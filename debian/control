@@ -1,0 +1,87 @@
+Source: farsight2
+Priority: optional
+Maintainer: Debian Telepathy maintainers <pkg-telepathy-maintainers@lists.alioth.debian.org>
+Uploaders: Dafydd Harries <daf@debian.org>,
+           Simon McVittie <smcv@ianadd.pseudorandom.co.uk>,
+           Sjoerd Simons <sjoerd@debian.org>,
+           Laurent Bigonville <bigon@bigon.be>
+Build-Depends: debhelper (>= 5.0.0),
+               cdbs,
+               libglib2.0-dev (>= 2.12),
+               libgstreamer0.10-dev (>= 0.10.17),
+               libgstreamer-plugins-base0.10-dev (>= 0.10.17),
+               python-central (>= 0.5),
+               python-gtk2-dev,
+               python-gst0.10
+Standards-Version: 3.7.3
+Vcs-Bzr: http://bzr.debian.org/pkg-telepathy/packages/unstable/farsight2/
+Homepage: http://farsight.freedesktop.org
+XS-Dm-Upload-Allowed: yes
+
+Package: libgstfarsight0.10-0
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Audio/Video communications framework
+ The Farsight project is an effort to create a framework to deal with all
+ known audio/video conferencing protocols. On one side it offers a generic
+ API that makes it possible to write plugins for different streaming
+ protocols, on the other side it offers an API for clients to use those
+ plugins.
+ .
+ This package provides the core Farsight 2 library.
+
+Package: libgstfarsight0.10-dev
+Section: libdevel
+Architecture: any
+Depends: libgstfarsight0.10-0 (= ${binary:Version}), libgstreamer0.10-dev
+Description: Audio/Video communications framework
+Description: audio/video stream library: development files
+ The Farsight project is an effort to create a framework to deal with all
+ known audio/video conferencing protocols. On one side it offers a generic
+ API that makes it possible to write plugins for different streaming
+ protocols, on the other side it offers an API for clients to use those
+ plugins.
+ .
+ This package provides development files for Farsight 2.
+
+Package: libgstfarsight0.10-doc
+Section: doc
+Architecture: any
+Description: audio/video stream library: development files
+ The Farsight project is an effort to create a framework to deal with all
+ known audio/video conferencing protocols. On one side it offers a generic
+ API that makes it possible to write plugins for different streaming
+ protocols, on the other side it offers an API for clients to use those
+ plugins.
+ .
+ This package provides contains documentation for Faright 2
+
+Package: libgstfarsight0.10-dbg
+Section: libdevel
+Priority: extra
+Architecture: any
+Depends: libgstfarsight0.10-0 (= ${binary:Version}), libgstreamer0.10-dev
+Description: audio/video stream library: development files
+ The Farsight project is an effort to create a framework to deal with all
+ known audio/video conferencing protocols. On one side it offers a generic
+ API that makes it possible to write plugins for different streaming
+ protocols, on the other side it offers an API for clients to use those
+ plugins.
+ .
+ This package provides contains documentation for Faright 2
+
+Package: python-farsight
+Section: python
+XS-Python-Version: >= 2.4
+Priority: extra
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, python-gst0.10
+Description: audio/video stream library: development files
+ The Farsight project is an effort to create a framework to deal with all
+ known audio/video conferencing protocols. On one side it offers a generic
+ API that makes it possible to write plugins for different streaming
+ protocols, on the other side it offers an API for clients to use those
+ plugins.
+ .
+ This package provides contains documentation for Faright 2

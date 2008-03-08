@@ -1,0 +1,20 @@
+#!/usr/bin/make -f
+
+DEB_DH_INSTALL_SOURCEDIR=debian/tmp
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/autotools.mk
+include /usr/share/cdbs/1/rules/simple-patchsys.mk
+
+# Ensure at build time that the library has no dependencies on undefined
+# # symbols, and speed up loading.
+LDFLAGS += -Wl,-z,defs -Wl,-O1
+
+DEB_CONFIGURE_EXTRA_FLAGS = --enable-python
+
+# List any files which are not installed
+include /usr/share/cdbs/1/rules/utils.mk
+common-binary-post-install-arch:: list-missing
+
+binary-install/python-avahi::
+	dh_pycentral -p$(cdbs_curpkg)
