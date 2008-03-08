@@ -35,7 +35,6 @@ Package: libgstfarsight0.10-dev
 Section: libdevel
 Architecture: any
 Depends: libgstfarsight0.10-0 (= ${binary:Version}), libgstreamer0.10-dev
-Description: Audio/Video communications framework
 Description: audio/video stream library: development files
  The Farsight project is an effort to create a framework to deal with all
  known audio/video conferencing protocols. On one side it offers a generic
