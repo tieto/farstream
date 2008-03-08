@@ -14,7 +14,7 @@ Build-Depends: debhelper (>= 5.0.0),
                python-gtk2-dev,
                python-gst0.10
 Standards-Version: 3.7.3
-Vcs-Bzr: http://bzr.debian.org/pkg-telepathy/packages/unstable/farsight2/
+Vcs-Bzr: http://bzr.debian.org/pkg-telepathy/packages/experimental/farsight2/
 Homepage: http://farsight.freedesktop.org
 XS-Dm-Upload-Allowed: yes
 
