@@ -1,5 +1,5 @@
-farsight2 (0.0.2-1) UNRELEASED; urgency=low
+farsight2 (0.0.2-1) experimental; urgency=low
 
   * First upload
 
- -- Sjoerd Simons <sjoerd@debian.org>  Sat, 08 Mar 2008 18:21:29 +0100
+ -- Sjoerd Simons <sjoerd@debian.org>  Tue, 11 Mar 2008 17:38:22 +0100
