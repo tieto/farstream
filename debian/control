@@ -77,11 +77,11 @@ XS-Python-Version: >= 2.4
 Priority: extra
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, python-gst0.10
-Description: Audio/Video communications framework: python bindings
+Description: Audio/Video communications framework: Python bindings
  The Farsight project is an effort to create a framework to deal with all
  known audio/video conferencing protocols. On one side it offers a generic
  API that makes it possible to write plugins for different streaming
  protocols, on the other side it offers an API for clients to use those
  plugins.
  .
- This package provides python bindings for Faright 2
+ This package provides Python bindings for Faright 2
