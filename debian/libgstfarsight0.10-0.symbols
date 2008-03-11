@@ -37,10 +37,6 @@ libgstfarsight-0.10.so.0 libgstfarsight0.10-0 #MINVER#
   fs_element_added_notifier_set_properties_from_keyfile@Base 0.0.1
   fs_error_get_type@Base 0.0.1
   fs_error_quark@Base 0.0.1
-  fs_marshal_VOID__BOXED_BOXED@Base 0.0.1
-  fs_marshal_VOID__INT_STRING_STRING@Base 0.0.1
-  fs_marshal_VOID__OBJECT_INT_STRING_STRING@Base 0.0.1
-  fs_marshal_VOID__OBJECT_OBJECT@Base 0.0.1
   fs_media_type_get_type@Base 0.0.1
   fs_media_type_to_string@Base 0.0.1
   fs_network_protocol_get_type@Base 0.0.1
