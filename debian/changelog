@@ -1,3 +1,11 @@
+farsight2 (0.0.2-2) UNRELEASED; urgency=low
+
+  * debian/conrol: Fix Farsight spelling in the descriptions
+  * debian/control: Add gstreamer0.10-plugins-{base,good,bad} to the depends
+    of libgstfarsight0.10-0.
+
+ -- Sjoerd Simons <sjoerd@debian.org>  Thu, 08 May 2008 21:38:37 +0200
+
 farsight2 (0.0.2-1) experimental; urgency=low
 
   * First upload
