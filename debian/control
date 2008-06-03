@@ -3,7 +3,7 @@ Priority: optional
 Section: libs
 Maintainer: Debian Telepathy maintainers <pkg-telepathy-maintainers@lists.alioth.debian.org>
 Uploaders: Dafydd Harries <daf@debian.org>,
-           Simon McVittie <smcv@ianadd.pseudorandom.co.uk>,
+           Simon McVittie <smcv@debian.org>,
            Sjoerd Simons <sjoerd@debian.org>,
            Laurent Bigonville <bigon@bigon.be>
 Build-Depends: debhelper (>= 5.0.0),
