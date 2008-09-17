@@ -1,4 +1,4 @@
-farsight2 (0.0.2-2) UNRELEASED; urgency=low
+farsight2 (0.0.3-1) experimental; urgency=low
 
   [ Sjoerd Simons ]
   * debian/conrol: Fix Farsight spelling in the descriptions
@@ -8,7 +8,16 @@ farsight2 (0.0.2-2) UNRELEASED; urgency=low
   [ Simon McVittie ]
   * Use my debian.org address in Uploaders
 
- -- Sjoerd Simons <sjoerd@debian.org>  Thu, 08 May 2008 21:38:37 +0200
+  [ Laurent Bigonville ]
+  * New upstream release
+  * Use my debian.org address in Uploaders
+  * Bump Standards-Version to version 3.8.0 (no further changes)
+  * debian/copyright: Fix download address
+  * debian/libgstfarsight0.10-doc.install: Fix documentation path
+  * debian/libgstfarsight0.10-0.symbols: Adjust symbols file 
+  * debian/control: Bump libglib2.0-dev build-dep
+
+ -- Laurent Bigonville <bigon@debian.org>  Wed, 17 Sep 2008 21:23:57 +0200
 
 farsight2 (0.0.2-1) experimental; urgency=low
 

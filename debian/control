@@ -5,16 +5,16 @@ Maintainer: Debian Telepathy maintainers <pkg-telepathy-maintainers@lists.alioth
 Uploaders: Dafydd Harries <daf@debian.org>,
            Simon McVittie <smcv@debian.org>,
            Sjoerd Simons <sjoerd@debian.org>,
-           Laurent Bigonville <bigon@bigon.be>
+           Laurent Bigonville <bigon@debian.org>
 Build-Depends: debhelper (>= 5.0.0),
                cdbs,
-               libglib2.0-dev (>= 2.12),
+               libglib2.0-dev (>= 2.14),
                libgstreamer0.10-dev (>= 0.10.17),
                libgstreamer-plugins-base0.10-dev (>= 0.10.17),
                python-central (>= 0.5),
                python-gtk2-dev,
                python-gst0.10
-Standards-Version: 3.7.3
+Standards-Version: 3.8.0
 Vcs-Bzr: http://bzr.debian.org/pkg-telepathy/packages/experimental/farsight2/
 Homepage: http://farsight.freedesktop.org
 XS-Dm-Upload-Allowed: yes
