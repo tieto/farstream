@@ -48,8 +48,10 @@ libgstfarsight-0.10.so.0 libgstfarsight0.10-0 #MINVER#
   fs_plugin_create@Base 0.0.1
   fs_plugin_create_valist@Base 0.0.1
   fs_plugin_get_type@Base 0.0.1
+  fs_plugin_list_available@Base 0.0.4
   fs_session_emit_error@Base 0.0.1
   fs_session_get_type@Base 0.0.1
+  fs_session_list_transmitters@Base 0.0.4
   fs_session_new_stream@Base 0.0.1
   fs_session_set_codec_preferences@Base 0.0.3
   fs_session_set_send_codec@Base 0.0.1
@@ -72,5 +74,6 @@ libgstfarsight-0.10.so.0 libgstfarsight0.10-0 #MINVER#
   fs_stream_transmitter_stop@Base 0.0.3
   fs_transmitter_emit_error@Base 0.0.3
   fs_transmitter_get_type@Base 0.0.1
+  fs_transmitter_list_available@Base 0.0.4
   fs_transmitter_new@Base 0.0.1
   fs_transmitter_new_stream_transmitter@Base 0.0.1
