@@ -7,8 +7,10 @@ farsight2 (0.0.4-1) UNRELEASED; urgency=low
     documentation
   * debian/libgstfarsight0.10-doc.install: Use the new location of the library
     documentation
+  * debian/rules: explicitly enable only the rawudp and multicast transmitter,
+    as the nice autodetection is broken.
 
- -- Sjoerd Simons <sjoerd@debian.org>  Thu, 13 Nov 2008 21:38:26 +0000
+ -- Sjoerd Simons <sjoerd@debian.org>  Thu, 13 Nov 2008 22:02:03 +0000
 
 farsight2 (0.0.3-1) experimental; urgency=low
 
