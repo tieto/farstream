@@ -1,4 +1,4 @@
-farsight2 (0.0.4-1) UNRELEASED; urgency=low
+farsight2 (0.0.4-1) experimental; urgency=low
 
   * New upstream release
   * debian/libgstfarsight0.10-0.symbols: Updated with new symbols
