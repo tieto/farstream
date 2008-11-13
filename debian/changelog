@@ -5,8 +5,10 @@ farsight2 (0.0.4-1) UNRELEASED; urgency=low
   * debian/libgstfarsight0.10-dev.install: Also install libgstfarsight-0.10.a
   * debian/libgstfarsight0.10-doc.install: Install the farsight2 plugin
     documentation
+  * debian/libgstfarsight0.10-doc.install: Use the new location of the library
+    documentation
 
- -- Sjoerd Simons <sjoerd@debian.org>  Tue, 11 Nov 2008 18:03:18 +0000
+ -- Sjoerd Simons <sjoerd@debian.org>  Thu, 13 Nov 2008 21:38:26 +0000
 
 farsight2 (0.0.3-1) experimental; urgency=low
 
