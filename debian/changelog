@@ -6,8 +6,9 @@ farsight2 (0.0.4-1.0.1) UNRELEASED; urgency=low
       warnings. From upstream git
   * debian/patches/01-set-remote-candidates-in-idle.patch:
     - Set remote candidates in an idle callback to prevent deadlocks
+  * Add dependency on gstreamer0.10-plugins-farsight
 
- -- Sjoerd Simons <sjoerd@debian.org>  Wed, 26 Nov 2008 17:49:48 +0100
+ -- Sjoerd Simons <sjoerd@debian.org>  Thu, 27 Nov 2008 15:03:14 +0100
 
 farsight2 (0.0.4-1) experimental; urgency=low
 
