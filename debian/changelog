@@ -1,4 +1,4 @@
-farsight2 (0.0.4-2) UNRELEASED; urgency=low
+farsight2 (0.0.4-1.0.1) UNRELEASED; urgency=low
 
   * Enable libnice support
   * debian/patches/00-dont-release-pads.patch:
