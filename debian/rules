@@ -13,5 +13,5 @@ DEB_CONFIGURE_EXTRA_FLAGS = --enable-python
 include /usr/share/cdbs/1/rules/utils.mk
 common-binary-post-install-arch:: list-missing
 
-binary-install/python-avahi::
+binary-install/python-farsight::
 	dh_pycentral -p$(cdbs_curpkg)
