@@ -1,5 +1,6 @@
 farsight2 (0.0.4-1.0.1) UNRELEASED; urgency=low
 
+  [ Sjoerd Simons ]
   * Enable libnice support
   * debian/patches/00-dont-release-pads.patch:
     - Don't release request pads on gstrtpbin. It's not implemented and causes
@@ -7,6 +8,9 @@ farsight2 (0.0.4-1.0.1) UNRELEASED; urgency=low
   * debian/patches/01-set-remote-candidates-in-idle.patch:
     - Set remote candidates in an idle callback to prevent deadlocks
   * Add dependency on gstreamer0.10-plugins-farsight
+
+  [ Simon McVittie ]
+  * Move packaging to git
 
  -- Sjoerd Simons <sjoerd@debian.org>  Thu, 27 Nov 2008 15:03:14 +0100
 

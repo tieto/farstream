@@ -16,7 +16,8 @@ Build-Depends: debhelper (>= 5.0.0),
                python-gst0.10,
                libnice-dev
 Standards-Version: 3.8.0
-Vcs-Bzr: http://bzr.debian.org/pkg-telepathy/packages/experimental/farsight2/
+Vcs-Git: git://git.debian.org/git/pkg-telepathy/farsight2.git
+Vcs-Browser: http://git.debian.org/?p=pkg-telepathy/farsight2.git
 Homepage: http://farsight.freedesktop.org
 XS-Dm-Upload-Allowed: yes
 
