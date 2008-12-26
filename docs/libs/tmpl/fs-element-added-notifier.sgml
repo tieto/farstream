@@ -1,0 +1,70 @@
+<!-- ##### SECTION Title ##### -->
+FsElementAddedNotifier
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT FsElementAddedNotifier ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL FsElementAddedNotifier::element-added ##### -->
+<para>
+
+</para>
+
+@fselementaddednotifier: the object which received the signal.
+@arg1: 
+@arg2: 
+
+<!-- ##### FUNCTION fs_element_added_notifier_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_element_added_notifier_add ##### -->
+<para>
+
+</para>
+
+@notifier: 
+@bin: 
+
+
+<!-- ##### FUNCTION fs_element_added_notifier_remove ##### -->
+<para>
+
+</para>
+
+@notifier: 
+@bin: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_element_added_notifier_set_properties_from_keyfile ##### -->
+<para>
+
+</para>
+
+@notifier: 
+@keyfile: 
+
+

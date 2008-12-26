@@ -1,0 +1,121 @@
+<!-- ##### SECTION Title ##### -->
+FsStreamTransmitter
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT FsStreamTransmitter ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL FsStreamTransmitter::error ##### -->
+<para>
+
+</para>
+
+@fsstreamtransmitter: the object which received the signal.
+@arg1: 
+@arg2: 
+@arg3: 
+
+<!-- ##### SIGNAL FsStreamTransmitter::local-candidates-prepared ##### -->
+<para>
+
+</para>
+
+@fsstreamtransmitter: the object which received the signal.
+
+<!-- ##### SIGNAL FsStreamTransmitter::new-active-candidate-pair ##### -->
+<para>
+
+</para>
+
+@fsstreamtransmitter: the object which received the signal.
+@arg1: 
+@arg2: 
+
+<!-- ##### SIGNAL FsStreamTransmitter::new-local-candidate ##### -->
+<para>
+
+</para>
+
+@fsstreamtransmitter: the object which received the signal.
+@arg1: 
+
+<!-- ##### ARG FsStreamTransmitter:preferred-local-candidates ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsStreamTransmitter:sending ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT FsStreamTransmitterClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+@add_remote_candidate: 
+@remote_candidates_added: 
+@select_candidate_pair: 
+
+<!-- ##### FUNCTION fs_stream_transmitter_add_remote_candidate ##### -->
+<para>
+
+</para>
+
+@streamtransmitter: 
+@candidate: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_stream_transmitter_remote_candidates_added ##### -->
+<para>
+
+</para>
+
+@streamtransmitter: 
+
+
+<!-- ##### FUNCTION fs_stream_transmitter_select_candidate_pair ##### -->
+<para>
+
+</para>
+
+@streamtransmitter: 
+@lfoundation: 
+@rfoundation: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_stream_transmitter_emit_error ##### -->
+<para>
+
+</para>
+
+@streamtransmitter: 
+@error_no: 
+@error_msg: 
+@debug_msg: 
+
+

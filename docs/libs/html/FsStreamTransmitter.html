@@ -1,0 +1,559 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>FsStreamTransmitter</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Farsight2 Reference Manual">
+<link rel="up" href="ch05.html" title="Farsight Transmitter objects">
+<link rel="prev" href="FsTransmitter.html" title="FsTransmitter">
+<link rel="next" href="ch06.html" title="Farsight Plugins infrastructure">
+<meta name="generator" content="GTK-Doc V1.8 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="part" href="pt01.html" title="Part&#160;I.&#160;User-oriented classes, interfaces and functions">
+<link rel="chapter" href="ch01.html" title="Farsight GStreamer Interfaces">
+<link rel="chapter" href="ch02.html" title="Farsight Core Library">
+<link rel="chapter" href="ch03.html" title="Farsight Utility Functions and Objects">
+<link rel="part" href="pt02.html" title="Part&#160;II.&#160;Classes used implements Farsight plugins">
+<link rel="chapter" href="ch04.html" title="Farsight GStreamer Base Implementations">
+<link rel="chapter" href="ch05.html" title="Farsight Transmitter objects">
+<link rel="chapter" href="ch06.html" title="Farsight Plugins infrastructure">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="FsTransmitter.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch05.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Farsight2 Reference Manual</th>
+<td><a accesskey="n" href="ch06.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#id2610005" class="shortcut">Top</a>
+                  &#160;|&#160;
+                  <a href="#id2626394" class="shortcut">Description</a>
+                  &#160;|&#160;
+                  <a href="#id2622171" class="shortcut">Object Hierarchy</a>
+                  &#160;|&#160;
+                  <a href="#id2626306" class="shortcut">Properties</a>
+                  &#160;|&#160;
+                  <a href="#id2626348" class="shortcut">Signals</a></nobr></td></tr>
+</table>
+<div class="refentry" lang="en">
+<a name="FsStreamTransmitter"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2>
+<a name="id2610005"></a><span class="refentrytitle">FsStreamTransmitter</span>
+</h2>
+<p>FsStreamTransmitter &#8212; A stream transmitter object used to convey per-stream
+  information to a transmitter.</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<h2>Synopsis</h2>
+<pre class="synopsis">
+
+
+
+                    <a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter-struct">FsStreamTransmitter</a>;
+                    <a class="link" href="FsStreamTransmitter.html#FsStreamTransmitterClass">FsStreamTransmitterClass</a>;
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="FsStreamTransmitter.html#fs-stream-transmitter-add-remote-candidate">fs_stream_transmitter_add_remote_candidate</a>
+                                                        (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter">FsStreamTransmitter</a> *streamtransmitter,
+                                                         <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate">FsCandidate</a> *candidate,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+>GError</a> **error);
+void                <a class="link" href="FsStreamTransmitter.html#fs-stream-transmitter-remote-candidates-added">fs_stream_transmitter_remote_candidates_added</a>
+                                                        (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter">FsStreamTransmitter</a> *streamtransmitter);
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="FsStreamTransmitter.html#fs-stream-transmitter-select-candidate-pair">fs_stream_transmitter_select_candidate_pair</a>
+                                                        (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter">FsStreamTransmitter</a> *streamtransmitter,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *lfoundation,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *rfoundation,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+>GError</a> **error);
+void                <a class="link" href="FsStreamTransmitter.html#fs-stream-transmitter-emit-error">fs_stream_transmitter_emit_error</a>    (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter">FsStreamTransmitter</a> *streamtransmitter,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a> error_no,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *error_msg,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *debug_msg);
+
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="id2622171"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+
+  <a
+href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
+>GObject</a>
+   +----FsStreamTransmitter
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="id2626306"></a><h2>Properties</h2>
+<pre class="synopsis">
+
+  "<a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter--preferred-local-candidates">preferred-local-candidates</a>" FsCandidateList       : Read / Write / Construct Only
+  "<a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter--sending">sending</a>"                  <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>              : Read / Write
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="id2626348"></a><h2>Signals</h2>
+<pre class="synopsis">
+
+  "<a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter-error">error</a>"                                          : Run Last
+  "<a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter-local-candidates-prepared">local-candidates-prepared</a>"                      : Run Last
+  "<a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter-new-active-candidate-pair">new-active-candidate-pair</a>"                      : Run Last
+  "<a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter-new-local-candidate">new-local-candidate</a>"                            : Run Last
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="id2626394"></a><h2>Description</h2>
+<p>
+This object is the base implementation of a Farsight Stream Transmitter.
+It needs to be derived and implement by a Farsight transmitter.
+A Farsight Stream transmitter is used to convery per-stream information
+to a transmitter, this is mostly local and remote candidates</p>
+<p>
+
+</p>
+</div>
+<div class="refsect1" lang="en">
+<a name="id2626418"></a><h2>Details</h2>
+<div class="refsect2" lang="en">
+<a name="id2626428"></a><h3>
+<a name="FsStreamTransmitter-struct"></a>FsStreamTransmitter</h3>
+<a class="indexterm" name="id2626440"></a><pre class="programlisting">typedef struct _FsStreamTransmitter FsStreamTransmitter;</pre>
+<p>
+All members are private, access them using methods and properties</p>
+<p>
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id2626460"></a><h3>
+<a name="FsStreamTransmitterClass"></a>FsStreamTransmitterClass</h3>
+<a class="indexterm" name="id2626471"></a><pre class="programlisting">typedef struct {
+  GObjectClass parent_class;
+
+  /*virtual functions */
+  gboolean (*add_remote_candidate) (FsStreamTransmitter *streamtransmitter,
+                                    FsCandidate *candidate, GError **error);
+
+  void (*remote_candidates_added) (FsStreamTransmitter *streamtransmitter);
+
+  gboolean (*select_candidate_pair) (FsStreamTransmitter *streamtransmitter,
+                                     gchar *lfoundation, gchar *rfoundation,
+                                     GError **error);
+} FsStreamTransmitterClass;
+</pre>
+<p>
+You must override the add_remote_candidate in a subclass</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a
+href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObjectClass"
+>GObjectClass</a>&#160;<em class="structfield"><code>parent_class</code></em>;</span></p></td>
+<td> Our parent
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code>add_remote_candidate</code></em>&#160;()</span></p></td>
+<td> Sets the remote candidate
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code>remote_candidates_added</code></em>&#160;()</span></p></td>
+<td> Tell the stream to start the connectivity checks
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code>select_candidate_pair</code></em>&#160;()</span></p></td>
+<td> Select the candidate pair
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id2626527"></a><h3>
+<a name="fs-stream-transmitter-add-remote-candidate"></a>fs_stream_transmitter_add_remote_candidate ()</h3>
+<a class="indexterm" name="id2626540"></a><pre class="programlisting"><a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            fs_stream_transmitter_add_remote_candidate
+                                                        (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter">FsStreamTransmitter</a> *streamtransmitter,
+                                                         <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate">FsCandidate</a> *candidate,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+>GError</a> **error);</pre>
+<p>
+This function is used to add remote candidates to the transmitter</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>streamtransmitter</code></em>&#160;:</span></p></td>
+<td> a <span class="type">FsStreamTranmitter</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>candidate</code></em>&#160;:</span></p></td>
+<td> a remote <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> to add
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error</code></em>&#160;:</span></p></td>
+<td> location of a <a
+href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+><span class="type">GError</span></a>, or NULL if no error occured
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> TRUE of the candidate could be added, FALSE if it couldnt
+  (and the <a
+href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+><span class="type">GError</span></a> will be set)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id2618993"></a><h3>
+<a name="fs-stream-transmitter-remote-candidates-added"></a>fs_stream_transmitter_remote_candidates_added ()</h3>
+<a class="indexterm" name="id2619007"></a><pre class="programlisting">void                fs_stream_transmitter_remote_candidates_added
+                                                        (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter">FsStreamTransmitter</a> *streamtransmitter);</pre>
+<p>
+Call this function when the remotes candidates have been set and the
+checks can start. More candidates can be added afterwards</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>streamtransmitter</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id2619068"></a><h3>
+<a name="fs-stream-transmitter-select-candidate-pair"></a>fs_stream_transmitter_select_candidate_pair ()</h3>
+<a class="indexterm" name="id2619082"></a><pre class="programlisting"><a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            fs_stream_transmitter_select_candidate_pair
+                                                        (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter">FsStreamTransmitter</a> *streamtransmitter,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *lfoundation,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *rfoundation,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+>GError</a> **error);</pre>
+<p>
+This function selects one pair of candidates to be selected to start
+sending media on.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>streamtransmitter</code></em>&#160;:</span></p></td>
+<td> a <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>lfoundation</code></em>&#160;:</span></p></td>
+<td> The foundation of the local candidate to be selected
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>rfoundation</code></em>&#160;:</span></p></td>
+<td> The foundation of the remote candidate to be selected
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error</code></em>&#160;:</span></p></td>
+<td> location of a <span class="type">GErrorh</span>, or NULL if no error occured
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td> TRUE if the candidate pair could be selected, FALSE otherwise
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id2619226"></a><h3>
+<a name="fs-stream-transmitter-emit-error"></a>fs_stream_transmitter_emit_error ()</h3>
+<a class="indexterm" name="id2619237"></a><pre class="programlisting">void                fs_stream_transmitter_emit_error    (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter">FsStreamTransmitter</a> *streamtransmitter,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a> error_no,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *error_msg,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *debug_msg);</pre>
+<p>
+This function emit the "error" signal on a <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a>, it should
+only be called by subclasses.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>streamtransmitter</code></em>&#160;:</span></p></td>
+<td> <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> on which to emit the error signal
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error_no</code></em>&#160;:</span></p></td>
+<td> The number of the error
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error_msg</code></em>&#160;:</span></p></td>
+<td> Error message to be displayed to user
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>debug_msg</code></em>&#160;:</span></p></td>
+<td> Debugging error message
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<div class="refsect1" lang="en">
+<a name="id2627700"></a><h2>Property Details</h2>
+<div class="refsect2" lang="en">
+<a name="id2627709"></a><h3>
+<a name="FsStreamTransmitter--preferred-local-candidates"></a>The "<code class="literal">preferred-local-candidates</code>" property</h3>
+<a class="indexterm" name="id2627723"></a><pre class="programlisting">  "preferred-local-candidates" FsCandidateList       : Read / Write / Construct Only</pre>
+<p>A GList of FsCandidates.</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id2627744"></a><h3>
+<a name="FsStreamTransmitter--sending"></a>The "<code class="literal">sending</code>" property</h3>
+<a class="indexterm" name="id2627756"></a><pre class="programlisting">  "sending"                  <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>              : Read / Write</pre>
+<p>
+A network source <a
+href="/usr/share/gtk-doc/html/gstreamer/GstElement.html"
+><span class="type">GstElement</span></a> to be used by the <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></p>
+<p>
+
+</p>
+<p>Default value: TRUE</p>
+</div>
+</div>
+<div class="refsect1" lang="en">
+<a name="id2627795"></a><h2>Signal Details</h2>
+<div class="refsect2" lang="en">
+<a name="id2627804"></a><h3>
+<a name="FsStreamTransmitter-error"></a>The "error" signal</h3>
+<a class="indexterm" name="id2627812"></a><pre class="programlisting">void                user_function                      (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter">FsStreamTransmitter</a> *self,
+                                                        <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a>                 errorno,
+                                                        <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a>               *error_msg,
+                                                        <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a>               *debug_msg,
+                                                        <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+>gpointer</a>             user_data)      : Run Last</pre>
+<p>
+This signal is emitted in any error condition</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>self</code></em>&#160;:</span></p></td>
+<td> <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> that emitted the signal
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>errorno</code></em>&#160;:</span></p></td>
+<td> The number of the error
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error_msg</code></em>&#160;:</span></p></td>
+<td> Error message to be displayed to user
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>debug_msg</code></em>&#160;:</span></p></td>
+<td> Debugging error message
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em>&#160;:</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id2627941"></a><h3>
+<a name="FsStreamTransmitter-local-candidates-prepared"></a>The "local-candidates-prepared" signal</h3>
+<a class="indexterm" name="id2627952"></a><pre class="programlisting">void                user_function                      (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter">FsStreamTransmitter</a> *self,
+                                                        <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+>gpointer</a>             user_data)      : Run Last</pre>
+<p>
+This signal is emitted when all local candidates have been
+prepared, an ICE implementation would send its SDP offer or answer.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>self</code></em>&#160;:</span></p></td>
+<td> <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> that emitted the signal
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em>&#160;:</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id2628025"></a><h3>
+<a name="FsStreamTransmitter-new-active-candidate-pair"></a>The "new-active-candidate-pair" signal</h3>
+<a class="indexterm" name="id2628036"></a><pre class="programlisting">void                user_function                      (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter">FsStreamTransmitter</a> *self,
+                                                        <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate">FsCandidate</a>         *local_candidate,
+                                                        <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate">FsCandidate</a>         *remote_candidate,
+                                                        <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+>gpointer</a>             user_data)             : Run Last</pre>
+<p>
+This signal is emitted when there is a new active chandidate pair that has
+been established. This is specially useful for ICE where the active
+candidate pair can change automatically due to network conditions. The user
+must not modify the candidates and must copy them if he wants to use them
+outside the callback scope.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>self</code></em>&#160;:</span></p></td>
+<td> <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> that emitted the signal
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>local_candidate</code></em>&#160;:</span></p></td>
+<td> <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> of the local candidate being used
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>remote_candidate</code></em>&#160;:</span></p></td>
+<td> <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> of the remote candidate being used
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em>&#160;:</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id2628164"></a><h3>
+<a name="FsStreamTransmitter-new-local-candidate"></a>The "new-local-candidate" signal</h3>
+<a class="indexterm" name="id2628175"></a><pre class="programlisting">void                user_function                      (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter">FsStreamTransmitter</a> *self,
+                                                        <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate">FsCandidate</a>         *local_candidate,
+                                                        <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+>gpointer</a>             user_data)            : Run Last</pre>
+<p>
+This signal is emitted when a new local candidate is discovered.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>self</code></em>&#160;:</span></p></td>
+<td> <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> that emitted the signal
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>local_candidate</code></em>&#160;:</span></p></td>
+<td> <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> of the local candidate
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em>&#160;:</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+</body>
+</html>

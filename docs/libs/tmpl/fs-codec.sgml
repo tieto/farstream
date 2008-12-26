@@ -1,0 +1,164 @@
+<!-- ##### SECTION Title ##### -->
+FsCodec
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### ENUM FsMediaType ##### -->
+<para>
+
+</para>
+
+@FS_MEDIA_TYPE_AUDIO: 
+@FS_MEDIA_TYPE_VIDEO: 
+@FS_MEDIA_TYPE_APPLICATION: 
+@FS_MEDIA_TYPE_LAST: 
+
+<!-- ##### FUNCTION fs_media_type_to_string ##### -->
+<para>
+
+</para>
+
+@media_type: 
+@Returns: 
+
+
+<!-- ##### STRUCT FsCodec ##### -->
+<para>
+
+</para>
+
+@id: 
+@encoding_name: 
+@media_type: 
+@clock_rate: 
+@channels: 
+@optional_params: 
+
+<!-- ##### STRUCT FsCodecParameter ##### -->
+<para>
+
+</para>
+
+@name: 
+@value: 
+
+<!-- ##### STRUCT FsCodecPreference ##### -->
+<para>
+
+</para>
+
+@encoding_name: 
+@clock_rate: 
+
+<!-- ##### MACRO FS_CODEC_ID_ANY ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO FS_CODEC_ID_DISABLE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION fs_codec_new ##### -->
+<para>
+
+</para>
+
+@id: 
+@encoding_name: 
+@media_type: 
+@clock_rate: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_codec_destroy ##### -->
+<para>
+
+</para>
+
+@codec: 
+
+
+<!-- ##### FUNCTION fs_codec_copy ##### -->
+<para>
+
+</para>
+
+@codec: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_codec_list_destroy ##### -->
+<para>
+
+</para>
+
+@codec_list: 
+
+
+<!-- ##### FUNCTION fs_codec_list_copy ##### -->
+<para>
+
+</para>
+
+@codec_list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_codec_list_from_keyfile ##### -->
+<para>
+
+</para>
+
+@filename: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_codec_to_string ##### -->
+<para>
+
+</para>
+
+@codec: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_codec_are_equal ##### -->
+<para>
+
+</para>
+
+@codec1: 
+@codec2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_codec_to_gst_caps ##### -->
+<para>
+
+</para>
+
+@codec: 
+@Returns: 
+
+

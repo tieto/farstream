@@ -1,0 +1,189 @@
+<!-- ##### SECTION Title ##### -->
+FsStream
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT FsStream ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL FsStream::error ##### -->
+<para>
+
+</para>
+
+@fsstream: the object which received the signal.
+@arg1: 
+@arg2: 
+@arg3: 
+
+<!-- ##### SIGNAL FsStream::local-candidates-prepared ##### -->
+<para>
+
+</para>
+
+@fsstream: the object which received the signal.
+
+<!-- ##### SIGNAL FsStream::new-active-candidate-pair ##### -->
+<para>
+
+</para>
+
+@fsstream: the object which received the signal.
+@arg1: 
+@arg2: 
+
+<!-- ##### SIGNAL FsStream::new-local-candidate ##### -->
+<para>
+
+</para>
+
+@fsstream: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL FsStream::recv-codecs-changed ##### -->
+<para>
+
+</para>
+
+@fsstream: the object which received the signal.
+
+<!-- ##### SIGNAL FsStream::src-pad-added ##### -->
+<para>
+
+</para>
+
+@fsstream: the object which received the signal.
+@arg1: 
+@arg2: 
+
+<!-- ##### ARG FsStream:current-recv-codecs ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsStream:direction ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsStream:participant ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsStream:remote-codecs ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsStream:session ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsStream:stream-transmitter ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT FsStreamClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+@add_remote_candidate: 
+@remote_candidates_added: 
+@select_candidate_pair: 
+@set_remote_codecs: 
+
+<!-- ##### ENUM FsStreamDirection ##### -->
+<para>
+
+</para>
+
+@FS_DIRECTION_NONE: 
+@FS_DIRECTION_SEND: 
+@FS_DIRECTION_RECV: 
+@FS_DIRECTION_BOTH: 
+
+<!-- ##### FUNCTION fs_stream_add_remote_candidate ##### -->
+<para>
+
+</para>
+
+@stream: 
+@candidate: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_stream_remote_candidates_added ##### -->
+<para>
+
+</para>
+
+@stream: 
+
+
+<!-- ##### FUNCTION fs_stream_select_candidate_pair ##### -->
+<para>
+
+</para>
+
+@stream: 
+@lfoundation: 
+@rfoundation: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_stream_set_remote_codecs ##### -->
+<para>
+
+</para>
+
+@stream: 
+@remote_codecs: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_stream_emit_error ##### -->
+<para>
+
+</para>
+
+@stream: 
+@error_no: 
+@error_msg: 
+@debug_msg: 
+
+
+<!-- ##### FUNCTION fs_stream_emit_src_pad_added ##### -->
+<para>
+
+</para>
+
+@stream: 
+@pad: 
+@codec: 
+
+

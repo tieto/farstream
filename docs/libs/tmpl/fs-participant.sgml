@@ -1,0 +1,47 @@
+<!-- ##### SECTION Title ##### -->
+FsParticipant
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT FsParticipant ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL FsParticipant::error ##### -->
+<para>
+
+</para>
+
+@fsparticipant: the object which received the signal.
+@arg1: 
+@arg2: 
+@arg3: 
+
+<!-- ##### ARG FsParticipant:cname ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT FsParticipantClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+

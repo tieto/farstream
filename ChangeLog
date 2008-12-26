@@ -1,0 +1,3965 @@
+commit bb6d58e2b9a9b79829d123cf214bd2a022a73055
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Mar 7 23:19:37 2008 -0500
+
+    Version 0.0.1
+
+commit f09613b13b4541c66c03dbf5e3c6e6e1248da6e8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Mar 7 23:17:54 2008 -0500
+
+    Dont use g_timeout_add_seconds, its really broken (gnome bug #448943)
+
+commit eade48eae07af7f59917659d462c9ae3db91a81c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Mar 7 18:48:20 2008 -0500
+
+    Add licensing info to the README
+
+commit 88fa398838cd1195665795b5eaded1ee390fcf23
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Mar 7 18:44:27 2008 -0500
+
+    Make multicast requirements clearer
+
+commit a6a3e46b6b192a227bb120a4d462e7fe2db28e50
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Mar 7 18:37:20 2008 -0500
+
+    Bump gtk-doc requirement to 1.8
+
+commit 3943f97ec5bb34a6d4ce3923e63ed171811b7dfa
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Mar 7 18:29:38 2008 -0500
+
+    Add basic readme with build/run requirements
+
+commit 0f156f461995263cc5a68fc7acf4614942e5a4f9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Mar 7 18:24:56 2008 -0500
+
+    Auto generate ChangeLog from git
+
+commit 7b14103de31d0ef90f4921c4bb519fc914d6ede7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Mar 7 18:14:06 2008 -0500
+
+    Add authors
+
+commit a70c9fc75a5d70cfe5614bb2d201bff0801dc643
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Mar 7 18:12:04 2008 -0500
+
+    Bump gst requirement to 0.10.17
+
+commit 536f1cbcfb842eb2475c54ff54edeb944596ccba
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Mar 7 18:08:59 2008 -0500
+
+    Its farsight2, not farsight 0.3
+
+commit cbd14d6b5c211004d617b59142804b21aeaf5ad9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Mar 7 17:50:11 2008 -0500
+
+    Reduce requirements to glib 2.12 and pygtk 2.10
+
+commit 9f1822e7ff47b47ad5cddf2ce73aa14981c0c07f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Mar 7 15:15:15 2008 -0500
+
+    Make it version 0.0.0.1
+
+commit df80fe7a96b23886c867fd087df67afd764e0be5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Mar 6 20:09:06 2008 -0500
+
+    Add proper includes to pre-declare functions
+
+commit 3b6b25c5ccbbc35b4127416a8d6b2b405b57ddaf
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Mar 6 16:14:11 2008 -0500
+
+    Fix parentheses
+
+commit 7fa342a447364dce08f09bbf3288db995f93acdd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Mar 6 14:17:51 2008 -0500
+
+    Add simple multicast example
+
+commit aa4e86ca5539c2d22d35a787dded1b623b313715
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Mar 6 13:37:27 2008 -0500
+
+    Typecast into the right types of objects
+
+commit b3a814d2b6ff265c472c259c1cda707105dbaf85
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Mar 6 13:28:00 2008 -0500
+
+    Add stdlib.h for strtol/atoi
+
+commit ca36a0f4533f85094b0fab41d3571b978384642f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Mar 4 15:26:20 2008 -0600
+
+    Set the right async properties on the multicast udp sinks
+
+commit 527590ad011d1d89bc801e1a6d563fc309e2bae2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Mar 4 13:23:05 2008 -0600
+
+    Let the system gst path through
+
+commit 3d7fadfbeda6059c45ef2722f1b6cb8ac354ebb7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Mar 3 15:29:13 2008 -0600
+
+    Rename file in Makefile.am (its a -, not a _)
+
+commit 94bd1a51b8a4c33943ccac59c2763cc5978318b0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 20 18:05:06 2008 -0500
+
+    Fix leaks, possible corruption and always put loopback address at the end
+
+commit 5ec774af29cc3eab95e9a8affccd278338fa8e04
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 20 18:03:14 2008 -0500
+
+    Clarify code and improve comments in fs-interfaces
+
+commit 922ac74731543ffe2852c06a3c425fb5f62fa955
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 20 11:42:20 2008 -0500
+
+    Add test to verify changing from sendrecv to sendonly
+
+commit 7c778bd34bc1cd31a46bd15fdb5bbe3b9322f7c1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 19 21:24:45 2008 -0500
+
+    Setup the source with the rest of the pipeline, not later
+
+commit 6540e7345a5e0bdab122a4893d377be2e2412b59
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 19 21:20:08 2008 -0500
+
+    Add test for sendonly and recvonly streams
+
+commit f8410615e5e8a4596dc9c9fea426197dd1f51be6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 19 20:34:17 2008 -0500
+
+    Add extra_init callback to the test
+
+commit ca5033ef5edbf25394c11e25b96fca1c5c9fa757
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 19 20:33:27 2008 -0500
+
+    Make handoff handler configurable in the stream
+
+commit 5ddb9c40ba7802bb7af901e98fda88555511b363
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 19 20:25:11 2008 -0500
+
+    Connect all the stream signals at the same place, re-order some functions
+
+commit 9a6a0675a1350cbc0695d70b5ff5fcc7c98e3ab3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 19 20:21:52 2008 -0500
+
+    Rename a tests that clearly aren't simple
+
+commit bbed04451b26d8824ee7a8313f51c59d33a64799
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 19 18:23:15 2008 -0500
+
+    Fix memory leaks
+
+commit da8331480f6f2a8a29dba72a8b74176463607295
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Feb 15 17:19:21 2008 -0500
+
+    Remove unimplementable fs_stream_preload_recv_codec
+
+commit 83a4e45712c48b901f3bc5693fd8bd10392a3925
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Feb 15 16:59:19 2008 -0500
+
+    Make H264 work with fs2-gui.py
+
+commit b7a720922f11a07695ff3a53986c4681d9357dae
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Feb 15 16:58:45 2008 -0500
+
+    Make the preview sink async=false (no point doing async if sync doesn't work)
+
+commit 79b642323a81448f6f9ca590d3d2f91adbebb3a8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Feb 15 15:15:11 2008 -0500
+
+    Fix small ref leak in the notifier
+
+commit 87b6df5694effeecc84277684b941fc9dc0e56a2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Feb 15 14:58:33 2008 -0500
+
+    Add FsElementAddedNotifier to the python bindings
+
+commit 3623a5918b2b4b830088b48930fd167448cebf87
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Feb 15 14:51:28 2008 -0500
+
+    Make the element addition notification thing into a GObject so that we can use regular signals
+
+commit 4b7dd57225ed263716f990c0ef4af52d6c428392
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 14 20:37:54 2008 -0500
+
+    Add videoscale to all video codecs to make dumb codecs (like H263) that only take specific resolutions happy
+
+commit 2f6c0ec543b5dfdbc9c5c41d5ad474a46fe5a8c5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 14 18:57:54 2008 -0500
+
+    Default the test gui to alsasrc
+
+commit 2119baa2b0e2ec0e498db31abe94b72889e25710
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 14 18:57:36 2008 -0500
+
+    Improve error messages a bit
+
+commit 04fb2e438dc7af4bbf4f2753b215e0bcf5eb7c0a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 14 18:57:12 2008 -0500
+
+    Don't sync on sending side (the latency is very different from the receiving side...)
+
+commit 306b8446c9b448fb3db4cf8103c7a78ba2798087
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 14 18:56:00 2008 -0500
+
+    Make the sending queues leaky and small enough to not create too much latency
+
+commit 3bdcd5c7c97833e7998effa4c0b9ed7b6b15e64b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 13 20:31:06 2008 -0500
+
+    Document python test gui a bit
+
+commit c3e14c5bbe8efc907ee4f159350a47aef7428816
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 13 19:40:02 2008 -0500
+
+    Make the audio/video sync work in fs2-gui.py
+
+commit ac9d40f4e03b8542ea124c5c1b675f8975d65997
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 13 18:42:54 2008 -0500
+
+    Connect the on-bye-ssrc signal from the gstrtpbin
+
+commit a6708485fa15ed28d08c5ce548e811548b2ab66c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 13 18:42:24 2008 -0500
+
+    Add function to remove SSRCs on rtcp bye in the rtpsession
+
+commit 369a4c91b04fadf6c944af19482dd04b2cc25001
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 13 18:39:30 2008 -0500
+
+    Add function to remove known SSRCs from a stream when a rtcp bye is received
+
+commit 7fa93ee4f96788017d8320b237b303849c89da28
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 13 17:27:46 2008 -0500
+
+    Add list of known ssrcs (in case rtcp arrives before rtp)
+
+commit 599b31bbdba6c431fb0715bb1e5c146540ae236c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 13 16:36:05 2008 -0500
+
+    Remove the sync from the valve
+
+commit 5025ea667e1e91ed4f9211a426fa127c3608c9c3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 13 16:33:01 2008 -0500
+
+    Make the no-rtcp-timeout stuff work properly and give some more debug
+
+commit a5a31e415b0a55bedbc041e73adb224795f56e71
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 13 16:25:29 2008 -0500
+
+    Add some debug for substream sync
+
+commit dae2fc681aa65d15f91e8d4dcfd2cd425383464b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 13 16:24:09 2008 -0500
+
+    Have the transmitter sink bin do the async-handling
+
+commit f373984d35ff3c267f03febc77f05d802dcd1510
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 13 14:48:42 2008 -0500
+
+    Fail cleanly if the gstrtpbin could not be created/added
+
+commit 2b4410d299c61aca617abb3f54fef0b9d13112b4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 12 17:55:22 2008 -0500
+
+    Add a bit more debug for ssrc/session association
+
+commit 1a975eb45cbad8b2c2bd830148921cb4f6b75772
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 12 14:23:57 2008 -0500
+
+    Set the new sync property to TRUE on the valve on the substreams to not empty the jitterbuffer
+
+commit 4ea785a382b1742e45d5abbd71ede0b3e6e47443
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Feb 9 10:38:02 2008 -0800
+
+    Add test for failed codec negotiation
+
+commit 0344b7580c90c88ab46dd31d915a012957908630
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Feb 9 10:37:50 2008 -0800
+
+    Test correctly if no codec could be negotiated
+
+commit ea17ca47563564f8158294bc24c80fd1adf000cf
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Feb 9 10:19:36 2008 -0800
+
+    Replace dont force PyList, accept any PySequence
+
+commit 6a9ff349fd87222fe53d281b88803b84b6dfb6aa
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Feb 9 09:46:40 2008 -0800
+
+    Dont crash if creating the stream transmitter fails in rawudp test
+
+commit 28aae637060ee161eda1c6d447c48e9bfe379803
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Feb 1 00:02:49 2008 +1100
+
+    Make the multi-party negotiation really prioritize the local pt only when multiple streams has remote codecs, make the remote_codecs a public member
+
+commit 0e29514e03f6633e3ab844da13808fe366c82c55
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 29 15:07:36 2008 +1100
+
+    Verify that h263version actually exists
+
+commit 074b208cc18884f9fd81fb9125f83b8d3aacaf90
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 29 15:07:18 2008 +1100
+
+    Remove useless includes and dependencies
+
+commit 44e06eaab1c9a5faf2ed77ed4cea7199ec8c5b62
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 29 15:06:54 2008 +1100
+
+    Clarify pygobject/pygtk deps
+
+commit d4a2b1063cc1560b918bcb10acd66ddac9b926ba
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 29 14:01:57 2008 +1100
+
+    We require glib 2.14 for the constructed vmethod
+
+commit 48a433c10af01255f3e84c4fc2611b161f0e934e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 24 17:32:33 2008 -0500
+
+    Re-indent rawudp transmitter according to standardised fs2 indentation rules
+
+commit 6890b95fa2fa9818c1cd925aa1f0ad2af0bda18f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 24 17:11:58 2008 -0500
+
+    Make the multicast transmitter used state locking instead of set_state->bin_remove->set_state hack
+
+commit 753d8cbf2de2148047373156204253a5379f96b0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 24 17:07:06 2008 -0500
+
+    Prevent the rawudp transmitter's sub-element from being rescitated
+
+commit 3785be8d220925e6fb146be8f173d9205e640fd8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 24 17:06:15 2008 -0500
+
+    Stop the transmitter in the right order in the rawudp test
+
+commit decfe5a3d8a0c6c25a2a3b5cb996810a4460ce2d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 24 17:05:53 2008 -0500
+
+    Make the generic transmitter tests thread-safe
+
+commit 65f82feea94f16734b0784e8ff1a7cd3752d8360
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 24 14:43:54 2008 -0500
+
+    Add forgotten lock and point lock macro to the right object
+
+commit 5a7f6233db2c3c0f87eee92ef0b751af4530d163
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 23 17:50:28 2008 -0500
+
+    Make audio and video optional in gui and make audio almost-work (except for sync)
+
+commit 5a3919ac59cc64aa7f026b370b7ce538c4eb3a14
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 23 17:45:45 2008 -0500
+
+    Improve indentation a bit
+
+commit 3485045334971db8980ea669701fb99bcd644f77
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 23 17:45:28 2008 -0500
+
+    Fix line length in rawudpstreamtransmitter doc
+
+commit f975e033be30170093b01fe1ecf072e35978e3c5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 23 14:30:12 2008 -0500
+
+    Re-organise core library documentation into logicals blocks
+
+commit b2d39e9ffd8c792224dec027f96b60029986a1b2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 23 14:15:20 2008 -0500
+
+    Improve transmitter documentation a bit
+
+commit a4aeeaa0e72e5abd4e2e5197d540740407e7131d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 23 14:13:35 2008 -0500
+
+    Add documentation to the rawudp transmitter
+
+commit 0e93bc52de9173b862769048ab45296a2bdb336b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 22 16:48:28 2008 -0500
+
+    Name the send codec bin uniquely per conference
+
+commit 574390fef7dd4f9a060636407b5723672a264b20
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 22 15:48:10 2008 -0500
+
+    Add test for multicast with a local interface specified
+
+commit 36a25eed50d8192dfe71e8ee3fe90e64d0f1051b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 22 15:47:32 2008 -0500
+
+    The Multicast transmitter now binds to the multicast address, not the local address. So we really have to have one socket per multicast group we join.
+
+commit fb74766c39d743416d76dfa172a9df5fae9e4d02
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 21 21:20:26 2008 -0500
+
+    Fix memory leak in multicast stream transmitter
+
+commit 268285460f56f9729c8966a6875b1fbc951b27a2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 21 20:30:06 2008 -0500
+
+    Add some documentation to the multicast transmitter
+
+commit 9d21339a9822aedd36eba3548fe1d47d7e8af361
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 21 20:24:24 2008 -0500
+
+    Same candidate requires the ttl to be the same with multicast
+
+commit 5b10ab2fc26dfce02680e7cb4773872f67b313bb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 21 17:31:52 2008 -0500
+
+    Make multicast transmitter respect the TTL in the candidate
+
+commit 6037191f6202a5ef49bd5c714f744dbb523186bb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 21:20:22 2008 -0500
+
+    Add ttl field to FsCandidate
+
+commit 39f837d52301f2ea7618022d71551507b2db8828
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 21:20:08 2008 -0500
+
+    Rename pad parameter in header to make it match the code
+
+commit 448ecdd01b578dd97735e6025ea1f09bde3a687d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 21:04:05 2008 -0500
+
+    Simplify the uddport code a bit in the multicast transmitter
+
+commit 7f5502e0f5b100f5c991e324684c8ea21d0f5e8d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 20:58:11 2008 -0500
+
+    Remove all references to fs-interfaces from the multicast transmitter
+
+commit 4231047accb083fcb2b581e4d3af8ad7db1def5e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 20:57:14 2008 -0500
+
+    Remove useless get
+
+commit a29a429a450a03717ef95fdded58b219cfa6f5e8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 20:49:53 2008 -0500
+
+    Remove unused files
+
+commit 5634e6f27d7c92f3c394632657ab09ecb6827e0b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 20:18:11 2008 -0500
+
+    Make error message a bit clearer
+
+commit 852b6475b74efa6eb329d2211ec43acf9a6187fa
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 20:16:53 2008 -0500
+
+    Re-set the IP_MULTICAST_LOOP to 0
+
+commit 0daf1e0eda2c01fc150dc405bbad20b5253d400c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 20:11:39 2008 -0500
+
+    Add simple test for multicast transmitter
+
+commit d5d1a4a2f89947b10e828884d4f5b15aedf73164
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 20:10:21 2008 -0500
+
+    Binding to interface 0 / INADDR_ANY by default
+
+commit 980ffae4622c745f78bd83340d11ad66f47c6a5e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 20:09:38 2008 -0500
+
+    Use SO_REUSEADDR/PORT
+
+commit da25dfe75f5fcd3006853dda27b7a98ddb85c56f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 20:09:03 2008 -0500
+
+    Add way to only allow binding to the exact requested port
+
+commit 2f4f0b9fd6a13f82fc77539ad3f859f7767b3329
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 18:55:32 2008 -0500
+
+    More s/prefered/preferred/
+
+commit 1e50dfc572c0413c0d09e841265c35dc89ba5c66
+Merge: 89faa33... 49436d4...
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 18:52:58 2008 -0500
+
+    Merge branch 'master' into multicast-transmitter
+
+commit 49436d40a3d78b7db84aeaf067fb8b8f7bc7594d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 18:52:44 2008 -0500
+
+    s/prefered/preferred/
+
+commit 89faa339727b46c963990ffcc02197596e02466b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 18:45:35 2008 -0500
+
+    Update the fs_candidate_new call to the new api
+
+commit ca1253c68ae6676d2dd21006653d14b0ad113e77
+Merge: 264cb2d... a36fc87...
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 18:43:06 2008 -0500
+
+    Merge branch 'master' into multicast-transmitter
+
+commit a36fc871173b87078dfde84e80dd17310c0ba1a9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 18:42:56 2008 -0500
+
+    Add the component to fs_candidate_new and document it
+
+commit 264cb2daa92959d3b9e9f9a6d201ac9aa6d44e5c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 18:06:16 2008 -0500
+
+    Put copy of fs-interfaces in the multicast transmitter
+
+commit 3c25ae8d25d41618ca4e3b19b1e09b3e7eaffd21
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 17:30:17 2008 -0500
+
+    Complete untested version of the multicast transmitter
+
+commit 7457bad4c5cea87864dbfee9e9ddebbb028f5e74
+Merge: 9261e7a... 8ef9704...
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 17:10:32 2008 -0500
+
+    Merge branch 'master' into multicast-transmitter
+
+commit 8ef97049f3aa236164723501ac947a981b58d9c0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 16:53:16 2008 -0500
+
+    Add new functions to the python bindings
+
+commit 95c9344bdd13b7cafd25120896ec4e3f5daccb41
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 16:06:32 2008 -0500
+
+    Add fs_candidate_new method
+
+commit c08044a83b42d5057f9f9e16dba9a1e046ab28dc
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 16:06:19 2008 -0500
+
+    Fix indentation
+
+commit 9261e7acb7df1bd17be35dc3d72b67749237645f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 18 16:02:55 2008 -0500
+
+    Fix incorrect \
+
+commit fe9659f6472a2b166c8371b22ebb50f3c8f6d51e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 17 17:52:44 2008 -0500
+
+    get_port returns an int, not a boolean
+
+commit 6fdd40fc56166b3fcdfb4d207da5d6632504ec8c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 17 17:52:20 2008 -0500
+
+    Add the proper configure macro to make automake happy about per-target flags
+
+commit c8e36e0e9b095f1ec41eb9ad55f57a3dbe2e37be
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 17 17:51:56 2008 -0500
+
+    Remove the automake portability warnings
+
+commit adcd630ca02beead88403ccd895bba07efa7a77d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 14 14:13:24 2008 -0500
+
+    Remove now useless mutex
+
+commit e1d99555d97b0235287dee641c670d6749210f5f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 14 14:11:29 2008 -0500
+
+    Fix documentation type in the rawudp stream transmitter
+
+commit 967f75b762ae18d800d4c6d679fe5a748a2b12d0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 14 14:02:33 2008 -0500
+
+    Remove references to STUN from the multicast transmitter
+
+commit fe80b6e670d17987df469e81ef14d06163263dbb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 14 13:48:07 2008 -0500
+
+    search/replace the copied files to multicast from rawudp
+
+commit 2728f1be6f90cbebfad178c7dc7ec4f2fcd1ccf6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 14 13:16:49 2008 -0500
+
+    Start multicast transmitter as a copy of the rawudp transmitter
+
+commit 844aa8febddda6e152a7eaada29297d73330e84d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 11 18:39:15 2008 -0500
+
+    Remove theora preference (it still doesnt work)
+
+commit 4ffa7401d3e524b2673b9610f57cb01abee7ce98
+Merge: ecd6d6a... 50b924f...
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 11 18:37:46 2008 -0500
+
+    Merge updated error clarification patch
+    
+    nothing added to commit but untracked files present (use "git add" to track)
+
+commit ecd6d6a1e954103571fd1f432e284eda131435c4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 11 18:25:35 2008 -0500
+
+    Add multicast candidate type
+
+commit 727931d16e6eab0f6acc97c271bbfff855a9a3f1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 11 15:59:05 2008 -0500
+
+    Ooops, don't overwrite the local ip address with ANY in rawudp transmitter
+
+commit f9e91d8b9f9c8f088a1fe6274a718c8fdab93252
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 10 19:15:55 2008 -0500
+
+    Transform the upwards call on the no-rtcp timeout into a signal
+
+commit 3e3fda793196024b44b1e0b08b7589e63aa651ef
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 10 19:06:58 2008 -0500
+
+    Make the fs_stream_emit_src_pad_added a function of the library
+
+commit f0ee0a7813efd02640f33075d50b3a35cad07ad3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 10 17:32:52 2008 -0500
+
+    Make the error message on no local codecs clearer
+
+commit 50b924fd1c03e23093b3cb157d041226ba9510d0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 10 17:32:52 2008 -0500
+
+    Make the error message on no local codecs clearer
+
+commit ae8f9f94a3018a2a608f6af25eeae317087cf7a3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 10 17:32:33 2008 -0500
+
+    Fix some indentation
+
+commit e83231aa3db6ebde4e3670466eca7772e8350cf0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 10 17:32:16 2008 -0500
+
+    Implement the callback after a timeout if there is no rtcp
+
+commit 14234032b7dc8baf2c06661458eaa78b591f6fa4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 10 17:31:18 2008 -0500
+
+    Add a no-rtcp-timeout property on the FsRtpSubStream and set it at construct time from the session
+
+commit efaaa37e69710175ebcb352dd6278505943bbfdf
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 10 17:27:47 2008 -0500
+
+    Add no-rtcp-timeout property to the FsRtpSession
+
+commit a5123235e68c42beba1238577fd041b45515c346
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 10 13:19:53 2008 -0500
+
+    Fix small leaks
+
+commit 9ada1d79a2b3072dd4855ab80fb010ac0ae7b797
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 9 20:14:49 2008 -0500
+
+    Make a macro to surround the fail*() calls with a mutex to prevent "Bad message type arg" errors
+
+commit e8d53dc094ca653d336ac28349057ad043982059
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 9 17:52:29 2008 -0500
+
+    Print more explicit error messages in demo gui
+
+commit 5f3dbb5469b1b6ec5c1ebf2421a9770320033521
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 9 17:30:54 2008 -0500
+
+    Make it possible to run the python gui from anywhere
+
+commit 409920f70cde31ac0e0e50e1aeaa22e4e589ea6c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 9 17:18:02 2008 -0500
+
+    Implement the emission of the recv-codecs-changed signal
+
+commit 191cd34dbd25610ec563548627e3592c80b58162
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 9 17:02:48 2008 -0500
+
+    Improve the doc for FsSession a bit to make clear the relation between the properties and their changed signal
+
+commit 8aadb06d772db68d168100332a00415726226573
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 9 16:53:25 2008 -0500
+
+    Remove the argument from the recv-codecs-changed signal, the details can be fetched from the property, and improve the doc a bit more
+
+commit 7832e19dab9536b8636da1df708a9f528cff3157
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 9 15:57:02 2008 -0500
+
+    Add copyright/license notice to the python demo gui
+
+commit 024a15b48fc3ea4b573fbcdb0d690facb7db72a0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 9 15:34:06 2008 -0500
+
+    Fix doc of recv-codecs-changed
+
+commit 04ff3a40a4ee91b6c1420d6fdcf4c1347aec9413
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 9 15:15:39 2008 -0500
+
+    If we receive a pad for which we have no codec (a race condition), don't block the pad forever,  instead use the pad probe to drop buffers until we get the right code (but this should never happen anyway)
+
+commit acfb5b51271c433a52ae22b2e3798faaee82aac0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 9 12:49:18 2008 -0500
+
+    Fix name of function is gtkdoc comment
+
+commit 6fb39ba8ca7763678f7a975b0056a51b32b88ce0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 8 16:30:41 2008 -0500
+
+    Set the new codecs before invalidating the old ones
+
+commit 18f035a2b25dadef69a5d8a48b7397a6d468b990
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 8 16:29:58 2008 -0500
+
+    Document the codec negotiation a tiny little bit
+
+commit 3389df2ecf2e2007ff605d82a9ffc2dda2f21e5d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 8 16:06:00 2008 -0500
+
+    Implement the current-recv-codecs property on FsRtpStream
+
+commit 781db1d7100a5d7e5a52f7c3e0f68c10b2c3525e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 8 15:28:09 2008 -0500
+
+    Ignore .pyo/.pyc files
+
+commit a2fceda47ad14bd9f4eea386019f607669021d7c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 8 15:26:07 2008 -0500
+
+    Fix various Makefile details to make "make distcheck" pass
+
+commit 8345c23c94eac649afbf6d8bdbd8fb66f5a21ac6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 8 15:15:15 2008 -0500
+
+    The recv codecs are now a list
+
+commit c617a3bc06cdf86e2b498d96c9a8b896253bfb8b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 8 15:09:49 2008 -0500
+
+    FsStreamDirection is now a flags, not a enum (and both=send|recv)
+
+commit 228887db9b7d95647d01b7bff4e34b9a2527ed0c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 8 14:26:08 2008 -0500
+
+    Oops, include the fs-private.h header in fs-transmitter.c too
+
+commit 3c072364439c5f5bb96b5160011a555b0a7f6469
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 8 14:25:49 2008 -0500
+
+    Give the right rule name to generate enum files
+
+commit dfae8e97952c8efbfbaf5e102f635495a029c495
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 7 19:22:40 2008 -0500
+
+    Use the gst debug category everywhere!
+
+commit c04d1313b1a9e23e65c0155a6ef1b52bf4b5615c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 7 19:22:20 2008 -0500
+
+    Add gst debug category to the rawudp transmitter
+
+commit a4e84ddaac5824b3a6dac72802716ec8ed915fad
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 7 19:21:27 2008 -0500
+
+    Remove useless print
+
+commit 9b129c0636f305e2392b7017d4bb0cc6201eecbe
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 7 19:21:09 2008 -0500
+
+    Add the new fs-private.h header to the Makefile.am
+
+commit 0d68b87bfe5d55e82d0b73de52089caa0624e01a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 7 19:20:39 2008 -0500
+
+    Fix the documentation building
+
+commit d78f84bc5f75b0010f46682ab9fc2378eb995981
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 7 19:20:14 2008 -0500
+
+    Also potentially init the debug from the FsTransmitter class constructor
+
+commit 252f2fa0c4aa36525546096cc6e2588a26c75f80
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 7 19:19:19 2008 -0500
+
+    Add a new fs-private.h header, move the debug category to there and make a function to init the debug category so it can be initialized by the fs-plugin so that unit tests can work without a Conference
+
+commit 98e936cb19b6d116c50fe73af7340449e5abdffb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 7 18:42:39 2008 -0500
+
+    Update parameter name in documentation
+
+commit 500995239cc65776d6e3e31c80ecb763c47ded8b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 7 18:03:34 2008 -0500
+
+    Add explanation of the behavior for multi-party codec negotiation
+
+commit 021ad1469395da8eed23655cb26f42605d6b1564
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 7 17:02:03 2008 -0500
+
+    Add test case for changing send codec while its playing
+
+commit c64bb52990001de223302a1f7bd5331b8507e829
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 7 17:01:32 2008 -0500
+
+    Check the correct cap to make sure we don't push an unacceptable buffer after a change in send codecs
+
+commit 61fc3daeea70d6aba18297b57d905f158092686f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 7 16:58:22 2008 -0500
+
+    Improve doc/debug messages a bit in FsRtpSession
+
+commit 80fbd05307bd911b0aafe87b06b565cd8679deca
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 4 18:46:55 2008 -0500
+
+    Add test to for fs_session_set_send_codec before the stream is started
+
+commit 2229349a86cf38513efae29fe59f4b35483ddb4d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 4 18:45:18 2008 -0500
+
+    Fix documentation lines to use proper prefixes for constants
+
+commit 3792284ce37102a534e4bdad3c167c27a27642e2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 4 15:46:44 2008 -0500
+
+    Add a property to get the output ghostpad from a FsRtpSubStream
+
+commit b42e90f7656c367956bf02403e2b0e76a552dc5c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 3 18:53:05 2008 -0500
+
+    Oops, some fs-rtp-conference macros dont have the right name
+
+commit 506adb7afd5e63c3a9e1e3f7340301250349e40d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 3 13:22:04 2008 -0500
+
+    Add tests for fs_utils_add_recursive_element_setter_from_keyfile
+
+commit 62b1086a3c87c38e1243ad64858da907c92b32e7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 3 13:21:48 2008 -0500
+
+    Use proper markup for functions in the gtk-doc
+
+commit 198881417bdd9280e5740d6c62e058a8339a3fcd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 3 13:21:25 2008 -0500
+
+    Rename _from_keyfile option setter function
+
+commit 2fd8dbcfa662862c8004c94dfaa7ab5c5557ac3f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 2 20:33:59 2008 -0500
+
+    Add function to set options from a keyfile using code from Farsight1
+
+commit f823ff965b749c33e0d7c81f2006e8b9f3f9900b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 2 20:33:07 2008 -0500
+
+    Remove unused prototype
+
+commit eb544fac10a4ce119f5b1fd1f75ba8a133e545c6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 2 20:32:52 2008 -0500
+
+    Make the element recursive element stuff also work on non-bin elements
+
+commit d217d48f273d8851672f5e52266d081e05cfbceb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 2 19:23:36 2008 -0500
+
+    Add test for the recursive element adding notification
+
+commit f2b529be8a4ca9a6eef84439c564480fc961f72b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 2 18:36:27 2008 -0500
+
+    Fix small documentation screwups, ignore auto-generated files
+
+commit 744516e1a621c720f253a7151c8009db92abe120
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 2 18:35:39 2008 -0500
+
+    Remove useless printing in configure
+
+commit ad191ba9edecbf7a08a78826487c6be12bf9d325
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 2 18:22:33 2008 -0500
+
+    Add utility to be notified when an element is added to a bin or a sub-bin
+
+commit dc1ddf200a205f688873ff253c418dc1e5bc0928
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 2 15:04:37 2008 -0500
+
+    Add code to set the correct receiving direction on the substreams
+
+commit b222c39c8e3e8f5cc64843eab9b5f72e0248da11
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 2 15:04:03 2008 -0500
+
+    Define the FS_DIRECTION_* flags with shifts in the right direction
+
+commit 61006195ef1db2130d780c6686571c1106741ba5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 2 14:49:56 2008 -0500
+
+    Add receiving property to FsRtpSubStream
+
+commit ba5a2d162f0d3e417181bb8a90b8dcf91af70b4f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 2 13:10:11 2008 -0500
+
+    Fix copy-paste error
+
+commit 4f9e1e60db1c9ded351d0faaa4c30dde02c2146d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Dec 22 23:56:15 2007 -0500
+
+    Make the video sinks a bit smaller
+
+commit f93b9435b9b5528710ef776e0c8518185cc35d3f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Dec 22 23:53:44 2007 -0500
+
+    Make the server relay the disconnection of one client to the other clients
+
+commit c995a2b16fafcdd9f42dcc57e3d2135800a2f4fa
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Dec 22 23:52:58 2007 -0500
+
+    Dont restart on all errors
+
+commit 2062625d63848a47e4aabb50e7c05686e6d782b6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 20 21:00:33 2007 -0500
+
+    Cleanup server-side when client is disconnected
+
+commit 8f7d195cbe4296392fa99fb02b82e80dad257e49
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 20 21:00:06 2007 -0500
+
+    Use weakrefs instead of strong refs for session->stream to break ref cycle
+
+commit a3dcb6aa817480064a5d7eedbf4d73d2a244dec4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 20 14:04:44 2007 -0500
+
+    Set latency of 100ms (to match the jb)
+
+commit d61b75f6ed3055046137a51c6b863456eeef3bf3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 20 11:09:43 2007 -0500
+
+    Skip the stunserver.org test if the network is down
+
+commit 9720e502973c9907630942d52de80504e3da89ac
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 20 11:09:11 2007 -0500
+
+    Ask for the loopback interface too (as a last chance)
+
+commit 2aa058e6c6d8d0d307b6aaa5502a5823364a0ccc
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 20 11:08:32 2007 -0500
+
+    Always add the loopback interface last if we ask for it
+
+commit bc11980706bc04aa1a2409974ab7c6fc917fdf0b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 20 10:54:26 2007 -0500
+
+    Emit an error if there is no local candidate
+
+commit a6468a2176ae1e25950b7433b6b67cdc637f9583
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 20 10:53:26 2007 -0500
+
+    Have the right marshaller for the stream error signal and use the fs_stream_emit_error function to emit the error instead of doing it directly
+
+commit d63a10e98517d1f9888c7ff382f108758e63f1fd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 19 17:53:10 2007 -0500
+
+    Various small improvements to the ui test
+
+commit 1422cb99754b8ac0dee08aad9d161b5f74351450
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 19 15:37:12 2007 -0500
+
+    in gui test, remove useless ffmpegcolorspace and capsfilter in source
+
+commit c07893a7f0ec36176ab1b44b64f4f1cabf418af4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 19 14:29:32 2007 -0500
+
+    Give output sink and preview sinks different names
+
+commit 259287cba2a2b37921cfa3a15633590f2267eebe
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 19 14:03:23 2007 -0500
+
+    Put ffmpegcolorspace/audioconvert/audioresample inside the appropriate codec bins
+
+commit 297f7ffbf0aca968d56d164ce20729fc923bcbab
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 19 14:02:52 2007 -0500
+
+    Replace fakesrc with audiotestsrc in generic rtpconference test
+
+commit 8623d77b70c9092993b701ea276d6f3e683f9deb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 18 17:23:20 2007 -0500
+
+    Comment out unused adder, use gtk.gdk.gdk_threads_init()
+
+commit 474731330ad820c563c48ca20e746126c10d8ce3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 17 20:31:29 2007 -0500
+
+    Improve the UI to force the output to have the same size as the data
+
+commit 10a5168f9e82c9f84e1ab421cf52b462a74b4735
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 17 17:56:37 2007 -0500
+
+    Add python gui demo program
+
+commit be3dfae414e90c6fb2f71dea2aa16f9d644fd480
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 17 14:46:27 2007 -0500
+
+    Add fakesink after the tee in rawudp transmitter
+
+commit c6201b2f587b45def8b9b62811331fa997481a42
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 17 14:46:13 2007 -0500
+
+    Remove useless check, fix comment
+
+commit 65eff83776847a5787004c6b21c6c7e409960cc3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 17 14:45:32 2007 -0500
+
+    Dont forget to ref the fakesinks
+
+commit fd32616b5d3c989459fc0cd9a1ab70b91fae7d08
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 17 14:16:38 2007 -0500
+
+    Simplify the error handling code a bit
+
+commit 7b7ed5737f3f09e6d37ce546d53694acd2dd3a45
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 17 14:12:04 2007 -0500
+
+    Add fakesink to the tee between the rtpbin and the transmitters
+
+commit 2b49ca8a50843af7569f1e589f003bf7b5bb971e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Dec 15 21:11:43 2007 -0500
+
+    Check the right types when converting python lists to glist and correctly check that the optional params
+
+commit 93804c96c0988cfe9984d30abe60e04f25c41c11
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 14 16:21:29 2007 -0500
+
+    Dont crash on null attributes inside codecs and candidates
+
+commit 48f9d2cea8a07544496ad0daf7275fdbeaf770b3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 12 16:57:45 2007 -0500
+
+    Use the Gst error stuff for the base classes too
+
+commit fe7b3308354779b2a13eaceabace1ce9590ef5eb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 12 16:57:32 2007 -0500
+
+    Have fs_codec_list_from_keyfile return a GError
+
+commit a077f32128ac5c5c08960e2006160755eaafae86
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 12 16:41:05 2007 -0500
+
+    Make sure we init the substream class in a single-threaded env
+
+commit 3802133f8aaadd6dbf92f30eaa1070878637bcb1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 12 16:33:53 2007 -0500
+
+    Add test for invalid transmitter name
+
+commit 4f9d8b636169474c8e1cbc242f5f84b5ef498d1f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 12 13:35:22 2007 -0500
+
+    Add test for two-way codec negotiation
+
+commit db88d3ccea933e316e8f38af127c8f245d4333ad
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 12 13:35:04 2007 -0500
+
+    Verify that the remote codecs passed are minimally valid
+
+commit e52172914f7a068767ed2d02a8f832eb5de0d2ab
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 12 13:34:44 2007 -0500
+
+    Invert the result of _compare_codec_lists to get the right result, and document the function
+
+commit a563f37727c653cf482d844b1cd967008ae5a20d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 11 19:49:28 2007 -0500
+
+    Fix various memory leaks (thanks valgrind)
+
+commit 59ba0aff9f5bf99b2170c72cb463f25ccc300a75
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 11 19:49:08 2007 -0500
+
+    Remove explicit timeont on tests
+
+commit d02e7f06093e7ace89567f5046a45a630ae4a7a4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 11 19:23:43 2007 -0500
+
+    Release all request pads
+
+commit 1d3cad6a5f27a8f79aa4bd2e80904b46fae0c843
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 11 19:05:07 2007 -0500
+
+    Fix various small memory leaks
+
+commit 117545d3137d2a533b8043a37c3b9a889099873b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 11 19:04:40 2007 -0500
+
+    unref request pads after releasing them
+
+commit e03aec30bdafcffd6a7eddcdebefd7771965741e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 11 18:03:01 2007 -0500
+
+    Fill fakesrc buffer to make valgrind happier
+
+commit 31939e9ec8485e20f8ce852214504132166f59d9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 11 17:59:06 2007 -0500
+
+    Fix leak in fstransmitter test
+
+commit c36f2cbfd78f7bfc3bf2fcb195ba4f00e0c69232
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 11 17:57:57 2007 -0500
+
+    Fix indentation in fscodec test
+
+commit 02a1e698c2978165eab20f0538bc9d88a3b30001
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 11 17:57:30 2007 -0500
+
+    Fix memleaks in fscodec test and some indentation
+
+commit 931c7a47b608d0acc03f7a5aded707d308399cd4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 11 17:41:50 2007 -0500
+
+    Add more tests for local-codecs-config
+
+commit 3339c89d120f8b8a3c9e0eb493f37cf1222907f5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 11 17:41:34 2007 -0500
+
+    Dont ignore all prefs, clock_rate is never negative, print more debug
+
+commit a25eae8856bf31949b8d95c6931d07c0546138b3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 11 16:31:25 2007 -0500
+
+    Add new test for various codec related functionalities
+
+commit 840abffcc2033006ecd1d64ba89d015cca419089
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 11 16:30:38 2007 -0500
+
+    Create the new local codecs association from the new codec configuration, not the old
+
+commit d3c1beff23e1ceddb5c422d7152e01c28d05dc2d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 11 16:15:21 2007 -0500
+
+    Get a copy of the local-codecs-config list
+
+commit dc58a6ebdd9bb5fb114f1ce24eee37f559e639f5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 11 15:19:15 2007 -0500
+
+    Export the FS_CODEC_ID_* constants
+
+commit 7d38f6a4e5b30b73973381f9c0af97750c94b622
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 11 13:35:22 2007 -0500
+
+    Make the livesrc behave more like a real livesrc
+
+commit 7c7b90a956a331423ca5e6c31a2b9fe76f192487
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 11 13:24:04 2007 -0500
+
+    Use the bus message to get the information about sessions
+
+commit 537ba587c0c83f54c5aa8782ba14347314adaf8a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 11 12:41:51 2007 -0500
+
+    Export all of gsrtpbin's sdes properties
+
+commit 36133a9f328a46c65e4886c48930619a55df4bc2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 11 12:24:31 2007 -0500
+
+    Have the rtp stream and rtp session hold hard refs to the parent objects
+
+commit 71a67d025bdfd8b987f657380c8a9ddf7ef3357a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 11 12:23:50 2007 -0500
+
+    Remove code that abort if the objects are unrefed in the wrong order
+
+commit 01d85b765fd041d544962a3667a5e1104bef5bf2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 10 22:11:17 2007 -0500
+
+    Add python bindings
+
+commit 2faac7ddbd2b7a899e85265db856d9a1f835170d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 10 19:16:53 2007 -0500
+
+    Dont need to check NULLness before calling g_strdup, it does it for us
+
+commit 0ade909872c95c19eaa924395ace1218c43ec188
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 10 19:15:21 2007 -0500
+
+    Remove useless proto_subtype and proto_profile fields in the candidates
+
+commit a48477633420b8be985b04180ab1402a4e52b035
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 10 19:07:52 2007 -0500
+
+    Make the enum types be generated by glib-mkenums
+
+commit 20223761512b5023d2cf4f4fc3f14a6a92bf6c68
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 10 19:05:44 2007 -0500
+
+    Add method to find the GType of stream transmitter that will be created from a specific transmitters, so the bindings can find which types the GValues should be
+
+commit caa813dea6a58a065e2ac32dbe8a5704243b1358
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 7 17:51:45 2007 -0500
+
+    Make fs_stream_direction_get_type public
+
+commit 9489ee57be3ca7ea68dea584c014ef8503c54d55
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 7 16:47:32 2007 -0500
+
+    Add test for 10-way conference
+
+commit 58ea750c217268ad0917f09086a1c9d6fad181e1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 7 16:34:05 2007 -0500
+
+    Use GST_BOILERPLATE_WITH_INTERFACE
+
+commit 3e6e63d23cdc7ea35d4a9a3febc9aa32f650f81d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 7 16:33:52 2007 -0500
+
+    Add test for changing direction property
+
+commit 89e01da28922cb72c9887ee825d6570fb9de3f95
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 7 15:55:54 2007 -0500
+
+    Test adding/removing remote codecs
+
+commit 73411e75bdc7edaa462c5c8d165e1eb295d4e895
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 7 15:52:11 2007 -0500
+
+    Add tests for various properties
+
+commit f440a2792335285c1ccd5cbd3f2a1b63e6f0516b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 7 15:51:57 2007 -0500
+
+    Getting a conf from a session will get a reference to it
+
+commit 0b16a063d3f2d75316609b8fe6dc358232d9b7ce
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 7 15:39:45 2007 -0500
+
+    Remove lots of useless code from fsrtpparticipant
+
+commit 7e804605f431b7c5c3079e90cf7fc68e75c11248
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 7 13:39:52 2007 -0500
+
+    Emit the send-codec-changed signal, making sure its on the caller's thread
+
+commit 3f1525d4ec3a38aeef2971032154e809749c6469
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 7 13:39:31 2007 -0500
+
+    Implement the getter for current-send-codec
+
+commit 1f6f5f628dc82b0b352acdf774b6b6a96ac15cc8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 7 13:01:59 2007 -0500
+
+    Add a cname property on the fsrtpconference and pass onto the gstrtpbin
+
+commit eb22b6b5c841d26003927ec56d9fca07be9c26f1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 6 19:27:06 2007 -0500
+
+    Add multi-user test
+
+commit 47958a676c193673f60af8413931b834225fbdd6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 6 19:26:51 2007 -0500
+
+    Dont mix particpants and sessions lists...
+
+commit 074234e228a6b185973da81947e3faaeb19a8339
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 6 19:20:04 2007 -0500
+
+    Prepare the test for multiple users
+
+commit 6a788a4cb914339f0cef5270f489b735f5379bd2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 6 19:19:36 2007 -0500
+
+    Return an error if a NULL cname is passed
+
+commit e96c16183569ba479c2547406084b2a710f325e4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 6 18:38:35 2007 -0500
+
+    Add warning when rtpbin asks for unknown PT
+
+commit db30b9b85bf4e08bed3a1b22c540b6efef4c4984
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 6 17:26:46 2007 -0500
+
+    Little simplication in the test
+
+commit 6ae79cf08517f3ab484f1b5d96c6e40cdf61ed5b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 6 16:06:26 2007 -0500
+
+    Use the gst debug stuff everywhere else
+
+commit 203175fe6553cbebb9e919884ef3f6bdb406a951
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 6 16:06:07 2007 -0500
+
+    Only print the buffer count every 10 buffers in test
+
+commit 44d6dbee0ab0999fb715143db8349d96ce5d3eef
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 6 16:01:11 2007 -0500
+
+    Also the the gst debug messaging for the codec negotiation
+
+commit 4167179edb8d96cb99f39544b8ff90621de2b31f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 6 15:53:25 2007 -0500
+
+    Use Gstreamer debug message mecanisms for codec discovery and cache
+
+commit 6b8ee4d8abbfed1ee48efc29b2679da8214deac3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 6 15:12:03 2007 -0500
+
+    Remove comment for set_options_elements
+
+commit ac923514c017ffd6a7784e6811f97077e0a9dd25
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 6 14:19:30 2007 -0500
+
+    Copy the codec into the negotiated list
+
+commit c598100e59c69fb5d5583801eabe2bac913b5ab6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 6 14:13:57 2007 -0500
+
+    Dont unref the send codec bin twice
+
+commit 54a063d0c8f08d60ee294c672a8be0bc81d2b101
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 6 14:11:16 2007 -0500
+
+    Check session existence on new ssrc-cname-association
+
+commit 34f7623079074b95a6604c8a8f03ae95961de3b5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 6 14:09:44 2007 -0500
+
+    Dont leak session ref on new association
+
+commit 819edebec9d0037d800d015dd7e4806dac66ef8a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 6 14:04:25 2007 -0500
+
+    Assert if a participant has no cname
+
+commit 87c2f06565b329a31c307a01092902901013e968
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 6 13:57:56 2007 -0500
+
+    Print the simpleconf id in debug messages
+
+commit 0f08fe284bab8afdfc55326b0e7eba5134cdee2a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 6 13:44:38 2007 -0500
+
+    Implement complete 2 person test
+
+commit 1cb6e39b66f342cddd0c6a61404e7b3b1982e7c3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 6 13:24:13 2007 -0500
+
+    Invert the way pad  the output ghostpad is added to make it more simple
+
+commit fc8311aa23cff3116a05e987e2dd318dd836e497
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 6 13:13:31 2007 -0500
+
+    Unref the substreams with g_object_unref.. not gst_..
+
+commit 89e35114b86c7b421c20c3945add92c5fd8add25
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 6 13:13:02 2007 -0500
+
+    Zero the gstrtpbin pointre if there is an error
+
+commit dba60ce7ba57d361c17a79e54078bbec9f8d8890
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 21:35:40 2007 -0500
+
+    Oops, check for item in get_stream_by_ssrc
+
+commit ae47999322e2ff538b5aaaaf4af3657b7ee3d3c7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 21:32:34 2007 -0500
+
+    Make fs_rtp_session_get_recv_codec_for_pt use its own locking
+
+commit d5e988344540942c6327f1332082935dff9afacb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 21:31:14 2007 -0500
+
+    Make the get_stream_by_ssrc method use its own locking
+
+commit d5636d9ba5f0fb2101e8ba45a83f24955723ac05
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 21:21:05 2007 -0500
+
+    Make the session mutex recursive
+
+commit d2495ca61c6ff3c96747bc3136d90b621270f680
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 20:54:11 2007 -0500
+
+    Save the codec/codebin in a substream
+
+commit dc487f3c035025382110e783f815871765ade393
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 20:53:51 2007 -0500
+
+    Announce a src pad if its made available after the substream creation
+
+commit 90a488e6716a16f29a880eee64f9f89f92346503
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 20:52:39 2007 -0500
+
+    Factor out the announcement of a new src pad on a RtpStream
+
+commit 69cbfe4e92a74980da895ab18b18dd024fff17b3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 20:37:48 2007 -0500
+
+    Only create the outside pad emit the pad blocking signal if there is a codec/codecbin
+
+commit 6547c33ac88fe49666a42659ece303e61d63b57e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 20:37:04 2007 -0500
+
+    Hide the pad blocking when there is no codec bin inside the substream
+
+commit 6eda253a4d99efbb87813bcd9b6e661115f73e00
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 19:46:36 2007 -0500
+
+    Put the ghostpad on the valve in the substream and make sure its active
+
+commit 7dc8cc3c3c30434853a7b1aa812c686b81c022d1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 19:45:11 2007 -0500
+
+    Dont hold the lock while calling add substream and remove the substream from the free list
+
+commit 31ef5806e0a93df59b4c89939d30035416333c43
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 19:44:33 2007 -0500
+
+    Print the unsigned value with %u ...
+
+commit 628ef2f1ae1347fe7aa527eef56ba21950df15f8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 17:43:05 2007 -0500
+
+    transform the new_recv_codec_bin function into a pre-locked one
+
+commit 413ab2fff89ed991a59c1914ebd0a7e627197a2f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 17:23:21 2007 -0500
+
+    Define FsDirection to have flag-like properties
+
+commit a77718e967903ecbd46ebafaf8fe839eae40d541
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 16:31:08 2007 -0500
+
+    Actually do the request/sometimes pad stuff in the right order
+
+commit 745943676f0097eebc532d31735c5c6483255e37
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 16:28:57 2007 -0500
+
+    Expect the sometimes pad to have appeared once the request ones have been requests from rtpbin, instead of using signal
+
+commit 60e1dbff2f7d4e8a4c73fca350aa830bdaa18b45
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 15:54:23 2007 -0500
+
+    Emit the new-negotiated-codecs signal with the right name
+
+commit a0c12be72fe93ba58ca8dbfa645138f3ad8e9b4f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 15:52:33 2007 -0500
+
+    Put the codec bin ghost pads are the correct ends
+
+commit 0e3c3337934b807aff56c91a6a6400cbdc08ba24
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 15:51:59 2007 -0500
+
+    Recognize the first/last elements of the pipeline list in a more correct/obvious way
+
+commit 486343f7a4d156615f7b0b9ba7984743e4c2765c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 15:44:10 2007 -0500
+
+    Oops, emit_by_name doesnt take a separate detail argument
+
+commit 9c67549c403cebc65402bc6aab90f168bc4c0208
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 15:43:44 2007 -0500
+
+    Make the RtpStream's properties refcount more explicit
+
+commit 90b0c3177b15e3bc0cb6aaa06bcb348de8a3fc8b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 15:42:51 2007 -0500
+
+    Stop the streamtransmitter first, to make sure no callbacks are called afterwise
+
+commit fc8e115fa378fe84258d9535967dbe0b8b146c91
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 15:42:14 2007 -0500
+
+    Rename the transmitter callback in the stream to make clear that they are callbacks, not methods
+
+commit 3a32e7753a2716325e269171fb6a631e0ecd670f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 15:41:07 2007 -0500
+
+    Make the rawudp test fail on g_warning and g_critical
+
+commit 784efcbc5b588a0f3d1253626b494cad73b223b6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 15:40:09 2007 -0500
+
+    Pass the pad name to the _new_ghost_pad function (not the direction..)
+
+commit a2e457bff0edfb50c9264f2c77b72bed00393991
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 5 15:39:36 2007 -0500
+
+    Make the error message clearer
+
+commit 8df7cc46e714bf4053f4661b92133c3381070097
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 4 21:36:59 2007 -0500
+
+    Only verify the old codec associations if they exist
+
+commit 12bb75eff191670452be796ff17963591e480c61
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 4 21:34:52 2007 -0500
+
+    Our special errors should be of type element
+
+commit 24bad75933a3cc7d617da2894dcb5a2ed836658a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 4 21:34:23 2007 -0500
+
+    Put the doc sections in a more logical order
+
+commit 86b6a883221ad1c8816858824cbb05951c117f9f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 4 19:46:47 2007 -0500
+
+    Remove stray h
+
+commit a07ecde48e2b5367413d670d1f2b9201fdbe39b2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 4 19:09:50 2007 -0500
+
+    Add documentation for special codec ids
+
+commit 9a37efcffff0dbeee0ee95b66efad849ed9d0f9a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 4 19:02:03 2007 -0500
+
+    Make the base class use G_DEFINE_*TYPE
+
+commit dfc755833ee36fb666065741f5bcaef9c29c45df
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 4 18:56:05 2007 -0500
+
+    Use G_DEFINE_TYPE to define the various FsRtp* types
+
+commit ee688737ef7c4a97223641c8fa9ea7a004535f57
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 4 18:45:17 2007 -0500
+
+    Creation/destruction should not take time
+
+commit 4d68ad171af38fe0138f0d161ac26e1978d0a61a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 4 18:25:08 2007 -0500
+
+    Little indentation fix
+
+commit c54d16e3fc3b7eb86055283fa8d841e7b1001662
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 4 18:24:31 2007 -0500
+
+    Add basic object life-cycle test
+
+commit 9462167bfc37bde5b2ba31b59bc2fe8ee1c006ee
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 4 18:24:12 2007 -0500
+
+    Break in switch
+
+commit b5f98aa2a590aa8e9a703d7e9347742d0693e7b3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 4 18:23:30 2007 -0500
+
+    The rtp muxer is called rtpmux
+
+commit 79863d0cd96003c32e1d76eb8486ee5fe1803797
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 4 18:23:11 2007 -0500
+
+    Lock the object, not the list..
+
+commit abc3a075c21f3084b87ee033d55970ca8734c55c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 4 18:18:53 2007 -0500
+
+    constructed method does not need to chain up
+
+commit 486a44481368fa14e1471a9f819defc9d7c32685
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 4 18:18:27 2007 -0500
+
+    Put the right parent for FsRtpSession
+
+commit 56bc9c689c94b39a785125162f3f471c5c079c1d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 4 17:45:43 2007 -0500
+
+    Add beginning of fsrtpconference tests
+
+commit 38ec1ba4e7c497be098d81cdbc26e140f99fce9e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 4 17:43:39 2007 -0500
+
+    Fix little indentation error
+
+commit 39d80efdc4624385adc4ac80c43ab8f662758416
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 4 17:17:29 2007 -0500
+
+    Correctly report substream async errors
+
+commit 03042bad0944a326220633877d6cfd81b00cd55a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 4 16:31:58 2007 -0500
+
+    Add a stream property to the substream
+
+commit 21d44d385d0763dfc3d34e18f0dac9fe06b0db6b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 4 16:30:43 2007 -0500
+
+    Make the header file match the code
+
+commit 6ea7f4cdfd6a74a5d6e75e8bb7984a177680f00c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 4 15:25:31 2007 -0500
+
+    Implement associating the substream with a stream based on the cname
+
+commit 46c5f983761d45e7b26345afbb23ec62e6544e87
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 4 14:38:01 2007 -0500
+
+    Dispatch the new ssrc-cname association signal
+
+commit 17f60e01b7bccb1b42564962b1560ccbe061f967
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 4 14:31:45 2007 -0500
+
+    Make clear that pad_added and request_pt_map are callbacks, not methods
+
+commit 0ff5bae869a869cb44a2ff00b1d05b20a1520ccb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 3 14:45:41 2007 -0500
+
+    Make sure there is only one participant with a specific cname in a conference
+
+commit 41b318a57cd035983396df8cab224aa7aa8d550a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 3 14:36:19 2007 -0500
+
+    Add a GError** to the new_participant method
+
+commit d43cd4a9354eebb6dffc22ecbfdb7f76e16e9d1d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 3 14:31:50 2007 -0500
+
+    Implement changing the recv codec bin and simplify its creation a bit
+
+commit bcc52dd1e24ef8f3979e517fc215deac3eec8be1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 3 13:54:51 2007 -0500
+
+    Fix copy-paste error in the session send blocked pad callback
+
+commit beca04ceca0795acb5ea6066f26fa1d14895ada9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 3 13:46:41 2007 -0500
+
+    Invalidate the substream
+
+commit 601b4884a289772950ed4bd122e67b4c27551e81
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 3 13:30:44 2007 -0500
+
+    Add function to rtp substream to start the process of changing the codec
+
+commit f9c6dfb47bc69314c4053693a93b846eee924683
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 3 13:23:18 2007 -0500
+
+    Clearly explain what the blocking id is for
+
+commit 705084c438c2d1e208bcc31f00b8b22e4422edd9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 3 13:07:30 2007 -0500
+
+    Protect the list of substreams in a stream with the session lock
+
+commit 061eb1efbeb3ce3b9b965a8526d883f2b9e5ff05
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 3 12:27:40 2007 -0500
+
+    Use the Rtp Session lock for the substreams too
+
+commit 4437942b6f31c63548426a3382901a01c00e8d94
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 3 12:23:14 2007 -0500
+
+    Make the RTP session mutex puiblic
+
+commit b840009230a0ac937543ea5926d2dd0fec33f587
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 3 12:09:59 2007 -0500
+
+    Make clear that the codec in the substream is also protected by the mutex
+
+commit adc7210b4555f138aa8ed0d59804d7e65d472123
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 3 11:37:31 2007 -0500
+
+    Simplify the set_send_codec code a little
+
+commit 14de2737e8933abafb071fc36bc476fd371d35c8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 3 11:27:06 2007 -0500
+
+    Stop and dispose of the send codec bin
+
+commit 8d248b86a54c8fc6f04bb630014bdcfa6accc93d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 3 11:24:40 2007 -0500
+
+    Add a capsfilter after the send codec bin (to set the codec parameters from the negotiation)
+
+commit 062179b9c8cca2e2f926d4177c40645bb171002a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 30 20:09:39 2007 -0500
+
+    Drop buffers received from the old payload type and only drop the pad probe when a buffer of the right type is received
+
+commit 4afb96ced21a1134a52eefe43661345cd822af22
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 30 19:49:20 2007 -0500
+
+    Implement changing the send codec dynamically
+
+commit dd6e86c1281d91d827cc37213da5348c6b0e198a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 30 18:34:04 2007 -0500
+
+    Add already-locked version of selected_send_codec
+
+commit 79ac9ccd98ca425eaf8ddf928dc7cc4f80f0793f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 30 18:09:39 2007 -0500
+
+    Improve the documentation of some functions, make it clear that the src-pad-added signal is called on the streaming thread
+
+commit ced146eee36ff70e6fb44be5b217c4d30ddba950
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 30 18:07:34 2007 -0500
+
+    Use the proper locking wen accessing the codec bin in the substream
+
+commit 8c03042d52e2f0c6898f12a56658de7b4058f47d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 30 18:00:05 2007 -0500
+
+    Add some documentation to the private methods of FsRtpSession
+
+commit a0acd12b4b2bc4426b8d593b9da2e59747057ba5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 30 16:19:04 2007 -0500
+
+    Look at the substreams to know if a stream already is associated with a ssrc
+
+commit b15c36263a6360d15fbe05d5210260c9f172df03
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 30 16:09:49 2007 -0500
+
+    Add the substream to the stream, save the current codec inside the substream,
+
+commit fc1d0734942e1f3c8c3e5e3946899a2ea26a96c3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 30 15:30:15 2007 -0500
+
+    Add a pointer to the session into the substream
+
+commit ec7919a4ae0596ef76f240d987ce1fb3b20b5a60
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 30 14:45:43 2007 -0500
+
+    Remove useless id property on the FsStream
+
+commit 4b771371a85c603a43c0ff4ea2df8ce899661813
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 29 19:33:55 2007 -0500
+
+    Fix typo in documentation
+
+commit d5cb6e39874d00d87209ec7463bbb15a55f73b45
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 29 19:11:24 2007 -0500
+
+    Re-factor the creation of the send codec bin to make it more atomic, and separate it from the creation of the recv codec bin
+
+commit 900fd1f360369c0aa95fb0aeb7fd2671c2848c1e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 29 19:10:38 2007 -0500
+
+    Oops, the negociatiated_codec_associations hashtable contains associations, not pure codecs
+
+commit d67103613387c3a2b9e3fdafdff6153089db985d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 29 17:59:06 2007 -0500
+
+    Use the requested send codec if its valid
+
+commit 0eac216d2abd845efc8d16e2c02a360daf46f8f6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 29 17:54:32 2007 -0500
+
+    Save the codec requested by set_send_codec
+
+commit 2ea8fb1a3627f263c86fdba31a98324b571023af
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 29 17:17:28 2007 -0500
+
+    Build the send codec bin, changing it is not handled yet
+
+commit 16f71b452bfdbdc350b00940f48c3fa7457ba4c4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 29 17:17:04 2007 -0500
+
+    Only dispose of the blueprints once all of the session elements have been destroyed
+
+commit 209f0628912945e21e66dbc3e0af6fcec47be78f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 29 17:16:12 2007 -0500
+
+    The error is unknown_codec, not invalid_codec
+
+commit c574bf8e59f7ea3f0c04d301fb4a23cfad968aad
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 28 18:11:06 2007 -0500
+
+    Make sure the reception of unknown codecs is reported
+
+commit b5e502b672e8e843974bd5419b60886bd034cc4c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 28 18:10:43 2007 -0500
+
+    Add new error code to report the reception of a unknown codec
+
+commit 6244cef64811201f7ad101c95df9ed77381136a3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 28 18:04:30 2007 -0500
+
+    Add a mutex to the FsRtpSubStream and use it to protect the codec bin
+
+commit 95ff5e20c616199e1ae2c3d39f9157a37f4fa3a8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 28 18:04:11 2007 -0500
+
+    Rename the lock macros to FS_RTP_SESSION* to clearly reflect that they are for the rtp session object
+
+commit b97ef9f3a5bb6513f72cdb44046e5a6cace21fe8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 28 17:10:50 2007 -0500
+
+    Create/link codec bin when a new recv codec is received
+
+commit 9d1a7861e2c7bd1908c0cd222303d06ef2654248
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 28 16:57:21 2007 -0500
+
+    Add function to add a codec bin to a substream
+
+commit bb6e8d33a92aa57e8105f3ca52ecc801d5fad32d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 28 16:19:37 2007 -0500
+
+    Add function to create a new codec bin from the negotiated codecs
+
+commit 3fb2062541dc91fc7783546984ae0ad5cd5a2b1b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 28 16:07:39 2007 -0500
+
+    Import improved version of create_codec_bin
+
+commit ede3e2b313cc67b78a73754b06b5273799cd2c13
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 28 15:13:38 2007 -0500
+
+    Make sure we stop the elements sink->source when stopping streams
+
+commit 2c21af75ce56373084dd579c1d8e29aea9a0c713
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 28 14:49:08 2007 -0500
+
+    Stop the src/sink elements before removing/unlinking them
+
+commit e628afd666d02095d34499f3d463cb9d1985d707
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 28 14:40:59 2007 -0500
+
+    Correct the copyright headers everywhere to make them LGPL v2.1 or later
+
+commit 0eb443bc5bba557e6bbba8aeb0dacf14db18124d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 28 14:06:30 2007 -0500
+
+    Make the FsRtpSubStream into a GObject of its own in its own file
+
+commit 62e68b7ca32d1963c87b0cb32fdb09642e2fc7dd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 28 14:05:59 2007 -0500
+
+    Fix fsrtpsession headers and pass the right type to the GET_PRIVATE macro
+
+commit df02f7676e7666810b6b4a859d5ed1beaa9fca9a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 22:29:13 2007 -0500
+
+    Implement codec negotiation
+
+commit 6ecec343eed691b9295c3886699e7c196a451e65
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 22:28:57 2007 -0500
+
+    Add new error for failed negotiation
+
+commit 53bb8440d30faf0958c81e088a255f26cfadefd8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 22:10:32 2007 -0500
+
+    The local and negotiated codec lists have their own copies of the codecs
+
+commit 512dd2827aab5a0668e09f1bea4ec9275ba2a70e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 22:08:31 2007 -0500
+
+    Generate local codecs
+
+commit eed9cdf420ef882a796d9f8e9a233ded25c9becb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 22:03:47 2007 -0500
+
+    Use the new function names for the codec discovery tests
+
+commit 7cce3c2844460cd9703ffd82981e41f24b8c0440
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 21:53:01 2007 -0500
+
+    Validate the codec configurations
+
+commit 49acd3fc71c2187f8db33cff8038ddc332b4b67e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 21:52:10 2007 -0500
+
+    Import the copyright attributions for the codec discovery stuff from fs1
+
+commit 30e54911ccee6a415d90867a75418a1326e9bd9b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 21:50:43 2007 -0500
+
+    Refuse any invalid codecs
+
+commit 44c425d59e39290b08e2f5b732fbb0aae355f98a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 21:44:54 2007 -0500
+
+    Replace the GPLv2 with the correct LGPLv2.1
+
+commit dcf3bd48bf6a8dce138ad9af4930c6871dabb790
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 21:19:40 2007 -0500
+
+    Implement request_pt_map
+
+commit a57bcb37127d8f2e014f2beaa8196a05f85f11a3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 21:14:37 2007 -0500
+
+    Load the blueprints when creating a new session and unload then on session disposal
+
+commit f59f2d6e0bfda0d8a6069d57aee373a1ce6a7e25
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 21:14:12 2007 -0500
+
+    Rename load/unload_codecs to fs_rtp_blueprints_get/unref
+
+commit e730077c966a15cbbf45364b7468cfd4b75b9c60
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 21:02:23 2007 -0500
+
+    Clarify locking for negotiated codecs
+
+commit 3e4928bf685d99720d7b878e52e2024ba29fed5a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 20:58:22 2007 -0500
+
+    Add remote_codecs implementation to the FsRtpStream
+
+commit 0f6f6183df37d462a17958650f6d16c96a661211
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 20:49:46 2007 -0500
+
+    Implement the various codec lists properties of FsRtpSession
+
+commit 855d27cb39e05a766f0100cf89e7ef8160d84c54
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 20:13:44 2007 -0500
+
+    Free the free substreams when the session dies
+
+commit c626bf144a4646373e3d0e58b477f3bde2e55a5e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 19:05:49 2007 -0500
+
+    Add the FsRtpSubStream struct, use it to implement session_new_recv_pad
+
+commit c7793543fe22cf9f0a938300db94007b9f69533e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 18:18:57 2007 -0500
+
+    The ssrc has to be 32bit (lets make sure it is)
+
+commit f3176271e0bc096b0e4a5c9f51b9b0048299939c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 18:16:28 2007 -0500
+
+    Oops, fs-rtp-session.h included itself
+
+commit 8fa9ed522ed94c83d0fbf1dc6dac50b157cddba4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 18:15:44 2007 -0500
+
+    Unref the session after using it
+
+commit a3af56e7b6246da759c38e3a50d4c747f43d25ce
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 17:35:06 2007 -0500
+
+    Remove preload_recv_codec, this API is probably impossible to implement on the stream
+
+commit 4e689ac2cb7d2f6b8a90b902fdb2b2abb6343e35
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 17:02:25 2007 -0500
+
+    Add a list of the rtpstreams to the rtpsession
+
+commit efe905519b48c80689ce7eac5950f09b40c9b053
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 16:59:43 2007 -0500
+
+    New src pads from the rtpbin are given to the session pending the ssrc-cname association
+
+commit aef9f2858cf56ffc21e9e8757e28828816575268
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 16:58:03 2007 -0500
+
+    Store the ssrc into the "id" property of a rtp stream
+
+commit 541276fb2692fd53cb4a59fd60e6a3bc21123f6d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 16:56:52 2007 -0500
+
+    Make fsrtpstream's constructed chain up
+
+commit 30d9a83f1e51bfd2b558b7352a4e37457ec9d6d4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 16:56:05 2007 -0500
+
+    Make the rtpsession ID into a public member so it can be used to find the session
+
+commit 7651713d5c759cb2ae9d9c90370f8511ee1348ed
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 27 14:09:05 2007 -0500
+
+    Add mutex to the session
+
+commit 45f55a64433a905ef66d38faa406116d4ee8029e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 26 19:42:08 2007 -0500
+
+    Add option to codec negotiation to prefer local codec ids
+
+commit 37e23884b68d1c0c699e41b881c72f11d9987526
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 26 19:21:52 2007 -0500
+
+    Import for the codec negotiation code from Farsight 1
+
+commit 3ed242b4705e2fb1bf819ea28257b697e12a53ec
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 23 14:44:33 2007 -0500
+
+    Import the local codec list generation code from Farsight 1
+
+commit 2fc9a348dbf4774b251383824f07addeb76e3ab7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 23 14:43:49 2007 -0500
+
+    Fix header comment to be more accurate (codec discovery is not an object)
+
+commit d48b8052571b88d338a1a1a6477a4a68fc372772
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 22 20:55:47 2007 -0500
+
+    Make clear that codec_blueprint_destroy is only exported for the caching
+
+commit d31af1ca6db39a41be510627353a0347e7d7798d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 22 20:52:52 2007 -0500
+
+    Add test program for codec discovery (its a manual test for now)
+
+commit 2a29314c5a30e08398316e0846b8febbc970e5f3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 22 20:51:43 2007 -0500
+
+    Re-enable the cache and update the version number
+
+commit 9e794e6f2acfa43d3d1aa83822f8c7cbad2ca6d3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 22 20:50:47 2007 -0500
+
+    Remove has_unique and sink/src content from the blueprint, its not no longer dependant on the config file
+
+commit 3752f9f97deb6c6fb788156f0d4ac2374c2db80a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 22 20:48:40 2007 -0500
+
+    Make load_codecs return the list of codecs (to isolate this module somehow)
+
+commit 1f5eac5e465f14eb673f2cb3de75ab87ff7e6659
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 22 20:47:05 2007 -0500
+
+    Make the list of elements factories in blueprints into list of lists
+    These are ordered by preference (and can be fed directly to fsselector)
+
+commit ad1c08c22cf14c669b6c319ad3efb50effdb29e9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 22 20:38:34 2007 -0500
+
+    Make ENABLE_DEBUG_CAPS  into a ifdef (and dont require a prototype for debug_codec_cap_list
+
+commit 674840700146092830e73e75fe8e2734db4c5978
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 21 15:24:58 2007 -0500
+
+    Make it clear that the parameters for new stream are for the stream transmitter
+
+commit 0936ef5aca92a2742cf4c47d19915f185d7c48a5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 20 19:41:27 2007 -0500
+
+    Don't save the cache if there is an error
+
+commit 7edf0c1e70ab4356eea1a3235eb3999ecbec3a7f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 20 19:36:26 2007 -0500
+
+    Define GST_MAJORMINOR and HOST_CPU in the configure.ac (like gst)
+
+commit c12142de68e3092efd63fc1300219bde3b292dd3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 20 16:34:01 2007 -0500
+
+    Make load_codecs() return a GError
+
+commit ac21a0f235e36a69bce2cf82350ec8730efa6894
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 20 16:00:13 2007 -0500
+
+    Oops, the session should be a session, not a participant
+
+commit b702c257a797ed169027cc9289740b4bd1ee3e37
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 20 15:10:54 2007 -0500
+
+    Make load_codecs_cache return a GError
+
+commit 90ef008b54d81c08b62e5b380ec777307cad08f1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 20 14:49:25 2007 -0500
+
+    Make the codec cache into its own separate module
+
+commit 7e36e2ffb28871248282b331c900c7e237028f7d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 20 14:28:41 2007 -0500
+
+    Import the codec discovery and caching stuff from Farsight 1
+
+commit e7e686936868547a41a6880d76ea1eec1737200e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 20 14:28:11 2007 -0500
+
+    Add defines for codec id (and allow disabling codecs)
+
+commit 75b1b85251816b3eb06d9a4e351b9b5c55e45788
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 20 14:21:59 2007 -0500
+
+    Print warnings if the state change fails when removing the udpsrc elements
+
+commit 9262bd83b2590e1a77f5d9cc0986171b755c0ca2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 19 20:00:42 2007 -0500
+
+    Make sure the non-forced rawudp ports are always continuguous for different components
+
+commit df9ddc6de50f342c6a0dac78af2119e92246f3e8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 19 19:59:38 2007 -0500
+
+    Make the test suite code a bit cleaner
+
+commit 81d0c9493a2e8c7116dfe1894073de68b95d01f8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 19 18:03:40 2007 -0500
+
+    Add a RTP muxer at object construction time
+
+commit 6999e66a87746db753fd58c27ddc8c0edc770dd5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 19 18:01:58 2007 -0500
+
+    Clarify that the transmitter's sink should not do the async thing
+
+commit 9a8d66d3c4445a37a7da08627b9482985f705718
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 19 18:00:36 2007 -0500
+
+    Set the transmitter elements to the same state as the conference
+
+commit 6e79a19480d7125fc96a24c18f4d59c42d1906a4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 19 17:28:37 2007 -0500
+
+    Remove useless entry
+
+commit 15ba998bf35421ba96076d12cdd7b377f0031bd4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 19 17:01:58 2007 -0500
+
+    Use g_timeout_add_full (not the seconds version, because its broken, gnome bug #448943)
+
+commit dd2bc7b8b24b42aa589faab2470183dfab25f4d4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 19 16:00:30 2007 -0500
+
+    Indentation typo
+
+commit e3f618420fa5f47680f090a7f60a0369550dca7d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 19 15:59:33 2007 -0500
+
+    Return FsRtpStream construction errors
+
+commit 797bc9a398bfa9d60d5079f70871907edfe34084
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 19 15:52:18 2007 -0500
+
+    Integrate transmitters into the FsRtpSession
+
+commit f7b29a5c0045534ef310957baa87fb72f8bd5586
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 19 14:43:30 2007 -0500
+
+    Pass the stream transmitter parameters to fs_session_new_stream()
+
+commit 47dce50cff4942e73e75b6adfbcfc5e43c19c43d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 19 12:32:20 2007 -0500
+
+    Implement the components property on the rawudp transmitter and make pads src%d and sink%d
+
+commit 2f5725233f6f2ce7921efe483df230620ac064bb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 19 12:31:03 2007 -0500
+
+    Add a parameter to the _new() function to specify the number of parameters
+
+commit 5034992d06e696aef384b5604630039acb5c7fe5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 19 12:04:29 2007 -0500
+
+    Specify the number of components on a transmitter with a construct-only property
+
+commit 7b85263eaf552cb22e65ab55421d52c914123e92
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 19 11:56:33 2007 -0500
+
+    Add variable args version of fs_plugin_create
+
+commit d98b5864dc87b63e2ab154dd4a64a30b9c75ae7d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 19 01:42:05 2007 -0500
+
+    Verify that component_id is not 0 in add_remote_candidate
+
+commit 6bbc4fe175006d551707dd0277b443fc22c05995
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 19 01:30:37 2007 -0500
+
+    Change the _build() function to use any number of components
+
+commit c2b79440ecf725214ebd3e4c6bc939aca6e5555e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 19 01:03:33 2007 -0500
+
+    Transform the stun_recv_id and stun_timeout_id into arrays too
+
+commit 5d071b9c3e1fbf01a31d0e33129fa133497c5983
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 19 00:55:57 2007 -0500
+
+    Do the same for active candidates
+
+commit 1b55dda6b26e33531f3f53c447f9f2911cbaa054
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 19 00:43:32 2007 -0500
+
+    Make the stun candidates into an array too
+
+commit 1512e1089c611c15a21cd84d07a7637212bd4782
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 19 00:40:45 2007 -0500
+
+    Transform local_forced_candidate into an array
+
+commit a74a7ab93e4f304b7637c7e1b50c7e80414c3e71
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 18 19:34:02 2007 -0500
+
+    Make remote_candidates into an array too
+
+commit e2deaf17737265cea13c585404ab46fa22688f88
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 18 19:19:09 2007 -0500
+
+    Replace rtp/rtcp_udpport pointers with a single array
+
+commit 641ce612efe9b3ff76e2adec79f9f2f86695ad86
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 18 19:00:02 2007 -0500
+
+    Make udpports into a table too (one per component)
+
+commit ddecf7f3351ed5b715c52ef56697ff068d961947
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 18 18:55:09 2007 -0500
+
+    Also have the sink tees into an array, one per component
+
+commit 02a235bb27d6775cc7b835bcb914e22f2f33923f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 18 18:49:12 2007 -0500
+
+    Make src funnels into a table (one per component)
+
+commit 5bd8a02b78f0d1ecb4d4db0abccf86d37bc77b15
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 18 18:38:13 2007 -0500
+
+    Add variable for the number of components
+
+commit 67711f864d38cf852abfd7a008cfe519fbdacedc
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 18 18:36:53 2007 -0500
+
+    Remove evil trailing whitespace
+
+commit 7dd4ecd031884a1d0fc425364c516507296e5d8b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 18 18:34:58 2007 -0500
+
+    Add test for forced local candidates
+
+commit ddbd6e60266925f53666de56536e882328d98c1a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 18 18:34:38 2007 -0500
+
+    Rename _finish_candidate_generation() to _no_stun() and have unique ids for forced candidates
+
+commit b2c2c9052aacc8462cc5d2e323a7ed585e8f46bd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 18 18:33:26 2007 -0500
+
+    Make the _finish_..() function only used when there is no stun, otherwise do the differnet steps directly
+
+commit 186c00b9965319033a1a087d1e2604742296b17f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 18 18:31:33 2007 -0500
+
+    Use enum for rtp/rtcp components for forced local candidates, don't overwrite rtp candidate with rtcp one
+
+commit e5191963208f88e8b40449688cf7a32c6767d55f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 18 04:26:34 2007 -0500
+
+    Add tests for STUN in the rawudp transmitter
+
+commit d9bc0cd80b091e34094a4ca8ca9d6404a7b4fdba
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 18 04:26:04 2007 -0500
+
+    Set the STUN timeout property correctly
+
+commit 0c40a56d0694cd6fa98edadc565e33a826afa69d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 18 04:23:34 2007 -0500
+
+    Remove src from the bin before stopping it (before of the lost states)
+
+commit 2f05a0349f4897257ce5d38525f6ccf58231e4c5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 18 03:16:19 2007 -0500
+
+    Add STUN timeout, protect more variables with the mutex
+
+commit aa4a854cab1c2a0ff36222e2561ef43eda762b88
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 18 03:15:34 2007 -0500
+
+    Add a function to emit async errors from the stream transmitters
+
+commit 367e53fdf84fc87374cef5cd301a6d69fd8511ec
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 16 19:43:07 2007 -0500
+
+    Replace g_debug with a DEBUG macro that is disabled by default
+
+commit 71490af3a0ac33f4dad299d8d645a29a51dd95a1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 16 19:42:47 2007 -0500
+
+    Remove useless debug messages
+
+commit c6234247d4a3e16c05d6adf2db73187fcaf5c876
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 16 19:42:32 2007 -0500
+
+    Little documentation fixes
+
+commit 454c94e0db17e2c01e171f017a62c468919b9be3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 16 19:42:13 2007 -0500
+
+    Transform FS_COMPONENT_* into an enum
+
+commit cb261ab95d2dffe731313b31871cad218978d080
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 16 19:31:38 2007 -0500
+
+    De-invert the copy/destroy function of FsCodec and FsCandidate
+
+commit b48c36f42abae131fd1a773a020d024aab3c89d1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 16 19:26:21 2007 -0500
+
+    Default the rtcp port to rtp port + 1, pass the right parameters to various functions, store pointers to tee and funnel in UdpPort for convenience
+
+commit feb1d53d74c5f06a8c244c07d05a36667cf512bb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 16 19:23:08 2007 -0500
+
+    Instead of putting a queue before the sink, just make do async=TRUE
+
+commit 33a08c8e0ecf35fde5b80c1de1bd34ede2a38f40
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 16 19:21:33 2007 -0500
+
+    Complete unit RawUdp transmitter unit test for local interface discovery mode
+
+commit c1e1150039b14f188d043d9f216eae23f81514c7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 16 17:11:18 2007 -0500
+
+    Oops, call gst_pad_push, not chain and pass the chain func to GST_DEBUG_FUNCPTR
+
+commit 493b62da9f7ea3edfa7423271306f68af2f32805
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 16 15:48:59 2007 -0500
+
+    Add the local candidates back and connect all the signals on the FsRawUdpStreamTransmitter
+
+commit 17915ab0ecb77bb0e3324a6a62929ed667aa481b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 16 15:48:25 2007 -0500
+
+    Emit the new-active-candidate-pair signal from FsRawUdpStreamTransmitter
+
+commit 96b0c4c2d93f0ddab74f143921d41f91012faeee
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 16 14:32:11 2007 -0500
+
+    Add beggining of test that runs the transmitter
+
+commit 8bf443473fe9d3b4916ee7fd940e0613cb485059
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 16 14:31:23 2007 -0500
+
+    Add descritive messages to non-existant transmiter test
+
+commit 0560bb508939e28c33ad204c35c8005d5d5ed0e0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 16 14:23:35 2007 -0500
+
+    Rename ourpad to the slightly more expressive elempad, connect the queue in the right direction
+
+commit 0771789c6a02180f076f114b1ec497446c54182b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 16 14:22:33 2007 -0500
+
+    Use g_set_error instead of g_error_new (forgotten in one place)
+
+commit 084632476cea558d01e3e4b7abbc04a821b16df0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 16 14:20:31 2007 -0500
+
+    Install the stun-port prop with the correct prop-id, free the stun_ip before replacing it, dont zero-out the error pointer and and return an error if the object can't be created
+
+commit 11254e6dd7e0e9b35bf47ad03cbf75f0a21e218e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 16 14:19:09 2007 -0500
+
+    Derive the FsStreamTransmitter from its parent not its class and vice-versa
+
+commit 2bd6ebd721a854865806331c84ee150bd1ef1813
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 16 14:18:12 2007 -0500
+
+    Pass the error flags when compiling the check tests
+
+commit 9872e58437931ba74161215a74c362f5ec5a8cde
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 16 14:17:35 2007 -0500
+
+    Activate the request pad on the funnel when its added
+
+commit ea5ea826f415125e075794ff34b429677831d518
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 16 12:12:22 2007 -0500
+
+    Dont link add/link fakesrc at pipeline creation
+
+commit a74b5153bc54779a24099cfd6513d4d3cf378d0a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 15 20:07:04 2007 -0500
+
+    Add first unit tests for the transmitters
+
+commit 780b3e940f39dcfcfc2044c4179370b7abe39096
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 15 20:05:46 2007 -0500
+
+    Create the bins using gst_bin_new() and have the FsRawUdpTransmitter ref them
+
+commit 05e5401871a1547e4429073f56656b6c5017f4f6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 15 20:04:43 2007 -0500
+
+    Fix the plugin loading code again
+
+commit ee3c94db7897507d4930a6c79a10117f2d6cb618
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 15 18:43:07 2007 -0500
+
+    Declare the rawudp transmitter as a plugin
+
+commit 577a5cab7ef10a8e1e19de948896d93d1d8503f8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 15 18:42:50 2007 -0500
+
+    Dont use a variable name as a macro argument...
+
+commit a057eeb457b3d90c866e438a8d4b79c9b18e1e1e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 15 18:30:13 2007 -0500
+
+    Build the fs-interfaces file into the transmitter
+
+commit 56642fc7fa12ed0c8d379e0a2020cf24b0c32b67
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 15 18:25:34 2007 -0500
+
+    Merge FS_STREAM_ERROR and FS_SESSION_ERROR in FS_ERROR (they are the same errors)
+
+commit d62bd068621209ff027a4d8eabe7376ecb52fce1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 15 18:14:24 2007 -0500
+
+    Return errors properly when there is problem while loading a transmitter plugin
+
+commit 3dc5bcf1c431767bf05bfa8e25bfedab5615f46f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 15 16:18:29 2007 -0500
+
+    Add queue to RTP sink in transmitter
+
+commit c6752f67e7f01336a8ac6d1ccacbda3fb08d69fe
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 15 15:27:33 2007 -0500
+
+    Generate local candidates from user request, STUN or by scanning the available interfaces
+
+commit fd875e4de5fabec03432ee916b92e9845d12dcce
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 15 14:58:57 2007 -0500
+
+    Add function to return the port actually used by a UdpPort
+
+commit bd0be86c94b2f8f480778eb4fba8891d3d4554a2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 15 12:49:27 2007 -0500
+
+    Replace UdpStream with UdpPorts in FsRawUdpStreamTransmitter
+
+commit 551b02f22206dd0521522eea45ba5dbd01fede0b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 15 12:45:11 2007 -0500
+
+    Replace the single UdpStream by two UdpPort structs (makes the code much more clean)
+
+commit fe091ea39d7f705fafe9b2c7a4efdb4c3b7e547c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 15 12:44:09 2007 -0500
+
+    Add constants to define the components ids 1 and 2 as RTP/RTCP as in ICE-19
+
+commit c98e347dc3b6900e2bc8999bc7afecccbebcb93b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 14 19:46:52 2007 -0500
+
+    Reformat the interfaces finding code according to Fs2 standards
+
+commit 2b809654c6e23b1196507eba558c8afe5c6168a1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 14 19:41:05 2007 -0500
+
+    Import interface finding code from Farsight1
+
+commit 8e28c7ea9573f0489ad7df90aeefb2fa01073a58
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 14 14:19:11 2007 -0500
+
+    Add stun timeout for the rawudp transmitter
+
+commit 6394d06b3c934df14295f310ac99780612396386
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 13 21:39:31 2007 -0500
+
+    Use GError to report non-implementedness from the transmitter classes too
+
+commit d2bee87083c4b67439b9c9575052215ef307b718
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 13 21:34:04 2007 -0500
+
+    Report method non-implementedness as a GError in FsStream
+
+commit ce8b3f5b02bb0f7f10d6cf16e3ba419a7a693fbd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 13 21:31:37 2007 -0500
+
+    Report method non-implementedness as a GError in FsStream
+
+commit b330daf94cf8553d9b237aba9c81e6b11d483dda
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 13 20:19:07 2007 -0500
+
+    Fix indentation
+
+commit 633920d47b70bd132b6a44579b04df9a99bfecb8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 13 19:37:31 2007 -0500
+
+    Implement sending property
+
+commit e18340fd8e46dbfc833618a7f991a7d298712780
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 13 19:32:34 2007 -0500
+
+    Implement remote candidates
+
+commit 0f236844c0d5147fed68b7b28f9a3a1ff7f8aa88
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 13 19:32:19 2007 -0500
+
+    Add functions to add and remove destinations from the multiudpsink
+
+commit 248c9b2b8c0c72d25ed6721de9d890ea2fa585c3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 13 19:11:57 2007 -0500
+
+    Fix indentation
+
+commit b035cac6fb12e9c96a267adc7fe1a5dc1bac028c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 13 19:05:28 2007 -0500
+
+    Call the build function after the RawUdpStreamTransmitter has been created
+
+commit 8631533842ba7a431bb028099bb55525355622fa
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 13 19:04:19 2007 -0500
+
+    Use g_set_error instead of g_error_new when appropriate
+
+commit 8849591a42f8702751342139197c7a8202d04916
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 13 18:58:15 2007 -0500
+
+    Don't set the errors to NULL without checking them
+
+commit f114444e064e82ff72646be15450102fcfe2dbef
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 13 18:19:56 2007 -0500
+
+    Add UdpStream to the FsRawUdpStreamTransmitter
+
+commit e5c2cf930f528422849b535d471023817163cd34
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 13 18:16:36 2007 -0500
+
+    Add a pointer to the parent rawudptransmiter to the rawudpstreamtransmitter
+
+commit 28023a5b2e0de49656b5360568e334a73ca0f1ed
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 13 17:06:39 2007 -0500
+
+    Add implementation of the UdpStream sub-object
+
+commit 059844ce8d283b54892277e20631f051baa4d5dd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 13 17:02:53 2007 -0500
+
+    Specify components 1/2 as RTP/RTCP
+
+commit c2882dc18672d59d60a14bfd5fe09212daaf93d5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 13 17:00:51 2007 -0500
+
+    Add network error for the stream
+
+commit 52579af1be9211d5c32ceebb618804838364a6c7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 13 13:38:25 2007 -0500
+
+    Implement the prefered-local-candidates property in the rawudp stream transmitter
+
+commit 4d87bcbc14c09111e0443885dce404f5d20969d0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 13 13:33:01 2007 -0500
+
+    Add prefered-local-candidates property to the FsStreamTransmitter
+
+commit 917fce0c8ccfed84ad34af5f2f3bf0083cddbd1e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 13 13:19:51 2007 -0500
+
+    Add doc for newer abstract methods
+
+commit 6e16199714db458f0fa15935911d9a6a015a3a4b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 13 12:14:45 2007 -0500
+
+    Add FsCandidateList boxed type
+
+commit 9ce195f575f8d7c5fd9f20a9e583f123c1a5d0b7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 13 11:52:07 2007 -0500
+
+    Implement properties in the rawudp stream transmitter
+
+commit 5f179760b1699e9febc0ed056875f0b882a5c12c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 12 17:45:05 2007 -0500
+
+    Implement new stream transmitter in rawudp
+
+commit 2da54dd9c2ffb7abb27283b6e31b5d9f8547522d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 12 17:26:44 2007 -0500
+
+    Pass parameters when creating a new stream transmitter
+
+commit 40a8b4303cf51ffa31e8e1b9ae74254f6473bd21
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 12 17:06:50 2007 -0500
+
+    Implement remote_candidates_added and select_candidate_pair in FsRtpStream
+
+commit 131b46881cd7bde6524b52b663c1f7f0a98c716a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 12 16:58:11 2007 -0500
+
+    Add fs_stream_transmitter_remote_candidates_added and fs_stream_transmitter_select_candidate_pair
+
+commit ef2873b8598f9a3086b3b9bbfc507fcdb728f49c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 12 16:47:24 2007 -0500
+
+    Add fs_stream_select_candidate_pair function
+
+commit 56e6a09d2d74a545d158c1587b611a95ccd8f15e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 12 16:27:47 2007 -0500
+
+    Add fs_stream_remote_candidates_added
+
+commit 7e767d1dfa3005c202cbc771eb83dad0e3f5dba3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 9 15:24:06 2007 -0500
+
+    Rename native codecs/candidates to local codecs/candidates to match ICE 19
+
+commit a808fdc85597f885edcd3b6128ee55aa7cc91fcf
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 8 20:02:04 2007 -0500
+
+    Create transmitter elements
+
+commit 9fcf9cf518a96f5cf6180fc1f841e922b278a3d9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 8 19:59:46 2007 -0500
+
+    Allow returning an error when constructing a transmitter
+
+commit 36ab671f3ea7445bce44b8e4af18ce68b0207a4c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 8 15:23:48 2007 -0500
+
+    Prioritize local lib when building
+
+commit 523c3d154d16554a42503f81435c4f6fe9ff2744
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 8 15:23:30 2007 -0500
+
+    Ignore .loT files too (some libtool thing)
+
+commit 0910bbaf4e5a33bf2bd70296975ad6a28cbbe321
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 8 15:23:05 2007 -0500
+
+    Add empty implementation of the rawudp transmitter plugin
+
+commit 7c30a826ea0e96c80d6e7e1d010ab347024f20f9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 20:16:46 2007 -0500
+
+    Document object structures and classes
+
+commit a3b6684fa65d119c9a64ba9651dfebdf7a47bd95
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 19:40:26 2007 -0500
+
+    Use the plugin infrastructure for transmitter plugins
+
+commit 6c152e84a91d55bb37b39d5e73b38f49d3fb2c70
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 19:40:13 2007 -0500
+
+    Import simplified version of the Farsight1 plugin infrastructure
+
+commit 1ed280a1335029e5c28401a8b79961882ff289bd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 16:12:13 2007 -0500
+
+    Add RTCP funnel
+
+commit ab541c482f9b6514dfe59027f34eec53b39d6924
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 16:10:58 2007 -0500
+
+    Add RTP funnel
+
+commit d11bd053d2f747cf137a09e2d70c488f8e16a7b9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 15:54:55 2007 -0500
+
+    Fix indentation of fs_rtp_session_class_init
+
+commit cf410ca210d458c902dccd4587b7366a8bb6a72f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 15:48:50 2007 -0500
+
+    Add fsfunnel element
+
+commit 6e181f80f0a2bbce9e2d4f134da8fe047d528ebb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 14:51:57 2007 -0500
+
+    Set the sending property of the stream transmitter based on the requested direction of the FsStream
+
+commit 6ef744781a990f492cff288608eda9c91de63ddf
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 14:48:34 2007 -0500
+
+    Add some documentation
+
+commit dcd8a5e550488f337c9775d97fcbaf615c50a42d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 14:39:32 2007 -0500
+
+    Add fs_stream_emit_error function
+
+commit 692867a282a1d9f9ea8b3ab4b5aadde1ce35ce06
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 14:36:57 2007 -0500
+
+    Only use fs_session_emit_error for locally generated errors, not for error propagation
+
+commit 29c6495893c12f45a770f1e1fddbde485493de66
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 14:26:41 2007 -0500
+
+    Document the Session/Stream error quarks
+
+commit 69945eddd25e89e10c05902c33dff20e26700afc
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 14:19:58 2007 -0500
+
+    Add error related definitions to the documentation
+
+commit ba522619be545b3015c14046c4fdbc30acee0a51
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 14:19:16 2007 -0500
+
+    Rename fs_session_error to fs_session_emit_error and document it
+
+commit 4fc0ee03e42bc7d0df2f68398eda2f95d1ffc341
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 14:18:38 2007 -0500
+
+    Forgot one av->application change
+
+commit bc3bfb4658e5aa98d1758be26105a1b253773ab5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 13:29:34 2007 -0500
+
+    Unref participant and stream transmitters on FsRtpStream dispose
+
+commit 04effecc4ffe0d8479155689fd310bff37dfc407
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 13:28:15 2007 -0500
+
+    Link various signals/functions between the rtp stream and its transmitter
+
+commit 37b35ef578bb04f02f5f5851f98900ce80e39b3a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 13:04:56 2007 -0500
+
+    Make fs_stream_add_remote_candidate return a GErrror
+
+commit fc85d5bd78c6b887544b21e17f0f81c2ce6fbf9c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 12:56:57 2007 -0500
+
+    The property is called stream-transmitter
+
+commit 418eafb702b4f90f002c507f02b76618435c524c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 12:47:18 2007 -0500
+
+    Fix unit test for fs_codec_to_gst_caps
+
+commit 53f1ba712fe3bf511222338e646c769bb0228a7e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 12:46:10 2007 -0500
+
+    Replace media_type AV (which doesn't exist) with application (which does)
+
+commit dcc56530dc8205515d82522fbf862790357c9da7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 12:32:50 2007 -0500
+
+    Add test registry to gitignore
+
+commit c1acb90698bbb029c98edf8bda601cd793446170
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 12:31:54 2007 -0500
+
+    Add unit test for fs_codec_to_gst_caps
+
+commit b237f5cb59f059f78e99a763056371c54afce0d1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 12:31:23 2007 -0500
+
+    Clarify that fs_codec_to_gst_caps produces fixed caps
+
+commit d937795db839a3d9e581e799b417171ffdeb9093
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 12:23:22 2007 -0500
+
+    Free codecs at the end of the fs_codec_copy test
+
+commit a42d86a0205ab38d88155bb8548e9a334ac8ecf1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 12:19:21 2007 -0500
+
+    Add const keyword to proper places in the FsCodec functions
+
+commit 1ebdbb1d080659e586dafdbd26b4f16a6f6c89b1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 7 12:17:15 2007 -0500
+
+    Add fs_codec_to_gst_caps to be base library
+
+commit 3f1578321ae2444e96c4d46ee60aacaad34b9a2d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 18:44:44 2007 -0500
+
+    Add emacs temp files to gitignore
+
+commit 7d66ba4a5dc714d77bf53a77e5fba4b5ad09d54a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 18:24:12 2007 -0500
+
+    Add proper error on the wrong type of participant
+
+commit 48ad9c7c3870e61934e47bc2ef4855e85fc66768
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 18:20:02 2007 -0500
+
+    Add FsStream error enum
+
+commit 9f41e3c4219e30b6db0b537bf6a11890cecbca0b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 18:03:51 2007 -0500
+
+    Improve comment
+
+commit 335e231fb6cd39a7b0499e00be4d39ef5efa6b8e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 17:44:04 2007 -0500
+
+    Add tees for multiple transmitters and link them when the appropriate pads are created
+
+commit 765082ca6be32024db50d11e0865fb7a8eb619f5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 17:40:25 2007 -0500
+
+    Rename fs_rtp_session_link_transmitter to more exact fs_rtp_session_link_network_sink
+
+commit 794fff143fe6366dd1916eaf0b2be83c4ecde900
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 17:38:30 2007 -0500
+
+    Have one one transmitter element for RTP and RTCP and this element will provide 2 pads
+
+commit 0c6882a3f68fad86feba92f9d7ef136a076c016c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 16:39:09 2007 -0500
+
+    Add callback on the apparition of the send_rtp_src_%d sometimes pad on gstrtpbin
+
+commit 552d4cab9fd4721994b3cdeb638c258df93aafce
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 16:04:07 2007 -0500
+
+    Make the FsSession sink pad available from the property
+
+commit ed0d9156a8284007d3d854f097c428bb3effc3bf
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 15:59:24 2007 -0500
+
+    Catch new recv pad in pad-added from GstRtpBin and call the appropriate FsRtpStream method
+
+commit a2c685f058d7cf3ba9f29c7579bc144be6131f77
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 15:29:23 2007 -0500
+
+    Rename fs_rtp_conference_request_pt_map to fs_rtp_conference_rtpbin_request_pt_map
+
+commit 30a88b993253b00f149e8c554bc52de82ae1e914
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 15:21:08 2007 -0500
+
+    Instantiate the send valve and session for FsRtpSession on the constructed method
+
+commit 4188f80fea3b4897b38f577c83c8bdc83143829f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 15:06:07 2007 -0500
+
+    Make session_new return a GError **
+
+commit f3ce40e2ee1da7b174f86b180b60f4c8c5119154
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 15:04:22 2007 -0500
+
+    Define error enum and quark for FsSession
+
+commit ae55c62e979164ad88e1e78a88f930b1e8d0c3c1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 14:15:10 2007 -0500
+
+    Make the GstRtpBin a public member of GstRtpConference
+
+commit 796aeca610338765619b2f1686cedf2f4d627704
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 14:13:40 2007 -0500
+
+    Set the whole RTP conference instead of just of GstRtpBin
+
+commit 63d87657dfe72ec8d1a0c2dd4a7215d297c853a2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 14:08:33 2007 -0500
+
+    Add empty constructor function to FsRtpSession
+
+commit 14a0e4b8cc6b4137de4182bf75cdfd14d27d5e4c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 14:08:15 2007 -0500
+
+    Add unchecked _CAST macros for the RTP plugin
+
+commit 40ca756798eebfae8d1aa4b5fbc81546ccb3c8ac
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 14:02:13 2007 -0500
+
+    Add gstrtpbin property to the FsRtpSession and set it at construct time from the conference
+
+commit 5700a3845ecc16fffd9fc6e09f1766acc87f0065
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 13:35:43 2007 -0500
+
+    Set a unique session id on each session of a conference
+
+commit 50637dd1803d8e91e70985b0e93986a31d4e30d9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 13:14:23 2007 -0500
+
+    Add id property to FsRtpSession
+
+commit c4d74361ad6b3206876b04515a70874363004190
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 13:10:27 2007 -0500
+
+    Add "id" property to FsSession and FsStream
+
+commit ae400956208a77612caffde6071f23058c7a6374
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 13:10:07 2007 -0500
+
+    Base FsBaseConference on GstBin instead of GstElement
+
+commit f360f93ce764f2e29357146ffeae22ed5c30e434
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 12:38:36 2007 -0500
+
+    Put the _CAST and some _get_type into the -sections.txt file
+
+commit 47326ae7a08f33683868a0128ac3fdc8e7218a70
+Merge: 2b30a02... 36f0610...
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 12:20:31 2007 -0500
+
+    Merge commit 'dhansakpublic/rtpbase' into rtpbase2
+
+commit 2b30a0231e4c975dd62bd269eb411fae5c133fc2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 6 12:07:38 2007 -0500
+
+    Add RTCP source/sinks to transmitter
+
+commit 36f06104e8fec605483dc996469b1d7f4022f9d8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 21:10:07 2007 -0500
+
+    Implement request-pt-map signal handler shell
+
+commit 8e407bd503002ad52b6aab2f8978cd81a81cbd01
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 21:08:58 2007 -0500
+
+    Get CFLAGS for -Wall -Werror on non-release versions
+
+commit 2f536904999d122b4a2400ae35dc2f0ce5a442ea
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 21:08:30 2007 -0500
+
+    Fix various compiler warnings
+
+commit 9dd5158f299b624811d8987e7610cf43aec0f6d2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 20:14:48 2007 -0500
+
+    Instantiate the GstRtpBin element
+
+commit f97c2f07e1d4ea31b3767816ce9ceb06bc1a924c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 20:14:28 2007 -0500
+
+    Have proper src pad template with 3 variables
+
+commit 4fa04e768a7c28d810259e170ad6a5e2e9f8fc73
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 19:56:15 2007 -0500
+
+    Make fsrtpconference into a real GStreamer instantiable GStreamer element
+
+commit a57160b11829af4e2cad7cdbc25ca62bafc2d669
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 19:55:17 2007 -0500
+
+    Add implementation of fs_rtp_stream_new
+
+commit 9602123aa38da16b0608eb5941fe937693ffe6b1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 19:54:50 2007 -0500
+
+    Renamed FS2_PLUGINS_BASE_CFLAGS to more meaningful FS2_INTERNAL_CFLAGS
+
+commit c84cc8b110e9c4f5463b4a400bb1144c8b4d4c8d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 19:11:59 2007 -0500
+
+    Add GST_DEBUG_FUNCPTR to FsBaseConference
+
+commit 7aecc959f96da2a1c5a19bdc9b8d398533f5ef9e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 19:09:12 2007 -0500
+
+    Remove unused get/set_property functions in fs-rtp-conference
+
+commit 3f673455007d4cf7c2b783b24f61d171aa1a91a4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 19:04:55 2007 -0500
+
+    Add FsStreamDirection property to FsRtpStream
+
+commit 11c7878e7bd199a626fec189055c7359fd68014f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 19:03:13 2007 -0500
+
+    Store the FsStreamTransmitter in the FsRtpStream
+
+commit 087e978a59b56e7a3cdae162833ac47c5f91d2cd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 19:01:14 2007 -0500
+
+    Add FsRtpParticipant to FsRtpStream's priv
+
+commit cd45439a3c8952ed281204dbb99323d062966313
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 18:54:46 2007 -0500
+
+    Store the FsSession pointer into the stream
+
+commit c68bba59d0b5d8ed9263a6756f60e0c5a1b06454
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 18:54:34 2007 -0500
+
+    Oops, rename all of the FsStream to FsRtpStream in rtp stream
+
+commit 046252338ad5626b2ee46a0bff61382d87fb1ec9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 18:52:21 2007 -0500
+
+    Add unchecked cast macros
+
+commit 0230dfbc78592f3f858a3952015b74f0bc4c6d21
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 18:21:15 2007 -0500
+
+    Have the RTP Session create the stream
+
+commit 6f03ff3ea8bb13b64426a450d4e26780c2df0c85
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 18:20:59 2007 -0500
+
+    Use unchecked cast (we created the object)
+
+commit 2430f085716241a155f568ecbf5dbc9cc801ab62
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 18:15:59 2007 -0500
+
+    Remove erroneous comment
+
+commit 9854e3dc4004a25e6a4b9a6f79d55d571cb971a3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 18:14:48 2007 -0500
+
+    Add FsRtpStream object
+
+commit 28a5bcf0483e98a256eab0e364be5dcbd2bfea7b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 18:14:34 2007 -0500
+
+    Properly override the FsSession properties
+
+commit 17374fe00543ad8a289560b984447e6f882fe078
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 17:50:31 2007 -0500
+
+    Store the media_type in FsRtpSession
+
+commit 75f34c58f4e4c3e36839b72c9be66892882fffd0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 17:38:57 2007 -0500
+
+    Add empty RTP session class
+
+commit d01c014656958b7d4c0182882c7ee44fa917341e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 17:25:09 2007 -0500
+
+    Add empty implementation of FsRtpParticipant
+
+commit 08c09edc235ccbcefa9282a9f532e71aa2b7044c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 17:24:33 2007 -0500
+
+    Store the FsParticipant cname in the base class
+
+commit e1f1ca5edfd88d142555ba207092b4cdf69206ba
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 17:24:08 2007 -0500
+
+    Add G_END_DECLS to FsParticipant
+
+commit c4508480899dbec8ac2b4e506a3661559f4d0808
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 17:23:03 2007 -0500
+
+    Make FsRtpConference compile and remove useless functions
+
+commit b5973331e8ce2bc068c262aa006721465880201e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 17:21:24 2007 -0500
+
+    Use the right variable for selected plugins
+
+commit 5c5e3f10ff00733725570add95790921b2fcf3be
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 16:52:45 2007 -0500
+
+    Add empty FsRtpConference
+
+commit 5864002edfc5d56a1cd4d9c98d131bca5e9df950
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 16:49:35 2007 -0500
+
+    Remove chain, getcaps, setcaps functions
+
+commit 4e1cfa570907b4c02f769e4c5984429e4b9c30fd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 16:45:48 2007 -0500
+
+    Add new_participant method to the baseconference class
+
+commit 65db0c91b332cfa0f6261b602a411348e1c29938
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 15:21:37 2007 -0500
+
+    Use the right prop numbers
+
+commit 290c69711e0bc83314ee4fe6e1b3726105b52860
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 15:19:51 2007 -0500
+
+    Add stream-transmitter property to the FsStream
+
+commit 0f50a74f6d93b96e0b9b7c63db79096b6855dd19
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 15:17:24 2007 -0500
+
+    Pass the name of the transmitter when creating a new stream
+
+commit 67b6a087845d3e2316df60b05256aaaf95491129
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 14:45:57 2007 -0500
+
+    Declare our base classes as G_TYPE_FLAG_ABSTRACT
+
+commit 653bcee2152df56eb33dd9ea2dab151636518bd9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 14:45:33 2007 -0500
+
+    Declare doc basefiles and include our path to build gtkdocs
+
+commit 7bfa369ba1308b876a53ca3a1b2ffb9c5ae2ee07
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 14:41:39 2007 -0500
+
+    Add FsTransmitter and FsStreamTransmitter base classes
+
+commit 0098e3d64619931f92f595928afa852fd6542685
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 14:40:55 2007 -0500
+
+    Fix small thinkos in FsStream
+
+commit c0d8dcd8bd4279eaa94162c4a27447a2dc904f9a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 14:39:12 2007 -0500
+
+    Add new-native-candidate and native-candidates prepared signal to the FsStream object
+
+commit f6d4bba966f6e8ad81e8ecfdc93ac4480e5132de
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 14:37:53 2007 -0500
+
+    Fix orthographic mistake
+
+commit 5a1f2f763d5ff5be192ac15f5f6ea00a3541c87f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 14:36:16 2007 -0500
+
+    Make the FsBaseConference implement the GstImplementsInterface interface
+
+commit c4ea13c6b762826127d82a2712295b03028580c7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 5 14:35:20 2007 -0500
+
+    Include headers as if they were coming from the system header path
+
+commit 583990066b0dc4a5c52192e5ff64dbfaa41fdaa5
+Author: Olivier CrÃªte <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 2 19:00:06 2007 -0400
+
+    Move the padding to the end of the structure (where it should be)
+
+commit 3ecba3e8324139359ee8acfa06ec0471a7e8e649
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 2 18:07:48 2007 -0400
+
+    Its Interface not Iface you idiot
+
+commit d031979e4aa22aae1259a9d6aeded1e3f93e3412
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 2 18:05:06 2007 -0400
+
+    More work on improving the documentation
+
+commit 73bb557c6de12233a2d4e4211ff37428c95ac2ee
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 2 18:04:50 2007 -0400
+
+    Complete the renaming of fs_codec_compare to fs_codec_are_equal
+
+commit f464fae5325764f5e444d4510045cdaad0295c52
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 2 18:03:32 2007 -0400
+
+    Make FsBaseConference into a proper derivative of GstElement
+
+commit 4c20b1c106db17213450970b06b7635cdbc84430
+Merge: f807f11... 2c052ae...
+Author: burger <burger@Silverwork.(none)>
+Date:   Fri Nov 2 17:05:38 2007 -0400
+
+    Merge commit 'tester/unit-tests'
+
+commit f807f11fb330419887da8be42423e5dbb434241b
+Merge: 1b4339e... 5bef80c...
+Author: burger <burger@Silverwork.(none)>
+Date:   Fri Nov 2 16:57:35 2007 -0400
+
+    Merge commit 'tester/misc-fixes'
+
+commit 1b4339ee556ecd3025bc232100fc3082fc169fef
+Merge: 139d32a... 97ccf76...
+Author: burger <burger@Silverwork.(none)>
+Date:   Fri Nov 2 16:56:45 2007 -0400
+
+    Merge commit 'tester/misc-fixes'
+
+commit 5bef80c6250a976874d2ff12c934442e598ffd8c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 2 16:54:50 2007 -0400
+
+    Fix indentation for new_participant
+
+commit 97ccf761467882ffe8d5b6ee021cfa6cbcf6e6c1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 2 16:38:53 2007 -0400
+
+    Use g_warning when we don't have a GstObject
+
+commit 662b2d3cad8a54f4b70805b5ee36d6b6ece241b3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 2 12:38:40 2007 -0400
+
+    Update the candidates definition to ICE-19 (foundation is now a 32byte string)
+
+commit 2c052ae51cb4ccccae5b6cd7b7afe82293a61d6e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 31 13:43:44 2007 -0400
+
+    Rename fs_codec_compare to _are_equal to match candidates API
+
+commit 808ffe16a2ee0c8e43649a64f9ade2070a0d9e65
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 30 18:19:41 2007 -0400
+
+    Fill base class stubs in FsStream
+
+commit dac4fbf5c328e33a577099e11d122d34903e4c22
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 30 18:18:37 2007 -0400
+
+    Add possibility of a GError to preload_recv_codec and pass a full FsCodec to it
+
+commit 36378388e8d2e2afad05a145c095ae0d7507065d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 30 18:10:03 2007 -0400
+
+    Preset the *error to NULL so the child doesn't have to do it
+
+commit f40882bf46eccfc9ba1de03f1e0a2d891df92159
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 30 17:46:11 2007 -0400
+
+    Verify the length of the ptrarray, not its presence. And also do it for the session's streams
+
+commit 3d36f9beaebf1c4ee6725dce191b3b88b7060bed
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 30 17:23:06 2007 -0400
+
+    Return directly if new_stream/session fails
+
+commit 32dc28dd7f45511461673a27c7609f832a4188dc
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 30 17:22:12 2007 -0400
+
+    Add calls to the class function for FsSession methods
+
+commit 655b7eceb94f38e94780e5aba0155a48fa6561d8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 30 16:24:03 2007 -0400
+
+    Add function to create a new participant, it is created from the conference, but is owned by the user
+
+commit 96cc24396b7bb2498439c66916b16c7efb049923
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 30 15:39:48 2007 -0400
+
+    session and participants are objects...
+
+commit 139d32ae9f99f402cf9243a08ecf5d6cdaf797bb
+Merge: 90f6540... 187d966...
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 30 15:35:12 2007 -0400
+
+    Merge branch 'master' into fixes-from-darcs
+
+commit d13920f742cb0f516977e466fa8300ef2032bb1f
+Merge: 4b3f5aa... 187d966...
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 30 15:33:53 2007 -0400
+
+    Merge branch 'master' into unit-tests
+
+commit 187d9665c303a88fdef7136d5d82a5cf9e5dea1c
+Author: burger <burger@Silverwork.(none)>
+Date:   Tue Oct 30 15:31:24 2007 -0400
+
+    Participants are independant, fixed refs and lifecycle issues to reflect new design
+
+commit 4b3f5aa5e8ae94123b2faff607c7067c0811abaf
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 30 15:21:29 2007 -0400
+
+    Add gitignore file
+
+commit 5a6362ae7448d7dddf768817cde02a911b825db7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 30 15:13:06 2007 -0400
+
+    Add test for fs_codec_copy
+
+commit ff3124f9e39979da680201be19c6b529e3c9a18c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 30 15:08:41 2007 -0400
+
+    Add Tests for fs_codec_compare
+
+commit 1d02c52284fedebeefc46a99d4af117c177259e2
+Author: Olivier CrÃªte <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 30 14:45:58 2007 -0400
+
+    Add the _get_type functions for fs_codec to the Standard subsection
+
+commit 190c711d04ec76f02a63b6a241b3019dc75f374b
+Author: Olivier CrÃªte <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 30 14:44:12 2007 -0400
+
+    Complete documentation for fs_codec_new
+
+commit 16ce497f745a569c81ecb6866db67415815e8aef
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 29 19:24:37 2007 -0400
+
+    Add fs_codec_compare function from darcs
+
+commit 996f352b8e1a3cfc92c6e28a134af7686964d8f1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 30 14:32:48 2007 -0400
+
+    Replace fs_codec_init with fs_codec_new
+
+commit 062f7c012ebf5862dd5991bf5a28e25cdbb72778
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 30 12:14:42 2007 -0400
+
+    Add on test to the test suite
+
+commit 90f654039b62b55f056065129bedf33aaa09b2e5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 29 19:22:09 2007 -0400
+
+    Properly reset the codec id to invalid -1 on error
+
+commit a55d026eb3100bc4c31e029990d8b3807ef217e6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 29 19:06:33 2007 -0400
+
+    Add audiovideo type to media_type_to_string
+
+commit fbeab7ae9184e9e8ee94bfed2dcd3dd12f5b88e4
+Author: Olivier CrÃªte <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 29 19:00:27 2007 -0400
+
+    Last is AV, not VIDEO
+
+commit 13f5110a0bd9a7d53e8d0d47b50f742176183739
+Author: Olivier CrÃªte <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 29 18:59:27 2007 -0400
+
+    Add more stuff to make the base unit test framework
+
+commit a2a52b77ccc164ab897604b21e747bb5d915d00c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 29 18:46:43 2007 -0400
+
+    Add framework for unit tests (taken from gst-plugins-base)
+
+commit f9d4f8984f0ee5bdbcd3c35f8f1fac10f4c1d0fb
+Author: burger <burger@Silverwork.(none)>
+Date:   Mon Oct 22 19:18:45 2007 -0400
+
+    Added weak refs between conference and sessions/participants, also made conference exit if unrefed before those 2
+
+commit 799fe1b34b33179ef7c5244225912c925c2fac7c
+Author: burger <burger@Silverwork.(none)>
+Date:   Fri Oct 19 18:12:47 2007 -0400
+
+    Started fs-base-conference element that implements the fs-conference-interface
+    Made errors multiplex on GstBus
+    Random doc and code fixes
+
+commit 957793f100239c2058286f8a5a89d38fd7c53f8c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 16 15:01:39 2007 -0400
+
+    Add proper marking for program listing
+
+commit bb263851d2a88152c1c26d12f74a1b1298c4e131
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 16 15:01:24 2007 -0400
+
+    Remove evil AM_MAINTAINER_MODE
+
+commit b1a1954b8ed5d9c2cb28efe6261f8a90a5bd4507
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 16 15:01:00 2007 -0400
+
+    Remove m4 subdir
+
+commit 163d1e0ee38e0c5f3d8aef35f9d3f5c0410c6a38
+Author: burger <burger@Silverwork.(none)>
+Date:   Tue Oct 16 11:09:36 2007 -0400
+
+    Added missing file
+
+commit 8610e0bc0a56a84a465b89655b314810e3bad2b4
+Author: burger <burger@Silverwork.(none)>
+Date:   Mon Oct 15 18:18:03 2007 -0400
+
+    Fixed gtkdoc generation, some fixes to code and docs
+
+commit 1c15f30a6ea7076f85802b1ad2b442301283b634
+Author: burger <burger@Silverwork.(none)>
+Date:   Fri Oct 12 18:08:05 2007 -0400
+
+    Add autofoo based on gst autofoo
+
+commit ce440b4c7062301987a3389b3eb14cbdd57dd03b
+Author: burger <burger@Silverwork.(none)>
+Date:   Thu Oct 11 19:46:42 2007 -0400
+
+    More API implementation all around
+
+commit d82cc20e93e485d7011d93504d9a9d4f6143d79e
+Author: burger <burger@Silverwork.(none)>
+Date:   Fri Oct 5 16:43:18 2007 -0400
+
+    -Removed FsSessionParticipant and replaced by FsStream
+    -Renamed fs-conference to fs-conference-iface
+    -Added fs-base-conference that will contain the Base element for Farsight Conference elements
+    -More code all over
+
+commit 626f21b311df31a1e02398e5f0ddb83af7000b3d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 1 17:32:34 2007 -0400
+
+    Initial import

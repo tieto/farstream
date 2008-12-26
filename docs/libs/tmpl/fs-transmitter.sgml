@@ -1,0 +1,93 @@
+<!-- ##### SECTION Title ##### -->
+FsTransmitter
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT FsTransmitter ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL FsTransmitter::error ##### -->
+<para>
+
+</para>
+
+@fstransmitter: the object which received the signal.
+@arg1: 
+@arg2: 
+@arg3: 
+
+<!-- ##### ARG FsTransmitter:components ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsTransmitter:gst-sink ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsTransmitter:gst-src ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT FsTransmitterClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+@new_stream_transmitter: 
+@get_stream_transmitter_type: 
+
+<!-- ##### FUNCTION fs_transmitter_new ##### -->
+<para>
+
+</para>
+
+@type: 
+@components: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_transmitter_new_stream_transmitter ##### -->
+<para>
+
+</para>
+
+@transmitter: 
+@participant: 
+@n_parameters: 
+@parameters: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_transmitter_get_stream_transmitter_type ##### -->
+<para>
+
+</para>
+
+@transmitter: 
+@error: 
+@Returns: 
+
+
