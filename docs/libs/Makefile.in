@@ -47,6 +47,7 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-auto-alt.m4 \
 	$(top_srcdir)/common/m4/as-compiler-flag.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
+	$(top_srcdir)/common/m4/as-python.m4 \
 	$(top_srcdir)/common/m4/as-scrub-include.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
@@ -56,6 +57,7 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst-feature.m4 \
 	$(top_srcdir)/common/m4/gst-function.m4 \
 	$(top_srcdir)/common/m4/gst-glib2.m4 \
+	$(top_srcdir)/common/m4/gst-plugin-docs.m4 \
 	$(top_srcdir)/common/m4/gst-plugindir.m4 \
 	$(top_srcdir)/common/m4/gst.m4 \
 	$(top_srcdir)/common/m4/isc-posix.m4 \
@@ -149,6 +151,8 @@ GST_PLUGINS_DIR = @GST_PLUGINS_DIR@
 GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
 GST_TOOLS_DIR = @GST_TOOLS_DIR@
 GTKDOC_CHECK = @GTKDOC_CHECK@
+GUPNP_CFLAGS = @GUPNP_CFLAGS@
+GUPNP_LIBS = @GUPNP_LIBS@
 HTML_DIR = @HTML_DIR@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -163,6 +167,8 @@ LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 MKDIR_P = @MKDIR_P@
+NICE_CFLAGS = @NICE_CFLAGS@
+NICE_LIBS = @NICE_LIBS@
 NMEDIT = @NMEDIT@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
@@ -180,6 +186,8 @@ PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
 PLUGINDIR = @PLUGINDIR@
 PROFILE_CFLAGS = @PROFILE_CFLAGS@
+PYDOCSTUFF_CFLAGS = @PYDOCSTUFF_CFLAGS@
+PYDOCSTUFF_LIBS = @PYDOCSTUFF_LIBS@
 PYFARSIGHT_CFLAGS = @PYFARSIGHT_CFLAGS@
 PYFARSIGHT_LIBS = @PYFARSIGHT_LIBS@
 PYTHON = @PYTHON@
@@ -307,6 +315,9 @@ IGNORE_HFILES = fs-marshal.h fs-enum-types.h fs-private.h
 # Images to copy into HTML directory.
 HTML_IMAGES = 
 
+# Extra SGML files that are included by $(DOC_MAIN_SGML_FILE).
+content_files = 
+
 # Other files to distribute.
 extra_files = 
 
@@ -315,7 +326,8 @@ extra_files =
 GTKDOC_CFLAGS = $(FS2_INTERNAL_CFLAGS) $(GST_PLUGINS_BASE_CFLAGS) $(GST_BASE_CFLAGS)
 GTKDOC_LIBS = -static \
 	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-0.10.la \
-	$(SCANOBJ_DEPS) $(GST_BASE_LIBS) 
+	$(GST_BASE_LIBS) \
+	$(GCOV_LIBS)
 
 GTKDOC_CC = $(LIBTOOL) --mode=compile $(CC)
 GTKDOC_LD = $(LIBTOOL) --mode=link $(CC)
@@ -334,7 +346,7 @@ DOC_OVERRIDES =
 GPATH = $(srcdir)
 
 # thomas: make docs parallel installable
-TARGET_DIR = $(HTML_DIR)/$(DOC_MODULE)
+TARGET_DIR = $(HTML_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@
 EXTRA_DIST = \
 	$(content_files)		\
 	$(extra_files)			\

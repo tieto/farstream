@@ -35,7 +35,7 @@ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(top_srcdir)/common/check.mak
 check_PROGRAMS = base/fscodec$(EXEEXT) base/fstransmitter$(EXEEXT) \
 	transmitter/rawudp$(EXEEXT) transmitter/multicast$(EXEEXT) \
-	rtp/codecs$(EXEEXT) rtp/sendcodecs$(EXEEXT) \
+	$(am__EXEEXT_1) rtp/codecs$(EXEEXT) rtp/sendcodecs$(EXEEXT) \
 	rtp/conference$(EXEEXT) utils/binadded$(EXEEXT)
 subdir = tests/check
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -43,6 +43,7 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-auto-alt.m4 \
 	$(top_srcdir)/common/m4/as-compiler-flag.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
+	$(top_srcdir)/common/m4/as-python.m4 \
 	$(top_srcdir)/common/m4/as-scrub-include.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
@@ -52,6 +53,7 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst-feature.m4 \
 	$(top_srcdir)/common/m4/gst-function.m4 \
 	$(top_srcdir)/common/m4/gst-glib2.m4 \
+	$(top_srcdir)/common/m4/gst-plugin-docs.m4 \
 	$(top_srcdir)/common/m4/gst-plugindir.m4 \
 	$(top_srcdir)/common/m4/gst.m4 \
 	$(top_srcdir)/common/m4/isc-posix.m4 \
@@ -61,6 +63,7 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
+@USE_NICE_TRUE@am__EXEEXT_1 = transmitter/nice$(EXEEXT)
 base_fscodec_SOURCES = base/fscodec.c
 base_fscodec_OBJECTS = fscodec.$(OBJEXT)
 base_fscodec_LDADD = $(LDADD)
@@ -117,13 +120,22 @@ transmitter_multicast_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(transmitter_multicast_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-am_transmitter_rawudp_OBJECTS = transmitter_rawudp-generic.$(OBJEXT) \
-	transmitter_rawudp-rawudp.$(OBJEXT)
-transmitter_rawudp_OBJECTS = $(am_transmitter_rawudp_OBJECTS)
-transmitter_rawudp_LDADD = $(LDADD)
-transmitter_rawudp_DEPENDENCIES =  \
+am_transmitter_nice_OBJECTS = transmitter_nice-generic.$(OBJEXT) \
+	transmitter_nice-nice.$(OBJEXT)
+transmitter_nice_OBJECTS = $(am_transmitter_nice_OBJECTS)
+transmitter_nice_LDADD = $(LDADD)
+transmitter_nice_DEPENDENCIES =  \
 	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-0.10.la \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+transmitter_nice_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(transmitter_nice_CFLAGS) \
+	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+am_transmitter_rawudp_OBJECTS = transmitter_rawudp-generic.$(OBJEXT) \
+	transmitter_rawudp-rawudp.$(OBJEXT) \
+	transmitter_rawudp-rawudp-upnp.$(OBJEXT)
+transmitter_rawudp_OBJECTS = $(am_transmitter_rawudp_OBJECTS)
+transmitter_rawudp_DEPENDENCIES = $(am__DEPENDENCIES_2) \
+	$(am__DEPENDENCIES_1)
 transmitter_rawudp_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(transmitter_rawudp_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
@@ -151,12 +163,13 @@ LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	$(LDFLAGS) -o $@
 SOURCES = base/fscodec.c base/fstransmitter.c $(rtp_codecs_SOURCES) \
 	$(rtp_conference_SOURCES) $(rtp_sendcodecs_SOURCES) \
-	$(transmitter_multicast_SOURCES) $(transmitter_rawudp_SOURCES) \
-	$(utils_binadded_SOURCES)
+	$(transmitter_multicast_SOURCES) $(transmitter_nice_SOURCES) \
+	$(transmitter_rawudp_SOURCES) $(utils_binadded_SOURCES)
 DIST_SOURCES = base/fscodec.c base/fstransmitter.c \
 	$(rtp_codecs_SOURCES) $(rtp_conference_SOURCES) \
 	$(rtp_sendcodecs_SOURCES) $(transmitter_multicast_SOURCES) \
-	$(transmitter_rawudp_SOURCES) $(utils_binadded_SOURCES)
+	$(transmitter_nice_SOURCES) $(transmitter_rawudp_SOURCES) \
+	$(utils_binadded_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -241,6 +254,8 @@ GST_PLUGINS_DIR = @GST_PLUGINS_DIR@
 GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
 GST_TOOLS_DIR = @GST_TOOLS_DIR@
 GTKDOC_CHECK = @GTKDOC_CHECK@
+GUPNP_CFLAGS = @GUPNP_CFLAGS@
+GUPNP_LIBS = @GUPNP_LIBS@
 HTML_DIR = @HTML_DIR@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -255,6 +270,8 @@ LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 MKDIR_P = @MKDIR_P@
+NICE_CFLAGS = @NICE_CFLAGS@
+NICE_LIBS = @NICE_LIBS@
 NMEDIT = @NMEDIT@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
@@ -272,6 +289,8 @@ PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
 PLUGINDIR = @PLUGINDIR@
 PROFILE_CFLAGS = @PROFILE_CFLAGS@
+PYDOCSTUFF_CFLAGS = @PYDOCSTUFF_CFLAGS@
+PYDOCSTUFF_LIBS = @PYDOCSTUFF_LIBS@
 PYFARSIGHT_CFLAGS = @PYFARSIGHT_CFLAGS@
 PYFARSIGHT_LIBS = @PYFARSIGHT_LIBS@
 PYTHON = @PYTHON@
@@ -358,14 +377,23 @@ TESTS_ENVIRONMENT = \
 	STATE_IGNORE_ELEMENTS="$(STATE_IGNORE_ELEMENTS)"	\
 	$(REGISTRY_ENVIRONMENT)					\
 	GST_PLUGIN_PATH=$(top_builddir)/gst:${GST_PLUGIN_PATH}	\
-	FS_PLUGIN_PATH=$(top_builddir)/transmitters/rawudp/.libs:$(top_builddir)/transmitters/multicast/.libs \
-	LD_LIBRARY_PATH=$(top_builddir)/gst-libs/gst/farsight/.libs:${LD_LIBRARY_PATH}
+	FS_PLUGIN_PATH=$(top_builddir)/transmitters/rawudp/.libs:$(top_builddir)/transmitters/multicast/.libs:$(top_builddir)/transmitters/nice/.libs \
+	LD_LIBRARY_PATH=$(top_builddir)/gst-libs/gst/farsight/.libs:${LD_LIBRARY_PATH} \
+	UPNP_XML_PATH=$(srcdir)/upnp \
+	SRCDIR=$(srcdir)
 
 
 # ths core dumps of some machines have PIDs appended
 CLEANFILES = core* test-registry.xml
 TESTS = $(check_PROGRAMS)
 SUPPRESSIONS = $(top_srcdir)/common/gst.supp
+EXTRA_DIST = \
+	upnp/InternetGatewayDevice.xml \
+	upnp/WANIPConnection.xml \
+	base/test1.conf
+
+@USE_NICE_FALSE@NICE_TRANSMITTER = 
+@USE_NICE_TRUE@NICE_TRANSMITTER = transmitter/nice
 AM_CFLAGS = \
 	$(CFLAGS) \
 	$(FS2_INTERNAL_CFLAGS) \
@@ -378,12 +406,17 @@ LDADD = \
 	$(GST_CHECK_LIBS) \
 	$(GST_LIBS)
 
-transmitter_rawudp_CFLAGS = $(AM_CFLAGS)
+transmitter_rawudp_CFLAGS = $(AM_CFLAGS) $(GUPNP_CFLAGS)
+transmitter_rawudp_LDADD = $(LDADD) \
+	$(GUPNP_LIBS)
+
 transmitter_rawudp_SOURCES = \
 	check-threadsafe.h  \
 	transmitter/generic.c \
 	transmitter/generic.h \
-	transmitter/rawudp.c 
+	transmitter/rawudp.c \
+	transmitter/rawudp-upnp.c \
+	transmitter/rawudp-upnp.h
 
 transmitter_multicast_CFLAGS = $(AM_CFLAGS)
 transmitter_multicast_SOURCES = \
@@ -391,6 +424,13 @@ transmitter_multicast_SOURCES = \
 	transmitter/generic.c \
 	transmitter/generic.h \
 	transmitter/multicast.c 
+
+transmitter_nice_CFLAGS = $(FS2_INTERNAL_CFLAGS) $(CFLAGS) $(AM_CFLAGS)
+transmitter_nice_SOURCES = \
+	check-threadsafe.h  \
+	transmitter/generic.c \
+	transmitter/generic.h \
+	transmitter/nice.c 
 
 rtp_conference_CFLAGS = $(AM_CFLAGS)
 rtp_conference_SOURCES = \
@@ -483,6 +523,9 @@ transmitter/$(am__dirstamp):
 transmitter/multicast$(EXEEXT): $(transmitter_multicast_OBJECTS) $(transmitter_multicast_DEPENDENCIES) transmitter/$(am__dirstamp)
 	@rm -f transmitter/multicast$(EXEEXT)
 	$(transmitter_multicast_LINK) $(transmitter_multicast_OBJECTS) $(transmitter_multicast_LDADD) $(LIBS)
+transmitter/nice$(EXEEXT): $(transmitter_nice_OBJECTS) $(transmitter_nice_DEPENDENCIES) transmitter/$(am__dirstamp)
+	@rm -f transmitter/nice$(EXEEXT)
+	$(transmitter_nice_LINK) $(transmitter_nice_OBJECTS) $(transmitter_nice_LDADD) $(LIBS)
 transmitter/rawudp$(EXEEXT): $(transmitter_rawudp_OBJECTS) $(transmitter_rawudp_DEPENDENCIES) transmitter/$(am__dirstamp)
 	@rm -f transmitter/rawudp$(EXEEXT)
 	$(transmitter_rawudp_LINK) $(transmitter_rawudp_OBJECTS) $(transmitter_rawudp_LDADD) $(LIBS)
@@ -509,7 +552,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rtp_sendcodecs-sendcodecs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_multicast-generic.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_multicast-multicast.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_nice-generic.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_nice-nice.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_rawudp-generic.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_rawudp-rawudp-upnp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_rawudp-rawudp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utils_binadded-binadded.Po@am__quote@
 
@@ -674,6 +720,34 @@ transmitter_multicast-multicast.obj: transmitter/multicast.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_multicast_CFLAGS) $(CFLAGS) -c -o transmitter_multicast-multicast.obj `if test -f 'transmitter/multicast.c'; then $(CYGPATH_W) 'transmitter/multicast.c'; else $(CYGPATH_W) '$(srcdir)/transmitter/multicast.c'; fi`
 
+transmitter_nice-generic.o: transmitter/generic.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_nice_CFLAGS) $(CFLAGS) -MT transmitter_nice-generic.o -MD -MP -MF $(DEPDIR)/transmitter_nice-generic.Tpo -c -o transmitter_nice-generic.o `test -f 'transmitter/generic.c' || echo '$(srcdir)/'`transmitter/generic.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/transmitter_nice-generic.Tpo $(DEPDIR)/transmitter_nice-generic.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='transmitter/generic.c' object='transmitter_nice-generic.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_nice_CFLAGS) $(CFLAGS) -c -o transmitter_nice-generic.o `test -f 'transmitter/generic.c' || echo '$(srcdir)/'`transmitter/generic.c
+
+transmitter_nice-generic.obj: transmitter/generic.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_nice_CFLAGS) $(CFLAGS) -MT transmitter_nice-generic.obj -MD -MP -MF $(DEPDIR)/transmitter_nice-generic.Tpo -c -o transmitter_nice-generic.obj `if test -f 'transmitter/generic.c'; then $(CYGPATH_W) 'transmitter/generic.c'; else $(CYGPATH_W) '$(srcdir)/transmitter/generic.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/transmitter_nice-generic.Tpo $(DEPDIR)/transmitter_nice-generic.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='transmitter/generic.c' object='transmitter_nice-generic.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_nice_CFLAGS) $(CFLAGS) -c -o transmitter_nice-generic.obj `if test -f 'transmitter/generic.c'; then $(CYGPATH_W) 'transmitter/generic.c'; else $(CYGPATH_W) '$(srcdir)/transmitter/generic.c'; fi`
+
+transmitter_nice-nice.o: transmitter/nice.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_nice_CFLAGS) $(CFLAGS) -MT transmitter_nice-nice.o -MD -MP -MF $(DEPDIR)/transmitter_nice-nice.Tpo -c -o transmitter_nice-nice.o `test -f 'transmitter/nice.c' || echo '$(srcdir)/'`transmitter/nice.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/transmitter_nice-nice.Tpo $(DEPDIR)/transmitter_nice-nice.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='transmitter/nice.c' object='transmitter_nice-nice.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_nice_CFLAGS) $(CFLAGS) -c -o transmitter_nice-nice.o `test -f 'transmitter/nice.c' || echo '$(srcdir)/'`transmitter/nice.c
+
+transmitter_nice-nice.obj: transmitter/nice.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_nice_CFLAGS) $(CFLAGS) -MT transmitter_nice-nice.obj -MD -MP -MF $(DEPDIR)/transmitter_nice-nice.Tpo -c -o transmitter_nice-nice.obj `if test -f 'transmitter/nice.c'; then $(CYGPATH_W) 'transmitter/nice.c'; else $(CYGPATH_W) '$(srcdir)/transmitter/nice.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/transmitter_nice-nice.Tpo $(DEPDIR)/transmitter_nice-nice.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='transmitter/nice.c' object='transmitter_nice-nice.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_nice_CFLAGS) $(CFLAGS) -c -o transmitter_nice-nice.obj `if test -f 'transmitter/nice.c'; then $(CYGPATH_W) 'transmitter/nice.c'; else $(CYGPATH_W) '$(srcdir)/transmitter/nice.c'; fi`
+
 transmitter_rawudp-generic.o: transmitter/generic.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_rawudp_CFLAGS) $(CFLAGS) -MT transmitter_rawudp-generic.o -MD -MP -MF $(DEPDIR)/transmitter_rawudp-generic.Tpo -c -o transmitter_rawudp-generic.o `test -f 'transmitter/generic.c' || echo '$(srcdir)/'`transmitter/generic.c
 @am__fastdepCC_TRUE@	mv -f $(DEPDIR)/transmitter_rawudp-generic.Tpo $(DEPDIR)/transmitter_rawudp-generic.Po
@@ -701,6 +775,20 @@ transmitter_rawudp-rawudp.obj: transmitter/rawudp.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='transmitter/rawudp.c' object='transmitter_rawudp-rawudp.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_rawudp_CFLAGS) $(CFLAGS) -c -o transmitter_rawudp-rawudp.obj `if test -f 'transmitter/rawudp.c'; then $(CYGPATH_W) 'transmitter/rawudp.c'; else $(CYGPATH_W) '$(srcdir)/transmitter/rawudp.c'; fi`
+
+transmitter_rawudp-rawudp-upnp.o: transmitter/rawudp-upnp.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_rawudp_CFLAGS) $(CFLAGS) -MT transmitter_rawudp-rawudp-upnp.o -MD -MP -MF $(DEPDIR)/transmitter_rawudp-rawudp-upnp.Tpo -c -o transmitter_rawudp-rawudp-upnp.o `test -f 'transmitter/rawudp-upnp.c' || echo '$(srcdir)/'`transmitter/rawudp-upnp.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/transmitter_rawudp-rawudp-upnp.Tpo $(DEPDIR)/transmitter_rawudp-rawudp-upnp.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='transmitter/rawudp-upnp.c' object='transmitter_rawudp-rawudp-upnp.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_rawudp_CFLAGS) $(CFLAGS) -c -o transmitter_rawudp-rawudp-upnp.o `test -f 'transmitter/rawudp-upnp.c' || echo '$(srcdir)/'`transmitter/rawudp-upnp.c
+
+transmitter_rawudp-rawudp-upnp.obj: transmitter/rawudp-upnp.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_rawudp_CFLAGS) $(CFLAGS) -MT transmitter_rawudp-rawudp-upnp.obj -MD -MP -MF $(DEPDIR)/transmitter_rawudp-rawudp-upnp.Tpo -c -o transmitter_rawudp-rawudp-upnp.obj `if test -f 'transmitter/rawudp-upnp.c'; then $(CYGPATH_W) 'transmitter/rawudp-upnp.c'; else $(CYGPATH_W) '$(srcdir)/transmitter/rawudp-upnp.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/transmitter_rawudp-rawudp-upnp.Tpo $(DEPDIR)/transmitter_rawudp-rawudp-upnp.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='transmitter/rawudp-upnp.c' object='transmitter_rawudp-rawudp-upnp.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_rawudp_CFLAGS) $(CFLAGS) -c -o transmitter_rawudp-rawudp-upnp.obj `if test -f 'transmitter/rawudp-upnp.c'; then $(CYGPATH_W) 'transmitter/rawudp-upnp.c'; else $(CYGPATH_W) '$(srcdir)/transmitter/rawudp-upnp.c'; fi`
 
 utils_binadded-binadded.o: utils/binadded.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(utils_binadded_CFLAGS) $(CFLAGS) -MT utils_binadded-binadded.o -MD -MP -MF $(DEPDIR)/utils_binadded-binadded.Tpo -c -o utils_binadded-binadded.o `test -f 'utils/binadded.c' || echo '$(srcdir)/'`utils/binadded.c

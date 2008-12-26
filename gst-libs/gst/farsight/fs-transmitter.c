@@ -298,7 +298,7 @@ fs_transmitter_new (const gchar *type, guint components, GError **error)
     return NULL;
 
   if (self->construction_error) {
-    *error = self->construction_error;
+    g_propagate_error(error, self->construction_error);
     g_object_unref (self);
     self = NULL;
   }
@@ -309,7 +309,6 @@ fs_transmitter_new (const gchar *type, guint components, GError **error)
 /**
  * fs_transmitter_get_stream_transmitter_type:
  * @transmitter: A #FsTransmitter object
- * @error: location of a #GError, or NULL if no error occured
  *
  * This function returns the GObject type for the stream transmitter.
  * This is meant for bindings that need to introspect the type of arguments
@@ -319,15 +318,14 @@ fs_transmitter_new (const gchar *type, guint components, GError **error)
  */
 
 GType
-fs_transmitter_get_stream_transmitter_type (FsTransmitter *transmitter,
-    GError **error)
+fs_transmitter_get_stream_transmitter_type (FsTransmitter *transmitter)
 {
   FsTransmitterClass *klass = FS_TRANSMITTER_GET_CLASS (transmitter);
 
   g_return_val_if_fail (klass, 0);
   g_return_val_if_fail (klass->get_stream_transmitter_type, 0);
 
-  return klass->get_stream_transmitter_type (transmitter, error);
+  return klass->get_stream_transmitter_type (transmitter);
 }
 
 
@@ -343,8 +341,26 @@ fs_transmitter_get_stream_transmitter_type (FsTransmitter *transmitter,
  */
 void
 fs_transmitter_emit_error (FsTransmitter *transmitter,
-  gint error_no, gchar *error_msg, gchar *debug_msg)
+    gint error_no,
+    const gchar *error_msg,
+    const gchar *debug_msg)
 {
   g_signal_emit (transmitter, signals[ERROR_SIGNAL], 0, error_no,
       error_msg, debug_msg);
+}
+
+/**
+ * fs_transmitter_list_available:
+ *
+ * Get the list of all available transmitters
+ *
+ * Returns: a newly allocated array of strings containing the list of all
+ *  available transmitters or %NULL if there are none. It should
+ *  be freed with g_strfreev().
+ */
+
+char **
+fs_transmitter_list_available (void)
+{
+  return fs_plugin_list_available ("transmitter");
 }

@@ -42,6 +42,7 @@
 <ANCHOR id="fs-session-stop-telephony-event" href="farsight2-libs-0.10/FsSession.html#fs-session-stop-telephony-event">
 <ANCHOR id="fs-session-set-send-codec" href="farsight2-libs-0.10/FsSession.html#fs-session-set-send-codec">
 <ANCHOR id="fs-session-set-codec-preferences" href="farsight2-libs-0.10/FsSession.html#fs-session-set-codec-preferences">
+<ANCHOR id="fs-session-list-transmitters" href="farsight2-libs-0.10/FsSession.html#fs-session-list-transmitters">
 <ANCHOR id="fs-session-emit-error" href="farsight2-libs-0.10/FsSession.html#fs-session-emit-error">
 <ANCHOR id="FsSession.property-details" href="farsight2-libs-0.10/FsSession.html#FsSession.property-details">
 <ANCHOR id="FsSession--codec-preferences" href="farsight2-libs-0.10/FsSession.html#FsSession--codec-preferences">
@@ -159,6 +160,7 @@
 <ANCHOR id="fs-transmitter-new-stream-transmitter" href="farsight2-libs-0.10/FsTransmitter.html#fs-transmitter-new-stream-transmitter">
 <ANCHOR id="fs-transmitter-get-stream-transmitter-type" href="farsight2-libs-0.10/FsTransmitter.html#fs-transmitter-get-stream-transmitter-type">
 <ANCHOR id="fs-transmitter-emit-error" href="farsight2-libs-0.10/FsTransmitter.html#fs-transmitter-emit-error">
+<ANCHOR id="fs-transmitter-list-available" href="farsight2-libs-0.10/FsTransmitter.html#fs-transmitter-list-available">
 <ANCHOR id="FsTransmitter.property-details" href="farsight2-libs-0.10/FsTransmitter.html#FsTransmitter.property-details">
 <ANCHOR id="FsTransmitter--components" href="farsight2-libs-0.10/FsTransmitter.html#FsTransmitter--components">
 <ANCHOR id="FsTransmitter--gst-sink" href="farsight2-libs-0.10/FsTransmitter.html#FsTransmitter--gst-sink">
@@ -198,3 +200,4 @@
 <ANCHOR id="fs-plugin-create-valist" href="farsight2-libs-0.10/farsight2-libs-FsPlugin.html#fs-plugin-create-valist">
 <ANCHOR id="fs-plugin-create" href="farsight2-libs-0.10/farsight2-libs-FsPlugin.html#fs-plugin-create">
 <ANCHOR id="FS-INIT-PLUGIN:CAPS" href="farsight2-libs-0.10/farsight2-libs-FsPlugin.html#FS-INIT-PLUGIN:CAPS">
+<ANCHOR id="fs-plugin-list-available" href="farsight2-libs-0.10/farsight2-libs-FsPlugin.html#fs-plugin-list-available">

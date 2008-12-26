@@ -44,6 +44,9 @@
 <div class="refsynopsisdiv">
 <a name="farsight2-libs-FsCandidate.synopsis"></a><h2>Synopsis</h2>
 <pre class="synopsis">
+
+#include &lt;gst/farsight/fs-conference-iface.h&gt;
+
                     <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate">FsCandidate</a>;
 enum                <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidateType" title="enum FsCandidateType">FsCandidateType</a>;
 enum                <a class="link" href="farsight2-libs-FsCandidate.html#FsNetworkProtocol" title="enum FsNetworkProtocol">FsNetworkProtocol</a>;
@@ -281,6 +284,7 @@ An enum for the base IP protocol</p>
 <a name="FsComponentType"></a><h3>enum FsComponentType</h3>
 <pre class="programlisting">typedef enum
 {
+  FS_COMPONENT_NONE = 0,
   FS_COMPONENT_RTP = 1,
   FS_COMPONENT_RTCP = 2
 } FsComponentType;
@@ -293,6 +297,11 @@ This enum contains the component IDs defined in ICE-19</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
+<tr>
+<td><p><a name="FS-COMPONENT-NONE:CAPS"></a><span class="term"><code class="literal">FS_COMPONENT_NONE</code></span></p></td>
+<td> Use this when specifying a component is innapropriate
+</td>
+</tr>
 <tr>
 <td><p><a name="FS-COMPONENT-RTP:CAPS"></a><span class="term"><code class="literal">FS_COMPONENT_RTP</code></span></p></td>
 <td> This component is for RTP data

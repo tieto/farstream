@@ -50,6 +50,9 @@
 <div class="refsynopsisdiv">
 <a name="FsSession.synopsis"></a><h2>Synopsis</h2>
 <pre class="synopsis">
+
+#include &lt;gst/farsight/fs-conference-iface.h&gt;
+
 enum                <a class="link" href="FsSession.html#FsDTMFEvent" title="enum FsDTMFEvent">FsDTMFEvent</a>;
 enum                <a class="link" href="FsSession.html#FsDTMFMethod" title="enum FsDTMFMethod">FsDTMFMethod</a>;
                     <a class="link" href="FsSession.html#FsSession-struct" title="FsSession">FsSession</a>;
@@ -99,14 +102,17 @@ href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a>**             <a class="link" href="FsSession.html#fs-session-list-transmitters" title="fs_session_list_transmitters ()">fs_session_list_transmitters</a>        (<a class="link" href="FsSession.html" title="FsSession">FsSession</a> *session);
 void                <a class="link" href="FsSession.html#fs-session-emit-error" title="fs_session_emit_error ()">fs_session_emit_error</a>               (<a class="link" href="FsSession.html" title="FsSession">FsSession</a> *session,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> error_no,
-                                                         <a
+                                                         const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *error_msg,
-                                                         <a
+                                                         const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *debug_msg);
 </pre>
@@ -165,7 +171,7 @@ href="../gstreamer-0.10/GstBus.html"
 ><span class="type">GstBus</span></a>.
 </p>
 <div class="refsect2" lang="en">
-<a name="id2926082"></a><h3>The "<code class="literal">farsight-send-codec-changed</code>"
+<a name="id2959646"></a><h3>The "<code class="literal">farsight-send-codec-changed</code>"
   message</h3>
 <div class="informalexample"><pre class="programlisting">
 "session"          <a class="link" href="FsSession.html" title="FsSession">FsSession</a>          The session that emits the message
@@ -178,7 +184,7 @@ This message is sent on the bus when the value of the
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2893398"></a><h3>The "<code class="literal">farsight-codecs-changed</code>"
+<a name="id2959690"></a><h3>The "<code class="literal">farsight-codecs-changed</code>"
  message</h3>
 <div class="informalexample"><pre class="programlisting">
 "session"          <a class="link" href="FsSession.html" title="FsSession">FsSession</a>          The session that emits the message
@@ -304,6 +310,8 @@ All members are private, access them using methods and properties</p>
   gboolean (* set_codec_preferences) (FsSession *session,
       GList *codec_preferences,
       GError **error);
+
+  gchar** (* list_transmitters) (FsSession *session);
 } FsSessionClass;
 </pre>
 <p>
@@ -344,6 +352,12 @@ href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObjectC
 <tr>
 <td><p><span class="term"><em class="structfield"><code>set_codec_preferences</code></em> ()</span></p></td>
 <td> Specifies the codec preferences
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code>list_transmitters</code></em> ()</span></p></td>
+<td>
+
 </td>
 </tr>
 </tbody>
@@ -656,15 +670,50 @@ href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"
 </div>
 <hr>
 <div class="refsect2" lang="en">
+<a name="fs-session-list-transmitters"></a><h3>fs_session_list_transmitters ()</h3>
+<pre class="programlisting"><a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a>**             fs_session_list_transmitters        (<a class="link" href="FsSession.html" title="FsSession">FsSession</a> *session);</pre>
+<p>
+Get the list of all available transmitters for this session.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
+<td> A <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a newly-allocagted <a
+href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
+><code class="literal">NULL</code></a> terminated array of named of transmitters
+or <a
+href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
+><code class="literal">NULL</code></a> if no transmitter is needed for this type of session. It should
+be freed with <a
+href="/usr/share/gtk-doc/html/glib/glib-String-Utility-Functions.html#g-strfreev"
+><code class="function">g_strfreev()</code></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
 <a name="fs-session-emit-error"></a><h3>fs_session_emit_error ()</h3>
 <pre class="programlisting">void                fs_session_emit_error               (<a class="link" href="FsSession.html" title="FsSession">FsSession</a> *session,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> error_no,
-                                                         <a
+                                                         const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *error_msg,
-                                                         <a
+                                                         const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *debug_msg);</pre>
 <p>

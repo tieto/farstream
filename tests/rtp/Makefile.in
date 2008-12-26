@@ -40,6 +40,7 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-auto-alt.m4 \
 	$(top_srcdir)/common/m4/as-compiler-flag.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
+	$(top_srcdir)/common/m4/as-python.m4 \
 	$(top_srcdir)/common/m4/as-scrub-include.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
@@ -49,6 +50,7 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst-feature.m4 \
 	$(top_srcdir)/common/m4/gst-function.m4 \
 	$(top_srcdir)/common/m4/gst-glib2.m4 \
+	$(top_srcdir)/common/m4/gst-plugin-docs.m4 \
 	$(top_srcdir)/common/m4/gst-plugindir.m4 \
 	$(top_srcdir)/common/m4/gst.m4 \
 	$(top_srcdir)/common/m4/isc-posix.m4 \
@@ -72,9 +74,11 @@ am_codec_discovery_OBJECTS =  \
 	codec_discovery-fs-rtp-session.$(OBJEXT) \
 	codec_discovery-fs-rtp-stream.$(OBJEXT) \
 	codec_discovery-fs-rtp-substream.$(OBJEXT) \
-	codec_discovery-fs-rtp-participant.$(OBJEXT) \
+	codec_discovery-fs-rtp-participant.$(OBJEXT)
+nodist_codec_discovery_OBJECTS =  \
 	codec_discovery-fs-rtp-marshal.$(OBJEXT)
-codec_discovery_OBJECTS = $(am_codec_discovery_OBJECTS)
+codec_discovery_OBJECTS = $(am_codec_discovery_OBJECTS) \
+	$(nodist_codec_discovery_OBJECTS)
 codec_discovery_LDADD = $(LDADD)
 am__DEPENDENCIES_1 =
 codec_discovery_DEPENDENCIES =  \
@@ -95,7 +99,7 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(codec_discovery_SOURCES)
+SOURCES = $(codec_discovery_SOURCES) $(nodist_codec_discovery_SOURCES)
 DIST_SOURCES = $(codec_discovery_SOURCES)
 ETAGS = etags
 CTAGS = ctags
@@ -181,6 +185,8 @@ GST_PLUGINS_DIR = @GST_PLUGINS_DIR@
 GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
 GST_TOOLS_DIR = @GST_TOOLS_DIR@
 GTKDOC_CHECK = @GTKDOC_CHECK@
+GUPNP_CFLAGS = @GUPNP_CFLAGS@
+GUPNP_LIBS = @GUPNP_LIBS@
 HTML_DIR = @HTML_DIR@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -195,6 +201,8 @@ LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 MKDIR_P = @MKDIR_P@
+NICE_CFLAGS = @NICE_CFLAGS@
+NICE_LIBS = @NICE_LIBS@
 NMEDIT = @NMEDIT@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
@@ -212,6 +220,8 @@ PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
 PLUGINDIR = @PLUGINDIR@
 PROFILE_CFLAGS = @PROFILE_CFLAGS@
+PYDOCSTUFF_CFLAGS = @PYDOCSTUFF_CFLAGS@
+PYDOCSTUFF_LIBS = @PYDOCSTUFF_LIBS@
 PYFARSIGHT_CFLAGS = @PYFARSIGHT_CFLAGS@
 PYFARSIGHT_LIBS = @PYFARSIGHT_LIBS@
 PYTHON = @PYTHON@
@@ -297,11 +307,14 @@ codec_discovery_SOURCES = codec-discovery.c \
 		$(top_srcdir)/gst/fsrtpconference/fs-rtp-session.c \
 		$(top_srcdir)/gst/fsrtpconference/fs-rtp-stream.c \
 		$(top_srcdir)/gst/fsrtpconference/fs-rtp-substream.c \
-		$(top_srcdir)/gst/fsrtpconference/fs-rtp-participant.c \
-		$(top_srcdir)/gst/fsrtpconference/fs-rtp-marshal.c
+		$(top_srcdir)/gst/fsrtpconference/fs-rtp-participant.c
+
+nodist_codec_discovery_SOURCES = \
+		$(top_builddir)/gst/fsrtpconference/fs-rtp-marshal.c
 
 codec_discovery_CFLAGS = \
 	-I$(top_srcdir)/gst/fsrtpconference/ \
+	-I$(top_builddir)/gst/fsrtpconference/ \
 	$(FS2_INTERNAL_CFLAGS) \
 	$(FS2_CFLAGS) \
 	$(GST_CFLAGS) \
@@ -581,19 +594,19 @@ codec_discovery-fs-rtp-participant.obj: $(top_srcdir)/gst/fsrtpconference/fs-rtp
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(codec_discovery_CFLAGS) $(CFLAGS) -c -o codec_discovery-fs-rtp-participant.obj `if test -f '$(top_srcdir)/gst/fsrtpconference/fs-rtp-participant.c'; then $(CYGPATH_W) '$(top_srcdir)/gst/fsrtpconference/fs-rtp-participant.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/gst/fsrtpconference/fs-rtp-participant.c'; fi`
 
-codec_discovery-fs-rtp-marshal.o: $(top_srcdir)/gst/fsrtpconference/fs-rtp-marshal.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(codec_discovery_CFLAGS) $(CFLAGS) -MT codec_discovery-fs-rtp-marshal.o -MD -MP -MF $(DEPDIR)/codec_discovery-fs-rtp-marshal.Tpo -c -o codec_discovery-fs-rtp-marshal.o `test -f '$(top_srcdir)/gst/fsrtpconference/fs-rtp-marshal.c' || echo '$(srcdir)/'`$(top_srcdir)/gst/fsrtpconference/fs-rtp-marshal.c
+codec_discovery-fs-rtp-marshal.o: $(top_builddir)/gst/fsrtpconference/fs-rtp-marshal.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(codec_discovery_CFLAGS) $(CFLAGS) -MT codec_discovery-fs-rtp-marshal.o -MD -MP -MF $(DEPDIR)/codec_discovery-fs-rtp-marshal.Tpo -c -o codec_discovery-fs-rtp-marshal.o `test -f '$(top_builddir)/gst/fsrtpconference/fs-rtp-marshal.c' || echo '$(srcdir)/'`$(top_builddir)/gst/fsrtpconference/fs-rtp-marshal.c
 @am__fastdepCC_TRUE@	mv -f $(DEPDIR)/codec_discovery-fs-rtp-marshal.Tpo $(DEPDIR)/codec_discovery-fs-rtp-marshal.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/gst/fsrtpconference/fs-rtp-marshal.c' object='codec_discovery-fs-rtp-marshal.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_builddir)/gst/fsrtpconference/fs-rtp-marshal.c' object='codec_discovery-fs-rtp-marshal.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(codec_discovery_CFLAGS) $(CFLAGS) -c -o codec_discovery-fs-rtp-marshal.o `test -f '$(top_srcdir)/gst/fsrtpconference/fs-rtp-marshal.c' || echo '$(srcdir)/'`$(top_srcdir)/gst/fsrtpconference/fs-rtp-marshal.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(codec_discovery_CFLAGS) $(CFLAGS) -c -o codec_discovery-fs-rtp-marshal.o `test -f '$(top_builddir)/gst/fsrtpconference/fs-rtp-marshal.c' || echo '$(srcdir)/'`$(top_builddir)/gst/fsrtpconference/fs-rtp-marshal.c
 
-codec_discovery-fs-rtp-marshal.obj: $(top_srcdir)/gst/fsrtpconference/fs-rtp-marshal.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(codec_discovery_CFLAGS) $(CFLAGS) -MT codec_discovery-fs-rtp-marshal.obj -MD -MP -MF $(DEPDIR)/codec_discovery-fs-rtp-marshal.Tpo -c -o codec_discovery-fs-rtp-marshal.obj `if test -f '$(top_srcdir)/gst/fsrtpconference/fs-rtp-marshal.c'; then $(CYGPATH_W) '$(top_srcdir)/gst/fsrtpconference/fs-rtp-marshal.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/gst/fsrtpconference/fs-rtp-marshal.c'; fi`
+codec_discovery-fs-rtp-marshal.obj: $(top_builddir)/gst/fsrtpconference/fs-rtp-marshal.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(codec_discovery_CFLAGS) $(CFLAGS) -MT codec_discovery-fs-rtp-marshal.obj -MD -MP -MF $(DEPDIR)/codec_discovery-fs-rtp-marshal.Tpo -c -o codec_discovery-fs-rtp-marshal.obj `if test -f '$(top_builddir)/gst/fsrtpconference/fs-rtp-marshal.c'; then $(CYGPATH_W) '$(top_builddir)/gst/fsrtpconference/fs-rtp-marshal.c'; else $(CYGPATH_W) '$(srcdir)/$(top_builddir)/gst/fsrtpconference/fs-rtp-marshal.c'; fi`
 @am__fastdepCC_TRUE@	mv -f $(DEPDIR)/codec_discovery-fs-rtp-marshal.Tpo $(DEPDIR)/codec_discovery-fs-rtp-marshal.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/gst/fsrtpconference/fs-rtp-marshal.c' object='codec_discovery-fs-rtp-marshal.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_builddir)/gst/fsrtpconference/fs-rtp-marshal.c' object='codec_discovery-fs-rtp-marshal.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(codec_discovery_CFLAGS) $(CFLAGS) -c -o codec_discovery-fs-rtp-marshal.obj `if test -f '$(top_srcdir)/gst/fsrtpconference/fs-rtp-marshal.c'; then $(CYGPATH_W) '$(top_srcdir)/gst/fsrtpconference/fs-rtp-marshal.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/gst/fsrtpconference/fs-rtp-marshal.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(codec_discovery_CFLAGS) $(CFLAGS) -c -o codec_discovery-fs-rtp-marshal.obj `if test -f '$(top_builddir)/gst/fsrtpconference/fs-rtp-marshal.c'; then $(CYGPATH_W) '$(top_builddir)/gst/fsrtpconference/fs-rtp-marshal.c'; else $(CYGPATH_W) '$(srcdir)/$(top_builddir)/gst/fsrtpconference/fs-rtp-marshal.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

@@ -39,6 +39,7 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-auto-alt.m4 \
 	$(top_srcdir)/common/m4/as-compiler-flag.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
+	$(top_srcdir)/common/m4/as-python.m4 \
 	$(top_srcdir)/common/m4/as-scrub-include.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
@@ -48,6 +49,7 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst-feature.m4 \
 	$(top_srcdir)/common/m4/gst-function.m4 \
 	$(top_srcdir)/common/m4/gst-glib2.m4 \
+	$(top_srcdir)/common/m4/gst-plugin-docs.m4 \
 	$(top_srcdir)/common/m4/gst-plugindir.m4 \
 	$(top_srcdir)/common/m4/gst.m4 \
 	$(top_srcdir)/common/m4/isc-posix.m4 \
@@ -69,8 +71,10 @@ LTLIBRARIES = $(pyfarsight_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 farsight_la_DEPENDENCIES = $(am__DEPENDENCIES_1) \
 	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-@GST_MAJORMINOR@.la
-am_farsight_la_OBJECTS = pyfarsightmodule.lo pyfarsight.lo
-farsight_la_OBJECTS = $(am_farsight_la_OBJECTS)
+am_farsight_la_OBJECTS = pyfarsightmodule.lo
+nodist_farsight_la_OBJECTS = pyfarsight.lo
+farsight_la_OBJECTS = $(am_farsight_la_OBJECTS) \
+	$(nodist_farsight_la_OBJECTS)
 farsight_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(farsight_la_LDFLAGS) $(LDFLAGS) -o $@
@@ -86,7 +90,7 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(farsight_la_SOURCES)
+SOURCES = $(farsight_la_SOURCES) $(nodist_farsight_la_SOURCES)
 DIST_SOURCES = $(farsight_la_SOURCES)
 ETAGS = etags
 CTAGS = ctags
@@ -172,6 +176,8 @@ GST_PLUGINS_DIR = @GST_PLUGINS_DIR@
 GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
 GST_TOOLS_DIR = @GST_TOOLS_DIR@
 GTKDOC_CHECK = @GTKDOC_CHECK@
+GUPNP_CFLAGS = @GUPNP_CFLAGS@
+GUPNP_LIBS = @GUPNP_LIBS@
 HTML_DIR = @HTML_DIR@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -186,6 +192,8 @@ LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 MKDIR_P = @MKDIR_P@
+NICE_CFLAGS = @NICE_CFLAGS@
+NICE_LIBS = @NICE_LIBS@
 NMEDIT = @NMEDIT@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
@@ -203,6 +211,8 @@ PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
 PLUGINDIR = @PLUGINDIR@
 PROFILE_CFLAGS = @PROFILE_CFLAGS@
+PYDOCSTUFF_CFLAGS = @PYDOCSTUFF_CFLAGS@
+PYDOCSTUFF_LIBS = @PYDOCSTUFF_LIBS@
 PYFARSIGHT_CFLAGS = @PYFARSIGHT_CFLAGS@
 PYFARSIGHT_LIBS = @PYFARSIGHT_LIBS@
 PYTHON = @PYTHON@
@@ -294,9 +304,9 @@ BUILT_SOURCES = \
 pyfarsightdir = $(pyexecdir)
 pyfarsight_LTLIBRARIES = farsight.la
 farsight_la_SOURCES = \
-	pyfarsightmodule.c				\
-	pyfarsight.c
+	pyfarsightmodule.c
 
+nodist_farsight_la_SOURCES = pyfarsight.c
 farsight_la_LIBADD = \
 	$(PYFARSIGHT_LIBS)				\
 	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-@GST_MAJORMINOR@.la
@@ -308,7 +318,9 @@ farsight_la_LDFLAGS = \
 EXTRA_DIST = \
 	pyfarsight.override	\
 	pyfarsight.defs		\
-	example.py
+	example.py		\
+	pyfarsight-filter.defs  \
+	rebuild-defs.sh
 
 CLEANFILES = $(BUILT_SOURCES)
 all: $(BUILT_SOURCES)
@@ -601,8 +613,8 @@ pyfarsight.c: pyfarsight.override pyfarsight.defs
 		--register $(PYDEFS)/gdk-types.defs		\
 		--register $(PYDEFS)/gtk-types.defs		\
 		--register $(GSTPYDEFS)/gst-types.defs		\
-		--override pyfarsight.override			\
-		pyfarsight.defs > $@ 
+		--override $(srcdir)/pyfarsight.override	\
+		$(srcdir)/pyfarsight.defs > $@ 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

@@ -34,6 +34,10 @@
 
 #define GST_CAT_DEFAULT fsrtpconference_nego
 
+#define SEND_PROFILE_ARG "farsight-send-profile"
+#define RECV_PROFILE_ARG "farsight-recv-profile"
+
+
 static CodecAssociation *
 lookup_codec_association_by_pt_list (GList *codec_associations, gint pt,
     gboolean want_empty);
@@ -44,6 +48,173 @@ codec_association_copy (CodecAssociation *ca);
 static CodecAssociation *
 lookup_codec_association_custom_intern (GList *codec_associations,
     gboolean want_disabled, CAFindFunc func, gpointer user_data);
+
+static gboolean
+link_unlinked_pads (GstElement *bin,
+    GstPadDirection dir,
+    const gchar *pad_name,
+    guint *pad_count,
+    GError **error)
+{
+  GstPad *pad = NULL;
+  guint i = 0;
+
+  while ((pad = gst_bin_find_unlinked_pad (GST_BIN (bin), dir)))
+  {
+    GstPad *ghostpad;
+    gchar *tmp;
+
+    if (i)
+      tmp = g_strdup_printf ("%s%d", pad_name, i);
+    else
+      tmp = g_strdup (pad_name);
+    i++;
+
+    ghostpad = gst_ghost_pad_new (tmp, pad);
+    gst_object_unref (pad);
+    g_free (tmp);
+
+    if (!ghostpad)
+    {
+      g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
+          "Could not create ghostpad for pad %s:%s",
+          GST_DEBUG_PAD_NAME (pad));
+      return FALSE;
+    }
+
+    if (!gst_element_add_pad (bin, ghostpad))
+    {
+      g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
+          "Could not add pad %s to bin", GST_OBJECT_NAME (ghostpad));
+      return FALSE;
+    }
+  }
+
+  if (pad_count)
+    *pad_count = i;
+
+  return TRUE;
+}
+
+GstElement *
+parse_bin_from_description_all_linked (const gchar *bin_description,
+    guint *src_pad_count, guint *sink_pad_count, GError **error)
+{
+  GstElement *bin =
+    gst_parse_bin_from_description (bin_description, FALSE, error);
+
+  if (!bin)
+    return NULL;
+
+  if (!link_unlinked_pads (bin, GST_PAD_SRC, "src", src_pad_count,
+          error))
+    goto error;
+
+  if (!link_unlinked_pads (bin, GST_PAD_SINK, "sink", sink_pad_count,
+          error))
+    goto error;
+
+  return bin;
+ error:
+  gst_object_unref (bin);
+  return NULL;
+}
+
+static gint
+find_matching_pad (gconstpointer a, gconstpointer b)
+{
+  GstPad *pad = GST_PAD (a);
+  GstCaps *caps = GST_CAPS (b);
+  GstCaps *padcaps = NULL;
+  GstCaps *intersect = NULL;
+  gint ret = 1;
+
+  padcaps = gst_pad_get_caps (pad);
+  intersect = gst_caps_intersect (caps, padcaps);
+
+  if (intersect && !gst_caps_is_empty (intersect))
+    ret = 0;
+
+  gst_caps_unref (intersect);
+  gst_caps_unref (padcaps);
+  gst_object_unref (pad);
+
+  return ret;
+}
+
+static gboolean
+validate_codec_profile (FsCodec *codec,const gchar *bin_description,
+    gboolean is_send)
+{
+  GError *error = NULL;
+  GstElement *bin = NULL;
+  guint src_pad_count = 0, sink_pad_count = 0;
+  GstCaps *caps;
+  gpointer matching_pad = NULL;
+  GstIterator *iter;
+
+  bin = parse_bin_from_description_all_linked (bin_description,
+      &src_pad_count, &sink_pad_count, &error);
+
+  /* if could not build bin, fail */
+  if (!bin)
+  {
+    GST_WARNING ("Could not build profile (%s): %s", bin_description,
+        error->message);
+    g_clear_error (&error);
+    return FALSE;
+  }
+  g_clear_error (&error);
+
+  caps = fs_codec_to_gst_caps (codec);
+
+  if (is_send)
+    iter = gst_element_iterate_src_pads (bin);
+  else
+    iter = gst_element_iterate_sink_pads (bin);
+
+  matching_pad = gst_iterator_find_custom (iter, find_matching_pad, caps);
+  gst_iterator_free (iter);
+
+  if (!matching_pad)
+  {
+    GST_WARNING ("Invalid profile (%s), has no %s pad that matches the codec"
+        " details", is_send ? "src" : "sink", bin_description);
+    gst_caps_unref (caps);
+    gst_object_unref (bin);
+    return FALSE;
+  }
+
+  gst_caps_unref (caps);
+  gst_object_unref (bin);
+
+  if (is_send)
+  {
+    if (src_pad_count == 0)
+    {
+      GST_WARNING ("Invalid profile (%s), has 0 src pad", bin_description);
+      return FALSE;
+    }
+  }
+  else
+  {
+    if (src_pad_count != 1)
+    {
+      GST_WARNING ("Invalid profile (%s), has %u src pads, should have one",
+          bin_description, sink_pad_count);
+      return FALSE;
+    }
+  }
+
+  if (sink_pad_count != 1)
+  {
+    GST_WARNING ("Invalid profile (%s), has %u sink pads, should have one",
+        bin_description, sink_pad_count);
+    return FALSE;
+  }
+
+  return TRUE;
+}
 
 /**
  * validate_codecs_configuration:
@@ -68,6 +239,7 @@ validate_codecs_configuration (FsMediaType media_type, GList *blueprints,
   {
     FsCodec *codec = codec_e->data;
     GList *blueprint_e = NULL;
+    FsCodecParameter *param;
 
     /* Check if codec is for the wrong media_type.. this would be wrong
      */
@@ -77,7 +249,6 @@ validate_codecs_configuration (FsMediaType media_type, GList *blueprints,
     if (codec->id >= 0 && codec->id < 128 && codec->encoding_name &&
         !g_ascii_strcasecmp (codec->encoding_name, "reserve-pt"))
       goto accept_codec;
-
 
     for (blueprint_e = g_list_first (blueprints);
          blueprint_e;
@@ -128,15 +299,32 @@ validate_codecs_configuration (FsMediaType media_type, GList *blueprints,
       continue;
     }
 
+    /* If there are send and/or recv profiles, lets test them */
+    param = fs_codec_get_optional_parameter (codec, RECV_PROFILE_ARG, NULL);
+    if (param && !validate_codec_profile (codec, param->value, FALSE))
+        goto remove_this_codec;
+
+    param = fs_codec_get_optional_parameter (codec, SEND_PROFILE_ARG, NULL);
+    if (param && !validate_codec_profile (codec, param->value, TRUE))
+      goto remove_this_codec;
+
     /* If no blueprint was found */
     if (blueprint_e == NULL)
+    {
+      /* Accept codecs with no blueprints if they have a valid profile */
+      if (fs_codec_get_optional_parameter (codec, RECV_PROFILE_ARG, NULL) &&
+          codec->id >= 0 && codec->id < 128 &&
+          codec->encoding_name && codec->clock_rate)
+        goto accept_codec;
+
       goto remove_this_codec;
+    }
 
   accept_codec:
     codec_e = g_list_next (codec_e);
 
     continue;
- remove_this_codec:
+  remove_this_codec:
     {
       GList *nextcodec_e = g_list_next (codec_e);
       gchar *tmp = fs_codec_to_string (codec);
@@ -160,6 +348,8 @@ _codec_association_destroy (CodecAssociation *ca)
     return;
 
   fs_codec_destroy (ca->codec);
+  g_free (ca->send_profile);
+  g_free (ca->recv_profile);
   g_slice_free (CodecAssociation, ca);
 }
 
@@ -278,6 +468,54 @@ match_original_codec_and_codec_pref (CodecAssociation *ca, gpointer user_data)
   return (tmpcodec != NULL);
 }
 
+static void
+codec_remove_parameter (FsCodec *codec, const gchar *param_name)
+{
+  FsCodecParameter *param;
+
+  param = fs_codec_get_optional_parameter (codec, param_name, NULL);
+
+  if (param)
+    fs_codec_remove_optional_parameter (codec, param);
+}
+
+static gchar *
+dup_param_value (FsCodec *codec, const gchar *param_name)
+{
+  FsCodecParameter *param;
+
+  param = fs_codec_get_optional_parameter (codec, param_name, NULL);
+
+  if (param)
+    return g_strdup (param->value);
+  else
+    return NULL;
+}
+
+/*
+ * Put the recv-only codecs after all of the codecs that are
+ * valid for sending.
+ * This should have the effect of putting stranges "codecs"
+ * like telephone-event and CN at the end
+ */
+
+static GList *
+list_insert_local_ca (GList *list, CodecAssociation *ca)
+{
+  if (codec_association_is_valid_for_sending (ca))
+  {
+    GList *item;
+
+    for (item = list; item; item = item->next)
+      if (!codec_association_is_valid_for_sending (item->data))
+        break;
+    if (item)
+      return g_list_insert_before (list, item, ca);
+  }
+
+  return g_list_append (list, ca);
+}
+
 /**
  * create_local_codec_associations:
  * @blueprints: The #GList of CodecBlueprint
@@ -334,7 +572,9 @@ create_local_codec_associations (
     }
 
     /* No matching blueprint, can't use this codec */
-    if (!bp)
+    if (!bp &&
+        !fs_codec_get_optional_parameter (codec_pref, RECV_PROFILE_ARG,
+                NULL))
     {
       GST_LOG ("Could not find matching blueprint for preferred codec %s/%s",
           fs_media_type_to_string (codec_pref->media_type),
@@ -383,8 +623,14 @@ create_local_codec_associations (
 
           ca = g_slice_new (CodecAssociation);
           memcpy (ca, oldca, sizeof (CodecAssociation));
+          codec_remove_parameter (codec, SEND_PROFILE_ARG);
+          codec_remove_parameter (codec, RECV_PROFILE_ARG);
           ca->codec = codec;
-          codec_associations = g_list_append (codec_associations, ca);
+
+          ca->send_profile = dup_param_value (codec_pref, SEND_PROFILE_ARG);
+          ca->recv_profile = dup_param_value (codec_pref, RECV_PROFILE_ARG);
+
+          codec_associations = list_insert_local_ca (codec_associations, ca);
           continue;
         }
       }
@@ -394,35 +640,44 @@ create_local_codec_associations (
     ca->blueprint = bp;
     ca->codec = fs_codec_copy (codec_pref);
 
-    /* Codec pref does not come with a number, but
-     * The blueprint has its own id, lets use it */
-    if (ca->codec->id == FS_CODEC_ID_ANY &&
-        (bp->codec->id >= 0 || bp->codec->id < 128))
-      ca->codec->id = bp->codec->id;
+    codec_remove_parameter (ca->codec, SEND_PROFILE_ARG);
+    codec_remove_parameter (ca->codec, RECV_PROFILE_ARG);
 
-    if (ca->codec->clock_rate == 0)
-      ca->codec->clock_rate = bp->codec->clock_rate;
+    ca->send_profile = dup_param_value (codec_pref, SEND_PROFILE_ARG);
+    ca->recv_profile = dup_param_value (codec_pref, RECV_PROFILE_ARG);
 
-    if (ca->codec->channels == 0)
-      ca->codec->channels = bp->codec->channels;
-
-    for (bp_param_e = bp->codec->optional_params;
-         bp_param_e;
-         bp_param_e = g_list_next (bp_param_e))
+    if (bp)
     {
-      GList *pref_param_e = NULL;
-      FsCodecParameter *bp_param = bp_param_e->data;
-      for (pref_param_e = ca->codec->optional_params;
-           pref_param_e;
-           pref_param_e = g_list_next (pref_param_e))
+      /* Codec pref does not come with a number, but
+       * The blueprint has its own id, lets use it */
+      if (ca->codec->id == FS_CODEC_ID_ANY &&
+          (bp->codec->id >= 0 || bp->codec->id < 128))
+        ca->codec->id = bp->codec->id;
+
+      if (ca->codec->clock_rate == 0)
+        ca->codec->clock_rate = bp->codec->clock_rate;
+
+      if (ca->codec->channels == 0)
+        ca->codec->channels = bp->codec->channels;
+
+      for (bp_param_e = bp->codec->optional_params;
+           bp_param_e;
+           bp_param_e = g_list_next (bp_param_e))
       {
-        FsCodecParameter *pref_param = pref_param_e->data;
-        if (!g_ascii_strcasecmp (bp_param->name, pref_param->name))
-          break;
+        GList *pref_param_e = NULL;
+        FsCodecParameter *bp_param = bp_param_e->data;
+        for (pref_param_e = ca->codec->optional_params;
+             pref_param_e;
+             pref_param_e = g_list_next (pref_param_e))
+        {
+          FsCodecParameter *pref_param = pref_param_e->data;
+          if (!g_ascii_strcasecmp (bp_param->name, pref_param->name))
+            break;
+        }
+        if (!pref_param_e)
+          fs_codec_add_optional_parameter (ca->codec, bp_param->name,
+              bp_param->value);
       }
-      if (!pref_param_e)
-        fs_codec_add_optional_parameter (ca->codec, bp_param->name,
-            bp_param->value);
     }
 
     {
@@ -431,38 +686,39 @@ create_local_codec_associations (
       g_free (tmp);
     }
 
-    codec_associations = g_list_append (codec_associations, ca);
-  }
+    codec_associations = list_insert_local_ca (codec_associations, ca);
 
-  /* Now, only codecs with specified ids are here,
-   * the rest are dynamic
-   * Lets attribute them here */
-  for (lca_e = codec_associations;
-       lca_e;
-       lca_e = g_list_next (lca_e))
-  {
-    CodecAssociation *lca = lca_e->data;
-    CodecAssociation *tmpca = NULL;
-
-    if (lca->reserved)
-      continue;
-
-    tmpca = lookup_codec_association_by_pt_list (current_codec_associations,
-        lca->codec->id, TRUE);
-
-    /* Same blueprint, we've copied the ID voluntarily, continue */
-    if (tmpca && tmpca->blueprint == lca->blueprint)
-      continue;
-
-    /* If we have a different blueprint or a ANY id, we have to get a new id */
-    if (tmpca || lca->codec->id < 0)
+    /* Now, only codecs with specified ids are here,
+     * the rest are dynamic
+     * Lets attribute them here */
+    for (lca_e = codec_associations;
+         lca_e;
+         lca_e = g_list_next (lca_e))
     {
-      lca->codec->id = _find_first_empty_dynamic_entry (
-          current_codec_associations, codec_associations);
-      if (lca->codec->id < 0)
+      CodecAssociation *lca = lca_e->data;
+      CodecAssociation *tmpca = NULL;
+
+      if (lca->reserved)
+        continue;
+
+      tmpca = lookup_codec_association_by_pt_list (current_codec_associations,
+          lca->codec->id, TRUE);
+
+      /* Same blueprint, we've copied the ID voluntarily, continue */
+      if (tmpca && tmpca->blueprint == lca->blueprint)
+        continue;
+
+      /* If we have a different blueprint or a ANY id, we have to get a new id
+       */
+      if (tmpca || lca->codec->id < 0)
       {
-        GST_ERROR ("We've run out of dynamic payload types");
-        goto error;
+        lca->codec->id = _find_first_empty_dynamic_entry (
+            current_codec_associations, codec_associations);
+        if (lca->codec->id < 0)
+        {
+          GST_ERROR ("We've run out of dynamic payload types");
+          goto error;
+        }
       }
     }
   }
@@ -524,7 +780,7 @@ create_local_codec_associations (
         ca->codec = fs_codec_copy (bp->codec);
         ca->codec->id = tmpca->codec->id;
 
-        codec_associations = g_list_append (codec_associations, ca);
+        codec_associations = list_insert_local_ca (codec_associations, ca);
         next = TRUE;
       }
     }
@@ -546,7 +802,7 @@ create_local_codec_associations (
       }
     }
 
-    codec_associations = g_list_append (codec_associations, ca);
+    codec_associations = list_insert_local_ca (codec_associations, ca);
   }
 
   for (lca_e = codec_associations;
@@ -640,6 +896,8 @@ negotiate_stream_codecs (
       new_ca->need_config = old_ca->need_config;
       new_ca->codec = nego_codec;
       new_ca->blueprint = old_ca->blueprint;
+      new_ca->send_profile = g_strdup (old_ca->send_profile);
+      new_ca->recv_profile = g_strdup (old_ca->recv_profile);
       tmp = fs_codec_to_string (nego_codec);
       GST_DEBUG ("Negotiated codec %s", tmp);
       g_free (tmp);
@@ -661,7 +919,8 @@ negotiate_stream_codecs (
   }
 
   /*
-   * Check if there is a non-disabled codec left
+   * Check if there is a non-disabled codec left that we can use
+   * for sending
    */
   for (item = new_codec_associations;
        item;
@@ -669,7 +928,7 @@ negotiate_stream_codecs (
   {
     CodecAssociation *ca = item->data;
 
-    if (!ca->disable && !ca->reserved && !ca->recv_only)
+    if (codec_association_is_valid_for_sending (ca))
       return new_codec_associations;
   }
 
@@ -818,6 +1077,8 @@ codec_association_copy (CodecAssociation *ca)
 
   memcpy (newca, ca, sizeof(CodecAssociation));
   newca->codec = fs_codec_copy (ca->codec);
+  newca->send_profile = g_strdup (ca->send_profile);
+  newca->recv_profile = g_strdup (ca->recv_profile);
 
   return newca;
 }
@@ -866,7 +1127,8 @@ codec_association_is_valid_for_sending (CodecAssociation *ca)
   if (!ca->disable &&
       !ca->reserved &&
       !ca->recv_only &&
-      ca->blueprint && ca->blueprint->send_pipeline_factory)
+      ((ca->blueprint && ca->blueprint->send_pipeline_factory) ||
+          ca->send_profile))
     return TRUE;
   else
     return FALSE;

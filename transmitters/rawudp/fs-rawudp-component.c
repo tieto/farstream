@@ -38,6 +38,10 @@
 
 #include <gst/netbuffer/gstnetbuffer.h>
 
+#ifdef HAVE_GUPNP
+#include <libgupnp-igd/gupnp-simple-igd-thread.h>
+#endif
+
 #include <string.h>
 #include <sys/types.h>
 
@@ -55,6 +59,11 @@
 #endif /*G_OS_WIN32*/
 
 #define GST_CAT_DEFAULT fs_rawudp_transmitter_debug
+
+#define DEFAULT_UPNP_MAPPING_TIMEOUT (600)
+#define DEFAULT_UPNP_DISCOVERY_TIMEOUT (10)
+
+#define MAX_STUN_TIMEOUT (30)
 
 /* Signals */
 enum
@@ -80,7 +89,14 @@ enum
   PROP_SENDING,
   PROP_TRANSMITTER,
   PROP_FORCED_CANDIDATE,
-  PROP_ASSOCIATE_ON_SOURCE
+  PROP_ASSOCIATE_ON_SOURCE,
+#ifdef HAVE_GUPNP
+  PROP_UPNP_MAPPING,
+  PROP_UPNP_DISCOVERY,
+  PROP_UPNP_MAPPING_TIMEOUT,
+  PROP_UPNP_DISCOVERY_TIMEOUT,
+  PROP_UPNP_IGD
+#endif
 };
 
 
@@ -107,6 +123,15 @@ struct _FsRawUdpComponentPrivate
 
   gboolean associate_on_source;
 
+#ifdef HAVE_GUPNP
+  gboolean upnp_discovery;
+  gboolean upnp_mapping;
+  guint upnp_mapping_timeout;
+  guint upnp_discovery_timeout;
+
+  GUPnPSimpleIgdThread *upnp_igd;
+#endif
+
   /* Above this line, its all set at construction time */
   /* Below, they are protected by the mutex */
 
@@ -117,7 +142,6 @@ struct _FsRawUdpComponentPrivate
 
   FsCandidate *local_active_candidate;
   FsCandidate *local_forced_candidate;
-  FsCandidate *local_stun_candidate;
 
   gboolean gathered;
 
@@ -126,12 +150,16 @@ struct _FsRawUdpComponentPrivate
   gulong buffer_recv_id;
 
   GstClockID stun_timeout_id;
-  GstClockTime next_stun_timeout;
   GThread *stun_timeout_thread;
+  gboolean stun_stop;
 
   gboolean sending;
 
   gboolean remote_is_unique;
+
+#ifdef HAVE_GUPNP
+  GSource *upnp_discovery_timeout_src;
+#endif
 };
 
 
@@ -297,7 +325,7 @@ fs_rawudp_component_class_init (FsRawUdpComponentClass *klass)
       g_param_spec_uint ("stun-timeout",
           "The timeout for the STUN reply",
           "How long to wait for for the STUN reply (in seconds) before giving up",
-          1, G_MAXUINT, 30,
+          1, G_MAXUINT, MAX_STUN_TIMEOUT,
           G_PARAM_CONSTRUCT_ONLY | G_PARAM_WRITABLE));
 
 
@@ -326,6 +354,50 @@ fs_rawudp_component_class_init (FsRawUdpComponentClass *klass)
           " source address",
           TRUE,
           G_PARAM_CONSTRUCT_ONLY | G_PARAM_WRITABLE));
+
+#ifdef HAVE_GUPNP
+    g_object_class_install_property (gobject_class,
+      PROP_UPNP_MAPPING,
+      g_param_spec_boolean ("upnp-mapping",
+          "Try to map ports using UPnP",
+          "Tries to map ports using UPnP if enabled",
+          TRUE,
+          G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class,
+      PROP_UPNP_DISCOVERY,
+      g_param_spec_boolean ("upnp-discovery",
+          "Try to use UPnP to find the external IP address",
+          "Tries to discovery the external IP with UPnP if stun fails",
+          TRUE,
+          G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class,
+      PROP_UPNP_MAPPING_TIMEOUT,
+      g_param_spec_uint ("upnp-mapping-timeout",
+          "Timeout after which UPnP mappings expire",
+          "The UPnP port mappings expire after this period if the app has"
+          " crashed (in seconds)",
+          0, G_MAXUINT32, DEFAULT_UPNP_MAPPING_TIMEOUT,
+          G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class,
+      PROP_UPNP_DISCOVERY_TIMEOUT,
+      g_param_spec_uint ("upnp-discovery-timeout",
+          "Timeout after which UPnP discovery fails",
+          "After this period, UPnP discovery is considered to have failed"
+          " and the local IP is returned",
+          0, G_MAXUINT32, DEFAULT_UPNP_DISCOVERY_TIMEOUT,
+          G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class,
+      PROP_UPNP_IGD,
+      g_param_spec_object ("upnp-igd",
+          "The GUPnPSimpleIgdThread object",
+          "This is the GUPnP IGD abstraction object",
+          GUPNP_TYPE_SIMPLE_IGD_THREAD,
+          G_PARAM_CONSTRUCT_ONLY | G_PARAM_WRITABLE));
+#endif
 
    /**
    * FsRawUdpComponent::new-local-candidate:
@@ -446,6 +518,13 @@ fs_rawudp_component_init (FsRawUdpComponent *self)
   ((guint32*)self->priv->stun_cookie)[2] = g_random_int ();
   ((guint32*)self->priv->stun_cookie)[3] = g_random_int ();
 
+#ifdef HAVE_GUPNP
+  self->priv->upnp_mapping = TRUE;
+  self->priv->upnp_discovery = TRUE;
+  self->priv->upnp_discovery_timeout = DEFAULT_UPNP_DISCOVERY_TIMEOUT;
+  self->priv->upnp_mapping_timeout = DEFAULT_UPNP_MAPPING_TIMEOUT;
+#endif
+
   self->priv->mutex = g_mutex_new ();
 }
 
@@ -502,6 +581,14 @@ fs_rawudp_component_dispose (GObject *object)
     fs_rawudp_component_stop (self);
   }
 
+#ifdef HAVE_GUPNP
+  if (self->priv->upnp_igd)
+  {
+    g_object_unref (self->priv->upnp_igd);
+    self->priv->upnp_igd = NULL;
+  }
+#endif
+
   /* Make sure dispose does not run twice. */
   self->priv->disposed = TRUE;
 
@@ -536,6 +623,23 @@ fs_rawudp_component_stop (FsRawUdpComponent *self)
 
   if (udpport)
   {
+#ifdef HAVE_GUPNP
+
+    if (self->priv->upnp_discovery_timeout_src)
+    {
+      g_source_destroy (self->priv->upnp_discovery_timeout_src);
+      g_source_unref (self->priv->upnp_discovery_timeout_src);
+    }
+    self->priv->upnp_discovery_timeout_src = NULL;
+
+    if (self->priv->upnp_igd  &&
+        (self->priv->upnp_mapping || self->priv->upnp_discovery))
+    {
+      gupnp_simple_igd_remove_port (GUPNP_SIMPLE_IGD (self->priv->upnp_igd),
+          "UDP", fs_rawudp_transmitter_udpport_get_port (udpport));
+    }
+#endif
+
     if (self->priv->buffer_recv_id)
     {
       fs_rawudp_transmitter_udpport_disconnect_recv (
@@ -571,8 +675,6 @@ fs_rawudp_component_finalize (GObject *object)
     fs_candidate_destroy (self->priv->remote_candidate);
   if (self->priv->local_active_candidate)
     fs_candidate_destroy (self->priv->local_active_candidate);
-  if (self->priv->local_stun_candidate)
-    fs_candidate_destroy (self->priv->local_stun_candidate);
   if (self->priv->local_forced_candidate)
     fs_candidate_destroy (self->priv->local_forced_candidate);
 
@@ -608,6 +710,20 @@ fs_rawudp_component_get_property (GObject *object,
     case PROP_COMPONENT:
       g_value_set_uint (value, self->priv->component);
       break;
+#ifdef HAVE_GUPNP
+    case PROP_UPNP_MAPPING:
+      g_value_set_boolean (value, self->priv->upnp_mapping);
+      break;
+    case PROP_UPNP_DISCOVERY:
+      g_value_set_boolean (value, self->priv->upnp_discovery);
+      break;
+    case PROP_UPNP_MAPPING_TIMEOUT:
+      g_value_set_uint (value, self->priv->upnp_mapping_timeout);
+      break;
+    case PROP_UPNP_DISCOVERY_TIMEOUT:
+      g_value_set_uint (value, self->priv->upnp_discovery_timeout);
+      break;
+#endif
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -686,6 +802,23 @@ fs_rawudp_component_set_property (GObject *object,
     case PROP_ASSOCIATE_ON_SOURCE:
       self->priv->associate_on_source = g_value_get_boolean (value);
       break;
+#ifdef HAVE_GUPNP
+    case PROP_UPNP_MAPPING:
+      self->priv->upnp_mapping = g_value_get_boolean (value);
+      break;
+    case PROP_UPNP_DISCOVERY:
+      self->priv->upnp_discovery = g_value_get_boolean (value);
+      break;
+    case PROP_UPNP_MAPPING_TIMEOUT:
+      self->priv->upnp_mapping_timeout = g_value_get_uint (value);
+      break;
+    case PROP_UPNP_DISCOVERY_TIMEOUT:
+      self->priv->upnp_discovery_timeout = g_value_get_uint (value);
+      break;
+    case PROP_UPNP_IGD:
+      self->priv->upnp_igd = g_value_dup_object (value);
+      break;
+#endif
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -703,6 +836,11 @@ fs_rawudp_component_new (
     const gchar *stun_ip,
     guint stun_port,
     guint stun_timeout,
+    gboolean upnp_mapping,
+    gboolean upnp_discovery,
+    guint upnp_mapping_timeout,
+    guint upnp_discovery_timeout,
+    gpointer upnp_igd,
     guint *used_port,
     GError **error)
 {
@@ -717,6 +855,13 @@ fs_rawudp_component_new (
       "stun-ip", stun_ip,
       "stun-port", stun_port,
       "stun-timeout", stun_timeout,
+#ifdef HAVE_GUPNP
+      "upnp-mapping", upnp_mapping,
+      "upnp-discovery", upnp_discovery,
+      "upnp-mapping-timeout", upnp_mapping_timeout,
+      "upnp-discovery-timeout", upnp_discovery_timeout,
+      "upnp-igd", upnp_igd,
+#endif
       NULL);
 
   if (!self)
@@ -847,6 +992,73 @@ fs_rawudp_component_set_remote_candidate (FsRawUdpComponent *self,
   return TRUE;
 }
 
+#ifdef HAVE_GUPNP
+static void
+_upnp_mapped_external_port (GUPnPSimpleIgdThread *igd, gchar *proto,
+    gchar *external_ip, gchar *replaces_external_ip, guint external_port,
+    gchar *local_ip, guint local_port, gchar *description, gpointer user_data)
+{
+  FsRawUdpComponent *self = FS_RAWUDP_COMPONENT (user_data);
+
+  FS_RAWUDP_COMPONENT_LOCK (self);
+  /* Skip it if its not our port */
+  if (fs_rawudp_transmitter_udpport_get_port (self->priv->udpport) !=
+      external_port)
+  {
+    FS_RAWUDP_COMPONENT_UNLOCK (self);
+    return;
+  }
+
+  if (self->priv->upnp_discovery_timeout_src)
+  {
+    g_source_destroy (self->priv->upnp_discovery_timeout_src);
+    g_source_unref (self->priv->upnp_discovery_timeout_src);
+  }
+  self->priv->upnp_discovery_timeout_src = NULL;
+
+  if (self->priv->local_active_candidate)
+  {
+    FS_RAWUDP_COMPONENT_UNLOCK (self);
+    return;
+  }
+
+  self->priv->local_active_candidate = fs_candidate_new ("L1",
+      self->priv->component,
+      FS_CANDIDATE_TYPE_HOST,
+      FS_NETWORK_PROTOCOL_UDP,
+      external_ip,
+      external_port);
+  FS_RAWUDP_COMPONENT_UNLOCK (self);
+
+  fs_rawudp_component_emit_candidate (self, self->priv->local_active_candidate);
+}
+
+static gboolean
+_upnp_discovery_timeout (gpointer user_data)
+{
+  FsRawUdpComponent *self = user_data;
+  GError *error = NULL;
+
+  FS_RAWUDP_COMPONENT_LOCK (self);
+  self->priv->upnp_discovery_timeout_src = NULL;
+  FS_RAWUDP_COMPONENT_UNLOCK (self);
+
+  if (!fs_rawudp_component_emit_local_candidates (self, &error))
+  {
+    if (error->domain == FS_ERROR)
+      fs_rawudp_component_emit_error (self, error->code,
+          error->message, error->message);
+    else
+      fs_rawudp_component_emit_error (self, FS_ERROR_INTERNAL,
+          "Error emitting local candidates", NULL);
+  }
+  g_clear_error (&error);
+
+  return FALSE;
+}
+
+#endif
+
 gboolean
 fs_rawudp_component_gather_local_candidates (FsRawUdpComponent *self,
     GError **error)
@@ -865,14 +1077,66 @@ fs_rawudp_component_gather_local_candidates (FsRawUdpComponent *self,
     return FALSE;
   }
 
+#ifdef HAVE_GUPNP
+
+  if (self->priv->upnp_igd  &&
+      (self->priv->upnp_mapping || self->priv->upnp_discovery))
+  {
+    guint port;
+    GList *ips;
+
+    port = fs_rawudp_transmitter_udpport_get_port (self->priv->udpport);
+
+    ips = fs_interfaces_get_local_ips (FALSE);
+
+    if (ips)
+    {
+      gchar *ip = g_list_first (ips)->data;
+      GMainContext *ctx;
+
+      if (self->priv->upnp_discovery)
+      {
+        g_signal_connect (self->priv->upnp_igd, "mapped-external-port",
+            G_CALLBACK (_upnp_mapped_external_port), self);
+      }
+
+      gupnp_simple_igd_add_port (GUPNP_SIMPLE_IGD (self->priv->upnp_igd),
+          "UDP", port, ip, port, self->priv->upnp_mapping_timeout,
+          "Farsight Raw UDP transmitter");
+
+
+      FS_RAWUDP_COMPONENT_LOCK (self);
+      self->priv->upnp_discovery_timeout_src = g_timeout_source_new_seconds (
+          self->priv->upnp_discovery_timeout);
+      g_source_set_callback (self->priv->upnp_discovery_timeout_src,
+          _upnp_discovery_timeout, self, NULL);
+      g_object_get (self->priv->upnp_igd, "main-context", &ctx, NULL);
+      g_source_attach (self->priv->upnp_discovery_timeout_src, ctx);
+      FS_RAWUDP_COMPONENT_UNLOCK (self);
+    }
+
+    /* free list of ips */
+    g_list_foreach (ips, (GFunc) g_free, NULL);
+    g_list_free (ips);
+
+  }
+#endif
+
   if (self->priv->stun_ip && self->priv->stun_port)
     return fs_rawudp_component_start_stun (self, error);
+#ifdef HAVE_GUPNP
+  else if (!self->priv->upnp_igd || !self->priv->upnp_discovery)
+    return fs_rawudp_component_emit_local_candidates (self, error);
+  else
+    return TRUE;
+#else
   else
     return fs_rawudp_component_emit_local_candidates (self, error);
+#endif
 }
 
 static gboolean
-fs_rawudp_component_start_stun (FsRawUdpComponent *self, GError **error)
+fs_rawudp_component_send_stun (FsRawUdpComponent *self, GError **error)
 {
   struct addrinfo hints;
   struct addrinfo *result = NULL;
@@ -881,16 +1145,6 @@ fs_rawudp_component_start_stun (FsRawUdpComponent *self, GError **error)
   guint length;
   int retval;
   StunMessage *msg;
-  gboolean res = TRUE;
-  GstClock *sysclock = NULL;
-
-  sysclock = gst_system_clock_obtain ();
-  if (sysclock == NULL)
-  {
-    g_set_error (error, FS_ERROR, FS_ERROR_INTERNAL,
-        "Could not obtain gst system clock");
-    return FALSE;
-  }
 
   memset (&hints, 0, sizeof (struct addrinfo));
   hints.ai_family = AF_INET;
@@ -908,13 +1162,6 @@ fs_rawudp_component_start_stun (FsRawUdpComponent *self, GError **error)
 
   address.sin_family = AF_INET;
   address.sin_port = htons (self->priv->stun_port);
-
-  FS_RAWUDP_COMPONENT_LOCK (self);
-  self->priv->stun_recv_id =
-    fs_rawudp_transmitter_udpport_connect_recv (
-        self->priv->udpport,
-        G_CALLBACK (stun_recv_cb), self);
-  FS_RAWUDP_COMPONENT_UNLOCK (self);
 
   msg = stun_message_new (STUN_MESSAGE_BINDING_REQUEST,
       self->priv->stun_cookie, 0);
@@ -938,12 +1185,19 @@ fs_rawudp_component_start_stun (FsRawUdpComponent *self, GError **error)
   g_free (packed);
   stun_message_free (msg);
 
+  return TRUE;
+}
+
+static gboolean
+fs_rawudp_component_start_stun (FsRawUdpComponent *self, GError **error)
+{
+  gboolean res = TRUE;
+
   FS_RAWUDP_COMPONENT_LOCK (self);
-
-  self->priv->next_stun_timeout = gst_clock_get_time (sysclock) +
-    (self->priv->stun_timeout * GST_SECOND);
-
-  gst_object_unref (sysclock);
+  self->priv->stun_recv_id =
+    fs_rawudp_transmitter_udpport_connect_recv (
+        self->priv->udpport,
+        G_CALLBACK (stun_recv_cb), self);
 
   if (self->priv->stun_timeout_thread == NULL) {
     /* only create a new thread if the old one was stopped. Otherwise we can
@@ -976,7 +1230,7 @@ fs_rawudp_component_stop_stun_locked (FsRawUdpComponent *self)
     self->priv->stun_recv_id = 0;
   }
 
-  self->priv->next_stun_timeout = 0;
+  self->priv->stun_stop = TRUE;
   if (self->priv->stun_timeout_id)
     gst_clock_id_unschedule (self->priv->stun_timeout_id);
 }
@@ -1088,6 +1342,9 @@ stun_timeout_func (gpointer user_data)
   GstClock *sysclock = NULL;
   GstClockID id;
   gboolean emit = TRUE;
+  GstClockTime next_stun_timeout;
+  GError *error = NULL;
+  guint total_timeout_ms = 100;
 
   sysclock = gst_system_clock_obtain ();
   if (sysclock == NULL)
@@ -1100,20 +1357,46 @@ stun_timeout_func (gpointer user_data)
   }
 
   FS_RAWUDP_COMPONENT_LOCK(self);
-  id = self->priv->stun_timeout_id = gst_clock_new_single_shot_id (sysclock,
-      self->priv->next_stun_timeout);
+  while (!self->priv->stun_stop &&
+      (total_timeout_ms / 1000) < self->priv->stun_timeout &&
+      total_timeout_ms < 1000 * MAX_STUN_TIMEOUT)
+  {
 
-  FS_RAWUDP_COMPONENT_UNLOCK(self);
-  gst_clock_id_wait (id, NULL);
-  FS_RAWUDP_COMPONENT_LOCK(self);
+    FS_RAWUDP_COMPONENT_UNLOCK(self);
+    if (!fs_rawudp_component_send_stun (self, &error))
+    {
+      fs_rawudp_component_emit_error (self, error->code, "Could not send stun",
+          error->message);
+      g_clear_error (&error);
+      FS_RAWUDP_COMPONENT_LOCK (self);
+      fs_rawudp_component_stop_stun_locked (self);
+      goto error;
+    }
+    FS_RAWUDP_COMPONENT_LOCK(self);
 
-  gst_clock_id_unref (id);
-  self->priv->stun_timeout_id = NULL;
+    if (self->priv->stun_stop)
+      goto error;
 
-  if (self->priv->next_stun_timeout == 0)
+    next_stun_timeout = gst_clock_get_time (sysclock) +
+      total_timeout_ms * GST_MSECOND;
+    total_timeout_ms *= 2;
+    total_timeout_ms += 100;
+
+    id = self->priv->stun_timeout_id = gst_clock_new_single_shot_id (sysclock,
+        next_stun_timeout);
+
+    FS_RAWUDP_COMPONENT_UNLOCK(self);
+    gst_clock_id_wait (id, NULL);
+    FS_RAWUDP_COMPONENT_LOCK(self);
+
+    gst_clock_id_unref (id);
+    self->priv->stun_timeout_id = NULL;
+  }
+ error:
+
+  if (self->priv->stun_stop)
     emit = FALSE;
 
- error:
   fs_rawudp_component_stop_stun_locked (self);
 
   FS_RAWUDP_COMPONENT_UNLOCK(self);

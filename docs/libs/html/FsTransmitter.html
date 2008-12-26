@@ -50,6 +50,9 @@
 <div class="refsynopsisdiv">
 <a name="FsTransmitter.synopsis"></a><h2>Synopsis</h2>
 <pre class="synopsis">
+
+#include &lt;gst/farsight/fs-transmitter.h&gt;
+
                     <a class="link" href="FsTransmitter.html#FsTransmitter-struct" title="FsTransmitter">FsTransmitter</a>;
                     <a class="link" href="FsTransmitter.html#FsTransmitterClass" title="FsTransmitterClass">FsTransmitterClass</a>;
 <a class="link" href="FsTransmitter.html" title="FsTransmitter">FsTransmitter</a>*      <a class="link" href="FsTransmitter.html#fs-transmitter-new" title="fs_transmitter_new ()">fs_transmitter_new</a>                  (const <a
@@ -76,20 +79,18 @@ href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 <a
 href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
 >GType</a>               <a class="link" href="FsTransmitter.html#fs-transmitter-get-stream-transmitter-type" title="fs_transmitter_get_stream_transmitter_type ()">fs_transmitter_get_stream_transmitter_type</a>
-                                                        (<a class="link" href="FsTransmitter.html" title="FsTransmitter">FsTransmitter</a> *transmitter,
-                                                         <a
-href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
->GError</a> **error);
+                                                        (<a class="link" href="FsTransmitter.html" title="FsTransmitter">FsTransmitter</a> *transmitter);
 void                <a class="link" href="FsTransmitter.html#fs-transmitter-emit-error" title="fs_transmitter_emit_error ()">fs_transmitter_emit_error</a>           (<a class="link" href="FsTransmitter.html" title="FsTransmitter">FsTransmitter</a> *transmitter,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> error_no,
-                                                         <a
+                                                         const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *error_msg,
-                                                         <a
+                                                         const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *debug_msg);
+char**              <a class="link" href="FsTransmitter.html#fs-transmitter-list-available" title="fs_transmitter_list_available ()">fs_transmitter_list_available</a>       (void);
 </pre>
 </div>
 <div class="refsect1" lang="en">
@@ -156,8 +157,7 @@ All members are private, access them using methods and properties</p>
                                                   guint n_parameters,
                                                   GParameter *parameters,
                                                   GError **error);
-  GType (*get_stream_transmitter_type) (FsTransmitter *transmitter,
-      GError **error);
+  GType (*get_stream_transmitter_type) (FsTransmitter *transmitter);
 } FsTransmitterClass;
 </pre>
 <p>
@@ -307,10 +307,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 <pre class="programlisting"><a
 href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
 >GType</a>               fs_transmitter_get_stream_transmitter_type
-                                                        (<a class="link" href="FsTransmitter.html" title="FsTransmitter">FsTransmitter</a> *transmitter,
-                                                         <a
-href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
->GError</a> **error);</pre>
+                                                        (<a class="link" href="FsTransmitter.html" title="FsTransmitter">FsTransmitter</a> *transmitter);</pre>
 <p>
 This function returns the GObject type for the stream transmitter.
 This is meant for bindings that need to introspect the type of arguments
@@ -324,13 +321,6 @@ that can be passed to the _new_stream_transmitter.</p>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>transmitter</code></em> :</span></p></td>
 <td> A <a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a> object
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> location of a <a
-href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
-><span class="type">GError</span></a>, or NULL if no error occured
 </td>
 </tr>
 <tr>
@@ -350,10 +340,10 @@ href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> error_no,
-                                                         <a
+                                                         const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *error_msg,
-                                                         <a
+                                                         const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *debug_msg);</pre>
 <p>
@@ -386,6 +376,30 @@ only be called by subclasses.</p>
 </td>
 </tr>
 </tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="fs-transmitter-list-available"></a><h3>fs_transmitter_list_available ()</h3>
+<pre class="programlisting">char**              fs_transmitter_list_available       (void);</pre>
+<p>
+Get the list of all available transmitters</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a newly allocated array of strings containing the list of all
+ available transmitters or <a
+href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
+><code class="literal">NULL</code></a> if there are none. It should
+ be freed with <a
+href="/usr/share/gtk-doc/html/glib/glib-String-Utility-Functions.html#g-strfreev"
+><code class="function">g_strfreev()</code></a>.
+</td>
+</tr></tbody>
 </table></div>
 </div>
 </div>

@@ -40,7 +40,7 @@ FsStreamTransmitter
 
 @fsstreamtransmitter: the object which received the signal.
 @arg1: 
-@Param3: 
+@arg2: 
 
 <!-- ##### SIGNAL FsStreamTransmitter::local-candidates-prepared ##### -->
 <para>

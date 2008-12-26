@@ -116,6 +116,7 @@ FsSession
 @stop_telephony_event: 
 @set_send_codec: 
 @set_codec_preferences: 
+@list_transmitters: 
 
 <!-- ##### FUNCTION fs_session_new_stream ##### -->
 <para>
@@ -173,6 +174,15 @@ FsSession
 @session: 
 @codec_preferences: 
 @error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_session_list_transmitters ##### -->
+<para>
+
+</para>
+
+@session: 
 @Returns: 
 
 

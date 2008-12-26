@@ -52,8 +52,11 @@ setup_fakesrc (FsTransmitter *trans, GstElement *pipeline, guint component_id)
   GstElement *src;
   GstElement *trans_sink;
   gchar *padname;
+  gchar *tmp;
 
-  src = gst_element_factory_make ("fakesrc", NULL);
+  tmp = g_strdup_printf ("fakemediasrc_%d", component_id);
+  src = gst_element_factory_make ("fakesrc", tmp);
+  g_free (tmp);
   g_object_set (src,
       "num-buffers", 20,
       "sizetype", 2,
@@ -61,6 +64,12 @@ setup_fakesrc (FsTransmitter *trans, GstElement *pipeline, guint component_id)
       "is-live", TRUE,
       "filltype", 2,
       NULL);
+
+  /*
+   * We lock and unlock the state to prevent the source to start
+   * playing before we link it
+   */
+  gst_element_set_locked_state (src, TRUE);
 
   ts_fail_unless (gst_bin_add (GST_BIN (pipeline), src),
     "Could not add the fakesrc");
@@ -74,6 +83,8 @@ setup_fakesrc (FsTransmitter *trans, GstElement *pipeline, guint component_id)
 
   ts_fail_if (gst_element_set_state (src, GST_STATE_PLAYING) ==
     GST_STATE_CHANGE_FAILURE, "Could not set the fakesrc to playing");
+
+  gst_element_set_locked_state (src, FALSE);
 
   gst_object_unref (trans_sink);
 }
@@ -159,4 +170,37 @@ bus_error_callback (GstBus *bus, GstMessage *message, gpointer user_data)
   }
 
   return TRUE;
+}
+
+void
+test_transmitter_creation (gchar *transmitter_name)
+{
+  GError *error = NULL;
+  FsTransmitter *trans;
+  GstElement *pipeline;
+  GstElement *trans_sink, *trans_src;
+
+  trans = fs_transmitter_new (transmitter_name, 2, &error);
+
+  if (error) {
+    ts_fail ("Error creating transmitter: (%s:%d) %s",
+      g_quark_to_string (error->domain), error->code, error->message);
+  }
+
+  ts_fail_if (trans == NULL, "No transmitter create, yet error is still NULL");
+
+  pipeline = setup_pipeline (trans, NULL);
+
+  g_object_get (trans, "gst-sink", &trans_sink, "gst-src", &trans_src, NULL);
+
+  fail_if (trans_sink == NULL, "Sink is NULL");
+  fail_if (trans_src == NULL, "Src is NULL");
+
+  gst_object_unref (trans_sink);
+  gst_object_unref (trans_src);
+
+  g_object_unref (trans);
+
+  gst_object_unref (pipeline);
+
 }

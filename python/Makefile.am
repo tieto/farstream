@@ -18,8 +18,9 @@ pyfarsightdir = $(pyexecdir)
 pyfarsight_LTLIBRARIES = farsight.la
 
 farsight_la_SOURCES =					\
-	pyfarsightmodule.c				\
-	pyfarsight.c
+	pyfarsightmodule.c
+
+nodist_farsight_la_SOURCES = pyfarsight.c
 
 farsight_la_LIBADD =					\
 	$(PYFARSIGHT_LIBS)				\
@@ -35,12 +36,14 @@ pyfarsight.c: pyfarsight.override pyfarsight.defs
 		--register $(PYDEFS)/gdk-types.defs		\
 		--register $(PYDEFS)/gtk-types.defs		\
 		--register $(GSTPYDEFS)/gst-types.defs		\
-		--override pyfarsight.override			\
-		pyfarsight.defs > $@ 
+		--override $(srcdir)/pyfarsight.override	\
+		$(srcdir)/pyfarsight.defs > $@ 
 
 EXTRA_DIST =			\
 	pyfarsight.override	\
 	pyfarsight.defs		\
-	example.py
+	example.py		\
+	pyfarsight-filter.defs  \
+	rebuild-defs.sh
 
 CLEANFILES = $(BUILT_SOURCES)

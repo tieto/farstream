@@ -26,7 +26,7 @@
  * SECTION:fs-rtp-participant
  * @short_description: A RTP participant in a #FsRtpConference
  *
- * This object represents one participant or person in a conference
+ * This object represents one participant or person in a RTP conference
  */
 
 #ifdef HAVE_CONFIG_H
@@ -80,7 +80,7 @@ fs_rtp_participant_init (FsRtpParticipant *self)
   // self->priv = FS_RTP_PARTICIPANT_GET_PRIVATE (self);
 }
 
-FsRtpParticipant *fs_rtp_participant_new (gchar *cname)
+FsRtpParticipant *fs_rtp_participant_new (const gchar *cname)
 {
   return g_object_new (FS_TYPE_RTP_PARTICIPANT, "cname", cname, NULL);
 }

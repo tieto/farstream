@@ -87,7 +87,6 @@ FsTransmitter
 </para>
 
 @transmitter: 
-@error: 
 @Returns: 
 
 
@@ -100,5 +99,13 @@ FsTransmitter
 @error_no: 
 @error_msg: 
 @debug_msg: 
+
+
+<!-- ##### FUNCTION fs_transmitter_list_available ##### -->
+<para>
+
+</para>
+
+@Returns: 
 
 

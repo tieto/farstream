@@ -1,3 +1,2762 @@
+commit 914525d4af200202356ee8dae0403060a0f12101
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 13 18:37:28 2008 +0000
+
+    Version 0.0.4
+
+commit c4415871b6e360468fc3396d206c0edb90082e17
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 13 18:37:20 2008 +0000
+
+    Don't distribute pyfarsight.c
+
+commit 9a95c078e7f21fefb48301fd029c30237192e88a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 13 18:14:34 2008 +0000
+
+    Remove const to match nice api change
+
+commit aac853005303a67956b22599ef5e66ccb3937b07
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 13 17:05:55 2008 +0000
+
+    Disable stund test unless STUND is defined
+
+commit 775be7887ed675d38e3bd7ca81114c99f922385b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 13 16:47:35 2008 +0000
+
+    Add missing files to tarball
+
+commit dad0b082e8f988b71262e8f1c0669acc8f215c6c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 13 16:29:16 2008 +0000
+
+    Include coverage files
+
+commit a0d1d492470db64203cac4df8f45e2c13151366b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 13 15:49:31 2008 +0000
+
+    Remove no longer valid message
+
+commit a2f039f2effcce87f071fa3e6e6e8db0f74bc59d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 13 15:27:09 2008 +0000
+
+    Lock source to prevent it being started by the bin before its linked
+
+commit 07c6f2f37f53e4935227c50011956a91cd8af83b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 13 15:26:04 2008 +0000
+
+    Stop immediately on error
+
+commit f1e1f853ddecfaa33b3d05f5007772a3a2cecd5c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 13 15:16:49 2008 +0000
+
+    Give the fakesrc a more meaningful name
+
+commit c2e160d1e95c4b7ba1fd452db22449acc1690c6c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 13 14:36:54 2008 +0000
+
+    Re-send stun requests with increasing timestamps per RFC3489
+
+commit c2208240b603cab33772dd654ebb3444b24ac9c0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 13 14:14:22 2008 +0000
+
+    Send the stun request in the timeout function
+
+commit 249269c1e00e5eb0b59d0015845a5079081fe7a7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 13 13:14:42 2008 +0000
+
+    Simplify rawudp stun timeout handling
+
+commit 2bd85c650c2e5725bad80ac1f215dbd279652dc3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 13 13:04:13 2008 +0000
+
+    Factor out the stun sending part
+
+commit d5174f34e17c53ff908fe994e3936cb510cf6e6b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 13 12:50:55 2008 +0000
+
+    Make sure the pipeline is playing before we start trying to do dtmf
+
+commit 5f8f3a34fe2ea73f66f6186cbfff94e18e1b5e7c
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Thu Nov 13 12:13:17 2008 +0000
+
+    Only strncyp the candidate foundation if it's set
+
+commit f415d1908289480a3838022d47e28d6783f79cdb
+Merge: d36d151... 90bc234...
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 11 19:23:49 2008 +0000
+
+    Merge branch 'nice-transmitter'
+
+commit 90bc23487c3f3b973d5bc633e948180e3169c891
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 11 19:05:06 2008 +0000
+
+    Test setting relay-info
+
+commit cffd47cf286425213823d0a35229b6b35a5e9804
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 11 18:59:35 2008 +0000
+
+    Fix small leak
+
+commit 1e19d6991faa2f01abf2138eca248c6a81ed8d78
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 11 18:33:53 2008 +0000
+
+    Take the values, so no leak
+
+commit d36d151870690c28328bbc6703fd61418a9deea5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 11 18:14:05 2008 +0000
+
+    Install gtk-doc in parallel-installable place
+
+commit fe33f681b70ea5469cf3b799088eba5f12b2a1f6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 11 16:51:41 2008 +0000
+
+    Dist the right filename
+
+commit 92a90e7f491a44eed3215bf0a8fc5478060b42ed
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Tue Nov 11 13:32:26 2008 +0000
+
+    We own the new stream so drop the extra ref pygobject_new adds
+
+commit 5f578b1b75f41c51eb1c663457de541fa41152a4
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Tue Nov 11 13:31:47 2008 +0000
+
+    Update defs file
+
+commit 80d24cda002735f9ddc15eb1cc3eba23127857c5
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Tue Nov 11 13:31:00 2008 +0000
+
+    Let the sed annotate all new_ functions with caller-owns-return
+
+commit 42ab6b09670188702a9cbf23e3298f4d643d749d
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Tue Nov 11 13:04:27 2008 +0000
+
+    Add rebuild-defs.sh to EXTRA_DIST
+
+commit 7f560e94b67777827cc7b423578dacdf3a1b98b1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 11 13:18:38 2008 +0000
+
+    Use slice for nicegststream
+
+commit f0d5735141dae346b1da71526c86b396212c7397
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 11 13:17:34 2008 +0000
+
+    Don't leak probe ids
+
+commit 2a4cedc564491a77e7d85afbd9238db181c7a029
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 11 12:17:09 2008 +0000
+
+    Add test for invalid arguments while creating nice transmitters
+
+commit 67a0e4c93bdd52fdd04b95c833faea8a0cc59d0a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 11 11:43:34 2008 +0000
+
+    Check is there is a valid particpant
+
+commit c66481c4a1b1860d5d2efcdbfaed3e17a07c4fa2
+Author: Youness Alaoui <kakaroto@kakaroto.(none)>
+Date:   Wed Nov 5 15:42:54 2008 -0500
+
+    a component id equal to the number of components is valid
+
+commit 9c858c06561b3f48a3e3dadc27f877de26966334
+Author: Youness Alaoui <kakaroto@kakaroto.(none)>
+Date:   Wed Nov 5 15:42:21 2008 -0500
+
+    we modify candidates, so we need to save the next item before modifying the list
+
+commit 4456bbbcc15aed451e4fd02427d34d399deafe49
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 5 19:45:59 2008 +0200
+
+    Add test for force_selected_candidates
+
+commit e9cb820acf588d24520178aa1b52dc54779a222c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 5 14:38:44 2008 +0200
+
+    Update error message to match code
+
+commit b6c75d4e448c095370043bab96fe9ff3776db233
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 5 14:22:00 2008 +0200
+
+    Use FS_COMPONENT_NONE in tests
+
+commit cfa848f11e04450f1ddf17272f67bc4f1d143352
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 5 14:21:23 2008 +0200
+
+    Add FS_COMPONENT_NONE
+
+commit bbacf3b1f17e61c16d505ea048d27c86c056b0de
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 5 14:15:02 2008 +0200
+
+    Add stund based test
+
+commit 2c3323ecff7134943332c8d4dcbcabb6b132f20c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 5 14:02:59 2008 +0200
+
+    Add test for preferred local candidates
+
+commit 628c81f93be9c8b6ef69f5da9c2772735d32520f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 10 18:16:19 2008 +0000
+
+    Delay forced candidates until the gathering is done
+
+commit 34a31a13479c12f3f0fb2b0cb2c9548a95c4d3c0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 10 18:04:07 2008 +0000
+
+    Factor out the candidate forcing function
+
+commit a87463e5dad318743e20db1bea243b6999fc9afb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 10 17:53:56 2008 +0000
+
+    Empty candidate list on restart
+
+commit 07a1aa39bb84613d30b7edd41437b299a3e314cd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 10 17:52:57 2008 +0000
+
+    Queue remote candidates until gathering is done
+
+commit 148e3401f3bc1dd224bfdd900af6470cfca0279a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 4 19:13:30 2008 -0500
+
+    Only set relay info on right component
+
+commit e36e777884a50742aa307da160b41d7dc5c5579c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 4 19:13:20 2008 -0500
+
+    Components start at 1
+
+commit aebd1118ad81c3f4fbd4025a97017013aa18578e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 4 19:05:14 2008 -0500
+
+    Don't enforce having one relay info per component
+
+commit ea506377ce65c8b23ba991e6994f8aeaf5edce14
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 4 17:16:13 2008 -0500
+
+    The local credentials are now copied inside libnice
+
+commit e3f5b5c968e4afb99bd378adc4b24a3e724b4966
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 4 16:09:27 2008 -0500
+
+    Use a static format string
+
+commit 2edaf4e4091d2fff8e1b370029ac9400a21f2b42
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 4 16:09:02 2008 -0500
+
+    Declare variable to make automake happy
+
+commit 457b259890c69116281784aa685bfc423abcf6fa
+Author: Youness Alaoui <kakaroto@kakaroto.(none)>
+Date:   Mon Nov 3 19:40:39 2008 -0500
+
+    only declare constant size arrays
+
+commit d6890ecefb77b5d6ceef22c066c7a2f0f6467091
+Author: Youness Alaoui <kakaroto@kakaroto.(none)>
+Date:   Mon Nov 3 19:38:48 2008 -0500
+
+    Fix include
+
+commit ca009d8745814396a65cce222c54b53071d9782e
+Author: Youness Alaoui <kakaroto@kakaroto.(none)>
+Date:   Mon Nov 3 19:38:35 2008 -0500
+
+    declare variables only at the start of blocks
+
+commit 5e00a42d7d2b2a41c377ff7cdefbad72ea24a265
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 3 19:29:31 2008 -0500
+
+    Set boolean to true to avoid double-setting of forced candidates
+
+commit 5acf2c9d3042e7f7f10678508628a06a83027477
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Aug 25 20:31:59 2008 -0400
+
+    Use the agent directly in callbacks instead of getting it from somewhere else
+
+commit 840f394ca2acfe34874ce96c2deb2aed5275fce8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 22 22:26:41 2008 -0400
+
+    Only connect the agent new candidate signal after the initial gathering is done
+
+commit 030f17792f03f8c6f20b54eb48fe6ea81fbfba59
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 3 16:47:43 2008 -0500
+
+    Match renaming of enum
+
+commit e50acec901b70b78ca129ef0a19475208da4b84c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 3 16:38:33 2008 -0500
+
+    Ignore gathering-done signal if the stream_id doesn't match
+
+commit a637cef192bece4f294b567b43ae0f461b28c6f6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Oct 30 16:09:57 2008 -0400
+
+    Add right see_also to nice transmitter
+
+commit d2076525eb0dd352efafe360ea1861100f71f3ee
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Oct 30 16:09:29 2008 -0400
+
+    Add nice transmitter to gtkdoc
+
+commit 1730673281f71c128f6caeebce44bd6bdc7021c1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 29 16:52:01 2008 -0400
+
+    Only stop on missing libnice if it was explicitely requested by the user
+
+commit 29fab1d5d914cd8c111dcbf67080234f8bfc731c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 29 13:13:39 2008 -0400
+
+    Remove GError in get_stream_transmitter_type to match updated api
+
+commit a67e1c3934bb1f920a9e216e302a66d5ce17e434
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 28 20:35:40 2008 -0400
+
+    Make it possible to set multiple turn servers (udp, tcp, tls) to libnice
+
+commit 4fb01402a8871252ef3441b7f81132ddbff3c0e5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 28 20:15:01 2008 -0400
+
+    Replace long/short term creds with relay-type
+
+commit 90a5e28cf3d704e6a3e25ad4a013abe4a8f539db
+Author: Youness Alaoui <kakaroto@kakaroto.(none)>
+Date:   Tue Oct 7 14:30:07 2008 -0400
+
+    Removing unused/unexisting socket factory
+
+commit 6437113512cf1d1bf03a67c095dd805d9f6425de
+Author: Youness Alaoui <kakaroto@kakaroto.(none)>
+Date:   Tue Oct 7 14:30:25 2008 -0400
+
+    Remove long term credentials flag from set_relay_info. API change..
+
+commit f3c863a05def2767e7e112e53ee5f05c46d7db2f
+Author: Youness Alaoui <kakaroto@kakaroto.(none)>
+Date:   Wed Sep 17 20:42:17 2008 -0400
+
+    Add support for enabling/disabling nice and stun debug messages
+
+commit c0a54ac7244580dd7d5d3e1fb905410629931043
+Author: Youness Alaoui <kakaroto@kakaroto.(none)>
+Date:   Wed Sep 17 02:18:23 2008 -0400
+
+    we must use g_value_dup_boxed instead of g_value_get_boxed as the GValueArray gets freed right after the set_property
+
+commit f57fc3799d4df92be5662aa930c9f2aa1f7c75cc
+Author: Youness Alaoui <kakaroto@kakaroto.(none)>
+Date:   Wed Sep 17 02:17:44 2008 -0400
+
+    update libnice API : replace ID19 by DRAFT19 for compatibility
+
+commit e6a1d37f07ebba47791b381bdeda6213a0dc856b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 11 18:56:38 2008 -0400
+
+    Add long-term-credentials boolean
+
+commit dc457e3b2ab0bfb338be72dab70729e0f0b1262a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 11 18:56:25 2008 -0400
+
+    Read port from "port", not ip
+
+commit 5c70bcd5b6628e217c28502bfce0d0a6b23d59bb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Aug 6 19:27:00 2008 -0400
+
+    Add call to nice_agent_set_relay_info
+
+commit bdd3ca080e47ffb95ec20cd88855a0e4af76c9df
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Aug 6 19:06:44 2008 -0400
+
+    Add property for relayinfo
+
+commit 4254a6880157397f252fe3633b4037cc05582d5b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Aug 6 19:02:45 2008 -0400
+
+    Remove turn-ip/turn-port parameters (they're unused)
+
+commit 01226e7c8b96a52f2370fd763479350e11df371d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Aug 6 16:38:49 2008 -0400
+
+    Remove udpsocketfactory from nice_agent_new() call
+
+commit b1f6da2eeae47586e167768198f0ec55ec0e3c85
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jul 29 22:55:50 2008 -0400
+
+    Add new test for associate-on-source in nice transmitter
+
+commit c6523b506dbf4864878aa11248e3f0f4c82e8706
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jul 29 22:29:49 2008 -0400
+
+    Add known buffer handler to the nice transmitter
+
+commit 8d94b613fd734a34981df3b3c8b092d89d1783f4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jul 29 22:21:39 2008 -0400
+
+    Add associate-on-source property to the nice transmitter
+
+commit 1c718ca425a520655580a0630f5c147ec8ad7814
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jul 29 22:19:25 2008 -0400
+
+    Add break to compat mode getter in nice st
+
+commit 17d8fb17221b7c3e93409acb9b2bfa5d5c02055e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jul 29 22:15:42 2008 -0400
+
+    Add per-buffer callback to the nice transmitter
+
+commit ad5d1befeb2acba20d45768f976d7a6e575af07d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jul 29 22:05:51 2008 -0400
+
+    Implement stream transmitter stop method in nice transmitter
+
+commit 27e61e6281e9d4cb434e6663b733211f8467a6ca
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jul 29 17:32:56 2008 -0400
+
+    Remove unload method from the nice transmitter
+
+commit fbd8057d784308e9900c54dee5d0024b79a7d5c6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jul 28 16:38:27 2008 -0400
+
+    Remove useless check
+
+commit 5a73d0661ca24cb098960543582809475fdce3e3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jul 3 15:39:36 2008 -0400
+
+    Implement force_remote_candidate api in nice transmitter using new nice api
+
+commit 3e7aa9def4f9a7de1052978af4842cc5535019f6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jul 1 16:49:34 2008 -0400
+
+    Port nice transmitter test to set api
+
+commit f2167cc364391ece37e0c7857352853eb9a1f5a7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jul 1 16:29:09 2008 -0400
+
+    Port nice transmitter from add to set candidates api
+
+commit 70a4b3bb2deffa9c0e7300fdbb0bdc60ddfef7f2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jul 1 13:10:44 2008 -0400
+
+    Check that the state changes happen in the right direction
+
+commit 36de08560d9b000747f6cc5cbf32b5b3ef391ff2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jun 30 20:01:04 2008 -0400
+
+    Remove the state property from the nice transmitter
+
+commit 01be6bdc0a4bf61fe9b1ccfdf0ca1da779784c25
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jun 27 20:13:25 2008 -0400
+
+    Use the state-changed signal instead of the notify::state signal in tests
+
+commit 13cf7a8a07fa2117272d7081ac2047513e74f38e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jun 27 14:59:53 2008 -0400
+
+    Emit new component-exposing signal
+
+commit 59127d8757764bfb1f4ed5793e420c242d59cb82
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 6 16:41:56 2008 -0400
+
+    Make the libs/cflags be in the right order in the transmitter
+
+commit b5fb45a894f471a40a56384be0890aff12d311ed
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri May 2 14:35:10 2008 -0400
+
+    Add fake participant subclass for unit test
+
+commit a7c730a8b859b472c5de826e1de0842df781b435
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri May 2 14:34:53 2008 -0400
+
+    Remove g_warning, it crashes test
+
+commit 0cbbaf094df2e47c07c7a766c34e0cc1ff461a9d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri May 2 14:26:28 2008 -0400
+
+    Lock participant data with participant lock
+
+commit dd54f350defd31c8e8f26da15c6d204233a8e1ec
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri May 2 14:12:39 2008 -0400
+
+    use the right agent object
+
+commit bb9161a21f475a02e9bf80e4b9474c923a95156d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri May 2 14:12:30 2008 -0400
+
+    Module is unloadable, strings are not static
+
+commit bc227bcdccad93723b7e6d0f93b601de0a9294a0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri May 2 14:06:51 2008 -0400
+
+    Remove now unused external agent functions from FsNiceAgent
+
+commit 4473d91f863babcf9835cb9886880a34f3610823
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri May 2 14:05:50 2008 -0400
+
+    Use FsNiceAgent to provide agent in FsNiceTransmitter
+
+commit 9ed897a97926517aaa403f36495194df57cbdcae
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri May 2 14:00:51 2008 -0400
+
+    Check if agent making succeeded in fs_nice_agent_new function
+
+commit fa512f4769d43129d7d696b127efe7d230088f76
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri May 2 13:56:43 2008 -0400
+
+    Set preferred local candidates in FsNiceAgent
+
+commit ff404d0a48a17049ccd0739c539c2cd7264d474b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri May 2 13:53:23 2008 -0400
+
+    Set prefs cands on agent on _new
+
+commit 2939cbecd270a704468ea7c0f2046c9ab7300566
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri May 2 13:52:04 2008 -0400
+
+    Add preferred local candidate property to FsNiceAgent and make compat mode readable
+
+commit 8bdf90a16e622732647e4c32652d65a3e5b4596f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri May 2 13:45:39 2008 -0400
+
+    Create nice agent in FsNiceAgent
+
+commit a5d644e5e8caef9d2e85cb15335874be45036d8a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri May 2 13:41:51 2008 -0400
+
+    Set compat mode when creating fsniceagent
+
+commit 37e768a6bdde44229db43adc614128d094589b1a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri May 2 13:39:48 2008 -0400
+
+    Rename FsNiceThread into FsNiceAgent
+
+commit 08388cd9bdb8906514cbf09616e55f499a06767e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri May 2 13:29:22 2008 -0400
+
+    Move the nice thread into a nice agent object
+
+commit 46f3efc9e204bdc7ccb9b447c237ffb4580b3bdf
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri May 2 13:28:47 2008 -0400
+
+    Create udpsocket factory in nice-thread class
+
+commit cf3983d6bc3207cf01dc3f3df5867b0287f041fd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri May 2 13:26:45 2008 -0400
+
+    Add compatibility_mode property to the nice thread
+
+commit e098237b6b018bdda0b0e33ff1a18dbfc54df037
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri May 2 13:23:00 2008 -0400
+
+    Revert "Use GInitiallyUnowned for fs-nice-thread"
+    
+    This reverts commit 48e70218512d2021944c30a9143b5ede7a4ba073.
+
+commit 39026fc5192c7a586b4a603fca9623622e57ec2c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu May 1 22:52:36 2008 -0400
+
+    Only set username/password on local candidates
+
+commit 10f428951b68df459123e0270257bd1ec1355916
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu May 1 22:52:01 2008 -0400
+
+    Only try to add base_addr if it is valid
+
+commit 5e8f05e9ab3a42cdc4f45c0bcec24a706d492f54
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu May 1 22:51:01 2008 -0400
+
+    Give login/password on a per-candidate basis
+
+commit 3c5ef661c9da6376e812953954d2d7bfcdc39409
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu May 1 22:50:28 2008 -0400
+
+    Use remote foundation to look for remote candidate
+
+commit a0a814931b569437408f41e1fcb8fcfdd7662736
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu May 1 19:35:01 2008 -0400
+
+    Free NiceCandidate with the right method
+
+commit d88e5d7b067223b198ea6f792f6ecbe7fed0494e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu May 1 19:34:33 2008 -0400
+
+    Ignore more than one call to candidates_added()
+
+commit a65ca967b14a7e0d0a3e003c10418330e6f6ccba
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu May 1 19:34:04 2008 -0400
+
+    Free candidate only once
+
+commit 30754a667dcbc3a16ec2393a19371156e707ea38
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu May 1 19:33:42 2008 -0400
+
+    Check that ip is there and accept that possibility of having no base
+
+commit fe3abd903dbef32ecb2c2a39bfdfbd5880a79b2d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu May 1 19:33:07 2008 -0400
+
+    Dupe username and passwords
+
+commit 6d9ecb8f01abd3d738afe26b9e1e22445071b17b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu May 1 17:40:14 2008 -0400
+
+    Use GInitiallyUnowned for fs-nice-thread
+
+commit 4d512ad91633cb73ebaef49b715e6bcc9125b218
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu May 1 17:21:48 2008 -0400
+
+    Use g_object_unref directly instead of having a function wrapping it
+
+commit 92ec6f0b86005e5c5001fca5c6db3d89dc1723a7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu May 1 17:21:06 2008 -0400
+
+    Keep ref to participant when adding agents to it, only destroy it when all agents are gone
+
+commit db801963f8d7dcbd02ed14c750701a5995e8c3e7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 30 23:01:08 2008 -0400
+
+    Fix leaks in nice transmitter
+
+commit f389dc54451f89f4da185cf0d488d72f9897e1ab
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 30 22:39:26 2008 -0400
+
+    Free gotten candidates (adapt to new api)
+
+commit d72a4cf94ee7495e79f4d6a3a8560161fb5919ec
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 29 20:43:45 2008 -0400
+
+    Don't ignore new-candidate
+
+commit dc3c7de35fecd4b7d0c3afb295362a150ea83d9e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 29 19:02:50 2008 -0400
+
+    Set the initial controlling mode and default to true
+
+commit 57139e6ad2ed2e85b2cdbd59551271418140a74a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 29 18:16:48 2008 -0400
+
+    Keep ref to main transmitter in nice transmitter
+
+commit ab922039e4976e8ab55a8f145a1b9981d773440f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 29 16:44:35 2008 -0400
+
+    Put the debug extern into the header file
+
+commit 04181c648770e024d16826cdc458f5edd324ca0c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 29 14:11:19 2008 -0400
+
+    Pass a pseudo-participant in the unit test
+
+commit f8af3785b91ca5acb432634ddab1481638fe7e89
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 29 14:07:39 2008 -0400
+
+    Connect to agent signals
+
+commit 53f87936e4590d1ff539c17e9889f5427c10dd92
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 29 13:50:30 2008 -0400
+
+    Find agent on participant if one exists, otherwise build one
+
+commit 4662f7768acec22adf079070d011585da29eb3fb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 28 21:28:42 2008 -0400
+
+    Pass the participant to the build function
+
+commit 05187bf2d8f46fd8eba29535fb6353af93065b77
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 28 21:24:23 2008 -0400
+
+    Move the agent inside the stream transmitter
+
+commit 5ad65859d9bfc16105295686ee0fdd607cf60bb0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 28 21:16:38 2008 -0400
+
+    Remove almost everything from the FsNiceTransmitter class
+
+commit dc8bd71b9ff3aef3d5e84a740f845c84cd207e09
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 28 20:46:24 2008 -0400
+
+    Add FsNiceThread object to be a reference counted thread
+
+commit e4c2c2c4db4b184038f9475d9abf56669765fa15
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 28 20:16:34 2008 -0400
+
+    Make add_gst_stream take the agent as an argument
+
+commit 4ff5e2c61f00b3a307a7cfc72c001dd256f81399
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Apr 26 01:38:07 2008 -0400
+
+    Print the state by name in the test
+
+commit d60a7bd6ae7d71a292e664f7e756583698c50f41
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Apr 26 01:37:57 2008 -0400
+
+    Init nice state to disconnected
+
+commit 2263fbf6356e5b782ed1c0fe128aaa033491a387
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Apr 26 01:23:57 2008 -0400
+
+    Build pipeline in reaction to change in stream state
+
+commit 6943c55afeb48304fae11739726500f9072dfe48
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Apr 26 01:12:17 2008 -0400
+
+    Implement the state property in the nice transmitter
+
+commit c8c81eee50d93d507a41044889e51c8a807713dd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Apr 26 00:39:09 2008 -0400
+
+    Almost working nice test
+
+commit 8af8ac35c88701575291ecc6f5ef64bb9d137cc7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 25 22:33:26 2008 -0400
+
+    Compare selected pair to the foundation (not the struct...)
+
+commit 78a097cd2c35ede7ec60a42aa088289656e981b8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 25 21:56:19 2008 -0400
+
+    Only set the remote candidates on the matching component
+
+commit 68266912fa408d5ecf4091dd2835a49266f167d9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 25 21:17:02 2008 -0400
+
+    Don't use per-candidate passwords, they're currently broken in libnice
+
+commit c8da82637bc421a835ae4c62742d67a9cc002b1c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 25 18:50:54 2008 -0400
+
+    NULL candidate list when its empty
+
+commit e9dfedffc6efa39a88e9e24134fc716955cd7afb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 25 18:45:58 2008 -0400
+
+    Don't keep mutex while traversing list
+
+commit f6b01221158d2524f056bcdf21129597d2ff873b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 25 18:45:26 2008 -0400
+
+    Don't lock printf uselessly
+
+commit 20f59dc0a26bb66c4adc75ff6e47f368dc1dc0d2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 25 18:34:09 2008 -0400
+
+    Add debug messages
+
+commit 83f4e9c31329be955eda41315726394b65b5e60b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 25 18:33:27 2008 -0400
+
+    Test the content of returned candidates
+
+commit 1f1b4c5f72cbd1a08067137e834d29d3c491f95b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 25 18:33:15 2008 -0400
+
+    Take a copy of candidates before returning
+
+commit 3126eba1ab128c81de55566e25b6ecbc648313a6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 25 18:24:21 2008 -0400
+
+    Get the credentials in a safer way
+
+commit e6dbaf81526cc8907b95b9ed437c00d805d96a8e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 25 18:20:26 2008 -0400
+
+    Use the right test for component counters
+
+commit 2e05734725f882a212626e23cc374c301cd80a26
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 25 18:11:49 2008 -0400
+
+    Create stream in build step, start gathering in gathering step
+
+commit d960d091224fa3de993e7fff2cceb09276d1554f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 25 17:15:30 2008 -0400
+
+    Set sync/async properties before potentially going to playing
+
+commit 0b318f83cb081778d6b3c6d3d46e43828c8633d0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 25 17:00:21 2008 -0400
+
+    Add some debugging messages
+
+commit 40eda4165315dfebdebfb7bdc8aa9e623c7d2338
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 25 16:59:57 2008 -0400
+
+    Test for errors creating libnice stream
+
+commit b5c61846db1f6cb5a848101afb929172646f8457
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 25 15:44:43 2008 -0400
+
+    Ignore new-candidate signals before the candidates-gathering-done arrives
+
+commit e5e08e72e27d3592b39bfd0e5150c3830d9101cb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 25 15:29:08 2008 -0400
+
+    Use the functions to add stream transmitters
+
+commit b07e5fcfec7395e0bfa5081036941cb253fa9605
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 25 15:21:11 2008 -0400
+
+    Add functions to create/destroy nice sinks/sources
+
+commit b1ab33ec72e08008ba86dd6f3c920c81310e5de4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 25 15:28:43 2008 -0400
+
+    Die if the nice transmitter if requested by libnice aint there
+
+commit 63ddcecef11aa2d946990c91ff84241efc344dd6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 25 13:14:58 2008 -0400
+
+    Use all interfaces if not specific inteface is set
+
+commit a522858780b62dce880be6205d0d5ef304629b99
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 19:03:55 2008 -0400
+
+    Only check error value if it is set
+
+commit e7943a85fd21c77dd43ff86fd2ec5e1e5ff37067
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 19:03:36 2008 -0400
+
+    Also check if transmitter is set
+
+commit 3c88f50ebb1a25b43425280a9dceb1967e4ac3ff
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 19:01:45 2008 -0400
+
+    Add test for main functionality of nice transmitter
+
+commit cb026610eed86b6e4d451be1c9936c0007871733
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 19:01:31 2008 -0400
+
+    Fix little type where the stream is started first
+
+commit ab0da744a08cc54685f5db901bd65ac71520db76
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 19:00:42 2008 -0400
+
+    Have ignored compatibility-mode property and set it to ID19 as default if none is set
+
+commit e3e2e219087706faf290a8a73d4e922e84d068f0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 18:31:08 2008 -0400
+
+    Move the transmitter creation test to the generic file
+
+commit 383b4e8a3a19a90a3a257420e6c8676ac69ebd3d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 18:27:32 2008 -0400
+
+    Add test for nice transmitter
+
+commit b37b852168594a0b1cae21b51c2e780e678eddc9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 18:11:59 2008 -0400
+
+    Make the stream id into a property and the streams into a list
+
+commit 79de71120f1f1843b3ff9494fed779f798349076
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 18:03:03 2008 -0400
+
+    Implement gather candidates
+
+commit e05eadb41f70904a7d9ad2749dbaf89e82af2193
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 17:38:37 2008 -0400
+
+    Implement setting the remote candidates
+
+commit c68ce3e1150a0bd929ac5fa470ec1179af54a5aa
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 17:11:15 2008 -0400
+
+    Emit candidates for all components when gathering is done
+
+commit ca4038e0fc40ce0e9b939ef43ca851244b911fdb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 17:10:45 2008 -0400
+
+    Set the username/password from global if there is no local
+
+commit e6d0bbff47890703e911ce11e5a2bd6afd6dfc19
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 16:45:06 2008 -0400
+
+    Print message on state change
+
+commit 20848824980b2b06bf97bcc15dbb259a5d453a93
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 16:44:36 2008 -0400
+
+    Replace g_warnign with GST_WARNING
+
+commit 6e1b2772a0d4bacad0638599332a643305c140ac
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 16:41:44 2008 -0400
+
+    Act on gathering-done signal
+
+commit d49ed15bff888e2db39e5f5ea61f85eef6c265d8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 16:39:18 2008 -0400
+
+    Add mutex to nice stream transmitter
+
+commit 7cdf7bd1c42e4ca191473fedfeff38d69c97c165
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 16:35:49 2008 -0400
+
+    Dispatch gathering done signal
+
+commit dae7d50aca64acfefa4d47daf00b366c4702f542
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 16:26:05 2008 -0400
+
+    Implement fs_nice_stream_transmitter_new_candidate
+
+commit 2776509080cb7e29d0115a0f7244c9d71684a6a2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 16:23:55 2008 -0400
+
+    implement fs_nice_stream_transmitter_selected_pair
+
+commit 4a4cbc5d3950d5c9b7c765232384d784c1bd1ae6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 15:53:39 2008 -0400
+
+    Implement select_candidate_pair
+
+commit a86f714249315cce202b7fb836a29b791bc0f239
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 15:53:56 2008 -0400
+
+    Remember if the stream was created and destroy it if it wasnt
+
+commit f72ebbe861663c06b3117e192264a86ac08be74a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 15:41:29 2008 -0400
+
+    Add all empty api functions
+
+commit eba09dce7c8035742369df927e8aef1670d40051
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 15:35:32 2008 -0400
+
+    Remove unused build method
+
+commit df68bd7f5d16f1c505d1b1c26dc65c59536972ae
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 15:32:11 2008 -0400
+
+    Add the property getter/setters
+
+commit 867173a4241766479a8be67cb553849a64a0223e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 15:22:53 2008 -0400
+
+    Make the agent into a public member
+
+commit 205a2ce145135215e9161a666da112621b124065
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 15:21:13 2008 -0400
+
+    Add various properties to the stream transmitter
+
+commit 250453a2b718eea3943dfb4a0dc1ab98830a1e1c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 15:01:51 2008 -0400
+
+    Set the stream_id when building a stream
+
+commit e15b19218545fca0fb3b0936cc97c3cc04fc07c0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 24 12:21:46 2008 -0400
+
+    Track stream destruction in a thread-safe way
+
+commit ae04b334a634181136b6afd3f5c077bb824615fc
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 23 16:14:12 2008 -0400
+
+    Dispatch the signal to the appropriate stream transmitter
+
+commit db26b279ca2a0fa57bd0a1128cfa2ec02d3b974c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 23 15:59:51 2008 -0400
+
+    Use macros for locks and unlocks
+
+commit 9ae3b66b5b7f205b96ef835deb89327f9b8bd577
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 23 15:56:53 2008 -0400
+
+    Keep the streams in a GArray
+
+commit c762f609345e5c4f2a68b472970e8e516b19b278
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 22 21:10:19 2008 -0400
+
+    Add empty handlers for the main signals
+
+commit 3ae4d9ca8ebc33c9a36253fb0578e7c529b53065
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 22 21:02:44 2008 -0400
+
+    Create nice agent
+
+commit c3e420593a4710d32fff88067ddc7bbbda7a98c7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 22 20:19:55 2008 -0400
+
+    Add mutex to nice transmitter
+
+commit 7fca91ecd3401720c71627ea7dfbeb2c8fb8a18f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 22 20:06:14 2008 -0400
+
+    Add agent property
+
+commit 596f94d1dd76ad819dcf4067b8c3824364675659
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 22 20:03:18 2008 -0400
+
+    Verify compat mode and make sure all streams have the same
+
+commit 2d375dbe7eb58eb937aef3ee5e02ba2abb23e38d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 22 19:46:04 2008 -0400
+
+    Add GMainLoop
+
+commit 7c2bd0202827ca72e6a30d60d1134770e88f97b6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 22 19:42:11 2008 -0400
+
+    Make nice transmitter use right right { identation
+
+commit 4f9a9ed437a6c82c8a4cd1f3232573674ddb5ff1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 22 19:40:26 2008 -0400
+
+    Add main context
+
+commit 68eccbe06665615f3489117c68f7ca22778bfb70
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 22 19:37:30 2008 -0400
+
+    Remove useless dispose functions
+
+commit ab482fe16751be4dffac0eefb640f341ccf944d0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 22 19:30:30 2008 -0400
+
+    Add getter for the component property
+
+commit 5621d06111b30bef8fb3310f5e884b7394861edd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 22 19:23:00 2008 -0400
+
+    Rename funnels/tees to non-udp names
+
+commit 4752a0f86fa73252754d20393b1f004b674861c7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 22 19:14:57 2008 -0400
+
+    Add empty implementation of the nice transmitter
+
+commit 40365c65d64bd0847bfd106279495e1548c4e2af
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 22 18:57:28 2008 -0400
+
+    Add empty libnice transmitter
+
+commit 39882301823879d66261feae9c1ee4721ab19404
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Oct 31 22:25:29 2008 -0400
+
+    Fix typo in doc
+
+commit ece5033223c9d26a5b622e78e06cb83076959bce
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Oct 31 22:24:24 2008 -0400
+
+    Add include files to the docs
+
+commit 484b9981b82d500acd9a1e0bedafba0802b4bbac
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Oct 31 22:13:55 2008 -0400
+
+    Make _emit_error functions take const arguments
+
+commit c8eef3ca945911896b94285f5c7598fb7fb0ed8b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Oct 31 22:10:04 2008 -0400
+
+    Make the cname argument to new_participant const
+
+commit 5bb89efbef0eae1c2674dd62c7cc3974071e8d76
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Oct 31 18:47:11 2008 -0400
+
+    Add test for fs_codec_list_from_keyfile
+
+commit 20f34f46e1de908ae6da5b03b5d8c4628380c8fc
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Oct 31 18:30:30 2008 -0400
+
+    Fix typo in test
+
+commit c0de1656938037e4a0d30e93de6f7251ea4c7db4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 8 18:04:02 2008 -0400
+
+    Import fs_rtp_session_list_transmitters
+
+commit b79eb6b930f5138c8c91e76280296a35f691d47f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 8 18:00:05 2008 -0400
+
+    Add python bindings for fs_session_list_transmitters
+
+commit d1679e8039ef9766ad5915baa999cd4be58ac894
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 8 17:49:46 2008 -0400
+
+    Add fs_session_list_transmitters()
+
+commit 774d863b92d59eec7131db5d986b5173b075bf34
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 8 14:05:19 2008 -0400
+
+    Add API to list transmitters
+
+commit 35f805a0904b6bf95305d45896e6f84387cef7e1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 8 14:00:58 2008 -0400
+
+    Add API to list plugins
+
+commit 83a16df136be1683edc61d9122050dad415a01f6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Oct 31 14:12:27 2008 -0400
+
+    Add stdlib.h to simple-call for atoi
+
+commit 9c94b93af942061abba4083d2450733edb9cd771
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Oct 31 13:34:07 2008 -0400
+
+    Remove duplicated test invocation
+
+commit 244f6d959c5dec95f31930d70ac1394706eaec6a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Oct 30 16:10:31 2008 -0400
+
+    Add proper links to the see_also in the transmitters
+
+commit 821d1df216233db4af7350c9e6f2b34344252cc6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Oct 25 14:00:30 2008 -0700
+
+    Replace gint with Py_ssize_t in python bindings where appropriate
+
+commit c07ca88f918e53bca0fd93cb8f056845e63870a6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 28 19:04:13 2008 -0400
+
+    Don't use upnp discovery in rtp tests
+
+commit d4c75daacc637f939eaad9253c836a973f27d1e3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 28 18:50:27 2008 -0400
+
+    Possibly set the upnp's xml path with env var for tests
+
+commit 9b773fe2f9b90974d739381f7b6ac8adc3081bca
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 28 18:48:16 2008 -0400
+
+    Add upnp xml files to the distcheck
+
+commit aac3ceaf0ab1016145836c85a57faa596bca71ed
+Merge: 8c02231... 6174b79...
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 28 17:50:48 2008 -0400
+
+    Merge branch 'upnp' into upnp-merged
+
+commit 8c0223185fac47b0f0830d1f9966233ce8d09dec
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 27 17:16:17 2008 -0400
+
+    Add gcov libs to gtkdoc scanner libs to make it work both gtk-doc and coverage enabled
+
+commit 142462215a92482aabd01f2edcbc6dad1e4d997f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Oct 24 13:11:27 2008 -0700
+
+    Add lcov stuff from core gstreamer
+
+commit 9cc8f55b3eb79ad1baf5ae56334ce67270336f00
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 27 20:19:15 2008 -0400
+
+    Don't clean inspect*.stamp
+
+commit 51f50718e2e913ef76e55138688f7eb43ac0b689
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 27 19:39:52 2008 -0400
+
+    Don't distribute generated marshaller files
+
+commit d02cfcd2d3dea52562fe33c9bffd3febd26d3f7d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 27 17:57:30 2008 -0400
+
+    Have fs-rawudp-* use the generic marshaller generator
+
+commit a8659d6599ad5654158081e15a0918e0fe5b1fec
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 27 17:53:52 2008 -0400
+
+    Have fs-rtp-* use the generic marshaller generator
+
+commit cd7fdbef7675978622cb5b6d31f7b7a6aeda652c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 27 17:49:07 2008 -0400
+
+    Replace multiple copies of marshaller/enums generator with gst version
+
+commit cb225613fb9e7f7ac8dd85a98dc90e35598f449c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 27 17:39:43 2008 -0400
+
+    Add dep on makefiles ot glib-gen.mak
+
+commit e1b8eeed8597c29ea049ed4e4ea50a60039912c2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 27 17:37:55 2008 -0400
+
+    Removed hardcoded header with variable?
+
+commit c7b6da0d52b0f8ee8f15a768c34b23e5cb4fd853
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 27 17:36:18 2008 -0400
+
+    Rename -enumtypes* files to -enum-types* in glib-gen.mk
+
+commit 58b4225bd100dbc0f66775845198235877470e4c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 27 17:35:35 2008 -0400
+
+    Import glib-gen.mk from gstreamer
+
+commit a7186a23d111aaa328469d5c807bc58928f16274
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 27 17:49:55 2008 -0400
+
+    Ignore generated marshaller files
+
+commit 150524d89b97e930d904cb20cf345c23321520d9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 22 23:01:04 2008 -0700
+
+    Allow plugin doc to be built in parallel
+
+commit 58d3939f10999f1007e5fc00874ce055d99231fb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 22 22:47:14 2008 -0700
+
+    Auto-generate rawudp marshallers list
+
+commit 047959848ed46cf912bcef45bf09a8d674471c0a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 22 22:43:54 2008 -0700
+
+    Auto-generate fsrtpconference marshaller list
+
+commit 1405cf339438edbbd9f9d6bfea7bc0246a878c00
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 22 22:37:57 2008 -0700
+
+    built fs-marshal.list is in builddir, not srcdir
+
+commit 5199f761674288567a2ff01f913bc64bad8d4962
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 22 21:59:49 2008 -0700
+
+    Add documentation for codec profiles
+
+commit 0b85280b76ca9e02cb8339a6eb796fcdc592e006
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 22 21:39:45 2008 -0700
+
+    Remove unused element in temporary struct
+
+commit 1850a70301155f01f070585be95ff2c83e43193a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 22 21:33:54 2008 -0700
+
+    Put variable declaration down into the block where its used
+
+commit 6c41cd48a8f0ca5aa55b7d02d565133846e61204
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 22 21:31:21 2008 -0700
+
+    Give function more explicit name about its memory allocation
+
+commit 9c1c498f0d0fd2319d3dc0b5691f2c4773cfed79
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 22 21:28:01 2008 -0700
+
+    Check if there are src/sink pads in the profiles that match the codec
+
+commit fa73244ec37437552be245e1bc7b8a6df3a2acb5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 22 20:31:48 2008 -0700
+
+    Factor out duplicated generated pad linking function
+
+commit 6be9da9079ea9c824ce4e584737a8d6384c25c95
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 22 20:15:49 2008 -0700
+
+    Put recv-only codecs at the end
+
+commit ac02e92686d1ab4412ee19c2ee85d0615817a094
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 22 22:56:29 2008 -0400
+
+    Fix identation
+
+commit 523570c092d72ff781842463a14a0724442c6666
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 22 22:29:19 2008 -0400
+
+    Add tests for recv-only profiles
+
+commit 84b8972d28ebfdd1fbdac99ecc1d23847495874b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 22 22:01:07 2008 -0400
+
+    Don't require a send profile
+
+commit d025b9350177bb93baf6cc23db58276e2c323fc1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 22 21:59:41 2008 -0400
+
+    We need a least one codec thats valid for sending
+
+commit 3afe81c3ed5eafc6ef03664d277418ac6ddb976f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 22 16:25:02 2008 -0400
+
+    Replace underscores with hyphens in profile property names
+
+commit 04a97f7f9fb6b5285fe31d373a1de5dee614f5ce
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 21 17:08:24 2008 -0400
+
+    Reduce tests loudness a bit
+
+commit 2dc7374b7af8007131525ffdd3d885e209d227ce
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 21 17:03:12 2008 -0400
+
+    Don't mix src and sin kpads in creating the codecbin
+
+commit 5ad81abb341cdbd46aa77b0fdd3182fe2c7ad592
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 21 16:57:31 2008 -0400
+
+    move extrainit before exchanging the codecs
+
+commit 25b2e4c324fc74bbc32a2bc2cfe6fd2d1da63ad9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 21 16:07:29 2008 -0400
+
+    Add tests for the codec profiles
+
+commit a721d5d58bbc6b855b387e40d270d0a42c0a741d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 21 15:48:27 2008 -0400
+
+    Test codec profiles on codecs that have a blueprint too
+
+commit 921b76c12b0dcae8044e24525f5c53d95294d2c4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 20 18:32:40 2008 -0400
+
+    Link extra pads if they exist
+
+commit bff18f6bd73843efb37c4cbc947ab0b56148794a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 20 14:26:50 2008 -0400
+
+    Cleanup extra capsfilters when changing send codec bin
+
+commit 7683edd257040e23dcd51f9acea8609832e1405d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 20 14:13:17 2008 -0400
+
+    Free extra send capsfilters on session destruction
+
+commit 859ab28fad34b99a0e397f8b5a4675c430e4c745
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Oct 19 19:05:32 2008 -0400
+
+    Add test for invalid srcpad case
+
+commit 1ec9ac1d5f1deacd3d59bed357d806461c10c006
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Oct 19 19:05:10 2008 -0400
+
+    Add bin parser wrapper to bind all pads into the bin
+
+commit 34a788d7d9848b388e2b56cf42c97be4f58de6d3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Oct 19 18:26:17 2008 -0400
+
+    Add basic test for codec profiles
+
+commit 237b3bc24469b9ecb7c9cbe113bec58fd5cec7bd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Oct 19 17:42:03 2008 -0400
+
+    Reject invalid profiles
+
+commit 432b2087f7717f6042131d790360ff28d7ffaefa
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Oct 19 17:35:06 2008 -0400
+
+    Don't look for iterator resync when it can't happen
+
+commit f9542ca3534d1643560dc06e0dd66fed77050b13
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Oct 19 17:22:42 2008 -0400
+
+    Rename send/recv_profile to farsight_send/recv_profile to make sure they don't clash with real optional parameters
+
+commit 67c833aad73bcfd4652cb2e51e3c8255baaf117c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Oct 17 16:36:54 2008 -0400
+
+    Validate the pads from the profile against the current codecs before using it
+
+commit ed202d297b5886514ba367e2c859cda1b30c50bf
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 15 18:55:18 2008 -0400
+
+    Accept codecs without blueprints
+
+commit dcc00a0a0c2c2caf46a387f24e00df369f84b6e5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 15 18:54:54 2008 -0400
+
+    Refuse profiled codecs that have no blueprint and no details
+
+commit bacb9d0fe823f6bd023ca14720cbfa364cf8af89
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 15 18:51:15 2008 -0400
+
+    Do not try to find the pipeline factory if there is no blueprint
+
+commit be8d346ea7fcce0494de085b6f8b7e1bbff32ec2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 15 15:52:55 2008 -0400
+
+    Create bin from profile instead of blueprint if available
+
+commit 008f5def028a32b14ce014c1a69d969f8c51eb8e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 15 15:30:18 2008 -0400
+
+    Remove useless temporary variables
+
+commit a746c87130e3f3feb00181870fc6fc4f7c3c3d28
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 15 12:06:47 2008 -0400
+
+    Get codec profile and save it over the negotiation
+
+commit 8fafa85e1ab8ee3f9d17ed5b8c79b3a6aacd2cf7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 14 17:37:46 2008 -0400
+
+    Accept codec prefs with profiles
+
+commit 1630cb1eb73d002203e97a0fdacbcb5e3b7a378a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Oct 9 16:02:37 2008 -0400
+
+    Hide blueprint inside _create_codec_bin()
+
+commit 6d75f4c9d78122d0457560e62fdcfe9ed199478a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Oct 9 15:58:59 2008 -0400
+
+    Remove blueprint from fs_rtp_session_add_send_codec_bin()
+
+commit 5c75b68d532b531a35f376392befbbfd346be44c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Oct 9 15:52:48 2008 -0400
+
+    Have fs_rtp_session_select_send_codec_locked return CodecAssociation*
+
+commit e134243bda4e868122508a65a2f202aae34d18d0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Oct 9 14:43:39 2008 -0400
+
+    Hide Blueprint from recv codec creation
+
+commit 8fbd25cba07ed383701bdc85386e77076f2d1f3b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 14 18:35:33 2008 -0400
+
+    Add more constness to fscodec
+
+commit f8aa0435484ae62ba2cec88a33fc537fa06e52d0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 22 22:15:02 2008 -0700
+
+    Add a section for core classes on the rtp plugin in the doc
+
+commit 4eabdc938b9002a5db5cba02acb55bb56c0c13a6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 22 22:06:17 2008 -0700
+
+    Sync plugins manuals title with lib manual
+
+commit d2f4b6c7b09f79fd2075d3efd4c9247748c30339
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 22 16:17:01 2008 -0400
+
+    Disable multicast tests if we don't have a multicast capable interface up
+
+commit 94a7867f23e7c8a26a2f12a55126f109f4b06311
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 21 14:37:09 2008 -0400
+
+    Fix typo
+
+commit 4d5609f50076f3122bc5258662c7114126970e0e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 21 11:54:27 2008 -0400
+
+    Hide more private symbols from gtkdoc
+
+commit 01e87c45c54640ac6218aba7c65347951a6b761a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 20 20:25:11 2008 -0400
+
+    Don't leak request pad for special source
+
+commit 716344596ea345e14ff0bb7f485ebb90aa531790
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 20 20:19:07 2008 -0400
+
+    Release rtpmuxer request pad
+
+commit c27cc69e1f94f5bf79cbb75d557e090fb1b4b2e1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 20 11:59:33 2008 -0400
+
+    Replace ssize_t by Py_ssize_t
+
+commit 8c54f6ff6496152c562cf1bc2780b628c5c9027b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Oct 17 15:03:14 2008 -0400
+
+    Generate the signal marshaller .list files on the fly
+    
+    Code taken from Gabble
+
+commit 8b2cef2d98c390ebd0c0f7076eb76598685f4dff
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 15 16:08:54 2008 -0400
+
+    Don't leak pads in funnel
+    
+    Thanks to Håvard Graff and Ole Andre for finding this leak
+
+commit aba418b83e789c02b17b42ad4494a5ff4f453562
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 15 14:05:51 2008 -0400
+
+    Use local stund from libnice for tests if available instead of stunserver.org
+
+commit 6174b796edafcd303f3602af586113c7fbc423de
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Oct 2 13:30:48 2008 -0400
+
+    Remove leftover .pc file
+
+commit 44ddceeba6bd61801c51567436d329684fdf19d7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 30 18:44:52 2008 -0400
+
+    Remove upnp stuff from .gitignore
+
+commit 252468fb26cf65e74d301d39a93d3bfd1d52656f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 30 18:32:09 2008 -0400
+
+    Re-add xml test files
+
+commit 001302e5bed7ebb9e68238aed2b5c460268e0256
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 30 18:23:29 2008 -0400
+
+    Remove internal copy of gupnp-igd
+
+commit 93b8326372d34fa0642be3cfc42a45f4ec6cd048
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 30 18:18:24 2008 -0400
+
+    Move to external gupnp-igd library
+
+commit 425ffc7e1c5872cf222e6507f5e407726786a55d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 23 14:15:27 2008 -0400
+
+    Don't try to do gst-xmlinspect if pygst inst there (will fail with non-tarball..)
+
+commit 802134bfd4a1bc95beaf2edefa80a8eb7cdec397
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 23 13:31:05 2008 -0400
+
+    Check for plugin doc stuff separately
+
+commit a26b7b70d8196c910c5f0faa0566f7384db5e860
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 23 13:31:02 2008 -0400
+
+    Require pygst to build module doc
+
+commit 0c74330c35916001bc8cace3b7be0e1bb9a9f9a0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 22 16:09:42 2008 -0400
+
+    Replace the private signals on FsRtpStream with callbacks
+
+commit 91a9c5ea5cb7ce2787ddfb68e93c2f054f8fe650
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 22 15:36:27 2008 -0400
+
+    Improve fsrtpconference documentation
+
+commit 11ffc28c7d6967aab68a34aaf810fb611850a6cb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 22 15:20:51 2008 -0400
+
+    Documenet fs-rtp-conference a bit
+
+commit b319f0940f460ad77c1e0db34c8bf893ff6d42ba
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 22 15:18:37 2008 -0400
+
+    Make the transmitter names explicit
+
+commit f07838bbdefde05bcefe219e72193cdee9eb52d9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 22 15:15:55 2008 -0400
+
+    Rename/add element descriptions in the right style
+
+commit 5a7002af7fa9156b3df09afa886c57669594c5f2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 22 15:11:23 2008 -0400
+
+    Create properly-named element docs
+
+commit 95052d44e26a1097f05981b9e8cfe3fc5f5fa7ea
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 22 13:10:07 2008 -0400
+
+    Remove inspect directory if it already exists
+
+commit b491bf57bc8453704253d88e6239e08626baf29e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 22 13:00:08 2008 -0400
+
+    Reflect the fact that I don't commit the inspect/etc stuff to git
+
+commit 19d1a0c44dd1606bb6249ac9419a2cf8d003018c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 22 12:54:53 2008 -0400
+
+    Always mkdir inspect/ (just in case)
+
+commit a6717e1b87342fb91ed40205b940c36aadebf160
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 22 12:37:12 2008 -0400
+
+    Only add the _doc.c file to BUILT_SOURCES if it should be built
+
+commit f0245d1a6f2209bdf6a3d0699b7550e432c76b07
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 19 21:53:00 2008 -0400
+
+    Add plugin doc files to .gitignore
+
+commit d5353997268dd6737e88b31286589d5a8354cc3e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 19 21:43:17 2008 -0400
+
+    Clean up the stamp file if srcdir!=builddir
+
+commit ff438e5b1118b96267fa246c41d325c063117b7a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 19 20:35:04 2008 -0400
+
+    Add forgotten files for plugin doc
+
+commit 541e6df0b19deac76ccf68d685aad013c42a5296
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 19 19:15:33 2008 -0400
+
+    Format the plugin doc nicely
+
+commit a7cedd00f3b4e8337a69c06c001266e8571b864c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 19 19:03:38 2008 -0400
+
+    Generate doc for our gst elements include fs plugins
+
+commit 6362a78117d159bc8cb066ddaf6b0febf8779495
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 19 19:02:22 2008 -0400
+
+    Add transmitter types
+
+commit 0cd1e4ce3fcf80c2a2be15d8f0eb4b80e717aabc
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 19 19:01:56 2008 -0400
+
+    remove gtk-doc style comment for non-gtkdoc comment
+
+commit 340cef531c3ce40526cf21427bd18759cc22c898
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 19 17:16:28 2008 -0400
+
+    Generate doc for the transmitter plugins
+
+commit c21745e3fcacb89e7687879c1fcd0143b10adb6c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 19 17:15:07 2008 -0400
+
+    Fix docbook in transmitter docs
+
+commit c48d4a1a94bf0f3c2c44166d89c3fc89c1472a58
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 19 14:56:03 2008 -0400
+
+    Import a copy of gtkdoc-scangobj
+
+commit c383f26e8c5c11a1f7b6628a87a9a40529e6ddc8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 19 14:52:01 2008 -0400
+
+    Add gst plugin documentation scripts imported from the gst cvs
+
+commit 371d353c3a5382e3b9a814769d29249dc58f245a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 19 17:15:43 2008 -0400
+
+    Don't crash if the error pointer is NULL
+
+commit 648d8632a975bca64502698c2cda668f212459fd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 19 13:45:10 2008 -0400
+
+    Remove useless GError in fs_transmitter_get_stream_transmitter_type()
+
+commit bc312d633a493b9ad57258e3575c2f86cd5d36fd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 16 19:37:41 2008 -0400
+
+    Fix leaks in upnp code
+
+commit 320bbcfb1ceb6c502015b3aaa65935822ff46aa1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 16 19:17:27 2008 -0400
+
+    Check that the upnp service was called
+
+commit 2a219cacdee56a1f89abf7065d56635ffda1da88
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 16 19:09:54 2008 -0400
+
+    Add upnp test to the rawudp transmitter
+
+commit 5185c6585242be05c52b88aa95c2c14ea5b2314e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 16 18:36:24 2008 -0400
+
+    Add upnp .pc file to gitignore
+
+commit f5fbc64c4b5f7085430ccfaa1b6167e6d85196a8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 16 15:29:23 2008 -0400
+
+    Oops, operate on right argument
+
+commit e9e79337a1884bb7e9f4e44b5e3c5e78f2643fdc
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 16 14:48:32 2008 -0400
+
+    add xml files for upnp service
+
+commit 130148f848e023f2198f540fe26c02ea4639cdee
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 16 14:39:49 2008 -0400
+
+    Fix error message to make it less unclear
+
+commit 56788615990450ba1ba29b05e4898c214bf7467a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 16 14:38:43 2008 -0400
+
+    Use idle task trick to stop main loop in other thread
+
+commit 843d54f5ce2dae689b6ee1275f8c3ce60bb6d82a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 16 14:37:50 2008 -0400
+
+    Don't make the root device available before filling it
+
+commit 5d68dbf15d03319dcc40e54e27653044c2908bdd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 16 12:58:11 2008 -0400
+
+    Add flag to prevent race conditions
+
+commit fdc8dd2584e95adf62e85e951a5bce475e5f6388
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 15 17:19:40 2008 -0400
+
+    Leave propreties even when upnp not enabled
+
+commit ff4513563e288604deea72dbeb9cf8e6ff3e9eb5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 15 17:19:27 2008 -0400
+
+    Don't build upnp tests if not enabled
+
+commit 3ff095c1966c606da62bf520e87022bfb435af22
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 15 14:55:23 2008 -0400
+
+    Make fs2-gui executable
+
+commit d30c74ff21d005f50638f97f7178d12395cac5ff
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 15 13:43:59 2008 -0400
+
+    Add uninstalled-paths.sh script
+
+commit c75e2637e89e8109ca38b0746ce345a1d384daa5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 15 12:54:31 2008 -0400
+
+    Test all three modes of operation of fspnpsimpleigd
+
+commit 44bcfcdb20174a25675e48560d8e4a29db70d917
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 15 12:30:00 2008 -0400
+
+    Rename test
+
+commit c5958b10cca7e52d146ba74acc523ef205b9b6a4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 12 19:15:27 2008 -0400
+
+    Add more complete test for fssimpleupnpigd
+
+commit 1e485a66f8d8c44ac208ab70d9e74f9d6c729491
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 12 18:34:42 2008 -0400
+
+    Add base of upnp library test
+
+commit 23b4a962a0084f529519167fb2753ed0bf048701
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 12 15:30:55 2008 -0400
+
+    Remove outdated codec parameters doc
+
+commit f753353cddd7ba6ea2e3b358edb6491042f2abc2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 12 15:30:34 2008 -0400
+
+    Add codingstyle.txt to the tarball
+
+commit 23e9cec66b76c4d376be13eb73c960c291553981
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 12 15:28:45 2008 -0400
+
+    Add nego-use-cases to the tree
+
+commit 503f9bef754ae23fddfe45ef2a41bf4d756f7919
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 12 14:37:40 2008 -0400
+
+    Disable upnp in normal tests
+
+commit ac05fac4b2a93f9fac2c915433ab63d929c11802
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 12 14:29:30 2008 -0400
+
+    Set priority on our idle callbacks to default (just in case)
+
+commit 4ad0dfb70f1cb5d526aefa8fda65304bef2b0f7c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 11 15:31:38 2008 -0400
+
+    Don't hold a real ref to the object in the idle struct, otherwise it risks becoming the last ref to the object
+
+commit 9bfd7da40322c9b430c29a3cdb98bf92ed215f7e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 11 14:53:37 2008 -0400
+
+    Add forgotten ifdefs
+
+commit db3f008d6732bea9acdb877d2561a41e55899466
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 11 14:33:49 2008 -0400
+
+    Add discovery timeout to the upnp stuff
+
+commit 2e8a56f8a5b5feed3c0b1d10c819b72683856d4c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 10 19:15:15 2008 -0400
+
+    Emit upnp candidate if one is found
+
+commit b0a59097a5dd270e6ffee3683ec97add57560f53
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 10 19:03:56 2008 -0400
+
+    Remove unused variable
+
+commit a6f0ae09925a55bf444b1444f611c1891e18a091
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 10 18:47:30 2008 -0400
+
+    Remove old line in doc
+
+commit b94c9f667a91f72436dd718bfd5fa59d100c8017
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 10 17:16:25 2008 -0400
+
+    Add port mapping to rawudp transmitter
+
+commit de97188c6067dffc753cf38448e886f58f698b5d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 10 16:07:58 2008 -0400
+
+    Pass upnp parameter to the components
+
+commit 795759617ad8807d2b44c92ff34beb555e86ec9b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 10 15:22:05 2008 -0400
+
+    Pass the igd object to each component
+
+commit 45f0cf94360616c7e1e1c7c0b9cde8722c40ff50
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 10 15:11:23 2008 -0400
+
+    Propage the upnp properties to each rawudp component
+
+commit a3e7f7e55ec644ac0ed1eb10edb27afa618223d6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 10 15:07:32 2008 -0400
+
+    Conditionally compile the rawudp transmitter against our upnp lib
+
+commit fecf87a04f6d88750f6c03da679a8d880dc9c9fc
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 9 17:23:26 2008 -0400
+
+    Set default timeouts at object creation time
+
+commit a4f5129c98989a708102c121ed352976acf1e3b0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 9 17:14:14 2008 -0400
+
+    Build upnp object if needed
+
+commit 19aca7ab71e9769ac484c0fc50df1d3579fda7cb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 9 17:12:45 2008 -0400
+
+    Include the proper path
+
+commit 1fe7e2f202785afe6acc0fe77913d730b5ff422d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 9 16:55:22 2008 -0400
+
+    Add upnp properties to the rawudp transmitter
+
+commit 9eae8ef1aedafdc70fa5c81f1e43cccff6840484
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 9 15:23:50 2008 -0400
+
+    Emit error if port is requested post-external port failure
+
+commit 3d4c949f70fce05e68e602de5df2ef525aecf9c1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 9 15:17:53 2008 -0400
+
+    Remove new-external-ip signal
+
+commit 5e65e3952f4d2b13a2c7b91a51d52d2bf1c81a76
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 9 15:16:44 2008 -0400
+
+    Remove error signal from upnp test
+
+commit c3c659ace05227d777999748ab2777024db79e9c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 9 15:15:29 2008 -0400
+
+    Compile tests for upnp stuff
+
+commit aaf2fc5d7dfee499b1fca78b630ad74cfcba0f87
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 9 14:56:17 2008 -0400
+
+    Remove old error signal
+
+commit 3a89edd2edfc9e82b8117f9bf7ff07331f9b5b51
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 9 14:55:56 2008 -0400
+
+    Emit GError in new domain on errors
+
+commit 22913bcf07ac96c1e2dc9a2c145f8bad8fbb9594
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 9 14:44:39 2008 -0400
+
+    Add error domain for simple igd
+
+commit f31ae705adf8068f090616d123d3691fd3831515
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 8 19:36:26 2008 -0400
+
+    Separate wanting and having gupnp
+
+commit dec8d0f68e8cab996e3544ee0a9c38c363cea387
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 8 18:05:08 2008 -0400
+
+    Add .pc file for the upnp lib
+
+commit 91d78441c361fb1694aa88af28914fb7e196ff23
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 8 17:44:02 2008 -0400
+
+    Remove the useless simple
+
+commit 1532dd90362c602a1c8b4ffa67340d8d6e471ef0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 8 17:31:08 2008 -0400
+
+    Add configure/makefiles to gupnp lib
+
+commit 50520d258124d94091ba5ff49760fdd083bca354
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 8 16:41:47 2008 -0400
+
+    Fix error string for python config check
+
+commit e4505074b33d06b6f3342277b79dc27afbec4c6c
+Merge: efa832b... ff2fd6f...
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 8 15:19:51 2008 -0400
+
+    Merge branch 'ready-to-merge' of ../gupnp into upnp
+
+commit ff2fd6f39c8662238d114726d49ed4cf40e559fc
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 8 15:02:07 2008 -0400
+
+    Move upnp stuff in fs2 places
+
+commit 0c4e829093e4d5f36096228b4818899b0c059466
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 8 14:32:51 2008 -0400
+
+    emit signal when the mapped address changes
+
+commit 612824d43562573ae998f9963af603e8f3257c76
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 8 14:16:14 2008 -0400
+
+    Get notification when the ip address changes
+
+commit 0caf7af0e50c7398ffe65f6d7ea867120eead27f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 5 15:34:37 2008 -0400
+
+    Make non-threaded test use custom mainsource
+
+commit a0d498e3b4b8c27b55191eeac6c21fdc232a6df8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 5 13:52:20 2008 -0400
+
+    Don't unset the main context..
+
+commit 07b3203907832b6181c317360b04bc3437fb03d1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 5 13:46:18 2008 -0400
+
+    Remove unused function
+
+commit 9569b1b0bec8ead6f4964c8afeb67aacf3fdc38b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 5 12:00:59 2008 -0400
+
+    Loop on length, not pointer
+
+commit b4ef73523681304da7c7d8b1a7d7330c850a3fd8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 21:40:06 2008 -0400
+
+    Force wakeup of the main context
+
+commit 3c2353cf6b15e2f42289872753ea559108dbed6c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 21:29:41 2008 -0400
+
+    Add thread test
+
+commit 834683a1c4bb1e9242985c3853073a6fef811f5f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 21:29:29 2008 -0400
+
+    Fix thread object creation
+
+commit 4ebab786b67bedc642103394045b84b3443e4bf4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 21:22:25 2008 -0400
+
+    Big oops in test
+
+commit d1b588b3915cf8c3cce2136ac0bf7ae9ef6f35e0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 21:16:21 2008 -0400
+
+    Add caller for remove-port function
+
+commit 8aa562ced28aa7a909eeb10d0376b856cf0c5479
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 21:15:18 2008 -0400
+
+    Share the same data struct for remove
+
+commit 329650f60ee84f1d4f20801cf575b1627bbff202
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 21:14:10 2008 -0400
+
+    Make add_port use the thread
+
+commit cde65fde6cea2d79e51648f2a8028145f54e18e9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 21:05:36 2008 -0400
+
+    Add empty subclasses
+
+commit 2b585645eff861492980a5c7fdaf6ee53e778dd4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 20:44:57 2008 -0400
+
+    Add thread
+
+commit 0e32af15ba0d21a4b5412c84fbe84c4e3c6384c9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 20:32:47 2008 -0400
+
+    Add mutex, context and loop
+
+commit 04708c30d2dfc9c80cea3ccd3b5c4e6fcdf1c72f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 19:37:34 2008 -0400
+
+    Make the other methods virtual too
+
+commit d5bd7bec2c4ab328beb4269c6cba601007f3991b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 19:30:20 2008 -0400
+
+    Add bare threading container
+
+commit 415967fbddb4b0fb07269e2c47eb7a7e16e1e858
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 19:30:01 2008 -0400
+
+    Don't delete marshaller list on clean
+
+commit 0f53b44b313d1f61d6f4b8aacefcbba5788bddd3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 19:12:27 2008 -0400
+
+    Remove unimplemented function
+
+commit b98b6faf1ac067c964c45834178a0a722bea55e9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 18:51:01 2008 -0400
+
+    Replace build with constructed to make a nicely subclassable gobject
+
+commit dd4192ab66e1254bfcb00acf661d6cbd7c3aa67d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 18:47:40 2008 -0400
+
+    Make main context a construct-time property
+
+commit f004b925a4643e0efe618d53b7d392277adc36a9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 18:42:23 2008 -0400
+
+    Put everything into build
+
+commit 15300fe3f01aa2625c982a363625068d97892fb5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 18:11:09 2008 -0400
+
+    Fix warning
+
+commit c1649d25df990cd96473aeb12fdd239224204fbb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 18:10:46 2008 -0400
+
+    Add marshaller list
+
+commit 70aafea323a30cfa8f8277651af897c9c69bae3b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 18:10:12 2008 -0400
+
+    Remove bare test
+
+commit a2e56e78896502f23442cfd9dc7962a8e192eb87
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 18:04:27 2008 -0400
+
+    Add new error signal
+
+commit da1c3a941b3e9c463b167b85cbd1616d05655b8a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 17:25:39 2008 -0400
+
+    Renew the mapping at the appropriate interval
+
+commit 58ad8d1b5b9bc219f076b4def66df475f136fa28
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 16:52:19 2008 -0400
+
+    Add call to remove mapping
+
+commit aee71c79d115ee110027b21dacd2579d8812b926
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 16:06:26 2008 -0400
+
+    Add test for port mapping
+
+commit 9427a3d9fd7141f2187318d20cec545e46582a56
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 16:06:15 2008 -0400
+
+    This signal is detailed
+
+commit 20623e82ef04e6bdeb035779760e9a0b21ea1785
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 4 15:14:48 2008 -0400
+
+    The proxy structs are not kept by gupnp
+
+commit ee1fa5bb060d736683d49bc047152d8cf36d1114
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 3 20:24:56 2008 -0400
+
+    Emit signal on mapping success
+
+commit dd06555e4090cf38073bf9d870dbe76bca8c8fe0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 3 19:21:25 2008 -0400
+
+    Cleanup mappings
+
+commit a96779e980b5ec8e82b04f36a2588f0615dbcb73
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 3 19:17:07 2008 -0400
+
+    Stop mapping calls on remove
+
+commit 02b736c0e31d9ffeaf04fb9fadd1b9d4715c34ee
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 3 18:06:00 2008 -0400
+
+    Centralise proxymapping stopping
+
+commit a98b50b8a73bd9a75158382537e97f2d53deb30e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 3 17:59:49 2008 -0400
+
+    Rename cleanup functions to free
+
+commit bfd7e3a62c685dd630c131eefe8af045931315d5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 3 17:23:09 2008 -0400
+
+    Add new mappings when a new service proxy appears
+
+commit 168f4969ae29f5f1259a5b23cde22ee54ba839e0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 3 17:07:42 2008 -0400
+
+    Remove timeout on GetExternalIP
+    
+    It was always shorter than the Port mapping timeout in any case
+
+commit 2a1f71fedf9a129244c3a4494189c31bcbc50e89
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 3 17:06:22 2008 -0400
+
+    Add request to create proxy mappings
+
+commit 6cdf0e24a9a8c1d42fcbb539ccc9ee32ad6e3655
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 3 16:42:19 2008 -0400
+
+    Remove generic action system
+
+commit 877a9a4b6bfb0082bdac8d7bac0304c9e16c3d2c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 3 15:40:58 2008 -0400
+
+    remove timeouts on answer
+
+commit 40b33bb8696cafb4568531b55d52e65a189f4bcb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 3 15:39:08 2008 -0400
+
+    Remove gather call
+
+commit feafc7358e71ae146f77c247e788a3ea8cfc06a1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 3 15:15:21 2008 -0400
+
+    Save external ip when its received
+
+commit 477a656f86e3cbf7f49f2fed8f52fc2ac0043664
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 3 14:59:17 2008 -0400
+
+    Add function to remove a mapping
+
+commit 86527b6aa743cf5dd04a82cf672d5cb2bef08bde
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 3 14:47:24 2008 -0400
+
+    Save new mapping when adding one
+
+commit 65e6a52636a7f9f088eed9e036b20706e656c16f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 3 14:29:01 2008 -0400
+
+    Add list of current mappings
+
+commit e69e6600222a22ab5a5bcde1c14edde66be1abeb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 2 14:22:58 2008 -0400
+
+    Add action timeout
+
+commit a93e7bb3f2cfc4ae0e1cd40062aa0e00db3b4d01
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 2 14:16:27 2008 -0400
+
+    Replace GArray for proxies/services with GPtrArrays
+
+commit 2e655098a739944396ad836e6162a2562356a5aa
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 29 19:43:27 2008 -0400
+
+    Pass the Proxy structure to the gather stuff
+
+commit cbbc6fe11a0987295860a7a4d4f9b791dd217211
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 29 19:38:29 2008 -0400
+
+    Store proxies in structures to be able to remember actions
+
+commit c886a9283bc11c3209894b9559a50e891fa9131a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 29 18:50:40 2008 -0400
+
+    Ignore errors when building gupnp context
+
+commit 0bb40bc4bab1a396166d470eeda751b195fdda66
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 29 18:26:55 2008 -0400
+
+    Add object test
+
+commit 6f6088f681fe31d228b488fe6096a54e4ce356f2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 29 18:25:02 2008 -0400
+
+    Use remove-fast
+
+commit 0b05d2a6fb4afc72d081af04ba6e767633d9a9b8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 29 18:24:45 2008 -0400
+
+    Use GPtrArray correctly
+
+commit 1a24b841c847cb6f6ba23e9749954b9ed9b43a2f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 29 18:22:33 2008 -0400
+
+    Default to the default context
+
+commit 9b15edbdbc86d2b657e20d2b0ffb0fffb6230b8b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 29 18:22:26 2008 -0400
+
+    Add make clean and -g
+
+commit 3285d4adfa2a928a9cee3075884430b48a49ac19
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 29 18:20:30 2008 -0400
+
+    use uint, not int
+
+commit db7ae34c5fee3fd9b851d605cedf94615d3a0515
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 29 18:18:44 2008 -0400
+
+     fix error
+
+commit 066e0c897216636ae8e5df9dc9f375d20ecb0198
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 29 18:18:39 2008 -0400
+
+    add private
+
+commit 305fad6a6a676bb86afe0061c621c0621dee0eaa
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 29 18:12:59 2008 -0400
+
+    Rename test to test-bare
+
+commit a061d6cbcd507477a9bb92014e34d17fd980cd43
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 29 18:11:51 2008 -0400
+
+    Emit signal or error on action completeness
+
+commit 92096841b2cb0c0a266cf1cfdd0ec289481143ef
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 29 18:09:31 2008 -0400
+
+    Add signals
+
+commit 1dde874dce7b397a7290941d4b9d869294f57ccb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 29 18:04:15 2008 -0400
+
+    Add gathering
+
+commit 4cd5501786ffbca814ef0d0ff8807962d266d1ee
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 29 17:31:24 2008 -0400
+
+    Remove threading stuff for now
+
+commit e9a8e943b00b298156a9b7d73d98659b1c1ba098
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 29 15:29:56 2008 -0400
+
+    Save, forget proxies on signals
+
+commit c515107e096d04ca73a32350332f969af367d014
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 29 15:28:46 2008 -0400
+
+    Disconnect signal handlers on dispose
+
+commit 5fea45ae8799d8937f7a41d15c1840a4f22ca268
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 29 15:19:58 2008 -0400
+
+    Create core gunpnp objects
+
+commit 1f7ac3d36f5f28f82b5d3de7aae7a42e2e42bbcd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 29 15:11:41 2008 -0400
+
+    Rename context to main context
+
+commit 483f67d4ac032afc6bae85ecef7e11f24e5b1632
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 29 15:08:28 2008 -0400
+
+    Add list of service proxies
+
+commit 3eef820e9e972760c4ed445b2ee428f1b66b915f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 29 14:33:17 2008 -0400
+
+    Add request-timeout property
+
+commit 423caf13c105b3e3053a7661c30627521062c68c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Aug 28 20:48:13 2008 -0400
+
+    Add main context construction/destruction aparatus
+
+commit 9030e23e04e718dbf39d8ac8242b1c73262186ef
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Aug 28 20:22:01 2008 -0400
+
+    Add maincontext member
+
+commit 386f13c83141062ea26965e2535da764fd09463b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Aug 28 19:33:39 2008 -0400
+
+    Initial import of gupnp igd experiment
+
+commit efa832be0a40878ed3ebb25840ec7c1c11342422
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Aug 27 14:25:24 2008 -0400
+
+    Test for auto-multicast everywhere
+
+commit 7b5fe8b40e91609460068c370ef53143497cc2b4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Aug 27 14:05:36 2008 -0400
+
+    Default to pcma/pcmu (we know these work)
+
+commit 4daa86528eb88cc7a952185574a0ff809cde7612
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Aug 27 14:05:27 2008 -0400
+
+    Set the sink to playing while adding it
+
+commit 31d344d2f2ebe148cfaf52208889b8caca5a0bb5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Aug 27 14:00:43 2008 -0400
+
+    Add copyright header and warning notice
+
+commit 1604f6f0c1c1fde36697050495036855c6b02fdb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Aug 27 13:58:51 2008 -0400
+
+    Print more messages
+
+commit cb4665802aeddb7ad99ffafc2b8b5aa0229750a7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Aug 27 13:06:39 2008 -0400
+
+    Fix leak in simple call
+
+commit 1c40b25a8d45bc5dbbbf8bc43650935afda8bac1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Aug 27 13:03:46 2008 -0400
+
+    Use a simple fs1-like use-the-local-candidates as remote and pass the candidate on the command line
+
+commit e30c8d4bf2e063b21fc5f191317fab784049f50f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Aug 27 12:38:13 2008 -0400
+
+    Handle errors
+
+commit 46ac8538a870ee758728768c8d02b65168dd771c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Aug 27 12:25:03 2008 -0400
+
+    Make simple-call usage clearer
+
+commit 5c4f8806f977098a02ac96e3fce37637498866c5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 26 18:52:16 2008 -0400
+
+    Make src local
+
+commit c17779aef3ea42a3a5d5833e689e318dd9a73235
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 26 18:51:21 2008 -0400
+
+    Add src-pad-added callback to the simple call
+
+commit d37c2072a6b6f3945b69ad06f1faf4fd05fe7f58
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 26 18:41:04 2008 -0400
+
+    Add audio session to command line test
+
+commit a8aa2adc84e25ac6ad1dc9367231bb0804448858
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 26 18:25:18 2008 -0400
+
+    Add beginning of simple command-line call app
+
+commit 02bfe7cc5771e34e1c5cda91ca7d21edfe9f8e1a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Aug 25 16:33:57 2008 -0400
+
+    Bump version 0.0.3.1
+
 commit 5fda6e799789e2cf7f6fd8dd6550d8b1dab8dfe5
 Author: Olivier Crête <olivier.crete@collabora.co.uk>
 Date:   Mon Aug 25 17:06:00 2008 -0400

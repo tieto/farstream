@@ -54,6 +54,9 @@ IGNORE_HFILES = fs-marshal.h fs-enum-types.h fs-private.h
 # Images to copy into HTML directory.
 HTML_IMAGES =
 
+# Extra SGML files that are included by $(DOC_MAIN_SGML_FILE).
+content_files =
+
 # Other files to distribute.
 extra_files =
 
@@ -62,7 +65,8 @@ extra_files =
 GTKDOC_CFLAGS = $(FS2_INTERNAL_CFLAGS) $(GST_PLUGINS_BASE_CFLAGS) $(GST_BASE_CFLAGS)
 GTKDOC_LIBS = -static \
 	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-0.10.la \
-	$(SCANOBJ_DEPS) $(GST_BASE_LIBS) 
+	$(GST_BASE_LIBS) \
+	$(GCOV_LIBS)
 
 GTKDOC_CC=$(LIBTOOL) --mode=compile $(CC)
 GTKDOC_LD=$(LIBTOOL) --mode=link $(CC)

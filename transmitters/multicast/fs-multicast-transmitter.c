@@ -116,8 +116,7 @@ static FsStreamTransmitter *fs_multicast_transmitter_new_stream_transmitter (
     FsTransmitter *transmitter, FsParticipant *participant,
     guint n_parameters, GParameter *parameters, GError **error);
 static GType fs_multicast_transmitter_get_stream_transmitter_type (
-    FsTransmitter *transmitter,
-    GError **error);
+    FsTransmitter *transmitter);
 
 static GObjectClass *parent_class = NULL;
 //static guint signals[LAST_SIGNAL] = { 0 };
@@ -673,7 +672,6 @@ _create_sinksource (gchar *elementname, GstBin *bin,
     "sockfd", fd,
     NULL);
 
-
   if (g_object_class_find_property (G_OBJECT_GET_CLASS (elem),
           "auto-multicast"))
     g_object_set (elem, "auto-multicast", FALSE, NULL);
@@ -931,8 +929,7 @@ fs_multicast_transmitter_udpsock_dec_sending (UdpSock *udpsock)
 
 static GType
 fs_multicast_transmitter_get_stream_transmitter_type (
-    FsTransmitter *transmitter,
-    GError **error)
+    FsTransmitter *transmitter)
 {
   return FS_TYPE_MULTICAST_STREAM_TRANSMITTER;
 }

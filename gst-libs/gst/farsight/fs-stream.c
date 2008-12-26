@@ -487,8 +487,10 @@ fs_stream_set_remote_codecs (FsStream *stream,
  * called by subclasses.
  */
 void
-fs_stream_emit_error (FsStream *stream, gint error_no,
-                      gchar *error_msg, gchar *debug_msg)
+fs_stream_emit_error (FsStream *stream,
+    gint error_no,
+    const gchar *error_msg,
+    const gchar *debug_msg)
 {
   g_signal_emit (stream, signals[ERROR_SIGNAL], 0, error_no, error_msg,
       debug_msg);
@@ -501,7 +503,7 @@ fs_stream_emit_error (FsStream *stream, gint error_no,
  * @pad: the #GstPad that this #FsStream has created
  * @codec: The #FsCodec for this pad
  *
- * This functin emits the #FsStream::src-pad-added" signal, it should only be
+ * Emits the #FsStream::src-pad-added" signal, it should only be
  * called by subclasses.
  */
 

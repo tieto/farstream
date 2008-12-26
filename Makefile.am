@@ -12,7 +12,8 @@ SUBDIRS = 			\
 	transmitters		\
 	$(PYTHON_SUBDIR)	\
 	tests 			\
-	docs
+	docs			\
+	common
 #	pkgconfig
 
 DIST_SUBDIRS = 			\
@@ -21,7 +22,8 @@ DIST_SUBDIRS = 			\
 	transmitters		\
 	python			\
 	tests 			\
-	docs
+	docs			\
+	common
 #	pkgconfig
 
 EXTRA_DIST = \
@@ -57,3 +59,5 @@ DISTCLEANFILES = $(pcinfiles:.in=)
 dist-hook:
 	chmod u+w ${distdir}/ChangeLog
 	if test -d .git; then git log >${distdir}/ChangeLog; fi
+
+include $(top_srcdir)/common/coverage/lcov.mak

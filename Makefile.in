@@ -32,17 +32,19 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-subdir = .
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
-	$(srcdir)/farsight2.pc.in $(top_srcdir)/configure AUTHORS \
-	COPYING ChangeLog INSTALL NEWS compile config.guess config.sub \
-	depcomp install-sh ltmain.sh missing
+	$(srcdir)/farsight2.pc.in \
+	$(top_srcdir)/common/coverage/lcov.mak $(top_srcdir)/configure \
+	AUTHORS COPYING ChangeLog INSTALL NEWS compile config.guess \
+	config.sub depcomp install-sh ltmain.sh missing
+subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-auto-alt.m4 \
 	$(top_srcdir)/common/m4/as-compiler-flag.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
+	$(top_srcdir)/common/m4/as-python.m4 \
 	$(top_srcdir)/common/m4/as-scrub-include.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
@@ -52,6 +54,7 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst-feature.m4 \
 	$(top_srcdir)/common/m4/gst-function.m4 \
 	$(top_srcdir)/common/m4/gst-glib2.m4 \
+	$(top_srcdir)/common/m4/gst-plugin-docs.m4 \
 	$(top_srcdir)/common/m4/gst-plugindir.m4 \
 	$(top_srcdir)/common/m4/gst.m4 \
 	$(top_srcdir)/common/m4/isc-posix.m4 \
@@ -177,6 +180,8 @@ GST_PLUGINS_DIR = @GST_PLUGINS_DIR@
 GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
 GST_TOOLS_DIR = @GST_TOOLS_DIR@
 GTKDOC_CHECK = @GTKDOC_CHECK@
+GUPNP_CFLAGS = @GUPNP_CFLAGS@
+GUPNP_LIBS = @GUPNP_LIBS@
 HTML_DIR = @HTML_DIR@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -191,6 +196,8 @@ LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 MKDIR_P = @MKDIR_P@
+NICE_CFLAGS = @NICE_CFLAGS@
+NICE_LIBS = @NICE_LIBS@
 NMEDIT = @NMEDIT@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
@@ -208,6 +215,8 @@ PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
 PLUGINDIR = @PLUGINDIR@
 PROFILE_CFLAGS = @PROFILE_CFLAGS@
+PYDOCSTUFF_CFLAGS = @PYDOCSTUFF_CFLAGS@
+PYDOCSTUFF_LIBS = @PYDOCSTUFF_LIBS@
 PYFARSIGHT_CFLAGS = @PYFARSIGHT_CFLAGS@
 PYFARSIGHT_LIBS = @PYFARSIGHT_LIBS@
 PYTHON = @PYTHON@
@@ -290,7 +299,8 @@ SUBDIRS = \
 	transmitters		\
 	$(PYTHON_SUBDIR)	\
 	tests 			\
-	docs
+	docs			\
+	common
 
 #	pkgconfig
 DIST_SUBDIRS = \
@@ -299,7 +309,8 @@ DIST_SUBDIRS = \
 	transmitters		\
 	python			\
 	tests 			\
-	docs
+	docs			\
+	common
 
 #	pkgconfig
 EXTRA_DIST = \
@@ -318,7 +329,7 @@ all: config.h
 .SUFFIXES:
 am--refresh:
 	@:
-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/common/coverage/lcov.mak $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -803,6 +814,43 @@ check-valgrind:
 dist-hook:
 	chmod u+w ${distdir}/ChangeLog
 	if test -d .git; then git log >${distdir}/ChangeLog; fi
+.PHONY: lcov-reset lcov lcov-run lcov-report lcov-upload
+
+# run lcov from scratch, always
+lcov-reset:
+	$(MAKE) lcov-run
+	$(MAKE) lcov-report
+
+# run lcov from scratch if the dir is not there
+lcov:
+	$(MAKE) lcov-reset
+
+# reset run coverage tests
+@GST_GCOV_ENABLED_TRUE@lcov-run:
+@GST_GCOV_ENABLED_TRUE@	@-rm -rf lcov
+@GST_GCOV_ENABLED_TRUE@	lcov --directory . --zerocounters
+@GST_GCOV_ENABLED_TRUE@	-if test -d tests/check; then $(MAKE) -C tests/check inspect; fi
+@GST_GCOV_ENABLED_TRUE@	-$(MAKE) check
+
+# generate report based on current coverage data
+@GST_GCOV_ENABLED_TRUE@lcov-report:
+@GST_GCOV_ENABLED_TRUE@	mkdir lcov
+@GST_GCOV_ENABLED_TRUE@	lcov --compat-libtool --directory . --capture --output-file lcov/lcov.info
+@GST_GCOV_ENABLED_TRUE@	lcov -l lcov/lcov.info | grep -v "`cd $(top_srcdir) && pwd`" | cut -d: -f1 > lcov/remove
+@GST_GCOV_ENABLED_TRUE@	lcov -l lcov/lcov.info | grep "tests/check/" | cut -d: -f1 >> lcov/remove
+@GST_GCOV_ENABLED_TRUE@	lcov -r lcov/lcov.info `cat lcov/remove` > lcov/lcov.cleaned.info
+@GST_GCOV_ENABLED_TRUE@	rm lcov/remove
+@GST_GCOV_ENABLED_TRUE@	mv lcov/lcov.cleaned.info lcov/lcov.info
+@GST_GCOV_ENABLED_TRUE@	genhtml -t "$(PACKAGE_STRING)" -o lcov --num-spaces 2 lcov/lcov.info
+
+@GST_GCOV_ENABLED_TRUE@lcov-upload: lcov
+@GST_GCOV_ENABLED_TRUE@	rsync -rvz -e ssh --delete lcov/* gstreamer.freedesktop.org:/srv/gstreamer.freedesktop.org/www/data/coverage/lcov/$(PACKAGE)
+
+@GST_GCOV_ENABLED_FALSE@lcov-run:
+@GST_GCOV_ENABLED_FALSE@	echo "Need to reconfigure with --enable-gcov"
+
+@GST_GCOV_ENABLED_FALSE@lcov-report:
+@GST_GCOV_ENABLED_FALSE@	echo "Need to reconfigure with --enable-gcov"
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

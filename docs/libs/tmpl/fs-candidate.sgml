@@ -59,6 +59,7 @@ FsCandidate
 
 </para>
 
+@FS_COMPONENT_NONE: 
 @FS_COMPONENT_RTP: 
 @FS_COMPONENT_RTCP: 
 

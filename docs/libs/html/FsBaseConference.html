@@ -48,6 +48,9 @@
 <div class="refsynopsisdiv">
 <a name="FsBaseConference.synopsis"></a><h2>Synopsis</h2>
 <pre class="synopsis">
+
+#include &lt;gst/farsight/fs-base-conference.h&gt;
+
                     <a class="link" href="FsBaseConference.html#FsBaseConference-struct" title="FsBaseConference">FsBaseConference</a>;
                     <a class="link" href="FsBaseConference.html#FsBaseConferenceClass" title="FsBaseConferenceClass">FsBaseConferenceClass</a>;
 </pre>
@@ -112,7 +115,7 @@ The <a class="link" href="FsBaseConference.html" title="FsBaseConference"><span 
                              FsMediaType media_type,
                              GError **error);
   FsParticipant *(*new_participant) (FsBaseConference *conference,
-      gchar *cname,
+      const gchar *cname,
       GError **error);
 } FsBaseConferenceClass;
 </pre>

@@ -43,6 +43,9 @@
 <div class="refsynopsisdiv">
 <a name="farsight2-libs-FsPlugin.synopsis"></a><h2>Synopsis</h2>
 <pre class="synopsis">
+
+#include &lt;gst/farsight/fs-plugin.h&gt;
+
                     <a class="link" href="farsight2-libs-FsPlugin.html#FsPlugin" title="FsPlugin">FsPlugin</a>;
 <a
 href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
@@ -75,6 +78,11 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *first_property_name,
                                                          ...);
 #define             <a class="link" href="farsight2-libs-FsPlugin.html#FS-INIT-PLUGIN:CAPS" title="FS_INIT_PLUGIN()">FS_INIT_PLUGIN</a>                      (type_register_func)
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a>**             <a class="link" href="farsight2-libs-FsPlugin.html#fs-plugin-list-available" title="fs_plugin_list_available ()">fs_plugin_list_available</a>            (const <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *type_suffix);
 </pre>
 </div>
 <div class="refsect1" lang="en">
@@ -255,6 +263,40 @@ href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
 ><span class="type">GType</span></a> and returns it
 </td>
 </tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="fs-plugin-list-available"></a><h3>fs_plugin_list_available ()</h3>
+<pre class="programlisting"><a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a>**             fs_plugin_list_available            (const <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *type_suffix);</pre>
+<p>
+Gets the list of all available plugins of a certain type</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>type_suffix</code></em> :</span></p></td>
+<td> Get list of plugins with this type suffix
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a newly allocated NULL terminated array of strings or <a
+href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
+><code class="literal">NULL</code></a> if no
+strings were found. It should be freed with <a
+href="/usr/share/gtk-doc/html/glib/glib-String-Utility-Functions.html#g-strfreev"
+><code class="function">g_strfreev()</code></a>.
+</td>
+</tr>
+</tbody>
 </table></div>
 </div>
 </div>

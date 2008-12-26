@@ -50,6 +50,9 @@
 <div class="refsynopsisdiv">
 <a name="FsConference.synopsis"></a><h2>Synopsis</h2>
 <pre class="synopsis">
+
+#include &lt;gst/farsight/fs-conference-iface.h&gt;
+
                     <a class="link" href="FsConference.html#FsConference-struct" title="FsConference">FsConference</a>;
 <a class="link" href="FsSession.html" title="FsSession">FsSession</a>*          <a class="link" href="FsConference.html#fs-conference-new-session" title="fs_conference_new_session ()">fs_conference_new_session</a>           (<a class="link" href="FsConference.html" title="FsConference">FsConference</a> *conference,
                                                          <a class="link" href="farsight2-libs-FsCodec.html#FsMediaType" title="enum FsMediaType">FsMediaType</a> media_type,
@@ -57,7 +60,7 @@
 href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);
 <a class="link" href="FsParticipant.html" title="FsParticipant">FsParticipant</a>*      <a class="link" href="FsConference.html#fs-conference-new-participant" title="fs_conference_new_participant ()">fs_conference_new_participant</a>       (<a class="link" href="FsConference.html" title="FsConference">FsConference</a> *conference,
-                                                         <a
+                                                         const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *cname,
                                                          <a
@@ -112,7 +115,7 @@ href="../gstreamer-0.10/GstBus.html"
 ><span class="type">GstBus</span></a>.
 </p>
 <div class="refsect2" lang="en">
-<a name="id2840094"></a><h3>The "<code class="literal">farsight-error</code>" message</h3>
+<a name="id2876859"></a><h3>The "<code class="literal">farsight-error</code>" message</h3>
 <div class="informalexample"><pre class="programlisting">
 "src-object"       <a
 href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
@@ -195,7 +198,7 @@ unref'd by the user when closing the session.
 <div class="refsect2" lang="en">
 <a name="fs-conference-new-participant"></a><h3>fs_conference_new_participant ()</h3>
 <pre class="programlisting"><a class="link" href="FsParticipant.html" title="FsParticipant">FsParticipant</a>*      fs_conference_new_participant       (<a class="link" href="FsConference.html" title="FsConference">FsConference</a> *conference,
-                                                         <a
+                                                         const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *cname,
                                                          <a

@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, cvs and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for cvs/prerelease
-AC_INIT(Farsight2, 0.0.3,
+AC_INIT(Farsight2, 0.0.4,
     https://bugs.freedesktop.org/enter_bug.cgi?product=Farsight,
     farsight2)
 
@@ -141,11 +141,14 @@ dnl *** path for our local plugins ***
 dnl these are all the transmitter plug-ins
 FS2_TRANSMITTER_PLUGINS_ALL=" \
 	rawudp \
-	multicast
+	multicast \
+	nice
 	"
 AC_SUBST(FS2_TRANSMITTER_PLUGINS_ALL)
 
 FS2_TRANSMITTER_PLUGINS_SELECTED=""
+
+TRANSMITTERS_DEFAULT=yes
 
 AC_ARG_WITH(transmitter-plugins,
     AC_HELP_STRING([--with-transmitter-plugins],
@@ -157,8 +160,39 @@ AC_ARG_WITH(transmitter-plugins,
         else
             echo "plug-in $i not recognized, ignoring..."
         fi
-    done],
+    done
+    TRANSMITTERS_DEFAULT=no],
     [FS2_TRANSMITTER_PLUGINS_SELECTED=$FS2_TRANSMITTER_PLUGINS_ALL])
+
+
+dnl check for libnice
+if echo $FS2_TRANSMITTER_PLUGINS_SELECTED | grep -qi nice; then
+
+  NICE_REQUIRED=0.0.1
+
+  PKG_CHECK_MODULES(NICE, \
+       nice >= $NICE_REQUIRED,
+       HAVE_NICE=yes,
+       HAVE_NICE=no)
+
+  if test "x$HAVE_NICE" = "xno"; then
+    if test "x$TRANSMITTERS_DEFAULT" = "xyes"; then
+      FS2_TRANSMITTER_PLUGINS_SELECTED="${FS2_TRANSMITTER_PLUGINS_SELECTED/ nice/}"
+      AC_MSG_WARN([Will not build libnice transmitter because libnice is not available])
+    else
+      AC_MSG_ERROR([Can not build requested libnice transmitter because libnice is not installed])
+    fi
+  else
+    USE_NICE=yes
+  fi
+
+  AC_SUBST(NICE_CFLAGS)
+  AC_SUBST(NICE_LIBS)
+else
+  AC_MSG_NOTICE(nice transmitter disabled by user request)
+fi
+
+AM_CONDITIONAL(USE_NICE, test "x$USE_NICE" == "xyes")
 
 AC_SUBST(FS2_TRANSMITTER_PLUGINS_SELECTED)
 
@@ -184,7 +218,8 @@ AM_CONDITIONAL(HAVE_VALGRIND, test ! "x$VALGRIND_PATH" = "xno")
 
 dnl check for documentation tools
 GTK_DOC_CHECK([1.8])
-dnl AG_GST_PLUGIN_DOCS([1.8],[2.1])
+AS_PATH_PYTHON([2.1])
+AG_GST_PLUGIN_DOCS([1.8],[2.1])
 
 dnl Make automake happy with per-target flags
 AM_PROG_CC_C_O
@@ -353,7 +388,7 @@ AC_ARG_ENABLE([python],
 	[case "${enableval}" in
 	    yes) WANT_PYTHON=yes ;;
 	    no)  WANT_PYTHON=no ;;
-	    *) AC_MSG_ERROR(bad value ${enableval} for --enable-debug) ;;
+	    *) AC_MSG_ERROR(bad value ${enableval} for --enable-python) ;;
         esac],
 	WANT_PYTHON=yes)
 if test "x$WANT_PYTHON" = "xyes"; then
@@ -365,12 +400,37 @@ if test "x$WANT_PYTHON" = "xyes"; then
 fi
 AM_CONDITIONAL(WANT_PYTHON, test "x$WANT_PYTHON" = "xyes")
 
+AC_ARG_ENABLE([gupnp],
+	AC_HELP_STRING([--disable-gupnp], [Disable GUPnP IGD support]),
+	[case "${enableval}" in
+	    yes) WANT_GUPNP=yes ;;
+	    no)  WANT_GUPNP=no ;;
+	    *) AC_MSG_ERROR(bad value ${enableval} for --enable-gupnp) ;;
+        esac],
+	WANT_GUPNP=test)
+
+HAVE_GUPNP=no
+if test "x$WANT_GUPNP" != "xno"; then
+   PKG_CHECK_MODULES(GUPNP, [ gupnp-igd-1.0 ],
+    [ HAVE_GUPNP=yes ],
+    [ HAVE_GUPNP=no ])
+fi
+if test "x$WANT_GUPNP" = "xyes" && test "x$HAVE_GUPNP" = "xno"; then
+   AC_ERROR([Requested GUPnP IGD, but it is not available])
+fi
+
+if test "x$HAVE_GUPNP" = "xyes"; then
+   AC_DEFINE(HAVE_GUPNP,,[Have the GUPnP IGD library])
+fi
+
 
 dnl *** output files ***
 
 AC_CONFIG_FILES(
 Makefile
 farsight2.pc
+common/Makefile
+common/m4/Makefile
 gst/Makefile
 gst/fsrtpconference/Makefile
 gst/funnel/Makefile
@@ -381,6 +441,7 @@ gst-libs/gst/farsight/Makefile
 transmitters/Makefile
 transmitters/rawudp/Makefile
 transmitters/multicast/Makefile
+transmitters/nice/Makefile
 dnl pkgconfig/Makefile
 dnl pkgconfig/farsight2.pc
 dnl pkgconfig/farsight2-uninstalled.pc
@@ -388,8 +449,10 @@ tests/Makefile
 tests/check/Makefile
 tests/rtp/Makefile
 tests/gui/Makefile
+tests/commandline/Makefile
 docs/Makefile
 docs/libs/Makefile
+docs/plugins/Makefile
 docs/version.entities
 python/Makefile
 dnl docs/plugins/Makefile

@@ -1,6 +1,7 @@
-PLUGIN_DOCS_DIRS =
 
-SUBDIRS = libs $(PLUGIN_DOCS_DIRS)
-DIST_SUBDIRS = libs
+SUBDIRS = libs plugins
 
-EXTRA_DIST =
+EXTRA_DIST = \
+	codingstyle.txt \
+	multi-party-negotiation.txt \
+	nego-use-cases.txt

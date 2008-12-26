@@ -44,34 +44,7 @@ gboolean src_setup[2] = {FALSE, FALSE};
 
 GST_START_TEST (test_multicasttransmitter_new)
 {
-  GError *error = NULL;
-  FsTransmitter *trans;
-  GstElement *pipeline;
-  GstElement *trans_sink, *trans_src;
-
-  trans = fs_transmitter_new ("multicast", 2, &error);
-
-  if (error) {
-    ts_fail ("Error creating transmitter: (%s:%d) %s",
-      g_quark_to_string (error->domain), error->code, error->message);
-  }
-
-  ts_fail_if (trans == NULL, "No transmitter create, yet error is still NULL");
-
-  pipeline = setup_pipeline (trans, NULL);
-
-  g_object_get (trans, "gst-sink", &trans_sink, "gst-src", &trans_src, NULL);
-
-  fail_if (trans_sink == NULL, "Sink is NULL");
-  fail_if (trans_src == NULL, "Src is NULL");
-
-  gst_object_unref (trans_sink);
-  gst_object_unref (trans_src);
-
-  g_object_unref (trans);
-
-  gst_object_unref (pipeline);
-
+  test_transmitter_creation ("multicast");
 }
 GST_END_TEST;
 
@@ -257,8 +230,8 @@ _find_multicast_capable_address (void)
   freeifaddrs (results);
 
   if (retval == NULL)
-    g_message ("Skipping test of prefered-local-candidates, no multicast"
-        " capable interface found");
+    g_message ("Skipping multicast transmitter tests, "
+        "no multicast capable interface found");
   return retval;
 
 #else
@@ -309,6 +282,15 @@ multicasttransmitter_suite (void)
   Suite *s = suite_create ("multicasttransmitter");
   TCase *tc_chain;
   GLogLevelFlags fatal_mask;
+  gchar *tmp_addr;
+
+
+  tmp_addr = _find_multicast_capable_address ();
+
+  if (!tmp_addr)
+    return s;
+  else
+    g_free (tmp_addr);
 
   fatal_mask = g_log_set_always_fatal (G_LOG_FATAL_MASK);
   fatal_mask |= G_LOG_LEVEL_WARNING | G_LOG_LEVEL_CRITICAL;

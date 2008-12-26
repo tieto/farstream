@@ -49,12 +49,16 @@ typedef struct _CodecAssociation {
   CodecBlueprint *blueprint;
   FsCodec *codec;
 
+  gchar *send_profile;
+  gchar *recv_profile;
+
   /*< private >*/
 
   gboolean reserved;
   gboolean disable;
   gboolean need_config;
   gboolean recv_only;
+
 } CodecAssociation;
 
 
@@ -108,6 +112,10 @@ typedef gboolean (*CAFindFunc) (CodecAssociation *ca, gpointer user_data);
 CodecAssociation *
 lookup_codec_association_custom (GList *codec_associations,
     CAFindFunc func, gpointer user_data);
+
+GstElement *
+parse_bin_from_description_all_linked (const gchar *bin_description,
+    guint *src_pad_count, guint *sink_pad_count, GError **error);
 
 
 G_END_DECLS

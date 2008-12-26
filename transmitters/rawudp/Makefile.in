@@ -14,6 +14,13 @@
 
 @SET_MAKE@
 
+# these are the variables your Makefile.am should set
+# the example is based on the colorbalance interface
+
+#glib_enum_headers=$(colorbalance_headers)
+#glib_enum_define=GST_COLOR_BALANCE
+#glib_enum_prefix=gst_color_balance
+
 
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
@@ -33,14 +40,15 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-subdir = transmitters/rawudp
 DIST_COMMON = $(noinst_HEADERS) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in
+	$(srcdir)/Makefile.in $(top_srcdir)/common/glib-gen.mak
+subdir = transmitters/rawudp
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-auto-alt.m4 \
 	$(top_srcdir)/common/m4/as-compiler-flag.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
+	$(top_srcdir)/common/m4/as-python.m4 \
 	$(top_srcdir)/common/m4/as-scrub-include.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
@@ -50,6 +58,7 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst-feature.m4 \
 	$(top_srcdir)/common/m4/gst-function.m4 \
 	$(top_srcdir)/common/m4/gst-glib2.m4 \
+	$(top_srcdir)/common/m4/gst-plugin-docs.m4 \
 	$(top_srcdir)/common/m4/gst-plugindir.m4 \
 	$(top_srcdir)/common/m4/gst.m4 \
 	$(top_srcdir)/common/m4/isc-posix.m4 \
@@ -72,15 +81,17 @@ am__DEPENDENCIES_1 =
 librawudp_transmitter_la_DEPENDENCIES =  \
 	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-0.10.la \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 am_librawudp_transmitter_la_OBJECTS =  \
 	librawudp_transmitter_la-fs-rawudp-transmitter.lo \
 	librawudp_transmitter_la-fs-rawudp-stream-transmitter.lo \
 	librawudp_transmitter_la-fs-rawudp-component.lo \
-	librawudp_transmitter_la-fs-rawudp-marshal.lo \
 	librawudp_transmitter_la-stun.lo
+nodist_librawudp_transmitter_la_OBJECTS =  \
+	librawudp_transmitter_la-fs-rawudp-marshal.lo
 librawudp_transmitter_la_OBJECTS =  \
-	$(am_librawudp_transmitter_la_OBJECTS)
+	$(am_librawudp_transmitter_la_OBJECTS) \
+	$(nodist_librawudp_transmitter_la_OBJECTS)
 librawudp_transmitter_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(librawudp_transmitter_la_CFLAGS) $(CFLAGS) \
@@ -98,9 +109,8 @@ LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 SOURCES = $(librawudp_transmitter_la_SOURCES) \
-	$(EXTRA_librawudp_transmitter_la_SOURCES)
-DIST_SOURCES = $(librawudp_transmitter_la_SOURCES) \
-	$(EXTRA_librawudp_transmitter_la_SOURCES)
+	$(nodist_librawudp_transmitter_la_SOURCES)
+DIST_SOURCES = $(librawudp_transmitter_la_SOURCES)
 HEADERS = $(noinst_HEADERS)
 ETAGS = etags
 CTAGS = ctags
@@ -186,6 +196,8 @@ GST_PLUGINS_DIR = @GST_PLUGINS_DIR@
 GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
 GST_TOOLS_DIR = @GST_TOOLS_DIR@
 GTKDOC_CHECK = @GTKDOC_CHECK@
+GUPNP_CFLAGS = @GUPNP_CFLAGS@
+GUPNP_LIBS = @GUPNP_LIBS@
 HTML_DIR = @HTML_DIR@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -200,6 +212,8 @@ LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 MKDIR_P = @MKDIR_P@
+NICE_CFLAGS = @NICE_CFLAGS@
+NICE_LIBS = @NICE_LIBS@
 NMEDIT = @NMEDIT@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
@@ -217,6 +231,8 @@ PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
 PLUGINDIR = @PLUGINDIR@
 PROFILE_CFLAGS = @PROFILE_CFLAGS@
+PYDOCSTUFF_CFLAGS = @PYDOCSTUFF_CFLAGS@
+PYDOCSTUFF_LIBS = @PYDOCSTUFF_LIBS@
 PYFARSIGHT_CFLAGS = @PYFARSIGHT_CFLAGS@
 PYFARSIGHT_LIBS = @PYFARSIGHT_LIBS@
 PYTHON = @PYTHON@
@@ -297,8 +313,11 @@ librawudp_transmitter_la_SOURCES = \
 	fs-rawudp-transmitter.c \
 	fs-rawudp-stream-transmitter.c \
 	fs-rawudp-component.c \
-	fs-rawudp-marshal.c \
 	stun.c
+
+nodist_librawudp_transmitter_la_SOURCES = \
+	fs-rawudp-marshal.c \
+	fs-rawudp-marshal.h
 
 
 # flags used to compile this plugin
@@ -306,7 +325,8 @@ librawudp_transmitter_la_CFLAGS = \
 	$(FS2_INTERNAL_CFLAGS) \
 	$(FS2_CFLAGS) \
 	$(GST_PLUGINS_BASE_CFLAGS) \
-	$(GST_CFLAGS)
+	$(GST_CFLAGS) \
+	$(GUPNP_CFLAGS)
 
 librawudp_transmitter_la_LDFLAGS = $(FS2_PLUGIN_LDFLAGS)
 librawudp_transmitter_la_LIBADD = \
@@ -314,27 +334,26 @@ librawudp_transmitter_la_LIBADD = \
 	$(FS2_LIBS) \
 	-lgstnetbuffer-@GST_MAJORMINOR@ \
 	$(GST_BASE_LIBS) \
-	$(GST_LIBS)
+	$(GST_LIBS) \
+	$(GUPNP_LIBS)
 
-EXTRA_librawudp_transmitter_la_SOURCES = fs-rawudp-marshal.list
 noinst_HEADERS = \
 	fs-rawudp-transmitter.h \
 	fs-rawudp-stream-transmitter.h \
 	fs-rawudp-component.h \
-	fs-rawudp-marshal.h \
 	stun.h
 
-BUILT_SOURCES = \
-		fs-rawudp-marshal.c \
-		fs-rawudp-marshal.h
-
-CLEANFILES = $(BUILT_SOURCES)
+BUILT_SOURCES = $(nodist_librawudp_transmitter_la_SOURCES)
+CLEANFILES = $(BUILT_SOURCES) fs-rawudp-marshal.list
+glib_enum_define = FS_RAWUDP
+glib_enum_prefix = _fs_rawudp
+enum_headers = $(foreach h,$(glib_enum_headers),\n\#include \"$(h)\")
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
 .SUFFIXES: .c .lo .o .obj
-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/common/glib-gen.mak $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -447,19 +466,19 @@ librawudp_transmitter_la-fs-rawudp-component.lo: fs-rawudp-component.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librawudp_transmitter_la_CFLAGS) $(CFLAGS) -c -o librawudp_transmitter_la-fs-rawudp-component.lo `test -f 'fs-rawudp-component.c' || echo '$(srcdir)/'`fs-rawudp-component.c
 
-librawudp_transmitter_la-fs-rawudp-marshal.lo: fs-rawudp-marshal.c
-@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librawudp_transmitter_la_CFLAGS) $(CFLAGS) -MT librawudp_transmitter_la-fs-rawudp-marshal.lo -MD -MP -MF $(DEPDIR)/librawudp_transmitter_la-fs-rawudp-marshal.Tpo -c -o librawudp_transmitter_la-fs-rawudp-marshal.lo `test -f 'fs-rawudp-marshal.c' || echo '$(srcdir)/'`fs-rawudp-marshal.c
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/librawudp_transmitter_la-fs-rawudp-marshal.Tpo $(DEPDIR)/librawudp_transmitter_la-fs-rawudp-marshal.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='fs-rawudp-marshal.c' object='librawudp_transmitter_la-fs-rawudp-marshal.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librawudp_transmitter_la_CFLAGS) $(CFLAGS) -c -o librawudp_transmitter_la-fs-rawudp-marshal.lo `test -f 'fs-rawudp-marshal.c' || echo '$(srcdir)/'`fs-rawudp-marshal.c
-
 librawudp_transmitter_la-stun.lo: stun.c
 @am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librawudp_transmitter_la_CFLAGS) $(CFLAGS) -MT librawudp_transmitter_la-stun.lo -MD -MP -MF $(DEPDIR)/librawudp_transmitter_la-stun.Tpo -c -o librawudp_transmitter_la-stun.lo `test -f 'stun.c' || echo '$(srcdir)/'`stun.c
 @am__fastdepCC_TRUE@	mv -f $(DEPDIR)/librawudp_transmitter_la-stun.Tpo $(DEPDIR)/librawudp_transmitter_la-stun.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='stun.c' object='librawudp_transmitter_la-stun.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librawudp_transmitter_la_CFLAGS) $(CFLAGS) -c -o librawudp_transmitter_la-stun.lo `test -f 'stun.c' || echo '$(srcdir)/'`stun.c
+
+librawudp_transmitter_la-fs-rawudp-marshal.lo: fs-rawudp-marshal.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librawudp_transmitter_la_CFLAGS) $(CFLAGS) -MT librawudp_transmitter_la-fs-rawudp-marshal.lo -MD -MP -MF $(DEPDIR)/librawudp_transmitter_la-fs-rawudp-marshal.Tpo -c -o librawudp_transmitter_la-fs-rawudp-marshal.lo `test -f 'fs-rawudp-marshal.c' || echo '$(srcdir)/'`fs-rawudp-marshal.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/librawudp_transmitter_la-fs-rawudp-marshal.Tpo $(DEPDIR)/librawudp_transmitter_la-fs-rawudp-marshal.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='fs-rawudp-marshal.c' object='librawudp_transmitter_la-fs-rawudp-marshal.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librawudp_transmitter_la_CFLAGS) $(CFLAGS) -c -o librawudp_transmitter_la-fs-rawudp-marshal.lo `test -f 'fs-rawudp-marshal.c' || echo '$(srcdir)/'`fs-rawudp-marshal.c
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -651,15 +670,53 @@ uninstall-am: uninstall-pluginLTLIBRARIES
 	tags uninstall uninstall-am uninstall-pluginLTLIBRARIES
 
 
-fs-rawudp-marshal.h: fs-rawudp-marshal.list Makefile
-		glib-genmarshal --header --prefix=_fs_rawudp_marshal $(srcdir)/$< > $@.tmp
-		mv $@.tmp $@
+fs-rawudp-marshal.list: $(librawudp_transmitter_la_SOURCES) Makefile.am
+	( cd $(srcdir) && \
+	sed -n -e 's/.*_fs_rawudp_marshal_\([[:upper:][:digit:]]*__[[:upper:][:digit:]_]*\).*/\1/p' \
+	$(librawudp_transmitter_la_SOURCES) ) \
+	| sed -e 's/__/:/' -e 'y/_/,/' | sort -u > $@.tmp
+	if cmp -s $@.tmp $@; then \
+		rm $@.tmp; \
+		touch $@; \
+	else \
+		mv $@.tmp $@; \
+	fi
 
-fs-rawudp-marshal.c: fs-rawudp-marshal.list Makefile
-		echo "#include \"glib-object.h\"" >> $@.tmp
-		echo "#include \"fs-rawudp-marshal.h\"" >> $@.tmp
-		glib-genmarshal --body --prefix=_fs_rawudp_marshal $(srcdir)/$< >> $@.tmp
-		mv $@.tmp $@
+# these are all the rules generating the relevant files
+%-marshal.h: %-marshal.list Makefile
+	glib-genmarshal --header --prefix=$(glib_enum_prefix)_marshal $< > $*-marshal.h.tmp
+	mv $*-marshal.h.tmp $*-marshal.h
+
+%-marshal.c: %-marshal.list Makefile
+	echo "#include \"$*-marshal.h\"" >> $*-marshal.c.tmp
+	glib-genmarshal --body --prefix=$(glib_enum_prefix)_marshal $< >> $*-marshal.c.tmp
+	mv $*-marshal.c.tmp $*-marshal.c
+
+%-enum-types.h: $(glib_enum_headers) Makefile
+	glib-mkenums \
+	--fhead "#ifndef __$(glib_enum_define)_ENUM_TYPES_H__\n#define __$(glib_enum_define)_ENUM_TYPES_H__\n\n#include <glib-object.h>\n\nG_BEGIN_DECLS\n" \
+	--fprod "\n/* enumerations from \"@filename@\" */\n" \
+	--vhead "GType @enum_name@_get_type (void);\n#define $(glib_enum_define)_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n"         \
+	--ftail "G_END_DECLS\n\n#endif /* __$(glib_enum_define)_ENUM_TYPES_H__ */" \
+	$^ > $@
+
+%-enum-types.c: $(glib_enum_headers) Makefile
+	@if test "x$(glib_enum_headers)" == "x"; then echo "ERROR: glib_enum_headers is empty, please fix Makefile"; exit 1; fi
+	glib-mkenums \
+	--fhead "#include \"$*-enum-types.h\"\n$(enum_headers)" \
+	--fprod "\n/* enumerations from \"@filename@\" */" \
+	--vhead "GType\n@enum_name@_get_type (void)\n{\n  static GType etype = 0;\n  if (etype == 0) {\n    static const G@Type@Value values[] = {"     \
+	--vprod "      { @VALUENAME@, \"@VALUENAME@\", \"@valuenick@\" }," \
+	--vtail "      { 0, NULL, NULL }\n    };\n    etype = g_@type@_register_static (\"@EnumName@\", values);\n  }\n  return etype;\n}\n" \
+	$^ > $@
+
+# a hack rule to make sure .Plo files exist because they get include'd
+# from Makefile's
+.deps/%-marshal.Plo:
+	touch $@
+
+.deps/%-enum-types.Plo:
+	touch $@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

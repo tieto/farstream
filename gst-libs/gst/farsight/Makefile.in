@@ -14,6 +14,13 @@
 
 @SET_MAKE@
 
+# these are the variables your Makefile.am should set
+# the example is based on the colorbalance interface
+
+#glib_enum_headers=$(colorbalance_headers)
+#glib_enum_define=GST_COLOR_BALANCE
+#glib_enum_prefix=gst_color_balance
+
 
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
@@ -33,14 +40,15 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+DIST_COMMON = $(libgstfarsightinclude_HEADERS) $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in $(top_srcdir)/common/glib-gen.mak
 subdir = gst-libs/gst/farsight
-DIST_COMMON = $(libgstfarsightinclude_HEADERS) $(noinst_HEADERS) \
-	$(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-auto-alt.m4 \
 	$(top_srcdir)/common/m4/as-compiler-flag.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
+	$(top_srcdir)/common/m4/as-python.m4 \
 	$(top_srcdir)/common/m4/as-scrub-include.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
@@ -50,6 +58,7 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst-feature.m4 \
 	$(top_srcdir)/common/m4/gst-function.m4 \
 	$(top_srcdir)/common/m4/gst-glib2.m4 \
+	$(top_srcdir)/common/m4/gst-plugin-docs.m4 \
 	$(top_srcdir)/common/m4/gst-plugindir.m4 \
 	$(top_srcdir)/common/m4/gst.m4 \
 	$(top_srcdir)/common/m4/isc-posix.m4 \
@@ -66,6 +75,7 @@ am__vpath_adj = case $$p in \
   esac;
 am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
 am__installdirs = "$(DESTDIR)$(libdir)" \
+	"$(DESTDIR)$(libgstfarsightincludedir)" \
 	"$(DESTDIR)$(libgstfarsightincludedir)"
 libLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES)
@@ -83,12 +93,14 @@ am_libgstfarsight_@GST_MAJORMINOR@_la_OBJECTS =  \
 	libgstfarsight_@GST_MAJORMINOR@_la-fs-transmitter.lo \
 	libgstfarsight_@GST_MAJORMINOR@_la-fs-stream-transmitter.lo \
 	libgstfarsight_@GST_MAJORMINOR@_la-fs-plugin.lo \
-	libgstfarsight_@GST_MAJORMINOR@_la-fs-marshal.lo \
-	libgstfarsight_@GST_MAJORMINOR@_la-fs-enum-types.lo \
 	libgstfarsight_@GST_MAJORMINOR@_la-fs-element-added-notifier.lo \
 	libgstfarsight_@GST_MAJORMINOR@_la-fs-interfaces.lo
+nodist_libgstfarsight_@GST_MAJORMINOR@_la_OBJECTS =  \
+	libgstfarsight_@GST_MAJORMINOR@_la-fs-marshal.lo \
+	libgstfarsight_@GST_MAJORMINOR@_la-fs-enum-types.lo
 libgstfarsight_@GST_MAJORMINOR@_la_OBJECTS =  \
-	$(am_libgstfarsight_@GST_MAJORMINOR@_la_OBJECTS)
+	$(am_libgstfarsight_@GST_MAJORMINOR@_la_OBJECTS) \
+	$(nodist_libgstfarsight_@GST_MAJORMINOR@_la_OBJECTS)
 libgstfarsight_@GST_MAJORMINOR@_la_LINK = $(LIBTOOL) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(libgstfarsight_@GST_MAJORMINOR@_la_CFLAGS) $(CFLAGS) \
@@ -106,11 +118,12 @@ LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 SOURCES = $(libgstfarsight_@GST_MAJORMINOR@_la_SOURCES) \
-	$(EXTRA_libgstfarsight_@GST_MAJORMINOR@_la_SOURCES)
-DIST_SOURCES = $(libgstfarsight_@GST_MAJORMINOR@_la_SOURCES) \
-	$(EXTRA_libgstfarsight_@GST_MAJORMINOR@_la_SOURCES)
+	$(nodist_libgstfarsight_@GST_MAJORMINOR@_la_SOURCES)
+DIST_SOURCES = $(libgstfarsight_@GST_MAJORMINOR@_la_SOURCES)
 libgstfarsightincludeHEADERS_INSTALL = $(INSTALL_HEADER)
-HEADERS = $(libgstfarsightinclude_HEADERS) $(noinst_HEADERS)
+nodist_libgstfarsightincludeHEADERS_INSTALL = $(INSTALL_HEADER)
+HEADERS = $(libgstfarsightinclude_HEADERS) \
+	$(nodist_libgstfarsightinclude_HEADERS)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -195,6 +208,8 @@ GST_PLUGINS_DIR = @GST_PLUGINS_DIR@
 GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
 GST_TOOLS_DIR = @GST_TOOLS_DIR@
 GTKDOC_CHECK = @GTKDOC_CHECK@
+GUPNP_CFLAGS = @GUPNP_CFLAGS@
+GUPNP_LIBS = @GUPNP_LIBS@
 HTML_DIR = @HTML_DIR@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -209,6 +224,8 @@ LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 MKDIR_P = @MKDIR_P@
+NICE_CFLAGS = @NICE_CFLAGS@
+NICE_LIBS = @NICE_LIBS@
 NMEDIT = @NMEDIT@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
@@ -226,6 +243,8 @@ PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
 PLUGINDIR = @PLUGINDIR@
 PROFILE_CFLAGS = @PROFILE_CFLAGS@
+PYDOCSTUFF_CFLAGS = @PYDOCSTUFF_CFLAGS@
+PYDOCSTUFF_LIBS = @PYDOCSTUFF_LIBS@
 PYFARSIGHT_CFLAGS = @PYFARSIGHT_CFLAGS@
 PYFARSIGHT_LIBS = @PYFARSIGHT_LIBS@
 PYTHON = @PYTHON@
@@ -311,19 +330,18 @@ libgstfarsightinclude_HEADERS = \
 		fs-transmitter.h \
 		fs-stream-transmitter.h \
 		fs-plugin.h \
-		fs-marshal.h \
-		fs-enum-types.h \
 		fs-element-added-notifier.h \
 		fs-interfaces.h
 
-lib_LTLIBRARIES = libgstfarsight-@GST_MAJORMINOR@.la
-BUILT_SOURCES = \
-		fs-marshal.c \
-		fs-marshal.h \
-		fs-enum-types.c \
+nodist_libgstfarsightinclude_HEADERS = \
 		fs-enum-types.h
 
-CLEANFILES = $(BUILT_SOURCES)
+lib_LTLIBRARIES = libgstfarsight-@GST_MAJORMINOR@.la
+BUILT_SOURCES = \
+	$(nodist_libgstfarsight_@GST_MAJORMINOR@_la_SOURCES) \
+	$(nodist_libgstfarsightinclude_HEADERS)
+
+CLEANFILES = $(BUILT_SOURCES) fs-marshal.list
 libgstfarsight_@GST_MAJORMINOR@_la_SOURCES = \
 		fs-base-conference.c \
 		fs-candidate.c \
@@ -335,16 +353,15 @@ libgstfarsight_@GST_MAJORMINOR@_la_SOURCES = \
 		fs-transmitter.c \
 		fs-stream-transmitter.c \
 		fs-plugin.c \
-		fs-marshal.c \
-		fs-enum-types.c \
 		fs-element-added-notifier.c \
-		fs-interfaces.c
+		fs-interfaces.c \
+		fs-private.h
 
-noinst_HEADERS = \
-	fs-marshal.h \
-	fs-private.h
+nodist_libgstfarsight_@GST_MAJORMINOR@_la_SOURCES = \
+		fs-marshal.c \
+		fs-marshal.h \
+		fs-enum-types.c
 
-EXTRA_libgstfarsight_@GST_MAJORMINOR@_la_SOURCES = fs-marshal.list
 libgstfarsight_@GST_MAJORMINOR@_la_CFLAGS = \
 	$(FS2_INTERNAL_CFLAGS) $(FS2_CFLAGS) \
 	$(GST_PLUGINS_BASE_CFLAGS) \
@@ -367,12 +384,16 @@ public_headers = fs-candidate.h \
 		fs-stream.h \
 		fs-conference-iface.h
 
+glib_enum_headers = $(public_headers)
+glib_enum_define = FS
+glib_enum_prefix = _fs
+enum_headers = $(foreach h,$(glib_enum_headers),\n\#include \"$(h)\")
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
 .SUFFIXES: .c .lo .o .obj
-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/common/glib-gen.mak $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -543,20 +564,6 @@ libgstfarsight_@GST_MAJORMINOR@_la-fs-plugin.lo: fs-plugin.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstfarsight_@GST_MAJORMINOR@_la_CFLAGS) $(CFLAGS) -c -o libgstfarsight_@GST_MAJORMINOR@_la-fs-plugin.lo `test -f 'fs-plugin.c' || echo '$(srcdir)/'`fs-plugin.c
 
-libgstfarsight_@GST_MAJORMINOR@_la-fs-marshal.lo: fs-marshal.c
-@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstfarsight_@GST_MAJORMINOR@_la_CFLAGS) $(CFLAGS) -MT libgstfarsight_@GST_MAJORMINOR@_la-fs-marshal.lo -MD -MP -MF $(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-marshal.Tpo -c -o libgstfarsight_@GST_MAJORMINOR@_la-fs-marshal.lo `test -f 'fs-marshal.c' || echo '$(srcdir)/'`fs-marshal.c
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-marshal.Tpo $(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-marshal.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='fs-marshal.c' object='libgstfarsight_@GST_MAJORMINOR@_la-fs-marshal.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstfarsight_@GST_MAJORMINOR@_la_CFLAGS) $(CFLAGS) -c -o libgstfarsight_@GST_MAJORMINOR@_la-fs-marshal.lo `test -f 'fs-marshal.c' || echo '$(srcdir)/'`fs-marshal.c
-
-libgstfarsight_@GST_MAJORMINOR@_la-fs-enum-types.lo: fs-enum-types.c
-@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstfarsight_@GST_MAJORMINOR@_la_CFLAGS) $(CFLAGS) -MT libgstfarsight_@GST_MAJORMINOR@_la-fs-enum-types.lo -MD -MP -MF $(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-enum-types.Tpo -c -o libgstfarsight_@GST_MAJORMINOR@_la-fs-enum-types.lo `test -f 'fs-enum-types.c' || echo '$(srcdir)/'`fs-enum-types.c
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-enum-types.Tpo $(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-enum-types.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='fs-enum-types.c' object='libgstfarsight_@GST_MAJORMINOR@_la-fs-enum-types.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstfarsight_@GST_MAJORMINOR@_la_CFLAGS) $(CFLAGS) -c -o libgstfarsight_@GST_MAJORMINOR@_la-fs-enum-types.lo `test -f 'fs-enum-types.c' || echo '$(srcdir)/'`fs-enum-types.c
-
 libgstfarsight_@GST_MAJORMINOR@_la-fs-element-added-notifier.lo: fs-element-added-notifier.c
 @am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstfarsight_@GST_MAJORMINOR@_la_CFLAGS) $(CFLAGS) -MT libgstfarsight_@GST_MAJORMINOR@_la-fs-element-added-notifier.lo -MD -MP -MF $(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-element-added-notifier.Tpo -c -o libgstfarsight_@GST_MAJORMINOR@_la-fs-element-added-notifier.lo `test -f 'fs-element-added-notifier.c' || echo '$(srcdir)/'`fs-element-added-notifier.c
 @am__fastdepCC_TRUE@	mv -f $(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-element-added-notifier.Tpo $(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-element-added-notifier.Plo
@@ -570,6 +577,20 @@ libgstfarsight_@GST_MAJORMINOR@_la-fs-interfaces.lo: fs-interfaces.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='fs-interfaces.c' object='libgstfarsight_@GST_MAJORMINOR@_la-fs-interfaces.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstfarsight_@GST_MAJORMINOR@_la_CFLAGS) $(CFLAGS) -c -o libgstfarsight_@GST_MAJORMINOR@_la-fs-interfaces.lo `test -f 'fs-interfaces.c' || echo '$(srcdir)/'`fs-interfaces.c
+
+libgstfarsight_@GST_MAJORMINOR@_la-fs-marshal.lo: fs-marshal.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstfarsight_@GST_MAJORMINOR@_la_CFLAGS) $(CFLAGS) -MT libgstfarsight_@GST_MAJORMINOR@_la-fs-marshal.lo -MD -MP -MF $(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-marshal.Tpo -c -o libgstfarsight_@GST_MAJORMINOR@_la-fs-marshal.lo `test -f 'fs-marshal.c' || echo '$(srcdir)/'`fs-marshal.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-marshal.Tpo $(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-marshal.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='fs-marshal.c' object='libgstfarsight_@GST_MAJORMINOR@_la-fs-marshal.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstfarsight_@GST_MAJORMINOR@_la_CFLAGS) $(CFLAGS) -c -o libgstfarsight_@GST_MAJORMINOR@_la-fs-marshal.lo `test -f 'fs-marshal.c' || echo '$(srcdir)/'`fs-marshal.c
+
+libgstfarsight_@GST_MAJORMINOR@_la-fs-enum-types.lo: fs-enum-types.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstfarsight_@GST_MAJORMINOR@_la_CFLAGS) $(CFLAGS) -MT libgstfarsight_@GST_MAJORMINOR@_la-fs-enum-types.lo -MD -MP -MF $(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-enum-types.Tpo -c -o libgstfarsight_@GST_MAJORMINOR@_la-fs-enum-types.lo `test -f 'fs-enum-types.c' || echo '$(srcdir)/'`fs-enum-types.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-enum-types.Tpo $(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-enum-types.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='fs-enum-types.c' object='libgstfarsight_@GST_MAJORMINOR@_la-fs-enum-types.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstfarsight_@GST_MAJORMINOR@_la_CFLAGS) $(CFLAGS) -c -o libgstfarsight_@GST_MAJORMINOR@_la-fs-enum-types.lo `test -f 'fs-enum-types.c' || echo '$(srcdir)/'`fs-enum-types.c
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -589,6 +610,23 @@ install-libgstfarsightincludeHEADERS: $(libgstfarsightinclude_HEADERS)
 uninstall-libgstfarsightincludeHEADERS:
 	@$(NORMAL_UNINSTALL)
 	@list='$(libgstfarsightinclude_HEADERS)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(libgstfarsightincludedir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(libgstfarsightincludedir)/$$f"; \
+	done
+install-nodist_libgstfarsightincludeHEADERS: $(nodist_libgstfarsightinclude_HEADERS)
+	@$(NORMAL_INSTALL)
+	test -z "$(libgstfarsightincludedir)" || $(MKDIR_P) "$(DESTDIR)$(libgstfarsightincludedir)"
+	@list='$(nodist_libgstfarsightinclude_HEADERS)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(nodist_libgstfarsightincludeHEADERS_INSTALL) '$$d$$p' '$(DESTDIR)$(libgstfarsightincludedir)/$$f'"; \
+	  $(nodist_libgstfarsightincludeHEADERS_INSTALL) "$$d$$p" "$(DESTDIR)$(libgstfarsightincludedir)/$$f"; \
+	done
+
+uninstall-nodist_libgstfarsightincludeHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(nodist_libgstfarsightinclude_HEADERS)'; for p in $$list; do \
 	  f=$(am__strip_dir) \
 	  echo " rm -f '$(DESTDIR)$(libgstfarsightincludedir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(libgstfarsightincludedir)/$$f"; \
@@ -672,7 +710,7 @@ check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
 all-am: Makefile $(LTLIBRARIES) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(libgstfarsightincludedir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(libgstfarsightincludedir)" "$(DESTDIR)$(libgstfarsightincludedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -723,7 +761,8 @@ info: info-am
 
 info-am:
 
-install-data-am: install-libgstfarsightincludeHEADERS
+install-data-am: install-libgstfarsightincludeHEADERS \
+	install-nodist_libgstfarsightincludeHEADERS
 
 install-dvi: install-dvi-am
 
@@ -760,7 +799,8 @@ ps: ps-am
 ps-am:
 
 uninstall-am: uninstall-libLTLIBRARIES \
-	uninstall-libgstfarsightincludeHEADERS
+	uninstall-libgstfarsightincludeHEADERS \
+	uninstall-nodist_libgstfarsightincludeHEADERS
 
 .MAKE: install-am install-strip
 
@@ -772,41 +812,64 @@ uninstall-am: uninstall-libLTLIBRARIES \
 	install-dvi-am install-exec install-exec-am install-html \
 	install-html-am install-info install-info-am \
 	install-libLTLIBRARIES install-libgstfarsightincludeHEADERS \
-	install-man install-pdf install-pdf-am install-ps \
-	install-ps-am install-strip installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-compile mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
-	uninstall-am uninstall-libLTLIBRARIES \
-	uninstall-libgstfarsightincludeHEADERS
+	install-man install-nodist_libgstfarsightincludeHEADERS \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
+	pdf pdf-am ps ps-am tags uninstall uninstall-am \
+	uninstall-libLTLIBRARIES \
+	uninstall-libgstfarsightincludeHEADERS \
+	uninstall-nodist_libgstfarsightincludeHEADERS
 
 
-fs-marshal.h: Makefile fs-marshal.list
-		glib-genmarshal --header --prefix=_fs_marshal $(srcdir)/fs-marshal.list > fs-marshal.h.tmp
-		mv fs-marshal.h.tmp fs-marshal.h
+fs-marshal.list: $(libgstfarsight_@GST_MAJORMINOR@_la_SOURCES) Makefile.am
+	( cd $(srcdir) && \
+	sed -n -e 's/.*_fs_marshal_\([[:upper:][:digit:]]*__[[:upper:][:digit:]_]*\).*/\1/p' \
+	$(libgstfarsight_@GST_MAJORMINOR@_la_SOURCES) ) \
+	| sed -e 's/__/:/' -e 'y/_/,/' | sort -u > $@.tmp
+	if cmp -s $@.tmp $@; then \
+		rm $@.tmp; \
+		touch $@; \
+	else \
+		mv $@.tmp $@; \
+	fi
 
-fs-marshal.c: Makefile fs-marshal.list
-		echo "#include \"glib-object.h\"" >> fs-marshal.c.tmp
-		echo "#include \"fs-marshal.h\"" >> fs-marshal.c.tmp
-		glib-genmarshal --body --prefix=_fs_marshal $(srcdir)/fs-marshal.list >> fs-marshal.c.tmp
-		mv fs-marshal.c.tmp fs-marshal.c
+# these are all the rules generating the relevant files
+%-marshal.h: %-marshal.list Makefile
+	glib-genmarshal --header --prefix=$(glib_enum_prefix)_marshal $< > $*-marshal.h.tmp
+	mv $*-marshal.h.tmp $*-marshal.h
 
-fs-enum-types.h: $(public_headers) Makefile
-	( cd $(srcdir) && glib-mkenums \
-			--fhead "#ifndef __FS_ENUM_TYPES_H__\n#define __FS_ENUM_TYPES_H__\n\n#include <glib-object.h>\n\nG_BEGIN_DECLS\n" \
-			--fprod "/* enumerations from \"@filename@\" */\n" \
-			--vhead "GType @enum_name@_get_type (void);\n#define FS_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n" 	\
-			--ftail "G_END_DECLS\n\n#endif /* __FS_ENUM_TYPES_H__ */" \
-		$(public_headers) ) > fs-enum-types.h
+%-marshal.c: %-marshal.list Makefile
+	echo "#include \"$*-marshal.h\"" >> $*-marshal.c.tmp
+	glib-genmarshal --body --prefix=$(glib_enum_prefix)_marshal $< >> $*-marshal.c.tmp
+	mv $*-marshal.c.tmp $*-marshal.c
 
-fs-enum-types.c: $(public_headers) Makefile
-	( cd $(srcdir) && glib-mkenums \
-			--fhead "#include <fs-conference-iface.h>\n#include <fs-enum-types.h>" \
-			--fprod "\n/* enumerations from \"@filename@\" */" \
-			--vhead "GType\n@enum_name@_get_type (void)\n{\n  static GType etype = 0;\n  if (etype == 0) {\n    static const G@Type@Value values[] = {" 	\
-			--vprod "      { @VALUENAME@, \"@VALUENAME@\", \"@valuenick@\" }," \
-			--vtail "      { 0, NULL, NULL }\n    };\n    etype = g_@type@_register_static (\"@EnumName@\", values);\n  }\n  return etype;\n}\n" \
-		$(public_headers) ) > fs-enum-types.c
+%-enum-types.h: $(glib_enum_headers) Makefile
+	glib-mkenums \
+	--fhead "#ifndef __$(glib_enum_define)_ENUM_TYPES_H__\n#define __$(glib_enum_define)_ENUM_TYPES_H__\n\n#include <glib-object.h>\n\nG_BEGIN_DECLS\n" \
+	--fprod "\n/* enumerations from \"@filename@\" */\n" \
+	--vhead "GType @enum_name@_get_type (void);\n#define $(glib_enum_define)_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n"         \
+	--ftail "G_END_DECLS\n\n#endif /* __$(glib_enum_define)_ENUM_TYPES_H__ */" \
+	$^ > $@
+
+%-enum-types.c: $(glib_enum_headers) Makefile
+	@if test "x$(glib_enum_headers)" == "x"; then echo "ERROR: glib_enum_headers is empty, please fix Makefile"; exit 1; fi
+	glib-mkenums \
+	--fhead "#include \"$*-enum-types.h\"\n$(enum_headers)" \
+	--fprod "\n/* enumerations from \"@filename@\" */" \
+	--vhead "GType\n@enum_name@_get_type (void)\n{\n  static GType etype = 0;\n  if (etype == 0) {\n    static const G@Type@Value values[] = {"     \
+	--vprod "      { @VALUENAME@, \"@VALUENAME@\", \"@valuenick@\" }," \
+	--vtail "      { 0, NULL, NULL }\n    };\n    etype = g_@type@_register_static (\"@EnumName@\", values);\n  }\n  return etype;\n}\n" \
+	$^ > $@
+
+# a hack rule to make sure .Plo files exist because they get include'd
+# from Makefile's
+.deps/%-marshal.Plo:
+	touch $@
+
+.deps/%-enum-types.Plo:
+	touch $@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

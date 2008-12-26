@@ -568,9 +568,34 @@ fs_session_set_codec_preferences (FsSession *session,
  * called by subclasses.
  */
 void
-fs_session_emit_error (FsSession *session, gint error_no,
-                       gchar *error_msg, gchar *debug_msg)
+fs_session_emit_error (FsSession *session,
+    gint error_no,
+    const gchar *error_msg,
+    const gchar *debug_msg)
 {
   g_signal_emit (session, signals[ERROR_SIGNAL], 0, session, error_no,
       error_msg, debug_msg);
+}
+
+/**
+ * fs_session_list_transmitters:
+ * @session: A #FsSession
+ *
+ * Get the list of all available transmitters for this session.
+ *
+ * Returns: a newly-allocagted %NULL terminated array of named of transmitters
+ * or %NULL if no transmitter is needed for this type of session. It should
+ * be freed with g_strfreev().
+ */
+
+gchar **
+fs_session_list_transmitters (FsSession *session)
+{
+  FsSessionClass *klass = FS_SESSION_GET_CLASS (session);
+
+  if (klass->list_transmitters) {
+    return klass->list_transmitters (session);
+  } else {
+    return NULL;
+  }
 }

@@ -24,9 +24,15 @@
  */
 
 /**
- * SECTION:fs-rtp-conference
- * @short_description: FarsightRTP Conference Gstreamer Elements
+ * SECTION:element-fsrtpconference
+ * @short_description: Farsight RTP Conference Gstreamer Elements
  *
+ * This is the core gstreamer element for a RTP conference. It must be added
+ * to your pipeline before anything else is done. Then you create the session,
+ * participants and streams according to the #FsConference interface.
+ *
+ * The various sdes-* properties allow you to set the content of the SDES packet
+ * in the sent RTCP reports.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -121,7 +127,7 @@ static FsSession *fs_rtp_conference_new_session (FsBaseConference *conf,
                                                  FsMediaType media_type,
                                                  GError **error);
 static FsParticipant *fs_rtp_conference_new_participant (FsBaseConference *conf,
-    gchar *cname,
+    const gchar *cname,
     GError **error);
 
 static FsRtpSession *fs_rtp_conference_get_session_by_id_locked (
@@ -610,7 +616,7 @@ fs_rtp_conference_new_session (FsBaseConference *conf,
 
 static FsParticipant *
 fs_rtp_conference_new_participant (FsBaseConference *conf,
-    gchar *cname,
+    const gchar *cname,
     GError **error)
 {
   FsRtpConference *self = FS_RTP_CONFERENCE (conf);

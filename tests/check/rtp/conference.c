@@ -411,9 +411,11 @@ _handoff_handler (GstElement *element, GstBuffer *buffer, GstPad *pad,
 
 
   st->buffer_count++;
-
+  /*
+    Disabled because it outputs too much stuff
   if (st->buffer_count % 10 == 0)
     g_debug ("%d:%d: Buffer %d", st->dat->id, st->target->id, st->buffer_count);
+  */
 
   /*
   ts_fail_if (dat->buffer_count > max_buffer_count,
@@ -712,6 +714,19 @@ nway_test (int in_count, extra_init extrainit,
     guint st_param_count, GParameter *st_params)
 {
   int i, j;
+  GParameter *params;
+
+  params = g_new0 (GParameter, st_param_count+2);
+
+  memcpy (params, st_params, st_param_count * sizeof (GParameter));
+
+  params[st_param_count].name = "upnp-discovery";
+  g_value_init (&params[st_param_count].value, G_TYPE_BOOLEAN);
+  g_value_set_boolean (&params[st_param_count].value, FALSE);
+
+  params[st_param_count+1].name = "upnp-mapping";
+  g_value_init (&params[st_param_count+1].value, G_TYPE_BOOLEAN);
+  g_value_set_boolean (&params[st_param_count+1].value, FALSE);
 
   count = in_count;
 
@@ -743,20 +758,21 @@ nway_test (int in_count, extra_init extrainit,
       {
         struct SimpleTestStream *st = NULL;
 
-        st = simple_conference_add_stream (dats[i], dats[j], 0, NULL);
+        st = simple_conference_add_stream (dats[i], dats[j], st_param_count+2,
+            params);
         st->handoff_handler = G_CALLBACK (_handoff_handler);
         g_signal_connect (st->stream, "src-pad-added",
             G_CALLBACK (_src_pad_added), st);
       }
+
+  if (extrainit)
+    extrainit ();
 
   for (i = 1; i < count; i++)
   {
     struct SimpleTestStream *st = find_pointback_stream (dats[i], dats[0]);
     set_initial_codecs (dats[0], st);
   }
-
-  if (extrainit)
-    extrainit ();
 
   g_main_loop_run (loop);
 
@@ -769,6 +785,8 @@ nway_test (int in_count, extra_init extrainit,
   g_free (dats);
 
   g_main_loop_unref (loop);
+
+  g_free (params);
 }
 
 
@@ -973,8 +991,6 @@ GST_START_TEST (test_rtpconference_no_rtcp)
 }
 GST_END_TEST;
 
-
-
 GST_START_TEST (test_rtpconference_three_way_no_source_assoc)
 {
   GParameter param = {0};
@@ -984,6 +1000,128 @@ GST_START_TEST (test_rtpconference_three_way_no_source_assoc)
   g_value_set_boolean (&param.value, FALSE);
 
   nway_test (3, NULL, 1, &param);
+}
+GST_END_TEST;
+
+
+static void
+_simple_profile_init (void)
+{
+  struct SimpleTestStream *st1 = dats[0]->streams->data;
+  struct SimpleTestStream *st2 = dats[1]->streams->data;
+  GList *prefs = NULL;
+  FsCodec *codec = NULL;
+  gboolean ret;
+
+  codec = fs_codec_new (0, "PCMU", FS_MEDIA_TYPE_AUDIO, 8000);
+  fs_codec_add_optional_parameter (codec, "farsight-send-profile",
+      "audioconvert ! audioresample ! audioconvert ! mulawenc ! rtppcmupay");
+  prefs = g_list_append (NULL, codec);
+
+  ret = fs_session_set_codec_preferences (st1->dat->session, prefs,
+      NULL);
+  ts_fail_unless (ret, "set codec prefs");
+  ret = fs_session_set_codec_preferences (st2->dat->session, prefs,
+      NULL);
+  ts_fail_unless (ret, "set codec prefs");
+
+  fs_codec_list_destroy (prefs);
+
+}
+
+
+GST_START_TEST (test_rtpconference_simple_profile)
+{
+  nway_test (2, _simple_profile_init, 0, NULL);
+}
+GST_END_TEST;
+
+
+static void
+_double_codec_handoff_handler (GstElement *element, GstBuffer *buffer,
+    GstPad *pad, gpointer user_data)
+{
+  static int buffer_count [2][2] = {{0,0},{0,0}};
+  static gpointer sts[2] = {NULL, NULL};
+  GstPad *peer = gst_pad_get_peer (pad);
+  gchar *name;
+  gint session, ssrc, pt;
+  guint id = 0xFFFFFF;
+
+  if (!(sts[0] == user_data || sts[1] == user_data))
+  {
+    if (!sts[0])
+      sts[0] = user_data;
+    else if (!sts[1])
+      sts[1] = user_data;
+    else
+      ts_fail ("Already have two streams");
+  }
+
+  if (sts[0] == user_data)
+    id = 0;
+  else if (sts[1] == user_data)
+    id = 1;
+  else
+    ts_fail ("Should not be here");
+
+  ts_fail_if (peer == NULL);
+  name = gst_pad_get_name (peer);
+  ts_fail_if (name == NULL);
+  gst_object_unref (peer);
+
+  ts_fail_unless (sscanf (name, "src_%d_%d_%d", &session, &ssrc, &pt) == 3);
+  g_free (name);
+
+  if (pt == 0)
+    buffer_count[0][id]++;
+  else if (pt == 8)
+    buffer_count[1][id]++;
+  else
+    ts_fail ("Wrong PT: %d", pt);
+
+  if (buffer_count[0][0] > 20 &&
+      buffer_count[0][1] > 20  &&
+      buffer_count[1][0] > 20 &&
+      buffer_count[1][1] > 20 )
+  {
+    g_main_loop_quit (loop);
+  }
+}
+
+static void
+_double_profile_init (void)
+{
+  struct SimpleTestStream *st1 = dats[0]->streams->data;
+  struct SimpleTestStream *st2 = dats[1]->streams->data;
+  GList *prefs = NULL;
+  FsCodec *codec = NULL;
+  gboolean ret;
+
+  st1->handoff_handler = G_CALLBACK (_double_codec_handoff_handler);
+  st2->handoff_handler = G_CALLBACK (_double_codec_handoff_handler);
+
+  codec = fs_codec_new (0, "PCMU", FS_MEDIA_TYPE_AUDIO, 8000);
+  fs_codec_add_optional_parameter (codec, "farsight-send-profile",
+      "tee name=t "
+      "t. ! audioconvert ! audioresample ! audioconvert ! mulawenc ! rtppcmupay "
+      "t. ! audioconvert ! audioresample ! audioconvert ! alawenc ! rtppcmapay");
+  prefs = g_list_append (NULL, codec);
+
+  ret = fs_session_set_codec_preferences (st1->dat->session, prefs,
+      NULL);
+  ts_fail_unless (ret, "set codec prefs");
+
+  ret = fs_session_set_codec_preferences (st2->dat->session, prefs,
+      NULL);
+  ts_fail_unless (ret, "set codec prefs");
+
+  fs_codec_list_destroy (prefs);
+}
+
+GST_START_TEST (test_rtpconference_double_codec_profile)
+{
+  nway_test (2, _double_profile_init, 0, NULL);
 }
 GST_END_TEST;
 
@@ -999,56 +1137,60 @@ fsrtpconference_suite (void)
   fatal_mask |= G_LOG_LEVEL_WARNING | G_LOG_LEVEL_CRITICAL;
   g_log_set_always_fatal (fatal_mask);
 
-  tc_chain = tcase_create ("fsrtpconfence_base");
+  tc_chain = tcase_create ("fsrtpconference_base");
   tcase_add_test (tc_chain, test_rtpconference_new);
   suite_add_tcase (s, tc_chain);
 
-  tc_chain = tcase_create ("fsrtpconfence_two_way");
+  tc_chain = tcase_create ("fsrtpconference_two_way");
   tcase_add_test (tc_chain, test_rtpconference_two_way);
   suite_add_tcase (s, tc_chain);
 
-  tc_chain = tcase_create ("fsrtpconfence_three_way");
+  tc_chain = tcase_create ("fsrtpconference_three_way");
   tcase_add_test (tc_chain, test_rtpconference_three_way);
   suite_add_tcase (s, tc_chain);
 
-  tc_chain = tcase_create ("fsrtpconfence_ten_way");
+  tc_chain = tcase_create ("fsrtpconference_ten_way");
   tcase_add_test (tc_chain, test_rtpconference_ten_way);
   suite_add_tcase (s, tc_chain);
 
-  tc_chain = tcase_create ("fsrtpconfence_errors");
+  tc_chain = tcase_create ("fsrtpconference_errors");
   tcase_add_test (tc_chain, test_rtpconference_errors);
   suite_add_tcase (s, tc_chain);
 
-  tc_chain = tcase_create ("fsrtpconfence_select_send_codec");
+  tc_chain = tcase_create ("fsrtpconference_select_send_codec");
   tcase_add_test (tc_chain, test_rtpconference_select_send_codec);
   suite_add_tcase (s, tc_chain);
 
-  tc_chain = tcase_create ("fsrtpconfence_select_send_codec_while_running");
+  tc_chain = tcase_create ("fsrtpconference_select_send_codec_while_running");
   tcase_add_test (tc_chain, test_rtpconference_select_send_codec_while_running);
   suite_add_tcase (s, tc_chain);
 
-  tc_chain = tcase_create ("fsrtpconfence_recv_only");
+  tc_chain = tcase_create ("fsrtpconference_recv_only");
   tcase_add_test (tc_chain, test_rtpconference_recv_only);
   suite_add_tcase (s, tc_chain);
 
-  tc_chain = tcase_create ("fsrtpconfence_send_only");
+  tc_chain = tcase_create ("fsrtpconference_send_only");
   tcase_add_test (tc_chain, test_rtpconference_send_only);
   suite_add_tcase (s, tc_chain);
 
-  tc_chain = tcase_create ("fsrtpconfence_change_to_send_only");
+  tc_chain = tcase_create ("fsrtpconference_change_to_send_only");
   tcase_add_test (tc_chain, test_rtpconference_change_to_send_only);
   suite_add_tcase (s, tc_chain);
 
-  tc_chain = tcase_create ("fsrtpconfence_change_to_send_only");
-  tcase_add_test (tc_chain, test_rtpconference_change_to_send_only);
-  suite_add_tcase (s, tc_chain);
-
-  tc_chain = tcase_create ("fsrtpconfence_no_rtcp");
+  tc_chain = tcase_create ("fsrtpconference_no_rtcp");
   tcase_add_test (tc_chain, test_rtpconference_no_rtcp);
   suite_add_tcase (s, tc_chain);
 
-  tc_chain = tcase_create ("fsrtpconfence_three_way_no_source_assoc");
+  tc_chain = tcase_create ("fsrtpconference_three_way_no_source_assoc");
   tcase_add_test (tc_chain, test_rtpconference_three_way_no_source_assoc);
+  suite_add_tcase (s, tc_chain);
+
+  tc_chain = tcase_create ("fsrtpconference_simple_profile");
+  tcase_add_test (tc_chain, test_rtpconference_simple_profile);
+  suite_add_tcase (s, tc_chain);
+
+  tc_chain = tcase_create ("fsrtpconference_double_codec_profile");
+  tcase_add_test (tc_chain, test_rtpconference_double_codec_profile);
   suite_add_tcase (s, tc_chain);
 
   return s;

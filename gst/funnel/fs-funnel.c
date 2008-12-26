@@ -23,7 +23,7 @@
  */
 
 /**
- * SECTION:element-funnel
+ * SECTION:element-fsfunnel
  * @short_description: N-to-1 simple funnel
  *
  * Takes packets from various input sinks into one output source
@@ -289,6 +289,7 @@ reset_pad (gpointer data, gpointer user_data)
   GST_OBJECT_LOCK (pad);
   gst_segment_init (&priv->segment, GST_FORMAT_UNDEFINED);
   GST_OBJECT_UNLOCK (pad);
+  gst_object_unref (pad);
 }
 
 static GstStateChangeReturn

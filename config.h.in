@@ -84,6 +84,9 @@
 /* Define to 1 if you have the `getifaddrs' function. */
 #undef HAVE_GETIFADDRS
 
+/* Have the GUPnP IGD library */
+#undef HAVE_GUPNP
+
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
