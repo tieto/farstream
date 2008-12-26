@@ -11,6 +11,7 @@ farsight2 (0.0.4-1.0.1) UNRELEASED; urgency=low
 
   [ Simon McVittie ]
   * Move packaging to git
+  * Add `debian/rules update-patches` and gbp.conf for maintainers
 
  -- Sjoerd Simons <sjoerd@debian.org>  Thu, 27 Nov 2008 15:03:14 +0100
 
