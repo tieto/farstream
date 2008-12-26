@@ -32,6 +32,67 @@
  * inside a session. In fact, a FarsightStream instance is obtained by adding a
  * participant into a session using #fs_session_add_participant.
  *
+ *
+ * This will communicate asynchronous events to the user through #GstMessage
+ * of type #GST_MESSAGE_ELEMENT sent over the #GstBus.
+ * </para>
+ * <refsect2><title>The "<literal>farsight-new-local-candidate</literal>" message</title>
+ * |[
+ * "stream"           #FsStream          The stream that emits the message
+ * "candidate"        #FsCandidate       The new candidate
+ * ]|
+ * <para>
+ * This message is emitted when a new local candidate is discovered.
+ * </para>
+ * </refsect2>
+ * <refsect2><title>The "<literal>farsight-local-candidates-prepared</literal>" message</title>
+ * |[
+ * "stream"           #FsStream          The stream that emits the message
+ * ]|
+ * <para>
+ * This signal is emitted when all local candidates have been
+ * prepared, an ICE implementation would send its SDP offer or answer.
+ * </para>
+ * </refsect2>
+ * <refsect2><title>The "<literal>farsight-new-active-candidate-pair</literal>" message</title>
+ * |[
+ * "stream"           #FsStream          The stream that emits the message
+ * "local-candidate"  #FsCandidate       Local candidate being used
+ * "remote-candidate" #FsCandidate       Remote candidate being used
+ * ]|
+ * <para>
+ * This message is emitted when there is a new active candidate pair that has
+ * been established. This is specially useful for ICE where the active
+ * candidate pair can change automatically due to network conditions. The user
+ * must not modify the candidates and must copy them if he wants to use them
+ * outside the callback scope. This message is emitted once per component.
+ * </para>
+ * </refsect2>
+ * <refsect2><title>The "<literal>farsight-recv-codecs-changed</literal>" message</title>
+ * |[
+ * "stream"           #FsStream          The stream that emits the message
+ * "codecs"           #FsCodecGList      A #GList of #FsCodec
+ * ]|
+ * <para>
+ * This message is emitted when the content of the
+ * #FsStream:current-recv-codecs property changes. It is normally emitted
+ * right after the #FsStream::src-pad-added signal only if that codec was not
+ * previously received in this stream, but it can also be emitted if the pad
+ * already exists, but the source material that will come to it is different.
+ * The list of new recv-codecs is included in the message
+ * </para>
+ * </refsect2>
+ * <refsect2><title>The "<literal>farsight-component-state-changed</literal>" message</title>
+ * |[
+ * "stream"           #FsStream          The stream that emits the message
+ * "component"        #guint             The component whose state changed
+ * "state"            #FsStreamState     The new state of the component
+ * ]|
+ * <para>
+ * This message is emitted the state of a component of a stream changes.
+ * </para>
+ * </refsect2>
+ * <para>
  */
 
 #ifdef HAVE_CONFIG_H
@@ -54,12 +115,8 @@
 /* Signals */
 enum
 {
-  ERROR,
+  ERROR_SIGNAL,
   SRC_PAD_ADDED,
-  RECV_CODECS_CHANGED,
-  NEW_ACTIVE_CANDIDATE_PAIR,
-  NEW_LOCAL_CANDIDATE,
-  LOCAL_CANDIDATES_PREPARED,
   LAST_SIGNAL
 };
 
@@ -72,6 +129,7 @@ enum
   PROP_SOURCE_PADS,
 #endif
   PROP_REMOTE_CODECS,
+  PROP_NEGOTIATED_CODECS,
   PROP_CURRENT_RECV_CODECS,
   PROP_DIRECTION,
   PROP_PARTICIPANT,
@@ -79,14 +137,16 @@ enum
   PROP_STREAM_TRANSMITTER
 };
 
+/*
 struct _FsStreamPrivate
 {
 };
 
-G_DEFINE_ABSTRACT_TYPE(FsStream, fs_stream, G_TYPE_OBJECT);
-
 #define FS_STREAM_GET_PRIVATE(o)  \
    (G_TYPE_INSTANCE_GET_PRIVATE ((o), FS_TYPE_STREAM, FsStreamPrivate))
+*/
+
+G_DEFINE_ABSTRACT_TYPE(FsStream, fs_stream, G_TYPE_OBJECT);
 
 static void fs_stream_get_property (GObject *object,
                                     guint prop_id,
@@ -146,12 +206,34 @@ fs_stream_class_init (FsStreamClass *klass)
         G_PARAM_READABLE));
 
   /**
-   * FsStream:current-recv-codec:
+   * FsStream:negotiated-codecs:
+   *
+   * This is the list of negotiatied codecs, it is the same list as the list
+   * of #FsCodec from the parent #FsSession, except that the codec config data
+   * has been replaced with the data from the remote codecs for this stream.
+   * This is the list of #FsCodec used to receive data from this stream.
+   * It is a #GList of #FsCodec.
+   *
+   */
+  g_object_class_install_property (gobject_class,
+      PROP_NEGOTIATED_CODECS,
+      g_param_spec_boxed ("negotiated-codecs",
+        "List of remote codecs",
+        "A GList of FsCodecs of the negotiated codecs for this stream",
+        FS_TYPE_CODEC_LIST,
+        G_PARAM_READABLE));
+
+  /**
+   * FsStream:current-recv-codecs:
    *
    * This is the list of codecs that have been received by this stream.
-   * The user must free the list if fs_codec_list_destroy()
-   * The #FsStream::recv-codecs-changed signal is emitted when the value of
-   * this property changes.
+   * The user must free the list if fs_codec_list_destroy().
+   * The "farsight-recv-codecs-changed" message is send on the #GstBus
+   * when the value of this property changes.
+   * It is normally emitted right after #FsStream::src-pad-added
+   * only if that codec was not previously received in this stream, but it can
+   * also be emitted if the pad already exists, but the source material that
+   * will come to it is different.
    *
    */
   g_object_class_install_property (gobject_class,
@@ -233,14 +315,14 @@ fs_stream_class_init (FsStreamClass *klass)
    * This signal is emitted in any error condition
    *
    */
-  signals[ERROR] = g_signal_new ("error",
+  signals[ERROR_SIGNAL] = g_signal_new ("error",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
       0,
       NULL,
       NULL,
-      _fs_marshal_VOID__INT_STRING_STRING,
-      G_TYPE_NONE, 3, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING);
+      _fs_marshal_VOID__ENUM_STRING_STRING,
+      G_TYPE_NONE, 3, FS_TYPE_ERROR, G_TYPE_STRING, G_TYPE_STRING);
 
   /**
    * FsStream::src-pad-added:
@@ -267,88 +349,6 @@ fs_stream_class_init (FsStreamClass *klass)
       _fs_marshal_VOID__BOXED_BOXED,
       G_TYPE_NONE, 2, GST_TYPE_PAD, FS_TYPE_CODEC);
 
-  /**
-   * FsStream::recv-codecs-changed:
-   * @self: #FsStream that emitted the signal
-   *
-   * This signal is emitted when the list of currently received codecs has
-   * changed. They can be fetched from the #FsStream:current-recv-codecs
-   * property.
-   * This is useful for displaying the current active reception codecs.
-   * This signal is normally emitted right after src-pad-added only if that
-   * codec was not previously received in this stream, but it can also be
-   * emitted if the pad already exists, but the source material that will
-   * come to it is different.
-   *
-   */
-  signals[RECV_CODECS_CHANGED] = g_signal_new ("recv-codecs-changed",
-      G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST,
-      0,
-      NULL,
-      NULL,
-      g_cclosure_marshal_VOID__VOID,
-      G_TYPE_NONE, 0);
-
-  /**
-   * FsStream::new-active-candidate-pair:
-   * @self: #FsStream that emitted the signal
-   * @local_candidate: #FsCandidate of the local candidate being used
-   * @remote_candidate: #FsCandidate of the remote candidate being used
-   *
-   * This signal is emitted when there is a new active chandidate pair that has
-   * been established. This is specially useful for ICE where the active
-   * candidate pair can change automatically due to network conditions. The user
-   * must not modify the candidates and must copy them if he wants to use them
-   * outside the callback scope.
-   *
-   */
-  signals[NEW_ACTIVE_CANDIDATE_PAIR] = g_signal_new
-    ("new-active-candidate-pair",
-        G_TYPE_FROM_CLASS (klass),
-        G_SIGNAL_RUN_LAST,
-        0,
-        NULL,
-        NULL,
-        _fs_marshal_VOID__BOXED_BOXED,
-        G_TYPE_NONE, 2, FS_TYPE_CANDIDATE, FS_TYPE_CANDIDATE);
-
- /**
-   * FsStream::new-local-candidate:
-   * @self: #FsStream that emitted the signal
-   * @local_candidate: #FsCandidate of the local candidate
-   *
-   * This signal is emitted when a new local candidate is discovered.
-   *
-   */
-  signals[NEW_LOCAL_CANDIDATE] = g_signal_new
-    ("new-local-candidate",
-      G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST,
-      0,
-      NULL,
-      NULL,
-      g_cclosure_marshal_VOID__BOXED,
-      G_TYPE_NONE, 1, FS_TYPE_CANDIDATE);
-
- /**
-   * FsStream::local-candidates-prepared:
-   * @self: #FsStream that emitted the signal
-   *
-   * This signal is emitted when all local candidates have been
-   * prepared, an ICE implementation would send its SDP offer or answer.
-   *
-   */
-  signals[LOCAL_CANDIDATES_PREPARED] = g_signal_new
-    ("local-candidates-prepared",
-      G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST,
-      0,
-      NULL,
-      NULL,
-      g_cclosure_marshal_VOID__VOID,
-      G_TYPE_NONE, 0);
-
   // g_type_class_add_private (klass, sizeof (FsStreamPrivate));
 }
 
@@ -365,6 +365,10 @@ fs_stream_get_property (GObject *object,
                         GValue *value,
                         GParamSpec *pspec)
 {
+  GST_WARNING ("Subclass %s of FsStream does not override the %s property"
+      " getter",
+      G_OBJECT_TYPE_NAME(object),
+      g_param_spec_get_name (pspec));
 }
 
 static void
@@ -373,82 +377,69 @@ fs_stream_set_property (GObject *object,
                         const GValue *value,
                         GParamSpec *pspec)
 {
+  GST_WARNING ("Subclass %s of FsStream does not override the %s property"
+      " setter",
+      G_OBJECT_TYPE_NAME(object),
+      g_param_spec_get_name (pspec));
 }
 
 /**
- * fs_stream_add_remote_candidate:
+ * fs_stream_set_remote_candidates:
  * @stream: an #FsStream
- * @candidate: an #FsCandidate struct representing a remote candidate
+ * @candidates: an #GList of #FsCandidate representing the remote candidates
  * @error: location of a #GError, or %NULL if no error occured
  *
- * This function adds the given candidate into the remote candiate list of the
- * stream. It will be used for establishing a connection with the peer. A copy
- * will be made so the user must free the passed candidate using
- * fs_candidate_destroy() when done.
+ * This function sets the list of remote candidates. Any new candidates are
+ * added to the list. The candidates will be used to establish a connection
+ * with the peer. A copy will be made so the user must free the
+ * passed candidate using fs_candidate_destroy() when done.
  *
  * Return value: TRUE if the candidate was valid, FALSE otherwise
  */
 gboolean
-fs_stream_add_remote_candidate (FsStream *stream, FsCandidate *candidate,
-                                GError **error)
+fs_stream_set_remote_candidates (FsStream *stream,
+    GList *candidates,
+    GError **error)
 {
   FsStreamClass *klass = FS_STREAM_GET_CLASS (stream);
 
-  if (klass->add_remote_candidate) {
-    return klass->add_remote_candidate (stream, candidate, error);
+  if (klass->set_remote_candidates) {
+    return klass->set_remote_candidates (stream, candidates, error);
   } else {
     g_set_error (error, FS_ERROR, FS_ERROR_NOT_IMPLEMENTED,
-      "add_remote_candidate not defined in class");
+      "set_remote_candidate not defined in class");
   }
 
   return FALSE;
 }
 
 /**
- * fs_stream_remote_candidates_added:
+ * fs_stream_force_remote_candidates:
  * @stream: a #FsStream
- *
- * Call this function when the remotes candidates have been set and the
- * checks can start. More candidates can be added afterwards
- */
-
-void
-fs_stream_remote_candidates_added (FsStream *stream)
-{
-  FsStreamClass *klass = FS_STREAM_GET_CLASS (stream);
-
-  if (klass->remote_candidates_added) {
-    klass->remote_candidates_added (stream);
-  } else {
-    GST_WARNING ("remote_candidates_added not defined in class");
-  }
-}
-
-/**
- * fs_stream_select_candidate_pair:
- * @stream: a #FsStream
- * @lfoundation: The foundation of the local candidate to be selected
- * @rfoundation: The foundation of the remote candidate to be selected
+ * @remote_candidates: a #GList of #FsCandidate to force
  * @error: location of a #GError, or %NULL if no error occured
  *
- * This function selects one pair of candidates to be selected to start
- * sending media on.
+ * This function forces data to be sent immediately to the selected remote
+ * candidate, by-passing any connectivity checks. There should be at most
+ * one candidate per component.
  *
- * Returns: TRUE if the candidate pair could be selected, FALSE otherwise
+ * Returns: %TRUE if the candidates could be forced, %FALSE otherwise
  */
 
 gboolean
-fs_stream_select_candidate_pair (FsStream *stream, gchar *lfoundation,
-                                 gchar *rfoundation, GError **error)
+fs_stream_force_remote_candidates (FsStream *stream,
+    GList *remote_candidates,
+    GError **error)
 {
   FsStreamClass *klass = FS_STREAM_GET_CLASS (stream);
 
-  if (klass->select_candidate_pair) {
-    return klass->select_candidate_pair (stream, lfoundation, rfoundation,
-    error);
+  if (klass->force_remote_candidates) {
+    return klass->force_remote_candidates (stream,
+        remote_candidates,
+        error);
   } else {
     g_set_error (error, FS_ERROR, FS_ERROR_NOT_IMPLEMENTED,
-      "select_candidate_pair not defined in class");
+      "force_remote_candidates not defined in class");
   }
 
   return FALSE;
@@ -499,7 +490,8 @@ void
 fs_stream_emit_error (FsStream *stream, gint error_no,
                       gchar *error_msg, gchar *debug_msg)
 {
-  g_signal_emit (stream, signals[ERROR], 0, error_no, error_msg, debug_msg);
+  g_signal_emit (stream, signals[ERROR_SIGNAL], 0, error_no, error_msg,
+      debug_msg);
 }
 
 

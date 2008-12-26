@@ -9,12 +9,10 @@ FsStream
 
 </para>
 
-
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
-
 
 <!-- ##### SECTION Stability_Level ##### -->
 
@@ -35,37 +33,6 @@ FsStream
 @arg2: 
 @arg3: 
 
-<!-- ##### SIGNAL FsStream::local-candidates-prepared ##### -->
-<para>
-
-</para>
-
-@fsstream: the object which received the signal.
-
-<!-- ##### SIGNAL FsStream::new-active-candidate-pair ##### -->
-<para>
-
-</para>
-
-@fsstream: the object which received the signal.
-@arg1: 
-@arg2: 
-
-<!-- ##### SIGNAL FsStream::new-local-candidate ##### -->
-<para>
-
-</para>
-
-@fsstream: the object which received the signal.
-@arg1: 
-
-<!-- ##### SIGNAL FsStream::recv-codecs-changed ##### -->
-<para>
-
-</para>
-
-@fsstream: the object which received the signal.
-
 <!-- ##### SIGNAL FsStream::src-pad-added ##### -->
 <para>
 
@@ -81,6 +48,11 @@ FsStream
 </para>
 
 <!-- ##### ARG FsStream:direction ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsStream:negotiated-codecs ##### -->
 <para>
 
 </para>
@@ -111,9 +83,8 @@ FsStream
 </para>
 
 @parent_class: 
-@add_remote_candidate: 
-@remote_candidates_added: 
-@select_candidate_pair: 
+@set_remote_candidates: 
+@force_remote_candidates: 
 @set_remote_codecs: 
 
 <!-- ##### ENUM FsStreamDirection ##### -->
@@ -126,33 +97,25 @@ FsStream
 @FS_DIRECTION_RECV: 
 @FS_DIRECTION_BOTH: 
 
-<!-- ##### FUNCTION fs_stream_add_remote_candidate ##### -->
+<!-- ##### ENUM FsStreamState ##### -->
+<para>
+
+</para>
+
+@FS_STREAM_STATE_FAILED: 
+@FS_STREAM_STATE_DISCONNECTED: 
+@FS_STREAM_STATE_GATHERING: 
+@FS_STREAM_STATE_CONNECTING: 
+@FS_STREAM_STATE_CONNECTED: 
+@FS_STREAM_STATE_READY: 
+
+<!-- ##### FUNCTION fs_stream_set_remote_candidates ##### -->
 <para>
 
 </para>
 
 @stream: 
-@candidate: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION fs_stream_remote_candidates_added ##### -->
-<para>
-
-</para>
-
-@stream: 
-
-
-<!-- ##### FUNCTION fs_stream_select_candidate_pair ##### -->
-<para>
-
-</para>
-
-@stream: 
-@lfoundation: 
-@rfoundation: 
+@candidates: 
 @error: 
 @Returns: 
 
@@ -164,6 +127,17 @@ FsStream
 
 @stream: 
 @remote_codecs: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_stream_force_remote_candidates ##### -->
+<para>
+
+</para>
+
+@stream: 
+@remote_candidates: 
 @error: 
 @Returns: 
 

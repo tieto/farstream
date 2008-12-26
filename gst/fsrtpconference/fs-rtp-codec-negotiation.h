@@ -29,28 +29,85 @@
 
 G_BEGIN_DECLS
 
+/**
+ * CodecAssociation:
+ * @reserved: Marks a payload-type reserved at the users request
+ * @disable: means that its not a real association, just a spot thats disabled
+ * @need_config: means that the config has to be retreived from the codec data
+ * @recv_only: means thats its not a real negotiated codec, just a codec that
+ * we have offered from which we have to be ready to receive stuff, just in case
+ *
+ * The codec association structure represents the link between a #FsCodec and
+ * a CodecBlueprint that implements it.
+ *
+ * It should be treated as opaque by any function outside of
+ * fs-rtp-codec-negotiation.c
+ *
+ */
+
 typedef struct _CodecAssociation {
   CodecBlueprint *blueprint;
   FsCodec *codec;
+
+  /*< private >*/
+
+  gboolean reserved;
+  gboolean disable;
+  gboolean need_config;
+  gboolean recv_only;
 } CodecAssociation;
 
 
-GList *validate_codecs_configuration (FsMediaType media_type, GList *blueprints,
-  GList *codecs);
+GList *validate_codecs_configuration (
+    FsMediaType media_type,
+    GList *blueprints,
+    GList *codecs);
 
-GHashTable *create_local_codec_associations (FsMediaType media_type,
-  GList *blueprints, GList *codec_prefs, GHashTable *current_codec_associations,
-  GList **local_codecs_list);
+GList *
+create_local_codec_associations (
+    GList *blueprints,
+    GList *codec_prefs,
+    GList *current_codec_associations);
 
-GHashTable *negotiate_codecs (const GList *remote_codecs,
-    GHashTable *current_negotiated_codec_associations,
-    GHashTable *local_codec_associations, GList *local_codecs,
-    gboolean use_local_ids,
-    GList **new_negotiated_codecs);
+GList *
+negotiate_stream_codecs (
+    const GList *remote_codecs,
+    GList *current_codec_associations,
+    gboolean use_local_ids);
 
-CodecAssociation *lookup_codec_association_by_pt (
-    GHashTable *codec_associations, gint pt);
+GList *
+finish_codec_negotiation (
+    GList *old_codec_associations,
+    GList *new_codec_associations);
 
+CodecAssociation *
+lookup_codec_association_by_pt (GList *codec_associations, gint pt);
+
+CodecAssociation *
+lookup_codec_association_by_codec (GList *codec_associations, FsCodec *codec);
+
+CodecAssociation *
+lookup_codec_association_by_codec_without_config (GList *codec_associations,
+    FsCodec *codec);
+
+gboolean
+codec_association_is_valid_for_sending (CodecAssociation *ca);
+
+GList *
+codec_associations_to_codecs (GList *codec_associations,
+    gboolean include_config);
+
+gboolean
+codec_associations_list_are_equal (GList *list1, GList *list2);
+
+void
+codec_association_list_destroy (GList *list);
+
+typedef gboolean (*CAFindFunc) (CodecAssociation *ca, gpointer user_data);
+
+CodecAssociation *
+lookup_codec_association_custom (GList *codec_associations,
+    CAFindFunc func, gpointer user_data);
 
 
 G_END_DECLS

@@ -72,7 +72,7 @@
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
-/* support for features: */
+/* Define to enable enable building of plug-ins with external deps. */
 #undef HAVE_EXTERNAL
 
 /* defined if the compiler implements __func__ */
@@ -86,6 +86,9 @@
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
+
+/* Have the struct ip_mreqn */
+#undef HAVE_IP_MREQN
 
 /* Define to 1 if you have the <malloc.h> header file. */
 #undef HAVE_MALLOC_H

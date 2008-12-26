@@ -35,7 +35,7 @@ G_BEGIN_DECLS
 
 /* TYPE MACROS */
 #define FS_TYPE_RTP_SESSION \
-  (fs_rtp_session_get_type())
+  (fs_rtp_session_get_type ())
 #define FS_RTP_SESSION(obj) \
   (G_TYPE_CHECK_INSTANCE_CAST((obj), FS_TYPE_RTP_SESSION, FsRtpSession))
 #define FS_RTP_SESSION_CLASS(klass) \
@@ -92,26 +92,13 @@ GstCaps *fs_rtp_session_request_pt_map (FsRtpSession *session, guint pt);
 void fs_rtp_session_new_recv_pad (FsRtpSession *session, GstPad *new_pad,
   guint32 ssrc, guint pt);
 
-gboolean fs_rtp_session_negotiate_codecs (FsRtpSession *session,
-    GList *remote_codecs,
-    gpointer stream,
-    GError **error);
-
-GstElement *fs_rtp_session_new_recv_codec_bin_locked (FsRtpSession *session,
-    guint32 ssrc,
-    guint pt,
-    FsCodec **out_codec,
-    GError **error);
-
-FsCodec *fs_rtp_session_get_recv_codec_for_pt (FsRtpSession *session,
-    gint pt);
-
 void fs_rtp_session_associate_ssrc_cname (FsRtpSession *session,
     guint32 ssrc,
     const gchar *cname);
 
 void fs_rtp_session_bye_ssrc (FsRtpSession *session,
     guint32 ssrc);
+
 
 G_END_DECLS
 

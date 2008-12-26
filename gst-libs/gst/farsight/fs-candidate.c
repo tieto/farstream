@@ -22,6 +22,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "fs-candidate.h"
 
 /**
@@ -65,8 +69,6 @@ fs_candidate_list_get_type (void)
   return candidate_list_type;
 }
 
-/* TODO Create a fs_candidate_new() function since there is a _destroy() func */
-
 /**
  * fs_candidate_destroy:
  * @cand: a #FsCandidate to delete
@@ -76,18 +78,13 @@ fs_candidate_list_get_type (void)
 void
 fs_candidate_destroy (FsCandidate * cand)
 {
-  if (cand->candidate_id)
-    g_free ((gchar *)cand->candidate_id);
-  if (cand->ip)
-    g_free ((gchar *)cand->ip);
-  if (cand->base_ip)
-    g_free ((gchar *)cand->base_ip);
-  if (cand->username)
-    g_free ((gchar *)cand->username);
-  if (cand->password)
-    g_free ((gchar *)cand->password);
+  g_free ((gchar *) cand->foundation);
+  g_free ((gchar *) cand->ip);
+  g_free ((gchar *) cand->base_ip);
+  g_free ((gchar *) cand->username);
+  g_free ((gchar *) cand->password);
 
-  g_free (cand);
+  g_slice_free (FsCandidate, cand);
 }
 
 /**
@@ -101,7 +98,7 @@ fs_candidate_destroy (FsCandidate * cand)
 FsCandidate *
 fs_candidate_copy (const FsCandidate * cand)
 {
-  FsCandidate *copy = g_new0 (FsCandidate, 1);
+  FsCandidate *copy = g_slice_new0 (FsCandidate);
 
   copy->component_id = cand->component_id;
   copy->port = cand->port;
@@ -112,7 +109,6 @@ fs_candidate_copy (const FsCandidate * cand)
   copy->ttl = cand->ttl;
 
   copy->foundation = g_strdup (cand->foundation);
-  copy->candidate_id = g_strdup (cand->candidate_id);
   copy->ip = g_strdup (cand->ip);
   copy->base_ip = g_strdup (cand->base_ip);
   copy->username = g_strdup (cand->username);
@@ -135,7 +131,7 @@ fs_candidate_list_destroy (GList *candidate_list)
 
   for (lp = candidate_list; lp; lp = g_list_next (lp)) {
     cand = (FsCandidate *) lp->data;
-    fs_candidate_destroy(cand);
+    fs_candidate_destroy (cand);
     lp->data = NULL;
   }
   g_list_free (candidate_list);
@@ -166,59 +162,8 @@ fs_candidate_list_copy (const GList *candidate_list)
 }
 
 /**
- * fs_candidate_get_by_id:
- * @candidate_list: a list of #FsCandidate
- * @candidate_id: the id of the candidate to extract
- *
- * Searches in candidate_list for the candidate indentified by candidate_id
- *
- * Returns: a #FsCandidate or NULL if not found
- */
-FsCandidate *
-fs_candidate_get_by_id (const GList *candidate_list,
-                        const gchar *candidate_id)
-{
-  FsCandidate *cand = NULL;
-  const GList *lp;
-  FsCandidate *cand_copy = NULL;
-
-  for (lp = candidate_list; lp; lp = g_list_next (lp)) {
-    cand = (FsCandidate *) lp->data;
-    if (g_ascii_strcasecmp(cand->candidate_id, candidate_id) == 0)
-    {
-      cand_copy = fs_candidate_copy (cand);
-      g_print("%p\n", cand_copy);
-      break;
-    }
-  }
-  return cand_copy;
-}
-
-/**
- * fs_candidate_are_equal:
- * @cand1: first #FsCandidate to compare
- * @cand2: second #FsCandidate to compare
- *
- * Compares two #FsCandidate to see if they are equivalent.
- *
- * Returns: True if equivalent.
- */
-gboolean
-fs_candidate_are_equal (const FsCandidate *cand1,
-    const FsCandidate *cand2)
-{
-  /* TODO we compare just the ip and port for now 
-   * is this enough ? think about it some more */
-  if ((g_ascii_strcasecmp(cand1->ip, cand2->ip) == 0) &&
-      (cand1->port == cand2->port))
-    return TRUE;
-  else
-    return FALSE;
-}
-
-/**
  * fs_candidate_new:
- * @id: The id of the candidate (must be unique for ICE)
+ * @foundation: The foundation of the candidate
  * @component_id: The component this candidate is for
  * @type: The type of candidate
  * @proto: The protocol this component is for
@@ -234,16 +179,16 @@ fs_candidate_are_equal (const FsCandidate *cand1,
 
 FsCandidate *
 fs_candidate_new (
-    const gchar *id,
+    const gchar *foundation,
     guint component_id,
     FsCandidateType type,
     FsNetworkProtocol proto,
     const gchar *ip,
     guint port)
 {
-  FsCandidate *candidate = g_new0 (FsCandidate, 1);
+  FsCandidate *candidate = g_slice_new0 (FsCandidate);
 
-  candidate->candidate_id = g_strdup (id);
+  candidate->foundation = g_strdup (foundation);
   candidate->component_id = component_id;
   candidate->type = type;
   candidate->proto = proto;

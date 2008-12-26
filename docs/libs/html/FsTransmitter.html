@@ -1,23 +1,23 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>FsTransmitter</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
 <link rel="start" href="index.html" title="Farsight2 Reference Manual">
-<link rel="up" href="ch05.html" title="Farsight Transmitter objects">
-<link rel="prev" href="ch05.html" title="Farsight Transmitter objects">
+<link rel="up" href="ch05.html" title="Farsight Transmitter Classes">
+<link rel="prev" href="ch05.html" title="Farsight Transmitter Classes">
 <link rel="next" href="FsStreamTransmitter.html" title="FsStreamTransmitter">
-<meta name="generator" content="GTK-Doc V1.8 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
-<link rel="part" href="pt01.html" title="Part&#160;I.&#160;User-oriented classes, interfaces and functions">
+<link rel="part" href="pt01.html" title="Part I. User-oriented classes, interfaces and functions">
 <link rel="chapter" href="ch01.html" title="Farsight GStreamer Interfaces">
 <link rel="chapter" href="ch02.html" title="Farsight Core Library">
 <link rel="chapter" href="ch03.html" title="Farsight Utility Functions and Objects">
-<link rel="part" href="pt02.html" title="Part&#160;II.&#160;Classes used implements Farsight plugins">
-<link rel="chapter" href="ch04.html" title="Farsight GStreamer Base Implementations">
-<link rel="chapter" href="ch05.html" title="Farsight Transmitter objects">
-<link rel="chapter" href="ch06.html" title="Farsight Plugins infrastructure">
+<link rel="part" href="pt02.html" title="Part II. Classes used to implement Farsight plugins">
+<link rel="chapter" href="ch04.html" title="Farsight Classes Base Implementations">
+<link rel="chapter" href="ch05.html" title="Farsight Transmitter Classes">
+<link rel="chapter" href="ch06.html" title="Farsight Plugins Infrastructure">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -28,36 +28,31 @@
 <th width="100%" align="center">Farsight2 Reference Manual</th>
 <td><a accesskey="n" href="FsStreamTransmitter.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#id2606252" class="shortcut">Top</a>
-                  &#160;|&#160;
-                  <a href="#id2622758" class="shortcut">Description</a>
-                  &#160;|&#160;
-                  <a href="#id2613167" class="shortcut">Object Hierarchy</a>
-                  &#160;|&#160;
-                  <a href="#id2613191" class="shortcut">Properties</a>
-                  &#160;|&#160;
-                  <a href="#id2622732" class="shortcut">Signals</a></nobr></td></tr>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#FsTransmitter.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#FsTransmitter.description" class="shortcut">Description</a>
+                   | 
+                  <a href="#FsTransmitter.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                   | 
+                  <a href="#FsTransmitter.properties" class="shortcut">Properties</a>
+                   | 
+                  <a href="#FsTransmitter.signals" class="shortcut">Signals</a></nobr></td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="FsTransmitter"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
-<h2>
-<a name="id2606252"></a><span class="refentrytitle">FsTransmitter</span>
-</h2>
-<p>FsTransmitter &#8212; A transmitter object linked to a session</p>
+<h2><span class="refentrytitle"><a name="FsTransmitter.top_of_page"></a>FsTransmitter</span></h2>
+<p>FsTransmitter — A transmitter object linked to a session</p>
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsynopsisdiv">
-<h2>Synopsis</h2>
+<a name="FsTransmitter.synopsis"></a><h2>Synopsis</h2>
 <pre class="synopsis">
-
-
-
-                    <a class="link" href="FsTransmitter.html#FsTransmitter-struct">FsTransmitter</a>;
-                    <a class="link" href="FsTransmitter.html#FsTransmitterClass">FsTransmitterClass</a>;
-<a class="link" href="FsTransmitter.html" title="FsTransmitter">FsTransmitter</a>*      <a class="link" href="FsTransmitter.html#fs-transmitter-new">fs_transmitter_new</a>                  (const <a
+                    <a class="link" href="FsTransmitter.html#FsTransmitter-struct" title="FsTransmitter">FsTransmitter</a>;
+                    <a class="link" href="FsTransmitter.html#FsTransmitterClass" title="FsTransmitterClass">FsTransmitterClass</a>;
+<a class="link" href="FsTransmitter.html" title="FsTransmitter">FsTransmitter</a>*      <a class="link" href="FsTransmitter.html#fs-transmitter-new" title="fs_transmitter_new ()">fs_transmitter_new</a>                  (const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *type,
                                                          <a
@@ -66,7 +61,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);
-<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter">FsStreamTransmitter</a>* <a class="link" href="FsTransmitter.html#fs-transmitter-new-stream-transmitter">fs_transmitter_new_stream_transmitter</a>
+<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter">FsStreamTransmitter</a>* <a class="link" href="FsTransmitter.html#fs-transmitter-new-stream-transmitter" title="fs_transmitter_new_stream_transmitter ()">fs_transmitter_new_stream_transmitter</a>
                                                         (<a class="link" href="FsTransmitter.html" title="FsTransmitter">FsTransmitter</a> *transmitter,
                                                          <a class="link" href="FsParticipant.html" title="FsParticipant">FsParticipant</a> *participant,
                                                          <a
@@ -80,18 +75,26 @@ href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);
 <a
 href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
->GType</a>               <a class="link" href="FsTransmitter.html#fs-transmitter-get-stream-transmitter-type">fs_transmitter_get_stream_transmitter_type</a>
+>GType</a>               <a class="link" href="FsTransmitter.html#fs-transmitter-get-stream-transmitter-type" title="fs_transmitter_get_stream_transmitter_type ()">fs_transmitter_get_stream_transmitter_type</a>
                                                         (<a class="link" href="FsTransmitter.html" title="FsTransmitter">FsTransmitter</a> *transmitter,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);
-
+void                <a class="link" href="FsTransmitter.html#fs-transmitter-emit-error" title="fs_transmitter_emit_error ()">fs_transmitter_emit_error</a>           (<a class="link" href="FsTransmitter.html" title="FsTransmitter">FsTransmitter</a> *transmitter,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a> error_no,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *error_msg,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *debug_msg);
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id2613167"></a><h2>Object Hierarchy</h2>
+<a name="FsTransmitter.object-hierarchy"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
-
   <a
 href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
 >GObject</a>
@@ -99,29 +102,27 @@ href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id2613191"></a><h2>Properties</h2>
+<a name="FsTransmitter.properties"></a><h2>Properties</h2>
 <pre class="synopsis">
-
-  "<a class="link" href="FsTransmitter.html#FsTransmitter--components">components</a>"               <a
+  "<a class="link" href="FsTransmitter.html#FsTransmitter--components" title='The "components" property'>components</a>"               <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>                 : Read / Write / Construct Only
-  "<a class="link" href="FsTransmitter.html#FsTransmitter--gst-sink">gst-sink</a>"                 <a
-href="/usr/share/gtk-doc/html/gstreamer/GstElement.html"
->GstElement</a>            : Read
-  "<a class="link" href="FsTransmitter.html#FsTransmitter--gst-src">gst-src</a>"                  <a
-href="/usr/share/gtk-doc/html/gstreamer/GstElement.html"
->GstElement</a>            : Read
+  "<a class="link" href="FsTransmitter.html#FsTransmitter--gst-sink" title='The "gst-sink" property'>gst-sink</a>"                 <a
+href="../gstreamer-0.10/GstElement.html"
+>GstElement</a>*           : Read
+  "<a class="link" href="FsTransmitter.html#FsTransmitter--gst-src" title='The "gst-src" property'>gst-src</a>"                  <a
+href="../gstreamer-0.10/GstElement.html"
+>GstElement</a>*           : Read
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id2622732"></a><h2>Signals</h2>
+<a name="FsTransmitter.signals"></a><h2>Signals</h2>
 <pre class="synopsis">
-
-  "<a class="link" href="FsTransmitter.html#FsTransmitter-error">error</a>"                                          : Run Last
+  "<a class="link" href="FsTransmitter.html#FsTransmitter-error" title='The "error" signal'>error</a>"                                          : Run Last
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id2622758"></a><h2>Description</h2>
+<a name="FsTransmitter.description"></a><h2>Description</h2>
 <p>
 This object is the base implementation of a Farsight Transmitter.
 It needs to be derived and implement by a Farsight transmitter. A
@@ -133,11 +134,10 @@ used to set the different per-stream properties</p>
 </p>
 </div>
 <div class="refsect1" lang="en">
-<a name="id2622790"></a><h2>Details</h2>
+<a name="FsTransmitter.details"></a><h2>Details</h2>
 <div class="refsect2" lang="en">
-<a name="id2622800"></a><h3>
-<a name="FsTransmitter-struct"></a>FsTransmitter</h3>
-<a class="indexterm" name="id2622812"></a><pre class="programlisting">typedef struct _FsTransmitter FsTransmitter;</pre>
+<a name="FsTransmitter-struct"></a><h3>FsTransmitter</h3>
+<pre class="programlisting">typedef struct _FsTransmitter FsTransmitter;</pre>
 <p>
 All members are private, access them using methods and properties</p>
 <p>
@@ -146,9 +146,8 @@ All members are private, access them using methods and properties</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2622833"></a><h3>
-<a name="FsTransmitterClass"></a>FsTransmitterClass</h3>
-<a class="indexterm" name="id2622845"></a><pre class="programlisting">typedef struct {
+<a name="FsTransmitterClass"></a><h3>FsTransmitterClass</h3>
+<pre class="programlisting">typedef struct {
   GObjectClass parent_class;
 
   /*virtual functions */
@@ -172,17 +171,17 @@ You must override the new_stream_transmitter method in a subclass</p>
 <tr>
 <td><p><span class="term"><a
 href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObjectClass"
->GObjectClass</a>&#160;<em class="structfield"><code>parent_class</code></em>;</span></p></td>
+>GObjectClass</a> <em class="structfield"><code>parent_class</code></em>;</span></p></td>
 <td> Our parent
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="structfield"><code>new_stream_transmitter</code></em>&#160;()</span></p></td>
+<td><p><span class="term"><em class="structfield"><code>new_stream_transmitter</code></em> ()</span></p></td>
 <td> Creates a new <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a>
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="structfield"><code>get_stream_transmitter_type</code></em>&#160;()</span></p></td>
+<td><p><span class="term"><em class="structfield"><code>get_stream_transmitter_type</code></em> ()</span></p></td>
 <td> Returns the <a
 href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
 ><span class="type">GType</span></a> of the stream transmitter
@@ -194,9 +193,8 @@ href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2625073"></a><h3>
-<a name="fs-transmitter-new"></a>fs_transmitter_new ()</h3>
-<a class="indexterm" name="id2625085"></a><pre class="programlisting"><a class="link" href="FsTransmitter.html" title="FsTransmitter">FsTransmitter</a>*      fs_transmitter_new                  (const <a
+<a name="fs-transmitter-new"></a><h3>fs_transmitter_new ()</h3>
+<pre class="programlisting"><a class="link" href="FsTransmitter.html" title="FsTransmitter">FsTransmitter</a>*      fs_transmitter_new                  (const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *type,
                                                          <a
@@ -215,24 +213,24 @@ It will load the appropriate plugin as required.</p>
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>type</code></em>&#160;:</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
 <td> The type of transmitter to create
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>components</code></em>&#160;:</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>components</code></em> :</span></p></td>
 <td> The number of components to create
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>error</code></em>&#160;:</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
 <td> location of a <a
 href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 ><span class="type">GError</span></a>, or NULL if no error occured
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> a newly-created <a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a> of the requested type
    (or NULL if there is an error)
 </td>
@@ -242,9 +240,8 @@ href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2625205"></a><h3>
-<a name="fs-transmitter-new-stream-transmitter"></a>fs_transmitter_new_stream_transmitter ()</h3>
-<a class="indexterm" name="id2625218"></a><pre class="programlisting"><a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter">FsStreamTransmitter</a>* fs_transmitter_new_stream_transmitter
+<a name="fs-transmitter-new-stream-transmitter"></a><h3>fs_transmitter_new_stream_transmitter ()</h3>
+<pre class="programlisting"><a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter">FsStreamTransmitter</a>* fs_transmitter_new_stream_transmitter
                                                         (<a class="link" href="FsTransmitter.html" title="FsTransmitter">FsTransmitter</a> *transmitter,
                                                          <a class="link" href="FsParticipant.html" title="FsParticipant">FsParticipant</a> *participant,
                                                          <a
@@ -266,38 +263,38 @@ specific participant for this <a class="link" href="FsTransmitter.html" title="F
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>transmitter</code></em>&#160;:</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>transmitter</code></em> :</span></p></td>
 <td> a <span class="type">FsTranmitter</span>
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>participant</code></em>&#160;:</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>participant</code></em> :</span></p></td>
 <td> the <a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a> for which the <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> using this
 new <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> is created
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>n_parameters</code></em>&#160;:</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>n_parameters</code></em> :</span></p></td>
 <td> The number of parameters to pass to the newly created
 <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a>
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>parameters</code></em>&#160;:</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>parameters</code></em> :</span></p></td>
 <td> an array of <a
 href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GParameter"
 ><span class="type">GParameter</span></a>
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>error</code></em>&#160;:</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
 <td> location of a <a
 href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 ><span class="type">GError</span></a>, or NULL if no error occured
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> a new <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a>, or NULL if there is an error
 </td>
 </tr>
@@ -306,9 +303,8 @@ href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2609048"></a><h3>
-<a name="fs-transmitter-get-stream-transmitter-type"></a>fs_transmitter_get_stream_transmitter_type ()</h3>
-<a class="indexterm" name="id2609062"></a><pre class="programlisting"><a
+<a name="fs-transmitter-get-stream-transmitter-type"></a><h3>fs_transmitter_get_stream_transmitter_type ()</h3>
+<pre class="programlisting"><a
 href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
 >GType</a>               fs_transmitter_get_stream_transmitter_type
                                                         (<a class="link" href="FsTransmitter.html" title="FsTransmitter">FsTransmitter</a> *transmitter,
@@ -326,19 +322,19 @@ that can be passed to the _new_stream_transmitter.</p>
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>transmitter</code></em>&#160;:</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>transmitter</code></em> :</span></p></td>
 <td> A <a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a> object
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>error</code></em>&#160;:</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
 <td> location of a <a
 href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 ><span class="type">GError</span></a>, or NULL if no error occured
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> the <a
 href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
 ><span class="type">GType</span></a>
@@ -347,13 +343,57 @@ href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
 </tbody>
 </table></div>
 </div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="fs-transmitter-emit-error"></a><h3>fs_transmitter_emit_error ()</h3>
+<pre class="programlisting">void                fs_transmitter_emit_error           (<a class="link" href="FsTransmitter.html" title="FsTransmitter">FsTransmitter</a> *transmitter,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a> error_no,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *error_msg,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *debug_msg);</pre>
+<p>
+This function emit the "error" signal on a <a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a>, it should
+only be called by subclasses.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>transmitter</code></em> :</span></p></td>
+<td> <a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a> on which to emit the error signal
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error_no</code></em> :</span></p></td>
+<td> The number of the error
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error_msg</code></em> :</span></p></td>
+<td> Error message to be displayed to user
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>debug_msg</code></em> :</span></p></td>
+<td> Debugging error message
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id2609171"></a><h2>Property Details</h2>
+<a name="FsTransmitter.property-details"></a><h2>Property Details</h2>
 <div class="refsect2" lang="en">
-<a name="id2609181"></a><h3>
-<a name="FsTransmitter--components"></a>The "<code class="literal">components</code>" property</h3>
-<a class="indexterm" name="id2609195"></a><pre class="programlisting">  "components"               <a
+<a name="FsTransmitter--components"></a><h3>The <code class="literal">"components"</code> property</h3>
+<pre class="programlisting">  "components"               <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>                 : Read / Write / Construct Only</pre>
 <p>
@@ -366,14 +406,13 @@ The number of components to create</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2609228"></a><h3>
-<a name="FsTransmitter--gst-sink"></a>The "<code class="literal">gst-sink</code>" property</h3>
-<a class="indexterm" name="id2609242"></a><pre class="programlisting">  "gst-sink"                 <a
-href="/usr/share/gtk-doc/html/gstreamer/GstElement.html"
->GstElement</a>            : Read</pre>
+<a name="FsTransmitter--gst-sink"></a><h3>The <code class="literal">"gst-sink"</code> property</h3>
+<pre class="programlisting">  "gst-sink"                 <a
+href="../gstreamer-0.10/GstElement.html"
+>GstElement</a>*           : Read</pre>
 <p>
 A network source <a
-href="/usr/share/gtk-doc/html/gstreamer/GstElement.html"
+href="../gstreamer-0.10/GstElement.html"
 ><span class="type">GstElement</span></a> to be used by the <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>
 These element's sink must have async=FALSE
 This element MUST provide a pad named "sink\<code class="literal">d</code>" per component.
@@ -386,14 +425,13 @@ These pads MUST be static pads.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2609303"></a><h3>
-<a name="FsTransmitter--gst-src"></a>The "<code class="literal">gst-src</code>" property</h3>
-<a class="indexterm" name="id2609317"></a><pre class="programlisting">  "gst-src"                  <a
-href="/usr/share/gtk-doc/html/gstreamer/GstElement.html"
->GstElement</a>            : Read</pre>
+<a name="FsTransmitter--gst-src"></a><h3>The <code class="literal">"gst-src"</code> property</h3>
+<pre class="programlisting">  "gst-src"                  <a
+href="../gstreamer-0.10/GstElement.html"
+>GstElement</a>*           : Read</pre>
 <p>
 A network source <a
-href="/usr/share/gtk-doc/html/gstreamer/GstElement.html"
+href="../gstreamer-0.10/GstElement.html"
 ><span class="type">GstElement</span></a> to be used by the <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>
 This element MUST provide a source pad named "src<code class="literal">d</code>" per component.
 These pads number must start at 1 (the <code class="literal">d</code> corresponds to the component
@@ -405,14 +443,11 @@ These pads MUST be static pads.</p>
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id2626152"></a><h2>Signal Details</h2>
+<a name="FsTransmitter.signal-details"></a><h2>Signal Details</h2>
 <div class="refsect2" lang="en">
-<a name="id2626161"></a><h3>
-<a name="FsTransmitter-error"></a>The "error" signal</h3>
-<a class="indexterm" name="id2626169"></a><pre class="programlisting">void                user_function                      (<a class="link" href="FsTransmitter.html" title="FsTransmitter">FsTransmitter</a> *self,
-                                                        <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
->gint</a>           errorno,
+<a name="FsTransmitter-error"></a><h3>The <code class="literal">"error"</code> signal</h3>
+<pre class="programlisting">void                user_function                      (<a class="link" href="FsTransmitter.html" title="FsTransmitter">FsTransmitter</a> *self,
+                                                        <a class="link" href="FsConference.html#FsError" title="enum FsError">FsError</a>        errorno,
                                                         <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a>         *error_msg,
@@ -431,27 +466,27 @@ This signal is emitted in any error condition</p>
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>self</code></em>&#160;:</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
 <td> <a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a> that emitted the signal
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>errorno</code></em>&#160;:</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>errorno</code></em> :</span></p></td>
 <td> The number of the error
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>error_msg</code></em>&#160;:</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>error_msg</code></em> :</span></p></td>
 <td> Error message to be displayed to user
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>debug_msg</code></em>&#160;:</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>debug_msg</code></em> :</span></p></td>
 <td> Debugging error message
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>user_data</code></em>&#160;:</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
 <td>user data set when the signal handler was connected.</td>
 </tr>
 </tbody>
@@ -459,5 +494,8 @@ This signal is emitted in any error condition</p>
 </div>
 </div>
 </div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.10</div>
 </body>
 </html>

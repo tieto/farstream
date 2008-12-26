@@ -50,12 +50,11 @@
    (G_TYPE_INSTANCE_GET_PRIVATE ((o), FS_TYPE_PLUGIN, FsPluginPrivate))
 
 static gboolean fs_plugin_load (GTypeModule *module);
-static void fs_plugin_unload (GTypeModule *module);
 
 
 static gchar **search_paths = NULL;
 
-GList *plugins = NULL;
+static GList *plugins = NULL;
 
 static GObjectClass *parent_class = NULL;
 
@@ -71,7 +70,7 @@ static void fs_plugin_dispose (GObject * object);
 static void fs_plugin_finalize (GObject * object);
 
 static void
-fs_plugin_search_path_init ()
+fs_plugin_search_path_init (void)
 {
   const gchar *env;
 
@@ -106,10 +105,9 @@ fs_plugin_class_init (FsPluginClass * klass)
   gobject_class->dispose = fs_plugin_dispose;
   gobject_class->finalize = fs_plugin_finalize;
 
-  parent_class = g_type_class_peek_parent(klass);
+  parent_class = g_type_class_peek_parent (klass);
 
   module_class->load = fs_plugin_load;
-  module_class->unload = fs_plugin_unload;
 
   g_type_class_add_private (klass, sizeof (FsPluginPrivate));
 
@@ -165,7 +163,7 @@ static gboolean fs_plugin_load (GTypeModule *module)
   for (search_path = search_paths; *search_path; search_path++) {
     GST_DEBUG("looking for plugins in %s", *search_path);
 
-    path = g_module_build_path(*search_path, plugin->name);
+    path = g_module_build_path (*search_path, plugin->name);
 
     plugin->priv->handle = g_module_open (path, G_MODULE_BIND_LOCAL);
     GST_INFO ("opening module %s: %s\n", path,
@@ -208,24 +206,6 @@ static gboolean fs_plugin_load (GTypeModule *module)
 
 }
 
-static void
-fs_plugin_unload (GTypeModule *module)
-{
-  FsPlugin *plugin = NULL;
-
-  g_return_if_fail (module != NULL);
-
-  plugin = FS_PLUGIN (module);
-
-  GST_INFO("Unloading plugin %s", plugin->name);
-
-  if (plugin->unload != NULL)
-    plugin->unload (plugin);
-
-  if (plugin->priv->handle != NULL)
-    g_module_close (plugin->priv->handle);
-}
-
 static FsPlugin *
 fs_plugin_get_by_name (const gchar * name, const gchar * type_suffix)
 {
@@ -240,7 +220,7 @@ fs_plugin_get_by_name (const gchar * name, const gchar * type_suffix)
 
   for (plugin_item = plugins;
        plugin_item;
-       plugin_item = g_list_next(plugin_item))  {
+       plugin_item = g_list_next (plugin_item))  {
     plugin = plugin_item->data;
     if (plugin->name == NULL || plugin->name[0] == 0)
       continue;
@@ -280,18 +260,10 @@ fs_plugin_create_valist (const gchar *name, const gchar *type_suffix,
   GObject *object;
   FsPlugin *plugin;
 
-  fs_base_conference_init_debug ();
+  g_return_val_if_fail (name, NULL);
+  g_return_val_if_fail (type_suffix, NULL);
 
-  if (name == NULL) {
-    g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
-      "You need to pass a name");
-    return NULL;
-  }
-  if (type_suffix == NULL) {
-    g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
-      "You need to pass a type suffix");
-    return NULL;
-  }
+  fs_base_conference_init_debug ();
 
   plugin = fs_plugin_get_by_name (name, type_suffix);
 
@@ -304,18 +276,18 @@ fs_plugin_create_valist (const gchar *name, const gchar *type_suffix,
     }
     plugin->name = g_strdup_printf ("%s-%s",name,type_suffix);
     g_type_module_set_name (G_TYPE_MODULE (plugin), plugin->name);
-    plugins = g_list_append(plugins, plugin);
-  }
+    plugins = g_list_append (plugins, plugin);
 
-  if (!g_type_module_use (G_TYPE_MODULE (plugin))) {
-    g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
-      "Could not load the %s-%s transmitter plugin", name, type_suffix);
-    return NULL;
+    /* We do the use once and then we keep it loaded forever because
+     * the gstreamer libraries can't be unloaded
+     */
+    if (!g_type_module_use (G_TYPE_MODULE (plugin))) {
+      g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
+          "Could not load the %s-%s transmitter plugin", name, type_suffix);
+      return NULL;
+    }
   }
-
   object = g_object_new_valist (plugin->type, first_property_name, var_args);
-
-  g_type_module_unuse(G_TYPE_MODULE(plugin));
 
   return object;
 }
@@ -328,7 +300,7 @@ fs_plugin_create_valist (const gchar *name, const gchar *type_suffix,
  * @error: location of a #GError, or NULL if no error occured
  * @first_property_name: The name of the first property to be set on the
  *   object
- * @...: The NULL-terminated list of properties to set on the transmitter 
+ * @...: The NULL-terminated list of properties to set on the transmitter
  *
  * Loads the appropriate plugin if necessary and creates a GObject of
  * the requested type

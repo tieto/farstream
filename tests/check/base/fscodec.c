@@ -30,14 +30,14 @@ GST_START_TEST (test_fscodec_new)
 {
   FsCodec *codec = NULL;
 
-  codec = fs_codec_new (1, "aa", FS_MEDIA_TYPE_APPLICATION, 650);
+  codec = fs_codec_new (1, "aa", FS_MEDIA_TYPE_VIDEO, 650);
 
   fail_if (codec == NULL, "Allocation failed");
 
   fail_unless (codec->id == 1, "Codec is incorrect");
   fail_unless (!strcmp (codec->encoding_name, "aa"),
       "Codec encoding name incorrect");;
-  fail_unless (codec->media_type == FS_MEDIA_TYPE_APPLICATION,
+  fail_unless (codec->media_type == FS_MEDIA_TYPE_VIDEO,
       "Codec media type incorrect");
   fail_unless (codec->clock_rate == 650, "Codec clock rate incorrect");
 
@@ -48,32 +48,37 @@ GST_END_TEST;
 
 GST_START_TEST (test_fscodec_are_equal)
 {
-  FsCodec *codec1 = fs_codec_new (1, "aa", FS_MEDIA_TYPE_APPLICATION, 650);
-  FsCodec *codec2 = fs_codec_new (1, "aa", FS_MEDIA_TYPE_APPLICATION, 650);
+  FsCodec *codec1 = fs_codec_new (1, "aa", FS_MEDIA_TYPE_VIDEO, 650);
+  FsCodec *codec2 = fs_codec_new (1, "aa", FS_MEDIA_TYPE_VIDEO, 650);
 
   fail_unless (fs_codec_are_equal (codec1, codec2) == TRUE,
       "Identical codecs not recognized");
 
   fs_codec_destroy (codec2);
 
-  codec2 = fs_codec_new (2, "aa", FS_MEDIA_TYPE_APPLICATION, 650);
+  codec2 = fs_codec_new (2, "aa", FS_MEDIA_TYPE_VIDEO, 650);
   fail_unless (fs_codec_are_equal (codec1, codec2) == FALSE,
       "Different codec ids not recognized");
   fs_codec_destroy (codec2);
 
-  codec2 = fs_codec_new (1, "aaa", FS_MEDIA_TYPE_APPLICATION, 650);
+  codec2 = fs_codec_new (1, "aaa", FS_MEDIA_TYPE_VIDEO, 650);
   fail_unless (fs_codec_are_equal (codec1, codec2) == FALSE,
       "Different codec types not recognized");
   fs_codec_destroy (codec2);
 
-  codec2 = fs_codec_new (1, "aa", FS_MEDIA_TYPE_VIDEO, 650);
+  codec2 = fs_codec_new (1, "aa", FS_MEDIA_TYPE_AUDIO, 650);
   fail_unless (fs_codec_are_equal (codec1, codec2) == FALSE,
       "Different media types not recognized");
   fs_codec_destroy (codec2);
 
-  codec2 = fs_codec_new (1, "aa", FS_MEDIA_TYPE_APPLICATION, 651);
+  codec2 = fs_codec_new (1, "aa", FS_MEDIA_TYPE_VIDEO, 651);
   fail_unless (fs_codec_are_equal (codec1, codec2) == FALSE,
       "Different clock rates not recognized");
+  fs_codec_destroy (codec2);
+
+  codec2 = fs_codec_new (1, NULL, FS_MEDIA_TYPE_VIDEO, 650);
+  fail_unless (fs_codec_are_equal (codec1, codec2) == FALSE,
+      "NULL encoding name not ignored");
   fs_codec_destroy (codec2);
 
   fs_codec_destroy (codec1);
@@ -83,23 +88,11 @@ GST_END_TEST;
 static FsCodec *
 init_codec_with_three_params (void)
 {
-  FsCodec *codec = fs_codec_new (1, "aa", FS_MEDIA_TYPE_APPLICATION, 650);
-  FsCodecParameter *p1 = NULL;
+  FsCodec *codec = fs_codec_new (1, "aa", FS_MEDIA_TYPE_VIDEO, 650);
 
-  p1 = g_new0 (FsCodecParameter, 1);
-  p1->name = g_strdup ("aa1");
-  p1->value = g_strdup ("bb1");
-  codec->optional_params = g_list_append (codec->optional_params, p1);
-
-  p1 = g_new0 (FsCodecParameter, 1);
-  p1->name = g_strdup ("aa2");
-  p1->value = g_strdup ("bb2");
-  codec->optional_params = g_list_append (codec->optional_params, p1);
-
-  p1 = g_new0 (FsCodecParameter, 1);
-  p1->name = g_strdup ("aa3");
-  p1->value = g_strdup ("bb3");
-  codec->optional_params = g_list_append (codec->optional_params, p1);
+  fs_codec_add_optional_parameter (codec, "aa1", "bb1");
+  fs_codec_add_optional_parameter (codec, "aa2", "bb2");
+  fs_codec_add_optional_parameter (codec, "aa3", "bb3");
 
   return codec;
 }
@@ -110,14 +103,13 @@ _free_codec_param (gpointer param)
   FsCodecParameter *p = param;
   g_free (p->name);
   g_free (p->value);
-  g_free (p);
+  g_slice_free (FsCodecParameter, p);
 }
 
 GST_START_TEST (test_fscodec_are_equal_opt_params)
 {
   FsCodec *codec1;
   FsCodec *codec2;
-  FsCodecParameter *p1 = NULL;
 
   codec1 = init_codec_with_three_params ();
   codec2 = init_codec_with_three_params ();
@@ -129,10 +121,7 @@ GST_START_TEST (test_fscodec_are_equal_opt_params)
   codec1->optional_params = g_list_remove (codec1->optional_params,
       g_list_first (codec1->optional_params)->data);
 
-  p1 = g_new0 (FsCodecParameter, 1);
-  p1->name = g_strdup ("aa1");
-  p1->value = g_strdup ("bb1");
-  codec1->optional_params = g_list_append (codec1->optional_params, p1);
+  fs_codec_add_optional_parameter (codec1, "aa1", "bb1");
 
   fail_unless (fs_codec_are_equal (codec1, codec2) == TRUE,
       "Identical codecs (with params in different order 1) not recognized");
@@ -141,10 +130,7 @@ GST_START_TEST (test_fscodec_are_equal_opt_params)
   codec1->optional_params = g_list_remove (codec1->optional_params,
       g_list_first (codec1->optional_params)->data);
 
-  p1 = g_new0 (FsCodecParameter, 1);
-  p1->name = g_strdup ("aa2");
-  p1->value = g_strdup ("bb2");
-  codec1->optional_params = g_list_append (codec1->optional_params, p1);
+  fs_codec_add_optional_parameter (codec1, "aa2", "bb2");
 
   fail_unless (fs_codec_are_equal (codec1, codec2) == TRUE,
       "Identical codecs (with params in different order 2) not recognized");
@@ -195,40 +181,22 @@ GST_START_TEST (test_fscodec_copy)
 }
 GST_END_TEST;
 
-
-GST_START_TEST (test_fscodec_to_gst_caps)
+GST_START_TEST (test_fscodec_null)
 {
-  FsCodec *codec = init_codec_with_three_params ();
-  GstCaps *compare_caps = gst_caps_new_simple ("application/x-rtp",
-      "encoding-name", G_TYPE_STRING, "AA", // encoding names are in caps in gst
-      "clock-rate", G_TYPE_INT, 650,
-      "payload", G_TYPE_INT, 1,
-      "media", G_TYPE_STRING, "application",
-      "aa1", G_TYPE_STRING, "bb1",
-      "aa2", G_TYPE_STRING, "bb2",
-      "aa3", G_TYPE_STRING, "bb3",
-      NULL);
-  GstCaps *caps = fs_codec_to_gst_caps (codec);
-  gchar *caps_string = gst_caps_to_string (caps);
-  gchar *compare_caps_string = gst_caps_to_string (compare_caps);
+  gchar *str;
 
-  fail_if (caps == NULL, "Could not create caps");
-
-  fail_unless (gst_caps_is_fixed (caps), "Generated caps are not fixed");
-
-  fail_unless (gst_caps_is_equal_fixed (caps, compare_caps),
-      "The generated caps are incorrect (caps (%s) != compare_caps (%s))",
-      caps_string, compare_caps_string);
-
-  g_free (caps_string);
-  g_free (compare_caps_string);
-  gst_caps_unref (caps);
-  gst_caps_unref (compare_caps);
-  fs_codec_destroy (codec);
+  fs_codec_destroy (NULL);
+  fail_unless (fs_codec_copy (NULL) == NULL, "Failed to copy NULL codec");
+  fs_codec_list_destroy (NULL);
+  fail_unless (fs_codec_list_copy (NULL) == NULL,
+      "Failed to copu NULL codec list");
+  str = fs_codec_to_string (NULL);
+  fail_unless (str && !strcmp (str, "(NULL)"),
+      "Failed to print NULL codec");
+  g_free (str);
+  fail_unless (fs_codec_are_equal (NULL,NULL), "NULL codecs are not equal");
 }
 GST_END_TEST;
-
-
 
 static Suite *
 fscodec_suite (void)
@@ -242,7 +210,7 @@ fscodec_suite (void)
   tcase_add_test (tc_chain, test_fscodec_are_equal);
   tcase_add_test (tc_chain, test_fscodec_are_equal_opt_params);
   tcase_add_test (tc_chain, test_fscodec_copy);
-  tcase_add_test (tc_chain, test_fscodec_to_gst_caps);
+  tcase_add_test (tc_chain, test_fscodec_null);
 
   return s;
 }

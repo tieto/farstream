@@ -5,7 +5,7 @@
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
  * Copyright 2007-2008 Nokia Corp.
  *
- * fs-multicast-transmitter.h - A Farsight multicast UDP transmitter
+ * fs-multicast-transmitter.c - A Farsight multicast UDP transmitter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -42,11 +42,20 @@
 
 #include <string.h>
 #include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <netdb.h>
-#include <unistd.h>
+
+#ifdef HAVE_UNISTD_H
+# include <unistd.h>
+#endif
+
+#ifdef G_OS_WIN32
+# include <ws2tcpip.h>
+# define close closesocket
+#else /*G_OS_WIN32*/
+# include <netdb.h>
+# include <sys/socket.h>
+# include <netinet/in.h>
+# include <arpa/inet.h>
+#endif /*G_OS_WIN32*/
 
 GST_DEBUG_CATEGORY (fs_multicast_transmitter_debug);
 #define GST_CAT_DEFAULT fs_multicast_transmitter_debug
@@ -142,10 +151,9 @@ fs_multicast_transmitter_register_type (FsPlugin *module)
     (GInstanceInitFunc) fs_multicast_transmitter_init
   };
 
-  if (fs_multicast_transmitter_debug == NULL)
-    GST_DEBUG_CATEGORY_INIT (fs_multicast_transmitter_debug,
-        "fsmulticasttransmitter", 0,
-        "Farsight multicast UDP transmitter");
+  GST_DEBUG_CATEGORY_INIT (fs_multicast_transmitter_debug,
+      "fsmulticasttransmitter", 0,
+      "Farsight multicast UDP transmitter");
 
   fs_multicast_stream_transmitter_register_type (module);
 
@@ -155,18 +163,7 @@ fs_multicast_transmitter_register_type (FsPlugin *module)
   return type;
 }
 
-static void
-fs_multicast_transmitter_unload (FsPlugin *plugin)
-{
-  if (fs_multicast_transmitter_debug)
-  {
-    gst_debug_category_free (fs_multicast_transmitter_debug);
-    fs_multicast_transmitter_debug = NULL;
-  }
-}
-
-FS_INIT_PLUGIN (fs_multicast_transmitter_register_type,
-    fs_multicast_transmitter_unload)
+FS_INIT_PLUGIN (fs_multicast_transmitter_register_type)
 
 static void
 fs_multicast_transmitter_class_init (FsMulticastTransmitterClass *klass)
@@ -352,6 +349,8 @@ fs_multicast_transmitter_constructed (GObject *object)
       return;
     }
   }
+
+  GST_CALL_PARENT (G_OBJECT_CLASS, constructed, (object));
 }
 
 static void
@@ -418,6 +417,9 @@ fs_multicast_transmitter_get_property (GObject *object,
     case PROP_GST_SRC:
       g_value_set_object (value, self->priv->gst_src);
       break;
+    case PROP_COMPONENTS:
+      g_value_set_uint (value, self->components);
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -471,7 +473,7 @@ fs_multicast_transmitter_new_stream_transmitter (FsTransmitter *transmitter,
  * The UdpSock structure is a ref-counted pseudo-object use to represent
  * one local_ip:port:ttl:multicast_ip quatuor on which we listen and send,
  * so it includes a udpsrc and a multiudpsink. It represents one BSD socket.
- * If two UdpSock only differ by their TTL, only the first will have 
+ * If two UdpSock only differ by their TTL, only the first will have
  */
 
 struct _UdpSock {
@@ -518,7 +520,7 @@ _ip_string_into_sockaddr_in (const gchar *ip_as_string,
         gai_strerror (retval));
     return FALSE;
   }
-  memcpy (sockaddr_in, result->ai_addr, sizeof(struct sockaddr_in));
+  memcpy (sockaddr_in, result->ai_addr, sizeof (struct sockaddr_in));
   freeaddrinfo (result);
 
   return TRUE;
@@ -537,7 +539,11 @@ _bind_port (
   int retval;
   guchar loop = 1;
   int reuseaddr = 1;
-  struct ip_mreqn mreqn;
+#ifdef HAVE_IP_MREQN
+  struct ip_mreqn mreq;
+#else
+  struct ip_mreq mreq;
+#endif
 
   address.sin_family = AF_INET;
   address.sin_addr.s_addr = INADDR_ANY;
@@ -546,20 +552,32 @@ _bind_port (
 
   if (!_ip_string_into_sockaddr_in (multicast_ip, &address, error))
     goto error;
-  memcpy (&mreqn.imr_multiaddr, &address.sin_addr, sizeof(mreqn.imr_multiaddr));
+  memcpy (&mreq.imr_multiaddr, &address.sin_addr,
+      sizeof (mreq.imr_multiaddr));
 
   if (local_ip)
   {
     struct sockaddr_in tmpaddr;
     if (!_ip_string_into_sockaddr_in (local_ip, &tmpaddr, error))
       goto error;
-    memcpy (&mreqn.imr_address, &tmpaddr.sin_addr, sizeof(mreqn.imr_address));
+#ifdef HAVE_IP_MREQN
+    memcpy (&mreq.imr_address, &tmpaddr.sin_addr, sizeof (mreq.imr_address));
+#else
+    memcpy (&mreq.imr_interface, &tmpaddr.sin_addr, sizeof (mreq.imr_interface));
+#endif
   }
   else
   {
-    mreqn.imr_address.s_addr = INADDR_ANY;
+#ifdef HAVE_IP_MREQN
+    mreq.imr_address.s_addr = INADDR_ANY;
+#else
+    mreq.imr_interface.s_addr = INADDR_ANY;
+#endif
   }
-  mreqn.imr_ifindex = 0;
+
+#ifdef HAVE_IP_MREQN
+  mreq.imr_ifindex = 0;
+#endif
 
   if ((sock = socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP)) <= 0) {
     g_set_error (error, FS_ERROR, FS_ERROR_NETWORK,
@@ -567,7 +585,7 @@ _bind_port (
     goto error;
   }
 
-  if (setsockopt (sock, IPPROTO_IP, IP_MULTICAST_TTL, &ttl,
+  if (setsockopt (sock, IPPROTO_IP, IP_MULTICAST_TTL, (const void *)&ttl,
           sizeof (ttl)) < 0)
   {
     g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
@@ -576,7 +594,7 @@ _bind_port (
     goto error;
   }
 
-  if (setsockopt (sock, IPPROTO_IP, IP_MULTICAST_LOOP, &loop,
+  if (setsockopt (sock, IPPROTO_IP, IP_MULTICAST_LOOP, (const void *)&loop,
           sizeof (loop)) < 0)
   {
     g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
@@ -585,7 +603,7 @@ _bind_port (
     goto error;
   }
 
-  if (setsockopt (sock, SOL_SOCKET, SO_REUSEADDR, &reuseaddr,
+  if (setsockopt (sock, SOL_SOCKET, SO_REUSEADDR, (const void *)&reuseaddr,
           sizeof (reuseaddr)) < 0)
   {
     g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
@@ -595,7 +613,7 @@ _bind_port (
   }
 
 #ifdef SO_REUSEPORT
-  if (setsockopt (sock, SOL_SOCKET, SO_REUSEPORT, &reuseaddr,
+  if (setsockopt (sock, SOL_SOCKET, SO_REUSEPORT, (const void *)&reuseaddr,
           sizeof (reuseaddr)) < 0)
   {
     g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
@@ -606,7 +624,7 @@ _bind_port (
 #endif
 
   if (setsockopt (sock, IPPROTO_IP, IP_ADD_MEMBERSHIP,
-          &(mreqn), sizeof (mreqn)) < 0)
+          (const void *)&mreq, sizeof (mreq)) < 0)
   {
     g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
         "Could not join the socket to the multicast group: %s",
@@ -655,7 +673,9 @@ _create_sinksource (gchar *elementname, GstBin *bin,
     "sockfd", fd,
     NULL);
 
-  if (direction == GST_PAD_SINK)
+
+  if (g_object_class_find_property (G_OBJECT_GET_CLASS (elem),
+          "auto-multicast"))
     g_object_set (elem, "auto-multicast", FALSE, NULL);
 
   if (!gst_bin_add (bin, elem)) {
@@ -775,7 +795,7 @@ fs_multicast_transmitter_get_udpsock (FsMulticastTransmitter *trans,
     }
   }
 
-  udpsock = g_new0 (UdpSock, 1);
+  udpsock = g_slice_new0 (UdpSock);
 
   udpsock->refcount = 1;
   udpsock->local_ip = g_strdup (local_ip);
@@ -884,8 +904,9 @@ fs_multicast_transmitter_put_udpsock (FsMulticastTransmitter *trans,
   if (udpsock->fd >= 0)
     close (udpsock->fd);
 
+  g_free (udpsock->multicast_ip);
   g_free (udpsock->local_ip);
-  g_free (udpsock);
+  g_slice_free (UdpSock, udpsock);
 }
 
 void

@@ -35,7 +35,7 @@ G_BEGIN_DECLS
 
 /* TYPE MACROS */
 #define FS_TYPE_RTP_SUB_STREAM \
-  (fs_rtp_sub_stream_get_type())
+  (fs_rtp_sub_stream_get_type ())
 #define FS_RTP_SUB_STREAM(obj) \
   (G_TYPE_CHECK_INSTANCE_CAST((obj), FS_TYPE_RTP_SUB_STREAM, FsRtpSubStream))
 #define FS_RTP_SUB_STREAM_CLASS(klass) \
@@ -80,7 +80,9 @@ FsRtpSubStream *fs_rtp_sub_stream_new (FsRtpConference *conference,
     GError **error);
 
 
-gboolean fs_rtp_sub_stream_add_codecbin (FsRtpSubStream *substream,
+gboolean fs_rtp_sub_stream_set_codecbin (FsRtpSubStream *substream,
+    FsCodec *codec,
+    GstElement *codecbin,
     GError **error);
 
 void fs_rtp_sub_stream_stop (FsRtpSubStream *substream);
@@ -89,9 +91,7 @@ gboolean fs_rtp_sub_stream_add_output_ghostpad_locked (
     FsRtpSubStream *substream,
     GError **error);
 
-void fs_rtp_sub_stream_invalidate_codec_locked (FsRtpSubStream *substream,
-    gint pt,
-    const FsCodec *codec);
+void fs_rtp_sub_stream_verify_codec_locked (FsRtpSubStream *substream);
 
 
 G_END_DECLS

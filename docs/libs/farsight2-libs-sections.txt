@@ -3,6 +3,8 @@
 <TITLE>FsParticipant</TITLE>
 FsParticipant
 FsParticipantClass
+FS_PARTICIPANT_DATA_LOCK
+FS_PARTICIPANT_DATA_UNLOCK
 <SUBSECTION Standard>
 FS_PARTICIPANT
 FS_IS_PARTICIPANT
@@ -21,10 +23,10 @@ FsParticipantPrivate
 FsStream
 FsStreamClass
 FsStreamDirection
-fs_stream_add_remote_candidate
-fs_stream_remote_candidates_added
-fs_stream_select_candidate_pair
+FsStreamState
+fs_stream_set_remote_candidates
 fs_stream_set_remote_codecs
+fs_stream_force_remote_candidates
 fs_stream_emit_error
 fs_stream_emit_src_pad_added
 <SUBSECTION Standard>
@@ -50,6 +52,7 @@ fs_session_new_stream
 fs_session_start_telephony_event
 fs_session_stop_telephony_event
 fs_session_set_send_codec
+fs_session_set_codec_preferences
 fs_session_emit_error
 <SUBSECTION Standard>
 FS_SESSION
@@ -71,6 +74,7 @@ fs_conference_new_session
 fs_conference_new_participant
 FS_ERROR
 FsError
+FS_ERROR_IS_FATAL
 <SUBSECTION Standard>
 FS_CONFERENCE
 FS_IS_CONFERENCE
@@ -84,17 +88,15 @@ fs_error_quark
 <SECTION>
 <FILE>fs-candidate</FILE>
 <TITLE>FsCandidate</TITLE>
+FsCandidate
 FsCandidateType
 FsNetworkProtocol
 FsComponentType
-FsCandidate
 fs_candidate_new
 fs_candidate_destroy
 fs_candidate_copy
 fs_candidate_list_destroy
 fs_candidate_list_copy
-fs_candidate_get_by_id
-fs_candidate_are_equal
 <SUBSECTION Standard>
 FS_TYPE_CANDIDATE
 fs_candidate_get_type
@@ -105,22 +107,26 @@ fs_candidate_list_get_type
 <SECTION>
 <FILE>fs-codec</FILE>
 <TITLE>FsCodec</TITLE>
-FsMediaType
-fs_media_type_to_string
 FsCodec
+FsMediaType
 FsCodecParameter
-FsCodecPreference
 FS_CODEC_ID_ANY
 FS_CODEC_ID_DISABLE
 fs_codec_new
 fs_codec_destroy
 fs_codec_copy
+fs_codec_are_equal
+fs_codec_list_from_keyfile
 fs_codec_list_destroy
 fs_codec_list_copy
-fs_codec_list_from_keyfile
+fs_codec_list_are_equal
 fs_codec_to_string
-fs_codec_are_equal
-fs_codec_to_gst_caps
+fs_codec_add_optional_parameter
+fs_codec_remove_optional_parameter
+fs_codec_get_optional_parameter
+FS_CODEC_FORMAT
+FS_CODEC_ARGS
+fs_media_type_to_string
 <SUBSECTION Standard>
 FS_TYPE_CODEC
 FS_TYPE_CODEC_LIST
@@ -139,6 +145,8 @@ FS_BASE_CONFERENCE_CAST
 FS_BASE_CONFERENCE_CLASS
 FS_BASE_CONFERENCE_GET_CLASS
 FS_TYPE_BASE_CONFERENCE
+FS_IS_BASE_CONFERENCE
+FS_IS_BASE_CONFERENCE_CLASS
 fs_base_conference_get_type
 FsBaseConferencePrivate
 </SECTION>
@@ -151,6 +159,7 @@ FsTransmitterClass
 fs_transmitter_new
 fs_transmitter_new_stream_transmitter
 fs_transmitter_get_stream_transmitter_type
+fs_transmitter_emit_error
 <SUBSECTION Standard>
 FS_IS_TRANSMITTER
 FS_IS_TRANSMITTER_CLASS
@@ -159,8 +168,6 @@ FS_TRANSMITTER_CLASS
 FS_TRANSMITTER_GET_CLASS
 FS_TYPE_TRANSMITTER
 FsTransmitterPrivate
-GST_IS_BASE_TRANSFORM
-GST_IS_BASE_TRANSFORM_CLASS
 FS_TRANSMITTER_CAST
 fs_transmitter_get_type
 </SECTION>
@@ -170,9 +177,10 @@ fs_transmitter_get_type
 <TITLE>FsStreamTransmitter</TITLE>
 FsStreamTransmitter
 FsStreamTransmitterClass
-fs_stream_transmitter_add_remote_candidate
-fs_stream_transmitter_remote_candidates_added
-fs_stream_transmitter_select_candidate_pair
+fs_stream_transmitter_set_remote_candidates
+fs_stream_transmitter_gather_local_candidates
+fs_stream_transmitter_force_remote_candidates
+fs_stream_transmitter_stop
 fs_stream_transmitter_emit_error
 <SUBSECTION Standard>
 FS_IS_STREAM_TRANSMITTER
@@ -223,4 +231,12 @@ FS_IS_ELEMENT_ADDED_NOTIFIER
 FS_IS_ELEMENT_ADDED_NOTIFIER_CLASS
 FS_TYPE_ELEMENT_ADDED_NOTIFIER
 fs_element_added_notifier_get_type
+</SECTION>
+
+<SECTION>
+<FILE>fs-interfaces</FILE>
+<TITLE>Network interfaces discovery</TITLE>
+fs_interfaces_get_ip_for_interface
+fs_interfaces_get_local_interfaces
+fs_interfaces_get_local_ips
 </SECTION>

@@ -37,12 +37,13 @@
 #endif
 
 #include "fs-participant.h"
+#include "fs-enum-types.h"
 #include "fs-marshal.h"
 
 /* Signals */
 enum
 {
-  ERROR,
+  ERROR_SIGNAL,
   LAST_SIGNAL
 };
 
@@ -112,20 +113,21 @@ fs_participant_class_init (FsParticipantClass *klass)
    * FsParticipant::error:
    * @self: #FsParticipant that emitted the signal
    * @object: The #Gobject that emitted the signal
-   * @errorno: The number of the error 
+   * @errorno: The number of the error
    * @error_msg: Error message to be displayed to user
    * @dbg_msg: Debugging error message
    *
    * This signal is emitted in any error condition
    */
-  signals[ERROR] = g_signal_new ("error",
+  signals[ERROR_SIGNAL] = g_signal_new ("error",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
       0,
       NULL,
       NULL,
-      _fs_marshal_VOID__OBJECT_INT_STRING_STRING,
-      G_TYPE_NONE, 3, G_TYPE_OBJECT, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING);
+      _fs_marshal_VOID__OBJECT_ENUM_STRING_STRING,
+      G_TYPE_NONE, 4, G_TYPE_OBJECT, FS_TYPE_ERROR, G_TYPE_STRING,
+      G_TYPE_STRING);
 
   gobject_class->dispose = fs_participant_dispose;
   gobject_class->finalize = fs_participant_finalize;
@@ -139,6 +141,8 @@ fs_participant_init (FsParticipant *self)
   /* member init */
   self->priv = FS_PARTICIPANT_GET_PRIVATE (self);
   self->priv->disposed = FALSE;
+
+  self->mutex = g_mutex_new ();
 }
 
 static void
@@ -166,6 +170,8 @@ fs_participant_finalize (GObject *object)
     g_free (self->priv->cname);
     self->priv->cname = NULL;
   }
+
+  g_mutex_free (self->mutex);
 
   parent_class->finalize (object);
 }

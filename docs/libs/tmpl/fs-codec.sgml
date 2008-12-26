@@ -9,33 +9,12 @@ FsCodec
 
 </para>
 
-
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
 
-
 <!-- ##### SECTION Stability_Level ##### -->
-
-
-<!-- ##### ENUM FsMediaType ##### -->
-<para>
-
-</para>
-
-@FS_MEDIA_TYPE_AUDIO: 
-@FS_MEDIA_TYPE_VIDEO: 
-@FS_MEDIA_TYPE_APPLICATION: 
-@FS_MEDIA_TYPE_LAST: 
-
-<!-- ##### FUNCTION fs_media_type_to_string ##### -->
-<para>
-
-</para>
-
-@media_type: 
-@Returns: 
 
 
 <!-- ##### STRUCT FsCodec ##### -->
@@ -50,6 +29,15 @@ FsCodec
 @channels: 
 @optional_params: 
 
+<!-- ##### ENUM FsMediaType ##### -->
+<para>
+
+</para>
+
+@FS_MEDIA_TYPE_AUDIO: 
+@FS_MEDIA_TYPE_VIDEO: 
+@FS_MEDIA_TYPE_LAST: 
+
 <!-- ##### STRUCT FsCodecParameter ##### -->
 <para>
 
@@ -57,14 +45,6 @@ FsCodec
 
 @name: 
 @value: 
-
-<!-- ##### STRUCT FsCodecPreference ##### -->
-<para>
-
-</para>
-
-@encoding_name: 
-@clock_rate: 
 
 <!-- ##### MACRO FS_CODEC_ID_ANY ##### -->
 <para>
@@ -109,6 +89,26 @@ FsCodec
 @Returns: 
 
 
+<!-- ##### FUNCTION fs_codec_are_equal ##### -->
+<para>
+
+</para>
+
+@codec1: 
+@codec2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_codec_list_from_keyfile ##### -->
+<para>
+
+</para>
+
+@filename: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION fs_codec_list_destroy ##### -->
 <para>
 
@@ -126,13 +126,13 @@ FsCodec
 @Returns: 
 
 
-<!-- ##### FUNCTION fs_codec_list_from_keyfile ##### -->
+<!-- ##### FUNCTION fs_codec_list_are_equal ##### -->
 <para>
 
 </para>
 
-@filename: 
-@error: 
+@list1: 
+@list2: 
 @Returns: 
 
 
@@ -145,22 +145,57 @@ FsCodec
 @Returns: 
 
 
-<!-- ##### FUNCTION fs_codec_are_equal ##### -->
-<para>
-
-</para>
-
-@codec1: 
-@codec2: 
-@Returns: 
-
-
-<!-- ##### FUNCTION fs_codec_to_gst_caps ##### -->
+<!-- ##### FUNCTION fs_codec_add_optional_parameter ##### -->
 <para>
 
 </para>
 
 @codec: 
+@name: 
+@value: 
+
+
+<!-- ##### FUNCTION fs_codec_remove_optional_parameter ##### -->
+<para>
+
+</para>
+
+@codec: 
+@param: 
+
+
+<!-- ##### FUNCTION fs_codec_get_optional_parameter ##### -->
+<para>
+
+</para>
+
+@codec: 
+@name: 
+@value: 
+@Returns: 
+
+
+<!-- ##### MACRO FS_CODEC_FORMAT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO FS_CODEC_ARGS ##### -->
+<para>
+
+</para>
+
+@codec: 
+
+
+<!-- ##### FUNCTION fs_media_type_to_string ##### -->
+<para>
+
+</para>
+
+@media_type: 
 @Returns: 
 
 

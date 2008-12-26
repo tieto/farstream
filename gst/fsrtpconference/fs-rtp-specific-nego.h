@@ -1,5 +1,5 @@
 /*
- * fs-rtp-specific-nego.h - Per-codec SDP negociation
+ * fs-rtp-specific-nego.h - Per-codec SDP negotiation
  *
  * Farsight RTP/AVP/SAVP/AVPF Module
  * Copyright (C) 2007 Collabora Ltd.
@@ -32,8 +32,17 @@
 G_BEGIN_DECLS
 
 FsCodec *
-sdp_is_compat (GstCaps *rtp_caps, FsCodec *local_codec,
-    FsCodec *remote_codec);
+sdp_is_compat (FsCodec *local_codec, FsCodec *remote_codec,
+    gboolean validate_config);
+
+gboolean
+codec_needs_config (FsCodec *codec);
+
+gboolean
+codec_has_config_data_named (FsCodec *codec, const gchar *name);
+
+FsCodec *
+codec_copy_without_config (FsCodec *codec);
 
 G_END_DECLS
 

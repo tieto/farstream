@@ -5,7 +5,7 @@
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
  * Copyright 2007-2008 Nokia Corp.
  *
- * fs-rawudp-transmitter.h - A Farsight Multicast UDP transmitter
+ * fs-multicast-transmitter.h - A Farsight Multicast UDP transmitter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,13 +29,11 @@
 
 #include <gst/gst.h>
 
-#include <arpa/inet.h>
-
 G_BEGIN_DECLS
 
 /* TYPE MACROS */
 #define FS_TYPE_MULTICAST_TRANSMITTER \
-  (fs_multicast_transmitter_get_type())
+  (fs_multicast_transmitter_get_type ())
 #define FS_MULTICAST_TRANSMITTER(obj) \
   (G_TYPE_CHECK_INSTANCE_CAST((obj), FS_TYPE_MULTICAST_TRANSMITTER, \
     FsMulticastTransmitter))

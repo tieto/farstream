@@ -1,0 +1,107 @@
+<!-- ##### SIGNAL FsSession::unknown-cname ##### -->
+<para>
+
+</para>
+
+@fssession: the object which received the signal.
+@arg1: 
+@Returns: 
+
+<!-- ##### ARG FsSession:local-codecs ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG FsSession:local-codecs-config ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG FsSession:negotiated-codecs ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG FsStreamTransmitter:state ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION fs_codec_to_gst_caps ##### -->
+<para>
+
+</para>
+
+@codec: 
+@Returns: 
+
+<!-- ##### FUNCTION fs_session_set_local_codecs_config ##### -->
+<para>
+
+</para>
+
+@session: 
+@local_codecs_config: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION fs_stream_add_remote_candidate ##### -->
+<para>
+
+</para>
+
+@stream: 
+@candidate: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION fs_stream_remote_candidates_added ##### -->
+<para>
+
+</para>
+
+@stream: 
+
+<!-- ##### FUNCTION fs_stream_select_candidate_pair ##### -->
+<para>
+
+</para>
+
+@stream: 
+@local_foundation: 
+@remote_foundation: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION fs_stream_transmitter_add_remote_candidate ##### -->
+<para>
+
+</para>
+
+@streamtransmitter: 
+@candidate: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION fs_stream_transmitter_remote_candidates_added ##### -->
+<para>
+
+</para>
+
+@streamtransmitter: 
+
+<!-- ##### FUNCTION fs_stream_transmitter_select_candidate_pair ##### -->
+<para>
+
+</para>
+
+@streamtransmitter: 
+@local_foundation: 
+@remote_foundation: 
+@error: 
+@Returns: 
+

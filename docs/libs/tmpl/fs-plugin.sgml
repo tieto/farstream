@@ -9,12 +9,10 @@ FsPlugin
 
 </para>
 
-
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
-
 
 <!-- ##### SECTION Stability_Level ##### -->
 
@@ -58,6 +56,5 @@ FsPlugin
 </para>
 
 @type_register_func: 
-@inunload: 
 
 

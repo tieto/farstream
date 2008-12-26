@@ -34,19 +34,17 @@ G_BEGIN_DECLS
 
 typedef struct _FsCodec FsCodec;
 typedef struct _FsCodecParameter FsCodecParameter;
-typedef struct _FsCodecPreference FsCodecPreference;
 
 #define FS_TYPE_CODEC \
-  (fs_codec_get_type())
+  (fs_codec_get_type ())
 
 #define FS_TYPE_CODEC_LIST \
-  (fs_codec_list_get_type())
+  (fs_codec_list_get_type ())
 
 /**
  * FsMediaType:
  * @FS_MEDIA_TYPE_AUDIO: A media type that encodes audio.
  * @FS_MEDIA_TYPE_VIDEO: A media type that encodes video.
- * @FS_MEDIA_TYPE_APPLICATION: A media type that ???
  * @FS_MEDIA_TYPE_LAST: Largest valid #FsMediaType
  *
  * Enum used to signify the media type of a codec or stream.
@@ -55,8 +53,7 @@ typedef enum
 {
   FS_MEDIA_TYPE_AUDIO,
   FS_MEDIA_TYPE_VIDEO,
-  FS_MEDIA_TYPE_APPLICATION,
-  FS_MEDIA_TYPE_LAST = FS_MEDIA_TYPE_APPLICATION
+  FS_MEDIA_TYPE_LAST = FS_MEDIA_TYPE_VIDEO
 } FsMediaType;
 
 /**
@@ -71,7 +68,7 @@ typedef enum
  *
  * If the id of a #FsCodec is #FS_CODEC_ID_DISABLE, then this codec will
  * not be used
- */ 
+ */
 
 #define FS_CODEC_ID_ANY            (-1)
 #define FS_CODEC_ID_DISABLE        (-2)
@@ -83,13 +80,13 @@ typedef enum
  * @media_type: type of media this codec is for
  * @clock_rate: clock rate of this stream
  * @channels: Number of channels codec should decode
- * @optional_params:  key pairs of param name to param data
+ * @optional_params: key pairs of param name to param data
  *
  * This structure reprensents one codec that can be offered or received
  */
+/* TODO Should this be made into a GstStructure? */
 struct _FsCodec
 {
-  /* TODO Should this be made into a GstStructure? */
   gint id;
   char *encoding_name;
   FsMediaType media_type;
@@ -113,17 +110,28 @@ struct _FsCodecParameter {
     gchar *value;
 };
 
+
 /**
- * FsCodecPreference:
- * @encoding_name: name of encoding preferred
- * @clock_rate: rate of codec preffered
+ * FS_CODEC_FORMAT:
  *
- * Used to give a preferece for what type of codec to use.
+ * A format that can be used in printf like format strings to format a FsCodec
  */
-struct _FsCodecPreference {
-    gchar *encoding_name;
-    gint clock_rate;
-};
+
+/**
+ * FS_CODEC_ARGS:
+ * @codec: a #FsCodec
+ *
+ * Formats the codec in args for FS_CODEC_FORMAT
+ */
+
+#define FS_CODEC_FORMAT "%d: %s %s clock:%d channels:%d params:%p"
+#define FS_CODEC_ARGS(codec)                            \
+    (codec)->id,                                        \
+    fs_media_type_to_string ((codec)->media_type),      \
+    (codec)->encoding_name,                             \
+    (codec)->clock_rate,                                \
+    (codec)->channels,                                  \
+    (codec)->optional_params
 
 GType fs_codec_get_type (void);
 GType fs_codec_list_get_type (void);
@@ -142,9 +150,18 @@ gchar *fs_codec_to_string (const FsCodec *codec);
 
 gboolean fs_codec_are_equal (const FsCodec *codec1, const FsCodec *codec2);
 
-GstCaps *fs_codec_to_gst_caps (const FsCodec *codec);
+gboolean fs_codec_list_are_equal (GList *list1, GList *list2);
 
 const gchar *fs_media_type_to_string (FsMediaType media_type);
+
+void fs_codec_add_optional_parameter (FsCodec *codec, const gchar *name,
+    const gchar *value);
+
+void fs_codec_remove_optional_parameter (FsCodec *codec,
+    FsCodecParameter *param);
+
+FsCodecParameter *fs_codec_get_optional_parameter (FsCodec *codec,
+    gchar *name, gchar *value);
 
 G_END_DECLS
 

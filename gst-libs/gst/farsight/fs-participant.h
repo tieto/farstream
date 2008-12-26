@@ -32,7 +32,7 @@ G_BEGIN_DECLS
 
 /* TYPE MACROS */
 #define FS_TYPE_PARTICIPANT \
-  (fs_participant_get_type())
+  (fs_participant_get_type ())
 #define FS_PARTICIPANT(obj) \
   (G_TYPE_CHECK_INSTANCE_CAST((obj), FS_TYPE_PARTICIPANT, FsParticipant))
 #define FS_PARTICIPANT_CLASS(klass) \
@@ -79,10 +79,34 @@ struct _FsParticipant
 
   /*< private >*/
 
+  GMutex *mutex;
+
   FsParticipantPrivate *priv;
 
   gpointer _padding[8];
 };
+
+/**
+ * FS_PARTICIPANT_DATA_LOCK
+ * @participant: A #FsParticipant
+ *
+ * Locks the participant for data set with g_object_set_data() or
+ * g_object_set_qdata().
+ */
+
+#define FS_PARTICIPANT_DATA_LOCK(participant) \
+  g_mutex_lock ((participant)->mutex)
+
+/**
+ * FS_PARTICIPANT_DATA_UNLOCK
+ * @participant: A #FsParticipant
+ *
+ * Unlocks the participant for data set with g_object_set_data() or
+ * g_object_set_qdata().
+ */
+
+#define FS_PARTICIPANT_DATA_UNLOCK(participant) \
+  g_mutex_unlock ((participant)->mutex)
 
 GType fs_participant_get_type (void);
 

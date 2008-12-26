@@ -9,15 +9,31 @@ FsCandidate
 
 </para>
 
-
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
 
-
 <!-- ##### SECTION Stability_Level ##### -->
 
+
+<!-- ##### STRUCT FsCandidate ##### -->
+<para>
+
+</para>
+
+@foundation: 
+@component_id: 
+@ip: 
+@port: 
+@base_ip: 
+@base_port: 
+@proto: 
+@priority: 
+@type: 
+@username: 
+@password: 
+@ttl: 
 
 <!-- ##### ENUM FsCandidateType ##### -->
 <para>
@@ -46,31 +62,12 @@ FsCandidate
 @FS_COMPONENT_RTP: 
 @FS_COMPONENT_RTCP: 
 
-<!-- ##### STRUCT FsCandidate ##### -->
-<para>
-
-</para>
-
-@candidate_id: 
-@foundation: 
-@component_id: 
-@ip: 
-@port: 
-@base_ip: 
-@base_port: 
-@proto: 
-@priority: 
-@type: 
-@username: 
-@password: 
-@ttl: 
-
 <!-- ##### FUNCTION fs_candidate_new ##### -->
 <para>
 
 </para>
 
-@id: 
+@foundation: 
 @component_id: 
 @type: 
 @proto: 
@@ -110,26 +107,6 @@ FsCandidate
 </para>
 
 @candidate_list: 
-@Returns: 
-
-
-<!-- ##### FUNCTION fs_candidate_get_by_id ##### -->
-<para>
-
-</para>
-
-@candidate_list: 
-@candidate_id: 
-@Returns: 
-
-
-<!-- ##### FUNCTION fs_candidate_are_equal ##### -->
-<para>
-
-</para>
-
-@cand1: 
-@cand2: 
 @Returns: 
 
 

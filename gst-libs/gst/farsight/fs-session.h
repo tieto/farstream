@@ -36,7 +36,7 @@ G_BEGIN_DECLS
 
 /* TYPE MACROS */
 #define FS_TYPE_SESSION \
-  (fs_session_get_type())
+  (fs_session_get_type ())
 #define FS_SESSION(obj) \
   (G_TYPE_CHECK_INSTANCE_CAST((obj), FS_TYPE_SESSION, FsSession))
 #define FS_SESSION_CLASS(klass) \
@@ -85,7 +85,7 @@ typedef enum
 /**
  * FsDTMFMethod:
  * @FS_DTMF_METHOD_AUTO: Send in any possible way
- * @FS_DTMF_METHOD_RTP_RFC4733: Send as a special payload type defined by RFC 4733 
+ * @FS_DTMF_METHOD_RTP_RFC4733: Send as a special payload type defined by RFC 4733
  * (which obsoletes RFC 2833)
  * @FS_DTMF_METHOD_IN_BAND: Send as tones as in-band audio sound
  *
@@ -106,6 +106,7 @@ typedef enum
  * @start_telephony_event: Starts a telephony event
  * @stop_telephony_event: Stops a telephony event
  * @set_send_codec: Forces sending with a specific codec
+ * @set_codec_preferences: Specifies the codec preferences
  *
  * You must override at least new_stream in a subclass.
  */
@@ -130,6 +131,9 @@ struct _FsSessionClass
 
   gboolean (* set_send_codec) (FsSession *session, FsCodec *send_codec,
                                GError **error);
+  gboolean (* set_codec_preferences) (FsSession *session,
+      GList *codec_preferences,
+      GError **error);
 
   /*< private >*/
   gpointer _padding[8];
@@ -169,6 +173,10 @@ gboolean fs_session_stop_telephony_event (FsSession *session,
 
 gboolean fs_session_set_send_codec (FsSession *session, FsCodec *send_codec,
                                     GError **error);
+
+gboolean fs_session_set_codec_preferences (FsSession *session,
+    GList *codec_preferences,
+    GError **error);
 
 void fs_session_emit_error (FsSession *session, gint error_no,
                             gchar *error_msg, gchar *debug_msg);

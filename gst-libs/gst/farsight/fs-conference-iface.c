@@ -40,6 +40,22 @@
  * simply need to derive from the FsBaseConference class and don't need to
  * implement this interface directly.
  *
+ *
+ * This will communicate asynchronous events to the user through #GstMessage
+ * of type #GST_MESSAGE_ELEMENT sent over the #GstBus.
+ * </para>
+ * <refsect2><title>The "<literal>farsight-error</literal>" message</title>
+ * |[
+ * "src-object"       #GObject           The object (#FsConference, #FsSession or #FsStream) that emitted the error
+ * "error-no"         #FsError           The Error number
+ * "error-msg"        #gchar*            The error message
+ * "debug-msg"        #gchar*            The debug string
+ * ]|
+ * <para>
+ * The message is sent on asynchronous errors.
+ * </para>
+ * </refsect2>
+ * <para>
  */
 
 static void fs_conference_iface_init (FsConferenceClass *iface);
@@ -105,12 +121,10 @@ fs_conference_new_session (FsConference *conference, FsMediaType media_type,
   FsConferenceClass *iface =
       FS_CONFERENCE_GET_IFACE (conference);
 
-  if (iface->new_session) {
-    return iface->new_session (conference, media_type, error);
-  } else {
-    GST_WARNING_OBJECT (conference, "new_session not defined in element");
-  }
-  return NULL;
+  g_return_val_if_fail (iface, NULL);
+  g_return_val_if_fail (iface->new_session, NULL);
+
+  return iface->new_session (conference, media_type, error);
 }
 
 
@@ -132,10 +146,8 @@ fs_conference_new_participant (FsConference *conference, gchar *cname,
   FsConferenceClass *iface =
       FS_CONFERENCE_GET_IFACE (conference);
 
-  if (iface->new_session) {
-    return iface->new_participant (conference, cname, error);
-  } else {
-    GST_WARNING_OBJECT (conference, "new_participant not defined in element");
-  }
-  return NULL;
+  g_return_val_if_fail (iface, NULL);
+  g_return_val_if_fail (iface->new_participant, NULL);
+
+  return iface->new_participant (conference, cname, error);
 }

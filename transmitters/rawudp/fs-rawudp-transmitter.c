@@ -42,11 +42,20 @@
 
 #include <string.h>
 #include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <netdb.h>
-#include <unistd.h>
+
+#ifdef HAVE_UNISTD_H
+# include <unistd.h>
+#endif
+
+#ifdef G_OS_WIN32
+# include <winsock2.h>
+# define close closesocket
+#else /*G_OS_WIN32*/
+# include <netdb.h>
+# include <sys/socket.h>
+# include <netinet/in.h>
+# include <arpa/inet.h>
+#endif /*G_OS_WIN32*/
 
 GST_DEBUG_CATEGORY (fs_rawudp_transmitter_debug);
 #define GST_CAT_DEFAULT fs_rawudp_transmitter_debug
@@ -145,10 +154,9 @@ fs_rawudp_transmitter_register_type (FsPlugin *module)
     (GInstanceInitFunc) fs_rawudp_transmitter_init
   };
 
-  if (fs_rawudp_transmitter_debug == NULL)
-    GST_DEBUG_CATEGORY_INIT (fs_rawudp_transmitter_debug,
-        "fsrawudptransmitter", 0,
-        "Farsight raw UDP transmitter");
+  GST_DEBUG_CATEGORY_INIT (fs_rawudp_transmitter_debug,
+      "fsrawudptransmitter", 0,
+      "Farsight raw UDP transmitter");
 
   fs_rawudp_stream_transmitter_register_type (module);
 
@@ -158,18 +166,8 @@ fs_rawudp_transmitter_register_type (FsPlugin *module)
   return type;
 }
 
-static void
-fs_rawudp_transmitter_unload (FsPlugin *plugin)
-{
-  if (fs_rawudp_transmitter_debug)
-  {
-    gst_debug_category_free (fs_rawudp_transmitter_debug);
-    fs_rawudp_transmitter_debug = NULL;
-  }
-}
 
-FS_INIT_PLUGIN (fs_rawudp_transmitter_register_type,
-    fs_rawudp_transmitter_unload)
+FS_INIT_PLUGIN (fs_rawudp_transmitter_register_type)
 
 static void
 fs_rawudp_transmitter_class_init (FsRawUdpTransmitterClass *klass)
@@ -364,6 +362,8 @@ fs_rawudp_transmitter_constructed (GObject *object)
       return;
     }
   }
+
+  GST_CALL_PARENT (G_OBJECT_CLASS, constructed, (object));
 }
 
 static void
@@ -434,6 +434,9 @@ fs_rawudp_transmitter_get_property (GObject *object,
       break;
     case PROP_GST_SRC:
       g_value_set_object (value, self->priv->gst_src);
+      break;
+    case PROP_COMPONENTS:
+      g_value_set_uint (value, self->components);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -514,6 +517,16 @@ struct _UdpPort {
   GstElement *tee;
 
   guint component_id;
+
+  /* Everything below is protected by the mutex */
+  GMutex *mutex;
+  GArray *known_addresses;
+};
+
+struct KnownAddress {
+  FsRawUdpAddressUniqueCallbackFunc callback;
+  gpointer user_data;
+  GstNetAddress addr;
 };
 
 static gint
@@ -541,11 +554,11 @@ _bind_port (
     retval = getaddrinfo (ip, NULL, &hints, &result);
     if (retval != 0)
     {
-      g_set_error (error, FS_ERROR, FS_ERROR_NETWORK,
+      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
           "Invalid IP address %s passed: %s", ip, gai_strerror (retval));
       return -1;
     }
-    memcpy (&address, result->ai_addr, sizeof(struct sockaddr_in));
+    memcpy (&address, result->ai_addr, sizeof (struct sockaddr_in));
     freeaddrinfo (result);
   }
 
@@ -714,13 +727,16 @@ fs_rawudp_transmitter_get_udpport (FsRawUdpTransmitter *trans,
   GST_DEBUG ("Make new UdpPort for component %u requesting %s:%u", component_id,
       requested_ip ? requested_ip : "ANY", requested_port);
 
-  udpport = g_new0 (UdpPort, 1);
+  udpport = g_slice_new0 (UdpPort);
 
   udpport->refcount = 1;
   udpport->requested_ip = g_strdup (requested_ip);
   udpport->requested_port = requested_port;
   udpport->fd = -1;
   udpport->component_id = component_id;
+  udpport->mutex = g_mutex_new ();
+  udpport->known_addresses = g_array_new (TRUE, FALSE,
+      sizeof (struct KnownAddress));
 
   /* Now lets bind both ports */
 
@@ -749,6 +765,7 @@ fs_rawudp_transmitter_get_udpport (FsRawUdpTransmitter *trans,
   g_object_set (udpport->udpsink,
       "async", FALSE,
       "sync", FALSE,
+      "auto-multicast", FALSE,
       NULL);
 
   trans->priv->udpports[component_id] =
@@ -818,8 +835,13 @@ fs_rawudp_transmitter_put_udpport (FsRawUdpTransmitter *trans,
   if (udpport->fd >= 0)
     close (udpport->fd);
 
+  if (udpport->mutex)
+    g_mutex_free (udpport->mutex);
+  if (udpport->known_addresses)
+    g_array_free (udpport->known_addresses, TRUE);
+
   g_free (udpport->requested_ip);
-  g_free (udpport);
+  g_slice_free (UdpPort, udpport);
 }
 
 void
@@ -916,4 +938,128 @@ fs_rawudp_transmitter_get_stream_transmitter_type (FsTransmitter *transmitter,
     GError **error)
 {
   return FS_TYPE_RAWUDP_STREAM_TRANSMITTER;
+}
+
+/**
+ * fs_rawudp_transmitter_udpport_add_known_address:
+ * @udpport: a #UdpPort
+ * @address: the new #GstNetAddress that we know
+ * @callback: a Callback that will be called if the uniqueness of an address
+ *   changes
+ * @user_data: data passed back to the callback
+ *
+ * This function stores the passed address and tells the caller if it was
+ * unique or not. The callback is called when the uniqueness changes.
+ *
+ * Returns: %TRUE if the new address is unique, %FALSE otherwise
+ */
+
+gboolean
+fs_rawudp_transmitter_udpport_add_known_address (UdpPort *udpport,
+    GstNetAddress *address,
+    FsRawUdpAddressUniqueCallbackFunc callback,
+    gpointer user_data)
+{
+  gint i;
+  gboolean unique = FALSE;
+  struct KnownAddress newka = {0};
+  guint counter = 0;
+  struct KnownAddress *prev_ka = NULL;
+
+  g_mutex_lock (udpport->mutex);
+
+  for (i = 0;
+       g_array_index (udpport->known_addresses, struct KnownAddress, i).callback;
+       i++)
+  {
+    struct KnownAddress *ka = &g_array_index (udpport->known_addresses, struct KnownAddress, i);
+    if (gst_netaddress_equal (address, &ka->addr))
+    {
+      g_assert (!(ka->callback == callback && ka->user_data == user_data));
+
+      prev_ka = ka;
+      counter++;
+    }
+  }
+
+  if (counter == 0)
+  {
+    unique = TRUE;
+  }
+  else if (counter == 1)
+  {
+    if (prev_ka->callback)
+      prev_ka->callback (FALSE, &prev_ka->addr, prev_ka->user_data);
+  }
+
+  memcpy (&newka.addr, address, sizeof (GstNetAddress));
+  newka.callback = callback;
+  newka.user_data = user_data;
+
+  g_array_append_val (udpport->known_addresses, newka);
+
+  g_mutex_unlock (udpport->mutex);
+
+  return unique;
+}
+
+/**
+ * fs_rawudp_transmitter_udpport_remove_known_address:
+ * @udpport: a #UdpPort
+ * @address: the address to remove
+ * @callback: the callback passed to the corresponding
+ *  fs_rawudp_transmitter_udpport_add_known_address() call
+ * @user_data: the user_data passed to the corresponding
+ *  fs_rawudp_transmitter_udpport_add_known_address() call
+ *
+ * Removes a known address from the list and calls the notifiers if another
+ * address becomes unique
+ */
+
+void
+fs_rawudp_transmitter_udpport_remove_known_address (UdpPort *udpport,
+    GstNetAddress *address,
+    FsRawUdpAddressUniqueCallbackFunc callback,
+    gpointer user_data)
+{
+  gint i;
+  gint remove_i = -1;
+  guint counter = 0;
+  struct KnownAddress *prev_ka = NULL;
+
+  g_mutex_lock (udpport->mutex);
+
+  for (i = 0;
+       g_array_index (udpport->known_addresses, struct KnownAddress, i).callback;
+       i++)
+  {
+    struct KnownAddress *ka = &g_array_index (udpport->known_addresses, struct KnownAddress, i);
+    if (gst_netaddress_equal (address, &ka->addr))
+    {
+      if (ka->callback == callback && ka->user_data == user_data)
+      {
+        remove_i = i;
+      }
+      else
+      {
+        counter++;
+        prev_ka = ka;
+      }
+    }
+  }
+
+  if (remove_i == -1)
+  {
+    GST_ERROR ("Tried to remove unknown known address");
+    goto out;
+  }
+
+  if (counter == 1)
+    prev_ka->callback (TRUE, &prev_ka->addr, prev_ka->user_data);
+
+  g_array_remove_index_fast (udpport->known_addresses, remove_i);
+
+ out:
+
+  g_mutex_unlock (udpport->mutex);
 }

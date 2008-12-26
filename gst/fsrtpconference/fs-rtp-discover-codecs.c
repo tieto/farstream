@@ -34,23 +34,15 @@
 
 #include "fs-rtp-discover-codecs.h"
 
+#include "fs-rtp-conference.h"
 #include "fs-rtp-codec-cache.h"
+#include "fs-rtp-special-source.h"
 
 #include <gst/farsight/fs-conference-iface.h>
 
 #include <string.h>
 
-#ifdef STANDALONE
-# undef GST_WARNING
-# undef GST_DEBUG
-# undef GST_LOG
-# define GST_WARNING(...) g_warning (__VA_ARGS__)
-# define GST_DEBUG(...) g_debug (__VA_ARGS__)
-# define GST_LOG(...) g_debug (__VA_ARGS__)
-#else
-# include "fs-rtp-conference.h"
-# define GST_CAT_DEFAULT fsrtpconference_disco
-#endif
+#define GST_CAT_DEFAULT fsrtpconference_disco
 
 /*
  * Local TYPES
@@ -102,7 +94,7 @@ debug_pipeline (GList *pipeline)
     GList *walk2;
     for (walk2 = g_list_first (walk->data); walk2; walk2 = g_list_next (walk2))
       GST_DEBUG ("%p:%d:%s ", walk2->data,
-        GST_OBJECT_REFCOUNT_VALUE(GST_OBJECT (walk2->data)),
+        GST_OBJECT_REFCOUNT_VALUE (GST_OBJECT (walk2->data)),
         gst_plugin_feature_get_name (GST_PLUGIN_FEATURE (walk2->data)));
     GST_DEBUG ("--");
   }
@@ -117,7 +109,7 @@ debug_codec_cap (CodecCap *codec_cap)
   {
     caps = gst_caps_to_string (codec_cap->caps);
     GST_LOG ("%p:%d:media_caps %s\n", codec_cap->caps,
-        GST_CAPS_REFCOUNT_VALUE(codec_cap->caps),
+        GST_CAPS_REFCOUNT_VALUE (codec_cap->caps),
         caps);
     g_free (caps);
   }
@@ -126,7 +118,7 @@ debug_codec_cap (CodecCap *codec_cap)
   {
     caps = gst_caps_to_string (codec_cap->rtp_caps);
     GST_LOG ("%p:%d:rtp_caps %s\n", codec_cap->rtp_caps,
-        GST_CAPS_REFCOUNT_VALUE(codec_cap->rtp_caps), caps);
+        GST_CAPS_REFCOUNT_VALUE (codec_cap->rtp_caps), caps);
     g_free (caps);
     g_assert (gst_caps_get_size (codec_cap->rtp_caps) == 1);
   }
@@ -188,7 +180,7 @@ codec_cap_free (CodecCap *codec_cap)
   {
     g_list_free (codec_cap->element_list2);
   }
-  g_free (codec_cap);
+  g_slice_free (CodecCap, codec_cap);
 }
 
 static void
@@ -235,9 +227,9 @@ fs_rtp_blueprints_get (FsMediaType media_type, GError **error)
   if (codecs_lists_ref[media_type] > 1)
     return list_codec_blueprints[media_type];
 
-  list_codec_blueprints[media_type] = load_codecs_cache(media_type, NULL);
+  list_codec_blueprints[media_type] = load_codecs_cache (media_type);
   if (list_codec_blueprints[media_type]) {
-    GST_DEBUG("Loaded codec blueprints from cache file");
+    GST_DEBUG ("Loaded codec blueprints from cache file");
     return list_codec_blueprints[media_type];
   }
 
@@ -268,7 +260,7 @@ fs_rtp_blueprints_get (FsMediaType media_type, GError **error)
   if (!recv_list && !send_list)
   {
     codecs_lists_ref[media_type]--;
-    g_set_error (error, FS_ERROR, FS_ERROR_INTERNAL,
+    g_set_error (error, FS_ERROR, FS_ERROR_NO_CODECS,
       "No codecs for media type %s detected",
       fs_media_type_to_string (media_type));
 
@@ -279,7 +271,7 @@ fs_rtp_blueprints_get (FsMediaType media_type, GError **error)
   ret = create_codec_lists (media_type, recv_list, send_list);
 
   /* Save the codecs blueprint cache */
-  save_codecs_cache(media_type, list_codec_blueprints[media_type]);
+  save_codecs_cache (media_type, list_codec_blueprints[media_type]);
 
  out:
   if (recv_list)
@@ -301,13 +293,13 @@ create_codec_lists (FsMediaType media_type,
    * only sendable or only receivable */
   duplex_list = codec_cap_list_intersect (recv_list, send_list);
 
-  if(!duplex_list) {
+  if (!duplex_list) {
     GST_WARNING ("There are no send/recv codecs");
     return FALSE;
   }
 
   GST_LOG ("*******Intersection of send_list and recv_list");
-  debug_codec_cap_list(duplex_list);
+  debug_codec_cap_list (duplex_list);
 
   duplex_list = remove_dynamic_duplicates (duplex_list);
 
@@ -319,6 +311,9 @@ create_codec_lists (FsMediaType media_type,
   parse_codec_cap_list (duplex_list, media_type);
 
   codec_cap_list_free (duplex_list);
+
+  list_codec_blueprints[media_type] =
+    fs_rtp_special_sources_add_blueprints (list_codec_blueprints[media_type]);
 
   return TRUE;
 }
@@ -354,7 +349,7 @@ validate_h263_codecs (CodecCap *codec_cap)
   if (!h263version || !encoding_name)
     return FALSE;
 
-  if( !strcmp (h263version, "h263"))
+  if ( !strcmp (h263version, "h263"))
   {
     /* baseline H263 can only be encoding name H263 or H263-1998 */
     if (strcmp (encoding_name, "H263") &&
@@ -422,6 +417,7 @@ remove_dynamic_duplicates (GList *list)
   CodecCap *codec_cap, *cur_codec_cap;
   GstStructure *rtp_struct, *cur_rtp_struct;
   const gchar *encoding_name, *cur_encoding_name;
+  GList *remove_us = NULL;
 
   for (walk1 = list; walk1; walk1 = g_list_next (walk1))
   {
@@ -465,13 +461,17 @@ remove_dynamic_duplicates (GList *list)
         GType type = G_VALUE_TYPE (value);
         /* this is a dynamic pt that has a static one , let's remove it */
         if (type == GST_TYPE_INT_RANGE)
-        {
-          list = g_list_remove (list, cur_codec_cap);
-          codec_cap_free (cur_codec_cap);
-        }
+          remove_us = g_list_prepend (remove_us, cur_codec_cap);
       }
     }
   }
+
+  for (walk1 = remove_us; walk1; walk1 = g_list_next (walk1))
+  {
+    list = g_list_remove_all (list, walk1->data);
+    codec_cap_free (walk1->data);
+  }
+  g_list_free (remove_us);
 
   return list;
 }
@@ -506,7 +506,7 @@ parse_codec_cap_list (GList *list, FsMediaType media_type)
   {
     codec_cap = (CodecCap *)(walk->data);
 
-    codec = g_new0 (FsCodec, 1);
+    codec = g_slice_new0 (FsCodec);
     codec->id = FS_CODEC_ID_ANY;
     codec->clock_rate = 0;
 
@@ -554,7 +554,7 @@ parse_codec_cap_list (GList *list, FsMediaType media_type)
 
   another:
 
-    codec_blueprint = g_new0 (CodecBlueprint, 1);
+    codec_blueprint = g_slice_new0 (CodecBlueprint);
     codec_blueprint->codec = codec;
     codec_blueprint->media_caps = gst_caps_copy (codec_cap->caps);
     codec_blueprint->rtp_caps = gst_caps_copy (codec_cap->rtp_caps);
@@ -567,6 +567,13 @@ parse_codec_cap_list (GList *list, FsMediaType media_type)
     /* Lets add the converters at the beginning of the encoding pipelines */
     if (media_type == FS_MEDIA_TYPE_VIDEO)
     {
+      tmpfact = gst_element_factory_find ("fsvideoanyrate");
+      if (tmpfact)
+      {
+        codec_blueprint->send_pipeline_factory = g_list_append (
+            codec_blueprint->send_pipeline_factory,
+            g_list_append (NULL, tmpfact));
+      }
       tmpfact = gst_element_factory_find ("ffmpegcolorspace");
       if (tmpfact)
       {
@@ -584,6 +591,13 @@ parse_codec_cap_list (GList *list, FsMediaType media_type)
     }
     else if (media_type == FS_MEDIA_TYPE_AUDIO)
     {
+      tmpfact = gst_element_factory_find ("audioconvert");
+      if (tmpfact)
+      {
+        codec_blueprint->send_pipeline_factory = g_list_append (
+            codec_blueprint->send_pipeline_factory,
+            g_list_append (NULL, tmpfact));
+      }
       tmpfact = gst_element_factory_find ("audioresample");
       if (tmpfact)
       {
@@ -631,7 +645,7 @@ klass_contains (const gchar *klass, const gchar *needle)
 {
   gchar *found = strstr (klass, needle);
 
-  if(!found)
+  if (!found)
     return FALSE;
   if (found != klass && *(found-1) != '/')
     return FALSE;
@@ -695,7 +709,7 @@ detect_send_codecs (GstCaps *caps)
   }
   else {
     GST_LOG ("**Payloaders");
-    debug_codec_cap_list(payloaders);
+    debug_codec_cap_list (payloaders);
   }
 
   /* find all encoders based on is_encoder filter */
@@ -708,7 +722,7 @@ detect_send_codecs (GstCaps *caps)
   }
   else {
     GST_LOG ("**Encoders");
-    debug_codec_cap_list(encoders);
+    debug_codec_cap_list (encoders);
   }
 
   /* create intersection list of codecs common
@@ -721,7 +735,7 @@ detect_send_codecs (GstCaps *caps)
   }
   else {
     GST_LOG ("**intersection of payloaders and encoders");
-    debug_codec_cap_list(send_list);
+    debug_codec_cap_list (send_list);
   }
 
   codec_cap_list_free (payloaders);
@@ -751,7 +765,7 @@ detect_recv_codecs (GstCaps *caps)
   }
   else {
     GST_LOG ("**Depayloaders");
-    debug_codec_cap_list(depayloaders);
+    debug_codec_cap_list (depayloaders);
   }
 
   /* find all decoders based on is_decoder filter */
@@ -765,7 +779,7 @@ detect_recv_codecs (GstCaps *caps)
   }
   else {
     GST_LOG ("**Decoders");
-    debug_codec_cap_list(decoders);
+    debug_codec_cap_list (decoders);
   }
 
   /* create intersection list of codecs common
@@ -778,7 +792,7 @@ detect_recv_codecs (GstCaps *caps)
   }
   else {
     GST_LOG ("**intersection of depayloaders and decoders");
-    debug_codec_cap_list(recv_list);
+    debug_codec_cap_list (recv_list);
   }
 
   codec_cap_list_free (depayloaders);
@@ -826,6 +840,8 @@ codec_cap_list_intersect (GList *list1, GList *list2)
         if (item) {
           GstCaps *new_caps = gst_caps_union (item->caps, intersection);
           GList *tmplist;
+
+          gst_caps_unref (item->caps);
           item->caps = new_caps;
 
           for (tmplist = g_list_first (codec_cap2->element_list1->data);
@@ -841,8 +857,8 @@ codec_cap_list_intersect (GList *list1, GList *list2)
           }
         } else {
 
-          item = g_new0 (CodecCap, 1);
-          item->caps = intersection;
+          item = g_slice_new0 (CodecCap);
+          item->caps = gst_caps_ref (intersection);
 
           if (rtp_caps1 && rtp_caps2)
           {
@@ -875,10 +891,10 @@ codec_cap_list_intersect (GList *list1, GList *list2)
             break;
         }
       } else {
-        gst_caps_unref (intersection);
         if (rtp_intersection)
           gst_caps_unref (rtp_intersection);
       }
+      gst_caps_unref (intersection);
     }
   }
 
@@ -928,7 +944,7 @@ codec_blueprint_destroy (CodecBlueprint *codec_blueprint)
   g_list_free (codec_blueprint->receive_pipeline_factory);
 
 
-  g_free (codec_blueprint);
+  g_slice_free (CodecBlueprint, codec_blueprint);
 }
 
 void
@@ -1074,7 +1090,7 @@ create_codec_cap_list (GstElementFactory *factory,
     if (padtemplate->direction != direction)
       continue;
 
-    if (GST_PAD_TEMPLATE_PRESENCE(padtemplate) != GST_PAD_ALWAYS) {
+    if (GST_PAD_TEMPLATE_PRESENCE (padtemplate) != GST_PAD_ALWAYS) {
       continue;
     }
 
@@ -1130,7 +1146,7 @@ create_codec_cap_list (GstElementFactory *factory,
 
       if (!entry)
       {
-        entry = g_new0 (CodecCap, 1);
+        entry = g_slice_new0 (CodecCap);
 
         entry->caps = cur_caps;
         if (rtp_caps)
@@ -1161,7 +1177,7 @@ create_codec_cap_list (GstElementFactory *factory,
             entry->rtp_caps = rtp_caps;
             /* This shouldn't happen, its we're looking at rtp elements
              * or we're not */
-            g_assert_not_reached();
+            g_assert_not_reached ();
           }
           gst_caps_unref (rtp_caps);
         }
@@ -1389,14 +1405,8 @@ extract_field_data (GQuark field_id,
   else
   {
     if (type == G_TYPE_STRING)
-    {
-      FsCodecParameter *optional_param = g_new0 (FsCodecParameter, 1);
-
-      optional_param->name = g_strdup (field_name);
-      optional_param->value = g_strdup (g_value_get_string (value));
-      codec->optional_params = g_list_append (codec->optional_params,
-          optional_param);
-    }
+      fs_codec_add_optional_parameter (codec, field_name,
+          g_value_get_string (value));
   }
 
   return TRUE;

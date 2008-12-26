@@ -10,11 +10,10 @@
 
 #include <gst/gst.h>
 
-#include "fs-conference-iface.h"
-#include "fs-enum-types.h"
+#include <gst/farsight/fs-conference-iface.h>
 
-#include "fs-transmitter.h"
-#include "fs-element-added-notifier.h"
+#include <gst/farsight/fs-transmitter.h>
+#include <gst/farsight/fs-element-added-notifier.h>
 
 static PyObject *
 _fs_boxed_list_from_value (const GValue *value, GType listtype, GType type)
@@ -46,7 +45,7 @@ _fs_boxed_list_to_value (GValue *value, PyObject *obj, GType type,
   GList *boxed = NULL;
 
   if (!PySequence_Check (obj)) {
-    PyErr_Format(PyExc_TypeError, "Must be a List of %s", g_type_name (type));
+    PyErr_Format(PyExc_TypeError, "Must be a Sequence of %s", g_type_name (type));
     return -1;
   }
 
@@ -57,7 +56,7 @@ _fs_boxed_list_to_value (GValue *value, PyObject *obj, GType type,
     if (!pyg_boxed_check (item, type))
     {
       PyErr_Format(PyExc_TypeError,
-          "The parameter must be a List of %s", g_type_name (type));
+          "The parameter must be a Sequence of %s", g_type_name (type));
       return -1;
     }
   }
@@ -108,7 +107,43 @@ _fs_candidate_list_to_value (GValue *value, PyObject *obj)
       (StructCopyFunc) fs_candidate_copy);
 }
 
-#line 112 "pyfarsight.c"
+static gboolean
+_fs_codec_list_from_pysequence (PyObject *obj, GList **list)
+{
+  GList *codecs = NULL;
+  gint i;
+
+  if (!PySequence_Check (obj))
+  {
+    PyErr_SetString (PyExc_TypeError,
+        "The parameter must be a Sequence of FsCodec");
+    return FALSE;
+  }
+
+  for (i = 0; i < PySequence_Size (obj); i++)
+  {
+    PyObject *item = PySequence_GetItem (obj, i);
+
+    if (!pyg_boxed_check (item, FS_TYPE_CODEC))
+    {
+      PyErr_SetString(PyExc_TypeError,
+          "The parameter must be a Sequence of FsCodec");
+      return FALSE;
+    }
+  }
+
+  for (i = 0; i < PySequence_Size (obj); i++)
+  {
+    PyObject *item = PySequence_GetItem (obj, i);
+
+    codecs = g_list_append (codecs, pyg_boxed_get (item, FsCodec));
+  }
+
+  *list = codecs;
+  return TRUE;
+}
+
+#line 147 "pyfarsight.c"
 
 
 /* ---------- types from other modules ---------- */
@@ -129,7 +164,7 @@ PyTypeObject G_GNUC_INTERNAL PyFsStream_Type;
 PyTypeObject G_GNUC_INTERNAL PyFsElementAddedNotifier_Type;
 PyTypeObject G_GNUC_INTERNAL PyFsConference_Type;
 
-#line 133 "pyfarsight.c"
+#line 168 "pyfarsight.c"
 
 
 
@@ -169,16 +204,6 @@ _wrap_fs_codec_new(PyGBoxed *self, PyObject *args, PyObject *kwargs)
     }
     self->free_on_dealloc = TRUE;
     return 0;
-}
-
-static PyObject *
-_wrap_fs_codec_destroy(PyObject *self)
-{
-    
-    fs_codec_destroy(pyg_boxed_get(self, FsCodec));
-    
-    Py_INCREF(Py_None);
-    return Py_None;
 }
 
 static PyObject *
@@ -233,33 +258,17 @@ _wrap_fs_codec_are_equal(PyObject *self, PyObject *args, PyObject *kwargs)
 
 }
 
-static PyObject *
-_wrap_fs_codec_to_gst_caps(PyObject *self)
-{
-    GstCaps *ret;
-
-    
-    ret = fs_codec_to_gst_caps(pyg_boxed_get(self, FsCodec));
-    
-    /* pyg_boxed_new handles NULL checking */
-    return pyg_boxed_new(GST_TYPE_CAPS, ret, TRUE, TRUE);
-}
-
 static const PyMethodDef _PyFsCodec_methods[] = {
-    { "destroy", (PyCFunction)_wrap_fs_codec_destroy, METH_NOARGS,
-      NULL },
     { "copy", (PyCFunction)_wrap_fs_codec_copy, METH_NOARGS,
       NULL },
     { "to_string", (PyCFunction)_wrap_fs_codec_to_string, METH_NOARGS,
       NULL },
     { "are_equal", (PyCFunction)_wrap_fs_codec_are_equal, METH_VARARGS|METH_KEYWORDS,
       NULL },
-    { "to_gst_caps", (PyCFunction)_wrap_fs_codec_to_gst_caps, METH_NOARGS,
-      NULL },
     { NULL, NULL, 0, NULL }
 };
 
-#line 368 "pyfarsight.override"
+#line 411 "pyfarsight.override"
 static PyObject *
 _wrap_fs_codec_tp_getattr(PyObject *self, char *attr)
 {
@@ -317,10 +326,10 @@ _wrap_fs_codec_tp_getattr(PyObject *self, char *attr)
     return Py_FindMethod((PyMethodDef*)_PyFsCodec_methods, self, attr);
   }
 }
-#line 321 "pyfarsight.c"
+#line 330 "pyfarsight.c"
 
 
-#line 249 "pyfarsight.override"
+#line 293 "pyfarsight.override"
 static int
 _wrap_fs_codec_tp_setattr(PyObject *self, char *attr, PyObject *value)
 {
@@ -378,7 +387,6 @@ _wrap_fs_codec_tp_setattr(PyObject *self, char *attr, PyObject *value)
   else if (!strcmp (attr, "optional_params"))
   {
     GList *p;
-    GList *newlist = NULL;
     int i = 0;
 
     if (value == NULL)
@@ -407,16 +415,6 @@ _wrap_fs_codec_tp_setattr(PyObject *self, char *attr, PyObject *value)
       }
     }
 
-    for (i = 0; i < PySequence_Size (value); i++)
-    {
-      PyObject *item = PySequence_GetItem (value, i);
-      FsCodecParameter *param = g_new0 (FsCodecParameter, 1);
-
-      param->name = g_strdup (PyString_AsString (PyTuple_GetItem (item, 0)));
-      param->value = g_strdup (PyString_AsString (PyTuple_GetItem (item, 1)));
-      newlist = g_list_append (newlist, param);
-    }
-
   none:
 
     for (p = g_list_first (codec->optional_params); p; p = g_list_next (p))
@@ -424,10 +422,20 @@ _wrap_fs_codec_tp_setattr(PyObject *self, char *attr, PyObject *value)
       FsCodecParameter *param = p->data;
       g_free (param->name);
       g_free (param->value);
-      g_free (p->data);
+      g_slice_free (FsCodecParameter, p->data);
     }
     g_list_free (codec->optional_params);
-    codec->optional_params = newlist;
+
+    if (value == NULL)
+      return 0;
+
+    for (i = 0; i < PySequence_Size (value); i++)
+    {
+      PyObject *item = PySequence_GetItem (value, i);
+      fs_codec_add_optional_parameter(codec,
+          PyString_AsString (PyTuple_GetItem (item, 0)),
+          PyString_AsString (PyTuple_GetItem (item, 1)));
+    }
   }
   else
   {
@@ -438,7 +446,62 @@ _wrap_fs_codec_tp_setattr(PyObject *self, char *attr, PyObject *value)
 
   return 0;
 }
-#line 442 "pyfarsight.c"
+#line 450 "pyfarsight.c"
+
+
+#line 470 "pyfarsight.override"
+static int
+_wrap_fs_codec_tp_compare(PyObject *self, PyGObject *v)
+{
+  FsCodec *codec1;
+  FsCodec *codec2;
+  int cmp;
+
+  if (!pyg_boxed_check (v, FS_TYPE_CODEC))
+    return 1;
+
+  codec1 = pyg_boxed_get(self, FsCodec);
+  codec2 = pyg_boxed_get(v, FsCodec);
+
+  /* If they're equal, return them as such */
+  if (fs_codec_are_equal (codec1, codec2))
+    return 0;
+
+  /* If their ids are different, return different ids */
+  if (codec1->id > codec2->id)
+    return -1;
+  else if (codec1->id < codec2->id)
+    return 1;
+
+  /* if one does not have an encoding name.. it goes first */
+  if (!codec1->encoding_name)
+    return -1;
+  if (!codec2->encoding_name)
+    return 1;
+
+  /* If they name are different, order them that way */
+  cmp = strcmp (codec1->encoding_name, codec2->encoding_name);
+  if (cmp)
+    return cmp;
+
+  /* otherwise lets try clock rates */
+  if (codec1->clock_rate != codec2->clock_rate)
+    return codec2->clock_rate - codec2->clock_rate;
+
+  /* maybe channels ? */
+  if (codec1->channels != codec2->channels)
+    return codec2->channels - codec2->channels;
+
+  /* If everything else is identical, lets use use the points to the optional
+   * params
+   */
+  if (codec1->optional_params > codec2->optional_params)
+    return -1;
+  else
+    return 1;
+}
+
+#line 505 "pyfarsight.c"
 
 
 PyTypeObject G_GNUC_INTERNAL PyFsCodec_Type = {
@@ -452,7 +515,7 @@ PyTypeObject G_GNUC_INTERNAL PyFsCodec_Type = {
     (printfunc)0,                      /* tp_print */
     (getattrfunc)_wrap_fs_codec_tp_getattr,       /* tp_getattr */
     (setattrfunc)_wrap_fs_codec_tp_setattr,       /* tp_setattr */
-    (cmpfunc)0,           /* tp_compare */
+    (cmpfunc)_wrap_fs_codec_tp_compare,           /* tp_compare */
     (reprfunc)0,             /* tp_repr */
     (PyNumberMethods*)0,     /* tp_as_number */
     (PySequenceMethods*)0, /* tp_as_sequence */
@@ -490,13 +553,13 @@ PyTypeObject G_GNUC_INTERNAL PyFsCodec_Type = {
 
 /* ----------- FsCandidate ----------- */
 
-#line 427 "pyfarsight.override"
+#line 523 "pyfarsight.override"
 static int
 _wrap_fs_candidate_new(PyGBoxed *self)
 {
   self->gtype = FS_TYPE_CANDIDATE;
   self->free_on_dealloc = FALSE;
-  self->boxed = g_new0 (FsCandidate, 1);
+  self->boxed = g_slice_new0 (FsCandidate);
 
   if (!self->boxed) {
     PyErr_SetString(PyExc_RuntimeError, "could not create FsCodec object");
@@ -506,18 +569,8 @@ _wrap_fs_candidate_new(PyGBoxed *self)
 
   return 0;
 }
-#line 510 "pyfarsight.c"
+#line 573 "pyfarsight.c"
 
-
-static PyObject *
-_wrap_fs_candidate_destroy(PyObject *self)
-{
-    
-    fs_candidate_destroy(pyg_boxed_get(self, FsCandidate));
-    
-    Py_INCREF(Py_None);
-    return Py_None;
-}
 
 static PyObject *
 _wrap_fs_candidate_copy(PyObject *self)
@@ -531,40 +584,13 @@ _wrap_fs_candidate_copy(PyObject *self)
     return pyg_boxed_new(FS_TYPE_CANDIDATE, ret, TRUE, TRUE);
 }
 
-static PyObject *
-_wrap_fs_candidate_are_equal(PyObject *self, PyObject *args, PyObject *kwargs)
-{
-    static char *kwlist[] = { "cand2", NULL };
-    PyObject *py_cand2;
-    int ret;
-    FsCandidate *cand2 = NULL;
-
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O:FsCandidate.are_equal", kwlist, &py_cand2))
-        return NULL;
-    if (pyg_boxed_check(py_cand2, FS_TYPE_CANDIDATE))
-        cand2 = pyg_boxed_get(py_cand2, FsCandidate);
-    else {
-        PyErr_SetString(PyExc_TypeError, "cand2 should be a FsCandidate");
-        return NULL;
-    }
-    
-    ret = fs_candidate_are_equal(pyg_boxed_get(self, FsCandidate), cand2);
-    
-    return PyBool_FromLong(ret);
-
-}
-
 static const PyMethodDef _PyFsCandidate_methods[] = {
-    { "destroy", (PyCFunction)_wrap_fs_candidate_destroy, METH_NOARGS,
-      NULL },
     { "copy", (PyCFunction)_wrap_fs_candidate_copy, METH_NOARGS,
-      NULL },
-    { "are_equal", (PyCFunction)_wrap_fs_candidate_are_equal, METH_VARARGS|METH_KEYWORDS,
       NULL },
     { NULL, NULL, 0, NULL }
 };
 
-#line 530 "pyfarsight.override"
+#line 624 "pyfarsight.override"
 static PyObject *
 _wrap_fs_candidate_tp_getattr(PyObject *self, char *attr)
 {
@@ -574,9 +600,7 @@ _wrap_fs_candidate_tp_getattr(PyObject *self, char *attr)
 
 #define CHECK_NULL(x) ((x) == NULL ? "" : (x))
 
-  if (!strcmp (attr, "candidate_id"))
-    return PyString_FromString (CHECK_NULL(candidate->candidate_id));
-  else if (!strcmp (attr, "foundation"))
+  if (!strcmp (attr, "foundation"))
     return PyString_FromString (CHECK_NULL(candidate->foundation));
   else if (!strcmp (attr, "component_id"))
     return PyInt_FromLong(candidate->component_id);
@@ -601,14 +625,14 @@ _wrap_fs_candidate_tp_getattr(PyObject *self, char *attr)
   else if (!strcmp (attr, "type"))
     return pyg_enum_from_gtype(FS_TYPE_CANDIDATE_TYPE, candidate->type);
   else
-    return Py_FindMethod((PyMethodDef*)_PyFsCodec_methods, self, attr);
+    return Py_FindMethod((PyMethodDef*)_PyFsCandidate_methods, self, attr);
 
 #undef CHECK_NULL
 }
-#line 609 "pyfarsight.c"
+#line 633 "pyfarsight.c"
 
 
-#line 446 "pyfarsight.override"
+#line 542 "pyfarsight.override"
 static int
 _wrap_fs_candidate_tp_setattr(PyObject *self, char *attr, PyObject *value)
 {
@@ -644,9 +668,7 @@ _wrap_fs_candidate_tp_setattr(PyObject *self, char *attr, PyObject *value)
 
 
 
-  if (!strcmp (attr, "candidate_id"))
-    CHECK_SET_STR (candidate_id);
-  else if (!strcmp (attr, "foundation"))
+  if (!strcmp (attr, "foundation"))
     CHECK_SET_STR (foundation);
   else if (!strcmp (attr, "component_id"))
     CHECK_SET_INT (component_id, 1, 256);
@@ -691,7 +713,7 @@ _wrap_fs_candidate_tp_setattr(PyObject *self, char *attr, PyObject *value)
 #undef CHECK_SET_INT
 #undef CHECK_SET_STR
 }
-#line 695 "pyfarsight.c"
+#line 717 "pyfarsight.c"
 
 
 PyTypeObject G_GNUC_INTERNAL PyFsCandidate_Type = {
@@ -743,7 +765,7 @@ PyTypeObject G_GNUC_INTERNAL PyFsCandidate_Type = {
 
 /* ----------- FsSession ----------- */
 
-#line 131 "pyfarsight.override"
+#line 169 "pyfarsight.override"
 static PyObject *
 _wrap_fs_session_new_stream(PyGObject *self, PyObject *args, PyObject *kwargs)
 {
@@ -754,7 +776,7 @@ _wrap_fs_session_new_stream(PyGObject *self, PyObject *args, PyObject *kwargs)
   gint direction;
   const gchar *transmitter_name = NULL;
   PyObject *st_params = NULL;
-  int pos = 0, i = 0;
+  ssize_t pos = 0, i = 0;
   PyObject *key, *value;
   FsTransmitter *transmitter = NULL;
   GObjectClass *st_class  = NULL;
@@ -763,7 +785,7 @@ _wrap_fs_session_new_stream(PyGObject *self, PyObject *args, PyObject *kwargs)
   guint n_parameters = 0;
   GParameter *parameters = NULL;
 
-  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O!is|O!:FsSession.new_stream",
+  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O!i|zO!:FsSession.new_stream",
           kwlist,
           &PyFsParticipant_Type, &participant,
           &direction,
@@ -771,19 +793,23 @@ _wrap_fs_session_new_stream(PyGObject *self, PyObject *args, PyObject *kwargs)
           &PyDict_Type, &st_params))
     return NULL;
 
-  if (st_params)
+  if (transmitter_name && st_params)
   {
     n_parameters = PyDict_Size (st_params);
 
     parameters = g_new0 (GParameter, n_parameters);
 
+    Py_BEGIN_ALLOW_THREADS
     transmitter = fs_transmitter_new (transmitter_name, 2, &error);
+    Py_END_ALLOW_THREADS
     if (!transmitter)
       goto error;
 
+    Py_BEGIN_ALLOW_THREADS
     st_class = g_type_class_ref (
         fs_transmitter_get_stream_transmitter_type (
             transmitter, &error));
+    Py_END_ALLOW_THREADS
     if (!st_class)
       goto error;
 
@@ -829,11 +855,13 @@ _wrap_fs_session_new_stream(PyGObject *self, PyObject *args, PyObject *kwargs)
     }
   }
 
+  Py_BEGIN_ALLOW_THREADS
   stream = fs_session_new_stream (FS_SESSION (pygobject_get (self)),
       FS_PARTICIPANT (pygobject_get (participant)),
       direction,
       transmitter_name, n_parameters, parameters,
       &error);
+  Py_END_ALLOW_THREADS
 
   if (!stream)
     goto error;
@@ -860,7 +888,7 @@ _wrap_fs_session_new_stream(PyGObject *self, PyObject *args, PyObject *kwargs)
 
   return NULL;
 }
-#line 864 "pyfarsight.c"
+#line 892 "pyfarsight.c"
 
 
 static PyObject *
@@ -875,9 +903,9 @@ _wrap_fs_session_start_telephony_event(PyGObject *self, PyObject *args, PyObject
         return NULL;
     if (pyg_enum_get_value(FS_TYPE_DTMF_METHOD, py_method, (gpointer)&method))
         return NULL;
-    
+    pyg_begin_allow_threads;
     ret = fs_session_start_telephony_event(FS_SESSION(self->obj), event, volume, method);
-    
+    pyg_end_allow_threads;
     return PyBool_FromLong(ret);
 
 }
@@ -894,9 +922,9 @@ _wrap_fs_session_stop_telephony_event(PyGObject *self, PyObject *args, PyObject 
         return NULL;
     if (pyg_enum_get_value(FS_TYPE_DTMF_METHOD, py_method, (gpointer)&method))
         return NULL;
-    
+    pyg_begin_allow_threads;
     ret = fs_session_stop_telephony_event(FS_SESSION(self->obj), method);
-    
+    pyg_end_allow_threads;
     return PyBool_FromLong(ret);
 
 }
@@ -918,14 +946,40 @@ _wrap_fs_session_set_send_codec(PyGObject *self, PyObject *args, PyObject *kwarg
         PyErr_SetString(PyExc_TypeError, "send_codec should be a FsCodec");
         return NULL;
     }
-    
+    pyg_begin_allow_threads;
     ret = fs_session_set_send_codec(FS_SESSION(self->obj), send_codec, &error);
-    
+    pyg_end_allow_threads;
     if (pyg_error_check(&error))
         return NULL;
     return PyBool_FromLong(ret);
 
 }
+
+#line 757 "pyfarsight.override"
+static PyObject *
+_wrap_fs_session_set_codec_preferences (PyGObject *self, PyObject *arg)
+{
+  gboolean ret = FALSE;
+  GError *error = NULL;
+  GList *codecs = NULL;
+
+  if (!_fs_codec_list_from_pysequence (arg, &codecs))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS
+  ret = fs_session_set_codec_preferences (FS_SESSION(self->obj), codecs,
+      &error);
+  Py_END_ALLOW_THREADS
+
+  g_list_free (codecs);
+
+  if (pyg_error_check(&error))
+    return NULL;
+
+  return PyBool_FromLong (ret);
+}
+#line 982 "pyfarsight.c"
+
 
 static PyObject *
 _wrap_fs_session_emit_error(PyGObject *self, PyObject *args, PyObject *kwargs)
@@ -936,9 +990,9 @@ _wrap_fs_session_emit_error(PyGObject *self, PyObject *args, PyObject *kwargs)
 
     if (!PyArg_ParseTupleAndKeywords(args, kwargs,"iss:FsSession.emit_error", kwlist, &error_no, &error_msg, &debug_msg))
         return NULL;
-    
+    pyg_begin_allow_threads;
     fs_session_emit_error(FS_SESSION(self->obj), error_no, error_msg, debug_msg);
-    
+    pyg_end_allow_threads;
     Py_INCREF(Py_None);
     return Py_None;
 }
@@ -951,6 +1005,8 @@ static const PyMethodDef _PyFsSession_methods[] = {
     { "stop_telephony_event", (PyCFunction)_wrap_fs_session_stop_telephony_event, METH_VARARGS|METH_KEYWORDS,
       NULL },
     { "set_send_codec", (PyCFunction)_wrap_fs_session_set_send_codec, METH_VARARGS|METH_KEYWORDS,
+      NULL },
+    { "set_codec_preferences", (PyCFunction)_wrap_fs_session_set_codec_preferences, METH_O,
       NULL },
     { "emit_error", (PyCFunction)_wrap_fs_session_emit_error, METH_VARARGS|METH_KEYWORDS,
       NULL },
@@ -1055,74 +1111,19 @@ PyTypeObject G_GNUC_INTERNAL PyFsParticipant_Type = {
 
 /* ----------- FsStream ----------- */
 
+#line 664 "pyfarsight.override"
 static PyObject *
-_wrap_fs_stream_add_remote_candidate(PyGObject *self, PyObject *args, PyObject *kwargs)
-{
-    static char *kwlist[] = { "candidate", NULL };
-    PyObject *py_candidate;
-    int ret;
-    GError *error = NULL;
-    FsCandidate *candidate = NULL;
-
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O:FsStream.add_remote_candidate", kwlist, &py_candidate))
-        return NULL;
-    if (pyg_boxed_check(py_candidate, FS_TYPE_CANDIDATE))
-        candidate = pyg_boxed_get(py_candidate, FsCandidate);
-    else {
-        PyErr_SetString(PyExc_TypeError, "candidate should be a FsCandidate");
-        return NULL;
-    }
-    
-    ret = fs_stream_add_remote_candidate(FS_STREAM(self->obj), candidate, &error);
-    
-    if (pyg_error_check(&error))
-        return NULL;
-    return PyBool_FromLong(ret);
-
-}
-
-static PyObject *
-_wrap_fs_stream_remote_candidates_added(PyGObject *self)
-{
-    
-    fs_stream_remote_candidates_added(FS_STREAM(self->obj));
-    
-    Py_INCREF(Py_None);
-    return Py_None;
-}
-
-static PyObject *
-_wrap_fs_stream_select_candidate_pair(PyGObject *self, PyObject *args, PyObject *kwargs)
-{
-    static char *kwlist[] = { "lfoundation", "rfoundation", NULL };
-    char *lfoundation, *rfoundation;
-    int ret;
-    GError *error = NULL;
-
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"ss:FsStream.select_candidate_pair", kwlist, &lfoundation, &rfoundation))
-        return NULL;
-    
-    ret = fs_stream_select_candidate_pair(FS_STREAM(self->obj), lfoundation, rfoundation, &error);
-    
-    if (pyg_error_check(&error))
-        return NULL;
-    return PyBool_FromLong(ret);
-
-}
-
-#line 572 "pyfarsight.override"
-static PyObject *
-_wrap_fs_stream_set_remote_codecs (PyGObject *self, PyObject *arg)
+_wrap_fs_stream_set_remote_candidates (PyGObject *self, PyObject *arg)
 {
   gboolean ret = FALSE;
   GError *error = NULL;
-  GList *codecs = NULL;
+  GList *candidates = NULL;
   int i;
 
   if (!PySequence_Check (arg))
   {
     PyErr_SetString (PyExc_TypeError,
-        "The parameter must be a List of FsCodec");
+        "The parameter must be a Sequence of FsCandidate");
     return NULL;
   }
 
@@ -1137,10 +1138,10 @@ _wrap_fs_stream_set_remote_codecs (PyGObject *self, PyObject *arg)
   {
     PyObject *item = PySequence_GetItem (arg, i);
 
-    if (!pyg_boxed_check (item, FS_TYPE_CODEC))
+    if (!pyg_boxed_check (item, FS_TYPE_CANDIDATE))
     {
       PyErr_SetString(PyExc_TypeError,
-          "The parameter must be a List of FsCodec");
+          "The parameter must be a Sequence of FsCandidate");
       return NULL;
     }
   }
@@ -1149,10 +1150,53 @@ _wrap_fs_stream_set_remote_codecs (PyGObject *self, PyObject *arg)
   {
     PyObject *item = PySequence_GetItem (arg, i);
 
-    codecs = g_list_append (codecs, pyg_boxed_get (item, FsCodec));
+    candidates = g_list_append (candidates, pyg_boxed_get (item, FsCandidate));
   }
 
+
+  Py_BEGIN_ALLOW_THREADS
+  ret = fs_stream_set_remote_candidates (FS_STREAM(self->obj), candidates,
+      &error);
+  Py_END_ALLOW_THREADS
+
+  g_list_free (candidates);
+
+  if (pyg_error_check(&error))
+    return NULL;
+
+  return PyBool_FromLong (ret);
+}
+#line 1170 "pyfarsight.c"
+
+
+#line 720 "pyfarsight.override"
+static PyObject *
+_wrap_fs_stream_set_remote_codecs (PyGObject *self, PyObject *arg)
+{
+  gboolean ret = FALSE;
+  GError *error = NULL;
+  GList *codecs = NULL;
+
+  if (!PySequence_Check (arg))
+  {
+    PyErr_SetString (PyExc_TypeError,
+        "The parameter must be a Sequence of FsCodec");
+    return NULL;
+  }
+
+  if (PySequence_Size (arg) == 0)
+  {
+    PyErr_SetString (PyExc_TypeError,
+        "Empty list invalid");
+    return NULL;
+  }
+
+  if (!_fs_codec_list_from_pysequence (arg, &codecs))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS
   ret = fs_stream_set_remote_codecs (FS_STREAM(self->obj), codecs, &error);
+  Py_END_ALLOW_THREADS
 
   g_list_free (codecs);
 
@@ -1161,7 +1205,7 @@ _wrap_fs_stream_set_remote_codecs (PyGObject *self, PyObject *arg)
 
   return PyBool_FromLong (ret);
 }
-#line 1165 "pyfarsight.c"
+#line 1209 "pyfarsight.c"
 
 
 static PyObject *
@@ -1173,9 +1217,9 @@ _wrap_fs_stream_emit_error(PyGObject *self, PyObject *args, PyObject *kwargs)
 
     if (!PyArg_ParseTupleAndKeywords(args, kwargs,"iss:FsStream.emit_error", kwlist, &error_no, &error_msg, &debug_msg))
         return NULL;
-    
+    pyg_begin_allow_threads;
     fs_stream_emit_error(FS_STREAM(self->obj), error_no, error_msg, debug_msg);
-    
+    pyg_end_allow_threads;
     Py_INCREF(Py_None);
     return Py_None;
 }
@@ -1196,19 +1240,15 @@ _wrap_fs_stream_emit_src_pad_added(PyGObject *self, PyObject *args, PyObject *kw
         PyErr_SetString(PyExc_TypeError, "codec should be a FsCodec");
         return NULL;
     }
-    
+    pyg_begin_allow_threads;
     fs_stream_emit_src_pad_added(FS_STREAM(self->obj), GST_PAD(pad->obj), codec);
-    
+    pyg_end_allow_threads;
     Py_INCREF(Py_None);
     return Py_None;
 }
 
 static const PyMethodDef _PyFsStream_methods[] = {
-    { "add_remote_candidate", (PyCFunction)_wrap_fs_stream_add_remote_candidate, METH_VARARGS|METH_KEYWORDS,
-      NULL },
-    { "remote_candidates_added", (PyCFunction)_wrap_fs_stream_remote_candidates_added, METH_NOARGS,
-      NULL },
-    { "select_candidate_pair", (PyCFunction)_wrap_fs_stream_select_candidate_pair, METH_VARARGS|METH_KEYWORDS,
+    { "set_remote_candidates", (PyCFunction)_wrap_fs_stream_set_remote_candidates, METH_O,
       NULL },
     { "set_remote_codecs", (PyCFunction)_wrap_fs_stream_set_remote_codecs, METH_O,
       NULL },
@@ -1389,9 +1429,9 @@ _wrap_fs_conference_new_session(PyGObject *self, PyObject *args, PyObject *kwarg
         return NULL;
     if (pyg_enum_get_value(FS_TYPE_MEDIA_TYPE, py_media_type, (gpointer)&media_type))
         return NULL;
-    
+    pyg_begin_allow_threads;
     ret = fs_conference_new_session(FS_CONFERENCE(self->obj), media_type, &error);
-    
+    pyg_end_allow_threads;
     if (pyg_error_check(&error))
         return NULL;
     /* pygobject_new handles NULL checking */
@@ -1408,9 +1448,9 @@ _wrap_fs_conference_new_participant(PyGObject *self, PyObject *args, PyObject *k
 
     if (!PyArg_ParseTupleAndKeywords(args, kwargs,"s:FsConference.new_participant", kwlist, &cname))
         return NULL;
-    
+    pyg_begin_allow_threads;
     ret = fs_conference_new_participant(FS_CONFERENCE(self->obj), cname, &error);
-    
+    pyg_end_allow_threads;
     if (pyg_error_check(&error))
         return NULL;
     /* pygobject_new handles NULL checking */
@@ -1495,6 +1535,7 @@ fs_add_constants(PyObject *module, const gchar *strip_prefix)
   pyg_enum_add(module, "DTMFEvent", strip_prefix, FS_TYPE_DTMF_EVENT);
   pyg_enum_add(module, "DTMFMethod", strip_prefix, FS_TYPE_DTMF_METHOD);
   pyg_flags_add(module, "StreamDirection", strip_prefix, FS_TYPE_STREAM_DIRECTION);
+  pyg_enum_add(module, "StreamState", strip_prefix, FS_TYPE_STREAM_STATE);
 
   if (PyErr_Occurred())
     PyErr_Print();
@@ -1538,7 +1579,7 @@ fs_register_classes(PyObject *d)
     }
 
 
-#line 123 "pyfarsight.override"
+#line 161 "pyfarsight.override"
 pyg_register_gtype_custom (FS_TYPE_CODEC_LIST,
     _fs_codec_list_from_value,
     _fs_codec_list_to_value);
@@ -1546,7 +1587,7 @@ pyg_register_gtype_custom (FS_TYPE_CANDIDATE_LIST,
     _fs_candidate_list_from_value,
     _fs_candidate_list_to_value);
 
-#line 1550 "pyfarsight.c"
+#line 1591 "pyfarsight.c"
     pyg_register_boxed(d, "Codec", FS_TYPE_CODEC, &PyFsCodec_Type);
     pyg_register_boxed(d, "Candidate", FS_TYPE_CANDIDATE, &PyFsCandidate_Type);
     pyg_register_interface(d, "Conference", FS_TYPE_CONFERENCE, &PyFsConference_Type);

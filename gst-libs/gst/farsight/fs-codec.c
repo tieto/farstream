@@ -25,6 +25,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "fs-codec.h"
 
 #include "fs-private.h"
@@ -90,7 +94,7 @@ FsCodec *
 fs_codec_new (int id, const char *encoding_name,
               FsMediaType media_type, guint clock_rate)
 {
-  FsCodec *codec = g_new0 (FsCodec, 1);
+  FsCodec *codec = g_slice_new0 (FsCodec);
 
   codec->id = id;
   codec->encoding_name = g_strdup (encoding_name);
@@ -104,27 +108,29 @@ fs_codec_new (int id, const char *encoding_name,
  * fs_codec_destroy:
  * @codec: #FsCodec structure to free
  *
- * Deletes a #FsCodec structure and all its data
+ * Deletes a #FsCodec structure and all its data. Is a no-op on %NULL codec
  */
 void
 fs_codec_destroy (FsCodec * codec)
 {
-  if (codec->encoding_name)
-    g_free (codec->encoding_name);
+  if (codec == NULL)
+    return;
+
+  g_free (codec->encoding_name);
   if (codec->optional_params) {
     GList *lp;
-    FsCodecParameter *optional_param;
+    FsCodecParameter *param;
 
     for (lp = codec->optional_params; lp; lp = g_list_next (lp)) {
-      optional_param = (FsCodecParameter *) lp->data;
-      g_free (optional_param->name);
-      g_free (optional_param->value);
-      g_free (optional_param);
+      param = (FsCodecParameter *) lp->data;
+      g_free (param->name);
+      g_free (param->value);
+      g_slice_free (FsCodecParameter, param);
     }
     g_list_free (codec->optional_params);
   }
 
-  g_free (codec);
+  g_slice_free (FsCodec, codec);
 }
 
 /**
@@ -138,7 +144,15 @@ fs_codec_destroy (FsCodec * codec)
 FsCodec *
 fs_codec_copy (const FsCodec * codec)
 {
-  FsCodec *copy = g_new0 (FsCodec, 1);
+  FsCodec *copy = NULL;
+  GList *lp;
+  FsCodecParameter *param;
+  FsCodecParameter *param_copy;
+
+  if (codec == NULL)
+    return NULL;
+
+  copy = g_slice_new0 (FsCodec);
 
   copy->id = codec->id;
   copy->media_type = codec->media_type;
@@ -147,24 +161,18 @@ fs_codec_copy (const FsCodec * codec)
 
   copy->encoding_name = g_strdup (codec->encoding_name);
 
-  copy->optional_params = NULL;
-
-  if (codec->optional_params) {
-    GList *lp;
-    FsCodecParameter *param;
-    FsCodecParameter *param_copy;
-
-    for (lp = codec->optional_params; lp; lp = g_list_next (lp)) {
-      param_copy = g_new0(FsCodecParameter,1);
-      param = (FsCodecParameter *) lp->data;
-      param_copy->name = g_strdup (param->name);
-      param_copy->value = g_strdup (param->value);
-      /* prepend then reverse the list for efficiency */
-      copy->optional_params = g_list_prepend (copy->optional_params,
-                                              param_copy);
-    }
-    copy->optional_params = g_list_reverse (copy->optional_params);
+  for (lp = codec->optional_params; lp; lp = g_list_next (lp))
+  {
+    param_copy = g_slice_new (FsCodecParameter);
+    param = (FsCodecParameter *) lp->data;
+    param_copy->name = g_strdup (param->name);
+    param_copy->value = g_strdup (param->value);
+    /* prepend then reverse the list for efficiency */
+    copy->optional_params = g_list_prepend (copy->optional_params,
+        param_copy);
   }
+  copy->optional_params = g_list_reverse (copy->optional_params);
+
   return copy;
 }
 
@@ -172,7 +180,8 @@ fs_codec_copy (const FsCodec * codec)
  * fs_codec_list_destroy:
  * @codec_list: a GList of #FsCodec to delete
  *
- * Deletes a list of #FsCodec structures and the list itself
+ * Deletes a list of #FsCodec structures and the list itself.
+ * Does nothing on %NULL lists.
  */
 void
 fs_codec_list_destroy (GList *codec_list)
@@ -182,7 +191,7 @@ fs_codec_list_destroy (GList *codec_list)
 
   for (lp = codec_list; lp; lp = g_list_next (lp)) {
     codec = (FsCodec *) lp->data;
-    fs_codec_destroy(codec);
+    fs_codec_destroy (codec);
     lp->data = NULL;
   }
   g_list_free (codec_list);
@@ -262,7 +271,7 @@ fs_codec_list_from_keyfile (const gchar *filename, GError **error)
     goto out;
 
   for (i=0; i < groups_count && groups[i]; i++) {
-    FsCodec *codec = g_new0 (FsCodec, 1);
+    FsCodec *codec = g_slice_new0 (FsCodec);
     gchar **keys = NULL;
     gsize keys_count;
     int j;
@@ -293,10 +302,10 @@ fs_codec_list_from_keyfile (const gchar *filename, GError **error)
       goto next_codec;
     }
 
-    if ((next_tok - groups[i]) == 5 /* strlen("audio") */ &&
+    if ((next_tok - groups[i]) == 5 /* strlen ("audio") */ &&
         !g_ascii_strncasecmp ("audio", groups[i], 5))
       codec->media_type = FS_MEDIA_TYPE_AUDIO;
-    else if ((next_tok - groups[i]) == 5 /* strlen("video") */ &&
+    else if ((next_tok - groups[i]) == 5 /* strlen ("video") */ &&
         !g_ascii_strncasecmp ("video", groups[i], 5))
       codec->media_type = FS_MEDIA_TYPE_VIDEO;
     else {
@@ -348,7 +357,7 @@ fs_codec_list_from_keyfile (const gchar *filename, GError **error)
         }
 
       } else {
-        FsCodecParameter *param = g_new0 (FsCodecParameter, 1);
+        FsCodecParameter *param = g_slice_new (FsCodecParameter);
 
         param->name = g_strdup (keys[j]);
         param->value = g_key_file_get_string (keyfile, groups[i], keys[j],
@@ -356,14 +365,14 @@ fs_codec_list_from_keyfile (const gchar *filename, GError **error)
         if (gerror) {
           g_free (param->name);
           g_free (param->value);
-          g_free (param);
+          g_slice_free (FsCodecParameter, param);
           goto keyerror;
         }
 
         if (!param->name || !param->value) {
           g_free (param->name);
           g_free (param->value);
-          g_free (param);
+          g_slice_free (FsCodecParameter, param);
         } else {
           codec->optional_params = g_list_append (codec->optional_params,
               param);
@@ -412,8 +421,6 @@ fs_media_type_to_string (FsMediaType media_type)
     return "audio";
   } else if (media_type == FS_MEDIA_TYPE_VIDEO) {
     return "video";
-  } else if (media_type == FS_MEDIA_TYPE_APPLICATION) {
-    return "application";
   } else {
     return NULL;
   }
@@ -430,9 +437,14 @@ fs_media_type_to_string (FsMediaType media_type)
 gchar *
 fs_codec_to_string (const FsCodec *codec)
 {
-  GString *string = g_string_new ("");
+  GString *string = NULL;
   GList *item;
   gchar *charstring;
+
+  if (codec == NULL)
+    return g_strdup ("(NULL)");
+
+  string = g_string_new ("");
 
   g_string_printf (string, "%d: %s %s clock:%d channels:%d",
       codec->id, fs_media_type_to_string (codec->media_type),
@@ -458,7 +470,7 @@ fs_codec_to_string (const FsCodec *codec)
  * It compares GLists of FarsightCodecParameter
  */
 static gboolean
-compare_lists(GList *list1, GList *list2)
+compare_lists (GList *list1, GList *list2)
 {
   GList *item1;
 
@@ -486,14 +498,15 @@ compare_lists(GList *list1, GList *list2)
 
 
 /**
- * fs_codec_are_equal
+ * fs_codec_are_equal:
  * @codec1: First codec
  * @codec2: Second codec
  *
  * Compare two codecs, it will declare two codecs to be identical even
- * if their optional parameters are in a different order.
+ * if their optional parameters are in a different order. %NULL encoding names
+ * are ignored.
  *
- * Return value: TRUE of the codecs are identical, FALSE otherwise
+ * Return value: %TRUE of the codecs are identical, %FALSE otherwise
  */
 
 gboolean
@@ -509,6 +522,8 @@ fs_codec_are_equal (const FsCodec *codec1, const FsCodec *codec2)
       codec1->media_type != codec2->media_type ||
       codec1->clock_rate != codec2->clock_rate ||
       codec1->channels != codec2->channels ||
+      codec1->encoding_name == NULL ||
+      codec2->encoding_name == NULL ||
       strcmp (codec1->encoding_name, codec2->encoding_name))
     return FALSE;
 
@@ -524,58 +539,106 @@ fs_codec_are_equal (const FsCodec *codec1, const FsCodec *codec2)
 }
 
 /**
- * fs_codec_to_gst_caps
- * @codec: A #FsCodec to be converted
+ * fs_codec_list_are_equal:
+ * @list1: a #GList of #FsCodec
+ * @list2: a #GList of #FsCodec
  *
- * This function converts a #FsCodec to a fixed #GstCaps with media type
- * application/x-rtp.
+ * Verifies if two glist of fscodecs are identical
  *
- * Return value: A newly-allocated #GstCaps
+ * Returns: %TRUE if they are identical, %FALSE otherwise
  */
 
-GstCaps *
-fs_codec_to_gst_caps (const FsCodec *codec)
+gboolean
+fs_codec_list_are_equal (GList *list1, GList *list2)
 {
-  GstCaps *caps;
-  GstStructure *structure;
-  GList *item;
 
-  gchar *encoding_name = g_ascii_strup (codec->encoding_name, -1);
-  if (!g_ascii_strcasecmp (encoding_name, "H263-N800")) {
-    g_free (encoding_name);
-    encoding_name = g_strdup ("H263-1998");
+  for (;
+       list1 && list2;
+       list1 = g_list_next (list1), list2 = g_list_next (list2))
+  {
+    if (!fs_codec_are_equal (list1->data, list2->data))
+      return FALSE;
   }
-  structure = gst_structure_new ("application/x-rtp",
-    "encoding-name", G_TYPE_STRING, encoding_name,
-    NULL);
-  g_free (encoding_name);
 
-  if (codec->clock_rate)
-    gst_structure_set (structure,
-      "clock-rate", G_TYPE_INT, codec->clock_rate, NULL);
+  if (list1 == NULL && list2 == NULL)
+    return TRUE;
+  else
+    return FALSE;
+}
 
-  if (fs_media_type_to_string (codec->media_type))
-    gst_structure_set (structure, "media", G_TYPE_STRING,
-      fs_media_type_to_string (codec->media_type), NULL);
+/**
+ * fs_codec_add_optional_parameter:
+ * @codec: The #FsCodec to add the parameter to
+ * @name: The name of the optional parameter
+ * @value: The value of the optional parameter
+ *
+ * This function adds an new optional parameter to a #FsCodec
+ */
 
-  if (codec->id >= 0 && codec->id < 128)
-    gst_structure_set (structure, "payload", G_TYPE_INT, codec->id, NULL);
+void
+fs_codec_add_optional_parameter (FsCodec *codec,
+    const gchar *name,
+    const gchar *value)
+{
+  FsCodecParameter *param;
 
-  if (codec->channels)
-    gst_structure_set (structure, "channels", G_TYPE_INT, codec->channels,
-      NULL);
+  g_return_if_fail (name != NULL && value != NULL);
 
-  for (item = codec->optional_params;
+  param = g_slice_new (FsCodecParameter);
+
+  param->name = g_strdup (name);
+  param->value = g_strdup (value);
+
+  codec->optional_params = g_list_append (codec->optional_params, param);
+}
+
+/**
+ * fs_codec_remove_optional_parameter:
+ * @codec: a #FsCodec
+ * @param: a pointer to the #FsCodecParameter to remove
+ *
+ * Removes an optional parameter from a codec
+ */
+
+void
+fs_codec_remove_optional_parameter (FsCodec *codec,
+    FsCodecParameter *param)
+{
+  g_free (param->name);
+  g_free (param->value);
+  g_slice_free (FsCodecParameter, param);
+  codec->optional_params = g_list_remove (codec->optional_params, param);
+}
+
+/**
+ * fs_codec_get_optional_parameter:
+ * @codec: a #FsCodec
+ * @name: The name of the parameter to search for
+ * @value: The value of the parameter to search for or %NULL for any value
+ *
+ * Finds the #FsCodecParameter in the #FsCodec that has the requested name
+ * and, if not %NULL, the requested value
+ *
+ * Returns: the #FsCodecParameter from the #FsCodec or %NULL
+ */
+
+FsCodecParameter *
+fs_codec_get_optional_parameter (FsCodec *codec, gchar *name, gchar *value)
+{
+  GList *item = NULL;
+
+  g_return_val_if_fail (codec != NULL, NULL);
+  g_return_val_if_fail (name != NULL, NULL);
+
+  for (item = g_list_first (codec->optional_params);
        item;
-       item = g_list_next (item)) {
+       item = g_list_next (item))
+  {
     FsCodecParameter *param = item->data;
-    gchar *lower_name = g_ascii_strdown (param->name, -1);
-    gst_structure_set (structure, lower_name, G_TYPE_STRING, param->value,
-      NULL);
-    g_free (lower_name);
+    if (!g_ascii_strcasecmp (param->name, name) &&
+        (value == NULL || !g_ascii_strcasecmp (param->value, value)))
+      return param;
   }
 
-  caps = gst_caps_new_full (structure, NULL);
-
-  return caps;
+  return NULL;
 }

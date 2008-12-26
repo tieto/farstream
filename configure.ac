@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, cvs and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for cvs/prerelease
-AC_INIT(Farsight2, 0.0.2,
+AC_INIT(Farsight2, 0.0.3,
     https://bugs.freedesktop.org/enter_bug.cgi?product=Farsight,
     farsight2)
 
@@ -101,7 +101,8 @@ AC_SUBST(GST_INSTALL_PLUGINS_HELPER)
 dnl these are all the gst plug-ins, compilable without additional libs
 FS2_PLUGINS_ALL=" \
 	fsrtpconference \
-	funnel
+	funnel \
+ 	videoanyrate
 	"
 AC_SUBST(FS2_PLUGINS_ALL)
 
@@ -183,7 +184,6 @@ AM_CONDITIONAL(HAVE_VALGRIND, test ! "x$VALGRIND_PATH" = "xno")
 
 dnl check for documentation tools
 GTK_DOC_CHECK([1.8])
-AS_PATH_PYTHON([2.1])
 dnl AG_GST_PLUGIN_DOCS([1.8],[2.1])
 
 dnl Make automake happy with per-target flags
@@ -208,6 +208,15 @@ dnl *** checks for types/defines ***
 
 dnl *** checks for structures ***
 
+AC_CHECK_MEMBER([struct ip_mreqn.imr_ifindex],
+	        [AC_DEFINE([HAVE_IP_MREQN], [1], [Have the struct ip_mreqn])],
+		[],
+		[
+#include <sys/socket.h>
+#include <netinet/in.h>
+])
+
+
 dnl *** checks for compiler characteristics ***
 
 dnl *** checks for library functions ***
@@ -218,7 +227,7 @@ AG_GST_CHECK_FUNCTION
 dnl *** checks for dependency libraries ***
 
 dnl GLib is required
-AG_GST_GLIB_CHECK([2.12])
+AG_GST_GLIB_CHECK([2.14])
 
 dnl checks for gstreamer
 dnl uninstalled is selected preferentially -- see pkg-config(1)
@@ -349,7 +358,8 @@ AC_ARG_ENABLE([python],
 	WANT_PYTHON=yes)
 if test "x$WANT_PYTHON" = "xyes"; then
    AM_PATH_PYTHON
-   PKG_CHECK_MODULES(PYFARSIGHT, [ 	pygobject-2.0 >= 2.12.0 
+   AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR(could not find Python headers)])
+   PKG_CHECK_MODULES(PYFARSIGHT, [ 	pygobject-2.0 >= 2.12.0
 					gst-python-0.10 >= 0.10.10
 					pygtk-2.0 >= 2.10 ] )
 fi
@@ -364,6 +374,7 @@ farsight2.pc
 gst/Makefile
 gst/fsrtpconference/Makefile
 gst/funnel/Makefile
+gst/videoanyrate/Makefile
 gst-libs/Makefile
 gst-libs/gst/Makefile
 gst-libs/gst/farsight/Makefile

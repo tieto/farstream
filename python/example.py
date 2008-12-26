@@ -1,7 +1,9 @@
+import pygst
+pygst.require('0.10')
 import farsight, gst, gobject, sys
 
 loop = gobject.MainLoop()
-pipeline = gst.Pipeline ()
+pipeline = gst.Pipeline()
 
 conference = gst.element_factory_make ("fsrtpconference")
 conference.set_property ("sdes-cname", sys.argv[1] + "@1.2.3.4")
@@ -11,8 +13,9 @@ session = conference.new_session (farsight.MEDIA_TYPE_VIDEO)
 participant = conference.new_participant (sys.argv[2]+"@1.2.3.4")
 stream = session.new_stream (participant, farsight.DIRECTION_BOTH, "multicast")
 
-stream.set_remote_codecs(session.get_property("local-codecs"))
-
+stream.set_remote_codecs([farsight.Codec(96, "H263-1998",
+                                         farsight.MEDIA_TYPE_VIDEO,
+                                         90000)])
 candidate = farsight.Candidate()
 candidate.ip = "224.0.0.110"
 candidate.port = 3442
@@ -20,21 +23,20 @@ candidate.component_id = farsight.COMPONENT_RTP
 candidate.proto = farsight.NETWORK_PROTOCOL_UDP
 candidate.type = farsight.CANDIDATE_TYPE_MULTICAST
 candidate.ttl = 1
-stream.add_remote_candidate (candidate)
 
-candidate.port = 3443
-candidate.component_id = farsight.COMPONENT_RTCP
-stream.add_remote_candidate (candidate)
+candidate2 = candidate.copy()
+candidate2.port = 3443
+candidate2.component_id = farsight.COMPONENT_RTCP
+stream.set_remote_candidates ([candidate, candidate2])
 
-videosource = gst.element_factory_make ("videotestsrc")
-videosource.set_property("is-live", True)
+videosource = gst.parse_bin_from_description (sys.argv[3] + " ! videoscale", True)
 pipeline.add (videosource)
 videosource.get_pad ("src").link(session.get_property ("sink-pad"))
 
 funnel = False
 def _src_pad_added (stream, pad, codec, pipeline):
     global funnel
-    print "src pad added for stream %s %s" % (stream.get_property("participant").get_property("cname"), codec.to_string())
+    print "src pad %s added for stream %s %s" % (pad.get_name(), stream.get_property("participant").get_property("cname"), codec.to_string())
     if not funnel:
         funnel = gst.element_factory_make("fsfunnel")
         videosink = gst.element_factory_make ("xvimagesink")
@@ -47,9 +49,5 @@ def _src_pad_added (stream, pad, codec, pipeline):
 
 stream.connect ("src-pad-added", _src_pad_added, pipeline)
 
-def startme(p):
-    p.set_state(gst.STATE_PLAYING)
-gobject.idle_add (startme, pipeline)
-
-
+pipeline.set_state(gst.STATE_PLAYING)
 loop.run()

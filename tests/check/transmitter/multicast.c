@@ -141,6 +141,8 @@ run_multicast_transmitter_test (gint n_parameters, GParameter *params)
   FsTransmitter *trans;
   FsStreamTransmitter *st;
   FsCandidate *tmpcand = NULL;
+  GList *candidates = NULL;
+  GstBus *bus = NULL;
 
   loop = g_main_loop_new (NULL, FALSE);
   trans = fs_transmitter_new ("multicast", 2, &error);
@@ -164,11 +166,15 @@ run_multicast_transmitter_test (gint n_parameters, GParameter *params)
 
   ts_fail_if (st == NULL, "No stream transmitter created, yet error is NULL");
 
+  bus = gst_element_get_bus (pipeline);
+  gst_bus_add_watch (bus, bus_error_callback, NULL);
+  gst_object_unref (bus);
+
   ts_fail_unless (g_signal_connect (st, "new-active-candidate-pair",
       G_CALLBACK (_new_active_candidate_pair), trans),
     "Coult not connect new-active-candidate-pair signal");
   ts_fail_unless (g_signal_connect (st, "error",
-      G_CALLBACK (_stream_transmitter_error), NULL),
+      G_CALLBACK (stream_transmitter_error), NULL),
     "Could not connect error signal");
 
   g_idle_add (_start_pipeline, pipeline);
@@ -177,23 +183,23 @@ run_multicast_transmitter_test (gint n_parameters, GParameter *params)
       FS_CANDIDATE_TYPE_MULTICAST, FS_NETWORK_PROTOCOL_UDP,
       "224.0.0.110", 2322);
   tmpcand->ttl = 1;
-  if (!fs_stream_transmitter_add_remote_candidate (st, tmpcand, &error))
-    ts_fail ("Error setting the remote candidate: %p %s", error,
-        error ? error->message : "NO ERROR SET");
-  ts_fail_unless (error == NULL, "Error is not null after successful candidate"
-      " addition");
-  fs_candidate_destroy (tmpcand);
+
+  candidates = g_list_prepend (candidates, tmpcand);
 
   tmpcand = fs_candidate_new ("L2", FS_COMPONENT_RTCP,
       FS_CANDIDATE_TYPE_MULTICAST, FS_NETWORK_PROTOCOL_UDP,
       "224.0.0.110", 2323);
   tmpcand->ttl = 1;
-  if (!fs_stream_transmitter_add_remote_candidate (st, tmpcand, &error))
-    ts_fail ("Error setting the remote candidate: %p %s", error,
+
+  candidates = g_list_prepend (candidates, tmpcand);
+
+  if (!fs_stream_transmitter_set_remote_candidates (st, candidates, &error))
+    ts_fail ("Error setting the remote candidates: %p %s", error,
         error ? error->message : "NO ERROR SET");
   ts_fail_unless (error == NULL, "Error is not null after successful candidate"
       " addition");
-  fs_candidate_destroy (tmpcand);
+
+  fs_candidate_list_destroy (candidates);
 
   g_main_run (loop);
 
@@ -235,18 +241,28 @@ _find_multicast_capable_address (void)
     if (ifa->ifa_addr == NULL || ifa->ifa_addr->sa_family != AF_INET)
       continue;
 
+    if (retval)
+    {
+      g_free (retval);
+      retval = NULL;
+      g_debug ("Disabling test, more than one multicast capable interface");
+      break;
+    }
+
     retval = g_strdup (
         inet_ntoa (((struct sockaddr_in *) ifa->ifa_addr)->sin_addr));
     g_debug ("Sending from %s on interface %s", retval, ifa->ifa_name);
-    break;
   }
 
   freeifaddrs (results);
 
+  if (retval == NULL)
+    g_message ("Skipping test of prefered-local-candidates, no multicast"
+        " capable interface found");
   return retval;
 
 #else
-  g_warning ("This system does not have getifaddrs,"
+  g_message ("This system does not have getifaddrs,"
       " this test will be disabled");
   return NULL;
 #endif
@@ -260,13 +276,9 @@ GST_START_TEST (test_multicasttransmitter_run_local_candidates)
   gchar *address = _find_multicast_capable_address ();
 
   if (address == NULL)
-  {
-    g_warning ("Skipping test of prefered-local-candidates, no multicast"
-        " capable interface found");
     return;
-  }
 
-  memset (params, 0, sizeof(GParameter) * 1);
+  memset (params, 0, sizeof (GParameter) * 1);
 
   candidate = fs_candidate_new ("L1", FS_COMPONENT_RTP, FS_CANDIDATE_TYPE_HOST,
       FS_NETWORK_PROTOCOL_UDP, address, 0);

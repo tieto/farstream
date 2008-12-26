@@ -9,12 +9,10 @@ FsSession
 
 </para>
 
-
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
-
 
 <!-- ##### SECTION Stability_Level ##### -->
 
@@ -67,19 +65,25 @@ FsSession
 @arg3: 
 @arg4: 
 
-<!-- ##### SIGNAL FsSession::new-negotiated-codecs ##### -->
+<!-- ##### ARG FsSession:codec-preferences ##### -->
 <para>
 
 </para>
 
-@fssession: the object which received the signal.
-
-<!-- ##### SIGNAL FsSession::send-codec-changed ##### -->
+<!-- ##### ARG FsSession:codecs ##### -->
 <para>
 
 </para>
 
-@fssession: the object which received the signal.
+<!-- ##### ARG FsSession:codecs-ready ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsSession:codecs-without-config ##### -->
+<para>
+
+</para>
 
 <!-- ##### ARG FsSession:current-send-codec ##### -->
 <para>
@@ -91,22 +95,7 @@ FsSession
 
 </para>
 
-<!-- ##### ARG FsSession:local-codecs ##### -->
-<para>
-
-</para>
-
-<!-- ##### ARG FsSession:local-codecs-config ##### -->
-<para>
-
-</para>
-
 <!-- ##### ARG FsSession:media-type ##### -->
-<para>
-
-</para>
-
-<!-- ##### ARG FsSession:negotiated-codecs ##### -->
 <para>
 
 </para>
@@ -126,6 +115,7 @@ FsSession
 @start_telephony_event: 
 @stop_telephony_event: 
 @set_send_codec: 
+@set_codec_preferences: 
 
 <!-- ##### FUNCTION fs_session_new_stream ##### -->
 <para>
@@ -171,6 +161,17 @@ FsSession
 
 @session: 
 @send_codec: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_session_set_codec_preferences ##### -->
+<para>
+
+</para>
+
+@session: 
+@codec_preferences: 
 @error: 
 @Returns: 
 

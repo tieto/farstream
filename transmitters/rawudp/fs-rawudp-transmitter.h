@@ -27,15 +27,21 @@
 
 #include <gst/farsight/fs-transmitter.h>
 
+#include <gst/netbuffer/gstnetbuffer.h>
+
 #include <gst/gst.h>
 
-#include <arpa/inet.h>
+#ifdef G_OS_WIN32
+# include <ws2tcpip.h>
+#else /*G_OS_WIN32*/
+# include <arpa/inet.h>
+#endif /*G_OS_WIN32*/
 
 G_BEGIN_DECLS
 
 /* TYPE MACROS */
 #define FS_TYPE_RAWUDP_TRANSMITTER \
-  (fs_rawudp_transmitter_get_type())
+  (fs_rawudp_transmitter_get_type ())
 #define FS_RAWUDP_TRANSMITTER(obj) \
   (G_TYPE_CHECK_INSTANCE_CAST((obj), FS_TYPE_RAWUDP_TRANSMITTER, \
     FsRawUdpTransmitter))
@@ -86,9 +92,12 @@ struct _FsRawUdpTransmitter
 /* Private declaration */
 typedef struct _UdpPort UdpPort;
 
+typedef void (*FsRawUdpAddressUniqueCallbackFunc) (gboolean unique,
+    const GstNetAddress *address, gpointer user_data);
+
 GType fs_rawudp_transmitter_get_type (void);
 
-
+GST_DEBUG_CATEGORY_EXTERN (fs_rawudp_transmitter_debug);
 
 UdpPort *fs_rawudp_transmitter_get_udpport (FsRawUdpTransmitter *trans,
     guint component_id,
@@ -124,6 +133,16 @@ gboolean fs_rawudp_transmitter_udpport_is_pad (UdpPort *udpport,
 
 gint fs_rawudp_transmitter_udpport_get_port (UdpPort *udpport);
 
+
+gboolean fs_rawudp_transmitter_udpport_add_known_address (UdpPort *udpport,
+    GstNetAddress *address,
+    FsRawUdpAddressUniqueCallbackFunc callback,
+    gpointer user_data);
+
+void fs_rawudp_transmitter_udpport_remove_known_address (UdpPort *udpport,
+    GstNetAddress *address,
+    FsRawUdpAddressUniqueCallbackFunc callback,
+    gpointer user_data);
 
 
 G_END_DECLS

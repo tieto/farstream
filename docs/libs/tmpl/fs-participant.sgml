@@ -9,12 +9,10 @@ FsParticipant
 
 </para>
 
-
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
-
 
 <!-- ##### SECTION Stability_Level ##### -->
 
@@ -34,6 +32,7 @@ FsParticipant
 @arg1: 
 @arg2: 
 @arg3: 
+@arg4: 
 
 <!-- ##### ARG FsParticipant:cname ##### -->
 <para>
@@ -46,4 +45,20 @@ FsParticipant
 </para>
 
 @parent_class: 
+
+<!-- ##### MACRO FS_PARTICIPANT_DATA_LOCK ##### -->
+<para>
+
+</para>
+
+@participant: 
+
+
+<!-- ##### MACRO FS_PARTICIPANT_DATA_UNLOCK ##### -->
+<para>
+
+</para>
+
+@participant: 
+
 

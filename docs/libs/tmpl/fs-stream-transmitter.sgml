@@ -9,12 +9,10 @@ FsStreamTransmitter
 
 </para>
 
-
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
-
 
 <!-- ##### SECTION Stability_Level ##### -->
 
@@ -34,6 +32,15 @@ FsStreamTransmitter
 @arg1: 
 @arg2: 
 @arg3: 
+
+<!-- ##### SIGNAL FsStreamTransmitter::known-source-packet-received ##### -->
+<para>
+
+</para>
+
+@fsstreamtransmitter: the object which received the signal.
+@arg1: 
+@Param3: 
 
 <!-- ##### SIGNAL FsStreamTransmitter::local-candidates-prepared ##### -->
 <para>
@@ -59,6 +66,20 @@ FsStreamTransmitter
 @fsstreamtransmitter: the object which received the signal.
 @arg1: 
 
+<!-- ##### SIGNAL FsStreamTransmitter::state-changed ##### -->
+<para>
+
+</para>
+
+@fsstreamtransmitter: the object which received the signal.
+@arg1: 
+@arg2: 
+
+<!-- ##### ARG FsStreamTransmitter:associate-on-source ##### -->
+<para>
+
+</para>
+
 <!-- ##### ARG FsStreamTransmitter:preferred-local-candidates ##### -->
 <para>
 
@@ -75,39 +96,49 @@ FsStreamTransmitter
 </para>
 
 @parent_class: 
-@add_remote_candidate: 
-@remote_candidates_added: 
-@select_candidate_pair: 
+@set_remote_candidates: 
+@force_remote_candidates: 
+@gather_local_candidates: 
+@stop: 
 
-<!-- ##### FUNCTION fs_stream_transmitter_add_remote_candidate ##### -->
+<!-- ##### FUNCTION fs_stream_transmitter_set_remote_candidates ##### -->
 <para>
 
 </para>
 
 @streamtransmitter: 
-@candidate: 
+@candidates: 
 @error: 
 @Returns: 
 
 
-<!-- ##### FUNCTION fs_stream_transmitter_remote_candidates_added ##### -->
+<!-- ##### FUNCTION fs_stream_transmitter_gather_local_candidates ##### -->
 <para>
 
 </para>
 
 @streamtransmitter: 
-
-
-<!-- ##### FUNCTION fs_stream_transmitter_select_candidate_pair ##### -->
-<para>
-
-</para>
-
-@streamtransmitter: 
-@lfoundation: 
-@rfoundation: 
 @error: 
 @Returns: 
+
+
+<!-- ##### FUNCTION fs_stream_transmitter_force_remote_candidates ##### -->
+<para>
+
+</para>
+
+@streamtransmitter: 
+@remote_candidates: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_stream_transmitter_stop ##### -->
+<para>
+
+</para>
+
+@streamtransmitter: 
 
 
 <!-- ##### FUNCTION fs_stream_transmitter_emit_error ##### -->

@@ -15,20 +15,15 @@ Requirements
 ============
 
 Build time:
- - gstreamer 0.10.17
- - gst-plugins-base 0.10.17
- - glib 2.12
+ - gstreamer 0.10.18
+ - gst-plugins-base 0.10.18
+ - glib 2.16
 
-Run time:
+Run time for the RTP plugin:
  All of the build time requirements (except gtk-doc) plus
  - gst-plugins-good 0.10.7
- - gst-plugins-bad 0.10.6
- - gst-plugins-farsight 0.12.6
-
-Usable video requires H.263 (encoder + decoder) from gst-ffmpeg
-Multicast requires gst-plugins-bad CVS (or 0.10.7) + the patch from 
-http://bugzilla.gnome.org/show_bug.cgi?id=520626
-
+ - gst-plugins-bad 0.10.7
+ - gst-plugins-farsight 0.12.9
 
 For the python module and examples you also need:
  - Python 2.1

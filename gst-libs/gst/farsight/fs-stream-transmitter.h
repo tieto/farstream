@@ -34,7 +34,7 @@ G_BEGIN_DECLS
 
 /* TYPE MACROS */
 #define FS_TYPE_STREAM_TRANSMITTER \
-  (fs_stream_transmitter_get_type())
+  (fs_stream_transmitter_get_type ())
 #define FS_STREAM_TRANSMITTER(obj) \
   (G_TYPE_CHECK_INSTANCE_CAST((obj), FS_TYPE_STREAM_TRANSMITTER, \
                               FsStreamTransmitter))
@@ -57,9 +57,11 @@ typedef struct _FsStreamTransmitterPrivate FsStreamTransmitterPrivate;
 /**
  * FsStreamTransmitterClass:
  * @parent_class: Our parent
- * @add_remote_candidate: Sets the remote candidate
- * @remote_candidates_added: Tell the stream to start the connectivity checks
- * @select_candidate_pair: Select the candidate pair
+ * @set_remote_candidates: Sets the remote candidates
+ * @force_remote_candidates: Forces certain remote candidates
+ * @gather_local_candidates: Starts the gathering of local candidates
+ * @stop: Stop the stream transmitter synchronously (does any Gst stopping
+ * that needs to be done)
  *
  * You must override the add_remote_candidate in a subclass
  */
@@ -69,14 +71,15 @@ struct _FsStreamTransmitterClass
   GObjectClass parent_class;
 
   /*virtual functions */
-  gboolean (*add_remote_candidate) (FsStreamTransmitter *streamtransmitter,
-                                    FsCandidate *candidate, GError **error);
+  gboolean (*set_remote_candidates) (FsStreamTransmitter *streamtransmitter,
+                                     GList *candidates, GError **error);
 
-  void (*remote_candidates_added) (FsStreamTransmitter *streamtransmitter);
-
-  gboolean (*select_candidate_pair) (FsStreamTransmitter *streamtransmitter,
-                                     gchar *lfoundation, gchar *rfoundation,
-                                     GError **error);
+  gboolean (*force_remote_candidates) (FsStreamTransmitter *streamtransmitter,
+      GList *remote_candidates,
+      GError **error);
+  gboolean (*gather_local_candidates) (FsStreamTransmitter *streamtransmitter,
+                                       GError **error);
+  void (*stop) (FsStreamTransmitter *streamtransmitter);
 
   /*< private >*/
   gpointer _padding[8];
@@ -98,20 +101,25 @@ struct _FsStreamTransmitter
 
 GType fs_stream_transmitter_get_type (void);
 
-gboolean fs_stream_transmitter_add_remote_candidate (
+gboolean fs_stream_transmitter_set_remote_candidates (
     FsStreamTransmitter *streamtransmitter,
-    FsCandidate *candidate, GError **error);
+    GList *candidates,
+    GError **error);
 
-void fs_stream_transmitter_remote_candidates_added (
-    FsStreamTransmitter *streamtransmitter);
+gboolean fs_stream_transmitter_force_remote_candidates (
+    FsStreamTransmitter *streamtransmitter,
+    GList *remote_candidates,
+    GError **error);
 
-gboolean fs_stream_transmitter_select_candidate_pair (
-    FsStreamTransmitter *streamtransmitter, gchar *lfoundation,
-    gchar *rfoundation, GError **error);
+gboolean
+fs_stream_transmitter_gather_local_candidates (
+    FsStreamTransmitter *streamtransmitter,
+    GError **error);
+
+void fs_stream_transmitter_stop (FsStreamTransmitter *streamtransmitter);
 
 void fs_stream_transmitter_emit_error (FsStreamTransmitter *streamtransmitter,
   gint error_no, gchar *error_msg, gchar *debug_msg);
-
 
 G_END_DECLS
 

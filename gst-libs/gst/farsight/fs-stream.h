@@ -51,9 +51,34 @@ typedef enum
   FS_DIRECTION_BOTH = FS_DIRECTION_SEND | FS_DIRECTION_RECV
 } FsStreamDirection;
 
+/**
+ * FsStreamState:
+ * @FS_STREAM_STATE_FAILED: connectivity checks have been completed,
+ *                          but connectivity was not established
+ * @FS_STREAM_STATE_DISCONNECTED: no activity scheduled
+ * @FS_STREAM_STATE_GATHERING: gathering local candidates
+ * @FS_STREAM_STATE_CONNECTING: establishing connectivity
+ * @FS_STREAM_STATE_CONNECTED: at least one working candidate pair
+ * @FS_STREAM_STATE_READY: ICE concluded, candidate pair selection is now final
+ *
+ * These are the possible states of a stream, a simple multicast stream
+ * could only be in "disconnected" or "ready" state.
+ * An stream using an ICE transmitter would use all of these.
+ */
+
+typedef enum
+{
+  FS_STREAM_STATE_FAILED,
+  FS_STREAM_STATE_DISCONNECTED,
+  FS_STREAM_STATE_GATHERING,
+  FS_STREAM_STATE_CONNECTING,
+  FS_STREAM_STATE_CONNECTED,
+  FS_STREAM_STATE_READY
+} FsStreamState;
+
 /* TYPE MACROS */
 #define FS_TYPE_STREAM \
-  (fs_stream_get_type())
+  (fs_stream_get_type ())
 #define FS_STREAM(obj) \
   (G_TYPE_CHECK_INSTANCE_CAST((obj), FS_TYPE_STREAM, FsStream))
 #define FS_STREAM_CLASS(klass) \
@@ -74,9 +99,8 @@ typedef struct _FsStreamPrivate FsStreamPrivate;
 /**
  * FsStreamClass:
  * @parent_class: Our parent
- * @add_remote_candidate: Adds a remote candidate
- * @remote_candidates_added: Tell the stream to start the connectivity checks
- * @select_candidate_pair: Select the candidate pair
+ * @set_remote_candidates: Set sthe remote candidates
+ * @force_remote_candidates: Forces certain remote candidates
  * @set_remote_codecs: Sets the list of remote codecs
  *
  * You must override add_remote_candidate in a subclass.
@@ -88,14 +112,13 @@ struct _FsStreamClass
   GObjectClass parent_class;
 
   /*virtual functions */
-  gboolean (*add_remote_candidate) (FsStream *stream,
-                                    FsCandidate *candidate,
-                                    GError **error);
+  gboolean (*set_remote_candidates) (FsStream *stream,
+                                     GList *candidates,
+                                     GError **error);
 
-  void (*remote_candidates_added) (FsStream *stream);
-
-  gboolean (*select_candidate_pair) (FsStream *stream, gchar *lfoundation,
-                                     gchar *rfoundation, GError **error);
+  gboolean (*force_remote_candidates) (FsStream *stream,
+      GList *remote_candidates,
+      GError **error);
 
   gboolean (*set_remote_codecs) (FsStream *stream,
                                  GList *remote_codecs, GError **error);
@@ -122,14 +145,13 @@ struct _FsStream
 
 GType fs_stream_get_type (void);
 
-gboolean fs_stream_add_remote_candidate (FsStream *stream,
-                                         FsCandidate *candidate,
-                                         GError **error);
+gboolean fs_stream_set_remote_candidates (FsStream *stream,
+                                          GList *candidates,
+                                          GError **error);
 
-void fs_stream_remote_candidates_added (FsStream *stream);
-
-gboolean fs_stream_select_candidate_pair (FsStream *stream, gchar *lfoundation,
-                                          gchar *rfoundation, GError **error);
+gboolean fs_stream_force_remote_candidates (FsStream *stream,
+    GList *remote_candidates,
+    GError **error);
 
 gboolean fs_stream_set_remote_codecs (FsStream *stream,
                                       GList *remote_codecs, GError **error);

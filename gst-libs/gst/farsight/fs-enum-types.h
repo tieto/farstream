@@ -25,6 +25,8 @@ GType fs_dtmf_method_get_type (void);
 /* enumerations from "fs-stream.h" */
 GType fs_stream_direction_get_type (void);
 #define FS_TYPE_STREAM_DIRECTION (fs_stream_direction_get_type())
+GType fs_stream_state_get_type (void);
+#define FS_TYPE_STREAM_STATE (fs_stream_state_get_type())
 /* enumerations from "fs-conference-iface.h" */
 GType fs_error_get_type (void);
 #define FS_TYPE_ERROR (fs_error_get_type())

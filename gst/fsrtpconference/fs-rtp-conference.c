@@ -66,13 +66,12 @@ enum
 };
 
 
-static GstElementDetails fs_rtp_conference_details = {
+static const GstElementDetails fs_rtp_conference_details =
+GST_ELEMENT_DETAILS (
   "Farsight RTP Conference",
   "Generic/Bin/RTP",
   "A Farsight RTP Conference",
-  "Olivier Crete <olivier.crete@collabora.co.uk>"
-};
-
+  "Olivier Crete <olivier.crete@collabora.co.uk>");
 
 
 static GstStaticPadTemplate fs_rtp_conference_sink_template =
@@ -142,6 +141,14 @@ static void _rtpbin_on_bye_ssrc (GstElement *rtpbin,
     guint ssrc,
     gpointer user_data);
 
+static void
+_remove_session (gpointer user_data,
+    GObject *where_the_object_was);
+static void
+_remove_participant (gpointer user_data,
+    GObject *where_the_object_was);
+
+
 static void fs_rtp_conference_handle_message (
     GstBin * bin,
     GstMessage * message);
@@ -166,6 +173,7 @@ static void
 fs_rtp_conference_dispose (GObject * object)
 {
   FsRtpConference *self = FS_RTP_CONFERENCE (object);
+  GList *item;
 
   if (self->priv->disposed)
     return;
@@ -174,6 +182,22 @@ fs_rtp_conference_dispose (GObject * object)
     gst_object_unref (self->gstrtpbin);
     self->gstrtpbin = NULL;
   }
+
+  GST_OBJECT_LOCK (object);
+  for (item = g_list_first (self->priv->sessions);
+       item;
+       item = g_list_next (item))
+    g_object_weak_unref (G_OBJECT (item->data), _remove_session, self);
+  g_list_free (self->priv->sessions);
+  self->priv->sessions = NULL;
+
+  for (item = g_list_first (self->priv->participants);
+       item;
+       item = g_list_next (item))
+    g_object_weak_unref (G_OBJECT (item->data), _remove_participant, self);
+  g_list_free (self->priv->participants);
+  self->priv->participants = NULL;
+  GST_OBJECT_UNLOCK (object);
 
   self->priv->disposed = TRUE;
 
@@ -220,13 +244,6 @@ fs_rtp_conference_class_init (FsRtpConferenceClass * klass)
   gobject_class->get_property =
     GST_DEBUG_FUNCPTR (fs_rtp_conference_get_property);
 
-  gst_element_class_set_details (gstelement_class, &fs_rtp_conference_details);
-
-  gst_element_class_add_pad_template (gstelement_class,
-            gst_static_pad_template_get (&fs_rtp_conference_sink_template));
-  gst_element_class_add_pad_template (gstelement_class,
-            gst_static_pad_template_get (&fs_rtp_conference_src_template));
-
   g_object_class_install_property (gobject_class, PROP_SDES_CNAME,
       g_param_spec_string ("sdes-cname", "Canonical name",
           "The CNAME for the RTP sessions",
@@ -266,6 +283,14 @@ fs_rtp_conference_class_init (FsRtpConferenceClass * klass)
 static void
 fs_rtp_conference_base_init (gpointer g_class)
 {
+  GstElementClass *gstelement_class = GST_ELEMENT_CLASS (g_class);
+
+  gst_element_class_add_pad_template (gstelement_class,
+            gst_static_pad_template_get (&fs_rtp_conference_sink_template));
+  gst_element_class_add_pad_template (gstelement_class,
+            gst_static_pad_template_get (&fs_rtp_conference_src_template));
+
+  gst_element_class_set_details (gstelement_class, &fs_rtp_conference_details);
 }
 
 static void
@@ -405,7 +430,7 @@ _rtpbin_request_pt_map (GstElement *element, guint session_id,
     caps = fs_rtp_session_request_pt_map (session, pt);
     g_object_unref (session);
   } else {
-    GST_WARNING_OBJECT(self,"GstRtpBin %p tried to request the caps for "
+    GST_WARNING_OBJECT (self,"GstRtpBin %p tried to request the caps for "
                        " payload type %u for non-existent session %u",
                        element, pt, session_id);
   }
@@ -486,7 +511,7 @@ fs_rtp_conference_get_session_by_id_locked (FsRtpConference *self,
     FsRtpSession *session = item->data;
 
     if (session->id == session_id) {
-      g_object_ref(session);
+      g_object_ref (session);
       break;
     }
   }
@@ -685,7 +710,7 @@ fs_rtp_conference_handle_message (
           fs_rtp_session_associate_ssrc_cname (session, ssrc, cname);
           g_object_unref (session);
         } else {
-          GST_WARNING_OBJECT(self,"Our GstRtpBin announced a new association"
+          GST_WARNING_OBJECT (self,"Our GstRtpBin announced a new association"
               "for non-existent session %u for ssrc: %u and cname %s",
               session_id, ssrc, cname);
         }
@@ -732,3 +757,73 @@ fs_rtp_conference_change_state (GstElement *element, GstStateChange transition)
     return result;
   }
 }
+
+
+
+/**
+ * fs_codec_to_gst_caps
+ * @codec: A #FsCodec to be converted
+ *
+ * This function converts a #FsCodec to a fixed #GstCaps with media type
+ * application/x-rtp.
+ *
+ * Return value: A newly-allocated #GstCaps or %NULL if the codec was %NULL
+ */
+
+GstCaps *
+fs_codec_to_gst_caps (const FsCodec *codec)
+{
+  GstCaps *caps;
+  GstStructure *structure;
+  GList *item;
+
+  if (codec == NULL)
+    return NULL;
+
+  structure = gst_structure_new ("application/x-rtp", NULL);
+
+  if (codec->encoding_name)
+  {
+    gchar *encoding_name = g_ascii_strup (codec->encoding_name, -1);
+
+    if (!g_ascii_strcasecmp (encoding_name, "H263-N800")) {
+      g_free (encoding_name);
+      encoding_name = g_strdup ("H263-1998");
+    }
+
+    gst_structure_set (structure,
+        "encoding-name", G_TYPE_STRING, encoding_name,
+        NULL);
+    g_free (encoding_name);
+  }
+
+  if (codec->clock_rate)
+    gst_structure_set (structure,
+      "clock-rate", G_TYPE_INT, codec->clock_rate, NULL);
+
+  if (fs_media_type_to_string (codec->media_type))
+    gst_structure_set (structure, "media", G_TYPE_STRING,
+      fs_media_type_to_string (codec->media_type), NULL);
+
+  if (codec->id >= 0 && codec->id < 128)
+    gst_structure_set (structure, "payload", G_TYPE_INT, codec->id, NULL);
+
+  if (codec->channels)
+    gst_structure_set (structure, "channels", G_TYPE_INT, codec->channels,
+      NULL);
+
+  for (item = codec->optional_params;
+       item;
+       item = g_list_next (item)) {
+    FsCodecParameter *param = item->data;
+    gchar *lower_name = g_ascii_strdown (param->name, -1);
+    gst_structure_set (structure, lower_name, G_TYPE_STRING, param->value,
+      NULL);
+    g_free (lower_name);
+  }
+
+  caps = gst_caps_new_full (structure, NULL);
+
+  return caps;
+}
+

@@ -36,6 +36,37 @@
  * contained in the same conference will be synchronised together during
  * playback.
  *
+ *
+ * This will communicate asynchronous events to the user through #GstMessage
+ * of type #GST_MESSAGE_ELEMENT sent over the #GstBus.
+ * </para>
+ * <refsect2><title>The "<literal>farsight-send-codec-changed</literal>"
+ *   message</title>
+ * |[
+ * "session"          #FsSession          The session that emits the message
+ * "codec"            #FsCodec            The new send codec
+ * ]|
+ * <para>
+ * This message is sent on the bus when the value of the
+ * #FsSession:current-send-codec property changes.
+ * </para>
+ * </refsect2>
+ * <refsect2><title>The "<literal>farsight-codecs-changed</literal>"
+ *  message</title>
+ * |[
+ * "session"          #FsSession          The session that emits the message
+ * ]|
+ * <para>
+ * This message is sent on the bus when the value of the
+ * #FsSession:codecs or #FsSession:codecs-without-config properties change.
+ * If one is using codecs that have configuration data that needs to be
+ * transmitted reliably, once should check the value of #FsSession:codecs-ready
+ * property to make sure all of the codecs configuration are ready and have been
+ * discovered before using the codecs. If its not %TRUE, one should wait for the
+ * next "farsight-codecs-changed" message until reading the codecs.
+ * </para>
+ * </refsect2>
+ * <para>
  */
 
 #ifdef HAVE_CONFIG_H
@@ -56,9 +87,7 @@
 /* Signals */
 enum
 {
-  ERROR,
-  SEND_CODEC_CHANGED,
-  NEW_NEGOTIATED_CODECS,
+  ERROR_SIGNAL,
   LAST_SIGNAL
 };
 
@@ -69,20 +98,23 @@ enum
   PROP_MEDIA_TYPE,
   PROP_ID,
   PROP_SINK_PAD,
-  PROP_LOCAL_CODECS,
-  PROP_LOCAL_CODECS_CONFIG,
-  PROP_NEGOTIATED_CODECS,
-  PROP_CURRENT_SEND_CODEC
+  PROP_CODEC_PREFERENCES,
+  PROP_CODECS,
+  PROP_CODECS_WITHOUT_CONFIG,
+  PROP_CURRENT_SEND_CODEC,
+  PROP_CODECS_READY
 };
 
+/*
 struct _FsSessionPrivate
 {
 };
 
-G_DEFINE_ABSTRACT_TYPE(FsSession, fs_session, G_TYPE_OBJECT);
-
 #define FS_SESSION_GET_PRIVATE(o)  \
    (G_TYPE_INSTANCE_GET_PRIVATE ((o), FS_TYPE_SESSION, FsSessionPrivate))
+*/
+
+G_DEFINE_ABSTRACT_TYPE(FsSession, fs_session, G_TYPE_OBJECT);
 
 static void fs_session_get_property (GObject *object,
                                      guint prop_id,
@@ -154,75 +186,96 @@ fs_session_class_init (FsSessionClass *klass)
         G_PARAM_READABLE));
 
   /**
-   * FsSession:local-codecs:
+   * FsSession:codec-preferences:
    *
-   * This is the list of local codecs that have been auto-detected based on
-   * installed GStreamer plugins. This list is unchanged during the lifecycle of
-   * the session unless local-codecs-config is changed by the user. It is a
-   * #GList of #FsCodec. User must free this codec list using
+   * This is the current preferences list for the local codecs. It is
+   * set by the user to specify the codec options and priorities. The user may
+   * change its value with fs_session_set_codec_preferences() at any time
+   * during a session. It is a #GList of #FsCodec.
+   * The user must free this codec list using fs_codec_list_destroy() when done.
+   *
+   * The payload type may be a valid dynamic PT (96-127), %FS_CODEC_ID_DISABLE
+   * or %FS_CODEC_ID_ANY. If the encoding name is "reserve-pt", then the
+   * payload type of the codec will be "reserved" and not be used by any
+   * dynamically assigned payload type.
+   */
+  g_object_class_install_property (gobject_class,
+      PROP_CODEC_PREFERENCES,
+      g_param_spec_boxed ("codec-preferences",
+        "List of user preferences for the codecs",
+        "A GList of FsCodecs that allows user to set his codec options and"
+        " priorities",
+        FS_TYPE_CODEC_LIST,
+        G_PARAM_READABLE));
+
+  /**
+   * FsSession:codecs:
+   *
+   * This is the list of codecs used for this session. It will include the
+   * codecs and payload type used to receive media on this session. It will
+   * also include any configuration parameter that must be transmitted reliably
+   * for the other end to decode the content.
+   *
+   * It may change when the codec preferences are set, when codecs are set
+   * on a #FsStream in this session, when a #FsStream is destroyed or
+   * asynchronously when new config data is discovered.
+   *
+   * You can only assume that the configuration parameters are valid when
+   * the #FsSession:codecs-ready property is %TRUE.
+   * The "farsight-codecs-changed" message will be emitted whenever the value
+   * of this property changes.
+   *
+   * It is a #GList of #FsCodec. User must free this codec list using
    * fs_codec_list_destroy() when done.
    *
    */
   g_object_class_install_property (gobject_class,
-      PROP_LOCAL_CODECS,
-      g_param_spec_boxed ("local-codecs",
-        "List of local codecs",
-        "A GList of FsCodecs that can be used for sending",
+      PROP_CODECS,
+      g_param_spec_boxed ("codecs",
+        "List of codecs",
+        "A GList of FsCodecs indicating the codecs for this session",
         FS_TYPE_CODEC_LIST,
         G_PARAM_READABLE));
 
   /**
-   * FsSession:local-codecs-config:
+   * FsSession:codecs-without-config:
    *
-   * This is the current configuration list for the local codecs. It is usually
-   * set by the user to specify the codec options and priorities. The user may
-   * change this value during an ongoing session. Note that doing this can cause
-   * the local-codecs to be changed. Therefore this requires the user to fetch
-   * the new local-codecs and renegotiate them with the peers. It is a #GList
-   * of #FsCodec. User must free this codec list using fs_codec_list_destroy()
-   * when done.
+   * This is the same list of codecs as #FsSession:codecs without
+   * the configuration information that describes the data sent. It is suitable
+   * for configurations where a list of codecs is shared by many senders.
+   * If one is using codecs such as Theora, Vorbis or H.264 that require
+   * such information to be transmitted, the configuration data should be
+   * included in the stream and retransmitted regularly.
    *
-   */
-  g_object_class_install_property (gobject_class,
-      PROP_LOCAL_CODECS_CONFIG,
-      g_param_spec_boxed ("local-codecs-config",
-        "List of user configuration for local codecs",
-        "A GList of FsCodecs that allows user to set his codec options and"
-        " priorities",
-        FS_TYPE_CODEC_LIST,
-        G_PARAM_READWRITE));
-
-  /**
-   * FsSession:negotiated-codecs:
+   * It may change when the codec preferences are set, when codecs are set
+   * on a #FsStream in this session, when a #FsStream is destroyed or
+   * asynchronously when new config data is discovered.
    *
-   * This list indicated what codecs have been successfully negotiated with the
-   * session participants. This list can change based on participants
-   * joining/leaving the session. It is a #GList of #FsCodec. User must free
-   * this codec list using fs_codec_list_destroy() when done.
-   * The #FsSession::new-negotiated-codecs signal is emited when the content
+   * The "farsight-codecs-changed" message will be emitted whenever the value
    * of this property changes.
    *
+   * It is a #GList of #FsCodec. User must free this codec list using
+   * fs_codec_list_destroy() when done.
+   *
    */
   g_object_class_install_property (gobject_class,
-      PROP_NEGOTIATED_CODECS,
-      g_param_spec_boxed ("negotiated-codecs",
-        "List of negotiated codecs",
-        "A GList of FsCodecs indicating the codecs that have been successfully"
-        " negotiated",
-        FS_TYPE_CODEC_LIST,
-        G_PARAM_READABLE));
+      PROP_CODECS_WITHOUT_CONFIG,
+      g_param_spec_boxed ("codecs-without-config",
+          "List of codecs without the configuration data",
+          "A GList of FsCodecs indicating the codecs for this session without "
+          "any configuration data",
+          FS_TYPE_CODEC_LIST,
+          G_PARAM_READABLE));
 
   /**
    * FsSession:current-send-codec:
    *
    * Indicates the currently active send codec. A user can change the active
    * send codec by calling fs_session_set_send_codec(). The send codec could
-   * also be automatically changed by Farsight. In both cases the
-   * ::send-codec-changed signal will be emited. This property is an
+   * also be automatically changed by Farsight. This property is an
    * #FsCodec. User must free the codec using fs_codec_destroy() when done.
-   * The #FsSession::send-codec-changed signal is emitted when the content
-   * of this property changes.
-   *
+   * The "farsight-send-codec-changed" message is emitted on the bus when
+   * the value of this property changes.
    */
   g_object_class_install_property (gobject_class,
       PROP_CURRENT_SEND_CODEC,
@@ -231,6 +284,26 @@ fs_session_class_init (FsSessionClass *klass)
         "An FsCodec indicating the currently active send codec",
         FS_TYPE_CODEC,
         G_PARAM_READABLE));
+
+  /**
+   * FsSession:codecs-ready
+   *
+   * Some codecs that have configuration data that needs to be sent reliably
+   * may need to be initialized from actual data before being ready. If your
+   * application uses such codecs, wait until this property is %TRUE before
+   * using the #FsSession:codecs
+   * property. If the value if not %TRUE, the "farsight-codecs-changed"
+   * message will be emitted when it becomes %TRUE. You should re-check
+   * the value of this property when you receive the message.
+   */
+  g_object_class_install_property (gobject_class,
+      PROP_CODECS_READY,
+      g_param_spec_boolean ("codecs-ready",
+          "Indicates if the codecs are ready",
+          "Indicates if the codecs are ready or if their configuration is"
+          " still being discovered",
+          TRUE,
+          G_PARAM_READABLE));
 
   /**
    * FsSession::error:
@@ -244,56 +317,15 @@ fs_session_class_init (FsSessionClass *klass)
    * thread. Applications should listen to the GstBus for errors.
    *
    */
-  signals[ERROR] = g_signal_new ("error",
+  signals[ERROR_SIGNAL] = g_signal_new ("error",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
       0,
       NULL,
       NULL,
-      _fs_marshal_VOID__OBJECT_INT_STRING_STRING,
-      G_TYPE_NONE, 4, G_TYPE_OBJECT, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING);
-
-  /**
-   * FsSession::send-codec-changed:
-   * @self: #FsSession that emitted the signal
-   *
-   * This signal is emitted when the active send codec has been changed
-   * manually by the user or automatically for QoS purposes. The user should
-   * look at the #FsSession:current-send-codec property in the session to
-   * determine what the new active codec is
-   *
-   */
-  signals[SEND_CODEC_CHANGED] = g_signal_new ("send-codec-changed",
-      G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST,
-      0,
-      NULL,
-      NULL,
-      g_cclosure_marshal_VOID__VOID,
-      G_TYPE_NONE, 0);
-
-  /**
-   * FsSession::new-negotiated-codecs:
-   * @self: #FsSession that emitted the signal
-   *
-   * This signal is emitted when the negotiated codecs list has changed for this
-   * session. This can happen when new remote codecs are added to the session
-   * (i.e. When a session is being initialized or a new participant joins an
-   * existing session). The user should look at the
-   * #FsSession:negotiated-codecs property to determine what the new
-   * negotiated codec list is.
-   *
-   */
-  signals[NEW_NEGOTIATED_CODECS] = g_signal_new ("new-negotiated-codecs",
-      G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST,
-      0,
-      NULL,
-      NULL,
-      g_cclosure_marshal_VOID__VOID,
-      G_TYPE_NONE, 0);
-
-  // g_type_class_add_private (klass, sizeof (FsSessionPrivate));
+      _fs_marshal_VOID__OBJECT_ENUM_STRING_STRING,
+      G_TYPE_NONE, 4, G_TYPE_OBJECT, FS_TYPE_ERROR, G_TYPE_STRING,
+      G_TYPE_STRING);
 }
 
 static void
@@ -309,6 +341,19 @@ fs_session_get_property (GObject *object,
                          GValue *value,
                          GParamSpec *pspec)
 {
+  switch (prop_id)
+  {
+    case PROP_CODECS_READY:
+      g_value_set_boolean (value, TRUE);
+      break;
+
+    default:
+      GST_WARNING ("Subclass %s of FsSession does not override the %s property"
+          " getter",
+          G_OBJECT_TYPE_NAME(object),
+          g_param_spec_get_name (pspec));
+      break;
+  }
 }
 
 static void
@@ -317,22 +362,26 @@ fs_session_set_property (GObject *object,
                          const GValue *value,
                          GParamSpec *pspec)
 {
+  GST_WARNING ("Subclass %s of FsSession does not override the %s property"
+      " setter",
+      G_OBJECT_TYPE_NAME(object),
+      g_param_spec_get_name (pspec));
 }
 
-void
+static void
 fs_session_error_forward (GObject *signal_src,
-                          gint error_no, gchar *error_msg,
+                          FsError error_no, gchar *error_msg,
                           gchar *debug_msg, FsSession *session)
 {
   /* We just need to forward the error signal including a ref to the stream
    * object (signal_src) */
-  g_signal_emit (session, signals[ERROR], 0, signal_src, error_no, error_msg,
-      debug_msg);
+  g_signal_emit (session, signals[ERROR_SIGNAL], 0, signal_src, error_no,
+      error_msg, debug_msg);
 }
 
 /**
  * fs_session_new_stream:
- * @session: an #FsSession
+ * @session: a #FsSession
  * @participant: #FsParticipant of a participant for the new stream
  * @direction: #FsStreamDirection describing the direction of the new stream that will
  * be created for this participant
@@ -358,31 +407,30 @@ fs_session_new_stream (FsSession *session, FsParticipant *participant,
 {
   FsSessionClass *klass = FS_SESSION_GET_CLASS (session);
   FsStream *new_stream = NULL;
+
+  g_return_val_if_fail (session, NULL);
+  g_return_val_if_fail (klass, NULL);
+  g_return_val_if_fail (klass->new_stream, NULL);
   g_return_val_if_fail (g_type_is_a (G_OBJECT_TYPE (session),
               FS_TYPE_SESSION), NULL);
 
-  if (klass->new_stream) {
-    new_stream = klass->new_stream (session, participant, direction,
+  new_stream = klass->new_stream (session, participant, direction,
       transmitter, stream_transmitter_n_parameters,
       stream_transmitter_parameters, error);
 
-    if (!new_stream)
-      return NULL;
+  if (!new_stream)
+    return NULL;
 
-    /* Let's catch all stream errors and forward them */
-    g_signal_connect (new_stream, "error",
+  /* Let's catch all stream errors and forward them */
+  g_signal_connect (new_stream, "error",
         G_CALLBACK (fs_session_error_forward), session);
 
-  } else {
-    g_set_error (error, FS_ERROR, FS_ERROR_NOT_IMPLEMENTED,
-      "new_stream not defined for %s", G_OBJECT_TYPE_NAME (session));
-  }
   return new_stream;
 }
 
 /**
  * fs_session_start_telephony_event:
- * @session: an #FsSession
+ * @session: a #FsSession
  * @event: A #FsStreamDTMFEvent or another number defined at
  * http://www.iana.org/assignments/audio-telephone-event-registry
  * @volume: The volume in dBm0 without the negative sign. Should be between
@@ -391,7 +439,7 @@ fs_session_new_stream (FsSession *session, FsParticipant *participant,
  *
  * This function will start sending a telephony event (such as a DTMF
  * tone) on the #FsSession. You have to call the function
- * fs_session_stop_telephony_event() to stop it. 
+ * fs_session_stop_telephony_event() to stop it.
  * This function will use any available method, if you want to use a specific
  * method only, use fs_session_start_telephony_event_full()
  *
@@ -441,13 +489,13 @@ fs_session_stop_telephony_event (FsSession *session, FsDTMFMethod method)
 
 /**
  * fs_session_set_send_codec:
- * @session: an #FsSession
- * @send_codec: an #FsCodec representing the codec to send
+ * @session: a #FsSession
+ * @send_codec: a #FsCodec representing the codec to send
  * @error: location of a #GError, or %NULL if no error occured
  *
  * This function will set the currently being sent codec for all streams in this
- * session. The given #FsCodec must be taken directly from the #negotiated-codecs
- * property of the session. If the given codec is not in the negotiated codecs
+ * session. The given #FsCodec must be taken directly from the #codecs
+ * property of the session. If the given codec is not in the codecs
  * list, @error will be set and %FALSE will be returned. The @send_codec will be
  * copied so it must be free'd using fs_codec_destroy() when done.
  *
@@ -462,6 +510,7 @@ fs_session_set_send_codec (FsSession *session, FsCodec *send_codec,
   if (klass->set_send_codec) {
     return klass->set_send_codec (session, send_codec, error);
   } else {
+    GST_WARNING ("set_send_codec not defined in class");
     g_set_error (error, FS_ERROR, FS_ERROR_NOT_IMPLEMENTED,
       "set_send_codec not defined in class");
   }
@@ -469,9 +518,49 @@ fs_session_set_send_codec (FsSession *session, FsCodec *send_codec,
 }
 
 /**
+ * fs_session_set_codec_preferences:
+ * @session: a #FsSession
+ * @codec_preferences: a #GList of #FsCodec with the desired configuration
+ * @error: location of a #GError, or %NULL if no error occured
+ *
+ * Set the list of desired codec preferences. The user may
+ * change this value during an ongoing session. Note that doing this can cause
+ * the codecs to change. Therefore this requires the user to fetch
+ * the new codecs and renegotiate them with the peers. It is a #GList
+ * of #FsCodec. The changes are immediately effective.
+ * The function does not take ownership of the list.
+ *
+ * The payload type may be a valid dynamic PT (96-127), %FS_CODEC_ID_DISABLE
+ * or %FS_CODEC_ID_ANY. If the encoding name is "reserve-pt", then the
+ * payload type of the codec will be "reserved" and not be used by any
+ * dynamically assigned payload type.
+ *
+ * If the list of specifications would invalidate all codecs, an error will
+ * be returned.
+ *
+ * Returns: %TRUE on success, %FALSE on error.
+ */
+gboolean
+fs_session_set_codec_preferences (FsSession *session,
+    GList *codec_preferences,
+    GError **error)
+{
+  FsSessionClass *klass = FS_SESSION_GET_CLASS (session);
+
+  if (klass->set_codec_preferences) {
+    return klass->set_codec_preferences (session, codec_preferences, error);
+  } else {
+    GST_WARNING ("set_send_preferences not defined in class");
+    g_set_error (error, FS_ERROR, FS_ERROR_NOT_IMPLEMENTED,
+        "set_codec_preferences not defined in class");
+  }
+  return FALSE;
+}
+
+/**
  * fs_session_emit_error:
  * @session: #FsSession on which to emit the error signal
- * @error_no: The number of the error
+ * @error_no: The number of the error of type #FsError
  * @error_msg: Error message to be displayed to user
  * @debug_msg: Debugging error message
  *
@@ -482,6 +571,6 @@ void
 fs_session_emit_error (FsSession *session, gint error_no,
                        gchar *error_msg, gchar *debug_msg)
 {
-  g_signal_emit (session, signals[ERROR], 0, session, error_no, error_msg,
-                 debug_msg);
+  g_signal_emit (session, signals[ERROR_SIGNAL], 0, session, error_no,
+      error_msg, debug_msg);
 }

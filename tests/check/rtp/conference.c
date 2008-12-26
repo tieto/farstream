@@ -30,6 +30,12 @@
 
 #include "generic.h"
 
+static struct SimpleTestStream *
+find_pointback_stream (
+    struct SimpleTestConference *dat,
+    struct SimpleTestConference *target);
+
+
 struct SimpleTestConference **dats;
 GMainLoop *loop;
 int count = 0;
@@ -37,6 +43,7 @@ int count = 0;
 // Options
 gboolean select_last_codec = FALSE;
 gboolean reset_to_last_codec = FALSE;
+gboolean no_rtcp = FALSE;
 
 #define WAITING_ON_LAST_CODEC   (1<<0)
 #define SHOULD_BE_LAST_CODEC    (1<<1)
@@ -49,7 +56,7 @@ GST_START_TEST (test_rtpconference_new)
   struct SimpleTestConference *dat = NULL;
   struct SimpleTestStream *st = NULL;
   guint id = 999;
-  GList *local_codecs = NULL;
+  GList *codecs = NULL;
   FsMediaType *media_type;
   GstPad *sinkpad = NULL;
   gchar *str = NULL;
@@ -60,7 +67,7 @@ GST_START_TEST (test_rtpconference_new)
   FsStreamDirection dir;
 
   dat = setup_simple_conference (1, "fsrtpconference", "bob@127.0.0.1");
-  st = simple_conference_add_stream (dat, dat);
+  st = simple_conference_add_stream (dat, dat, 0, NULL);
 
   g_object_get (dat->conference, "sdes-cname", &str, NULL);
   ts_fail_unless (!strcmp (str, "bob@127.0.0.1"), "Conference CNAME is wrong");
@@ -72,7 +79,7 @@ GST_START_TEST (test_rtpconference_new)
 
   g_object_get (dat->session,
       "id", &id,
-      "local-codecs", &local_codecs,
+      "codecs", &codecs,
       "media-type", &media_type,
       "sink-pad", &sinkpad,
       "conference", &conf,
@@ -80,8 +87,8 @@ GST_START_TEST (test_rtpconference_new)
 
   ts_fail_unless (id == 1, "The id of the first session should be 1 not %d",
       id);
-  ts_fail_if (local_codecs == NULL, "Local codecs should not be NULL");
-  fs_codec_list_destroy (local_codecs);
+  ts_fail_if (codecs == NULL, "Codecs should not be NULL");
+  fs_codec_list_destroy (codecs);
   ts_fail_unless (media_type == FS_MEDIA_TYPE_AUDIO, "Media type isnt audio,"
       " its %d", media_type);
   ts_fail_if (sinkpad == NULL, "Sink pad should not be null");
@@ -120,6 +127,55 @@ GST_START_TEST (test_rtpconference_new)
 }
 GST_END_TEST;
 
+
+static void
+_new_local_candidate (FsStream *stream, FsCandidate *candidate)
+{
+  struct SimpleTestStream *st = g_object_get_data (G_OBJECT (stream),
+      "SimpleTestStream");
+  gboolean ret;
+  GError *error = NULL;
+  struct SimpleTestStream *other_st = find_pointback_stream (st->target,
+      st->dat);
+  GList *candidates = NULL;
+
+  if (candidate->component_id == FS_COMPONENT_RTCP && no_rtcp)
+    return;
+
+  g_debug ("%d:%d: Setting remote candidate for component %d",
+      other_st->dat->id,
+      other_st->target->id,
+      candidate->component_id);
+
+  candidates = g_list_prepend (NULL, candidate);
+  ret = fs_stream_set_remote_candidates (other_st->stream, candidates, &error);
+  g_list_free (candidates);
+
+  if (error)
+    ts_fail ("Error while adding candidate: (%s:%d) %s",
+      g_quark_to_string (error->domain), error->code, error->message);
+
+  ts_fail_unless (ret == TRUE, "No detailed error from add_remote_candidate");
+
+}
+
+static void
+_current_send_codec_changed (FsSession *session, FsCodec *codec)
+{
+  struct SimpleTestConference *dat = NULL;
+  FsConference *conf = NULL;
+  gchar *str = NULL;
+
+  g_object_get (session, "conference", &conf, NULL);
+  dat = g_object_get_data (G_OBJECT (conf), "dat");
+  gst_object_unref (conf);
+
+  str = fs_codec_to_string (codec);
+  g_debug ("%d: New send codec: %s", dat->id, str);
+  g_free (str);
+}
+
+
 static gboolean
 _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
 {
@@ -128,21 +184,142 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
   switch (GST_MESSAGE_TYPE (message))
   {
     case GST_MESSAGE_ELEMENT:
-      if (gst_implements_interface_check (GST_MESSAGE_SRC (message),
-              FS_TYPE_CONFERENCE))
       {
-        const GValue *errorvalue, *debugvalue;
-        gint errno;
+        const GstStructure *s = gst_message_get_structure (message);
+        ts_fail_if (s==NULL, "NULL structure in element message");
+        if (gst_structure_has_name (s, "farsight-error"))
+        {
+          const GValue *value;
+          FsError errorno;
+          const gchar *error, *debug;
 
-        gst_structure_get_int (message->structure, "error-no", &errno);
-        errorvalue = gst_structure_get_value (message->structure, "error-msg");
-        debugvalue = gst_structure_get_value (message->structure, "debug-msg");
+          ts_fail_unless (
+              gst_implements_interface_check (GST_MESSAGE_SRC (message),
+                  FS_TYPE_CONFERENCE),
+              "Received farsight-error from non-farsight element");
 
-        ts_fail ("Error on BUS (%d) %s .. %s", errno,
-            g_value_get_string (errorvalue),
-            g_value_get_string (debugvalue));
-      }
+          ts_fail_unless (
+              gst_structure_has_field_typed (s, "src-object", G_TYPE_OBJECT),
+              "farsight-error structure has no src-object field");
+          ts_fail_unless (
+              gst_structure_has_field_typed (s, "error-no", FS_TYPE_ERROR),
+              "farsight-error structure has no src-object field");
+          ts_fail_unless (
+              gst_structure_has_field_typed (s, "error-msg", G_TYPE_STRING),
+              "farsight-error structure has no src-object field");
+          ts_fail_unless (
+              gst_structure_has_field_typed (s, "debug-msg", G_TYPE_STRING),
+              "farsight-error structure has no src-object field");
 
+          value = gst_structure_get_value (s, "error-no");
+          errorno = g_value_get_enum (value);
+          error = gst_structure_get_string (s, "error-msg");
+          debug = gst_structure_get_string (s, "debug-msg");
+
+          ts_fail ("Error on BUS (%d) %s .. %s", errorno, error, debug);
+        }
+        else if (gst_structure_has_name (s, "farsight-new-local-candidate"))
+        {
+          FsStream *stream;
+          FsCandidate *candidate;
+          const GValue *value;
+
+          ts_fail_unless (
+              gst_implements_interface_check (GST_MESSAGE_SRC (message),
+                  FS_TYPE_CONFERENCE),
+              "Received farsight-error from non-farsight element");
+
+          ts_fail_unless (
+              gst_structure_has_field_typed (s, "stream", FS_TYPE_STREAM),
+              "farsight-new-local-candidate structure has no stream field");
+          ts_fail_unless (
+              gst_structure_has_field_typed (s, "candidate", FS_TYPE_CANDIDATE),
+              "farsight-new-local-candidate structure has no candidate field");
+
+          value = gst_structure_get_value (s, "stream");
+          stream = g_value_get_object (value);
+
+          value = gst_structure_get_value (s, "candidate");
+          candidate = g_value_get_boxed (value);
+
+          ts_fail_unless (stream && candidate, "new-local-candidate with NULL"
+              " stream(%p) or candidate(%p)", stream, candidate);
+
+          _new_local_candidate (stream, candidate);
+        }
+        else if (gst_structure_has_name (s,
+                "farsight-new-active-candidate-pair"))
+        {
+          FsStream *stream;
+          FsCandidate *local_candidate, *remote_candidate;
+          const GValue *value;
+
+          ts_fail_unless (
+              gst_implements_interface_check (GST_MESSAGE_SRC (message),
+                  FS_TYPE_CONFERENCE),
+              "Received farsight-error from non-farsight element");
+
+          ts_fail_unless (
+              gst_structure_has_field_typed (s, "stream", FS_TYPE_STREAM),
+              "farsight-new-active-candidate-pair structure"
+              " has no stream field");
+          ts_fail_unless (
+              gst_structure_has_field_typed (s, "local-candidate",
+                  FS_TYPE_CANDIDATE),
+              "farsight-new-active-candidate-pair structure"
+              " has no local-candidate field");
+          ts_fail_unless (
+              gst_structure_has_field_typed (s, "remote-candidate",
+                  FS_TYPE_CANDIDATE),
+              "farsight-new-active-candidate-pair structure"
+              " has no remote-candidate field");
+
+          value = gst_structure_get_value (s, "stream");
+          stream = g_value_get_object (value);
+          value = gst_structure_get_value (s, "local-candidate");
+          local_candidate = g_value_get_boxed (value);
+          value = gst_structure_get_value (s, "remote-candidate");
+          remote_candidate = g_value_get_boxed (value);
+
+          ts_fail_unless (stream && local_candidate && remote_candidate,
+              "new-local-candidate with NULL stream(%p)"
+              " or local_candidate(%p) or remote_candidate(%p)",
+              stream, local_candidate, remote_candidate);
+        }
+        else if (gst_structure_has_name (s,
+                "farsight-current-send-codec-changed"))
+        {
+          FsSession *session;
+          FsCodec *codec;
+          const GValue *value;
+
+          ts_fail_unless (
+              gst_implements_interface_check (GST_MESSAGE_SRC (message),
+                  FS_TYPE_CONFERENCE),
+              "Received farsight-error from non-farsight element");
+
+          ts_fail_unless (
+              gst_structure_has_field_typed (s, "session", FS_TYPE_SESSION),
+              "farsight-current-send-codec-changed structure"
+              " has no session field");
+          ts_fail_unless (
+              gst_structure_has_field_typed (s, "codec",
+                  FS_TYPE_CODEC),
+              "");
+
+          value = gst_structure_get_value (s, "session");
+          session = g_value_get_object (value);
+          value = gst_structure_get_value (s, "codec");
+          codec = g_value_get_boxed (value);
+
+          ts_fail_unless (session && codec,
+              "current-send-codec-changed with NULL session(%p) or codec(%p)",
+              session, codec);
+
+          _current_send_codec_changed (session, codec);
+        }
+
+       }
       break;
     case GST_MESSAGE_ERROR:
       {
@@ -177,41 +354,24 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
 }
 
 static void
-_send_codec_changed (FsSession *session, gpointer user_data)
-{
-  struct SimpleTestConference *dat = user_data;
-  FsCodec *codec = NULL;
-  gchar *str = NULL;
-
-  g_object_get (session, "current-send-codec", &codec, NULL);
-  ts_fail_if (codec == NULL, "Could not get new send codec");
-
-  str = fs_codec_to_string (codec);
-  g_debug ("%d: New send codec: %s", dat->id, str);
-  g_free (str);
-
-  fs_codec_destroy (codec);
-}
-
-static void
 _handoff_handler (GstElement *element, GstBuffer *buffer, GstPad *pad,
   gpointer user_data)
 {
   struct SimpleTestStream *st = user_data;
   int i;
   gboolean stop = TRUE;
-  GList *negotiated_codecs = NULL;
+  GList *codecs = NULL;
 
   g_object_get (st->dat->session,
-      "negotiated-codecs", &negotiated_codecs,
+      "codecs", &codecs,
       NULL);
 
-  ts_fail_if (negotiated_codecs == NULL, "Could not get negotiated codecs");
+  ts_fail_if (codecs == NULL, "Could not get codecs");
 
   if (st->flags & WAITING_ON_LAST_CODEC)
   {
     if (fs_codec_are_equal (
-        g_list_last (negotiated_codecs)->data,
+        g_list_last (codecs)->data,
         g_object_get_data (G_OBJECT (element), "codec")))
     {
       st->flags &= ~WAITING_ON_LAST_CODEC;
@@ -223,12 +383,12 @@ _handoff_handler (GstElement *element, GstBuffer *buffer, GstPad *pad,
     {
       gchar *str = fs_codec_to_string (
           g_object_get_data (G_OBJECT (element), "codec"));
-      gchar *str2 = fs_codec_to_string (g_list_last (negotiated_codecs)->data);
+      gchar *str2 = fs_codec_to_string (g_list_last (codecs)->data);
       g_debug ("not yet the last codec, skipping (we have %s, we want %s)",
           str, str2);
       g_free (str);
       g_free (str2);
-      fs_codec_list_destroy (negotiated_codecs);
+      fs_codec_list_destroy (codecs);
       return;
     }
   }
@@ -237,17 +397,17 @@ _handoff_handler (GstElement *element, GstBuffer *buffer, GstPad *pad,
   if (select_last_codec || st->flags & SHOULD_BE_LAST_CODEC)
     ts_fail_unless (
         fs_codec_are_equal (
-            g_list_last (negotiated_codecs)->data,
+            g_list_last (codecs)->data,
             g_object_get_data (G_OBJECT (element), "codec")),
-        "The handoff handler got a buffer from the wrong codec");
+        "The handoff handler got a buffer from the wrong codec (last)");
   else
     ts_fail_unless (
         fs_codec_are_equal (
-            g_list_first (negotiated_codecs)->data,
+            g_list_first (codecs)->data,
             g_object_get_data (G_OBJECT (element), "codec")),
         "The handoff handler got a buffer from the wrong codec");
 
-  fs_codec_list_destroy (negotiated_codecs);
+  fs_codec_list_destroy (codecs);
 
 
   st->buffer_count++;
@@ -287,10 +447,10 @@ _handoff_handler (GstElement *element, GstBuffer *buffer, GstPad *pad,
       gchar *str = NULL;
 
       g_object_get (st->target->session,
-          "negotiated-codecs", &nego_codecs,
+          "codecs", &nego_codecs,
           NULL);
 
-      ts_fail_if (nego_codecs == NULL, "No negotiated codecs ??");
+      ts_fail_if (nego_codecs == NULL, "No codecs");
       ts_fail_if (g_list_length (nego_codecs) < 2, "Only one negotiated codec");
 
       str = fs_codec_to_string (g_list_last (nego_codecs)->data);
@@ -333,6 +493,10 @@ _src_pad_added (FsStream *self, GstPad *pad, FsCodec *codec, gpointer user_data)
       "async", TRUE,
       NULL);
 
+  ts_fail_if (codec->encoding_name == NULL,
+      "Got invalid codec without an encoding_name with id %u"
+      " and clock_rate %u", codec->id, codec->clock_rate);
+
   g_object_set_data (G_OBJECT (fakesink), "codec", codeccopy);
   g_object_weak_ref (G_OBJECT (fakesink),
       (GWeakNotify) fs_codec_destroy, codeccopy);
@@ -357,17 +521,6 @@ _src_pad_added (FsStream *self, GstPad *pad, FsCodec *codec, gpointer user_data)
 }
 
 
-static void
-_new_active_candidate_pair (FsStream *stream, FsCandidate *local,
-    FsCandidate *remote, gpointer user_data)
-{
-  ts_fail_if (local == NULL, "Local candidate NULL");
-  ts_fail_if (remote == NULL, "Remote candidate NULL");
-
-  if (local->component_id != 1)
-    return;
-}
-
 static struct SimpleTestStream *
 find_pointback_stream (
     struct SimpleTestConference *dat,
@@ -389,30 +542,6 @@ find_pointback_stream (
   return NULL;
 }
 
-static void
-_new_local_candidate (FsStream *stream, FsCandidate *candidate,
-    gpointer user_data)
-{
-  struct SimpleTestStream *st = user_data;
-  gboolean ret;
-  GError *error = NULL;
-  struct SimpleTestStream *other_st = find_pointback_stream (st->target,
-      st->dat);
-
-  g_debug ("%d:%d: Setting remote candidate for component %d",
-      other_st->dat->id,
-      other_st->target->id,
-      candidate->component_id);
-
-  ret = fs_stream_add_remote_candidate (other_st->stream, candidate, &error);
-
-  if (error)
-    ts_fail ("Error while adding candidate: (%s:%d) %s",
-      g_quark_to_string (error->domain), error->code, error->message);
-
-  ts_fail_unless(ret == TRUE, "No detailed error from add_remote_candidate");
-
-}
 
 static void
 rtpconference_connect_signals (struct SimpleTestConference *dat)
@@ -422,20 +551,6 @@ rtpconference_connect_signals (struct SimpleTestConference *dat)
   bus = gst_element_get_bus (dat->pipeline);
   gst_bus_add_watch (bus, _bus_callback, dat);
   gst_object_unref (bus);
-
-  g_signal_connect (dat->session, "send-codec-changed",
-      G_CALLBACK (_send_codec_changed), dat);
-}
-
-static void
-rtpconference_connect_streams_signals (struct SimpleTestStream *st)
-{
-  g_signal_connect (st->stream, "src-pad-added",
-      G_CALLBACK (_src_pad_added), st);
-  g_signal_connect (st->stream, "new-active-candidate-pair",
-      G_CALLBACK (_new_active_candidate_pair), st);
-  g_signal_connect (st->stream, "new-local-candidate",
-      G_CALLBACK (_new_local_candidate), st);
 }
 
 
@@ -471,9 +586,11 @@ _compare_codec_lists (GList *list1, GList *list2)
 }
 
 static void
-_new_negotiated_codecs (FsSession *session, gpointer user_data)
+_negotiated_codecs_notify (GObject *object, GParamSpec *paramspec,
+    gpointer user_data)
 {
   struct SimpleTestConference *dat = user_data;
+  FsSession *session = FS_SESSION (object);
   GList *codecs = NULL;
   GError *error = NULL;
   GList *item = NULL;
@@ -482,7 +599,7 @@ _new_negotiated_codecs (FsSession *session, gpointer user_data)
 
   ts_fail_if (session != dat->session, "Got signal from the wrong object");
 
-  g_object_get (dat->session, "negotiated-codecs", &codecs, NULL);
+  g_object_get (dat->session, "codecs", &codecs, NULL);
   ts_fail_if (codecs == NULL, "Could not get the negotiated codecs");
 
 
@@ -533,17 +650,17 @@ set_initial_codecs (
     struct SimpleTestConference *from,
     struct SimpleTestStream *to)
 {
-  GList *local_codecs = NULL;
+  GList *codecs = NULL;
   GList *filtered_codecs = NULL;
   GList *item = NULL;
   GList *rcodecs2 = NULL;
   GError *error = NULL;
 
-  g_object_get (from->session, "local-codecs", &local_codecs, NULL);
+  g_object_get (from->session, "codecs", &codecs, NULL);
 
-  ts_fail_if (local_codecs == NULL, "Could not get the local codecs");
+  ts_fail_if (codecs == NULL, "Could not get the codecs");
 
-  for (item = g_list_first (local_codecs); item; item = g_list_next (item))
+  for (item = g_list_first (codecs); item; item = g_list_next (item))
   {
     FsCodec *codec = item->data;
     if (codec->id == 0 || codec->id == 8)
@@ -585,13 +702,14 @@ set_initial_codecs (
   g_clear_error (&error);
 
   g_list_free (filtered_codecs);
-  fs_codec_list_destroy (local_codecs);
+  fs_codec_list_destroy (codecs);
 }
 
 typedef void (*extra_init) (void);
 
 static void
-nway_test (int in_count, extra_init extrainit)
+nway_test (int in_count, extra_init extrainit,
+    guint st_param_count, GParameter *st_params)
 {
   int i, j;
 
@@ -603,9 +721,11 @@ nway_test (int in_count, extra_init extrainit)
 
   for (i = 0; i < count; i++)
   {
-    gchar *tmp = g_strdup_printf ("tester%d@TesterTop3", i);
+    gchar *tmp = g_strdup_printf ("tester%d@hostname", i);
     dats[i] = setup_simple_conference (i, "fsrtpconference", tmp);
     g_free (tmp);
+
+    g_object_set (G_OBJECT (dats[i]->session), "no-rtcp-timeout", -1, NULL);
 
     rtpconference_connect_signals (dats[i]);
     g_idle_add (_start_pipeline, dats[i]);
@@ -613,8 +733,8 @@ nway_test (int in_count, extra_init extrainit)
     setup_fakesrc (dats[i]);
 
     if (i != 0)
-      g_signal_connect (dats[i]->session, "new-negotiated-codecs",
-          G_CALLBACK (_new_negotiated_codecs), dats[i]);
+      g_signal_connect (dats[i]->session, "notify::codecs",
+          G_CALLBACK (_negotiated_codecs_notify), dats[i]);
   }
 
   for (i = 0; i < count; i++)
@@ -623,9 +743,10 @@ nway_test (int in_count, extra_init extrainit)
       {
         struct SimpleTestStream *st = NULL;
 
-        st = simple_conference_add_stream (dats[i], dats[j]);
+        st = simple_conference_add_stream (dats[i], dats[j], 0, NULL);
         st->handoff_handler = G_CALLBACK (_handoff_handler);
-        rtpconference_connect_streams_signals (st);
+        g_signal_connect (st->stream, "src-pad-added",
+            G_CALLBACK (_src_pad_added), st);
       }
 
   for (i = 1; i < count; i++)
@@ -653,21 +774,21 @@ nway_test (int in_count, extra_init extrainit)
 
 GST_START_TEST (test_rtpconference_two_way)
 {
-  nway_test (2, NULL);
+  nway_test (2, NULL, 0, NULL);
 }
 GST_END_TEST;
 
 
 GST_START_TEST (test_rtpconference_three_way)
 {
-  nway_test (3, NULL);
+  nway_test (3, NULL, 0, NULL);
 }
 GST_END_TEST;
 
 
 GST_START_TEST (test_rtpconference_ten_way)
 {
-  nway_test (10, NULL);
+  nway_test (10, NULL, 0, NULL);
 }
 GST_END_TEST;
 
@@ -709,7 +830,8 @@ GST_END_TEST;
 GST_START_TEST (test_rtpconference_select_send_codec)
 {
   select_last_codec = TRUE;
-  nway_test (2, NULL);
+  nway_test (2, NULL, 0, NULL);
+  select_last_codec = FALSE;
 }
 GST_END_TEST;
 
@@ -717,7 +839,8 @@ GST_END_TEST;
 GST_START_TEST (test_rtpconference_select_send_codec_while_running)
 {
   reset_to_last_codec = TRUE;
-  nway_test (2, NULL);
+  nway_test (2, NULL, 0, NULL);
+  reset_to_last_codec = FALSE;
 }
 GST_END_TEST;
 
@@ -769,8 +892,8 @@ _recv_only_init_2 (void)
 
 GST_START_TEST (test_rtpconference_recv_only)
 {
-  nway_test (2, _recv_only_init_1);
-  nway_test (2, _recv_only_init_2);
+  nway_test (2, _recv_only_init_1, 0, NULL);
+  nway_test (2, _recv_only_init_2, 0, NULL);
 }
 GST_END_TEST;
 
@@ -800,8 +923,8 @@ _send_only_init_2 (void)
 
 GST_START_TEST (test_rtpconference_send_only)
 {
-  nway_test (2, _send_only_init_1);
-  nway_test (2, _send_only_init_2);
+  nway_test (2, _send_only_init_1, 0, NULL);
+  nway_test (2, _send_only_init_2, 0, NULL);
 }
 GST_END_TEST;
 
@@ -835,9 +958,35 @@ _change_to_send_only_init (void)
 
 GST_START_TEST (test_rtpconference_change_to_send_only)
 {
-  nway_test (2, _change_to_send_only_init);
+  nway_test (2, _change_to_send_only_init, 0, NULL);
 }
 GST_END_TEST;
+
+
+GST_START_TEST (test_rtpconference_no_rtcp)
+{
+  no_rtcp = TRUE;
+
+  nway_test (2, NULL, 0, NULL);
+
+  no_rtcp = FALSE;
+}
+GST_END_TEST;
+
+
+
+GST_START_TEST (test_rtpconference_three_way_no_source_assoc)
+{
+  GParameter param = {0};
+
+  param.name = "associate-on-source";
+  g_value_init (&param.value, G_TYPE_BOOLEAN);
+  g_value_set_boolean (&param.value, FALSE);
+
+  nway_test (3, NULL, 1, &param);
+}
+GST_END_TEST;
+
 
 static Suite *
 fsrtpconference_suite (void)
@@ -849,7 +998,6 @@ fsrtpconference_suite (void)
   fatal_mask = g_log_set_always_fatal (G_LOG_FATAL_MASK);
   fatal_mask |= G_LOG_LEVEL_WARNING | G_LOG_LEVEL_CRITICAL;
   g_log_set_always_fatal (fatal_mask);
-
 
   tc_chain = tcase_create ("fsrtpconfence_base");
   tcase_add_test (tc_chain, test_rtpconference_new);
@@ -889,6 +1037,18 @@ fsrtpconference_suite (void)
 
   tc_chain = tcase_create ("fsrtpconfence_change_to_send_only");
   tcase_add_test (tc_chain, test_rtpconference_change_to_send_only);
+  suite_add_tcase (s, tc_chain);
+
+  tc_chain = tcase_create ("fsrtpconfence_change_to_send_only");
+  tcase_add_test (tc_chain, test_rtpconference_change_to_send_only);
+  suite_add_tcase (s, tc_chain);
+
+  tc_chain = tcase_create ("fsrtpconfence_no_rtcp");
+  tcase_add_test (tc_chain, test_rtpconference_no_rtcp);
+  suite_add_tcase (s, tc_chain);
+
+  tc_chain = tcase_create ("fsrtpconfence_three_way_no_source_assoc");
+  tcase_add_test (tc_chain, test_rtpconference_three_way_no_source_assoc);
   suite_add_tcase (s, tc_chain);
 
   return s;

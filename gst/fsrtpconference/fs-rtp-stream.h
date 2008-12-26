@@ -32,11 +32,13 @@
 #include "fs-rtp-session.h"
 #include "fs-rtp-substream.h"
 
+#include "fs-rtp-marshal.h"
+
 G_BEGIN_DECLS
 
 /* TYPE MACROS */
 #define FS_TYPE_RTP_STREAM \
-  (fs_rtp_stream_get_type())
+  (fs_rtp_stream_get_type ())
 #define FS_RTP_STREAM(obj) \
   (G_TYPE_CHECK_INSTANCE_CAST((obj), FS_TYPE_RTP_STREAM, FsRtpStream))
 #define FS_RTP_STREAM_CLASS(klass) \
@@ -67,9 +69,13 @@ struct _FsRtpStream
 {
   FsStream parent;
 
-  /* Can only be accessed by main user thread */
+  /* Can only be accessed while holding the FsRtpSession lock */
   /* Dont modify, call set_remote_codecs() */
   GList *remote_codecs;
+
+  /* Can only be accessed while holding the FsRtpSession lock */
+  /* Dont modify, call add_substream() */
+  GList *substreams;
 
   FsRtpStreamPrivate *priv;
 };
@@ -86,22 +92,9 @@ gboolean fs_rtp_stream_add_substream (FsRtpStream *stream,
     FsRtpSubStream *substream,
     GError **error);
 
-gboolean fs_rtp_stream_knows_ssrc_locked (FsRtpStream *stream,
-    guint32 ssrc);
-
-void fs_rtp_stream_invalidate_codec_locked (FsRtpStream *stream,
-    gint pt,
-    const FsCodec *codec);
-
-void fs_rtp_stream_maybe_emit_codecs_changed (FsRtpStream *stream,
-    FsRtpSubStream *substream);
-
-void fs_rtp_stream_add_known_ssrc (FsRtpStream *stream,
-    guint32 ssrc);
-
-void fs_rtp_stream_remove_known_ssrc (FsRtpStream *stream,
-    guint32 ssrc);
-
+void
+fs_rtp_stream_set_negotiated_codecs (FsRtpStream *stream,
+    GList *codecs);
 
 G_END_DECLS
 

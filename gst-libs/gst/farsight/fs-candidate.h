@@ -31,11 +31,11 @@
 G_BEGIN_DECLS
 
 #define FS_TYPE_CANDIDATE \
-  (fs_candidate_get_type())
+  (fs_candidate_get_type ())
 
 
 #define FS_TYPE_CANDIDATE_LIST \
-  (fs_candidate_list_get_type())
+  (fs_candidate_list_get_type ())
 
 /**
  * FsCandidateType:
@@ -88,7 +88,6 @@ typedef struct _FsCandidate FsCandidate;
 
 /**
  * FsCandidate:
- * @candidate_id: string identifier of the candidate
  * @foundation: a string representing the foundation of this candidate (maximum 32 chars)
  * @component_id: value between 1 and 256 indicating which component this candidate represents (1 is RTP, 2 is RTCP, #FsComponentType can be used here)
  * @ip: IP in dotted format
@@ -108,7 +107,6 @@ typedef struct _FsCandidate FsCandidate;
  */
 struct _FsCandidate
 {
-  const gchar *candidate_id;
   gchar *foundation;
   guint component_id;
   const gchar *ip;
@@ -116,7 +114,7 @@ struct _FsCandidate
   const gchar *base_ip;
   guint16 base_port;
   FsNetworkProtocol proto;
-  gint priority;
+  guint32 priority;
   FsCandidateType type;
   const gchar *username;
   const gchar *password;
@@ -136,14 +134,8 @@ void fs_candidate_list_destroy (GList *candidate_list);
 
 GList *fs_candidate_list_copy (const GList *candidate_list);
 
-FsCandidate *fs_candidate_get_by_id (const GList *candidate_list,
-                                     const gchar *candidate_id);
-
-gboolean fs_candidate_are_equal (const FsCandidate *cand1,
-                                 const FsCandidate *cand2);
-
 FsCandidate * fs_candidate_new (
-    const gchar *id,
+    const gchar *foundation,
     guint component_id,
     FsCandidateType type,
     FsNetworkProtocol proto,

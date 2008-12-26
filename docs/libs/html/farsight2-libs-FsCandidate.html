@@ -1,23 +1,23 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>FsCandidate</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
 <link rel="start" href="index.html" title="Farsight2 Reference Manual">
 <link rel="up" href="ch02.html" title="Farsight Core Library">
 <link rel="prev" href="FsStream.html" title="FsStream">
 <link rel="next" href="farsight2-libs-FsCodec.html" title="FsCodec">
-<meta name="generator" content="GTK-Doc V1.8 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
-<link rel="part" href="pt01.html" title="Part&#160;I.&#160;User-oriented classes, interfaces and functions">
+<link rel="part" href="pt01.html" title="Part I. User-oriented classes, interfaces and functions">
 <link rel="chapter" href="ch01.html" title="Farsight GStreamer Interfaces">
 <link rel="chapter" href="ch02.html" title="Farsight Core Library">
 <link rel="chapter" href="ch03.html" title="Farsight Utility Functions and Objects">
-<link rel="part" href="pt02.html" title="Part&#160;II.&#160;Classes used implements Farsight plugins">
-<link rel="chapter" href="ch04.html" title="Farsight GStreamer Base Implementations">
-<link rel="chapter" href="ch05.html" title="Farsight Transmitter objects">
-<link rel="chapter" href="ch06.html" title="Farsight Plugins infrastructure">
+<link rel="part" href="pt02.html" title="Part II. Classes used to implement Farsight plugins">
+<link rel="chapter" href="ch04.html" title="Farsight Classes Base Implementations">
+<link rel="chapter" href="ch05.html" title="Farsight Transmitter Classes">
+<link rel="chapter" href="ch06.html" title="Farsight Plugins Infrastructure">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -28,70 +28,54 @@
 <th width="100%" align="center">Farsight2 Reference Manual</th>
 <td><a accesskey="n" href="farsight2-libs-FsCodec.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#id2590020" class="shortcut">Top</a>
-                  &#160;|&#160;
-                  <a href="#id2600618" class="shortcut">Description</a></nobr></td></tr>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#farsight2-libs-FsCandidate.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#farsight2-libs-FsCandidate.description" class="shortcut">Description</a></nobr></td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="farsight2-libs-FsCandidate"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
-<h2>
-<a name="id2590020"></a><span class="refentrytitle">FsCandidate</span>
-</h2>
-<p>FsCandidate &#8212; Structure describing a transport candidate.</p>
+<h2><span class="refentrytitle"><a name="farsight2-libs-FsCandidate.top_of_page"></a>FsCandidate</span></h2>
+<p>FsCandidate — Structure describing a transport candidate.</p>
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsynopsisdiv">
-<h2>Synopsis</h2>
+<a name="farsight2-libs-FsCandidate.synopsis"></a><h2>Synopsis</h2>
 <pre class="synopsis">
-
-
-
-enum                <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidateType">FsCandidateType</a>;
-enum                <a class="link" href="farsight2-libs-FsCandidate.html#FsNetworkProtocol">FsNetworkProtocol</a>;
-enum                <a class="link" href="farsight2-libs-FsCandidate.html#FsComponentType">FsComponentType</a>;
-                    <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a>;
-<a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a>*        <a class="link" href="farsight2-libs-FsCandidate.html#fs-candidate-new">fs_candidate_new</a>                    (const <a
+                    <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate">FsCandidate</a>;
+enum                <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidateType" title="enum FsCandidateType">FsCandidateType</a>;
+enum                <a class="link" href="farsight2-libs-FsCandidate.html#FsNetworkProtocol" title="enum FsNetworkProtocol">FsNetworkProtocol</a>;
+enum                <a class="link" href="farsight2-libs-FsCandidate.html#FsComponentType" title="enum FsComponentType">FsComponentType</a>;
+<a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate">FsCandidate</a>*        <a class="link" href="farsight2-libs-FsCandidate.html#fs-candidate-new" title="fs_candidate_new ()">fs_candidate_new</a>                    (const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
->gchar</a> *id,
+>gchar</a> *foundation,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a> component_id,
-                                                         <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidateType">FsCandidateType</a> type,
-                                                         <a class="link" href="farsight2-libs-FsCandidate.html#FsNetworkProtocol">FsNetworkProtocol</a> proto,
+                                                         <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidateType" title="enum FsCandidateType">FsCandidateType</a> type,
+                                                         <a class="link" href="farsight2-libs-FsCandidate.html#FsNetworkProtocol" title="enum FsNetworkProtocol">FsNetworkProtocol</a> proto,
                                                          const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *ip,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a> port);
-void                <a class="link" href="farsight2-libs-FsCandidate.html#fs-candidate-destroy">fs_candidate_destroy</a>                (<a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a> *cand);
-<a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a>*        <a class="link" href="farsight2-libs-FsCandidate.html#fs-candidate-copy">fs_candidate_copy</a>                   (const <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a> *cand);
-void                <a class="link" href="farsight2-libs-FsCandidate.html#fs-candidate-list-destroy">fs_candidate_list_destroy</a>           (<a
+void                <a class="link" href="farsight2-libs-FsCandidate.html#fs-candidate-destroy" title="fs_candidate_destroy ()">fs_candidate_destroy</a>                (<a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate">FsCandidate</a> *cand);
+<a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate">FsCandidate</a>*        <a class="link" href="farsight2-libs-FsCandidate.html#fs-candidate-copy" title="fs_candidate_copy ()">fs_candidate_copy</a>                   (const <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate">FsCandidate</a> *cand);
+void                <a class="link" href="farsight2-libs-FsCandidate.html#fs-candidate-list-destroy" title="fs_candidate_list_destroy ()">fs_candidate_list_destroy</a>           (<a
 href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
 >GList</a> *candidate_list);
 <a
 href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
->GList</a>*              <a class="link" href="farsight2-libs-FsCandidate.html#fs-candidate-list-copy">fs_candidate_list_copy</a>              (const <a
+>GList</a>*              <a class="link" href="farsight2-libs-FsCandidate.html#fs-candidate-list-copy" title="fs_candidate_list_copy ()">fs_candidate_list_copy</a>              (const <a
 href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
 >GList</a> *candidate_list);
-<a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a>*        <a class="link" href="farsight2-libs-FsCandidate.html#fs-candidate-get-by-id">fs_candidate_get_by_id</a>              (const <a
-href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
->GList</a> *candidate_list,
-                                                         const <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
->gchar</a> *candidate_id);
-<a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
->gboolean</a>            <a class="link" href="farsight2-libs-FsCandidate.html#fs-candidate-are-equal">fs_candidate_are_equal</a>              (const <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a> *cand1,
-                                                         const <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a> *cand2);
-
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id2600618"></a><h2>Description</h2>
+<a name="farsight2-libs-FsCandidate.description"></a><h2>Description</h2>
 <p>
 An FsCandidate is a way to exchange candidate information between the client
 and Farsight. This description is compatible with ICE-13. It can also be a
@@ -103,11 +87,121 @@ information exchanged in the signaling.</p>
 </p>
 </div>
 <div class="refsect1" lang="en">
-<a name="id2600643"></a><h2>Details</h2>
+<a name="farsight2-libs-FsCandidate.details"></a><h2>Details</h2>
 <div class="refsect2" lang="en">
-<a name="id2600654"></a><h3>
-<a name="FsCandidateType"></a>enum FsCandidateType</h3>
-<a class="indexterm" name="id2600666"></a><pre class="programlisting">typedef enum
+<a name="FsCandidate"></a><h3>FsCandidate</h3>
+<pre class="programlisting">typedef struct {
+  gchar *foundation;
+  guint component_id;
+  const gchar *ip;
+  guint16 port;
+  const gchar *base_ip;
+  guint16 base_port;
+  FsNetworkProtocol proto;
+  guint32 priority;
+  FsCandidateType type;
+  const gchar *username;
+  const gchar *password;
+  guint ttl;
+} FsCandidate;
+</pre>
+<p>
+Struct to hold information about ICE-19 compliant candidates</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *<em class="structfield"><code>foundation</code></em>;</span></p></td>
+<td> a string representing the foundation of this candidate (maximum 32 chars)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
+>guint</a> <em class="structfield"><code>component_id</code></em>;</span></p></td>
+<td> value between 1 and 256 indicating which component this candidate represents (1 is RTP, 2 is RTCP, <a class="link" href="farsight2-libs-FsCandidate.html#FsComponentType" title="enum FsComponentType"><span class="type">FsComponentType</span></a> can be used here)
+</td>
+</tr>
+<tr>
+<td><p><span class="term">const <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *<em class="structfield"><code>ip</code></em>;</span></p></td>
+<td> IP in dotted format
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint16"
+>guint16</a> <em class="structfield"><code>port</code></em>;</span></p></td>
+<td> Port to use
+</td>
+</tr>
+<tr>
+<td><p><span class="term">const <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *<em class="structfield"><code>base_ip</code></em>;</span></p></td>
+<td> IP of base in dotted format as defined in ICE-19.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint16"
+>guint16</a> <em class="structfield"><code>base_port</code></em>;</span></p></td>
+<td> Port of base as defined in ICE-19.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a class="link" href="farsight2-libs-FsCandidate.html#FsNetworkProtocol" title="enum FsNetworkProtocol">FsNetworkProtocol</a> <em class="structfield"><code>proto</code></em>;</span></p></td>
+<td> <a class="link" href="farsight2-libs-FsCandidate.html#FsNetworkProtocol" title="enum FsNetworkProtocol"><span class="type">FsNetworkProtocol</span></a> for ip protocol to use as candidate
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint32"
+>guint32</a> <em class="structfield"><code>priority</code></em>;</span></p></td>
+<td> Value between 0 and (2^31 - 1) representing the priority
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a class="link" href="farsight2-libs-FsCandidate.html#FsCandidateType" title="enum FsCandidateType">FsCandidateType</a> <em class="structfield"><code>type</code></em>;</span></p></td>
+<td> The <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidateType" title="enum FsCandidateType"><span class="type">FsCandidateType</span></a> of the candidate
+</td>
+</tr>
+<tr>
+<td><p><span class="term">const <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *<em class="structfield"><code>username</code></em>;</span></p></td>
+<td> Username to use to connect to client if necessary,
+           NULL otherwise
+</td>
+</tr>
+<tr>
+<td><p><span class="term">const <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *<em class="structfield"><code>password</code></em>;</span></p></td>
+<td> Username to use to connect to client if necessary,
+           NULL otherwise
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
+>guint</a> <em class="structfield"><code>ttl</code></em>;</span></p></td>
+<td> The TTL used when sending Multicast packet (0 = auto)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="FsCandidateType"></a><h3>enum FsCandidateType</h3>
+<pre class="programlisting">typedef enum
 {
   FS_CANDIDATE_TYPE_HOST,
   FS_CANDIDATE_TYPE_SRFLX,
@@ -125,27 +219,27 @@ An enum for the type of candidate used/reported</p>
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><a name="FS-CANDIDATE-TYPE-HOST:CAPS"></a><code class="literal">FS_CANDIDATE_TYPE_HOST</code></span></p></td>
+<td><p><a name="FS-CANDIDATE-TYPE-HOST:CAPS"></a><span class="term"><code class="literal">FS_CANDIDATE_TYPE_HOST</code></span></p></td>
 <td> A host candidate (local)
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a name="FS-CANDIDATE-TYPE-SRFLX:CAPS"></a><code class="literal">FS_CANDIDATE_TYPE_SRFLX</code></span></p></td>
+<td><p><a name="FS-CANDIDATE-TYPE-SRFLX:CAPS"></a><span class="term"><code class="literal">FS_CANDIDATE_TYPE_SRFLX</code></span></p></td>
 <td> A server reflexive candidate.
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a name="FS-CANDIDATE-TYPE-PRFLX:CAPS"></a><code class="literal">FS_CANDIDATE_TYPE_PRFLX</code></span></p></td>
+<td><p><a name="FS-CANDIDATE-TYPE-PRFLX:CAPS"></a><span class="term"><code class="literal">FS_CANDIDATE_TYPE_PRFLX</code></span></p></td>
 <td> A peer reflexive candidate
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a name="FS-CANDIDATE-TYPE-RELAY:CAPS"></a><code class="literal">FS_CANDIDATE_TYPE_RELAY</code></span></p></td>
+<td><p><a name="FS-CANDIDATE-TYPE-RELAY:CAPS"></a><span class="term"><code class="literal">FS_CANDIDATE_TYPE_RELAY</code></span></p></td>
 <td> An relay candidate
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a name="FS-CANDIDATE-TYPE-MULTICAST:CAPS"></a><code class="literal">FS_CANDIDATE_TYPE_MULTICAST</code></span></p></td>
+<td><p><a name="FS-CANDIDATE-TYPE-MULTICAST:CAPS"></a><span class="term"><code class="literal">FS_CANDIDATE_TYPE_MULTICAST</code></span></p></td>
 <td> A multicast address
 </td>
 </tr>
@@ -154,9 +248,8 @@ An enum for the type of candidate used/reported</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2616558"></a><h3>
-<a name="FsNetworkProtocol"></a>enum FsNetworkProtocol</h3>
-<a class="indexterm" name="id2616571"></a><pre class="programlisting">typedef enum
+<a name="FsNetworkProtocol"></a><h3>enum FsNetworkProtocol</h3>
+<pre class="programlisting">typedef enum
 {
   FS_NETWORK_PROTOCOL_UDP,
   FS_NETWORK_PROTOCOL_TCP
@@ -171,12 +264,12 @@ An enum for the base IP protocol</p>
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><a name="FS-NETWORK-PROTOCOL-UDP:CAPS"></a><code class="literal">FS_NETWORK_PROTOCOL_UDP</code></span></p></td>
+<td><p><a name="FS-NETWORK-PROTOCOL-UDP:CAPS"></a><span class="term"><code class="literal">FS_NETWORK_PROTOCOL_UDP</code></span></p></td>
 <td> A UDP based protocol
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a name="FS-NETWORK-PROTOCOL-TCP:CAPS"></a><code class="literal">FS_NETWORK_PROTOCOL_TCP</code></span></p></td>
+<td><p><a name="FS-NETWORK-PROTOCOL-TCP:CAPS"></a><span class="term"><code class="literal">FS_NETWORK_PROTOCOL_TCP</code></span></p></td>
 <td> A TCP based protocol
 </td>
 </tr>
@@ -185,9 +278,8 @@ An enum for the base IP protocol</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2616636"></a><h3>
-<a name="FsComponentType"></a>enum FsComponentType</h3>
-<a class="indexterm" name="id2616649"></a><pre class="programlisting">typedef enum
+<a name="FsComponentType"></a><h3>enum FsComponentType</h3>
+<pre class="programlisting">typedef enum
 {
   FS_COMPONENT_RTP = 1,
   FS_COMPONENT_RTCP = 2
@@ -202,12 +294,12 @@ This enum contains the component IDs defined in ICE-19</p>
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><a name="FS-COMPONENT-RTP:CAPS"></a><code class="literal">FS_COMPONENT_RTP</code></span></p></td>
+<td><p><a name="FS-COMPONENT-RTP:CAPS"></a><span class="term"><code class="literal">FS_COMPONENT_RTP</code></span></p></td>
 <td> This component is for RTP data
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a name="FS-COMPONENT-RTCP:CAPS"></a><code class="literal">FS_COMPONENT_RTCP</code></span></p></td>
+<td><p><a name="FS-COMPONENT-RTCP:CAPS"></a><span class="term"><code class="literal">FS_COMPONENT_RTCP</code></span></p></td>
 <td> This component is for RTCP control
 </td>
 </tr>
@@ -216,136 +308,15 @@ This enum contains the component IDs defined in ICE-19</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2616716"></a><h3>
-<a name="FsCandidate"></a>FsCandidate</h3>
-<a class="indexterm" name="id2616728"></a><pre class="programlisting">typedef struct {
-  const gchar *candidate_id;
-  gchar *foundation;
-  guint component_id;
-  const gchar *ip;
-  guint16 port;
-  const gchar *base_ip;
-  guint16 base_port;
-  FsNetworkProtocol proto;
-  gint priority;
-  FsCandidateType type;
-  const gchar *username;
-  const gchar *password;
-  guint ttl;
-} FsCandidate;
-</pre>
-<p>
-Struct to hold information about ICE-19 compliant candidates</p>
-<p>
-
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term">const&#160;<a
+<a name="fs-candidate-new"></a><h3>fs_candidate_new ()</h3>
+<pre class="programlisting"><a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate">FsCandidate</a>*        fs_candidate_new                    (const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
->gchar</a>&#160;*<em class="structfield"><code>candidate_id</code></em>;</span></p></td>
-<td> string identifier of the candidate
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
->gchar</a>&#160;*<em class="structfield"><code>foundation</code></em>;</span></p></td>
-<td> a string representing the foundation of this candidate (maximum 32 chars)
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
->guint</a>&#160;<em class="structfield"><code>component_id</code></em>;</span></p></td>
-<td> value between 1 and 256 indicating which component this candidate represents (1 is RTP, 2 is RTCP, <a class="link" href="farsight2-libs-FsCandidate.html#FsComponentType"><span class="type">FsComponentType</span></a> can be used here)
-</td>
-</tr>
-<tr>
-<td><p><span class="term">const&#160;<a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
->gchar</a>&#160;*<em class="structfield"><code>ip</code></em>;</span></p></td>
-<td> IP in dotted format
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint16"
->guint16</a>&#160;<em class="structfield"><code>port</code></em>;</span></p></td>
-<td> Port to use
-</td>
-</tr>
-<tr>
-<td><p><span class="term">const&#160;<a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
->gchar</a>&#160;*<em class="structfield"><code>base_ip</code></em>;</span></p></td>
-<td> IP of base in dotted format as defined in ICE-19.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint16"
->guint16</a>&#160;<em class="structfield"><code>base_port</code></em>;</span></p></td>
-<td> Port of base as defined in ICE-19.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a class="link" href="farsight2-libs-FsCandidate.html#FsNetworkProtocol">FsNetworkProtocol</a>&#160;<em class="structfield"><code>proto</code></em>;</span></p></td>
-<td> <a class="link" href="farsight2-libs-FsCandidate.html#FsNetworkProtocol"><span class="type">FsNetworkProtocol</span></a> for ip protocol to use as candidate
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
->gint</a>&#160;<em class="structfield"><code>priority</code></em>;</span></p></td>
-<td> Value between 0 and (2^31 - 1) representing the priority
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a class="link" href="farsight2-libs-FsCandidate.html#FsCandidateType">FsCandidateType</a>&#160;<em class="structfield"><code>type</code></em>;</span></p></td>
-<td> The <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidateType"><span class="type">FsCandidateType</span></a> of the candidate
-</td>
-</tr>
-<tr>
-<td><p><span class="term">const&#160;<a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
->gchar</a>&#160;*<em class="structfield"><code>username</code></em>;</span></p></td>
-<td> Username to use to connect to client if necessary,
-           NULL otherwise
-</td>
-</tr>
-<tr>
-<td><p><span class="term">const&#160;<a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
->gchar</a>&#160;*<em class="structfield"><code>password</code></em>;</span></p></td>
-<td> Username to use to connect to client if necessary,
-           NULL otherwise
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
->guint</a>&#160;<em class="structfield"><code>ttl</code></em>;</span></p></td>
-<td> The TTL used when sending Multicast packet (0 = auto)
-</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2" lang="en">
-<a name="id2621335"></a><h3>
-<a name="fs-candidate-new"></a>fs_candidate_new ()</h3>
-<a class="indexterm" name="id2621345"></a><pre class="programlisting"><a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a>*        fs_candidate_new                    (const <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
->gchar</a> *id,
+>gchar</a> *foundation,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a> component_id,
-                                                         <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidateType">FsCandidateType</a> type,
-                                                         <a class="link" href="farsight2-libs-FsCandidate.html#FsNetworkProtocol">FsNetworkProtocol</a> proto,
+                                                         <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidateType" title="enum FsCandidateType">FsCandidateType</a> type,
+                                                         <a class="link" href="farsight2-libs-FsCandidate.html#FsNetworkProtocol" title="enum FsNetworkProtocol">FsNetworkProtocol</a> proto,
                                                          const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *ip,
@@ -353,7 +324,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a> port);</pre>
 <p>
-Allocates a new <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a>, the rest of the fields can be optionally
+Allocates a new <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate"><span class="type">FsCandidate</span></a>, the rest of the fields can be optionally
 filled manually.</p>
 <p>
 
@@ -362,39 +333,39 @@ filled manually.</p>
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>id</code></em>&#160;:</span></p></td>
-<td> The id of the candidate (must be unique for ICE)
+<td><p><span class="term"><em class="parameter"><code>foundation</code></em> :</span></p></td>
+<td> The foundation of the candidate
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>component_id</code></em>&#160;:</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>component_id</code></em> :</span></p></td>
 <td> The component this candidate is for
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>type</code></em>&#160;:</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
 <td> The type of candidate
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>proto</code></em>&#160;:</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>proto</code></em> :</span></p></td>
 <td> The protocol this component is for
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>ip</code></em>&#160;:</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>ip</code></em> :</span></p></td>
 <td> The IP address of this component (can be NULL for local candidate to
     mean any address)
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>port</code></em>&#160;:</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>port</code></em> :</span></p></td>
 <td> the UDP/TCP port
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
-<td> a newly-allocated <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a newly-allocated <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate"><span class="type">FsCandidate</span></a>
 </td>
 </tr>
 </tbody>
@@ -402,30 +373,28 @@ filled manually.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2621519"></a><h3>
-<a name="fs-candidate-destroy"></a>fs_candidate_destroy ()</h3>
-<a class="indexterm" name="id2621530"></a><pre class="programlisting">void                fs_candidate_destroy                (<a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a> *cand);</pre>
+<a name="fs-candidate-destroy"></a><h3>fs_candidate_destroy ()</h3>
+<pre class="programlisting">void                fs_candidate_destroy                (<a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate">FsCandidate</a> *cand);</pre>
 <p>
-Frees a <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> and all its contents</p>
+Frees a <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate"><span class="type">FsCandidate</span></a> and all its contents</p>
 <p>
 
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
-<td><p><span class="term"><em class="parameter"><code>cand</code></em>&#160;:</span></p></td>
-<td> a <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> to delete
+<td><p><span class="term"><em class="parameter"><code>cand</code></em> :</span></p></td>
+<td> a <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate"><span class="type">FsCandidate</span></a> to delete
 </td>
 </tr></tbody>
 </table></div>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2621594"></a><h3>
-<a name="fs-candidate-copy"></a>fs_candidate_copy ()</h3>
-<a class="indexterm" name="id2621606"></a><pre class="programlisting"><a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a>*        fs_candidate_copy                   (const <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a> *cand);</pre>
+<a name="fs-candidate-copy"></a><h3>fs_candidate_copy ()</h3>
+<pre class="programlisting"><a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate">FsCandidate</a>*        fs_candidate_copy                   (const <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate">FsCandidate</a> *cand);</pre>
 <p>
-Copies a <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> and its contents.</p>
+Copies a <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate"><span class="type">FsCandidate</span></a> and its contents.</p>
 <p>
 
 </p>
@@ -433,13 +402,13 @@ Copies a <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><spa
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>cand</code></em>&#160;:</span></p></td>
-<td> a <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> to copy
+<td><p><span class="term"><em class="parameter"><code>cand</code></em> :</span></p></td>
+<td> a <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate"><span class="type">FsCandidate</span></a> to copy
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
-<td> a new <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate"><span class="type">FsCandidate</span></a>
 </td>
 </tr>
 </tbody>
@@ -447,36 +416,34 @@ Copies a <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><spa
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2621688"></a><h3>
-<a name="fs-candidate-list-destroy"></a>fs_candidate_list_destroy ()</h3>
-<a class="indexterm" name="id2621700"></a><pre class="programlisting">void                fs_candidate_list_destroy           (<a
+<a name="fs-candidate-list-destroy"></a><h3>fs_candidate_list_destroy ()</h3>
+<pre class="programlisting">void                fs_candidate_list_destroy           (<a
 href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
 >GList</a> *candidate_list);</pre>
 <p>
-Deletes a GList of <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> and its contents</p>
+Deletes a GList of <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate"><span class="type">FsCandidate</span></a> and its contents</p>
 <p>
 
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
-<td><p><span class="term"><em class="parameter"><code>candidate_list</code></em>&#160;:</span></p></td>
-<td> A GList of <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a>
+<td><p><span class="term"><em class="parameter"><code>candidate_list</code></em> :</span></p></td>
+<td> A GList of <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate"><span class="type">FsCandidate</span></a>
 </td>
 </tr></tbody>
 </table></div>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2621763"></a><h3>
-<a name="fs-candidate-list-copy"></a>fs_candidate_list_copy ()</h3>
-<a class="indexterm" name="id2621775"></a><pre class="programlisting"><a
+<a name="fs-candidate-list-copy"></a><h3>fs_candidate_list_copy ()</h3>
+<pre class="programlisting"><a
 href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
 >GList</a>*              fs_candidate_list_copy              (const <a
 href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
 >GList</a> *candidate_list);</pre>
 <p>
-Copies a GList of <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> and its contents</p>
+Copies a GList of <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate"><span class="type">FsCandidate</span></a> and its contents</p>
 <p>
 
 </p>
@@ -484,89 +451,22 @@ Copies a GList of <a class="link" href="farsight2-libs-FsCandidate.html#FsCandid
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>candidate_list</code></em>&#160;:</span></p></td>
-<td> A GList of <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a>
+<td><p><span class="term"><em class="parameter"><code>candidate_list</code></em> :</span></p></td>
+<td> A GList of <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate"><span class="type">FsCandidate</span></a>
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
-<td> a new GList of <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new GList of <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate"><span class="type">FsCandidate</span></a>
 </td>
 </tr>
 </tbody>
 </table></div>
 </div>
+</div>
+</div>
+<div class="footer">
 <hr>
-<div class="refsect2" lang="en">
-<a name="id2621857"></a><h3>
-<a name="fs-candidate-get-by-id"></a>fs_candidate_get_by_id ()</h3>
-<a class="indexterm" name="id2621868"></a><pre class="programlisting"><a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a>*        fs_candidate_get_by_id              (const <a
-href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
->GList</a> *candidate_list,
-                                                         const <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
->gchar</a> *candidate_id);</pre>
-<p>
-Searches in candidate_list for the candidate indentified by candidate_id</p>
-<p>
-
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>candidate_list</code></em>&#160;:</span></p></td>
-<td> a list of <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>candidate_id</code></em>&#160;:</span></p></td>
-<td> the id of the candidate to extract
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
-<td> a <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> or NULL if not found
-</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2" lang="en">
-<a name="id2621943"></a><h3>
-<a name="fs-candidate-are-equal"></a>fs_candidate_are_equal ()</h3>
-<a class="indexterm" name="id2621954"></a><pre class="programlisting"><a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
->gboolean</a>            fs_candidate_are_equal              (const <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a> *cand1,
-                                                         const <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a> *cand2);</pre>
-<p>
-Compares two <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> to see if they are equivalent.</p>
-<p>
-
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>cand1</code></em>&#160;:</span></p></td>
-<td> first <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> to compare
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>cand2</code></em>&#160;:</span></p></td>
-<td> second <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> to compare
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
-<td> True if equivalent.
-</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-</div>
-</div>
+          Generated by GTK-Doc V1.10</div>
 </body>
 </html>

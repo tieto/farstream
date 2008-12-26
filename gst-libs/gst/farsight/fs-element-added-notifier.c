@@ -87,6 +87,9 @@ fs_element_added_notifier_class_init (FsElementAddedNotifierClass *klass)
    *
    * This signal is emitted when an element is added to a #GstBin that was added
    * to this object or one of its sub-bins.
+   * Be careful, there is no guarantee that this will be emitted on your
+   * main thread, it will be emitted in the thread that added the element.
+   * The bin may be %NULL if this is the top-level bin.
    */
   signals[ELEMENT_ADDED] = g_signal_new ("element-added",
       G_TYPE_FROM_CLASS (klass),
@@ -148,6 +151,9 @@ void
 fs_element_added_notifier_add (FsElementAddedNotifier *notifier,
     GstBin *bin)
 {
+  g_return_if_fail (notifier && FS_IS_ELEMENT_ADDED_NOTIFIER (notifier));
+  g_return_if_fail (bin && GST_IS_BIN (bin));
+
   _element_added_callback (NULL, GST_ELEMENT_CAST (bin), notifier);
 }
 
@@ -160,7 +166,7 @@ _bin_unparented_cb (GstObject *object, GstObject *parent, gpointer user_data)
   gboolean done;
 
   /* Return if there was no handler connected */
-  if (g_signal_handlers_disconnect_by_func(object, _element_added_callback,
+  if (g_signal_handlers_disconnect_by_func (object, _element_added_callback,
           user_data) == 0)
     return;
 
@@ -212,6 +218,9 @@ gboolean
 fs_element_added_notifier_remove (FsElementAddedNotifier *notifier,
     GstBin *bin)
 {
+  g_return_val_if_fail (FS_IS_ELEMENT_ADDED_NOTIFIER (notifier), FALSE);
+  g_return_val_if_fail (GST_IS_BIN (bin), FALSE);
+
   if (g_signal_handler_find (bin,
           G_SIGNAL_MATCH_FUNC | G_SIGNAL_MATCH_DATA,
           0, 0, NULL, /* id, detail, closure */
@@ -322,7 +331,7 @@ _bin_added_from_keyfile (FsElementAddedNotifier *notifier, GstBin *bin,
 #else
         str_key_value = g_key_file_get_value (keyfile, name, keys[i],
             NULL);
-        double_key_value = g_strtod(str_key_value, NULL);
+        double_key_value = g_strtod (str_key_value, NULL);
 #endif
         g_value_init (&key_value, G_TYPE_DOUBLE);
         g_value_set_double (&key_value, double_key_value);
@@ -333,7 +342,7 @@ _bin_added_from_keyfile (FsElementAddedNotifier *notifier, GstBin *bin,
       case G_TYPE_ULONG:
         str_key_value = g_key_file_get_value (keyfile, name, keys[i],
             NULL);
-        ulong_key_value = strtoul(str_key_value, NULL, 10);
+        ulong_key_value = strtoul (str_key_value, NULL, 10);
         g_value_init (&key_value, G_TYPE_ULONG);
         g_value_set_ulong (&key_value, ulong_key_value);
         DEBUG ("%s is a ulong: %lu", keys[i], ulong_key_value);
@@ -341,7 +350,7 @@ _bin_added_from_keyfile (FsElementAddedNotifier *notifier, GstBin *bin,
       case G_TYPE_LONG:
         str_key_value = g_key_file_get_value (keyfile, name, keys[i],
             NULL);
-        long_key_value = strtol(str_key_value, NULL, 10);
+        long_key_value = strtol (str_key_value, NULL, 10);
         g_value_init (&key_value, G_TYPE_LONG);
         g_value_set_long (&key_value, long_key_value);
         DEBUG ("%s is a long: %ld", keys[i], long_key_value);
@@ -368,10 +377,10 @@ _bin_added_from_keyfile (FsElementAddedNotifier *notifier, GstBin *bin,
     }
 
     DEBUG ("Setting %s to on %s", keys[i], name);
-    g_object_set_property (G_OBJECT(element), keys[i], &prop_value);
+    g_object_set_property (G_OBJECT (element), keys[i], &prop_value);
   }
 
-  g_strfreev(keys);
+  g_strfreev (keys);
 }
 
 
@@ -390,6 +399,9 @@ fs_element_added_notifier_set_properties_from_keyfile (
     FsElementAddedNotifier *notifier,
     GKeyFile *keyfile)
 {
+  g_return_if_fail (FS_IS_ELEMENT_ADDED_NOTIFIER (notifier));
+  g_return_if_fail (keyfile);
+
   g_signal_connect (notifier, "element-added",
       G_CALLBACK (_bin_added_from_keyfile), keyfile);
 

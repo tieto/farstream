@@ -28,6 +28,15 @@ import sys, os, pwd, os.path
 import socket, struct
 import gc
 
+
+try:
+    import pygst
+    pygst.require('0.10')
+        
+    import gst
+except ImportError, e:
+    raise SystemExit("Gst-Python couldn't be found! (%s)" % (e[0]))
+
 try:
     import farsight
 except:
@@ -39,11 +48,10 @@ import gobject
 
 class FsUIConnect:
     ERROR = 0
-    CODEC = 1
-    CODECS_DONE = 2
-    CANDIDATE = 3
-    CANDIDATES_DONE = 4
-    INTRO = 5
+    CODECS = 1
+    CANDIDATE = 2
+    CANDIDATES_DONE = 3
+    INTRO = 4
 
     def __reset(self):
         self.type = None
@@ -60,6 +68,7 @@ class FsUIConnect:
         self.callbacks = callbacks
         self.myid = myid
         self.partid = 1
+        self.is_server = True
         sock.setblocking(0)
         gobject.io_add_watch(self.sock.fileno(), gobject.IO_IN,
                              self.__data_in)
@@ -89,8 +98,8 @@ class FsUIConnect:
         self.data += data
         if len(self.data) == self.size:
             if self.type is not None:
-                if self.type == self.CODEC:
-                    data = self.__codec_from_string(data)
+                if self.type == self.CODECS:
+                    data = self.__codecs_from_string(data)
                 elif self.type == self.CANDIDATE:
                     data = self.__candidate_from_string(data)
                 else:
@@ -108,10 +117,14 @@ class FsUIConnect:
                 if check != 0xDEADBEEF:
                     print "CORRUPTION"
                     sys.exit(1)
+                if self.myid > 1 and self.dest != self.myid:
+                    print "GOT MESSAGE FOR %d, but I am %d" % (self.dest,
+                                                               self.myid)
+                    sys.exit(1)
                 self.data=""
                 if self.size == 0:
                     self.callbacks[self.type](self.src, self.dest,
-                                              self.media, data)
+                                              self.media, None)
                     self.__reset()
         return True
 
@@ -136,12 +149,10 @@ class FsUIConnect:
         self.__send_data(dest, self.ERROR, src=src)
     def send_intro(self, dest, cname, src=None):
         self.__send_data(dest, self.INTRO, data=cname, src=src)
-    def send_codec(self, dest, media, codec, src=None):
-        self.__send_data(dest, self.CODEC,
+    def send_codecs(self, dest, media, codecs, src=None):
+        self.__send_data(dest, self.CODECS,
                          media=media,
-                         data=self.__codec_to_string(codec))
-    def send_codecs_done(self, dest, media):
-        self.__send_data(dest, self.CODECS_DONE, media=media)
+                         data=self.__codecs_to_string(codecs), src=src)
     def send_candidate(self, dest, media, candidate, src=None):
         self.__send_data(dest, self.CANDIDATE, media=media,
                          data=self.__candidate_to_string(candidate), src=src)
@@ -157,7 +168,6 @@ class FsUIConnect:
 
     def __candidate_to_string(self, candidate):
         return "|".join((
-            candidate.candidate_id,
             candidate.foundation,
             str(candidate.component_id),
             candidate.ip,
@@ -172,8 +182,7 @@ class FsUIConnect:
 
     def __candidate_from_string(self, string):
         candidate = farsight.Candidate()
-        (candidate.candidate_id,
-         candidate.foundation,
+        (candidate.foundation,
          component_id,
          candidate.ip,
          port,
@@ -192,33 +201,42 @@ class FsUIConnect:
         candidate.type = int(type)
         return candidate
 
-    def __codec_to_string(self, codec):
-        start = " ".join((str(codec.id),
-                          codec.encoding_name,
-                          str(int(codec.media_type)),
-                          str(codec.clock_rate),
-                          str(codec.channels)))
-        return "".join((start,
-                       "|",
-                       ":".join(["=".join(i) for i in codec.optional_params])))
+    def __codecs_to_string(self, codecs):
+        codec_strings = []
+        for codec in codecs:
+            start = " ".join((str(codec.id),
+                              codec.encoding_name,
+                              str(int(codec.media_type)),
+                              str(codec.clock_rate),
+                              str(codec.channels)))
+            codec = "".join((start,
+                             "|",
+                             ";".join(["=".join(i) for i in codec.optional_params])))
+            codec_strings.append(codec)
+            
+        return "\n".join(codec_strings)
 
 
-    def __codec_from_string(self, string):
-        (start,end) = string.split("|")
-        (id, encoding_name, media_type, clock_rate, channels) = start.split(" ")
-        codec = farsight.Codec(int(id), encoding_name, int(media_type),
+    def __codecs_from_string(self, string):
+        codecs = []
+        for substring in string.split("\n"):
+            (start,end) = substring.split("|")
+            (id, encoding_name, media_type, clock_rate, channels) = start.split(" ")
+            codec = farsight.Codec(int(id), encoding_name, int(media_type),
                                int(clock_rate))
-        codec.channels = int(channels)
-        if len(end):
-            codec.optional_params = \
-                  [tuple(x.split("=")) for x in end.split(":") if len(x) > 0]
-        return codec
+            codec.channels = int(channels)
+            if len(end):
+                codec.optional_params = \
+                  [tuple(x.split("=",1)) for x in end.split(";") if len(x) > 0]
+            codecs.append(codec)
+        return codecs
 
 class FsUIConnectClient (FsUIConnect):
     def __init__(self, ip, port, callbacks):
         sock = socket.socket()
         sock.connect((ip, port))
         FsUIConnect.__init__(self, sock, callbacks)
+        self.is_server = False
 
 class FsUIListener:
     def __init__(self, port, callback, *args):
@@ -258,23 +276,21 @@ class FsUIClient:
         self.args = args
         self.cname = cname
         self.connect = FsUIConnectClient(ip, port, (self.__error,
-                                                    self.__codec,
-                                                    self.__codecs_done,
+                                                    self.__codecs,
                                                     self.__candidate,
                                                     self.__candidate_done,
                                                     self.__intro))
         self.connect.send_intro(1, cname)
 
-    def __codec(self, src, dest, media, data):
-        self.participants[src].codec(media, data)
-    def __codecs_done(self, src, dest, media, data):
-        self.participants[src].codecs_done(media)
+    def __codecs(self, src, dest, media, data):
+        print "Got codec Src:%d dest:%d data:%s" % (src, dest, data)
+        self.participants[src].codecs(media, data)
     def __candidate(self, src, dest, media, data):
         self.participants[src].candidate(media, data)
     def __candidate_done(self, src, dest, media, data):
         self.participants[src].candidates_done(media)
     def __intro(self, src, dest, media, cname):
-        print "Got Intro from %s" % src
+        print "Got Intro from %s, I am %d" % (src, dest)
         if src == 1:
             self.connect.myid = dest
         if not self.participants.has_key(src):
@@ -303,15 +319,12 @@ class FsUIServer:
         self.get_participant = get_participant
         self.args = args
         self.connect = FsUIConnect(sock, (self.__error,
-                                          self.__codec,
-                                          self.__codecs_done,
+                                          self.__codecs,
                                           self.__candidate,
                                           self.__candidate_done,
                                           self.__intro), 1)
-    def __codec(self, src, dest, media, data):
-        FsUIServer.participants[src].codec(media, data)
-    def __codecs_done(self, src, dest, media, data):
-        FsUIServer.participants[src].codecs_done(media)
+    def __codecs(self, src, dest, media, data):
+        FsUIServer.participants[src].codecs(media, data)
     def __candidate(self, src, dest, media, data):
         if dest == 1:
             FsUIServer.participants[src].candidate(media, data)
@@ -349,6 +362,8 @@ class FsUIServer:
             FsUIServer.participants[dest].connect.send_intro(dest,
                                                              cname,
                                                              src)
+            FsUIServer.participants[src].send_codecs_to(
+                        FsUIServer.participants[dest])
         else:
             print "ERROR SRC != 0"
             
@@ -374,53 +389,68 @@ if __name__ == "__main__":
             print "Got candidate", candidate
         def candidates_done(self):
             print "Got candidate done"
-        def codec(self, codec):
-            print "Got codec src:%d dest:%d media:%d src:%s" % (codec.id, int(codec.media_type), codec.clock_rate, codec.encoding_name)
-        def codecs_done(self):
-            print "Got codecs done from %s for media %s" % (self.pid, self.id)
+        def codecs(self, codecs):
             if self.connect.myid != 1:
-                self.connect.send_codec(1, self.id,
-                                        farsight.Codec(self.connect.myid,
-                                                       "codecs_done",
+                self.connect.send_codecs(1, self.id,
+                                        [farsight.Codec(self.connect.myid,
+                                                       "codec-name",
                                                        self.pid,
-                                                       self.id))
-                self.connect.send_codecs_done(1, self.id)
+                                                       self.id)])
+       
         def send_local_codecs(self):
             print "Send local codecs to %s for media %s" % (self.pid, self.id)
-            self.connect.send_codec(self.pid, self.id,
-                                    farsight.Codec(self.connect.myid,
-                                                   "local_codec",
-                                                   self.pid,
-                                                   self.id))
-            self.connect.send_codecs_done(self.pid, self.id)
+            self.connect.send_codecs(self.pid, self.id,
+                                     [farsight.Codec(self.connect.myid,
+                                                     "local_codec",
+                                                     self.pid,
+                                                     self.id)])
+        def get_codecs(self):
+            return [farsight.Codec(self.connect.myid,
+                                   "nego-codecs",
+                                   self.pid,
+                                   self.id)]
             
             
     class TestParticipant:
         def __init__(self, connect, id, cname, *args):
             self.id = id
-            self.medias = {1: TestMedia(id, 1, connect),
-                           2: TestMedia(id, 2, connect)}
+            self.streams = {1: TestMedia(id, 1, connect),
+                            2: TestMedia(id, 2, connect)}
             self.cname = cname
             self.connect = connect
             print "New Participant %s and cname %s" % (id,cname)
         def candidate(self, media, candidate):
-            self.medias[media].candidate(candidate)
+            self.streams[media].candidate(candidate)
         def candidates_done(self, media):
-            self.medias[media].candidates_done()
-        def codec(self, media, codec):
-            self.medias[media].codec(codec)
-        def codecs_done(self, media):
-            self.medias[media].codecs_done()
+            self.streams[media].candidates_done()
+        def codecs(self, media, codecs):
+            self.streams[media].codecs(codecs)
         def send_local_codecs(self):
-            for id in self.medias:
-                self.medias[id].send_local_codecs()
+            for id in self.streams:
+                self.streams[id].send_local_codecs()
+        def destroy(self):
+            pass
+        def send_codecs_to(self, participant):
+            for sid in self.streams:
+                print "to: %s from: %s" % (str(participant.id), (self.id))
+                participant.connect.send_codecs(participant.id,
+                                                self.streams[sid].id,
+                                                self.streams[sid].get_codecs(),
+                                                self.id)
+        def error(self):
+            print "ERROR"
+            sys.exit(1)
+        def destroy(self):
+            passs
             
 
     mycname = "test"
     mainloop = gobject.MainLoop()
     gobject.threads_init()
     if len(sys.argv) > 1:
-        client = FsUIClient("127.0.0.1", int(sys.argv[1]), TestParticipant)
+        client = FsUIClient("127.0.0.1", int(sys.argv[1]),
+                            "cname" + sys.argv[1],
+                            TestParticipant)
     else:
-        listener = FsUIListener(9893, FsUIServer, TestParticipant)
+        listener = FsUIListener(9893, FsUIServer, "cnameServ", TestParticipant)
     mainloop.run()

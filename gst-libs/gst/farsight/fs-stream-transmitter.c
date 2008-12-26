@@ -51,10 +51,12 @@
 /* Signals */
 enum
 {
-  ERROR,
+  ERROR_SIGNAL,
   NEW_LOCAL_CANDIDATE,
   NEW_ACTIVE_CANDIDATE_PAIR,
   LOCAL_CANDIDATES_PREPARED,
+  KNOWN_SOURCE_PACKET_RECEIVED,
+  STATE_CHANGED,
   LAST_SIGNAL
 };
 
@@ -63,7 +65,8 @@ enum
 {
   PROP_0,
   PROP_SENDING,
-  PROP_PREFERRED_LOCAL_CANDIDATES
+  PROP_PREFERRED_LOCAL_CANDIDATES,
+  PROP_ASSOCIATE_ON_SOURCE
 };
 
 struct _FsStreamTransmitterPrivate
@@ -136,6 +139,21 @@ fs_stream_transmitter_class_init (FsStreamTransmitterClass *klass)
         FS_TYPE_CANDIDATE_LIST,
         G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
 
+  /**
+   * FsStreamTransmitter:associate-on-source
+   *
+   * This tells the stream transmitter to associate incoming data with this
+   * based on the source without looking at the content if possible.
+   *
+   */
+
+  g_object_class_install_property (gobject_class,
+      PROP_ASSOCIATE_ON_SOURCE,
+      g_param_spec_boolean ("associate-on-source",
+        "Associate incoming data based on the source address",
+        "Whether to associate incoming data stream based on the source address",
+        TRUE,
+        G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
 
   /**
    * FsStreamTransmitter::error:
@@ -147,18 +165,18 @@ fs_stream_transmitter_class_init (FsStreamTransmitterClass *klass)
    * This signal is emitted in any error condition
    *
    */
-  signals[ERROR] = g_signal_new ("error",
+  signals[ERROR_SIGNAL] = g_signal_new ("error",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
       0,
       NULL,
       NULL,
-      _fs_marshal_VOID__INT_STRING_STRING,
-      G_TYPE_NONE, 3, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING);
+      _fs_marshal_VOID__ENUM_STRING_STRING,
+      G_TYPE_NONE, 3, FS_TYPE_ERROR, G_TYPE_STRING, G_TYPE_STRING);
 
     /**
    * FsStreamTransmitter::new-active-candidate-pair:
-   * @self: #FsStream that emitted the signal
+   * @self: #FsStreamTransmitter that emitted the signal
    * @local_candidate: #FsCandidate of the local candidate being used
    * @remote_candidate: #FsCandidate of the remote candidate being used
    *
@@ -199,7 +217,7 @@ fs_stream_transmitter_class_init (FsStreamTransmitterClass *klass)
 
  /**
    * FsStreamTransmitter::local-candidates-prepared:
-   * @self: #FsStream that emitted the signal
+   * @self: #FsStreamTransmitter that emitted the signal
    *
    * This signal is emitted when all local candidates have been
    * prepared, an ICE implementation would send its SDP offer or answer.
@@ -215,6 +233,44 @@ fs_stream_transmitter_class_init (FsStreamTransmitterClass *klass)
       g_cclosure_marshal_VOID__VOID,
       G_TYPE_NONE, 0);
 
+ /**
+   * FsStreamTransmitter::known-source-packet-received:
+   * @self: #FsStreamTransmitter that emitted the signal
+   * @component: The Component on which this buffer was received
+   * @buffer: the #GstBuffer coming from the known source
+   *
+   * This signal is emitted when a buffer coming from a confirmed known source
+   * is received.
+   */
+  signals[KNOWN_SOURCE_PACKET_RECEIVED] = g_signal_new
+    ("known-source-packet-received",
+      G_TYPE_FROM_CLASS (klass),
+      G_SIGNAL_RUN_LAST,
+      0,
+      NULL,
+      NULL,
+      _fs_marshal_VOID__UINT_POINTER,
+      G_TYPE_NONE, 2, G_TYPE_UINT, G_TYPE_POINTER);
+
+
+  /**
+   * FsStreamTransmitter::state-changed
+   * @self: #FsStreamTransmitter that emitted the signal
+   * @component: the id of the component which state has changed
+   * @state: the new state of the component
+   *
+   * This signal is emitted when the ICE state (or equivalent) of the component
+   * changes
+   */
+ signals[STATE_CHANGED] = g_signal_new
+    ("state-changed",
+      G_TYPE_FROM_CLASS (klass),
+      G_SIGNAL_RUN_LAST,
+      0,
+      NULL,
+      NULL,
+      _fs_marshal_VOID__UINT_ENUM,
+      G_TYPE_NONE, 2, G_TYPE_UINT, FS_TYPE_STREAM_STATE);
 
 
   gobject_class->dispose = fs_stream_transmitter_dispose;
@@ -259,6 +315,10 @@ fs_stream_transmitter_get_property (GObject *object,
                                     GValue *value,
                                     GParamSpec *pspec)
 {
+  GST_WARNING ("Subclass %s of FsStreamTransmitter does not override the %s"
+      " property getter",
+      G_OBJECT_TYPE_NAME(object),
+      g_param_spec_get_name (pspec));
 }
 
 static void
@@ -267,31 +327,36 @@ fs_stream_transmitter_set_property (GObject *object,
                                     const GValue *value,
                                     GParamSpec *pspec)
 {
+  GST_WARNING ("Subclass %s of FsStreamTransmitter does not override the %s"
+      " property setter",
+      G_OBJECT_TYPE_NAME(object),
+      g_param_spec_get_name (pspec));
 }
 
 
 /**
- * fs_stream_transmitter_add_remote_candidate
+ * fs_stream_transmitter_set_remote_candidates
  * @streamtransmitter: a #FsStreamTranmitter
- * @candidate: a remote #FsCandidate to add
+ * @candidates: a #GList of the remote candidates
  * @error: location of a #GError, or NULL if no error occured
  *
- * This function is used to add remote candidates to the transmitter
+ * This function is used to set the remote candidates to the transmitter
  *
  * Returns: TRUE of the candidate could be added, FALSE if it couldnt
  *   (and the #GError will be set)
  */
 
 gboolean
-fs_stream_transmitter_add_remote_candidate (
-    FsStreamTransmitter *streamtransmitter, FsCandidate *candidate,
+fs_stream_transmitter_set_remote_candidates (
+    FsStreamTransmitter *streamtransmitter,
+    GList *candidates,
     GError **error)
 {
   FsStreamTransmitterClass *klass =
     FS_STREAM_TRANSMITTER_GET_CLASS (streamtransmitter);
 
-  if (klass->add_remote_candidate) {
-    return klass->add_remote_candidate (streamtransmitter, candidate, error);
+  if (klass->set_remote_candidates) {
+    return klass->set_remote_candidates (streamtransmitter, candidates, error);
   } else {
     g_set_error (error, FS_ERROR, FS_ERROR_NOT_IMPLEMENTED,
       "add_remote_candidate not defined in stream transmitter class");
@@ -300,59 +365,83 @@ fs_stream_transmitter_add_remote_candidate (
   return FALSE;
 }
 
-
 /**
- * fs_stream_transmitter_remote_candidates_added:
+ * fs_stream_transmitter_force_remote_candidates:
  * @streamtransmitter: a #FsStreamTransmitter
+ * @remote_candidates: a #GList of #FsCandidate to force
+ * @error: location of a #GError, or NULL if no error occured
  *
- * Call this function when the remotes candidates have been set and the
- * checks can start. More candidates can be added afterwards
- */
-
-void
-fs_stream_transmitter_remote_candidates_added (
-    FsStreamTransmitter *streamtransmitter)
-{
-  FsStreamTransmitterClass *klass =
-    FS_STREAM_TRANSMITTER_GET_CLASS (streamtransmitter);
-
-  if (klass->remote_candidates_added) {
-    klass->remote_candidates_added (streamtransmitter);
-  } else {
-    GST_WARNING ("remote_candidates_added not defined in transmitter class");
-  }
-}
-
-/**
- * fs_stream_transmitter_select_candidate_pair:
- * @streamtransmitter: a #FsStreamTransmitter
- * @lfoundation: The foundation of the local candidate to be selected
- * @rfoundation: The foundation of the remote candidate to be selected
- * @error: location of a #GErrorh, or NULL if no error occured
+ * This function forces data to be sent immediately to the selected remote
+ * candidate, by-passing any connectivity checks. There should be at most
+ * one candidate per component.
  *
- * This function selects one pair of candidates to be selected to start
- * sending media on.
- *
- * Returns: TRUE if the candidate pair could be selected, FALSE otherwise
+ * Returns: %TRUE if the candidates could be forced, %FALSE otherwise
  */
 
 gboolean
-fs_stream_transmitter_select_candidate_pair (
-    FsStreamTransmitter *streamtransmitter, gchar *lfoundation,
-    gchar *rfoundation, GError **error)
+fs_stream_transmitter_force_remote_candidates (
+    FsStreamTransmitter *streamtransmitter,
+    GList *remote_candidates,
+    GError **error)
 {
   FsStreamTransmitterClass *klass =
     FS_STREAM_TRANSMITTER_GET_CLASS (streamtransmitter);
 
-  if (klass->select_candidate_pair) {
-    return klass->select_candidate_pair (streamtransmitter, lfoundation, rfoundation,
-    error);
+  if (klass->force_remote_candidates) {
+    return klass->force_remote_candidates (streamtransmitter,
+        remote_candidates, error);
   } else {
     g_set_error (error, FS_ERROR, FS_ERROR_NOT_IMPLEMENTED,
-      "select_candidate_pair not defined in stream transmitter class");
+      "force_remote_candidates not defined in stream transmitter class");
   }
 
   return FALSE;
+}
+
+/**
+ * fs_stream_transmitter_gather_local_candidates:
+ * @streamtransmitter: a #FsStreamTransmitter
+ * @error: location of a #GErrorh, or NULL if no error occured
+ *
+ * This function tells the transmitter to start gathering local candidates,
+ * signals for new candidates and newly active candidates can be emitted
+ * during the call to this function.
+ *
+ * Returns: %TRUE if it succeeds (or is not implemented), %FALSE otherwise
+ */
+
+gboolean
+fs_stream_transmitter_gather_local_candidates (
+    FsStreamTransmitter *streamtransmitter,
+    GError **error)
+{
+  FsStreamTransmitterClass *klass =
+    FS_STREAM_TRANSMITTER_GET_CLASS (streamtransmitter);
+
+  if (klass->gather_local_candidates)
+    return klass->gather_local_candidates (streamtransmitter, error);
+  else
+    return TRUE;
+}
+
+
+
+/**
+ * fs_stream_transmitter_stop:
+ * @streamtransmitter: a #FsStreamTransmitter
+ *
+ * This functions stops the #FsStreamTransmitter, it must be called before
+ * the last reference is dropped.
+ */
+
+void
+fs_stream_transmitter_stop (FsStreamTransmitter *streamtransmitter)
+{
+  FsStreamTransmitterClass *klass =
+    FS_STREAM_TRANSMITTER_GET_CLASS (streamtransmitter);
+
+  if (klass->stop)
+    klass->stop (streamtransmitter);
 }
 
 
@@ -370,6 +459,6 @@ void
 fs_stream_transmitter_emit_error (FsStreamTransmitter *streamtransmitter,
   gint error_no, gchar *error_msg, gchar *debug_msg)
 {
-  g_signal_emit (streamtransmitter, signals[ERROR], 0, error_no, error_msg,
-    debug_msg);
+  g_signal_emit (streamtransmitter, signals[ERROR_SIGNAL], 0, error_no,
+      error_msg, debug_msg);
 }

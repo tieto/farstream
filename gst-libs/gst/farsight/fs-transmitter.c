@@ -51,7 +51,7 @@
 /* Signals */
 enum
 {
-  ERROR,
+  ERROR_SIGNAL,
   LAST_SIGNAL
 };
 
@@ -165,14 +165,14 @@ fs_transmitter_class_init (FsTransmitterClass *klass)
    * This signal is emitted in any error condition
    *
    */
-  signals[ERROR] = g_signal_new ("error",
+  signals[ERROR_SIGNAL] = g_signal_new ("error",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
       0,
       NULL,
       NULL,
-      _fs_marshal_VOID__OBJECT_INT_STRING_STRING,
-      G_TYPE_NONE, 3, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING);
+      _fs_marshal_VOID__ENUM_STRING_STRING,
+      G_TYPE_NONE, 3, FS_TYPE_ERROR, G_TYPE_STRING, G_TYPE_STRING);
 
 
   gobject_class->dispose = fs_transmitter_dispose;
@@ -217,6 +217,10 @@ fs_transmitter_get_property (GObject *object,
                              GValue *value,
                              GParamSpec *pspec)
 {
+  GST_WARNING ("Subclass %s of FsTransmitter does not override the %s property"
+      " getter",
+      G_OBJECT_TYPE_NAME(object),
+      g_param_spec_get_name (pspec));
 }
 
 static void
@@ -225,6 +229,10 @@ fs_transmitter_set_property (GObject *object,
                              const GValue *value,
                              GParamSpec *pspec)
 {
+  GST_WARNING ("Subclass %s of FsTransmitter does not override the %s property"
+      " setter",
+      G_OBJECT_TYPE_NAME(object),
+      g_param_spec_get_name (pspec));
 }
 
 
@@ -253,13 +261,12 @@ fs_transmitter_new_stream_transmitter (FsTransmitter *transmitter,
 {
   FsTransmitterClass *klass = FS_TRANSMITTER_GET_CLASS (transmitter);
 
-  if (klass->new_stream_transmitter) {
-    return klass->new_stream_transmitter (transmitter, participant,
+  g_return_val_if_fail (transmitter, NULL);
+  g_return_val_if_fail (klass, NULL);
+  g_return_val_if_fail (klass->new_stream_transmitter, NULL);
+
+  return klass->new_stream_transmitter (transmitter, participant,
       n_parameters, parameters, error);
-  } else {
-    g_set_error (error, FS_ERROR, FS_ERROR_NOT_IMPLEMENTED,
-      "new_stream_transmitter not defined in class");
-  }
 
   return NULL;
 }
@@ -284,7 +291,7 @@ fs_transmitter_new (const gchar *type, guint components, GError **error)
 
   g_return_val_if_fail (type != NULL, NULL);
 
-  self = FS_TRANSMITTER(fs_plugin_create(type, "transmitter", error,
+  self = FS_TRANSMITTER (fs_plugin_create (type, "transmitter", error,
       "components", components, NULL));
 
   if (!self)
@@ -317,12 +324,27 @@ fs_transmitter_get_stream_transmitter_type (FsTransmitter *transmitter,
 {
   FsTransmitterClass *klass = FS_TRANSMITTER_GET_CLASS (transmitter);
 
-  if (klass->get_stream_transmitter_type) {
-    return klass->get_stream_transmitter_type (transmitter, error);
-  } else {
-    g_set_error (error, FS_ERROR, FS_ERROR_NOT_IMPLEMENTED,
-      "get_stream_transmitter_type not defined in class");
-  }
+  g_return_val_if_fail (klass, 0);
+  g_return_val_if_fail (klass->get_stream_transmitter_type, 0);
 
-  return 0;
+  return klass->get_stream_transmitter_type (transmitter, error);
+}
+
+
+/**
+ * fs_transmitter_emit_error:
+ * @transmitter: #FsTransmitter on which to emit the error signal
+ * @error_no: The number of the error
+ * @error_msg: Error message to be displayed to user
+ * @debug_msg: Debugging error message
+ *
+ * This function emit the "error" signal on a #FsTransmitter, it should
+ * only be called by subclasses.
+ */
+void
+fs_transmitter_emit_error (FsTransmitter *transmitter,
+  gint error_no, gchar *error_msg, gchar *debug_msg)
+{
+  g_signal_emit (transmitter, signals[ERROR_SIGNAL], 0, error_no,
+      error_msg, debug_msg);
 }

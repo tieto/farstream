@@ -31,7 +31,6 @@
   (values
     '("audio" "FS_MEDIA_TYPE_AUDIO")
     '("video" "FS_MEDIA_TYPE_VIDEO")
-    '("application" "FS_MEDIA_TYPE_APPLICATION")
     '("last" "FS_MEDIA_TYPE_LAST")
   )
 )
@@ -113,16 +112,48 @@
   )
 )
 
-(define-method to_gst_caps
-  (of-object "FsCodec")
-  (c-name "fs_codec_to_gst_caps")
-  (return-type "GstCaps*")
+(define-function fs_codec_list_are_equal
+  (c-name "fs_codec_list_are_equal")
+  (return-type "gboolean")
+  (parameters
+    '("GList*" "list1")
+    '("GList*" "list2")
+  )
 )
 
 (define-method to_string
   (of-object "FsMediaType")
   (c-name "fs_media_type_to_string")
   (return-type "const-gchar*")
+)
+
+(define-method add_optional_parameter
+  (of-object "FsCodec")
+  (c-name "fs_codec_add_optional_parameter")
+  (return-type "none")
+  (parameters
+    '("const-gchar*" "name")
+    '("const-gchar*" "value")
+  )
+)
+
+(define-method remove_optional_parameter
+  (of-object "FsCodec")
+  (c-name "fs_codec_remove_optional_parameter")
+  (return-type "none")
+  (parameters
+    '("FsCodecParameter*" "param")
+  )
+)
+
+(define-method get_optional_parameter
+  (of-object "FsCodec")
+  (c-name "fs_codec_get_optional_parameter")
+  (return-type "FsCodecParameter*")
+  (parameters
+    '("gchar*" "name")
+    '("gchar*" "value")
+  )
 )
 
 
@@ -204,30 +235,12 @@
   )
 )
 
-(define-function fs_candidate_get_by_id
-  (c-name "fs_candidate_get_by_id")
-  (return-type "FsCandidate*")
-  (parameters
-    '("const-GList*" "candidate_list")
-    '("const-gchar*" "candidate_id")
-  )
-)
-
-(define-method are_equal
-  (of-object "FsCandidate")
-  (c-name "fs_candidate_are_equal")
-  (return-type "gboolean")
-  (parameters
-    '("const-FsCandidate*" "cand2")
-  )
-)
-
 (define-function fs_candidate_new
   (c-name "fs_candidate_new")
   (is-constructor-of "FsCandidate")
   (return-type "FsCandidate*")
   (parameters
-    '("const-gchar*" "id")
+    '("const-gchar*" "foundation")
     '("guint" "component_id")
     '("FsCandidateType" "type")
     '("FsNetworkProtocol" "proto")
@@ -247,13 +260,16 @@
   (gtype-id "FS_TYPE_ERROR")
   (values
     '("construction" "FS_ERROR_CONSTRUCTION")
-    '("invalid-arguments" "FS_ERROR_INVALID_ARGUMENTS")
     '("internal" "FS_ERROR_INTERNAL")
+    '("invalid-arguments" "FS_ERROR_INVALID_ARGUMENTS")
     '("network" "FS_ERROR_NETWORK")
     '("not-implemented" "FS_ERROR_NOT_IMPLEMENTED")
     '("negotiation-failed" "FS_ERROR_NEGOTIATION_FAILED")
     '("unknown-codec" "FS_ERROR_UNKNOWN_CODEC")
     '("unknown-cname" "FS_ERROR_UNKNOWN_CNAME")
+    '("no-codecs" "FS_ERROR_NO_CODECS")
+    '("no-codecs-left" "FS_ERROR_NO_CODECS_LEFT")
+    '("connection-failed" "FS_ERROR_CONNECTION_FAILED")
   )
 )
 
@@ -272,6 +288,7 @@
 
 (define-method new_session
   (of-object "FsConference")
+  (unblock-threads t)
   (c-name "fs_conference_new_session")
   (return-type "FsSession*")
   (parameters
@@ -282,6 +299,7 @@
 
 (define-method new_participant
   (of-object "FsConference")
+  (unblock-threads t)
   (c-name "fs_conference_new_participant")
   (return-type "FsParticipant*")
   (parameters
@@ -347,6 +365,7 @@
 
 (define-method new_stream
   (of-object "FsSession")
+  (unblock-threads t)
   (c-name "fs_session_new_stream")
   (return-type "FsStream*")
   (parameters
@@ -361,6 +380,7 @@
 
 (define-method start_telephony_event
   (of-object "FsSession")
+  (unblock-threads t)
   (c-name "fs_session_start_telephony_event")
   (return-type "gboolean")
   (parameters
@@ -372,6 +392,7 @@
 
 (define-method stop_telephony_event
   (of-object "FsSession")
+  (unblock-threads t)
   (c-name "fs_session_stop_telephony_event")
   (return-type "gboolean")
   (parameters
@@ -381,6 +402,7 @@
 
 (define-method set_send_codec
   (of-object "FsSession")
+  (unblock-threads t)
   (c-name "fs_session_set_send_codec")
   (return-type "gboolean")
   (parameters
@@ -389,8 +411,20 @@
   )
 )
 
+(define-method set_codec_preferences
+  (of-object "FsSession")
+  (unblock-threads t)
+  (c-name "fs_session_set_codec_preferences")
+  (return-type "gboolean")
+  (parameters
+    '("GList*" "codec_preferences")
+    '("GError**" "error")
+  )
+)
+
 (define-method emit_error
   (of-object "FsSession")
+  (unblock-threads t)
   (c-name "fs_session_emit_error")
   (return-type "none")
   (parameters
@@ -444,6 +478,20 @@
   )
 )
 
+(define-enum StreamState
+  (in-module "Fs")
+  (c-name "FsStreamState")
+  (gtype-id "FS_TYPE_STREAM_STATE")
+  (values
+    '("failed" "FS_STREAM_STATE_FAILED")
+    '("disconnected" "FS_STREAM_STATE_DISCONNECTED")
+    '("gathering" "FS_STREAM_STATE_GATHERING")
+    '("connecting" "FS_STREAM_STATE_CONNECTING")
+    '("connected" "FS_STREAM_STATE_CONNECTED")
+    '("ready" "FS_STREAM_STATE_READY")
+  )
+)
+
 
 ;; From fs-stream.h
 
@@ -452,35 +500,31 @@
   (return-type "GType")
 )
 
-(define-method add_remote_candidate
+(define-method set_remote_candidates
   (of-object "FsStream")
-  (c-name "fs_stream_add_remote_candidate")
+  (unblock-threads t)
+  (c-name "fs_stream_set_remote_candidates")
   (return-type "gboolean")
   (parameters
-    '("FsCandidate*" "candidate")
+    '("GList*" "candidates")
     '("GError**" "error")
   )
 )
 
-(define-method remote_candidates_added
+(define-method force_remote_candidates
   (of-object "FsStream")
-  (c-name "fs_stream_remote_candidates_added")
-  (return-type "none")
-)
-
-(define-method select_candidate_pair
-  (of-object "FsStream")
-  (c-name "fs_stream_select_candidate_pair")
+  (unblock-threads t)
+  (c-name "fs_stream_force_remote_candidates")
   (return-type "gboolean")
   (parameters
-    '("gchar*" "lfoundation")
-    '("gchar*" "rfoundation")
+    '("GList*" "remote_candidates")
     '("GError**" "error")
   )
 )
 
 (define-method set_remote_codecs
   (of-object "FsStream")
+  (unblock-threads t)
   (c-name "fs_stream_set_remote_codecs")
   (return-type "gboolean")
   (parameters
@@ -491,6 +535,7 @@
 
 (define-method emit_error
   (of-object "FsStream")
+  (unblock-threads t)
   (c-name "fs_stream_emit_error")
   (return-type "none")
   (parameters
@@ -502,6 +547,7 @@
 
 (define-method emit_src_pad_added
   (of-object "FsStream")
+  (unblock-threads t)
   (c-name "fs_stream_emit_src_pad_added")
   (return-type "none")
   (parameters
@@ -603,6 +649,11 @@
 
 (define-function fs_stream_direction_get_type
   (c-name "fs_stream_direction_get_type")
+  (return-type "GType")
+)
+
+(define-function fs_stream_state_get_type
+  (c-name "fs_stream_state_get_type")
   (return-type "GType")
 )
 

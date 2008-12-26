@@ -39,7 +39,7 @@ G_BEGIN_DECLS
 
 /* TYPE MACROS */
 #define FS_TYPE_PLUGIN \
-  (fs_plugin_get_type())
+  (fs_plugin_get_type ())
 #define FS_PLUGIN(obj) \
   (G_TYPE_CHECK_INSTANCE_CAST((obj), FS_TYPE_PLUGIN, FsPlugin))
 #define FS_PLUGIN_CLASS(klass) \
@@ -50,6 +50,13 @@ G_BEGIN_DECLS
   (G_TYPE_CHECK_CLASS_TYPE((klass), FS_TYPE_PLUGIN))
 #define FS_PLUGIN_GET_CLASS(obj) \
   (G_TYPE_INSTANCE_GET_CLASS ((obj), FS_TYPE_PLUGIN, FsPluginClass))
+
+/**
+ * FsPlugin:
+ * @parent: the parent object
+ *
+ * This structure represents a plugin, it is opaque.
+ */
 
 typedef struct _FsPlugin FsPlugin;
 typedef struct _FsPluginClass FsPluginClass;
@@ -63,21 +70,22 @@ struct _FsPlugin
 
   GType  type;
 
-  gchar *name;			/* name of the plugin */
+  gchar *name;                  /* name of the plugin */
 
-  /* callbacks */
-  /* This function is called when the last instance of the plugin is
-   * unloaded. It can be useful to deallocate resources common for all
-   * instances of the plugin. */
-  void (*unload) (FsPlugin * plugin);
+  /*< private >*/
 
   FsPluginPrivate *priv;
+
+  gpointer unused[4];
 };
 
 struct _FsPluginClass
 {
   GTypeModuleClass parent_class;
 
+  /*< private >*/
+
+  gpointer unused[4];
 };
 
 GType fs_plugin_get_type (void);
@@ -97,17 +105,14 @@ GObject *fs_plugin_create (const gchar *name,
 /**
  * FS_INIT_PLUGIN:
  * @type_register_func: A function that register a #GType and returns it
- * @inunload: a function of type void (*unload) (FsPlugin * plugin) to be
- * called when the plugin is unloaded
  *
  * This macro is used to declare Farsight plugins and must be used once
  * in any farsight plugin.
  */
 
-#define FS_INIT_PLUGIN(type_register_func, inunload)            \
+#define FS_INIT_PLUGIN(type_register_func)            \
     G_MODULE_EXPORT void fs_init_plugin (FsPlugin *plugin) {    \
       plugin->type = (type_register_func (plugin));             \
-      plugin->unload = (inunload);                              \
     }
 
 

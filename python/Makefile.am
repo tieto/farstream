@@ -3,10 +3,10 @@ GSTPYDEFS=`pkg-config --variable=defsdir gst-python-0.10`
 
 AM_CPPFLAGS =						\
 	-I.						\
-	-I$(top_srcdir)/gst-libs/gst/farsight/		\
+	-I$(top_srcdir)/gst-libs/			\
 	-DDATADIR=\""$(datadir)"\"			\
 	$(PYFARSIGHT_CFLAGS)				\
-	`python-config --cflags`			\
+	$(PYTHON_INCLUDES)				\
 	$(FS2_INTERNAL_CFLAGS) 				\
 	$(FS2_CFLAGS) 					\
 	$(WARN_CFLAGS)

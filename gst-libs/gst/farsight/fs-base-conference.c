@@ -27,7 +27,7 @@
  * SECTION:fs-base-conference
  * @short_description: Base class for Farsight Conference Gstreamer Elements
  *
- * This base class must be used by all Farsight Conference elements. It makes
+ * This base class must be subclassed by all Farsight Conference elements. It makes
  * sure to agreggate the errors and maintain the lifecycles of the instances in
  * the API.
  */
@@ -55,23 +55,19 @@ enum
   PROP_0
 };
 
+/*
 #define FS_BASE_CONFERENCE_GET_PRIVATE(obj) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((obj), FS_TYPE_BASE_CONFERENCE, FsBaseConferencePrivate))
 
 struct _FsBaseConferencePrivate
 {
 };
+*/
 
 GST_BOILERPLATE_WITH_INTERFACE (
     FsBaseConference, fs_base_conference,
     GstBin, GST_TYPE_BIN,
     FsConference, FS_TYPE_CONFERENCE, fs_conference);
-
-static void fs_base_conference_set_property (GObject *object, guint prop_id,
-                                             const GValue *value,
-                                             GParamSpec *pspec);
-static void fs_base_conference_get_property (GObject *object, guint prop_id,
-                                             GValue *value, GParamSpec *pspec);
 
 static FsSession *fs_base_conference_new_session (FsConference *conf,
                                                   FsMediaType media_type,
@@ -81,15 +77,14 @@ static FsParticipant *fs_base_conference_new_participant (FsConference *conf,
     GError **error);
 
 void fs_base_conference_error (GObject *signal_src, GObject *error_src,
-                               gint error_no, gchar *error_msg,
+                               FsError error_no, gchar *error_msg,
                                gchar *debug_msg, FsBaseConference *conf);
 
 void
 fs_base_conference_init_debug (void)
 {
-  if (!fs_base_conference_debug)
-    GST_DEBUG_CATEGORY_INIT (fs_base_conference_debug, "fsbaseconference", 0,
-        "farsight base conference library");
+  GST_DEBUG_CATEGORY_INIT (fs_base_conference_debug, "fsbaseconference", 0,
+      "farsight base conference library");
 }
 
 static void
@@ -108,11 +103,6 @@ fs_base_conference_class_init (FsBaseConferenceClass * klass)
   // g_type_class_add_private (klass, sizeof (FsBaseConferencePrivate));
 
   parent_class = g_type_class_peek_parent (klass);
-
-  gobject_class->set_property =
-      GST_DEBUG_FUNCPTR (fs_base_conference_set_property);
-  gobject_class->get_property =
-      GST_DEBUG_FUNCPTR (fs_base_conference_get_property);
 }
 
 static void
@@ -150,35 +140,36 @@ fs_base_conference_new_session (FsConference *conf,
 
   FsSession *new_session = NULL;
 
-  if (klass->new_session) {
-    new_session = klass->new_session (base_conf, media_type, error);
+  g_return_val_if_fail (base_conf, NULL);
+  g_return_val_if_fail (klass, NULL);
+  g_return_val_if_fail (klass->new_session, NULL);
 
-    if (!new_session)
-      return NULL;
+  new_session = klass->new_session (base_conf, media_type, error);
 
-    /* Let's catch all session errors and send them over the GstBus */
-    g_signal_connect (new_session, "error",
-        G_CALLBACK (fs_base_conference_error), base_conf);
-  } else {
-    GST_WARNING_OBJECT (conf, "new_session not defined in element");
-    g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
-      "new_session not defined in element");
-  }
+  if (!new_session)
+    return NULL;
+
+  /* Let's catch all session errors and send them over the GstBus */
+  g_signal_connect (new_session, "error",
+      G_CALLBACK (fs_base_conference_error), base_conf);
 
   return new_session;
 }
 
 void
 fs_base_conference_error (GObject *signal_src, GObject *error_src,
-                          gint error_no, gchar *error_msg,
+                          FsError error_no, gchar *error_msg,
                           gchar *debug_msg, FsBaseConference *conf)
 {
   GstMessage *gst_msg = NULL;
   GstStructure *error_struct = NULL;
 
+  if (debug_msg == NULL)
+    debug_msg = error_msg;
+
   error_struct = gst_structure_new ("farsight-error",
       "src-object", G_TYPE_OBJECT, error_src,
-      "error-no", G_TYPE_INT, error_no,
+      "error-no", FS_TYPE_ERROR, error_no,
       "error-msg", G_TYPE_STRING, error_msg,
       "debug-msg", G_TYPE_STRING, debug_msg,
       NULL);
@@ -191,19 +182,6 @@ fs_base_conference_error (GObject *signal_src, GObject *error_src,
   }
 }
 
-static void
-fs_base_conference_set_property (GObject *object, guint prop_id,
-                                 const GValue *value,
-                                 GParamSpec *pspec)
-{
-}
-
-static void
-fs_base_conference_get_property (GObject *object, guint prop_id,
-                                 GValue *value, GParamSpec *pspec)
-{
-}
-
 
 static FsParticipant *
 fs_base_conference_new_participant (FsConference *conf,
@@ -213,11 +191,9 @@ fs_base_conference_new_participant (FsConference *conf,
   FsBaseConference *baseconf = FS_BASE_CONFERENCE (conf);
   FsBaseConferenceClass *klass = FS_BASE_CONFERENCE_GET_CLASS (conf);
 
-  if (klass->new_participant) {
-    return klass->new_participant (baseconf, cname, error);
-  } else {
-    GST_WARNING_OBJECT (conf, "new_session not defined in element");
-  }
+  g_return_val_if_fail (baseconf, NULL);
+  g_return_val_if_fail (klass, NULL);
+  g_return_val_if_fail (klass->new_participant, NULL);
 
-  return NULL;
+  return klass->new_participant (baseconf, cname, error);
 }

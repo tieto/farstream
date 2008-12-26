@@ -60,7 +60,6 @@ fs_media_type_get_type (void)
     static const GEnumValue values[] = {
       { FS_MEDIA_TYPE_AUDIO, "FS_MEDIA_TYPE_AUDIO", "audio" },
       { FS_MEDIA_TYPE_VIDEO, "FS_MEDIA_TYPE_VIDEO", "video" },
-      { FS_MEDIA_TYPE_APPLICATION, "FS_MEDIA_TYPE_APPLICATION", "application" },
       { FS_MEDIA_TYPE_LAST, "FS_MEDIA_TYPE_LAST", "last" },
       { 0, NULL, NULL }
     };
@@ -131,6 +130,24 @@ fs_stream_direction_get_type (void)
   }
   return etype;
 }
+GType
+fs_stream_state_get_type (void)
+{
+  static GType etype = 0;
+  if (etype == 0) {
+    static const GEnumValue values[] = {
+      { FS_STREAM_STATE_FAILED, "FS_STREAM_STATE_FAILED", "failed" },
+      { FS_STREAM_STATE_DISCONNECTED, "FS_STREAM_STATE_DISCONNECTED", "disconnected" },
+      { FS_STREAM_STATE_GATHERING, "FS_STREAM_STATE_GATHERING", "gathering" },
+      { FS_STREAM_STATE_CONNECTING, "FS_STREAM_STATE_CONNECTING", "connecting" },
+      { FS_STREAM_STATE_CONNECTED, "FS_STREAM_STATE_CONNECTED", "connected" },
+      { FS_STREAM_STATE_READY, "FS_STREAM_STATE_READY", "ready" },
+      { 0, NULL, NULL }
+    };
+    etype = g_enum_register_static ("FsStreamState", values);
+  }
+  return etype;
+}
 
 /* enumerations from "fs-conference-iface.h" */
 GType
@@ -140,13 +157,16 @@ fs_error_get_type (void)
   if (etype == 0) {
     static const GEnumValue values[] = {
       { FS_ERROR_CONSTRUCTION, "FS_ERROR_CONSTRUCTION", "construction" },
-      { FS_ERROR_INVALID_ARGUMENTS, "FS_ERROR_INVALID_ARGUMENTS", "invalid-arguments" },
       { FS_ERROR_INTERNAL, "FS_ERROR_INTERNAL", "internal" },
+      { FS_ERROR_INVALID_ARGUMENTS, "FS_ERROR_INVALID_ARGUMENTS", "invalid-arguments" },
       { FS_ERROR_NETWORK, "FS_ERROR_NETWORK", "network" },
       { FS_ERROR_NOT_IMPLEMENTED, "FS_ERROR_NOT_IMPLEMENTED", "not-implemented" },
       { FS_ERROR_NEGOTIATION_FAILED, "FS_ERROR_NEGOTIATION_FAILED", "negotiation-failed" },
       { FS_ERROR_UNKNOWN_CODEC, "FS_ERROR_UNKNOWN_CODEC", "unknown-codec" },
       { FS_ERROR_UNKNOWN_CNAME, "FS_ERROR_UNKNOWN_CNAME", "unknown-cname" },
+      { FS_ERROR_NO_CODECS, "FS_ERROR_NO_CODECS", "no-codecs" },
+      { FS_ERROR_NO_CODECS_LEFT, "FS_ERROR_NO_CODECS_LEFT", "no-codecs-left" },
+      { FS_ERROR_CONNECTION_FAILED, "FS_ERROR_CONNECTION_FAILED", "connection-failed" },
       { 0, NULL, NULL }
     };
     etype = g_enum_register_static ("FsError", values);

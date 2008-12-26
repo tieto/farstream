@@ -3,9 +3,28 @@ noinst_PROGRAMS = codec-discovery
 
 codec_discovery_SOURCES = codec-discovery.c \
 		$(top_srcdir)/gst/fsrtpconference/fs-rtp-discover-codecs.c \
-		$(top_srcdir)/gst/fsrtpconference/fs-rtp-codec-cache.c
-codec_discovery_CFLAGS = -I$(top_srcdir)/gst/fsrtpconference/ \
-	$(FS2_INTERNAL_CFLAGS) $(FS2_CFLAGS) $(GST_CFLAGS)  $(CFLAGS) \
-	-DSTANDALONE
-LDADD = $(GST_LIBS) $(GST_CHECK_LIBS) \
-	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-0.10.la
+		$(top_srcdir)/gst/fsrtpconference/fs-rtp-codec-cache.c \
+		$(top_srcdir)/gst/fsrtpconference/fs-rtp-special-source.c \
+		$(top_srcdir)/gst/fsrtpconference/fs-rtp-dtmf-event-source.c \
+		$(top_srcdir)/gst/fsrtpconference/fs-rtp-dtmf-sound-source.c \
+		$(top_srcdir)/gst/fsrtpconference/fs-rtp-codec-negotiation.c \
+		$(top_srcdir)/gst/fsrtpconference/fs-rtp-specific-nego.c \
+		$(top_srcdir)/gst/fsrtpconference/fs-rtp-conference.c \
+		$(top_srcdir)/gst/fsrtpconference/fs-rtp-session.c \
+		$(top_srcdir)/gst/fsrtpconference/fs-rtp-stream.c \
+		$(top_srcdir)/gst/fsrtpconference/fs-rtp-substream.c \
+		$(top_srcdir)/gst/fsrtpconference/fs-rtp-participant.c \
+		$(top_srcdir)/gst/fsrtpconference/fs-rtp-marshal.c
+
+codec_discovery_CFLAGS = \
+	-I$(top_srcdir)/gst/fsrtpconference/ \
+	$(FS2_INTERNAL_CFLAGS) \
+	$(FS2_CFLAGS) \
+	$(GST_CFLAGS) \
+	$(CFLAGS)
+
+LDADD = \
+	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-0.10.la \
+	$(GST_CHECK_LIBS) \
+	-lgstrtp-@GST_MAJORMINOR@ \
+	$(GST_LIBS) 

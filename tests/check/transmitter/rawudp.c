@@ -26,6 +26,9 @@
 #include <gst/farsight/fs-transmitter.h>
 #include <gst/farsight/fs-conference-iface.h>
 
+#include <arpa/inet.h>
+#include <netdb.h>
+
 #include "check-threadsafe.h"
 #include "generic.h"
 
@@ -34,10 +37,16 @@ GMainLoop *loop = NULL;
 gint candidates[2] = {0, 0};
 GstElement *pipeline = NULL;
 gboolean src_setup[2] = {FALSE, FALSE};
+volatile gint running = TRUE;
+guint received_known[2] = {0, 0};
+gboolean has_stun = FALSE;
+gboolean associate_on_source = TRUE;
+
 
 enum {
-  FLAG_HAS_STUN = 1 << 0,
-  FLAG_IS_LOCAL = 1 << 1
+  FLAG_HAS_STUN  = 1 << 0,
+  FLAG_IS_LOCAL  = 1 << 1,
+  FLAG_NO_SOURCE = 1 << 2
 };
 
 #define RTP_PORT 9828
@@ -64,13 +73,37 @@ GST_START_TEST (test_rawudptransmitter_new)
 
   g_object_get (trans, "gst-sink", &trans_sink, "gst-src", &trans_src, NULL);
 
-  fail_if (trans_sink == NULL, "Sink is NULL");
-  fail_if (trans_src == NULL, "Src is NULL");
+  ts_fail_if (trans_sink == NULL, "Sink is NULL");
+  ts_fail_if (trans_src == NULL, "Src is NULL");
 
   gst_object_unref (trans_sink);
   gst_object_unref (trans_src);
 
   g_object_unref (trans);
+
+  /* lets do it again to see if it still works */
+
+  trans = fs_transmitter_new ("rawudp", 2, &error);
+
+  if (error) {
+    ts_fail ("Error creating transmitter: (%s:%d) %s",
+      g_quark_to_string (error->domain), error->code, error->message);
+  }
+
+  ts_fail_if (trans == NULL, "No transmitter create, yet error is still NULL");
+
+  pipeline = setup_pipeline (trans, NULL);
+
+  g_object_get (trans, "gst-sink", &trans_sink, "gst-src", &trans_src, NULL);
+
+  ts_fail_if (trans_sink == NULL, "Sink is NULL");
+  ts_fail_if (trans_src == NULL, "Src is NULL");
+
+  gst_object_unref (trans_sink);
+  gst_object_unref (trans_src);
+
+  g_object_unref (trans);
+
 
   gst_object_unref (pipeline);
 
@@ -81,9 +114,9 @@ static void
 _new_local_candidate (FsStreamTransmitter *st, FsCandidate *candidate,
   gpointer user_data)
 {
-  gboolean has_stun = GPOINTER_TO_INT (user_data) & FLAG_HAS_STUN;
   gboolean is_local = GPOINTER_TO_INT (user_data) & FLAG_IS_LOCAL;
   GError *error = NULL;
+  GList *item = NULL;
   gboolean ret;
 
   g_debug ("Has local candidate %s:%u of type %d",
@@ -103,7 +136,7 @@ _new_local_candidate (FsStreamTransmitter *st, FsCandidate *candidate,
       candidate->ip, candidate->port, candidate->type, candidate->component_id);
   else {
     ts_fail_unless (candidate->type == FS_CANDIDATE_TYPE_HOST,
-      "Does not have stun, but candidate is not host");
+        "Does not have stun, but candidate is not host");
     if (candidate->component_id == FS_COMPONENT_RTP) {
       ts_fail_unless (candidate->port % 2 == 0, "RTP port should be odd");
     } else if (candidate->component_id == FS_COMPONENT_RTCP) {
@@ -129,21 +162,23 @@ _new_local_candidate (FsStreamTransmitter *st, FsCandidate *candidate,
   g_debug ("New local candidate %s:%d of type %d for component %d",
     candidate->ip, candidate->port, candidate->type, candidate->component_id);
 
-  ret = fs_stream_transmitter_add_remote_candidate (st, candidate, &error);
+  item = g_list_prepend (NULL, candidate);
+
+  ret = fs_stream_transmitter_set_remote_candidates (st, item, &error);
+
+  g_list_free (item);
 
   if (error)
     ts_fail ("Error while adding candidate: (%s:%d) %s",
       g_quark_to_string (error->domain), error->code, error->message);
 
-  ts_fail_unless(ret == TRUE, "No detailed error from add_remote_candidate");
+  ts_fail_unless (ret == TRUE, "No detailed error from add_remote_candidate");
 
 }
 
 static void
 _local_candidates_prepared (FsStreamTransmitter *st, gpointer user_data)
 {
-  gboolean has_stun = GPOINTER_TO_INT (user_data) & FLAG_HAS_STUN;
-
   ts_fail_if (candidates[0] == 0, "candidates-prepared with no RTP candidate");
   ts_fail_if (candidates[1] == 0, "candidates-prepared with no RTCP candidate");
 
@@ -154,7 +189,10 @@ _local_candidates_prepared (FsStreamTransmitter *st, gpointer user_data)
    */
 
   if (has_stun)
+  {
     g_main_loop_quit (loop);
+    g_atomic_int_set(&running, FALSE);
+  }
 }
 
 
@@ -173,19 +211,6 @@ _new_active_candidate_pair (FsStreamTransmitter *st, FsCandidate *local,
   if (!src_setup[local->component_id-1])
     setup_fakesrc (user_data, pipeline, local->component_id);
   src_setup[local->component_id-1] = TRUE;
-}
-
-static gboolean
-_start_pipeline (gpointer user_data)
-{
-  GstElement *pipeline = user_data;
-
-  g_debug ("Starting pipeline");
-
-  ts_fail_if (gst_element_set_state (pipeline, GST_STATE_PLAYING) ==
-    GST_STATE_CHANGE_FAILURE, "Could not set the pipeline to playing");
-
-  return FALSE;
 }
 
 static void
@@ -211,8 +236,43 @@ _handoff_handler (GstElement *element, GstBuffer *buffer, GstPad *pad,
 
   if (buffer_count[0] == 20 && buffer_count[1] == 20) {
     /* TEST OVER */
+    if (associate_on_source)
+      ts_fail_unless (buffer_count[0] == received_known[0] &&
+          buffer_count[1] == received_known[1], "Some known buffers from known"
+          " sources have not been reported (%d != %u || %d != %u)",
+          buffer_count[0], received_known[0],
+          buffer_count[1], received_known[1]);
+    else
+      ts_fail_unless (received_known[0] == 0 && received_known[1] == 0,
+          "Got a known-source-packet-received signal when we shouldn't have");
+    g_atomic_int_set(&running, FALSE);
     g_main_loop_quit (loop);
   }
+}
+
+static void
+_known_source_packet_received (FsStreamTransmitter *st, guint component_id,
+    GstBuffer *buffer, gpointer user_data)
+{
+  ts_fail_unless (associate_on_source == TRUE,
+      "Got known-source-packet-received when we shouldn't have");
+
+  ts_fail_unless (component_id == 1 || component_id == 2,
+      "Invalid component id %u", component_id);
+
+  ts_fail_unless (GST_IS_BUFFER (buffer), "Invalid buffer received at %p",
+      buffer);
+
+  received_known[component_id - 1]++;
+}
+
+static gboolean
+check_running (gpointer data)
+{
+  if (g_atomic_int_get (&running) == FALSE)
+    g_main_loop_quit (loop);
+
+  return FALSE;
 }
 
 
@@ -223,6 +283,16 @@ run_rawudp_transmitter_test (gint n_parameters, GParameter *params,
   GError *error = NULL;
   FsTransmitter *trans;
   FsStreamTransmitter *st;
+  GstBus *bus = NULL;
+
+  buffer_count[0] = 0;
+  buffer_count[1] = 0;
+  received_known[0] = 0;
+  received_known[1] = 0;
+
+  has_stun = flags & FLAG_HAS_STUN;
+
+  associate_on_source = !(flags & FLAG_NO_SOURCE);
 
   loop = g_main_loop_new (NULL, FALSE);
   trans = fs_transmitter_new ("rawudp", 2, &error);
@@ -236,11 +306,15 @@ run_rawudp_transmitter_test (gint n_parameters, GParameter *params,
 
   pipeline = setup_pipeline (trans, G_CALLBACK (_handoff_handler));
 
+  bus = gst_element_get_bus (pipeline);
+  gst_bus_add_watch (bus, bus_error_callback, NULL);
+  gst_object_unref (bus);
+
   st = fs_transmitter_new_stream_transmitter (trans, NULL, n_parameters, params,
     &error);
 
   if (error) {
-    if (flags & FLAG_HAS_STUN &&
+    if (has_stun &&
         error->domain == FS_ERROR &&
         error->code == FS_ERROR_NETWORK &&
         error->message && strstr (error->message, "unreachable"))
@@ -257,18 +331,36 @@ run_rawudp_transmitter_test (gint n_parameters, GParameter *params,
 
   ts_fail_unless (g_signal_connect (st, "new-local-candidate",
       G_CALLBACK (_new_local_candidate), GINT_TO_POINTER (flags)),
-    "Coult not connect new-local-candidate signal");
+    "Could not connect new-local-candidate signal");
   ts_fail_unless (g_signal_connect (st, "local-candidates-prepared",
       G_CALLBACK (_local_candidates_prepared), GINT_TO_POINTER (flags)),
-    "Coult not connect local-candidates-prepared signal");
+    "Could not connect local-candidates-prepared signal");
   ts_fail_unless (g_signal_connect (st, "new-active-candidate-pair",
       G_CALLBACK (_new_active_candidate_pair), trans),
-    "Coult not connect new-active-candidate-pair signal");
+    "Could not connect new-active-candidate-pair signal");
   ts_fail_unless (g_signal_connect (st, "error",
-      G_CALLBACK (_stream_transmitter_error), NULL),
+      G_CALLBACK (stream_transmitter_error), NULL),
     "Could not connect error signal");
+  ts_fail_unless (g_signal_connect (st, "known-source-packet-received",
+      G_CALLBACK (_known_source_packet_received), NULL),
+    "Could not connect known-source-packet-received signal");
 
-  g_idle_add (_start_pipeline, pipeline);
+  ts_fail_if (gst_element_set_state (pipeline, GST_STATE_PLAYING) ==
+    GST_STATE_CHANGE_FAILURE, "Could not set the pipeline to playing");
+
+  if (!fs_stream_transmitter_gather_local_candidates (st, &error))
+  {
+    if (error)
+    {
+      ts_fail ("Could not start gathering local candidates (%s:%d) %s",
+          g_quark_to_string (error->domain), error->code, error->message);
+    }
+    else
+      ts_fail ("Could not start gathering candidates"
+          " (without a specified error)");
+  }
+
+  g_idle_add (check_running, NULL);
 
   g_main_run (loop);
 
@@ -279,7 +371,10 @@ run_rawudp_transmitter_test (gint n_parameters, GParameter *params,
   gst_element_get_state (pipeline, NULL, NULL, GST_CLOCK_TIME_NONE);
 
   if (st)
+  {
+    fs_stream_transmitter_stop (st);
     g_object_unref (st);
+  }
 
   g_object_unref (trans);
 
@@ -295,6 +390,18 @@ GST_START_TEST (test_rawudptransmitter_run_nostun)
 }
 GST_END_TEST;
 
+GST_START_TEST (test_rawudptransmitter_run_nostun_nosource)
+{
+  GParameter param = {NULL, {0}};
+
+  param.name = "associate-on-source";
+  g_value_init (&param.value, G_TYPE_BOOLEAN);
+  g_value_set_boolean (&param.value, FALSE);
+
+  run_rawudp_transmitter_test (1, &param, FLAG_NO_SOURCE);
+}
+GST_END_TEST;
+
 GST_START_TEST (test_rawudptransmitter_run_invalid_stun)
 {
   GParameter params[3];
@@ -303,7 +410,7 @@ GST_START_TEST (test_rawudptransmitter_run_invalid_stun)
    * Hopefully not one is runing a stun server on local port 7777
    */
 
-  memset (params, 0, sizeof(GParameter) * 3);
+  memset (params, 0, sizeof (GParameter) * 3);
 
   params[0].name = "stun-ip";
   g_value_init (&params[0].value, G_TYPE_STRING);
@@ -325,12 +432,34 @@ GST_END_TEST;
 GST_START_TEST (test_rawudptransmitter_run_stunserver_dot_org)
 {
   GParameter params[3];
+  char buf[INET_ADDRSTRLEN];
+  struct addrinfo hints = {0};
+  struct addrinfo *res = NULL;
 
-  memset (params, 0, sizeof(GParameter) * 3);
+  hints.ai_family = AF_INET;
+  hints.ai_socktype = SOCK_DGRAM;
+  hints.ai_flags = AI_ADDRCONFIG;
+
+  if (getaddrinfo ("stunserver.org", NULL, &hints, &res))
+  {
+    g_debug ("Could not resolve stunserver.org, skipping");
+    return;
+  }
+
+  if (inet_ntop (AF_INET, &((struct sockaddr_in*)res->ai_addr)->sin_addr,
+          buf, INET_ADDRSTRLEN) == NULL)
+  {
+    g_debug ("Could not stringify address, skipping test");
+    return;
+  }
+
+  freeaddrinfo (res);
+
+  memset (params, 0, sizeof (GParameter) * 3);
 
   params[0].name = "stun-ip";
   g_value_init (&params[0].value, G_TYPE_STRING);
-  g_value_set_static_string (&params[0].value, "192.245.12.229");
+  g_value_set_string (&params[0].value, buf);
 
   params[1].name = "stun-port";
   g_value_init (&params[1].value, G_TYPE_UINT);
@@ -351,24 +480,16 @@ GST_START_TEST (test_rawudptransmitter_run_local_candidates)
   GList *list = NULL;
   FsCandidate *candidate;
 
-  memset (params, 0, sizeof(GParameter) * 1);
+  memset (params, 0, sizeof (GParameter) * 1);
 
-  candidate = g_new0 (FsCandidate, 1);
-  candidate->candidate_id = g_strdup ("L1");
-  candidate->component_id = FS_COMPONENT_RTP;
-  candidate->ip = g_strdup ("127.0.0.1");
-  candidate->port = RTP_PORT;
-  candidate->proto = FS_NETWORK_PROTOCOL_UDP;
-  candidate->type = FS_CANDIDATE_TYPE_HOST;
+  candidate = fs_candidate_new ("L1",
+      FS_COMPONENT_RTP, FS_CANDIDATE_TYPE_HOST,
+      FS_NETWORK_PROTOCOL_UDP, "127.0.0.1", RTP_PORT);
   list = g_list_prepend (list, candidate);
 
-  candidate = g_new0 (FsCandidate, 1);
-  candidate->candidate_id = g_strdup ("L2");
-  candidate->component_id = FS_COMPONENT_RTCP;
-  candidate->ip = g_strdup ("127.0.0.1");
-  candidate->port = RTCP_PORT;
-  candidate->proto = FS_NETWORK_PROTOCOL_UDP;
-  candidate->type = FS_CANDIDATE_TYPE_HOST;
+  candidate = fs_candidate_new ("L1",
+      FS_COMPONENT_RTCP, FS_CANDIDATE_TYPE_HOST,
+      FS_NETWORK_PROTOCOL_UDP, "127.0.0.1", RTCP_PORT);
   list = g_list_prepend (list, candidate);
 
   params[0].name = "preferred-local-candidates";
@@ -383,6 +504,120 @@ GST_START_TEST (test_rawudptransmitter_run_local_candidates)
 }
 GST_END_TEST;
 
+static gboolean
+_bus_stop_stream_cb (GstBus *bus, GstMessage *message, gpointer user_data)
+{
+  FsStreamTransmitter *st = user_data;
+  GstState oldstate, newstate, pending;
+
+  if (GST_MESSAGE_TYPE (message) != GST_MESSAGE_STATE_CHANGED ||
+      G_OBJECT_TYPE (GST_MESSAGE_SRC (message)) != GST_TYPE_PIPELINE)
+    return bus_error_callback (bus, message, user_data);
+
+  gst_message_parse_state_changed (message, &oldstate, &newstate, &pending);
+
+  if (newstate != GST_STATE_PLAYING)
+    return TRUE;
+
+  if (pending != GST_STATE_VOID_PENDING)
+    ts_fail ("New state playing, but pending is %d", pending);
+
+  g_debug ("Stopping stream transmitter");
+
+  fs_stream_transmitter_stop (st);
+  g_object_unref (st);
+
+  g_debug ("Stopped stream transmitter");
+
+  g_atomic_int_set(&running, FALSE);
+  g_main_loop_quit (loop);
+
+  return TRUE;
+}
+
+static void
+_handoff_handler_empty (GstElement *element, GstBuffer *buffer, GstPad *pad,
+  gpointer user_data)
+{
+}
+
+
+/*
+ * This test checks that starting a stream, getting it to playing
+ * then stopping it, while the pipeline is playing works
+ */
+
+GST_START_TEST (test_rawudptransmitter_stop_stream)
+{
+  GError *error = NULL;
+  FsTransmitter *trans;
+  FsStreamTransmitter *st;
+  GstBus *bus = NULL;
+
+  has_stun = FALSE;
+
+  loop = g_main_loop_new (NULL, FALSE);
+  trans = fs_transmitter_new ("rawudp", 2, &error);
+
+  if (error) {
+    ts_fail ("Error creating transmitter: (%s:%d) %s",
+      g_quark_to_string (error->domain), error->code, error->message);
+  }
+
+  ts_fail_if (trans == NULL, "No transmitter create, yet error is still NULL");
+
+  pipeline = setup_pipeline (trans, G_CALLBACK (_handoff_handler_empty));
+
+  st = fs_transmitter_new_stream_transmitter (trans, NULL, 0, NULL, &error);
+
+  if (error)
+    ts_fail ("Error creating stream transmitter: (%s:%d) %s",
+        g_quark_to_string (error->domain), error->code, error->message);
+
+  ts_fail_if (st == NULL, "No stream transmitter created, yet error is NULL");
+
+  bus = gst_element_get_bus (pipeline);
+  gst_bus_add_watch (bus, _bus_stop_stream_cb, st);
+  gst_object_unref (bus);
+
+  ts_fail_unless (g_signal_connect (st, "new-local-candidate",
+          G_CALLBACK (_new_local_candidate), NULL),
+      "Could not connect new-local-candidate signal");
+  ts_fail_unless (g_signal_connect (st, "new-active-candidate-pair",
+          G_CALLBACK (_new_active_candidate_pair), trans),
+      "Could not connect new-active-candidate-pair signal");
+  ts_fail_unless (g_signal_connect (st, "error",
+          G_CALLBACK (stream_transmitter_error), NULL),
+      "Could not connect error signal");
+
+  ts_fail_if (gst_element_set_state (pipeline, GST_STATE_PLAYING) ==
+    GST_STATE_CHANGE_FAILURE, "Could not set the pipeline to playing");
+
+  if (!fs_stream_transmitter_gather_local_candidates (st, &error))
+  {
+    if (error)
+      ts_fail ("Could not start gathering local candidates %s",
+          error->message);
+    else
+      ts_fail ("Could not start gathering candidates"
+          " (without a specified error)");
+  }
+
+  g_idle_add (check_running, NULL);
+
+  g_main_run (loop);
+
+  gst_element_set_state (pipeline, GST_STATE_NULL);
+
+  gst_element_get_state (pipeline, NULL, NULL, GST_CLOCK_TIME_NONE);
+
+  g_object_unref (trans);
+
+  gst_object_unref (pipeline);
+
+  g_main_loop_unref (loop);
+}
+GST_END_TEST;
 
 
 static Suite *
@@ -396,10 +631,16 @@ rawudptransmitter_suite (void)
   fatal_mask |= G_LOG_LEVEL_WARNING | G_LOG_LEVEL_CRITICAL;
   g_log_set_always_fatal (fatal_mask);
 
-  tc_chain = tcase_create ("rawudptransmitter");
-  tcase_set_timeout (tc_chain, 5);
+  tc_chain = tcase_create ("rawudptransmitter_new");
   tcase_add_test (tc_chain, test_rawudptransmitter_new);
+  suite_add_tcase (s, tc_chain);
+
+  tc_chain = tcase_create ("rawudptransmitter_nostun");
   tcase_add_test (tc_chain, test_rawudptransmitter_run_nostun);
+  suite_add_tcase (s, tc_chain);
+
+  tc_chain = tcase_create ("rawudptransmitter_nostun_nosource");
+  tcase_add_test (tc_chain, test_rawudptransmitter_run_nostun_nosource);
   suite_add_tcase (s, tc_chain);
 
   tc_chain = tcase_create ("rawudptransmitter-stun-timeout");
@@ -414,6 +655,10 @@ rawudptransmitter_suite (void)
 
   tc_chain = tcase_create ("rawudptransmitter-local-candidates");
   tcase_add_test (tc_chain, test_rawudptransmitter_run_local_candidates);
+  suite_add_tcase (s, tc_chain);
+
+  tc_chain = tcase_create ("rawudptransmitter-stop-stream");
+  tcase_add_test (tc_chain, test_rawudptransmitter_stop_stream);
   suite_add_tcase (s, tc_chain);
 
   return s;

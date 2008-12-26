@@ -5,7 +5,7 @@
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
  * Copyright 2007 Nokia Corp.
  *
- * gstfsfunnel.h: Simple Funnel element
+ * fs-funnel.h: Simple Funnel element
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -31,7 +31,7 @@
 G_BEGIN_DECLS
 
 #define FS_TYPE_FUNNEL \
-  (fs_funnel_get_type())
+  (fs_funnel_get_type ())
 #define FS_FUNNEL(obj) \
   (G_TYPE_CHECK_INSTANCE_CAST((obj),FS_TYPE_FUNNEL,FsFunnel))
 #define FS_FUNNEL_CLASS(klass) \
@@ -54,6 +54,8 @@ struct _FsFunnel {
 
   /*< private >*/
   GstPad         *srcpad;
+
+  gboolean has_segment;
 };
 
 struct _FsFunnelClass {
