@@ -80,7 +80,7 @@ REPORT_FILES = \
 
 # FC3 seems to need -scan.c to be part of CLEANFILES for distcheck
 # no idea why FC4 can do without
-CLEANFILES = \
+CLEANFILES += \
 	$(SCANOBJ_FILES_O) \
 	$(DOC_MODULE)-scan.c \
 	$(REPORT_FILES) \
@@ -299,8 +299,6 @@ install-data-local:
 	    $(INSTALL_DATA) $(srcdir)/html/$(DOC_MODULE).devhelp2 \
 	           $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@.devhelp2; \
 	  fi; \
-	  (which gtkdoc-rebase >/dev/null && \
-	    gtkdoc-rebase --relative --dest-dir=$(DESTDIR) --html-dir=$(DESTDIR)$(TARGET_DIR)) || true ; \
 	fi) 
 uninstall-local:
 	(installfiles=`echo ./html/*.html`; \
@@ -368,7 +366,7 @@ scanobj-trans-update:
 # We have a scanobj-build.stamp just to prevent both from running at the same
 # time as they use temp files with the same name
 
-scanobj-trans-build.stamp: $(SCANOBJ_DEPS) $(basefiles) scanobj-build.stamp
+scanobj-trans-build.stamp: $(SCANOBJ_DEPS) $(basefiles) scanobj-build.stamp farsight2-transmitters.types
 	@echo '*** Scanning Transmitters ***'
 	if test x"$(srcdir)" = x. ; then				\
 	    GST_PLUGIN_PATH=$(top_builddir)/gst:$(top_builddir)/ext	\
@@ -403,8 +401,8 @@ dist-hook: dist-check-gtkdoc dist-hook-local
 	cp $(srcdir)/html/* $(distdir)/html
 	-cp $(srcdir)/$(DOC_MODULE).types $(distdir)/
 	-cp $(srcdir)/$(DOC_MODULE)-sections.txt $(distdir)/
+	-cp $(srcdir)/html/$(DOC_MODULE).devhelp* $(distdir)/html
 	cd $(distdir) && rm -f $(DISTCLEANFILES)
-        -gtkdoc-rebase --online --relative --html-dir=$(distdir)/html
 
 .PHONY : dist-hook-local docs
 

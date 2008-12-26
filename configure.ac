@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, cvs and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for cvs/prerelease
-AC_INIT(Farsight2, 0.0.5,
+AC_INIT(Farsight2, 0.0.6,
     https://bugs.freedesktop.org/enter_bug.cgi?product=Farsight,
     farsight2)
 
@@ -207,7 +207,9 @@ AM_CONDITIONAL(HAVE_VALGRIND, test ! "x$VALGRIND_PATH" = "xno")
 dnl check for documentation tools
 GTK_DOC_CHECK([1.8])
 AS_PATH_PYTHON([2.4])
+LT_AC_PROG_SED
 AG_GST_PLUGIN_DOCS([1.8],[2.1])
+AC_SUBST(SED)
 
 dnl Make automake happy with per-target flags
 AM_PROG_CC_C_O

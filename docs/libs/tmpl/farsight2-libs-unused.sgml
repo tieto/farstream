@@ -1,3 +1,12 @@
+<!-- ##### SIGNAL FsTransmitter::get-recvonly-filter ##### -->
+<para>
+
+</para>
+
+@fstransmitter: the object which received the signal.
+@arg1: 
+@Returns: 
+
 <!-- ##### FUNCTION fs_codec_to_gst_caps ##### -->
 <para>
 
@@ -26,5 +35,14 @@
 @local_foundation: 
 @remote_foundation: 
 @error: 
+@Returns: 
+
+<!-- ##### FUNCTION fs_transmitter_get_recvonly_filter ##### -->
+<para>
+
+</para>
+
+@transmitter: 
+@component: 
 @Returns: 
 

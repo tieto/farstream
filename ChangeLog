@@ -1,3 +1,89 @@
+commit 0f91b46ee7815dcb939b433c2f2740e3b8964bd5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 11 17:34:56 2008 -0500
+
+    Version 0.0.6
+
+commit 605eedcc1606c87bf8879530d501d0e0806b260c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 11 17:34:45 2008 -0500
+
+    Fix plugins doc Makefiles to let distcheck pass
+
+commit 1d38646c1f3d770c54cbb89190136d303e5afb20
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 10 17:06:15 2008 -0500
+
+    Use fixed caps on funnel src pad
+
+commit 6a874365c890a4f4da3cf95406250d702a724d43
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 9 19:41:37 2008 -0500
+
+    Simplify (and correct) the multicast transmitter to always send with the max requested TTL
+
+commit 3148bc8e723dddbce002c92b13bed51ba222b6d3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 9 15:10:52 2008 -0500
+
+    Force checking for sed
+
+commit 8d64d4c111a57f4a7845c1959d560ca5f7d3124b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 9 15:00:15 2008 -0500
+
+    Test for newer pythons too
+
+commit f42efca4e0bf0b648c930eb874c12f0ee3604700
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 8 18:41:16 2008 -0500
+
+    Update doc for get_stream_transmitter_type method
+
+commit 452b5550f198c08bc24cc62940c357f6a5d00c79
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 8 17:30:43 2008 -0500
+
+    Remove the request pad before the sinks.
+    
+    This is required to prevent the race where a buffer is stuck in the sink while trying to stop it and returns wrong-state
+
+commit f9be9e386d19d6fc395443b83be0cfc752400374
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 8 14:27:16 2008 -0500
+
+    Document list_transmitters in session class
+
+commit 0236d0bd7572e9793e0bd8cb8bbf55e573934f35
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 8 14:21:13 2008 -0500
+
+    Remove one debug statement that prints too often
+
+commit c8e97fd900cd4ec24271da2023073a910b318e1e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 8 14:20:55 2008 -0500
+
+    Skip upnp-ignored -> stun tests if stund isnt there
+
+commit 7eabd4fe29191feda4fe5d4158dd4f1c256f8850
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 4 17:40:30 2008 -0500
+
+    Replace static mutex with regular mutex in nice transmitter
+
+commit 668643d410e6fe3a0a6d09038dfe55780a2a072d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 3 18:19:49 2008 -0500
+
+    Only try to generate the doc for existing transmitters
+
+commit 4aeee7cde69c47c968e29db2c705f84d25a1dacb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 2 19:32:33 2008 -0500
+
+    Versioin 0.0.5.1
+
 commit c604c378b968b2c078af78b40b8b1b138f0a4aba
 Author: Olivier Crête <olivier.crete@collabora.co.uk>
 Date:   Tue Dec 2 19:26:38 2008 -0500

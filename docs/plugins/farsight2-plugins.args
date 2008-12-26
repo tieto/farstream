@@ -248,3 +248,13 @@
 <DEFAULT>3478</DEFAULT>
 </ARG>
 
+<ARG>
+<NAME>FsRtcpFilter::sending</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Sending RTP?</NICK>
+<BLURB>If set to FALSE, it assumes that all RTP has been dropped.</BLURB>
+<DEFAULT>FALSE</DEFAULT>
+</ARG>
+

@@ -147,7 +147,7 @@ href="../gstreamer-0.10/GstBus.html"
 ><span class="type">GstBus</span></a>.
 </p>
 <div class="refsect2" lang="en">
-<a name="id2857450"></a><h3>The "<code class="literal">farsight-new-local-candidate</code>" message</h3>
+<a name="id2787681"></a><h3>The "<code class="literal">farsight-new-local-candidate</code>" message</h3>
 <div class="informalexample"><pre class="programlisting">
 "stream"           <a class="link" href="FsStream.html" title="FsStream">FsStream</a>          The stream that emits the message
 "candidate"        <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate">FsCandidate</a>       The new candidate
@@ -158,7 +158,7 @@ This message is emitted when a new local candidate is discovered.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2857486"></a><h3>The "<code class="literal">farsight-local-candidates-prepared</code>" message</h3>
+<a name="id2787718"></a><h3>The "<code class="literal">farsight-local-candidates-prepared</code>" message</h3>
 <div class="informalexample"><pre class="programlisting">
 "stream"           <a class="link" href="FsStream.html" title="FsStream">FsStream</a>          The stream that emits the message
 </pre></div>
@@ -169,7 +169,7 @@ prepared, an ICE implementation would send its SDP offer or answer.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2857518"></a><h3>The "<code class="literal">farsight-new-active-candidate-pair</code>" message</h3>
+<a name="id2787749"></a><h3>The "<code class="literal">farsight-new-active-candidate-pair</code>" message</h3>
 <div class="informalexample"><pre class="programlisting">
 "stream"           <a class="link" href="FsStream.html" title="FsStream">FsStream</a>          The stream that emits the message
 "local-candidate"  <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate">FsCandidate</a>       Local candidate being used
@@ -185,7 +185,7 @@ outside the callback scope. This message is emitted once per component.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2857567"></a><h3>The "<code class="literal">farsight-recv-codecs-changed</code>" message</h3>
+<a name="id2787799"></a><h3>The "<code class="literal">farsight-recv-codecs-changed</code>" message</h3>
 <div class="informalexample"><pre class="programlisting">
 "stream"           <a class="link" href="FsStream.html" title="FsStream">FsStream</a>          The stream that emits the message
 "codecs"           FsCodecGList      A <a
@@ -203,7 +203,7 @@ The list of new recv-codecs is included in the message
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2857635"></a><h3>The "<code class="literal">farsight-component-state-changed</code>" message</h3>
+<a name="id2787867"></a><h3>The "<code class="literal">farsight-component-state-changed</code>" message</h3>
 <div class="informalexample"><pre class="programlisting">
 "stream"           <a class="link" href="FsStream.html" title="FsStream">FsStream</a>          The stream that emits the message
 "component"        <a

@@ -616,7 +616,7 @@ struct _NiceGstStream {
   gulong *probe_ids;
 
   /* Protects the sending field and the addition/state of the elements */
-  GStaticMutex mutex;
+  GMutex *mutex;
 
   gboolean sending;
 };
@@ -634,7 +634,7 @@ fs_nice_transmitter_add_gst_stream (FsNiceTransmitter *self,
 
   ns = g_slice_new0 (NiceGstStream);
   ns->sending = TRUE;
-  g_static_mutex_init (&ns->mutex);
+  ns->mutex = g_mutex_new ();
   ns->nicesrcs = g_new0 (GstElement *, self->components + 1);
   ns->nicesinks = g_new0 (GstElement *, self->components + 1);
   ns->requested_tee_pads = g_new0 (GstPad *, self->components + 1);
@@ -717,12 +717,6 @@ fs_nice_transmitter_free_gst_stream (FsNiceTransmitter *self,
       gst_object_unref (ns->nicesinks[c]);
     }
 
-    if (ns->requested_tee_pads[c])
-    {
-      gst_element_release_request_pad (self->priv->sink_tees[c],
-          ns->requested_tee_pads[c]);
-      gst_object_unref (ns->requested_tee_pads[c]);
-    }
   }
 
   g_free (ns->nicesrcs);
@@ -730,6 +724,7 @@ fs_nice_transmitter_free_gst_stream (FsNiceTransmitter *self,
   g_free (ns->requested_tee_pads);
   g_free (ns->requested_funnel_pads);
   g_free (ns->probe_ids);
+  g_mutex_free (ns->mutex);
   g_slice_free (NiceGstStream, ns);
 }
 
@@ -739,11 +734,11 @@ fs_nice_transmitter_set_sending (FsNiceTransmitter *self,
 {
   guint c;
 
-  g_static_mutex_lock (&ns->mutex);
+  g_mutex_lock (ns->mutex);
 
   if (ns->sending == sending)
   {
-    g_static_mutex_lock (&ns->mutex);
+    g_mutex_unlock (ns->mutex);
     return;
   }
 
@@ -752,6 +747,15 @@ fs_nice_transmitter_set_sending (FsNiceTransmitter *self,
     for (c = 1; c <= self->components; c++)
     {
       GstStateChangeReturn ret;
+
+
+      if (ns->requested_tee_pads[c])
+      {
+        gst_element_release_request_pad (self->priv->sink_tees[c],
+            ns->requested_tee_pads[c]);
+        gst_object_unref (ns->requested_tee_pads[c]);
+      }
+
       gst_element_set_locked_state (ns->nicesinks[c], TRUE);
       ret = gst_element_set_state (ns->nicesinks[c], GST_STATE_NULL);
       if (ret != GST_STATE_CHANGE_SUCCESS)
@@ -777,6 +781,12 @@ fs_nice_transmitter_set_sending (FsNiceTransmitter *self,
       if (!gst_element_sync_state_with_parent (ns->nicesinks[c]))
         GST_ERROR ("Could sync the state of the nicesink with its parent");
 
+
+      ns->requested_tee_pads[c] =
+        gst_element_get_request_pad (self->priv->sink_tees[c], "src%d");
+
+      g_warn_if_fail (ns->requested_tee_pads[c]);
+
       elempad = gst_element_get_static_pad (ns->nicesinks[c], "sink");
       ret = gst_pad_link (ns->requested_tee_pads[c], elempad);
       if (GST_PAD_LINK_FAILED(ret))
@@ -787,6 +797,6 @@ fs_nice_transmitter_set_sending (FsNiceTransmitter *self,
 
   ns->sending = sending;
 
-  g_static_mutex_unlock (&ns->mutex);
+  g_mutex_unlock (ns->mutex);
 
 }
