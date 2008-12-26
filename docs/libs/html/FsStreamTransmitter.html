@@ -62,7 +62,7 @@
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            <a class="link" href="FsStreamTransmitter.html#fs-stream-transmitter-add-remote-candidate">fs_stream_transmitter_add_remote_candidate</a>
                                                         (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter">FsStreamTransmitter</a> *streamtransmitter,
-                                                         <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate">FsCandidate</a> *candidate,
+                                                         <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a> *candidate,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);
@@ -206,7 +206,7 @@ href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObjectC
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            fs_stream_transmitter_add_remote_candidate
                                                         (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter">FsStreamTransmitter</a> *streamtransmitter,
-                                                         <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate">FsCandidate</a> *candidate,
+                                                         <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a> *candidate,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);</pre>
@@ -225,7 +225,7 @@ This function is used to add remote candidates to the transmitter</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>candidate</code></em>&#160;:</span></p></td>
-<td> a remote <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> to add
+<td> a remote <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> to add
 </td>
 </tr>
 <tr>
@@ -480,8 +480,8 @@ prepared, an ICE implementation would send its SDP offer or answer.</p>
 <a name="id2628025"></a><h3>
 <a name="FsStreamTransmitter-new-active-candidate-pair"></a>The "new-active-candidate-pair" signal</h3>
 <a class="indexterm" name="id2628036"></a><pre class="programlisting">void                user_function                      (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter">FsStreamTransmitter</a> *self,
-                                                        <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate">FsCandidate</a>         *local_candidate,
-                                                        <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate">FsCandidate</a>         *remote_candidate,
+                                                        <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a>         *local_candidate,
+                                                        <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a>         *remote_candidate,
                                                         <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>             user_data)             : Run Last</pre>
@@ -504,12 +504,12 @@ outside the callback scope.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>local_candidate</code></em>&#160;:</span></p></td>
-<td> <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> of the local candidate being used
+<td> <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> of the local candidate being used
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>remote_candidate</code></em>&#160;:</span></p></td>
-<td> <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> of the remote candidate being used
+<td> <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> of the remote candidate being used
 </td>
 </tr>
 <tr>
@@ -524,7 +524,7 @@ outside the callback scope.</p>
 <a name="id2628164"></a><h3>
 <a name="FsStreamTransmitter-new-local-candidate"></a>The "new-local-candidate" signal</h3>
 <a class="indexterm" name="id2628175"></a><pre class="programlisting">void                user_function                      (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter">FsStreamTransmitter</a> *self,
-                                                        <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate">FsCandidate</a>         *local_candidate,
+                                                        <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a>         *local_candidate,
                                                         <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>             user_data)            : Run Last</pre>
@@ -543,7 +543,7 @@ This signal is emitted when a new local candidate is discovered.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>local_candidate</code></em>&#160;:</span></p></td>
-<td> <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> of the local candidate
+<td> <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> of the local candidate
 </td>
 </tr>
 <tr>

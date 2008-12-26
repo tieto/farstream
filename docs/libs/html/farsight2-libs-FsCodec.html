@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
 <link rel="start" href="index.html" title="Farsight2 Reference Manual">
 <link rel="up" href="ch02.html" title="Farsight Core Library">
-<link rel="prev" href="farsight-libs-FsCandidate.html" title="FsCandidate">
+<link rel="prev" href="farsight2-libs-FsCandidate.html" title="FsCandidate">
 <link rel="next" href="ch03.html" title="Farsight Utility Functions and Objects">
 <meta name="generator" content="GTK-Doc V1.8 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -22,7 +22,7 @@
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
 <tr valign="middle">
-<td><a accesskey="p" href="farsight-libs-FsCandidate.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="farsight2-libs-FsCandidate.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="ch02.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">Farsight2 Reference Manual</th>
@@ -33,7 +33,7 @@
                   <a href="#id2619442" class="shortcut">Description</a></nobr></td></tr>
 </table>
 <div class="refentry" lang="en">
-<a name="farsight-libs-FsCodec"></a><div class="titlepage"></div>
+<a name="farsight2-libs-FsCodec"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2>
@@ -49,34 +49,34 @@
 
 
 
-enum                <a class="link" href="farsight-libs-FsCodec.html#FsMediaType">FsMediaType</a>;
+enum                <a class="link" href="farsight2-libs-FsCodec.html#FsMediaType">FsMediaType</a>;
 const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
->gchar</a>*        <a class="link" href="farsight-libs-FsCodec.html#fs-media-type-to-string">fs_media_type_to_string</a>             (<a class="link" href="farsight-libs-FsCodec.html#FsMediaType">FsMediaType</a> media_type);
-                    <a class="link" href="farsight-libs-FsCodec.html#FsCodec">FsCodec</a>;
-                    <a class="link" href="farsight-libs-FsCodec.html#FsCodecParameter">FsCodecParameter</a>;
-                    <a class="link" href="farsight-libs-FsCodec.html#FsCodecPreference">FsCodecPreference</a>;
-#define             <a class="link" href="farsight-libs-FsCodec.html#FS-CODEC-ID-ANY:CAPS">FS_CODEC_ID_ANY</a>
-#define             <a class="link" href="farsight-libs-FsCodec.html#FS-CODEC-ID-DISABLE:CAPS">FS_CODEC_ID_DISABLE</a>
-<a class="link" href="farsight-libs-FsCodec.html#FsCodec">FsCodec</a>*            <a class="link" href="farsight-libs-FsCodec.html#fs-codec-new">fs_codec_new</a>                        (int id,
+>gchar</a>*        <a class="link" href="farsight2-libs-FsCodec.html#fs-media-type-to-string">fs_media_type_to_string</a>             (<a class="link" href="farsight2-libs-FsCodec.html#FsMediaType">FsMediaType</a> media_type);
+                    <a class="link" href="farsight2-libs-FsCodec.html#FsCodec">FsCodec</a>;
+                    <a class="link" href="farsight2-libs-FsCodec.html#FsCodecParameter">FsCodecParameter</a>;
+                    <a class="link" href="farsight2-libs-FsCodec.html#FsCodecPreference">FsCodecPreference</a>;
+#define             <a class="link" href="farsight2-libs-FsCodec.html#FS-CODEC-ID-ANY:CAPS">FS_CODEC_ID_ANY</a>
+#define             <a class="link" href="farsight2-libs-FsCodec.html#FS-CODEC-ID-DISABLE:CAPS">FS_CODEC_ID_DISABLE</a>
+<a class="link" href="farsight2-libs-FsCodec.html#FsCodec">FsCodec</a>*            <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-new">fs_codec_new</a>                        (int id,
                                                          const char *encoding_name,
-                                                         <a class="link" href="farsight-libs-FsCodec.html#FsMediaType">FsMediaType</a> media_type,
+                                                         <a class="link" href="farsight2-libs-FsCodec.html#FsMediaType">FsMediaType</a> media_type,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a> clock_rate);
-void                <a class="link" href="farsight-libs-FsCodec.html#fs-codec-destroy">fs_codec_destroy</a>                    (<a class="link" href="farsight-libs-FsCodec.html#FsCodec">FsCodec</a> *codec);
-<a class="link" href="farsight-libs-FsCodec.html#FsCodec">FsCodec</a>*            <a class="link" href="farsight-libs-FsCodec.html#fs-codec-copy">fs_codec_copy</a>                       (const <a class="link" href="farsight-libs-FsCodec.html#FsCodec">FsCodec</a> *codec);
-void                <a class="link" href="farsight-libs-FsCodec.html#fs-codec-list-destroy">fs_codec_list_destroy</a>               (<a
+void                <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-destroy">fs_codec_destroy</a>                    (<a class="link" href="farsight2-libs-FsCodec.html#FsCodec">FsCodec</a> *codec);
+<a class="link" href="farsight2-libs-FsCodec.html#FsCodec">FsCodec</a>*            <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-copy">fs_codec_copy</a>                       (const <a class="link" href="farsight2-libs-FsCodec.html#FsCodec">FsCodec</a> *codec);
+void                <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-list-destroy">fs_codec_list_destroy</a>               (<a
 href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
 >GList</a> *codec_list);
 <a
 href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
->GList</a>*              <a class="link" href="farsight-libs-FsCodec.html#fs-codec-list-copy">fs_codec_list_copy</a>                  (const <a
+>GList</a>*              <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-list-copy">fs_codec_list_copy</a>                  (const <a
 href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
 >GList</a> *codec_list);
 <a
 href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
->GList</a>*              <a class="link" href="farsight-libs-FsCodec.html#fs-codec-list-from-keyfile">fs_codec_list_from_keyfile</a>          (const <a
+>GList</a>*              <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-list-from-keyfile">fs_codec_list_from_keyfile</a>          (const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *filename,
                                                          <a
@@ -84,21 +84,21 @@ href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);
 <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
->gchar</a>*              <a class="link" href="farsight-libs-FsCodec.html#fs-codec-to-string">fs_codec_to_string</a>                  (const <a class="link" href="farsight-libs-FsCodec.html#FsCodec">FsCodec</a> *codec);
+>gchar</a>*              <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-to-string">fs_codec_to_string</a>                  (const <a class="link" href="farsight2-libs-FsCodec.html#FsCodec">FsCodec</a> *codec);
 <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
->gboolean</a>            <a class="link" href="farsight-libs-FsCodec.html#fs-codec-are-equal">fs_codec_are_equal</a>                  (const <a class="link" href="farsight-libs-FsCodec.html#FsCodec">FsCodec</a> *codec1,
-                                                         const <a class="link" href="farsight-libs-FsCodec.html#FsCodec">FsCodec</a> *codec2);
+>gboolean</a>            <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-are-equal">fs_codec_are_equal</a>                  (const <a class="link" href="farsight2-libs-FsCodec.html#FsCodec">FsCodec</a> *codec1,
+                                                         const <a class="link" href="farsight2-libs-FsCodec.html#FsCodec">FsCodec</a> *codec2);
 <a
 href="/usr/share/gtk-doc/html/gstreamer/gstreamer-GstCaps.html#GstCaps"
->GstCaps</a>*            <a class="link" href="farsight-libs-FsCodec.html#fs-codec-to-gst-caps">fs_codec_to_gst_caps</a>                (const <a class="link" href="farsight-libs-FsCodec.html#FsCodec">FsCodec</a> *codec);
+>GstCaps</a>*            <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-to-gst-caps">fs_codec_to_gst_caps</a>                (const <a class="link" href="farsight2-libs-FsCodec.html#FsCodec">FsCodec</a> *codec);
 
 </pre>
 </div>
 <div class="refsect1" lang="en">
 <a name="id2619442"></a><h2>Description</h2>
 <p>
-An <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> is a way to exchange codec information between the client and
+An <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> is a way to exchange codec information between the client and
 Farsight. The information specified in this structure is usually
 representative of the codec information exchanged in the signaling.</p>
 <p>
@@ -143,7 +143,7 @@ Enum used to signify the media type of a codec or stream.</p>
 </tr>
 <tr>
 <td><p><span class="term"><a name="FS-MEDIA-TYPE-LAST:CAPS"></a><code class="literal">FS_MEDIA_TYPE_LAST</code></span></p></td>
-<td> Largest valid <a class="link" href="farsight-libs-FsCodec.html#FsMediaType"><span class="type">FsMediaType</span></a>
+<td> Largest valid <a class="link" href="farsight2-libs-FsCodec.html#FsMediaType"><span class="type">FsMediaType</span></a>
 </td>
 </tr>
 </tbody>
@@ -155,7 +155,7 @@ Enum used to signify the media type of a codec or stream.</p>
 <a name="fs-media-type-to-string"></a>fs_media_type_to_string ()</h3>
 <a class="indexterm" name="id2612926"></a><pre class="programlisting">const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
->gchar</a>*        fs_media_type_to_string             (<a class="link" href="farsight-libs-FsCodec.html#FsMediaType">FsMediaType</a> media_type);</pre>
+>gchar</a>*        fs_media_type_to_string             (<a class="link" href="farsight2-libs-FsCodec.html#FsMediaType">FsMediaType</a> media_type);</pre>
 <p>
 Gives a user-printable string representing the media type</p>
 <p>
@@ -212,7 +212,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a class="link" href="farsight-libs-FsCodec.html#FsMediaType">FsMediaType</a>&#160;<em class="structfield"><code>media_type</code></em>;</span></p></td>
+<td><p><span class="term"><a class="link" href="farsight2-libs-FsCodec.html#FsMediaType">FsMediaType</a>&#160;<em class="structfield"><code>media_type</code></em>;</span></p></td>
 <td> type of media this codec is for
 </td>
 </tr>
@@ -315,7 +315,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 <a class="indexterm" name="id2608873"></a><pre class="programlisting">#define FS_CODEC_ID_ANY            (-1)
 </pre>
 <p>
-If the id of a <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> is <a class="link" href="farsight-libs-FsCodec.html#FS-CODEC-ID-ANY:CAPS"><span class="type">FS_CODEC_ID_ANY</span></a>, then it will be replaced
+If the id of a <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> is <a class="link" href="farsight2-libs-FsCodec.html#FS-CODEC-ID-ANY:CAPS"><span class="type">FS_CODEC_ID_ANY</span></a>, then it will be replaced
 with a dynamic payload type at runtime</p>
 <p>
 
@@ -328,7 +328,7 @@ with a dynamic payload type at runtime</p>
 <a class="indexterm" name="id2623302"></a><pre class="programlisting">#define FS_CODEC_ID_DISABLE        (-2)
 </pre>
 <p>
-If the id of a <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> is <a class="link" href="farsight-libs-FsCodec.html#FS-CODEC-ID-DISABLE:CAPS"><span class="type">FS_CODEC_ID_DISABLE</span></a>, then this codec will
+If the id of a <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> is <a class="link" href="farsight2-libs-FsCodec.html#FS-CODEC-ID-DISABLE:CAPS"><span class="type">FS_CODEC_ID_DISABLE</span></a>, then this codec will
 not be used</p>
 <p>
 
@@ -338,14 +338,14 @@ not be used</p>
 <div class="refsect2" lang="en">
 <a name="id2623331"></a><h3>
 <a name="fs-codec-new"></a>fs_codec_new ()</h3>
-<a class="indexterm" name="id2623342"></a><pre class="programlisting"><a class="link" href="farsight-libs-FsCodec.html#FsCodec">FsCodec</a>*            fs_codec_new                        (int id,
+<a class="indexterm" name="id2623342"></a><pre class="programlisting"><a class="link" href="farsight2-libs-FsCodec.html#FsCodec">FsCodec</a>*            fs_codec_new                        (int id,
                                                          const char *encoding_name,
-                                                         <a class="link" href="farsight-libs-FsCodec.html#FsMediaType">FsMediaType</a> media_type,
+                                                         <a class="link" href="farsight2-libs-FsCodec.html#FsMediaType">FsMediaType</a> media_type,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a> clock_rate);</pre>
 <p>
-Allocates and initializes a <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> structure</p>
+Allocates and initializes a <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> structure</p>
 <p>
 
 </p>
@@ -364,7 +364,7 @@ Allocates and initializes a <a class="link" href="farsight-libs-FsCodec.html#FsC
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>media_type</code></em>&#160;:</span></p></td>
-<td> <a class="link" href="farsight-libs-FsCodec.html#FsMediaType"><span class="type">FsMediaType</span></a> for type of codec
+<td> <a class="link" href="farsight2-libs-FsCodec.html#FsMediaType"><span class="type">FsMediaType</span></a> for type of codec
 </td>
 </tr>
 <tr>
@@ -374,7 +374,7 @@ Allocates and initializes a <a class="link" href="farsight-libs-FsCodec.html#FsC
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
-<td> A newly allocated <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a>
+<td> A newly allocated <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a>
 </td>
 </tr>
 </tbody>
@@ -384,9 +384,9 @@ Allocates and initializes a <a class="link" href="farsight-libs-FsCodec.html#FsC
 <div class="refsect2" lang="en">
 <a name="id2623482"></a><h3>
 <a name="fs-codec-destroy"></a>fs_codec_destroy ()</h3>
-<a class="indexterm" name="id2623494"></a><pre class="programlisting">void                fs_codec_destroy                    (<a class="link" href="farsight-libs-FsCodec.html#FsCodec">FsCodec</a> *codec);</pre>
+<a class="indexterm" name="id2623494"></a><pre class="programlisting">void                fs_codec_destroy                    (<a class="link" href="farsight2-libs-FsCodec.html#FsCodec">FsCodec</a> *codec);</pre>
 <p>
-Deletes a <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> structure and all its data</p>
+Deletes a <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> structure and all its data</p>
 <p>
 
 </p>
@@ -394,7 +394,7 @@ Deletes a <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class=
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>codec</code></em>&#160;:</span></p></td>
-<td> <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> structure to free
+<td> <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> structure to free
 </td>
 </tr></tbody>
 </table></div>
@@ -403,9 +403,9 @@ Deletes a <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class=
 <div class="refsect2" lang="en">
 <a name="id2623558"></a><h3>
 <a name="fs-codec-copy"></a>fs_codec_copy ()</h3>
-<a class="indexterm" name="id2623571"></a><pre class="programlisting"><a class="link" href="farsight-libs-FsCodec.html#FsCodec">FsCodec</a>*            fs_codec_copy                       (const <a class="link" href="farsight-libs-FsCodec.html#FsCodec">FsCodec</a> *codec);</pre>
+<a class="indexterm" name="id2623571"></a><pre class="programlisting"><a class="link" href="farsight2-libs-FsCodec.html#FsCodec">FsCodec</a>*            fs_codec_copy                       (const <a class="link" href="farsight2-libs-FsCodec.html#FsCodec">FsCodec</a> *codec);</pre>
 <p>
-Copies a <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> structure.</p>
+Copies a <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> structure.</p>
 <p>
 
 </p>
@@ -433,7 +433,7 @@ Copies a <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="
 href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
 >GList</a> *codec_list);</pre>
 <p>
-Deletes a list of <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> structures and the list itself</p>
+Deletes a list of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> structures and the list itself</p>
 <p>
 
 </p>
@@ -441,7 +441,7 @@ Deletes a list of <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><spa
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>codec_list</code></em>&#160;:</span></p></td>
-<td> a GList of <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> to delete
+<td> a GList of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> to delete
 </td>
 </tr></tbody>
 </table></div>
@@ -456,7 +456,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
 href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
 >GList</a> *codec_list);</pre>
 <p>
-Copies a list of <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> structures.</p>
+Copies a list of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> structures.</p>
 <p>
 
 </p>
@@ -465,7 +465,7 @@ Copies a list of <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>codec_list</code></em>&#160;:</span></p></td>
-<td> a GList of <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> to copy
+<td> a GList of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> to copy
 </td>
 </tr>
 <tr>
@@ -494,7 +494,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Key-value-file-parser.html#GKeyFile"
 ><span class="type">GKeyFile</span></a> of the following format into
 a <a
 href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
-><span class="type">GList</span></a> of <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> structures.
+><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> structures.
 </p>
 <p>
 Example:
@@ -534,7 +534,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></p></td>
 <td> The <a
 href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
-><span class="type">GList</span></a> of <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> or <a
+><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> or <a
 href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 ><code class="literal">NULL</code></a> if the keyfile was empty
  or an error occured.
@@ -549,7 +549,7 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 <a name="fs-codec-to-string"></a>fs_codec_to_string ()</h3>
 <a class="indexterm" name="id2623979"></a><pre class="programlisting"><a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
->gchar</a>*              fs_codec_to_string                  (const <a class="link" href="farsight-libs-FsCodec.html#FsCodec">FsCodec</a> *codec);</pre>
+>gchar</a>*              fs_codec_to_string                  (const <a class="link" href="farsight2-libs-FsCodec.html#FsCodec">FsCodec</a> *codec);</pre>
 <p>
 Returns a newly-allocated string representing the codec</p>
 <p>
@@ -577,8 +577,8 @@ Returns a newly-allocated string representing the codec</p>
 <a name="fs-codec-are-equal"></a>fs_codec_are_equal ()</h3>
 <a class="indexterm" name="id2624053"></a><pre class="programlisting"><a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
->gboolean</a>            fs_codec_are_equal                  (const <a class="link" href="farsight-libs-FsCodec.html#FsCodec">FsCodec</a> *codec1,
-                                                         const <a class="link" href="farsight-libs-FsCodec.html#FsCodec">FsCodec</a> *codec2);</pre>
+>gboolean</a>            fs_codec_are_equal                  (const <a class="link" href="farsight2-libs-FsCodec.html#FsCodec">FsCodec</a> *codec1,
+                                                         const <a class="link" href="farsight2-libs-FsCodec.html#FsCodec">FsCodec</a> *codec2);</pre>
 <p>
 Compare two codecs, it will declare two codecs to be identical even
 if their optional parameters are in a different order.</p>
@@ -612,9 +612,9 @@ if their optional parameters are in a different order.</p>
 <a name="fs-codec-to-gst-caps"></a>fs_codec_to_gst_caps ()</h3>
 <a class="indexterm" name="id2624148"></a><pre class="programlisting"><a
 href="/usr/share/gtk-doc/html/gstreamer/gstreamer-GstCaps.html#GstCaps"
->GstCaps</a>*            fs_codec_to_gst_caps                (const <a class="link" href="farsight-libs-FsCodec.html#FsCodec">FsCodec</a> *codec);</pre>
+>GstCaps</a>*            fs_codec_to_gst_caps                (const <a class="link" href="farsight2-libs-FsCodec.html#FsCodec">FsCodec</a> *codec);</pre>
 <p>
-This function converts a <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> to a fixed <a
+This function converts a <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> to a fixed <a
 href="/usr/share/gtk-doc/html/gstreamer/gstreamer-GstCaps.html#GstCaps"
 ><span class="type">GstCaps</span></a> with media type
 application/x-rtp.</p>
@@ -626,7 +626,7 @@ application/x-rtp.</p>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>codec</code></em>&#160;:</span></p></td>
-<td> A <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> to be converted
+<td> A <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> to be converted
 </td>
 </tr>
 <tr>

@@ -7,7 +7,7 @@
 <link rel="start" href="index.html" title="Farsight2 Reference Manual">
 <link rel="up" href="ch02.html" title="Farsight Core Library">
 <link rel="prev" href="FsSession.html" title="FsSession">
-<link rel="next" href="farsight-libs-FsCandidate.html" title="FsCandidate">
+<link rel="next" href="farsight2-libs-FsCandidate.html" title="FsCandidate">
 <meta name="generator" content="GTK-Doc V1.8 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="pt01.html" title="Part&#160;I.&#160;User-oriented classes, interfaces and functions">
@@ -26,7 +26,7 @@
 <td><a accesskey="u" href="ch02.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">Farsight2 Reference Manual</th>
-<td><a accesskey="n" href="farsight-libs-FsCandidate.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="farsight2-libs-FsCandidate.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts"><nobr><a href="#id2576998" class="shortcut">Top</a>
                   &#160;|&#160;
@@ -61,7 +61,7 @@ enum                <a class="link" href="FsStream.html#FsStreamDirection">FsStr
 <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            <a class="link" href="FsStream.html#fs-stream-add-remote-candidate">fs_stream_add_remote_candidate</a>      (<a class="link" href="FsStream.html" title="FsStream">FsStream</a> *stream,
-                                                         <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate">FsCandidate</a> *candidate,
+                                                         <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a> *candidate,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);
@@ -101,7 +101,7 @@ void                <a class="link" href="FsStream.html#fs-stream-emit-src-pad-a
                                                          <a
 href="/usr/share/gtk-doc/html/gstreamer/GstPad.html"
 >GstPad</a> *pad,
-                                                         <a class="link" href="farsight-libs-FsCodec.html#FsCodec">FsCodec</a> *codec);
+                                                         <a class="link" href="farsight2-libs-FsCodec.html#FsCodec">FsCodec</a> *codec);
 
 </pre>
 </div>
@@ -273,7 +273,7 @@ An enum for specifying the direction of a stream</p>
 <a class="indexterm" name="id2588691"></a><pre class="programlisting"><a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            fs_stream_add_remote_candidate      (<a class="link" href="FsStream.html" title="FsStream">FsStream</a> *stream,
-                                                         <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate">FsCandidate</a> *candidate,
+                                                         <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a> *candidate,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);</pre>
@@ -281,7 +281,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 This function adds the given candidate into the remote candiate list of the
 stream. It will be used for establishing a connection with the peer. A copy
 will be made so the user must free the passed candidate using
-<a class="link" href="farsight-libs-FsCandidate.html#fs-candidate-destroy"><code class="function">fs_candidate_destroy()</code></a> when done.</p>
+<a class="link" href="farsight2-libs-FsCandidate.html#fs-candidate-destroy"><code class="function">fs_candidate_destroy()</code></a> when done.</p>
 <p>
 
 </p>
@@ -295,7 +295,7 @@ will be made so the user must free the passed candidate using
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>candidate</code></em>&#160;:</span></p></td>
-<td> an <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> struct representing a remote candidate
+<td> an <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> struct representing a remote candidate
 </td>
 </tr>
 <tr>
@@ -412,7 +412,7 @@ codecs or already negotiated codecs for the corresponding <a class="link" href="
 will be set and <a
 href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"
 ><code class="literal">FALSE</code></a> will be returned. The <em class="parameter"><code>remote_codecs</code></em> list will be
-copied so it must be free'd using <a class="link" href="farsight-libs-FsCodec.html#fs-codec-list-destroy"><code class="function">fs_codec_list_destroy()</code></a> when done.</p>
+copied so it must be free'd using <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-list-destroy"><code class="function">fs_codec_list_destroy()</code></a> when done.</p>
 <p>
 
 </p>
@@ -428,7 +428,7 @@ copied so it must be free'd using <a class="link" href="farsight-libs-FsCodec.ht
 <td><p><span class="term"><em class="parameter"><code>remote_codecs</code></em>&#160;:</span></p></td>
 <td> a <a
 href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
-><span class="type">GList</span></a> of <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> representing the remote codecs
+><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> representing the remote codecs
 </td>
 </tr>
 <tr>
@@ -504,7 +504,7 @@ called by subclasses.</p>
                                                          <a
 href="/usr/share/gtk-doc/html/gstreamer/GstPad.html"
 >GstPad</a> *pad,
-                                                         <a class="link" href="farsight-libs-FsCodec.html#FsCodec">FsCodec</a> *codec);</pre>
+                                                         <a class="link" href="farsight2-libs-FsCodec.html#FsCodec">FsCodec</a> *codec);</pre>
 <p>
 This functin emits the <a class="link" href="FsStream.html#FsStream-src-pad-added"><span class="type">FsStream::src-pad-added</span></a>" signal, it should only be
 called by subclasses.</p>
@@ -528,7 +528,7 @@ href="/usr/share/gtk-doc/html/gstreamer/GstPad.html"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>codec</code></em>&#160;:</span></p></td>
-<td> The <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> for this pad
+<td> The <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> for this pad
 </td>
 </tr>
 </tbody>
@@ -578,7 +578,7 @@ This is the list of remote codecs for this stream. They must be set by the
 user as soon as they are known using <a class="link" href="FsStream.html#fs-stream-set-remote-codecs"><code class="function">fs_stream_set_remote_codecs()</code></a>
 (generally through external signaling). It is a <a
 href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
-><span class="type">GList</span></a> of <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a>.</p>
+><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a>.</p>
 <p>
 
 </p>
@@ -694,8 +694,8 @@ prepared, an ICE implementation would send its SDP offer or answer.</p>
 <a name="id2620761"></a><h3>
 <a name="FsStream-new-active-candidate-pair"></a>The "new-active-candidate-pair" signal</h3>
 <a class="indexterm" name="id2620771"></a><pre class="programlisting">void                user_function                      (<a class="link" href="FsStream.html" title="FsStream">FsStream</a>    *self,
-                                                        <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate">FsCandidate</a> *local_candidate,
-                                                        <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate">FsCandidate</a> *remote_candidate,
+                                                        <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a> *local_candidate,
+                                                        <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a> *remote_candidate,
                                                         <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>     user_data)             : Run Last</pre>
@@ -718,12 +718,12 @@ outside the callback scope.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>local_candidate</code></em>&#160;:</span></p></td>
-<td> <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> of the local candidate being used
+<td> <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> of the local candidate being used
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>remote_candidate</code></em>&#160;:</span></p></td>
-<td> <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> of the remote candidate being used
+<td> <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> of the remote candidate being used
 </td>
 </tr>
 <tr>
@@ -738,7 +738,7 @@ outside the callback scope.</p>
 <a name="id2620899"></a><h3>
 <a name="FsStream-new-local-candidate"></a>The "new-local-candidate" signal</h3>
 <a class="indexterm" name="id2620908"></a><pre class="programlisting">void                user_function                      (<a class="link" href="FsStream.html" title="FsStream">FsStream</a>    *self,
-                                                        <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate">FsCandidate</a> *local_candidate,
+                                                        <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate">FsCandidate</a> *local_candidate,
                                                         <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>     user_data)            : Run Last</pre>
@@ -757,7 +757,7 @@ This signal is emitted when a new local candidate is discovered.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>local_candidate</code></em>&#160;:</span></p></td>
-<td> <a class="link" href="farsight-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> of the local candidate
+<td> <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> of the local candidate
 </td>
 </tr>
 <tr>
@@ -810,7 +810,7 @@ come to it is different.</p>
                                                         <a
 href="/usr/share/gtk-doc/html/gstreamer/GstPad.html"
 >GstPad</a>   *pad,
-                                                        <a class="link" href="farsight-libs-FsCodec.html#FsCodec">FsCodec</a>  *codec,
+                                                        <a class="link" href="farsight2-libs-FsCodec.html#FsCodec">FsCodec</a>  *codec,
                                                         <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>  user_data)      : Run Last</pre>
@@ -820,7 +820,7 @@ specific codec being received. There will be a different source pad for
 each codec that is received. The user must ref the <a
 href="/usr/share/gtk-doc/html/gstreamer/GstPad.html"
 ><span class="type">GstPad</span></a> if he wants to
-keep it. The user should not modify the <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> and must copy it if he
+keep it. The user should not modify the <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> and must copy it if he
 wants to use it outside the callback scope.
 </p>
 <p>
@@ -846,7 +846,7 @@ href="/usr/share/gtk-doc/html/gstreamer/GstPad.html"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>codec</code></em>&#160;:</span></p></td>
-<td> <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> of the codec being received on the new source pad
+<td> <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> of the codec being received on the new source pad
 </td>
 </tr>
 <tr>

@@ -51,12 +51,12 @@
 
 /* VOID:OBJECT,INT,STRING,STRING (./fs-marshal.list:1) */
 void
-fs_marshal_VOID__OBJECT_INT_STRING_STRING (GClosure     *closure,
-                                           GValue       *return_value G_GNUC_UNUSED,
-                                           guint         n_param_values,
-                                           const GValue *param_values,
-                                           gpointer      invocation_hint G_GNUC_UNUSED,
-                                           gpointer      marshal_data)
+_fs_marshal_VOID__OBJECT_INT_STRING_STRING (GClosure     *closure,
+                                            GValue       *return_value G_GNUC_UNUSED,
+                                            guint         n_param_values,
+                                            const GValue *param_values,
+                                            gpointer      invocation_hint G_GNUC_UNUSED,
+                                            gpointer      marshal_data)
 {
   typedef void (*GMarshalFunc_VOID__OBJECT_INT_STRING_STRING) (gpointer     data1,
                                                                gpointer     arg_1,
@@ -92,12 +92,12 @@ fs_marshal_VOID__OBJECT_INT_STRING_STRING (GClosure     *closure,
 
 /* VOID:INT,STRING,STRING (./fs-marshal.list:2) */
 void
-fs_marshal_VOID__INT_STRING_STRING (GClosure     *closure,
-                                    GValue       *return_value G_GNUC_UNUSED,
-                                    guint         n_param_values,
-                                    const GValue *param_values,
-                                    gpointer      invocation_hint G_GNUC_UNUSED,
-                                    gpointer      marshal_data)
+_fs_marshal_VOID__INT_STRING_STRING (GClosure     *closure,
+                                     GValue       *return_value G_GNUC_UNUSED,
+                                     guint         n_param_values,
+                                     const GValue *param_values,
+                                     gpointer      invocation_hint G_GNUC_UNUSED,
+                                     gpointer      marshal_data)
 {
   typedef void (*GMarshalFunc_VOID__INT_STRING_STRING) (gpointer     data1,
                                                         gint         arg_1,
@@ -131,12 +131,12 @@ fs_marshal_VOID__INT_STRING_STRING (GClosure     *closure,
 
 /* VOID:BOXED,BOXED (./fs-marshal.list:3) */
 void
-fs_marshal_VOID__BOXED_BOXED (GClosure     *closure,
-                              GValue       *return_value G_GNUC_UNUSED,
-                              guint         n_param_values,
-                              const GValue *param_values,
-                              gpointer      invocation_hint G_GNUC_UNUSED,
-                              gpointer      marshal_data)
+_fs_marshal_VOID__BOXED_BOXED (GClosure     *closure,
+                               GValue       *return_value G_GNUC_UNUSED,
+                               guint         n_param_values,
+                               const GValue *param_values,
+                               gpointer      invocation_hint G_GNUC_UNUSED,
+                               gpointer      marshal_data)
 {
   typedef void (*GMarshalFunc_VOID__BOXED_BOXED) (gpointer     data1,
                                                   gpointer     arg_1,
@@ -168,12 +168,12 @@ fs_marshal_VOID__BOXED_BOXED (GClosure     *closure,
 
 /* VOID:OBJECT,OBJECT (./fs-marshal.list:4) */
 void
-fs_marshal_VOID__OBJECT_OBJECT (GClosure     *closure,
-                                GValue       *return_value G_GNUC_UNUSED,
-                                guint         n_param_values,
-                                const GValue *param_values,
-                                gpointer      invocation_hint G_GNUC_UNUSED,
-                                gpointer      marshal_data)
+_fs_marshal_VOID__OBJECT_OBJECT (GClosure     *closure,
+                                 GValue       *return_value G_GNUC_UNUSED,
+                                 guint         n_param_values,
+                                 const GValue *param_values,
+                                 gpointer      invocation_hint G_GNUC_UNUSED,
+                                 gpointer      marshal_data)
 {
   typedef void (*GMarshalFunc_VOID__OBJECT_OBJECT) (gpointer     data1,
                                                     gpointer     arg_1,

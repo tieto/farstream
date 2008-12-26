@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, cvs and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for cvs/prerelease
-AC_INIT(Farsight2, 0.0.1,
+AC_INIT(Farsight2, 0.0.2,
     https://bugs.freedesktop.org/enter_bug.cgi?product=Farsight,
     farsight2)
 
@@ -162,7 +162,7 @@ AC_ARG_WITH(transmitter-plugins,
 AC_SUBST(FS2_TRANSMITTER_PLUGINS_SELECTED)
 
 dnl set the plugindir where plugins should be installed
-AS_AC_EXPAND(FS2_PLUGIN_PATH, ${libdir}/farsight-$FS2_MAJORMINOR)
+AS_AC_EXPAND(FS2_PLUGIN_PATH, ${libdir}/farsight2-$FS2_MAJORMINOR)
 AC_SUBST(FS2_PLUGIN_PATH)
 AC_DEFINE_UNQUOTED(FS2_PLUGIN_PATH, "${FS2_PLUGIN_PATH}", [The path were plugins are installed and search by default])
 
@@ -232,7 +232,7 @@ AM_CONDITIONAL(HAVE_GST_CHECK, test "x$HAVE_GST_CHECK" = "xyes")
 
 dnl Check for documentation xrefs
 GLIB_PREFIX="`$PKG_CONFIG --variable=prefix glib-2.0`"
-FS2_PREFIX="`$PKG_CONFIG --variable=prefix farsight-$FS2_MAJORMINOR`"
+FS2_PREFIX="`$PKG_CONFIG --variable=prefix farsight2-$FS2_MAJORMINOR`"
 AC_SUBST(GLIB_PREFIX)
 AC_SUBST(FS2_PREFIX)
 
@@ -325,13 +325,18 @@ AC_SUBST(FS2_ALL_LDFLAGS)
 dnl FS2_LIB_LDFLAGS
 dnl linker flags shared by all libraries
 dnl LDFLAGS modifier defining exported symbols from built libraries
-FS2_LIB_LDFLAGS="-export-symbols-regex [_]*\(fs_\|Fs\|FS_\).*"
+FS2_LIB_LDFLAGS="-export-symbols-regex ^fs_.*"
 AC_SUBST(FS2_LIB_LDFLAGS)
 
 dnl this really should only contain flags, not libs - they get added before
 dnl whatevertarget_LIBS and -L flags here affect the rest of the linking
-FS2_PLUGIN_LDFLAGS="-module -avoid-version -export-symbols-regex '^[_]*gst_plugin_desc\$\$' $GST_ALL_LDFLAGS"
+FS2_PLUGIN_LDFLAGS="-module -avoid-version -export-symbols-regex '^[_]*fs_init_plugin\$\$' $FS2_ALL_LDFLAGS"
 AC_SUBST(FS2_PLUGIN_LDFLAGS)
+
+dnl this really should only contain flags, not libs - they get added before
+dnl whatevertarget_LIBS and -L flags here affect the rest of the linking
+GST_PLUGIN_LDFLAGS="-module -avoid-version -export-symbols-regex '^[_]*gst_plugin_desc\$\$' $FS2_ALL_LDFLAGS"
+AC_SUBST(GST_PLUGIN_LDFLAGS)
 
 
 AC_ARG_ENABLE([python],
@@ -355,6 +360,7 @@ dnl *** output files ***
 
 AC_CONFIG_FILES(
 Makefile
+farsight2.pc
 gst/Makefile
 gst/fsrtpconference/Makefile
 gst/funnel/Makefile
@@ -370,6 +376,7 @@ dnl pkgconfig/farsight2-uninstalled.pc
 tests/Makefile
 tests/check/Makefile
 tests/rtp/Makefile
+tests/gui/Makefile
 docs/Makefile
 docs/libs/Makefile
 docs/version.entities

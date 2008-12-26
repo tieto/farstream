@@ -1,3 +1,69 @@
+commit 7a258c63be5b31625f6729eac080feb6e2c1af05
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Mar 10 18:27:31 2008 -0400
+
+    Version 0.0.2
+
+commit f3159127a7b05bf7b6a87fbc74c50cd390922ef1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Mar 10 15:44:14 2008 -0400
+
+    Rename the fs2 doc dir into farsight2-libs
+
+commit 0d6e507d2f69eee134f17e55f17d60328756d1bd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Mar 10 15:29:06 2008 -0400
+
+    Prevent fs_marshal_* functions from being exported
+
+commit 284a37754f29f186f378349dc31e6a1ce04eda13
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Mar 8 15:08:44 2008 -0500
+
+    Fix pasto
+
+commit 471a2f6393ca246fafaef1491fc1eb45d2210d2e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Mar 8 14:56:23 2008 -0500
+
+    Add python examples in the tarball
+
+commit 83e4dfe2d9c22da3bbd6e32c84a427b4ee51a3d2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Mar 8 14:55:54 2008 -0500
+
+    Only export fs_* symbols
+
+commit bef4b7a3bb7f595153b7aa6c0b89dba156eb5fd7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Mar 8 13:58:20 2008 -0500
+
+    Avoid installing versioned plugins
+
+commit 016dd0523e4ee6d0f8025541d1c763d9507741ae
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Mar 8 13:49:23 2008 -0500
+
+    Rename the plugins dir to farsight2-version
+
+commit 2061797ef3df2251f67dc019344e3bd91807384f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Mar 8 13:48:05 2008 -0500
+
+    Use the right macro to print gsize
+
+commit ce2488eb2afac6bdd68503cd70bd84842b701401
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Mar 8 13:44:01 2008 -0500
+
+    Add pkgconfig file
+
+commit 573ff93c8df3d617a8083c95bacdadeda48e50d9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Mar 7 23:33:26 2008 -0500
+
+    Bump version to 0.0.1.1
+
 commit bb6d58e2b9a9b79829d123cf214bd2a022a73055
 Author: Olivier Crête <olivier.crete@collabora.co.uk>
 Date:   Fri Mar 7 23:19:37 2008 -0500

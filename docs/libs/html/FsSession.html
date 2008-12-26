@@ -91,7 +91,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            <a class="link" href="FsSession.html#fs-session-set-send-codec">fs_session_set_send_codec</a>           (<a class="link" href="FsSession.html" title="FsSession">FsSession</a> *session,
-                                                         <a class="link" href="farsight-libs-FsCodec.html#FsCodec">FsCodec</a> *send_codec,
+                                                         <a class="link" href="farsight2-libs-FsCodec.html#FsCodec">FsCodec</a> *send_codec,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);
@@ -122,13 +122,13 @@ href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
 <a name="id2592529"></a><h2>Properties</h2>
 <pre class="synopsis">
 
-  "<a class="link" href="FsSession.html#FsSession--current-send-codec">current-send-codec</a>"       <a class="link" href="farsight-libs-FsCodec.html#FsCodec">FsCodec</a>               : Read
+  "<a class="link" href="FsSession.html#FsSession--current-send-codec">current-send-codec</a>"       <a class="link" href="farsight2-libs-FsCodec.html#FsCodec">FsCodec</a>               : Read
   "<a class="link" href="FsSession.html#FsSession--id">id</a>"                       <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>                 : Read / Write / Construct Only
   "<a class="link" href="FsSession.html#FsSession--local-codecs">local-codecs</a>"             FsCodecGList          : Read
   "<a class="link" href="FsSession.html#FsSession--local-codecs-config">local-codecs-config</a>"      FsCodecGList          : Read / Write
-  "<a class="link" href="FsSession.html#FsSession--media-type">media-type</a>"               <a class="link" href="farsight-libs-FsCodec.html#FsMediaType">FsMediaType</a>           : Read / Write / Construct Only
+  "<a class="link" href="FsSession.html#FsSession--media-type">media-type</a>"               <a class="link" href="farsight2-libs-FsCodec.html#FsMediaType">FsMediaType</a>           : Read / Write / Construct Only
   "<a class="link" href="FsSession.html#FsSession--negotiated-codecs">negotiated-codecs</a>"        FsCodecGList          : Read
   "<a class="link" href="FsSession.html#FsSession--sink-pad">sink-pad</a>"                 <a
 href="/usr/share/gtk-doc/html/gstreamer/GstPad.html"
@@ -495,18 +495,18 @@ does not support telephony events or if no telephony event is being sent
 <a class="indexterm" name="id2617222"></a><pre class="programlisting"><a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            fs_session_set_send_codec           (<a class="link" href="FsSession.html" title="FsSession">FsSession</a> *session,
-                                                         <a class="link" href="farsight-libs-FsCodec.html#FsCodec">FsCodec</a> *send_codec,
+                                                         <a class="link" href="farsight2-libs-FsCodec.html#FsCodec">FsCodec</a> *send_codec,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);</pre>
 <p>
 This function will set the currently being sent codec for all streams in this
-session. The given <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> must be taken directly from the <span class="type">negotiated-codecs</span>
+session. The given <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> must be taken directly from the <span class="type">negotiated-codecs</span>
 property of the session. If the given codec is not in the negotiated codecs
 list, <em class="parameter"><code>error</code></em> will be set and <a
 href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"
 ><code class="literal">FALSE</code></a> will be returned. The <em class="parameter"><code>send_codec</code></em> will be
-copied so it must be free'd using <a class="link" href="farsight-libs-FsCodec.html#fs-codec-destroy"><code class="function">fs_codec_destroy()</code></a> when done.</p>
+copied so it must be free'd using <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-destroy"><code class="function">fs_codec_destroy()</code></a> when done.</p>
 <p>
 
 </p>
@@ -520,7 +520,7 @@ copied so it must be free'd using <a class="link" href="farsight-libs-FsCodec.ht
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>send_codec</code></em>&#160;:</span></p></td>
-<td> an <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> representing the codec to send
+<td> an <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a> representing the codec to send
 </td>
 </tr>
 <tr>
@@ -594,13 +594,13 @@ called by subclasses.</p>
 <div class="refsect2" lang="en">
 <a name="id2617533"></a><h3>
 <a name="FsSession--current-send-codec"></a>The "<code class="literal">current-send-codec</code>" property</h3>
-<a class="indexterm" name="id2617547"></a><pre class="programlisting">  "current-send-codec"       <a class="link" href="farsight-libs-FsCodec.html#FsCodec">FsCodec</a>               : Read</pre>
+<a class="indexterm" name="id2617547"></a><pre class="programlisting">  "current-send-codec"       <a class="link" href="farsight2-libs-FsCodec.html#FsCodec">FsCodec</a>               : Read</pre>
 <p>
 Indicates the currently active send codec. A user can change the active
 send codec by calling <a class="link" href="FsSession.html#fs-session-set-send-codec"><code class="function">fs_session_set_send_codec()</code></a>. The send codec could
 also be automatically changed by Farsight. In both cases the
 ::send-codec-changed signal will be emited. This property is an
-<a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a>. User must free the codec using <a class="link" href="farsight-libs-FsCodec.html#fs-codec-destroy"><code class="function">fs_codec_destroy()</code></a> when done.
+<a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a>. User must free the codec using <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-destroy"><code class="function">fs_codec_destroy()</code></a> when done.
 The <a class="link" href="FsSession.html#FsSession-send-codec-changed"><span class="type">FsSession::send-codec-changed</span></a> signal is emitted when the content
 of this property changes.</p>
 <p>
@@ -633,8 +633,8 @@ installed GStreamer plugins. This list is unchanged during the lifecycle of
 the session unless local-codecs-config is changed by the user. It is a
 <a
 href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
-><span class="type">GList</span></a> of <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a>. User must free this codec list using
-<a class="link" href="farsight-libs-FsCodec.html#fs-codec-list-destroy"><code class="function">fs_codec_list_destroy()</code></a> when done.</p>
+><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a>. User must free this codec list using
+<a class="link" href="farsight2-libs-FsCodec.html#fs-codec-list-destroy"><code class="function">fs_codec_list_destroy()</code></a> when done.</p>
 <p>
 
 </p>
@@ -652,7 +652,7 @@ the local-codecs to be changed. Therefore this requires the user to fetch
 the new local-codecs and renegotiate them with the peers. It is a <a
 href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
 ><span class="type">GList</span></a>
-of <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a>. User must free this codec list using <a class="link" href="farsight-libs-FsCodec.html#fs-codec-list-destroy"><code class="function">fs_codec_list_destroy()</code></a>
+of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a>. User must free this codec list using <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-list-destroy"><code class="function">fs_codec_list_destroy()</code></a>
 when done.</p>
 <p>
 
@@ -662,7 +662,7 @@ when done.</p>
 <div class="refsect2" lang="en">
 <a name="id2617773"></a><h3>
 <a name="FsSession--media-type"></a>The "<code class="literal">media-type</code>" property</h3>
-<a class="indexterm" name="id2617786"></a><pre class="programlisting">  "media-type"               <a class="link" href="farsight-libs-FsCodec.html#FsMediaType">FsMediaType</a>           : Read / Write / Construct Only</pre>
+<a class="indexterm" name="id2617786"></a><pre class="programlisting">  "media-type"               <a class="link" href="farsight2-libs-FsCodec.html#FsMediaType">FsMediaType</a>           : Read / Write / Construct Only</pre>
 <p>
 The media-type of the session. This is either Audio, Video or both.
 This is a constructor parameter that cannot be changed.</p>
@@ -681,8 +681,8 @@ This list indicated what codecs have been successfully negotiated with the
 session participants. This list can change based on participants
 joining/leaving the session. It is a <a
 href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
-><span class="type">GList</span></a> of <a class="link" href="farsight-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a>. User must free
-this codec list using <a class="link" href="farsight-libs-FsCodec.html#fs-codec-list-destroy"><code class="function">fs_codec_list_destroy()</code></a> when done.
+><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec"><span class="type">FsCodec</span></a>. User must free
+this codec list using <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-list-destroy"><code class="function">fs_codec_list_destroy()</code></a> when done.
 The <a class="link" href="FsSession.html#FsSession-new-negotiated-codecs"><span class="type">FsSession::new-negotiated-codecs</span></a> signal is emited when the content
 of this property changes.</p>
 <p>

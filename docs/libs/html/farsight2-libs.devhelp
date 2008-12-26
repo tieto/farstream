@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!DOCTYPE book PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "">
-<book xmlns="http://www.devhelp.net/book" title="Farsight2 Reference Manual" link="index.html" author="" name="farsight-libs">
+<book xmlns="http://www.devhelp.net/book" title="Farsight2 Reference Manual" link="index.html" author="" name="farsight2-libs">
   <chapters>
     <sub name="User-oriented classes, interfaces and functions" link="pt01.html">
       <sub name="Farsight GStreamer Interfaces" link="ch01.html">
@@ -10,8 +10,8 @@
         <sub name="FsParticipant" link="FsParticipant.html"/>
         <sub name="FsSession" link="FsSession.html"/>
         <sub name="FsStream" link="FsStream.html"/>
-        <sub name="FsCandidate" link="farsight-libs-FsCandidate.html"/>
-        <sub name="FsCodec" link="farsight-libs-FsCodec.html"/>
+        <sub name="FsCandidate" link="farsight2-libs-FsCandidate.html"/>
+        <sub name="FsCodec" link="farsight2-libs-FsCodec.html"/>
       </sub>
       <sub name="Farsight Utility Functions and Objects" link="ch03.html">
         <sub name="FsElementAddedNotifier" link="FsElementAddedNotifier.html"/>
@@ -26,7 +26,7 @@
         <sub name="FsStreamTransmitter" link="FsStreamTransmitter.html"/>
       </sub>
       <sub name="Farsight Plugins infrastructure" link="ch06.html">
-        <sub name="FsPlugin" link="farsight-libs-FsPlugin.html"/>
+        <sub name="FsPlugin" link="farsight2-libs-FsPlugin.html"/>
       </sub>
     </sub>
   </chapters>
@@ -80,33 +80,33 @@
     <function name="The &quot;new-local-candidate&quot; signal" link="FsStream.html#FsStream-new-local-candidate"/>
     <function name="The &quot;recv-codecs-changed&quot; signal" link="FsStream.html#FsStream-recv-codecs-changed"/>
     <function name="The &quot;src-pad-added&quot; signal" link="FsStream.html#FsStream-src-pad-added"/>
-    <function name="enum FsCandidateType" link="farsight-libs-FsCandidate.html#FsCandidateType"/>
-    <function name="enum FsNetworkProtocol" link="farsight-libs-FsCandidate.html#FsNetworkProtocol"/>
-    <function name="enum FsComponentType" link="farsight-libs-FsCandidate.html#FsComponentType"/>
-    <function name="FsCandidate" link="farsight-libs-FsCandidate.html#FsCandidate"/>
-    <function name="fs_candidate_new ()" link="farsight-libs-FsCandidate.html#fs-candidate-new"/>
-    <function name="fs_candidate_destroy ()" link="farsight-libs-FsCandidate.html#fs-candidate-destroy"/>
-    <function name="fs_candidate_copy ()" link="farsight-libs-FsCandidate.html#fs-candidate-copy"/>
-    <function name="fs_candidate_list_destroy ()" link="farsight-libs-FsCandidate.html#fs-candidate-list-destroy"/>
-    <function name="fs_candidate_list_copy ()" link="farsight-libs-FsCandidate.html#fs-candidate-list-copy"/>
-    <function name="fs_candidate_get_by_id ()" link="farsight-libs-FsCandidate.html#fs-candidate-get-by-id"/>
-    <function name="fs_candidate_are_equal ()" link="farsight-libs-FsCandidate.html#fs-candidate-are-equal"/>
-    <function name="enum FsMediaType" link="farsight-libs-FsCodec.html#FsMediaType"/>
-    <function name="fs_media_type_to_string ()" link="farsight-libs-FsCodec.html#fs-media-type-to-string"/>
-    <function name="FsCodec" link="farsight-libs-FsCodec.html#FsCodec"/>
-    <function name="FsCodecParameter" link="farsight-libs-FsCodec.html#FsCodecParameter"/>
-    <function name="FsCodecPreference" link="farsight-libs-FsCodec.html#FsCodecPreference"/>
-    <function name="FS_CODEC_ID_ANY" link="farsight-libs-FsCodec.html#FS-CODEC-ID-ANY:CAPS"/>
-    <function name="FS_CODEC_ID_DISABLE" link="farsight-libs-FsCodec.html#FS-CODEC-ID-DISABLE:CAPS"/>
-    <function name="fs_codec_new ()" link="farsight-libs-FsCodec.html#fs-codec-new"/>
-    <function name="fs_codec_destroy ()" link="farsight-libs-FsCodec.html#fs-codec-destroy"/>
-    <function name="fs_codec_copy ()" link="farsight-libs-FsCodec.html#fs-codec-copy"/>
-    <function name="fs_codec_list_destroy ()" link="farsight-libs-FsCodec.html#fs-codec-list-destroy"/>
-    <function name="fs_codec_list_copy ()" link="farsight-libs-FsCodec.html#fs-codec-list-copy"/>
-    <function name="fs_codec_list_from_keyfile ()" link="farsight-libs-FsCodec.html#fs-codec-list-from-keyfile"/>
-    <function name="fs_codec_to_string ()" link="farsight-libs-FsCodec.html#fs-codec-to-string"/>
-    <function name="fs_codec_are_equal ()" link="farsight-libs-FsCodec.html#fs-codec-are-equal"/>
-    <function name="fs_codec_to_gst_caps ()" link="farsight-libs-FsCodec.html#fs-codec-to-gst-caps"/>
+    <function name="enum FsCandidateType" link="farsight2-libs-FsCandidate.html#FsCandidateType"/>
+    <function name="enum FsNetworkProtocol" link="farsight2-libs-FsCandidate.html#FsNetworkProtocol"/>
+    <function name="enum FsComponentType" link="farsight2-libs-FsCandidate.html#FsComponentType"/>
+    <function name="FsCandidate" link="farsight2-libs-FsCandidate.html#FsCandidate"/>
+    <function name="fs_candidate_new ()" link="farsight2-libs-FsCandidate.html#fs-candidate-new"/>
+    <function name="fs_candidate_destroy ()" link="farsight2-libs-FsCandidate.html#fs-candidate-destroy"/>
+    <function name="fs_candidate_copy ()" link="farsight2-libs-FsCandidate.html#fs-candidate-copy"/>
+    <function name="fs_candidate_list_destroy ()" link="farsight2-libs-FsCandidate.html#fs-candidate-list-destroy"/>
+    <function name="fs_candidate_list_copy ()" link="farsight2-libs-FsCandidate.html#fs-candidate-list-copy"/>
+    <function name="fs_candidate_get_by_id ()" link="farsight2-libs-FsCandidate.html#fs-candidate-get-by-id"/>
+    <function name="fs_candidate_are_equal ()" link="farsight2-libs-FsCandidate.html#fs-candidate-are-equal"/>
+    <function name="enum FsMediaType" link="farsight2-libs-FsCodec.html#FsMediaType"/>
+    <function name="fs_media_type_to_string ()" link="farsight2-libs-FsCodec.html#fs-media-type-to-string"/>
+    <function name="FsCodec" link="farsight2-libs-FsCodec.html#FsCodec"/>
+    <function name="FsCodecParameter" link="farsight2-libs-FsCodec.html#FsCodecParameter"/>
+    <function name="FsCodecPreference" link="farsight2-libs-FsCodec.html#FsCodecPreference"/>
+    <function name="FS_CODEC_ID_ANY" link="farsight2-libs-FsCodec.html#FS-CODEC-ID-ANY:CAPS"/>
+    <function name="FS_CODEC_ID_DISABLE" link="farsight2-libs-FsCodec.html#FS-CODEC-ID-DISABLE:CAPS"/>
+    <function name="fs_codec_new ()" link="farsight2-libs-FsCodec.html#fs-codec-new"/>
+    <function name="fs_codec_destroy ()" link="farsight2-libs-FsCodec.html#fs-codec-destroy"/>
+    <function name="fs_codec_copy ()" link="farsight2-libs-FsCodec.html#fs-codec-copy"/>
+    <function name="fs_codec_list_destroy ()" link="farsight2-libs-FsCodec.html#fs-codec-list-destroy"/>
+    <function name="fs_codec_list_copy ()" link="farsight2-libs-FsCodec.html#fs-codec-list-copy"/>
+    <function name="fs_codec_list_from_keyfile ()" link="farsight2-libs-FsCodec.html#fs-codec-list-from-keyfile"/>
+    <function name="fs_codec_to_string ()" link="farsight2-libs-FsCodec.html#fs-codec-to-string"/>
+    <function name="fs_codec_are_equal ()" link="farsight2-libs-FsCodec.html#fs-codec-are-equal"/>
+    <function name="fs_codec_to_gst_caps ()" link="farsight2-libs-FsCodec.html#fs-codec-to-gst-caps"/>
     <function name="FsElementAddedNotifier" link="FsElementAddedNotifier.html#FsElementAddedNotifier-struct"/>
     <function name="fs_element_added_notifier_new ()" link="FsElementAddedNotifier.html#fs-element-added-notifier-new"/>
     <function name="fs_element_added_notifier_add ()" link="FsElementAddedNotifier.html#fs-element-added-notifier-add"/>
@@ -136,9 +136,9 @@
     <function name="The &quot;local-candidates-prepared&quot; signal" link="FsStreamTransmitter.html#FsStreamTransmitter-local-candidates-prepared"/>
     <function name="The &quot;new-active-candidate-pair&quot; signal" link="FsStreamTransmitter.html#FsStreamTransmitter-new-active-candidate-pair"/>
     <function name="The &quot;new-local-candidate&quot; signal" link="FsStreamTransmitter.html#FsStreamTransmitter-new-local-candidate"/>
-    <function name="FsPlugin" link="farsight-libs-FsPlugin.html#FsPlugin"/>
-    <function name="fs_plugin_create_valist ()" link="farsight-libs-FsPlugin.html#fs-plugin-create-valist"/>
-    <function name="fs_plugin_create ()" link="farsight-libs-FsPlugin.html#fs-plugin-create"/>
-    <function name="FS_INIT_PLUGIN()" link="farsight-libs-FsPlugin.html#FS-INIT-PLUGIN:CAPS"/>
+    <function name="FsPlugin" link="farsight2-libs-FsPlugin.html#FsPlugin"/>
+    <function name="fs_plugin_create_valist ()" link="farsight2-libs-FsPlugin.html#fs-plugin-create-valist"/>
+    <function name="fs_plugin_create ()" link="farsight2-libs-FsPlugin.html#fs-plugin-create"/>
+    <function name="FS_INIT_PLUGIN()" link="farsight2-libs-FsPlugin.html#FS-INIT-PLUGIN:CAPS"/>
   </functions>
 </book>

@@ -147,6 +147,7 @@ GST_PACKAGE_ORIGIN = @GST_PACKAGE_ORIGIN@
 GST_PLUGINS_BASE_CFLAGS = @GST_PLUGINS_BASE_CFLAGS@
 GST_PLUGINS_BASE_LIBS = @GST_PLUGINS_BASE_LIBS@
 GST_PLUGINS_DIR = @GST_PLUGINS_DIR@
+GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
 GST_TOOLS_DIR = @GST_TOOLS_DIR@
 HTML_DIR = @HTML_DIR@
 INSTALL = @INSTALL@
@@ -254,7 +255,7 @@ top_srcdir = @top_srcdir@
 
 # The name of the module, e.g. 'glib'.
 #DOC_MODULE=gst-plugins-libs-@GST_MAJORMINOR@
-DOC_MODULE = farsight-libs
+DOC_MODULE = farsight2-libs
 
 # generated basefiles
 basefiles = \
