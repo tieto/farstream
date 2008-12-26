@@ -380,6 +380,9 @@ fs_nice_stream_transmitter_finalize (GObject *object)
 
   fs_candidate_list_destroy (self->priv->preferred_local_candidates);
 
+  if (self->priv->relay_info)
+    g_value_array_free (self->priv->relay_info);
+
   g_free (self->priv->stun_ip);
 
   g_mutex_free (self->priv->mutex);
@@ -454,6 +457,8 @@ fs_nice_stream_transmitter_set_property (GObject *object,
   {
     case PROP_SENDING:
       self->priv->sending = g_value_get_boolean (value);
+      fs_nice_transmitter_set_sending (self->priv->transmitter,
+          self->priv->gststream, self->priv->sending);
       break;
     case PROP_PREFERRED_LOCAL_CANDIDATES:
       self->priv->preferred_local_candidates = g_value_dup_boxed (value);

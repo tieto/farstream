@@ -72,9 +72,6 @@
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
-/* Define to enable enable building of plug-ins with external deps. */
-#undef HAVE_EXTERNAL
-
 /* defined if the compiler implements __func__ */
 #undef HAVE_FUNC
 

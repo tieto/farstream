@@ -1,0 +1,30 @@
+<!-- ##### FUNCTION fs_codec_to_gst_caps ##### -->
+<para>
+
+</para>
+
+@codec: 
+@Returns: 
+
+<!-- ##### FUNCTION fs_stream_select_candidate_pair ##### -->
+<para>
+
+</para>
+
+@stream: 
+@local_foundation: 
+@remote_foundation: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION fs_stream_transmitter_select_candidate_pair ##### -->
+<para>
+
+</para>
+
+@streamtransmitter: 
+@local_foundation: 
+@remote_foundation: 
+@error: 
+@Returns: 
+

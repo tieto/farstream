@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, cvs and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for cvs/prerelease
-AC_INIT(Farsight2, 0.0.4,
+AC_INIT(Farsight2, 0.0.5,
     https://bugs.freedesktop.org/enter_bug.cgi?product=Farsight,
     farsight2)
 
@@ -55,8 +55,8 @@ dnl AS_LIBTOOL_TAGS
 AM_PROG_LIBTOOL
 
 dnl *** required versions of GStreamer stuff ***
-GST_REQ=0.10.17
-GSTPB_REQ=0.10.17
+GST_REQ=0.10.20
+GSTPB_REQ=0.10.20
 
 dnl *** autotools stuff ****
 
@@ -123,18 +123,6 @@ AC_ARG_WITH(plugins,
 
 AC_SUBST(FS2_PLUGINS_SELECTED)
 
-dnl ext plug-ins; plug-ins that have external dependencies
-AG_GST_CHECK_FEATURE(EXTERNAL, [enable building of plug-ins with external deps],,
-  [HAVE_EXTERNAL=yes], enabled,
-  [
-    AC_MSG_NOTICE(building external plug-ins)
-    BUILD_EXTERNAL="yes"
-  ],[
-    AC_MSG_NOTICE(all plug-ins with external dependencies will not be built)
-    BUILD_EXTERNAL="no"
-  ])
-AM_CONDITIONAL(BUILD_EXTERNAL, test "x$BUILD_EXTERNAL" = "xyes")
-
 dnl *** path for our local plugins ***
 
 
@@ -168,7 +156,7 @@ AC_ARG_WITH(transmitter-plugins,
 dnl check for libnice
 if echo $FS2_TRANSMITTER_PLUGINS_SELECTED | grep -qi nice; then
 
-  NICE_REQUIRED=0.0.1
+  NICE_REQUIRED=0.0.3
 
   PKG_CHECK_MODULES(NICE, \
        nice >= $NICE_REQUIRED,
@@ -177,7 +165,7 @@ if echo $FS2_TRANSMITTER_PLUGINS_SELECTED | grep -qi nice; then
 
   if test "x$HAVE_NICE" = "xno"; then
     if test "x$TRANSMITTERS_DEFAULT" = "xyes"; then
-      FS2_TRANSMITTER_PLUGINS_SELECTED="${FS2_TRANSMITTER_PLUGINS_SELECTED/ nice/}"
+      FS2_TRANSMITTER_PLUGINS_SELECTED="${FS2_TRANSMITTER_PLUGINS_SELECTED/nice/}"
       AC_MSG_WARN([Will not build libnice transmitter because libnice is not available])
     else
       AC_MSG_ERROR([Can not build requested libnice transmitter because libnice is not installed])
@@ -218,7 +206,7 @@ AM_CONDITIONAL(HAVE_VALGRIND, test ! "x$VALGRIND_PATH" = "xno")
 
 dnl check for documentation tools
 GTK_DOC_CHECK([1.8])
-AS_PATH_PYTHON([2.1])
+AS_PATH_PYTHON([2.4])
 AG_GST_PLUGIN_DOCS([1.8],[2.1])
 
 dnl Make automake happy with per-target flags
@@ -268,8 +256,6 @@ dnl checks for gstreamer
 dnl uninstalled is selected preferentially -- see pkg-config(1)
 AG_GST_CHECK_GST($GST_MAJORMINOR, [$GST_REQ])
 AG_GST_CHECK_GST_BASE($GST_MAJORMINOR, [$GST_REQ])
-AG_GST_CHECK_GST_GDP($GST_MAJORMINOR, [$GST_REQ])
-AG_GST_CHECK_GST_CONTROLLER($GST_MAJORMINOR, [$GST_REQ])
 AG_GST_CHECK_GST_CHECK($GST_MAJORMINOR, [$GST_REQ], no)
 AG_GST_CHECK_GST_PLUGINS_BASE($GST_MAJORMINOR, [$GSTPB_REQ])
 AM_CONDITIONAL(HAVE_GST_CHECK, test "x$HAVE_GST_CHECK" = "xyes")
@@ -295,29 +281,6 @@ AG_GST_SET_ERROR_CFLAGS($FS2_CVS)
 
 dnl define correct level for debugging messages
 AG_GST_SET_LEVEL_DEFAULT($FS2_CVS)
-
-dnl *** sys plug-ins ***
-
-echo
-AC_MSG_NOTICE([Checking libraries for plugins in sys/])
-echo
-
-dnl *** ext plug-ins ***
-dnl keep this list sorted alphabetically !
-
-if test "x$BUILD_EXTERNAL" = "xyes"; then
-
-echo
-AC_MSG_NOTICE([Checking libraries for plugins in ext/])
-echo
-
-else
-
-dnl not building plugins with external dependencies,
-dnl but we still need to set the conditionals
-echo
-
-fi dnl of EXT plugins
 
 AC_CHECK_FUNCS(getifaddrs)
 

@@ -50,7 +50,6 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst-args.m4 \
 	$(top_srcdir)/common/m4/gst-check.m4 \
 	$(top_srcdir)/common/m4/gst-error.m4 \
-	$(top_srcdir)/common/m4/gst-feature.m4 \
 	$(top_srcdir)/common/m4/gst-function.m4 \
 	$(top_srcdir)/common/m4/gst-glib2.m4 \
 	$(top_srcdir)/common/m4/gst-plugin-docs.m4 \
@@ -238,10 +237,6 @@ GST_BASE_LIBS = @GST_BASE_LIBS@
 GST_CFLAGS = @GST_CFLAGS@
 GST_CHECK_CFLAGS = @GST_CHECK_CFLAGS@
 GST_CHECK_LIBS = @GST_CHECK_LIBS@
-GST_CONTROLLER_CFLAGS = @GST_CONTROLLER_CFLAGS@
-GST_CONTROLLER_LIBS = @GST_CONTROLLER_LIBS@
-GST_GDP_CFLAGS = @GST_GDP_CFLAGS@
-GST_GDP_LIBS = @GST_GDP_LIBS@
 GST_INSTALL_PLUGINS_HELPER = @GST_INSTALL_PLUGINS_HELPER@
 GST_LEVEL_DEFAULT = @GST_LEVEL_DEFAULT@
 GST_LIBS = @GST_LIBS@

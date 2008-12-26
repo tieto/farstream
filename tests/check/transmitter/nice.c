@@ -47,6 +47,8 @@ gboolean associate_on_source = TRUE;
 gboolean is_address_local = FALSE;
 gboolean force_candidates = FALSE;
 
+GStaticMutex count_mutex = G_STATIC_MUTEX_INIT;
+
 GST_START_TEST (test_nicetransmitter_new)
 {
   test_transmitter_creation ("nice");
@@ -86,20 +88,13 @@ _new_local_candidate (FsStreamTransmitter *st, FsCandidate *candidate,
           fs_candidate_copy (candidate)));
 }
 
-static void
-_local_candidates_prepared (FsStreamTransmitter *st, gpointer user_data)
+static gboolean
+set_the_candidates (gpointer user_data)
 {
-  FsStreamTransmitter *st2 = FS_STREAM_TRANSMITTER (user_data);
-  GList *candidates = g_object_get_data (G_OBJECT (st), "candidates");
+  FsStreamTransmitter *st = FS_STREAM_TRANSMITTER (user_data);
+  GList *candidates = g_object_get_data (G_OBJECT (st), "candidates-set");
   gboolean ret;
   GError *error = NULL;
-
-  g_object_set_data (G_OBJECT (st), "candidates", NULL);
-
-  ts_fail_if (g_list_length (candidates) < 2,
-      "We don't have at least 2 candidates");
-
-  g_debug ("Local Candidates Prepared");
 
   if (force_candidates)
   {
@@ -125,13 +120,13 @@ _local_candidates_prepared (FsStreamTransmitter *st, gpointer user_data)
       }
     }
 
-    ret = fs_stream_transmitter_force_remote_candidates (st2, new_list, &error);
+    ret = fs_stream_transmitter_force_remote_candidates (st, new_list, &error);
 
     fs_candidate_list_destroy (new_list);
   }
   else
   {
-    ret = fs_stream_transmitter_set_remote_candidates (st2, candidates, &error);
+    ret = fs_stream_transmitter_set_remote_candidates (st, candidates, &error);
   }
 
   if (error)
@@ -141,8 +136,29 @@ _local_candidates_prepared (FsStreamTransmitter *st, gpointer user_data)
   ts_fail_unless (ret == TRUE, "No detailed error setting remote_candidate");
 
   fs_candidate_list_destroy (candidates);
+
+  return FALSE;
 }
 
+
+static void
+_local_candidates_prepared (FsStreamTransmitter *st, gpointer user_data)
+{
+  FsStreamTransmitter *st2 = FS_STREAM_TRANSMITTER (user_data);
+  GList *candidates = g_object_get_data (G_OBJECT (st), "candidates");
+
+  g_object_set_data (G_OBJECT (st), "candidates", NULL);
+
+  ts_fail_if (g_list_length (candidates) < 2,
+      "We don't have at least 2 candidates");
+
+  g_debug ("Local Candidates Prepared");
+
+  g_object_set_data (G_OBJECT (st2), "candidates-set", candidates);
+
+  g_idle_add (set_the_candidates, st2);
+
+}
 
 static void
 _new_active_candidate_pair (FsStreamTransmitter *st, FsCandidate *local,
@@ -164,6 +180,8 @@ _handoff_handler (GstElement *element, GstBuffer *buffer, GstPad *pad,
   ts_fail_unless (GST_BUFFER_SIZE (buffer) == component_id * 10,
     "Buffer is size %d but component_id is %d", GST_BUFFER_SIZE (buffer),
     component_id);
+
+  g_static_mutex_lock (&count_mutex);
 
   buffer_count[stream][component_id-1]++;
 
@@ -204,6 +222,8 @@ _handoff_handler (GstElement *element, GstBuffer *buffer, GstPad *pad,
     g_atomic_int_set(&running, FALSE);
     g_main_loop_quit (loop);
   }
+
+  g_static_mutex_unlock (&count_mutex);
 }
 
 static void
@@ -277,7 +297,7 @@ _stream_state_changed (FsStreamTransmitter *st, guint component,
 
   g_object_set_data (G_OBJECT (st), prop, GINT_TO_POINTER (state));
 
-  if (state < FS_STREAM_STATE_CONNECTED)
+  if (state < FS_STREAM_STATE_READY)
     return;
 
   if (component == 1)
@@ -335,6 +355,10 @@ run_nice_transmitter_test (gint n_parameters, GParameter *params,
   GstElement *pipeline = NULL;
   GstElement *pipeline2 = NULL;
   FsNiceTestParticipant *p1 = NULL, *p2 = NULL;
+
+  memset (buffer_count, 0, sizeof(gint)*4);
+  memset (received_known, 0, sizeof(guint)*4);
+  running = TRUE;
 
   associate_on_source = !(flags & FLAG_NO_SOURCE);
   is_address_local = (flags & FLAG_IS_LOCAL);
@@ -521,7 +545,7 @@ GST_START_TEST (test_nicetransmitter_preferred_candidates)
 
   param.name = "preferred-local-candidates";
   g_value_init (&param.value, FS_TYPE_CANDIDATE_LIST);
-  g_value_set_boxed (&param.value, list);
+  g_value_take_boxed (&param.value, list);
 
   run_nice_transmitter_test (1, &param, FLAG_IS_LOCAL);
 
@@ -531,21 +555,10 @@ GST_END_TEST;
 
 GST_START_TEST (test_nicetransmitter_stund)
 {
-  GError *error = NULL;
-  gint myout, myin;
-  GPid pid;
-  gchar *argv[] = {"stund", NULL};
   GParameter params[2];
 
-  if (!g_spawn_async_with_pipes (NULL, argv, NULL,
-          G_SPAWN_SEARCH_PATH, NULL, NULL, &pid, &myin, &myout, NULL,
-          &error))
-  {
-    g_debug ("Could not spawn stund, skipping stun testing: %s",
-        error->message);
-    g_clear_error (&error);
+  if (stund_pid <= 0)
     return;
-  }
 
   memset (params, 0, sizeof (GParameter) * 2);
 
@@ -558,10 +571,6 @@ GST_START_TEST (test_nicetransmitter_stund)
   g_value_set_uint (&params[1].value, 3478);
 
   run_nice_transmitter_test (2, params, 0);
-
-  close (myout);
-  close (myin);
-  g_spawn_close_pid (pid);
 }
 GST_END_TEST;
 
@@ -754,6 +763,7 @@ nicetransmitter_suite (void)
   if (g_getenv ("STUND"))
   {
     tc_chain = tcase_create ("nicetransmitter-stund");
+    tcase_add_checked_fixture (tc_chain, setup_stund, teardown_stund);
     tcase_add_test (tc_chain, test_nicetransmitter_stund);
     suite_add_tcase (s, tc_chain);
   }
