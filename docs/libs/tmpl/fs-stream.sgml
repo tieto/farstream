@@ -1,0 +1,165 @@
+<!-- ##### SECTION Title ##### -->
+FsStream
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT FsStream ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL FsStream::error ##### -->
+<para>
+
+</para>
+
+@fsstream: the object which received the signal.
+@arg1: 
+@arg2: 
+@arg3: 
+
+<!-- ##### SIGNAL FsStream::src-pad-added ##### -->
+<para>
+
+</para>
+
+@fsstream: the object which received the signal.
+@arg1: 
+@arg2: 
+
+<!-- ##### ARG FsStream:current-recv-codecs ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsStream:direction ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsStream:negotiated-codecs ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsStream:participant ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsStream:remote-codecs ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsStream:session ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsStream:stream-transmitter ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT FsStreamClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+@set_remote_candidates: 
+@force_remote_candidates: 
+@set_remote_codecs: 
+
+<!-- ##### ENUM FsStreamDirection ##### -->
+<para>
+
+</para>
+
+@FS_DIRECTION_NONE: 
+@FS_DIRECTION_SEND: 
+@FS_DIRECTION_RECV: 
+@FS_DIRECTION_BOTH: 
+
+<!-- ##### ENUM FsStreamState ##### -->
+<para>
+
+</para>
+
+@FS_STREAM_STATE_FAILED: 
+@FS_STREAM_STATE_DISCONNECTED: 
+@FS_STREAM_STATE_GATHERING: 
+@FS_STREAM_STATE_CONNECTING: 
+@FS_STREAM_STATE_CONNECTED: 
+@FS_STREAM_STATE_READY: 
+
+<!-- ##### FUNCTION fs_stream_set_remote_candidates ##### -->
+<para>
+
+</para>
+
+@stream: 
+@candidates: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_stream_set_remote_codecs ##### -->
+<para>
+
+</para>
+
+@stream: 
+@remote_codecs: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_stream_force_remote_candidates ##### -->
+<para>
+
+</para>
+
+@stream: 
+@remote_candidates: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_stream_emit_error ##### -->
+<para>
+
+</para>
+
+@stream: 
+@error_no: 
+@error_msg: 
+@debug_msg: 
+
+
+<!-- ##### FUNCTION fs_stream_emit_src_pad_added ##### -->
+<para>
+
+</para>
+
+@stream: 
+@pad: 
+@codec: 
+
+

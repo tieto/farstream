@@ -1,0 +1,199 @@
+<!-- ##### SECTION Title ##### -->
+FsSession
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### ENUM FsDTMFEvent ##### -->
+<para>
+
+</para>
+
+@FS_DTMF_EVENT_0: 
+@FS_DTMF_EVENT_1: 
+@FS_DTMF_EVENT_2: 
+@FS_DTMF_EVENT_3: 
+@FS_DTMF_EVENT_4: 
+@FS_DTMF_EVENT_5: 
+@FS_DTMF_EVENT_6: 
+@FS_DTMF_EVENT_7: 
+@FS_DTMF_EVENT_8: 
+@FS_DTMF_EVENT_9: 
+@FS_DTMF_EVENT_STAR: 
+@FS_DTMF_EVENT_POUND: 
+@FS_DTMF_EVENT_A: 
+@FS_DTMF_EVENT_B: 
+@FS_DTMF_EVENT_C: 
+@FS_DTMF_EVENT_D: 
+
+<!-- ##### ENUM FsDTMFMethod ##### -->
+<para>
+
+</para>
+
+@FS_DTMF_METHOD_AUTO: 
+@FS_DTMF_METHOD_RTP_RFC4733: 
+@FS_DTMF_METHOD_IN_BAND: 
+
+<!-- ##### STRUCT FsSession ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL FsSession::error ##### -->
+<para>
+
+</para>
+
+@fssession: the object which received the signal.
+@arg1: 
+@arg2: 
+@arg3: 
+@arg4: 
+
+<!-- ##### ARG FsSession:codec-preferences ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsSession:codecs ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsSession:codecs-ready ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsSession:codecs-without-config ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsSession:current-send-codec ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsSession:id ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsSession:media-type ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsSession:sink-pad ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT FsSessionClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+@new_stream: 
+@start_telephony_event: 
+@stop_telephony_event: 
+@set_send_codec: 
+@set_codec_preferences: 
+@list_transmitters: 
+
+<!-- ##### FUNCTION fs_session_new_stream ##### -->
+<para>
+
+</para>
+
+@session: 
+@participant: 
+@direction: 
+@transmitter: 
+@stream_transmitter_n_parameters: 
+@stream_transmitter_parameters: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_session_start_telephony_event ##### -->
+<para>
+
+</para>
+
+@session: 
+@event: 
+@volume: 
+@method: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_session_stop_telephony_event ##### -->
+<para>
+
+</para>
+
+@session: 
+@method: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_session_set_send_codec ##### -->
+<para>
+
+</para>
+
+@session: 
+@send_codec: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_session_set_codec_preferences ##### -->
+<para>
+
+</para>
+
+@session: 
+@codec_preferences: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_session_list_transmitters ##### -->
+<para>
+
+</para>
+
+@session: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_session_emit_error ##### -->
+<para>
+
+</para>
+
+@session: 
+@error_no: 
+@error_msg: 
+@debug_msg: 
+
+

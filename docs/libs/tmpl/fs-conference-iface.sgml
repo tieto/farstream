@@ -1,0 +1,79 @@
+<!-- ##### SECTION Title ##### -->
+FsConference
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT FsConference ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION fs_conference_new_session ##### -->
+<para>
+
+</para>
+
+@conference: 
+@media_type: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_conference_new_participant ##### -->
+<para>
+
+</para>
+
+@conference: 
+@cname: 
+@error: 
+@Returns: 
+
+
+<!-- ##### MACRO FS_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### ENUM FsError ##### -->
+<para>
+
+</para>
+
+@FS_ERROR_CONSTRUCTION: 
+@FS_ERROR_INTERNAL: 
+@FS_ERROR_INVALID_ARGUMENTS: 
+@FS_ERROR_NETWORK: 
+@FS_ERROR_NOT_IMPLEMENTED: 
+@FS_ERROR_NEGOTIATION_FAILED: 
+@FS_ERROR_UNKNOWN_CODEC: 
+@FS_ERROR_UNKNOWN_CNAME: 
+@FS_ERROR_NO_CODECS: 
+@FS_ERROR_NO_CODECS_LEFT: 
+@FS_ERROR_CONNECTION_FAILED: 
+
+<!-- ##### MACRO FS_ERROR_IS_FATAL ##### -->
+<para>
+
+</para>
+
+@error: 
+
+

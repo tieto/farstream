@@ -1,0 +1,154 @@
+<!-- ##### SECTION Title ##### -->
+FsStreamTransmitter
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT FsStreamTransmitter ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL FsStreamTransmitter::error ##### -->
+<para>
+
+</para>
+
+@fsstreamtransmitter: the object which received the signal.
+@arg1: 
+@arg2: 
+@arg3: 
+
+<!-- ##### SIGNAL FsStreamTransmitter::known-source-packet-received ##### -->
+<para>
+
+</para>
+
+@fsstreamtransmitter: the object which received the signal.
+@arg1: 
+@arg2: 
+
+<!-- ##### SIGNAL FsStreamTransmitter::local-candidates-prepared ##### -->
+<para>
+
+</para>
+
+@fsstreamtransmitter: the object which received the signal.
+
+<!-- ##### SIGNAL FsStreamTransmitter::new-active-candidate-pair ##### -->
+<para>
+
+</para>
+
+@fsstreamtransmitter: the object which received the signal.
+@arg1: 
+@arg2: 
+
+<!-- ##### SIGNAL FsStreamTransmitter::new-local-candidate ##### -->
+<para>
+
+</para>
+
+@fsstreamtransmitter: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL FsStreamTransmitter::state-changed ##### -->
+<para>
+
+</para>
+
+@fsstreamtransmitter: the object which received the signal.
+@arg1: 
+@arg2: 
+
+<!-- ##### ARG FsStreamTransmitter:associate-on-source ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsStreamTransmitter:preferred-local-candidates ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG FsStreamTransmitter:sending ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT FsStreamTransmitterClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+@set_remote_candidates: 
+@force_remote_candidates: 
+@gather_local_candidates: 
+@stop: 
+
+<!-- ##### FUNCTION fs_stream_transmitter_set_remote_candidates ##### -->
+<para>
+
+</para>
+
+@streamtransmitter: 
+@candidates: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_stream_transmitter_gather_local_candidates ##### -->
+<para>
+
+</para>
+
+@streamtransmitter: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_stream_transmitter_force_remote_candidates ##### -->
+<para>
+
+</para>
+
+@streamtransmitter: 
+@remote_candidates: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION fs_stream_transmitter_stop ##### -->
+<para>
+
+</para>
+
+@streamtransmitter: 
+
+
+<!-- ##### FUNCTION fs_stream_transmitter_emit_error ##### -->
+<para>
+
+</para>
+
+@streamtransmitter: 
+@error_no: 
+@error_msg: 
+@debug_msg: 
+
+
