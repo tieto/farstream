@@ -6,8 +6,8 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
 <link rel="start" href="index.html" title="Farsight2 Plugins Manual">
 <link rel="up" href="ch02.html" title="Transmitters">
-<link rel="prev" href="FsRawUdpStreamTransmitter.html" title="FsRawUdpStreamTransmitter">
-<link rel="next" href="FsNiceStreamTransmitter.html" title="FsNiceStreamTransmitter">
+<link rel="prev" href="farsight2-plugins-FsRawUdpStreamTransmitter.html" title="FsRawUdpStreamTransmitter">
+<link rel="next" href="farsight2-plugins-FsNiceStreamTransmitter.html" title="FsNiceStreamTransmitter">
 <meta name="generator" content="GTK-Doc V1.10 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="pt01.html" title="Part I. RTP Plugin">
@@ -18,47 +18,33 @@
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
 <tr valign="middle">
-<td><a accesskey="p" href="FsRawUdpStreamTransmitter.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="farsight2-plugins-FsRawUdpStreamTransmitter.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="ch02.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">Farsight2 Plugins Manual</th>
-<td><a accesskey="n" href="FsNiceStreamTransmitter.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="farsight2-plugins-FsNiceStreamTransmitter.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#FsMulticastStreamTransmitter.synopsis" class="shortcut">Top</a>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#farsight2-plugins-FsMulticastStreamTransmitter.synopsis" class="shortcut">Top</a>
                    | 
-                  <a href="#FsMulticastStreamTransmitter.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#FsMulticastStreamTransmitter.object-hierarchy" class="shortcut">Object Hierarchy</a></nobr></td></tr>
+                  <a href="#farsight2-plugins-FsMulticastStreamTransmitter.description" class="shortcut">Description</a></nobr></td></tr>
 </table>
 <div class="refentry" lang="en">
-<a name="FsMulticastStreamTransmitter"></a><div class="titlepage"></div>
+<a name="farsight2-plugins-FsMulticastStreamTransmitter"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
-<h2><span class="refentrytitle"><a name="FsMulticastStreamTransmitter.top_of_page"></a>FsMulticastStreamTransmitter</span></h2>
+<h2><span class="refentrytitle"><a name="farsight2-plugins-FsMulticastStreamTransmitter.top_of_page"></a>FsMulticastStreamTransmitter</span></h2>
 <p>FsMulticastStreamTransmitter — A stream transmitter object for Multicast UDP</p>
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsynopsisdiv">
-<a name="FsMulticastStreamTransmitter.synopsis"></a><h2>Synopsis</h2>
+<a name="farsight2-plugins-FsMulticastStreamTransmitter.synopsis"></a><h2>Synopsis</h2>
 <pre class="synopsis">
-                    <a class="link" href="FsMulticastStreamTransmitter.html#FsMulticastStreamTransmitter-struct" title="FsMulticastStreamTransmitter">FsMulticastStreamTransmitter</a>;
+                    <a class="link" href="farsight2-plugins-FsMulticastStreamTransmitter.html#FsMulticastStreamTransmitter" title="FsMulticastStreamTransmitter">FsMulticastStreamTransmitter</a>;
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="FsMulticastStreamTransmitter.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="synopsis">
-  <a
-href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
->GObject</a>
-   +----<a
-href="../farsight-libs/FsStreamTransmitter.html"
->FsStreamTransmitter</a>
-         +----FsMulticastStreamTransmitter
-</pre>
-</div>
-<div class="refsect1" lang="en">
-<a name="FsMulticastStreamTransmitter.description"></a><h2>Description</h2>
+<a name="farsight2-plugins-FsMulticastStreamTransmitter.description"></a><h2>Description</h2>
 <p>
 The multicast transmitter allows data to be sent over and received from
 multicasted UDP on IPv4.
@@ -93,10 +79,13 @@ The name of this transmitter is "multicast".</p>
 </p>
 </div>
 <div class="refsect1" lang="en">
-<a name="FsMulticastStreamTransmitter.details"></a><h2>Details</h2>
+<a name="farsight2-plugins-FsMulticastStreamTransmitter.details"></a><h2>Details</h2>
 <div class="refsect2" lang="en">
-<a name="FsMulticastStreamTransmitter-struct"></a><h3>FsMulticastStreamTransmitter</h3>
-<pre class="programlisting">typedef struct _FsMulticastStreamTransmitter FsMulticastStreamTransmitter;</pre>
+<a name="FsMulticastStreamTransmitter"></a><h3>FsMulticastStreamTransmitter</h3>
+<pre class="programlisting">typedef struct {
+  FsStreamTransmitter parent;
+} FsMulticastStreamTransmitter;
+</pre>
 <p>
 All members are private, access them using methods and properties</p>
 <p>
@@ -105,8 +94,8 @@ All members are private, access them using methods and properties</p>
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="FsMulticastStreamTransmitter.see-also"></a><h2>See Also</h2>
-<a class="link" href="FsRawUdpStreamTransmitter.html" title="FsRawUdpStreamTransmitter"><span class="type">FsRawUdpStreamTransmitter</span></a>
+<a name="farsight2-plugins-FsMulticastStreamTransmitter.see-also"></a><h2>See Also</h2>
+<a class="link" href="farsight2-plugins-FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter" title="FsRawUdpStreamTransmitter"><span class="type">FsRawUdpStreamTransmitter</span></a>
 </div>
 </div>
 <div class="footer">

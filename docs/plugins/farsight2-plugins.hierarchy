@@ -1,8 +1,6 @@
 GObject
   GstObject
     GstPad
-      GstProxyPad
-        GstGhostPad
     GstPadTemplate
     GstPluginFeature
       GstElementFactory
@@ -11,41 +9,12 @@ GObject
     GstElement
       GstBin
         GstPipeline
-      FsFunnel
-      GstBaseTransform
-        GstCapsFilter
-        GstIdentity
-      GstBaseSrc
-        GstFakeSrc
-        GstPushSrc
-          GstFdSrc
-        GstFileSrc
-      GstBaseSink
-        GstFakeSink
-        GstFdSink
-        GstFileSink
-      GstQueue
-      GstTee
-      GstTypeFindElement
-      GstMultiQueue
     GstBus
     GstTask
     GstClock
     GstPlugin
     GstRegistry
   GstSignalObject
-  FsTransmitter
-    FsRawUdpTransmitter
-    FsMulticastTransmitter
-    FsNiceTransmitter
-  GTypeModule
-    FsPlugin
-  FsRawUdpComponent
-  FsStreamTransmitter
-    FsRawUdpStreamTransmitter
-    FsMulticastStreamTransmitter
-    FsNiceStreamTransmitter
-  FsNiceAgent
 GInterface
   GTypePlugin
   GstChildProxy

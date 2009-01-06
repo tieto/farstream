@@ -10,19 +10,19 @@
         <sub name="FsRtpStream" link="farsight2-plugins-FsRtpStream.html"/>
       </sub>
       <sub name="Transmitters" link="ch02.html">
-        <sub name="FsRawUdpStreamTransmitter" link="FsRawUdpStreamTransmitter.html"/>
-        <sub name="FsMulticastStreamTransmitter" link="FsMulticastStreamTransmitter.html"/>
-        <sub name="FsNiceStreamTransmitter" link="FsNiceStreamTransmitter.html"/>
+        <sub name="FsRawUdpStreamTransmitter" link="farsight2-plugins-FsRawUdpStreamTransmitter.html"/>
+        <sub name="FsMulticastStreamTransmitter" link="farsight2-plugins-FsMulticastStreamTransmitter.html"/>
+        <sub name="FsNiceStreamTransmitter" link="farsight2-plugins-FsNiceStreamTransmitter.html"/>
       </sub>
     </sub>
     <sub name="Utility elements" link="pt02.html">
-      <sub name="FsFunnel" link="FsFunnel.html"/>
+      <sub name="FsFunnel" link="farsight2-plugins-FsFunnel.html"/>
       <sub name="GstVideoanyrate" link="farsight2-plugins-GstVideoanyrate.html"/>
     </sub>
   </chapters>
   <functions>
-    <function name="Element Information" link="farsight2-plugins-FsRtpConference.html#id2801678"/>
-    <function name="Element Pads" link="farsight2-plugins-FsRtpConference.html#id2732357"/>
+    <function name="Element Information" link="farsight2-plugins-FsRtpConference.html#id2885783"/>
+    <function name="Element Pads" link="farsight2-plugins-FsRtpConference.html#id2816462"/>
     <function name="FsRtpConference" link="farsight2-plugins-FsRtpConference.html#FsRtpConference"/>
     <function name="The &quot;sdes-cname&quot; property" link="farsight2-plugins-FsRtpConference.html#FsRtpConference--sdes-cname"/>
     <function name="The &quot;sdes-email&quot; property" link="farsight2-plugins-FsRtpConference.html#FsRtpConference--sdes-email"/>
@@ -32,34 +32,26 @@
     <function name="The &quot;sdes-phone&quot; property" link="farsight2-plugins-FsRtpConference.html#FsRtpConference--sdes-phone"/>
     <function name="The &quot;sdes-tool&quot; property" link="farsight2-plugins-FsRtpConference.html#FsRtpConference--sdes-tool"/>
     <function name="FsRtpParticipant" link="farsight2-plugins-FsRtpParticipant.html#FsRtpParticipant"/>
-    <function name="Codec profiles" link="farsight2-plugins-FsRtpSession.html#id2816172"/>
+    <function name="Codec profiles" link="farsight2-plugins-FsRtpSession.html#id2900277"/>
     <function name="FsRtpSession" link="farsight2-plugins-FsRtpSession.html#FsRtpSession"/>
     <function name="The &quot;no-rtcp-timeout&quot; property" link="farsight2-plugins-FsRtpSession.html#FsRtpSession--no-rtcp-timeout"/>
     <function name="The &quot;conference&quot; property" link="farsight2-plugins-FsRtpSession.html#FsRtpSession--conference"/>
     <function name="FsRtpStream" link="farsight2-plugins-FsRtpStream.html#FsRtpStream"/>
-    <function name="FsRawUdpStreamTransmitter" link="FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter-struct"/>
-    <function name="The &quot;stun-ip&quot; property" link="FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--stun-ip"/>
-    <function name="The &quot;stun-port&quot; property" link="FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--stun-port"/>
-    <function name="The &quot;stun-timeout&quot; property" link="FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--stun-timeout"/>
-    <function name="The &quot;upnp-discovery&quot; property" link="FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--upnp-discovery"/>
-    <function name="The &quot;upnp-discovery-timeout&quot; property" link="FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--upnp-discovery-timeout"/>
-    <function name="The &quot;upnp-mapping&quot; property" link="FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--upnp-mapping"/>
-    <function name="The &quot;upnp-mapping-timeout&quot; property" link="FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--upnp-mapping-timeout"/>
-    <function name="The &quot;upnp-request-timeout&quot; property" link="FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--upnp-request-timeout"/>
-    <function name="FsMulticastStreamTransmitter" link="FsMulticastStreamTransmitter.html#FsMulticastStreamTransmitter-struct"/>
-    <function name="FsNiceStreamTransmitter" link="FsNiceStreamTransmitter.html#FsNiceStreamTransmitter-struct"/>
-    <function name="The &quot;compatibility-mode&quot; property" link="FsNiceStreamTransmitter.html#FsNiceStreamTransmitter--compatibility-mode"/>
-    <function name="The &quot;controlling-mode&quot; property" link="FsNiceStreamTransmitter.html#FsNiceStreamTransmitter--controlling-mode"/>
-    <function name="The &quot;debug&quot; property" link="FsNiceStreamTransmitter.html#FsNiceStreamTransmitter--debug"/>
-    <function name="The &quot;relay-info&quot; property" link="FsNiceStreamTransmitter.html#FsNiceStreamTransmitter--relay-info"/>
-    <function name="The &quot;stream-id&quot; property" link="FsNiceStreamTransmitter.html#FsNiceStreamTransmitter--stream-id"/>
-    <function name="The &quot;stun-ip&quot; property" link="FsNiceStreamTransmitter.html#FsNiceStreamTransmitter--stun-ip"/>
-    <function name="The &quot;stun-port&quot; property" link="FsNiceStreamTransmitter.html#FsNiceStreamTransmitter--stun-port"/>
-    <function name="Element Information" link="FsFunnel.html#id2814705"/>
-    <function name="Element Pads" link="FsFunnel.html#id2783154"/>
-    <function name="FsFunnel" link="FsFunnel.html#FsFunnel-struct"/>
-    <function name="Element Information" link="farsight2-plugins-GstVideoanyrate.html#id2804175"/>
-    <function name="Element Pads" link="farsight2-plugins-GstVideoanyrate.html#id2800454"/>
+    <function name="FsRawUdpStreamTransmitter" link="farsight2-plugins-FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter"/>
+    <function name="The &quot;stun-ip&quot; property" link="farsight2-plugins-FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--stun-ip"/>
+    <function name="The &quot;stun-port&quot; property" link="farsight2-plugins-FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--stun-port"/>
+    <function name="The &quot;stun-timeout&quot; property" link="farsight2-plugins-FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--stun-timeout"/>
+    <function name="The &quot;upnp-discovery&quot; property" link="farsight2-plugins-FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--upnp-discovery"/>
+    <function name="The &quot;upnp-discovery-timeout&quot; property" link="farsight2-plugins-FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--upnp-discovery-timeout"/>
+    <function name="The &quot;upnp-mapping&quot; property" link="farsight2-plugins-FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--upnp-mapping"/>
+    <function name="The &quot;upnp-mapping-timeout&quot; property" link="farsight2-plugins-FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--upnp-mapping-timeout"/>
+    <function name="The &quot;upnp-request-timeout&quot; property" link="farsight2-plugins-FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--upnp-request-timeout"/>
+    <function name="FsMulticastStreamTransmitter" link="farsight2-plugins-FsMulticastStreamTransmitter.html#FsMulticastStreamTransmitter"/>
+    <function name="Element Information" link="farsight2-plugins-FsFunnel.html#id2870610"/>
+    <function name="Element Pads" link="farsight2-plugins-FsFunnel.html#id2886694"/>
+    <function name="FsFunnel" link="farsight2-plugins-FsFunnel.html#FsFunnel"/>
+    <function name="Element Information" link="farsight2-plugins-GstVideoanyrate.html#id2865306"/>
+    <function name="Element Pads" link="farsight2-plugins-GstVideoanyrate.html#id2888422"/>
     <function name="GstVideoanyrate" link="farsight2-plugins-GstVideoanyrate.html#GstVideoanyrate"/>
   </functions>
 </book>

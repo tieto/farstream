@@ -1,3 +1,305 @@
+commit 0f91b46ee7815dcb939b433c2f2740e3b8964bd5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 11 17:34:56 2008 -0500
+
+    Version 0.0.6
+
+commit 605eedcc1606c87bf8879530d501d0e0806b260c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 11 17:34:45 2008 -0500
+
+    Fix plugins doc Makefiles to let distcheck pass
+
+commit 1d38646c1f3d770c54cbb89190136d303e5afb20
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 10 17:06:15 2008 -0500
+
+    Use fixed caps on funnel src pad
+
+commit 6a874365c890a4f4da3cf95406250d702a724d43
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 9 19:41:37 2008 -0500
+
+    Simplify (and correct) the multicast transmitter to always send with the max requested TTL
+
+commit 3148bc8e723dddbce002c92b13bed51ba222b6d3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 9 15:10:52 2008 -0500
+
+    Force checking for sed
+
+commit 8d64d4c111a57f4a7845c1959d560ca5f7d3124b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 9 15:00:15 2008 -0500
+
+    Test for newer pythons too
+
+commit f42efca4e0bf0b648c930eb874c12f0ee3604700
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 8 18:41:16 2008 -0500
+
+    Update doc for get_stream_transmitter_type method
+
+commit 452b5550f198c08bc24cc62940c357f6a5d00c79
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 8 17:30:43 2008 -0500
+
+    Remove the request pad before the sinks.
+    
+    This is required to prevent the race where a buffer is stuck in the sink while trying to stop it and returns wrong-state
+
+commit f9be9e386d19d6fc395443b83be0cfc752400374
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 8 14:27:16 2008 -0500
+
+    Document list_transmitters in session class
+
+commit 0236d0bd7572e9793e0bd8cb8bbf55e573934f35
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 8 14:21:13 2008 -0500
+
+    Remove one debug statement that prints too often
+
+commit c8e97fd900cd4ec24271da2023073a910b318e1e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 8 14:20:55 2008 -0500
+
+    Skip upnp-ignored -> stun tests if stund isnt there
+
+commit 7eabd4fe29191feda4fe5d4158dd4f1c256f8850
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 4 17:40:30 2008 -0500
+
+    Replace static mutex with regular mutex in nice transmitter
+
+commit 668643d410e6fe3a0a6d09038dfe55780a2a072d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 3 18:19:49 2008 -0500
+
+    Only try to generate the doc for existing transmitters
+
+commit 4aeee7cde69c47c968e29db2c705f84d25a1dacb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 2 19:32:33 2008 -0500
+
+    Versioin 0.0.5.1
+
+commit c604c378b968b2c078af78b40b8b1b138f0a4aba
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 2 19:26:38 2008 -0500
+
+    Versioin 0.0.5
+
+commit 779b3a8642d459584e7e8ab880bbcb0ff2cf39e9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 1 19:50:50 2008 -0500
+
+    Make it compile with python 2.4
+
+commit 1a1cacba2b635c362187d0d6941d1f71960e0350
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 1 19:30:25 2008 -0500
+
+    Add nice requirement to the README
+
+commit c2f7f9676dced4b3bc7ed1c6fc9a5b39f06d292e
+Author: Håvard Graff <havard.graff@tandberg.com>
+Date:   Mon Dec 1 18:10:01 2008 -0500
+
+    Forward events
+
+commit ec9f768df52f009861b12f7083c5fa9de4e23516
+Author: Håvard Graff <havard.graff@tandberg.com>
+Date:   Mon Dec 1 18:07:01 2008 -0500
+
+    Implement getcaps in the funnel
+
+commit 0540db2ebd8e45f5887865f440a548f094bcb46d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 30 20:37:17 2008 -0500
+
+    We need libnice 0.0.3 with the relay constants
+
+commit de6f9e9f59f55c4fc71ff699a49da1cec1766336
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 30 09:43:12 2008 +0100
+
+    Protect sink addition/removal with a mutex
+
+commit 84a180100167b331946303143a3137b0326f4685
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 30 09:39:41 2008 +0100
+
+    Use the new method to control the sendingness
+
+commit 4dd1c36b6118363f2486f62a2b554438568e1f02
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 30 09:37:26 2008 +0100
+
+    Add method to set the nice sink sending or not
+
+commit f33fe835392d4dd4b4068ecabf87f5f8192fac82
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 30 09:28:41 2008 +0100
+
+    Check linking success as asap
+
+commit 19d78cdd1bcb2ef6423f6ec36496dbd34a45ad96
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 30 09:17:17 2008 +0100
+
+    Keep a ref to the nice elements
+
+commit 2b62a803ed02567715958293dab8e54ff5b208b6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 21 11:00:16 2008 -0500
+
+    Don't release the request pads on gstrtpbin, its not implemented and prints out a warning
+
+commit d9a5fc09cfd04ce54ffa5ec7ed89937ddd6682a3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 20 19:00:34 2008 -0500
+
+    Set the remote_candidates from an idler to prevent deadlock
+
+commit 8f52bfa113a7fd242775d612176a31d7455fe953
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 20 18:53:28 2008 -0500
+
+    Wait until the component is ready before using it to avoid losing buffers
+
+commit 2c57ca7bb37712dae5ca3513e534b67467e1aaf8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 20 18:52:51 2008 -0500
+
+    Lock the counter while they're being processed
+
+commit 8615988202b7e3a966b61cd10c0786cc740d620c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 20 18:16:52 2008 -0500
+
+    Fix small leaks in nice transmitter and tests
+
+commit bca3688dac528d8ec5cc0f072d24bfbabd6b00e3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 18 14:33:26 2008 -0500
+
+    Remove double semi-colons
+
+commit 33140c5ae130e024452bf8140f6b363d97b61b73
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 18 13:51:00 2008 -0500
+
+    Make rawudp compile without upnp
+
+commit bc3429305e79e4ffec8e57d1a3a98a7e727fa322
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 18 13:35:33 2008 -0500
+
+    Add more UPnP tests
+
+commit 52a7dc97ee0152e8db8fbb1696d0505974f6c9b6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 18 13:07:28 2008 -0500
+
+    Disconnect signal when stopping upnp discovery
+
+commit 029e5b617ac88514bcf5d80fa5d517b5a2805cf7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 17 18:34:23 2008 -0500
+
+    Only emit the upnp candidates if stun fails
+
+commit 46dd2a0add2af23e39d2db6395d350ab370eda0f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 17 18:33:58 2008 -0500
+
+    Make stund rawudp tests non optional
+
+commit dcc8977245577938d2226b744bb7b645702a9f8a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 17 18:27:47 2008 -0500
+
+    Prevent deadlock in rawudp test stopping process
+
+commit 32780a7353525ef7e2f2e370d55124592d909a91
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 17 17:55:11 2008 -0500
+
+    Stop upnp discovery if stun candidate is found
+
+commit 726597c3ef3a7a57121d00f1ec48aca29fd0ceb2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 17 17:49:00 2008 -0500
+
+    Centralise upnp discovery stopping code
+
+commit 4533b5df57e97241c5cd902135e7107540121d86
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 16 20:13:47 2008 +0000
+
+    Disable upnp discovery on stund test
+
+commit f39c66d97dfd5aed97a4898f678e40ec1cdb3506
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 16 20:13:17 2008 +0000
+
+    Really disable upnp discovery if its disabled
+
+commit 42086875e4a58af06b6fded66f7271b0e4f8e49f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Nov 16 19:26:07 2008 +0000
+
+    Start/stop the stund in test fixtures
+
+commit 381218dc71408e87ab47d1a89e00421ee409d307
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 17 16:38:09 2008 -0500
+
+    Reset global variables on every test
+
+commit 91a5a265803cf2a696dba0cc950187dd26a45292
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 17 13:44:12 2008 +0000
+
+    Print the right variable in error
+
+commit afba4e4e9a7e2996fddf6c336b1fada1d33debbf
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Nov 15 17:48:36 2008 +0000
+
+    Document more requirements
+
+commit f761cd7ed8c32ebc056b87d1b5487dde21a17d79
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 14 09:38:00 2008 +0000
+
+    Remove more unused stuff in the configure
+
+commit bacfca413a16a9dafd99d579720c4fdb89fba1ba
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 14 09:36:15 2008 +0000
+
+    Require gst 0.10.20 for gst_bin_find_unlinked_pad()
+
+commit 3d6a068e00e20c542aed4acbffd7d15d9bcbf2d9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 13 22:09:04 2008 +0000
+
+    Remove unused stuff in configure
+
+commit 750c3376c20d2a9df8a0cc017c4a8af13b12c299
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 13 22:05:58 2008 +0000
+
+    Ignore nice properly if its not installed
+
+commit f2eb8d35651ffcefc7e899543c98b7a4e8c1b538
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 13 22:02:47 2008 +0000
+
+    version 0.0.4.1
+
 commit 914525d4af200202356ee8dae0403060a0f12101
 Author: Olivier Crête <olivier.crete@collabora.co.uk>
 Date:   Thu Nov 13 18:37:28 2008 +0000

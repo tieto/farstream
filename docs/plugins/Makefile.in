@@ -55,7 +55,6 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst-args.m4 \
 	$(top_srcdir)/common/m4/gst-check.m4 \
 	$(top_srcdir)/common/m4/gst-error.m4 \
-	$(top_srcdir)/common/m4/gst-feature.m4 \
 	$(top_srcdir)/common/m4/gst-function.m4 \
 	$(top_srcdir)/common/m4/gst-glib2.m4 \
 	$(top_srcdir)/common/m4/gst-plugin-docs.m4 \
@@ -136,10 +135,6 @@ GST_BASE_LIBS = @GST_BASE_LIBS@
 GST_CFLAGS = @GST_CFLAGS@
 GST_CHECK_CFLAGS = @GST_CHECK_CFLAGS@
 GST_CHECK_LIBS = @GST_CHECK_LIBS@
-GST_CONTROLLER_CFLAGS = @GST_CONTROLLER_CFLAGS@
-GST_CONTROLLER_LIBS = @GST_CONTROLLER_LIBS@
-GST_GDP_CFLAGS = @GST_GDP_CFLAGS@
-GST_GDP_LIBS = @GST_GDP_LIBS@
 GST_INSTALL_PLUGINS_HELPER = @GST_INSTALL_PLUGINS_HELPER@
 GST_LEVEL_DEFAULT = @GST_LEVEL_DEFAULT@
 GST_LIBS = @GST_LIBS@
@@ -353,9 +348,15 @@ content_files =
 
 # Other files to distribute.
 extra_files = \
-	farsight2-transmitters.types \
+	farsight2-transmitters.types.in \
 	gtkdoc-scangobj-transmitters
 
+
+# FC3 seems to need -scan.c to be part of CLEANFILES for distcheck
+# no idea why FC4 can do without
+CLEANFILES = farsight2-transmitters.types $(SCANOBJ_FILES_O) \
+	$(DOC_MODULE)-scan.c $(REPORT_FILES) $(DOC_STAMPS) \
+	inspect-registry.xml
 
 # CFLAGS and LDFLAGS for compiling scan program. Only needed if your app/lib
 # contains GtkObjects/GObjects and you want to document signals and properties.
@@ -433,16 +434,6 @@ REPORT_FILES = \
 	$(DOC_MODULE)-undocumented.txt \
 	$(DOC_MODULE)-undeclared.txt \
 	$(DOC_MODULE)-unused.txt
-
-
-# FC3 seems to need -scan.c to be part of CLEANFILES for distcheck
-# no idea why FC4 can do without
-CLEANFILES = \
-	$(SCANOBJ_FILES_O) \
-	$(DOC_MODULE)-scan.c \
-	$(REPORT_FILES) \
-	$(DOC_STAMPS) \
-	inspect-registry.xml
 
 
 ### inspect GStreamer plug-ins; done by documentation maintainer ###
@@ -631,6 +622,12 @@ uninstall-am: uninstall-local
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	uninstall uninstall-am uninstall-local
 
+
+farsight2-transmitters.types: farsight2-transmitters.types.in Makefile
+	cat $< > $@
+	for i in "$(FS2_TRANSMITTER_PLUGINS_SELECTED)"; do \
+		echo "${i}" >> $@ ;\
+	done
 
 update-all: scanobj-trans-build.stamp update
 
@@ -843,8 +840,6 @@ install-data-local:
 	    $(INSTALL_DATA) $(srcdir)/html/$(DOC_MODULE).devhelp2 \
 	           $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@.devhelp2; \
 	  fi; \
-	  (which gtkdoc-rebase >/dev/null && \
-	    gtkdoc-rebase --relative --dest-dir=$(DESTDIR) --html-dir=$(DESTDIR)$(TARGET_DIR)) || true ; \
 	fi) 
 uninstall-local:
 	(installfiles=`echo ./html/*.html`; \
@@ -909,7 +904,7 @@ scanobj-trans-update:
 # We have a scanobj-build.stamp just to prevent both from running at the same
 # time as they use temp files with the same name
 
-scanobj-trans-build.stamp: $(SCANOBJ_DEPS) $(basefiles) scanobj-build.stamp
+scanobj-trans-build.stamp: $(SCANOBJ_DEPS) $(basefiles) scanobj-build.stamp farsight2-transmitters.types
 	@echo '*** Scanning Transmitters ***'
 	if test x"$(srcdir)" = x. ; then				\
 	    GST_PLUGIN_PATH=$(top_builddir)/gst:$(top_builddir)/ext	\
@@ -941,8 +936,8 @@ dist-hook: dist-check-gtkdoc dist-hook-local
 	cp $(srcdir)/html/* $(distdir)/html
 	-cp $(srcdir)/$(DOC_MODULE).types $(distdir)/
 	-cp $(srcdir)/$(DOC_MODULE)-sections.txt $(distdir)/
+	-cp $(srcdir)/html/$(DOC_MODULE).devhelp* $(distdir)/html
 	cd $(distdir) && rm -f $(DISTCLEANFILES)
-        -gtkdoc-rebase --online --relative --html-dir=$(distdir)/html
 
 .PHONY : dist-hook-local docs
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

@@ -79,6 +79,8 @@ static void fs_funnel_release_pad (GstElement * element, GstPad * pad);
 
 static GstFlowReturn fs_funnel_chain (GstPad * pad, GstBuffer * buffer);
 static gboolean fs_funnel_event (GstPad * pad, GstEvent * event);
+static gboolean fs_funnel_src_event (GstPad * pad, GstEvent * event);
+static GstCaps* fs_funnel_getcaps (GstPad * pad);
 
 
 typedef struct {
@@ -119,14 +121,13 @@ fs_funnel_class_init (FsFunnelClass * klass)
   gstelement_class->change_state = GST_DEBUG_FUNCPTR (fs_funnel_change_state);
 }
 
-
-
 static void
 fs_funnel_init (FsFunnel * funnel, FsFunnelClass * g_class)
 {
   funnel->srcpad = gst_pad_new_from_static_template (&funnel_src_template,
     "src");
-
+  gst_pad_set_event_function (funnel->srcpad, fs_funnel_src_event);
+  gst_pad_use_fixed_caps (funnel->srcpad);
   gst_element_add_pad (GST_ELEMENT (funnel), funnel->srcpad);
 }
 
@@ -145,6 +146,7 @@ fs_funnel_request_new_pad (GstElement * element, GstPadTemplate * templ,
 
   gst_pad_set_chain_function (sinkpad, GST_DEBUG_FUNCPTR (fs_funnel_chain));
   gst_pad_set_event_function (sinkpad, GST_DEBUG_FUNCPTR (fs_funnel_event));
+  gst_pad_set_getcaps_function (sinkpad, GST_DEBUG_FUNCPTR (fs_funnel_getcaps));
 
   gst_segment_init (&priv->segment, GST_FORMAT_UNDEFINED);
   gst_pad_set_element_private (sinkpad, priv);
@@ -170,6 +172,21 @@ fs_funnel_release_pad (GstElement * element, GstPad * pad)
     g_slice_free1 (sizeof(FsFunnelPadPrivate), priv);
 
   gst_element_remove_pad (GST_ELEMENT_CAST (funnel), pad);
+}
+
+static GstCaps*
+fs_funnel_getcaps (GstPad * pad)
+{
+  FsFunnel *funnel = FS_FUNNEL (gst_pad_get_parent (pad));
+  GstCaps *caps;
+
+  caps = gst_pad_peer_get_caps (funnel->srcpad);
+  if (caps == NULL)
+    caps = gst_caps_copy (gst_pad_get_pad_template_caps (pad));
+
+  gst_object_unref (funnel);
+
+  return caps;
 }
 
 static GstFlowReturn
@@ -279,6 +296,44 @@ fs_funnel_event (GstPad * pad, GstEvent * event)
   return res;
 }
 
+static gboolean
+fs_funnel_src_event (GstPad * pad, GstEvent * event)
+{
+  GstElement *funnel;
+  GstIterator *iter;
+  GstPad *sinkpad;
+  gboolean result = FALSE;
+  gboolean done = FALSE;
+
+  funnel = gst_pad_get_parent_element (pad);
+  g_return_val_if_fail (funnel != NULL, FALSE);
+
+  iter = gst_element_iterate_sink_pads (funnel);
+
+  while (!done) {
+    switch (gst_iterator_next (iter, (gpointer) &sinkpad)) {
+      case GST_ITERATOR_OK:
+        gst_event_ref (event);
+        result |= gst_pad_push_event (sinkpad, event);
+        gst_object_unref (sinkpad);
+        break;
+      case GST_ITERATOR_RESYNC:
+        gst_iterator_resync (iter);
+        result = FALSE;
+        break;
+      case GST_ITERATOR_ERROR:
+        GST_WARNING_OBJECT (funnel, "Error iterating sinkpads");
+      case GST_ITERATOR_DONE:
+        done = TRUE;
+        break;
+    }
+  }
+  gst_iterator_free (iter);
+  gst_object_unref (funnel);
+  gst_event_unref (event);
+
+  return result;
+}
 
 static void
 reset_pad (gpointer data, gpointer user_data)

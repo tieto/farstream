@@ -159,6 +159,9 @@ struct _FsRawUdpComponentPrivate
 
 #ifdef HAVE_GUPNP
   GSource *upnp_discovery_timeout_src;
+  FsCandidate *local_upnp_candidate;
+
+  gulong upnp_signal_id;
 #endif
 };
 
@@ -225,6 +228,11 @@ static gboolean
 fs_rawudp_component_start_stun (FsRawUdpComponent *self, GError **error);
 static void
 fs_rawudp_component_stop_stun_locked (FsRawUdpComponent *self);
+
+#ifdef HAVE_GUPNP
+static void
+fs_rawudp_component_stop_upnp_discovery_locked (FsRawUdpComponent *self);
+#endif
 
 GType
 fs_rawudp_component_get_type (void)
@@ -625,12 +633,7 @@ fs_rawudp_component_stop (FsRawUdpComponent *self)
   {
 #ifdef HAVE_GUPNP
 
-    if (self->priv->upnp_discovery_timeout_src)
-    {
-      g_source_destroy (self->priv->upnp_discovery_timeout_src);
-      g_source_unref (self->priv->upnp_discovery_timeout_src);
-    }
-    self->priv->upnp_discovery_timeout_src = NULL;
+    fs_rawudp_component_stop_upnp_discovery_locked (self);
 
     if (self->priv->upnp_igd  &&
         (self->priv->upnp_mapping || self->priv->upnp_discovery))
@@ -677,6 +680,10 @@ fs_rawudp_component_finalize (GObject *object)
     fs_candidate_destroy (self->priv->local_active_candidate);
   if (self->priv->local_forced_candidate)
     fs_candidate_destroy (self->priv->local_forced_candidate);
+#ifdef HAVE_GUPNP
+  if (self->priv->local_upnp_candidate)
+    fs_candidate_destroy (self->priv->local_upnp_candidate);
+#endif
 
   g_free (self->priv->ip);
   g_free (self->priv->stun_ip);
@@ -992,6 +999,52 @@ fs_rawudp_component_set_remote_candidate (FsRawUdpComponent *self,
   return TRUE;
 }
 
+static void
+fs_rawudp_component_maybe_emit_local_candidates (FsRawUdpComponent *self)
+{
+  GError *error = NULL;
+
+  FS_RAWUDP_COMPONENT_LOCK (self);
+  if (self->priv->local_active_candidate)
+  {
+    FS_RAWUDP_COMPONENT_UNLOCK (self);
+    return;
+  }
+
+  if (self->priv->stun_timeout_thread &&
+      self->priv->stun_timeout_thread != g_thread_self ())
+  {
+    FS_RAWUDP_COMPONENT_UNLOCK (self);
+    return;
+  }
+
+#ifdef HAVE_GUPNP
+  if (self->priv->local_upnp_candidate)
+  {
+    self->priv->local_active_candidate = self->priv->local_upnp_candidate;
+    self->priv->local_upnp_candidate = NULL;
+    FS_RAWUDP_COMPONENT_UNLOCK (self);
+    fs_rawudp_component_emit_candidate (self,
+        self->priv->local_active_candidate);
+    return;
+  }
+#endif
+
+  FS_RAWUDP_COMPONENT_UNLOCK (self);
+
+  if (!fs_rawudp_component_emit_local_candidates (self, &error))
+  {
+    if (error->domain == FS_ERROR)
+      fs_rawudp_component_emit_error (self, error->code,
+          error->message, error->message);
+    else
+      fs_rawudp_component_emit_error (self, FS_ERROR_INTERNAL,
+          "Error emitting local candidates", NULL);
+  }
+  g_clear_error (&error);
+
+}
+
 #ifdef HAVE_GUPNP
 static void
 _upnp_mapped_external_port (GUPnPSimpleIgdThread *igd, gchar *proto,
@@ -1009,6 +1062,43 @@ _upnp_mapped_external_port (GUPnPSimpleIgdThread *igd, gchar *proto,
     return;
   }
 
+  fs_rawudp_component_stop_upnp_discovery_locked (self);
+
+  if (self->priv->local_upnp_candidate || self->priv->local_active_candidate)
+  {
+    FS_RAWUDP_COMPONENT_UNLOCK (self);
+    return;
+  }
+
+  self->priv->local_upnp_candidate = fs_candidate_new ("L1",
+      self->priv->component,
+      FS_CANDIDATE_TYPE_HOST,
+      FS_NETWORK_PROTOCOL_UDP,
+      external_ip,
+      external_port);
+
+  FS_RAWUDP_COMPONENT_UNLOCK (self);
+
+  fs_rawudp_component_maybe_emit_local_candidates (self);
+}
+
+static gboolean
+_upnp_discovery_timeout (gpointer user_data)
+{
+  FsRawUdpComponent *self = user_data;
+
+  FS_RAWUDP_COMPONENT_LOCK (self);
+  self->priv->upnp_discovery_timeout_src = NULL;
+  FS_RAWUDP_COMPONENT_UNLOCK (self);
+
+  fs_rawudp_component_maybe_emit_local_candidates (self);
+
+  return FALSE;
+}
+
+static void
+fs_rawudp_component_stop_upnp_discovery_locked (FsRawUdpComponent *self)
+{
   if (self->priv->upnp_discovery_timeout_src)
   {
     g_source_destroy (self->priv->upnp_discovery_timeout_src);
@@ -1016,45 +1106,12 @@ _upnp_mapped_external_port (GUPnPSimpleIgdThread *igd, gchar *proto,
   }
   self->priv->upnp_discovery_timeout_src = NULL;
 
-  if (self->priv->local_active_candidate)
+  if (self->priv->upnp_signal_id)
   {
-    FS_RAWUDP_COMPONENT_UNLOCK (self);
-    return;
+    g_signal_handler_disconnect (self->priv->upnp_igd,
+        self->priv->upnp_signal_id);
+    self->priv->upnp_signal_id = 0;
   }
-
-  self->priv->local_active_candidate = fs_candidate_new ("L1",
-      self->priv->component,
-      FS_CANDIDATE_TYPE_HOST,
-      FS_NETWORK_PROTOCOL_UDP,
-      external_ip,
-      external_port);
-  FS_RAWUDP_COMPONENT_UNLOCK (self);
-
-  fs_rawudp_component_emit_candidate (self, self->priv->local_active_candidate);
-}
-
-static gboolean
-_upnp_discovery_timeout (gpointer user_data)
-{
-  FsRawUdpComponent *self = user_data;
-  GError *error = NULL;
-
-  FS_RAWUDP_COMPONENT_LOCK (self);
-  self->priv->upnp_discovery_timeout_src = NULL;
-  FS_RAWUDP_COMPONENT_UNLOCK (self);
-
-  if (!fs_rawudp_component_emit_local_candidates (self, &error))
-  {
-    if (error->domain == FS_ERROR)
-      fs_rawudp_component_emit_error (self, error->code,
-          error->message, error->message);
-    else
-      fs_rawudp_component_emit_error (self, FS_ERROR_INTERNAL,
-          "Error emitting local candidates", NULL);
-  }
-  g_clear_error (&error);
-
-  return FALSE;
 }
 
 #endif
@@ -1096,8 +1153,11 @@ fs_rawudp_component_gather_local_candidates (FsRawUdpComponent *self,
 
       if (self->priv->upnp_discovery)
       {
-        g_signal_connect (self->priv->upnp_igd, "mapped-external-port",
+        FS_RAWUDP_COMPONENT_LOCK (self);
+        self->priv->upnp_signal_id = g_signal_connect (self->priv->upnp_igd,
+            "mapped-external-port",
             G_CALLBACK (_upnp_mapped_external_port), self);
+        FS_RAWUDP_COMPONENT_UNLOCK (self);
       }
 
       gupnp_simple_igd_add_port (GUPNP_SIMPLE_IGD (self->priv->upnp_igd),
@@ -1105,14 +1165,17 @@ fs_rawudp_component_gather_local_candidates (FsRawUdpComponent *self,
           "Farsight Raw UDP transmitter");
 
 
-      FS_RAWUDP_COMPONENT_LOCK (self);
-      self->priv->upnp_discovery_timeout_src = g_timeout_source_new_seconds (
-          self->priv->upnp_discovery_timeout);
-      g_source_set_callback (self->priv->upnp_discovery_timeout_src,
-          _upnp_discovery_timeout, self, NULL);
-      g_object_get (self->priv->upnp_igd, "main-context", &ctx, NULL);
-      g_source_attach (self->priv->upnp_discovery_timeout_src, ctx);
-      FS_RAWUDP_COMPONENT_UNLOCK (self);
+      if (self->priv->upnp_discovery)
+      {
+        FS_RAWUDP_COMPONENT_LOCK (self);
+        self->priv->upnp_discovery_timeout_src = g_timeout_source_new_seconds (
+            self->priv->upnp_discovery_timeout);
+        g_source_set_callback (self->priv->upnp_discovery_timeout_src,
+            _upnp_discovery_timeout, self, NULL);
+        g_object_get (self->priv->upnp_igd, "main-context", &ctx, NULL);
+        g_source_attach (self->priv->upnp_discovery_timeout_src, ctx);
+        FS_RAWUDP_COMPONENT_UNLOCK (self);
+      }
     }
 
     /* free list of ips */
@@ -1322,8 +1385,12 @@ stun_recv_cb (GstPad *pad, GstBuffer *buffer,
 
   FS_RAWUDP_COMPONENT_LOCK(self);
   fs_rawudp_component_stop_stun_locked (self);
+#ifdef HAVE_GUPNP
+  fs_rawudp_component_stop_upnp_discovery_locked (self);
+#endif
 
   self->priv->local_active_candidate = fs_candidate_copy (candidate);
+
   FS_RAWUDP_COMPONENT_UNLOCK(self);
 
   fs_rawudp_component_emit_candidate (self, candidate);
@@ -1404,19 +1471,7 @@ stun_timeout_func (gpointer user_data)
   gst_object_unref (sysclock);
 
   if (emit)
-  {
-    GError *error = NULL;
-    if (!fs_rawudp_component_emit_local_candidates (self, &error))
-    {
-      if (error->domain == FS_ERROR)
-        fs_rawudp_component_emit_error (self, error->code,
-            error->message, error->message);
-      else
-        fs_rawudp_component_emit_error (self, FS_ERROR_INTERNAL,
-            "Error emitting local candidates", NULL);
-    }
-    g_clear_error (&error);
-  }
+    fs_rawudp_component_maybe_emit_local_candidates (self);
 
   return NULL;
 }
