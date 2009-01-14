@@ -82,9 +82,6 @@ struct _FsRtpSubStreamPrivate {
   FsRtpSession *session;
   FsRtpStream *stream; /* only set once, protected by session lock */
 
-  guint32 ssrc;
-  guint pt;
-
   GstPad *rtpbin_pad;
 
   GstElement *valve;
@@ -95,11 +92,14 @@ struct _FsRtpSubStreamPrivate {
    * otherwise the rtpbin_pad is blocked */
   /* Protected by the session mutex */
   GstElement *codecbin;
-  FsCodec *codec;
   GstCaps *caps;
 
   /* This is only created when the substream is associated with a FsRtpStream */
   GstPad *output_ghostpad;
+
+  /* Set to TRUE if the ghostpad is already being added */
+  /* Proteced by the session mutex */
+  gboolean adding_output_ghostpad;
 
   /* The id of the pad probe used to block the stream while the recv codec
    * is changed
@@ -107,16 +107,22 @@ struct _FsRtpSubStreamPrivate {
    */
   gulong blocking_id;
 
+  /* This is protected by the session lock... the caller takes the lock
+   * before updating the property.. yea nasty I know
+   */
   gboolean receiving;
+
+  /* Both of these are session mutex protected */
+  /* This is TRUE while someone is modifying the recv pipeline */
+  gboolean modifying;
+  /* This becomes true when the substream is stopped */
+  gboolean stopped;
 
   /* Protected by the this mutex */
   GMutex *mutex;
   GstClockID no_rtcp_timeout_id;
   GstClockTime next_no_rtcp_timeout;
   GThread *no_rtcp_timeout_thread;
-
-  /* Protected by the session mutex*/
-  gint no_rtcp_timeout;
 
   GError *construction_error;
 };
@@ -154,6 +160,10 @@ fs_rtp_sub_stream_emit_error (FsRtpSubStream *substream,
     gint error_no,
     gchar *error_msg,
     gchar *debug_msg);
+
+static void
+fs_rtp_sub_stream_try_stop (FsRtpSubStream *substream);
+
 
 static void
 fs_rtp_sub_stream_class_init (FsRtpSubStreamClass *klass)
@@ -288,7 +298,7 @@ fs_rtp_sub_stream_class_init (FsRtpSubStreamClass *klass)
    * This signal is not emitted on the main thread, but on GStreamer's streaming
    * thread!
    *
-   * This is probably re-emited by the FsStream
+   * This is re-emited by the FsStream
    *
    */
   signals[SRC_PAD_ADDED] = g_signal_new ("src-pad-added",
@@ -430,7 +440,7 @@ fs_rtp_sub_stream_start_no_rtcp_timeout_thread (FsRtpSubStream *self,
   FS_RTP_SUB_STREAM_LOCK(self);
 
   self->priv->next_no_rtcp_timeout = gst_clock_get_time (sysclock) +
-    (self->priv->no_rtcp_timeout * GST_MSECOND);
+    (self->no_rtcp_timeout * GST_MSECOND);
 
   gst_object_unref (sysclock);
 
@@ -487,7 +497,7 @@ fs_rtp_sub_stream_constructed (GObject *object)
   gchar *tmp;
 
   GST_DEBUG ("New substream in session %u for ssrc %x and pt %u",
-      self->priv->session->id, self->priv->ssrc, self->priv->pt);
+      self->priv->session->id, self->ssrc, self->pt);
 
   if (!self->priv->conference) {
     self->priv->construction_error = g_error_new (FS_ERROR,
@@ -496,15 +506,15 @@ fs_rtp_sub_stream_constructed (GObject *object)
   }
 
   tmp = g_strdup_printf ("recv_valve_%d_%d_%d", self->priv->session->id,
-      self->priv->ssrc, self->priv->pt);
+      self->ssrc, self->pt);
   self->priv->valve = gst_element_factory_make ("fsvalve", tmp);
   g_free (tmp);
 
   if (!self->priv->valve) {
     self->priv->construction_error = g_error_new (FS_ERROR,
       FS_ERROR_CONSTRUCTION, "Could not create a fsvalve element for"
-      " session substream with ssrc: %u and pt:%d", self->priv->ssrc,
-      self->priv->pt);
+      " session substream with ssrc: %u and pt:%d", self->ssrc,
+      self->pt);
     return;
   }
 
@@ -512,7 +522,7 @@ fs_rtp_sub_stream_constructed (GObject *object)
     self->priv->construction_error = g_error_new (FS_ERROR,
       FS_ERROR_CONSTRUCTION, "Could not add the fsvalve element for session"
       " substream with ssrc: %u and pt:%d to the conference bin",
-      self->priv->ssrc, self->priv->pt);
+      self->ssrc, self->pt);
     return;
   }
 
@@ -521,26 +531,25 @@ fs_rtp_sub_stream_constructed (GObject *object)
       "drop", TRUE,
       NULL);
 
-
   if (gst_element_set_state (self->priv->valve, GST_STATE_PLAYING) ==
     GST_STATE_CHANGE_FAILURE) {
     self->priv->construction_error = g_error_new (FS_ERROR,
       FS_ERROR_CONSTRUCTION, "Could not set the fsvalve element for session"
       " substream with ssrc: %u and pt:%d to the playing state",
-      self->priv->ssrc, self->priv->pt);
+      self->ssrc, self->pt);
     return;
   }
 
   tmp = g_strdup_printf ("recv_capsfilter_%d_%d_%d", self->priv->session->id,
-      self->priv->ssrc, self->priv->pt);
+      self->ssrc, self->pt);
   self->priv->capsfilter = gst_element_factory_make ("capsfilter", tmp);
   g_free (tmp);
 
   if (!self->priv->capsfilter) {
     self->priv->construction_error = g_error_new (FS_ERROR,
       FS_ERROR_CONSTRUCTION, "Could not create a capsfilter element for"
-      " session substream with ssrc: %u and pt:%d", self->priv->ssrc,
-      self->priv->pt);
+      " session substream with ssrc: %u and pt:%d", self->ssrc,
+      self->pt);
     return;
   }
 
@@ -548,7 +557,7 @@ fs_rtp_sub_stream_constructed (GObject *object)
     self->priv->construction_error = g_error_new (FS_ERROR,
       FS_ERROR_CONSTRUCTION, "Could not add the capsfilter element for session"
       " substream with ssrc: %u and pt:%d to the conference bin",
-      self->priv->ssrc, self->priv->pt);
+      self->ssrc, self->pt);
     return;
   }
 
@@ -557,7 +566,7 @@ fs_rtp_sub_stream_constructed (GObject *object)
     self->priv->construction_error = g_error_new (FS_ERROR,
       FS_ERROR_CONSTRUCTION, "Could not set the capsfilter element for session"
       " substream with ssrc: %u and pt:%d to the playing state",
-      self->priv->ssrc, self->priv->pt);
+      self->ssrc, self->pt);
     return;
   }
 
@@ -584,7 +593,7 @@ fs_rtp_sub_stream_constructed (GObject *object)
   }
 
 
-  if (self->priv->no_rtcp_timeout > 0)
+  if (self->no_rtcp_timeout > 0)
     if (!fs_rtp_sub_stream_start_no_rtcp_timeout_thread (self,
             &self->priv->construction_error))
       return;
@@ -609,26 +618,26 @@ fs_rtp_sub_stream_dispose (GObject *object)
     self->priv->output_ghostpad = NULL;
   }
 
-  if (self->priv->capsfilter) {
-    gst_object_ref (self->priv->capsfilter);
-    gst_element_set_state (self->priv->capsfilter, GST_STATE_NULL);
-    gst_bin_remove (GST_BIN (self->priv->conference), self->priv->capsfilter);
-    gst_element_set_state (self->priv->capsfilter, GST_STATE_NULL);
-    gst_object_unref (self->priv->capsfilter);
-    self->priv->capsfilter = NULL;
-  }
-
   if (self->priv->valve) {
-    gst_object_ref (self->priv->valve);
+    gst_element_set_locked_state (self->priv->valve, TRUE);
     gst_element_set_state (self->priv->valve, GST_STATE_NULL);
     gst_bin_remove (GST_BIN (self->priv->conference), self->priv->valve);
-    gst_element_set_state (self->priv->valve, GST_STATE_NULL);
-    gst_object_unref (self->priv->valve);
     self->priv->valve = NULL;
   }
 
+  if (self->priv->codecbin) {
+    gst_element_set_locked_state (self->priv->codecbin, TRUE);
+    gst_element_set_state (self->priv->codecbin, GST_STATE_NULL);
+    gst_bin_remove (GST_BIN (self->priv->conference), self->priv->codecbin);
+    self->priv->codecbin = NULL;
+  }
 
-  FS_RTP_SESSION_LOCK (self->priv->session);
+  if (self->priv->capsfilter) {
+    gst_element_set_locked_state (self->priv->capsfilter, TRUE);
+    gst_element_set_state (self->priv->capsfilter, GST_STATE_NULL);
+    gst_bin_remove (GST_BIN (self->priv->conference), self->priv->capsfilter);
+    self->priv->capsfilter = NULL;
+  }
 
   if (self->priv->blocking_id)
   {
@@ -636,18 +645,6 @@ fs_rtp_sub_stream_dispose (GObject *object)
         self->priv->blocking_id);
     self->priv->blocking_id = 0;
   }
-
-  if (self->priv->codecbin) {
-    gst_object_ref (self->priv->codecbin);
-    gst_element_set_state (self->priv->codecbin, GST_STATE_NULL);
-    gst_bin_remove (GST_BIN (self->priv->conference), self->priv->codecbin);
-    gst_element_set_state (self->priv->codecbin, GST_STATE_NULL);
-    gst_object_unref (self->priv->codecbin);
-    self->priv->codecbin = NULL;
-  }
-
-  FS_RTP_SESSION_UNLOCK (self->priv->session);
-
 
   if (self->priv->rtpbin_pad) {
     gst_object_unref (self->priv->rtpbin_pad);
@@ -663,8 +660,8 @@ fs_rtp_sub_stream_finalize (GObject *object)
 {
   FsRtpSubStream *self = FS_RTP_SUB_STREAM (object);
 
-  if (self->priv->codec)
-    fs_codec_destroy (self->priv->codec);
+  if (self->codec)
+    fs_codec_destroy (self->codec);
 
   if (self->priv->caps)
     gst_caps_unref (self->priv->caps);
@@ -676,6 +673,11 @@ fs_rtp_sub_stream_finalize (GObject *object)
 }
 
 
+
+/*
+ * These properties can only be accessed while holding the session lock
+ *
+ */
 
 static void
 fs_rtp_sub_stream_set_property (GObject *object,
@@ -693,35 +695,29 @@ fs_rtp_sub_stream_set_property (GObject *object,
       self->priv->session = g_value_get_object (value);
       break;
     case PROP_STREAM:
-      FS_RTP_SESSION_LOCK (self->priv->session);
       if (self->priv->stream)
         GST_WARNING ("Stream already set, not re-setting");
       else
         self->priv->stream = g_value_get_object (value);
-      FS_RTP_SESSION_UNLOCK (self->priv->session);
       break;
     case PROP_RTPBIN_PAD:
       self->priv->rtpbin_pad = GST_PAD (g_value_dup_object (value));
       break;
     case PROP_SSRC:
-      self->priv->ssrc = g_value_get_uint (value);
+      self->ssrc = g_value_get_uint (value);
       break;
     case PROP_PT:
-      self->priv->pt = g_value_get_uint (value);
+      self->pt = g_value_get_uint (value);
       break;
     case PROP_RECEIVING:
-      FS_RTP_SESSION_LOCK (self->priv->session);
       self->priv->receiving = g_value_get_boolean (value);
       if (self->priv->output_ghostpad && self->priv->valve)
         g_object_set (G_OBJECT (self->priv->valve),
             "drop", !self->priv->receiving,
             NULL);
-      FS_RTP_SESSION_UNLOCK (self->priv->session);
       break;
     case PROP_NO_RTCP_TIMEOUT:
-      FS_RTP_SESSION_LOCK (self->priv->session);
-      self->priv->no_rtcp_timeout = g_value_get_int (value);
-      FS_RTP_SESSION_UNLOCK (self->priv->session);
+      self->no_rtcp_timeout = g_value_get_int (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -729,6 +725,10 @@ fs_rtp_sub_stream_set_property (GObject *object,
   }
 }
 
+/*
+ * These properties can only be accessed while holding the session lock
+ *
+ */
 
 static void
 fs_rtp_sub_stream_get_property (GObject *object,
@@ -746,37 +746,27 @@ fs_rtp_sub_stream_get_property (GObject *object,
       g_value_set_object (value, self->priv->session);
       break;
     case PROP_STREAM:
-      FS_RTP_SESSION_LOCK (self->priv->session);
       g_value_set_object (value, self->priv->stream);
-      FS_RTP_SESSION_UNLOCK (self->priv->session);
       break;
     case PROP_RTPBIN_PAD:
       g_value_set_object (value, self->priv->rtpbin_pad);
       break;
     case PROP_SSRC:
-      g_value_set_uint (value, self->priv->ssrc);
+      g_value_set_uint (value, self->ssrc);
       break;
     case PROP_PT:
-      g_value_set_uint (value, self->priv->pt);
+      g_value_set_uint (value, self->pt);
       break;
     case PROP_CODEC:
-      FS_RTP_SESSION_LOCK (self->priv->session);
-      g_value_set_boxed (value, self->priv->codec);
-      FS_RTP_SESSION_UNLOCK (self->priv->session);
+      g_value_set_boxed (value, self->codec);
       break;
     case PROP_RECEIVING:
-      FS_RTP_SESSION_LOCK (self->priv->session);
       g_value_set_boolean (value, self->priv->receiving);
-      FS_RTP_SESSION_UNLOCK (self->priv->session);
     case PROP_OUTPUT_GHOSTPAD:
-      FS_RTP_SESSION_LOCK (self->priv->session);
       g_value_set_object (value, self->priv->output_ghostpad);
-      FS_RTP_SESSION_UNLOCK (self->priv->session);
       break;
     case PROP_NO_RTCP_TIMEOUT:
-      FS_RTP_SESSION_LOCK (self->priv->session);
-      g_value_set_int (value, self->priv->no_rtcp_timeout);
-      FS_RTP_SESSION_UNLOCK (self->priv->session);
+      g_value_set_int (value, self->no_rtcp_timeout);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -785,21 +775,21 @@ fs_rtp_sub_stream_get_property (GObject *object,
 }
 
 /**
- * fs_rtp_sub_stream_set_codecbin:
- * @substream: a #FsRtpSubStream
- * @codec: The codec to set
- * @codecbin: the codecbin to set
+ * fs_rtp_sub_stream_set_codecbin_unlock:
  *
  * Add and links the rtpbin for a given substream.
  * Removes any codecbin that was previously there.
  *
- * This function will swallow one ref to the codecbin
+ * This function will swallow one ref to the codecbin and the codec.x
+ *
+ * You must enter this function with the session lock held and it will release
+ * it.
  *
  * Returns: TRUE on success
  */
 
 gboolean
-fs_rtp_sub_stream_set_codecbin (FsRtpSubStream *substream,
+fs_rtp_sub_stream_set_codecbin_unlock (FsRtpSubStream *substream,
     FsCodec *codec,
     GstElement *codecbin,
     GError **error)
@@ -810,43 +800,73 @@ fs_rtp_sub_stream_set_codecbin (FsRtpSubStream *substream,
   GstPad *pad;
   gboolean codec_changed = TRUE;
 
-  FS_RTP_SESSION_LOCK (substream->priv->session);
-
-  if (substream->priv->codec)
+  if (substream->priv->stopped)
   {
-    if (!fs_codec_are_equal (codec, substream->priv->codec))
+    FS_RTP_SESSION_UNLOCK (substream->priv->session);
+    gst_object_unref (codecbin);
+    fs_codec_destroy (codec);
+    fs_rtp_sub_stream_try_stop (substream);
+    return TRUE;
+  }
+  substream->priv->modifying = TRUE;
+
+  if (substream->codec)
+  {
+    if (!fs_codec_are_equal (codec, substream->codec))
       codec_changed = FALSE;
   }
 
   if (substream->priv->codecbin)
   {
+    FsCodec *saved_codec = substream->codec;
+
+    FS_RTP_SESSION_UNLOCK (substream->priv->session);
+
+    gst_element_set_locked_state (substream->priv->codecbin, TRUE);
     if (gst_element_set_state (substream->priv->codecbin, GST_STATE_NULL) !=
         GST_STATE_CHANGE_SUCCESS)
     {
+      gst_element_set_locked_state (substream->priv->codecbin, FALSE);
       g_set_error (error, FS_ERROR, FS_ERROR_INTERNAL,
           "Could not set the codec bin for ssrc %u"
-          " and payload type %d to the state NULL", substream->priv->ssrc,
-          substream->priv->pt);
-      goto error_no_remove;
+          " and payload type %d to the state NULL", substream->ssrc,
+          substream->pt);
+      substream->priv->modifying = FALSE;
+      FS_RTP_SESSION_UNLOCK (substream->priv->session);
+      gst_object_unref (codecbin);
+      fs_codec_destroy (codec);
+      fs_rtp_sub_stream_try_stop (substream);
+      return FALSE;
     }
 
     gst_bin_remove (GST_BIN (substream->priv->conference),
         substream->priv->codecbin);
     substream->priv->codecbin = NULL;
 
-    fs_codec_destroy (substream->priv->codec);
-    substream->priv->codec = NULL;
+    FS_RTP_SESSION_LOCK (substream->priv->session);
+    if (substream->codec == saved_codec)
+    {
+      fs_codec_destroy (substream->codec);
+      substream->codec = NULL;
+    }
 
     if (substream->priv->caps)
       gst_caps_unref (substream->priv->caps);
     substream->priv->caps = NULL;
   }
 
+  FS_RTP_SESSION_UNLOCK (substream->priv->session);
+
+  gst_object_ref (codecbin);
+
   if (!gst_bin_add (GST_BIN (substream->priv->conference), codecbin))
   {
+    gst_object_unref (codecbin);
     g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
       "Could not add the codec bin to the conference");
-    goto error_no_remove;
+    substream->priv->modifying = FALSE;
+    fs_rtp_sub_stream_try_stop (substream);
+    return FALSE;
   }
 
   if (gst_element_set_state (codecbin, GST_STATE_PLAYING) ==
@@ -870,7 +890,7 @@ fs_rtp_sub_stream_set_codecbin (FsRtpSubStream *substream,
   {
      g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
          "Could not link the receive capsfilter and the codecbin for pt %d",
-         substream->priv->pt);
+         substream->pt);
     goto error;
   }
 
@@ -898,7 +918,7 @@ fs_rtp_sub_stream_set_codecbin (FsRtpSubStream *substream,
     gst_caps_unref (caps);
 
     GST_DEBUG ("Could not set the caps on the codecbin, waiting on config-data"
-        " for SSRC:%x pt:%d", substream->priv->ssrc, substream->priv->pt);
+        " for SSRC:%x pt:%d", substream->ssrc, substream->pt);
 
     /* We call this to drop all buffers until something comes up */
     fs_rtp_sub_stream_add_probe_locked (substream);
@@ -907,33 +927,43 @@ fs_rtp_sub_stream_set_codecbin (FsRtpSubStream *substream,
 
   gst_object_unref (pad);
 
+  FS_RTP_SESSION_LOCK (substream->priv->session);
   substream->priv->caps = caps;
   substream->priv->codecbin = codecbin;
-  substream->priv->codec = fs_codec_copy (codec);
+  substream->codec = codec;
+  substream->priv->modifying = FALSE;
 
   if (substream->priv->stream && !substream->priv->output_ghostpad)
   {
-    if (!fs_rtp_sub_stream_add_output_ghostpad_locked (substream, error))
+    if (!fs_rtp_sub_stream_add_output_ghostpad_unlock (substream, error))
       goto error;
   }
   else
   {
+    FS_RTP_SESSION_UNLOCK (substream->priv->session);
     if (codec_changed)
       g_signal_emit (substream, signals[CODEC_CHANGED], 0);
   }
 
-  FS_RTP_SESSION_UNLOCK (substream->priv->session);
+  gst_object_unref (codecbin);
+
+  fs_rtp_sub_stream_try_stop (substream);
+
   return TRUE;
 
  error:
+  substream->priv->modifying = FALSE;
 
+
+  gst_element_set_locked_state (codecbin, TRUE);
   gst_element_set_state (codecbin, GST_STATE_NULL);
   gst_object_ref (codecbin);
   gst_bin_remove (GST_BIN (substream->priv->conference), codecbin);
 
- error_no_remove:
+  gst_object_unref (codecbin);
+  fs_codec_destroy (codec);
 
-  FS_RTP_SESSION_UNLOCK (substream->priv->session);
+  fs_rtp_sub_stream_try_stop (substream);
 
   return ret;
 }
@@ -965,6 +995,39 @@ fs_rtp_sub_stream_new (FsRtpConference *conference,
   return substream;
 }
 
+static void
+fs_rtp_sub_stream_try_stop (FsRtpSubStream *substream)
+{
+  FS_RTP_SESSION_LOCK (substream->priv->session);
+  if (!substream->priv->stopped || substream->priv->modifying)
+  {
+    FS_RTP_SESSION_UNLOCK (substream->priv->session);
+    return;
+  }
+  FS_RTP_SESSION_UNLOCK (substream->priv->session);
+
+  if (substream->priv->output_ghostpad)
+    gst_pad_set_active (substream->priv->output_ghostpad, FALSE);
+
+  if (substream->priv->valve)
+  {
+    gst_element_set_locked_state (substream->priv->valve, TRUE);
+    gst_element_set_state (substream->priv->valve, GST_STATE_NULL);
+  }
+
+  if (substream->priv->codecbin)
+  {
+    gst_element_set_locked_state (substream->priv->codecbin, TRUE);
+    gst_element_set_state (substream->priv->codecbin, GST_STATE_NULL);
+  }
+
+  if (substream->priv->capsfilter)
+  {
+    gst_element_set_locked_state (substream->priv->capsfilter, TRUE);
+    gst_element_set_state (substream->priv->capsfilter, GST_STATE_NULL);
+  }
+}
+
 /**
  * fs_rtp_sub_stream_stop:
  *
@@ -974,24 +1037,15 @@ fs_rtp_sub_stream_new (FsRtpConference *conference,
 void
 fs_rtp_sub_stream_stop (FsRtpSubStream *substream)
 {
-  if (substream->priv->output_ghostpad)
-    gst_pad_set_active (substream->priv->output_ghostpad, FALSE);
-
-  if (substream->priv->valve)
-    gst_element_set_state (substream->priv->valve, GST_STATE_NULL);
-
   FS_RTP_SESSION_LOCK (substream->priv->session);
-  if (substream->priv->codecbin)
-    gst_element_set_state (substream->priv->codecbin, GST_STATE_NULL);
+  substream->priv->stopped = TRUE;
   FS_RTP_SESSION_UNLOCK (substream->priv->session);
 
-  if (substream->priv->capsfilter)
-    gst_element_set_state (substream->priv->capsfilter, GST_STATE_NULL);
+  fs_rtp_sub_stream_try_stop (substream);
 }
 
-
 /**
- * fs_rtp_sub_stream_add_output_ghostpad:
+ * fs_rtp_sub_stream_add_output_ghostpad_unlock:
  *
  * Creates and adds an output ghostpad for this substreams
  *
@@ -1001,21 +1055,30 @@ fs_rtp_sub_stream_stop (FsRtpSubStream *substream)
  */
 
 gboolean
-fs_rtp_sub_stream_add_output_ghostpad_locked (FsRtpSubStream *substream,
+fs_rtp_sub_stream_add_output_ghostpad_unlock (FsRtpSubStream *substream,
     GError **error)
 {
   GstPad *valve_srcpad;
   gchar *padname = NULL;
-  guint session_id;
   GstPad *ghostpad = NULL;
+  gboolean receiving;
+  FsCodec *codec = NULL;
+
+  if (substream->priv->adding_output_ghostpad)
+  {
+    FS_RTP_SESSION_UNLOCK (substream->priv->session);
+    return TRUE;
+  }
 
   g_assert (substream->priv->output_ghostpad == NULL);
 
-  g_object_get (substream->priv->session, "id", &session_id, NULL);
+  substream->priv->adding_output_ghostpad = TRUE;
 
-  padname = g_strdup_printf ("src_%u_%u_%d", session_id,
-      substream->priv->ssrc,
-      substream->priv->pt);
+  padname = g_strdup_printf ("src_%u_%u_%d", substream->priv->session->id,
+      substream->ssrc,
+      substream->pt);
+
+  FS_RTP_SESSION_UNLOCK (substream->priv->session);
 
   valve_srcpad = gst_element_get_static_pad (substream->priv->valve,
       "src");
@@ -1032,17 +1095,19 @@ fs_rtp_sub_stream_add_output_ghostpad_locked (FsRtpSubStream *substream,
   if (!ghostpad)
   {
     g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
-        "Could not build ghostpad src_%u_%u_%d", session_id,
-        substream->priv->ssrc, substream->priv->pt);
+        "Could not build ghostpad src_%u_%u_%d", substream->priv->session->id,
+        substream->ssrc, substream->pt);
+    substream->priv->adding_output_ghostpad = FALSE;
     return FALSE;
   }
 
   if (!gst_pad_set_active (ghostpad, TRUE))
   {
     g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
-        "Could not activate the src_%u_%u_%d", session_id,
-        substream->priv->ssrc, substream->priv->pt);
+        "Could not activate the src_%u_%u_%d", substream->priv->session->id,
+        substream->ssrc, substream->pt);
     gst_object_unref (ghostpad);
+    substream->priv->adding_output_ghostpad = FALSE;
     return FALSE;
   }
 
@@ -1051,24 +1116,34 @@ fs_rtp_sub_stream_add_output_ghostpad_locked (FsRtpSubStream *substream,
   {
     g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
         "Could add build ghostpad src_%u_%u_%d to the conference",
-        session_id, substream->priv->ssrc, substream->priv->pt);
+        substream->priv->session->id, substream->ssrc, substream->pt);
     gst_object_unref (ghostpad);
+    substream->priv->adding_output_ghostpad = FALSE;
     return FALSE;
   }
 
+  FS_RTP_SESSION_LOCK (substream->priv->session);
   substream->priv->output_ghostpad = ghostpad;
 
   GST_DEBUG ("Src pad added on substream for ssrc:%X pt:%u " FS_CODEC_FORMAT,
-      substream->priv->ssrc, substream->priv->pt,
-      FS_CODEC_ARGS (substream->priv->codec));
+      substream->ssrc, substream->pt,
+      FS_CODEC_ARGS (substream->codec));
+
+  receiving = substream->priv->receiving;
+  codec = fs_codec_copy (substream->codec);
+
+  FS_RTP_SESSION_UNLOCK (substream->priv->session);
 
   g_signal_emit (substream, signals[SRC_PAD_ADDED], 0,
-                 ghostpad, substream->priv->codec);
-
+                 ghostpad, codec);
   g_signal_emit (substream, signals[CODEC_CHANGED], 0);
 
-  if (substream->priv->receiving)
+  fs_codec_destroy (codec);
+
+  if (receiving)
     g_object_set (substream->priv->valve, "drop", FALSE, NULL);
+
+  fs_rtp_sub_stream_try_stop (substream);
 
   return TRUE;
 }
@@ -1093,7 +1168,7 @@ _rtpbin_pad_have_data_callback (GstPad *pad, GstMiniObject *miniobj,
 
   FS_RTP_SESSION_LOCK (self->priv->session);
 
-  if (!self->priv->codecbin || !self->priv->codec || !self->priv->caps)
+  if (!self->priv->codecbin || !self->codec || !self->priv->caps)
   {
     ret = FALSE;
   }
@@ -1156,7 +1231,7 @@ fs_rtp_sub_stream_add_probe_locked (FsRtpSubStream *substream)
 }
 
 /**
- * fs_rtp_sub_stream_verify_codec_locked:
+ * fs_rtp_sub_stream_verify_codec:
  * @substream: A #FsRtpSubStream
  *
  * This function will start the process that invalidates the codec
@@ -1166,10 +1241,10 @@ fs_rtp_sub_stream_add_probe_locked (FsRtpSubStream *substream)
  */
 
 void
-fs_rtp_sub_stream_verify_codec_locked (FsRtpSubStream *substream)
+fs_rtp_sub_stream_verify_codec (FsRtpSubStream *substream)
 {
   GST_LOG ("Starting codec verification process for substream with"
-      " SSRC:%x pt:%d", substream->priv->ssrc, substream->priv->pt);
+      " SSRC:%x pt:%d", substream->ssrc, substream->pt);
 
 
   fs_rtp_sub_stream_add_probe_locked (substream);

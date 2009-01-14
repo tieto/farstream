@@ -1,3 +1,4 @@
+<ONLINE href="http://farsight.freedesktop.org/apidoc/farsight2-plugins/">
 <ANCHOR id="farsight2-plugins-FsRtpConference" href="farsight2-plugins-0.10/farsight2-plugins-FsRtpConference.html">
 <ANCHOR id="farsight2-plugins-FsRtpConference.synopsis" href="farsight2-plugins-0.10/farsight2-plugins-FsRtpConference.html#farsight2-plugins-FsRtpConference.synopsis">
 <ANCHOR id="farsight2-plugins-FsRtpConference.properties" href="farsight2-plugins-0.10/farsight2-plugins-FsRtpConference.html#farsight2-plugins-FsRtpConference.properties">
@@ -55,8 +56,18 @@
 <ANCHOR id="farsight2-plugins-FsMulticastStreamTransmitter.see-also" href="farsight2-plugins-0.10/farsight2-plugins-FsMulticastStreamTransmitter.html#farsight2-plugins-FsMulticastStreamTransmitter.see-also">
 <ANCHOR id="farsight2-plugins-FsNiceStreamTransmitter" href="farsight2-plugins-0.10/farsight2-plugins-FsNiceStreamTransmitter.html">
 <ANCHOR id="farsight2-plugins-FsNiceStreamTransmitter.synopsis" href="farsight2-plugins-0.10/farsight2-plugins-FsNiceStreamTransmitter.html#farsight2-plugins-FsNiceStreamTransmitter.synopsis">
+<ANCHOR id="farsight2-plugins-FsNiceStreamTransmitter.properties" href="farsight2-plugins-0.10/farsight2-plugins-FsNiceStreamTransmitter.html#farsight2-plugins-FsNiceStreamTransmitter.properties">
 <ANCHOR id="farsight2-plugins-FsNiceStreamTransmitter.description" href="farsight2-plugins-0.10/farsight2-plugins-FsNiceStreamTransmitter.html#farsight2-plugins-FsNiceStreamTransmitter.description">
 <ANCHOR id="farsight2-plugins-FsNiceStreamTransmitter.details" href="farsight2-plugins-0.10/farsight2-plugins-FsNiceStreamTransmitter.html#farsight2-plugins-FsNiceStreamTransmitter.details">
+<ANCHOR id="FsNiceStreamTransmitter" href="farsight2-plugins-0.10/farsight2-plugins-FsNiceStreamTransmitter.html#FsNiceStreamTransmitter">
+<ANCHOR id="farsight2-plugins-FsNiceStreamTransmitter.property-details" href="farsight2-plugins-0.10/farsight2-plugins-FsNiceStreamTransmitter.html#farsight2-plugins-FsNiceStreamTransmitter.property-details">
+<ANCHOR id="FsNiceStreamTransmitter--compatibility-mode" href="farsight2-plugins-0.10/farsight2-plugins-FsNiceStreamTransmitter.html#FsNiceStreamTransmitter--compatibility-mode">
+<ANCHOR id="FsNiceStreamTransmitter--controlling-mode" href="farsight2-plugins-0.10/farsight2-plugins-FsNiceStreamTransmitter.html#FsNiceStreamTransmitter--controlling-mode">
+<ANCHOR id="FsNiceStreamTransmitter--debug" href="farsight2-plugins-0.10/farsight2-plugins-FsNiceStreamTransmitter.html#FsNiceStreamTransmitter--debug">
+<ANCHOR id="FsNiceStreamTransmitter--relay-info" href="farsight2-plugins-0.10/farsight2-plugins-FsNiceStreamTransmitter.html#FsNiceStreamTransmitter--relay-info">
+<ANCHOR id="FsNiceStreamTransmitter--stream-id" href="farsight2-plugins-0.10/farsight2-plugins-FsNiceStreamTransmitter.html#FsNiceStreamTransmitter--stream-id">
+<ANCHOR id="FsNiceStreamTransmitter--stun-ip" href="farsight2-plugins-0.10/farsight2-plugins-FsNiceStreamTransmitter.html#FsNiceStreamTransmitter--stun-ip">
+<ANCHOR id="FsNiceStreamTransmitter--stun-port" href="farsight2-plugins-0.10/farsight2-plugins-FsNiceStreamTransmitter.html#FsNiceStreamTransmitter--stun-port">
 <ANCHOR id="farsight2-plugins-FsNiceStreamTransmitter.see-also" href="farsight2-plugins-0.10/farsight2-plugins-FsNiceStreamTransmitter.html#farsight2-plugins-FsNiceStreamTransmitter.see-also">
 <ANCHOR id="farsight2-plugins-FsFunnel" href="farsight2-plugins-0.10/farsight2-plugins-FsFunnel.html">
 <ANCHOR id="farsight2-plugins-FsFunnel.synopsis" href="farsight2-plugins-0.10/farsight2-plugins-FsFunnel.html#farsight2-plugins-FsFunnel.synopsis">

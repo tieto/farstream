@@ -65,15 +65,9 @@ enum
 struct _FsRtpStreamPrivate
 {
   FsRtpSession *session;
-  FsRtpParticipant *participant;
   FsStreamTransmitter *stream_transmitter;
 
   FsStreamDirection direction;
-
-  /* Protected by the session mutex */
-  guint recv_codecs_changed_idle_id;
-
-  GList *negotiated_codecs;
 
   GError *construction_error;
 
@@ -81,7 +75,7 @@ struct _FsRtpStreamPrivate
   stream_known_source_packet_receive_cb known_source_packet_received_cb;
   gpointer user_data_for_cb;
 
-  gboolean disposed;
+  GMutex *mutex;
 };
 
 
@@ -200,57 +194,101 @@ fs_rtp_stream_init (FsRtpStream *self)
   /* member init */
   self->priv = FS_RTP_STREAM_GET_PRIVATE (self);
 
-  self->priv->disposed = FALSE;
   self->priv->session = NULL;
-  self->priv->participant = NULL;
+  self->participant = NULL;
   self->priv->stream_transmitter = NULL;
 
+  self->priv->mutex = g_mutex_new ();
+
   self->priv->direction = FS_DIRECTION_NONE;
+}
+
+static FsRtpSession *
+fs_rtp_stream_get_session (FsRtpStream *self, GError **error)
+{
+  FsRtpSession *session;
+
+  g_mutex_lock (self->priv->mutex);
+  session = self->priv->session;
+  if (session)
+    g_object_ref (session);
+  g_mutex_unlock (self->priv->mutex);
+
+  if (!session)
+    g_set_error (error, FS_ERROR, FS_ERROR_DISPOSED,
+        "Called function after stream has been disposed");
+
+  return session;
+}
+
+
+static FsStreamTransmitter *
+fs_rtp_stream_get_stream_transmitter (FsRtpStream *self, GError **error)
+{
+  FsRtpSession *session = fs_rtp_stream_get_session (self, error);
+  FsStreamTransmitter *st = NULL;
+
+  if (!session)
+    return NULL;
+
+  FS_RTP_SESSION_LOCK (session);
+  st = self->priv->stream_transmitter;
+  if (st)
+    g_object_ref (st);
+  FS_RTP_SESSION_UNLOCK (session);
+
+  if (!st)
+    g_set_error (error, FS_ERROR, FS_ERROR_DISPOSED,
+        "Called function after stream has been disposed");
+
+  g_object_unref (session);
+  return st;
 }
 
 static void
 fs_rtp_stream_dispose (GObject *object)
 {
   FsRtpStream *self = FS_RTP_STREAM (object);
+  FsStreamTransmitter *st;
+  FsRtpParticipant *participant;
+  FsRtpSession *session = fs_rtp_stream_get_session (self, NULL);
 
-  if (self->priv->disposed) {
-    /* If dispose did already run, return. */
+  if (!session)
     return;
-  }
 
-  if (self->priv->stream_transmitter) {
-    fs_stream_transmitter_stop (self->priv->stream_transmitter);
-    g_object_unref (self->priv->stream_transmitter);
-    self->priv->stream_transmitter = NULL;
-  }
+  g_mutex_lock (self->priv->mutex);
+  self->priv->session = NULL;
+  g_mutex_unlock (self->priv->mutex);
 
-  FS_RTP_SESSION_LOCK (self->priv->session);
-  if (self->priv->recv_codecs_changed_idle_id)
+  FS_RTP_SESSION_LOCK (session);
+  participant = self->participant;
+  self->participant = NULL;
+
+  st = self->priv->stream_transmitter;
+  self->priv->stream_transmitter = NULL;
+
+  if (st)
   {
-    g_source_remove (self->priv->recv_codecs_changed_idle_id);
-    self->priv->recv_codecs_changed_idle_id = 0;
+    FS_RTP_SESSION_UNLOCK (session);
+    fs_stream_transmitter_stop (st);
+    g_object_unref (st);
+    FS_RTP_SESSION_LOCK (session);
   }
 
-  if (self->substreams) {
-    g_list_foreach (self->substreams, (GFunc) g_object_unref, NULL);
-    g_list_free (self->substreams);
-    self->substreams = NULL;
-  }
-  FS_RTP_SESSION_UNLOCK (self->priv->session);
-
-  if (self->priv->participant) {
-    g_object_unref (self->priv->participant);
-    self->priv->participant = NULL;
-  }
-
-  /* Make sure dispose does not run twice. */
-  self->priv->disposed = TRUE;
-
-  if (self->priv->session)
+  while (self->substreams)
   {
-    g_object_unref (self->priv->session);
-    self->priv->session = NULL;
+    FsRtpSubStream *substream = self->substreams->data;
+    self->substreams = g_list_remove (self->substreams, substream);
+    FS_RTP_SESSION_UNLOCK (session);
+    g_object_unref (substream);
+    FS_RTP_SESSION_LOCK (session);
   }
+
+  FS_RTP_SESSION_UNLOCK (session);
+
+  g_object_unref (participant);
+  g_object_unref (session);
+  g_object_unref (session);
 
   parent_class->dispose (object);
 }
@@ -260,11 +298,10 @@ fs_rtp_stream_finalize (GObject *object)
 {
   FsRtpStream *self = FS_RTP_STREAM (object);
 
-  if (self->remote_codecs)
-    fs_codec_list_destroy (self->remote_codecs);
+  fs_codec_list_destroy (self->remote_codecs);
+  fs_codec_list_destroy (self->negotiated_codecs);
 
-  if (self->priv->negotiated_codecs)
-    fs_codec_list_destroy (self->priv->negotiated_codecs);
+  g_mutex_free (self->priv->mutex);
 
   parent_class->finalize (object);
 }
@@ -289,26 +326,29 @@ fs_rtp_stream_get_property (GObject *object,
                             GParamSpec *pspec)
 {
   FsRtpStream *self = FS_RTP_STREAM (object);
+  FsRtpSession *session = fs_rtp_stream_get_session (self, NULL);
+
+  if (!session)
+    return;
 
   switch (prop_id) {
     case PROP_REMOTE_CODECS:
-      FS_RTP_SESSION_LOCK (self->priv->session);
+      FS_RTP_SESSION_LOCK (session);
       g_value_set_boxed (value, self->remote_codecs);
-      FS_RTP_SESSION_UNLOCK (self->priv->session);
+      FS_RTP_SESSION_UNLOCK (session);
       break;
     case PROP_NEGOTIATED_CODECS:
-      FS_RTP_SESSION_LOCK (self->priv->session);
-      g_value_set_boxed (value, self->priv->negotiated_codecs);
-      FS_RTP_SESSION_UNLOCK (self->priv->session);
+      FS_RTP_SESSION_LOCK (session);
+      g_value_set_boxed (value, self->negotiated_codecs);
+      FS_RTP_SESSION_UNLOCK (session);
       break;
     case PROP_SESSION:
-      g_value_set_object (value, self->priv->session);
+      g_value_set_object (value, session);
       break;
     case PROP_PARTICIPANT:
-      g_value_set_object (value, self->priv->participant);
-      break;
-    case PROP_STREAM_TRANSMITTER:
-      g_value_set_object (value, self->priv->stream_transmitter);
+      FS_RTP_SESSION_LOCK (session);
+      g_value_set_object (value, self->participant);
+      FS_RTP_SESSION_UNLOCK (session);
       break;
     case PROP_DIRECTION:
       g_value_set_flags (value, self->priv->direction);
@@ -318,31 +358,31 @@ fs_rtp_stream_get_property (GObject *object,
         GList *codeclist = NULL;
         GList *substream_item;
 
-        FS_RTP_SESSION_LOCK (self->priv->session);
+        FS_RTP_SESSION_LOCK (session);
         for (substream_item = g_list_first (self->substreams);
              substream_item;
              substream_item = g_list_next (substream_item))
         {
-          FsCodec *codec = NULL;
-          g_object_get (substream_item->data, "codec", &codec, NULL);
+          FsRtpSubStream *substream = substream_item->data;
 
-          if (codec)
+          if (substream->codec)
           {
-            if (!_codec_list_has_codec (codeclist, codec))
-              codeclist = g_list_append (codeclist, codec);
-            else
-              fs_codec_destroy (codec);
+            if (!_codec_list_has_codec (codeclist, substream->codec))
+              codeclist = g_list_append (codeclist,
+                  fs_codec_copy (substream->codec));
           }
         }
 
         g_value_take_boxed (value, codeclist);
-        FS_RTP_SESSION_UNLOCK (self->priv->session);
+        FS_RTP_SESSION_UNLOCK (session);
       }
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
   }
+
+  g_object_unref (session);
 }
 
 static void
@@ -359,30 +399,55 @@ fs_rtp_stream_set_property (GObject *object,
       self->priv->session = FS_RTP_SESSION (g_value_dup_object (value));
       break;
     case PROP_PARTICIPANT:
-      self->priv->participant = FS_RTP_PARTICIPANT (g_value_dup_object (value));
+      self->participant = FS_RTP_PARTICIPANT (g_value_dup_object (value));
       break;
     case PROP_STREAM_TRANSMITTER:
       self->priv->stream_transmitter =
         FS_STREAM_TRANSMITTER (g_value_get_object (value));
       break;
     case PROP_DIRECTION:
-      self->priv->direction = g_value_get_flags (value);
-      if (self->priv->stream_transmitter)
-        g_object_set (self->priv->stream_transmitter, "sending",
-            self->priv->direction & FS_DIRECTION_SEND, NULL);
-      FS_RTP_SESSION_LOCK (self->priv->session);
-      for (item = g_list_first (self->substreams);
-           item;
-           item = g_list_next (item))
-        g_object_set (G_OBJECT (item->data),
-            "receiving", ((self->priv->direction & FS_DIRECTION_RECV) != 0),
-            NULL);
-      FS_RTP_SESSION_UNLOCK (self->priv->session);
+      {
+        FsStreamTransmitter *st = NULL;
+        GList *copy = NULL;
+        FsRtpSession *session = fs_rtp_stream_get_session (self, NULL);
+        FsStreamDirection dir;
+
+        if (!session)
+        {
+          self->priv->direction = g_value_get_flags (value);
+          return;
+        }
+
+        FS_RTP_SESSION_LOCK (session);
+        dir = self->priv->direction = g_value_get_flags (value);
+        FS_RTP_SESSION_UNLOCK (session);
+        st = fs_rtp_stream_get_stream_transmitter (self, NULL);
+        if (st)
+        {
+          g_object_set (self->priv->stream_transmitter, "sending",
+              dir & FS_DIRECTION_SEND, NULL);
+          g_object_unref (st);
+        }
+
+        FS_RTP_SESSION_LOCK (session);
+        copy = g_list_copy (g_list_first (self->substreams));
+        g_list_foreach (copy, (GFunc) g_object_ref, NULL);
+        FS_RTP_SESSION_UNLOCK (session);
+
+        for (item = copy;  item; item = g_list_next (item))
+          g_object_set (G_OBJECT (item->data),
+              "receiving", ((dir & FS_DIRECTION_RECV) != 0),
+              NULL);
+        g_list_foreach (copy, (GFunc) g_object_unref, NULL);
+        g_list_free (copy);
+        g_object_unref (session);
+      }
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
   }
+
 }
 
 static void
@@ -448,9 +513,16 @@ fs_rtp_stream_set_remote_candidates (FsStream *stream, GList *candidates,
                                      GError **error)
 {
   FsRtpStream *self = FS_RTP_STREAM (stream);
+  FsStreamTransmitter *st = fs_rtp_stream_get_stream_transmitter (self, error);
+  gboolean ret = FALSE;
 
-  return fs_stream_transmitter_set_remote_candidates (
-      self->priv->stream_transmitter, candidates, error);
+  if (!st)
+    return FALSE;
+
+  ret = fs_stream_transmitter_set_remote_candidates (st, candidates, error);
+
+  g_object_unref (st);
+  return ret;
 }
 
 /**
@@ -466,10 +538,19 @@ fs_rtp_stream_force_remote_candidates (FsStream *stream,
     GError **error)
 {
   FsRtpStream *self = FS_RTP_STREAM (stream);
+  FsStreamTransmitter *st = fs_rtp_stream_get_stream_transmitter (self, error);
+  gboolean ret = FALSE;
 
-  return fs_stream_transmitter_force_remote_candidates (
+  if (!st)
+    return FALSE;
+
+
+  ret = fs_stream_transmitter_force_remote_candidates (
       self->priv->stream_transmitter, remote_candidates,
       error);
+
+  g_object_unref (st);
+  return ret;
 }
 
 
@@ -494,8 +575,10 @@ fs_rtp_stream_set_remote_codecs (FsStream *stream,
   FsRtpStream *self = FS_RTP_STREAM (stream);
   GList *item = NULL;
   FsMediaType media_type;
+  FsRtpSession *session = fs_rtp_stream_get_session (self, error);
 
-  FS_RTP_SESSION_LOCK (self->priv->session);
+  if (!session)
+    return FALSE;
 
   if (remote_codecs == NULL) {
     g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
@@ -503,7 +586,7 @@ fs_rtp_stream_set_remote_codecs (FsStream *stream,
     goto error;
   }
 
-  g_object_get (self->priv->session, "media-type", &media_type, NULL);
+  g_object_get (session, "media-type", &media_type, NULL);
 
   for (item = g_list_first (remote_codecs); item; item = g_list_next (item))
   {
@@ -540,18 +623,21 @@ fs_rtp_stream_set_remote_codecs (FsStream *stream,
   if (self->priv->new_remote_codecs_cb (self, remote_codecs, error,
           self->priv->user_data_for_cb))
   {
+    FS_RTP_SESSION_LOCK (session);
     if (self->remote_codecs)
       fs_codec_list_destroy (self->remote_codecs);
     self->remote_codecs = fs_codec_list_copy (remote_codecs);
+    FS_RTP_SESSION_UNLOCK (session);
   } else {
     goto error;
   }
 
-  FS_RTP_SESSION_UNLOCK (self->priv->session);
+  g_object_unref (session);
   return TRUE;
 
  error:
-  FS_RTP_SESSION_UNLOCK (self->priv->session);
+
+  g_object_unref (session);
   return FALSE;
 }
 
@@ -562,8 +648,9 @@ fs_rtp_stream_set_remote_codecs (FsStream *stream,
  * @direction: the initial #FsDirection for this stream
  * @stream_transmitter: the #FsStreamTransmitter for this stream, one
  *   reference to it will be eaten
- * @new_remote_codecs: Callback called when the remote codecs change
- * (ie when fs_rtp_stream_set_remote_codecs() is called).
+ * @new_remote_codecs_cb: Callback called when the remote codecs change
+ * (ie when fs_rtp_stream_set_remote_codecs() is called). One must hold
+ * the session lock across calls.
  * @known_source_packet_received: Callback called when a packet from a
  * known source is receive.
  * @user_data: User data for the callbacks.
@@ -617,8 +704,12 @@ _local_candidates_prepared (FsStreamTransmitter *stream_transmitter,
 {
   FsRtpStream *self = FS_RTP_STREAM (user_data);
   GstElement *conf = NULL;
+  FsRtpSession *session = fs_rtp_stream_get_session (self, NULL);
 
-  g_object_get (self->priv->session, "conference", &conf, NULL);
+  if (!session)
+    return;
+
+  g_object_get (session, "conference", &conf, NULL);
 
   gst_element_post_message (conf,
       gst_message_new_element (GST_OBJECT (conf),
@@ -627,6 +718,7 @@ _local_candidates_prepared (FsStreamTransmitter *stream_transmitter,
               NULL)));
 
   gst_object_unref (conf);
+  g_object_unref (session);
 }
 
 
@@ -638,9 +730,13 @@ _new_active_candidate_pair (
     gpointer user_data)
 {
   FsRtpStream *self = FS_RTP_STREAM (user_data);
+  FsRtpSession *session = fs_rtp_stream_get_session (self, NULL);
   GstElement *conf = NULL;
 
-  g_object_get (self->priv->session, "conference", &conf, NULL);
+  if (!session)
+    return;
+
+  g_object_get (session, "conference", &conf, NULL);
 
   gst_element_post_message (conf,
       gst_message_new_element (GST_OBJECT (conf),
@@ -651,6 +747,7 @@ _new_active_candidate_pair (
               NULL)));
 
   gst_object_unref (conf);
+  g_object_unref (session);
 }
 
 
@@ -661,9 +758,13 @@ _new_local_candidate (
     gpointer user_data)
 {
   FsRtpStream *self = FS_RTP_STREAM (user_data);
+  FsRtpSession *session = fs_rtp_stream_get_session (self, NULL);
   GstElement *conf = NULL;
 
-  g_object_get (self->priv->session, "conference", &conf, NULL);
+  if (!session)
+    return;
+
+  g_object_get (session, "conference", &conf, NULL);
 
   gst_element_post_message (conf,
       gst_message_new_element (GST_OBJECT (conf),
@@ -673,6 +774,7 @@ _new_local_candidate (
               NULL)));
 
   gst_object_unref (conf);
+  g_object_unref (session);
 }
 
 static void
@@ -705,9 +807,13 @@ _state_changed (FsStreamTransmitter *stream_transmitter,
     gpointer user_data)
 {
   FsRtpStream *self = FS_RTP_STREAM (user_data);
+  FsRtpSession *session = fs_rtp_stream_get_session (self, NULL);
   GstElement *conf = NULL;
 
-  g_object_get (self->priv->session, "conference", &conf, NULL);
+  if (!session)
+    return;
+
+  g_object_get (session, "conference", &conf, NULL);
 
   gst_element_post_message (conf,
       gst_message_new_element (GST_OBJECT (conf),
@@ -718,6 +824,7 @@ _state_changed (FsStreamTransmitter *stream_transmitter,
               NULL)));
 
   gst_object_unref (conf);
+  g_object_unref (session);
 
   if (component == 1 && state == FS_STREAM_STATE_FAILED)
     fs_stream_emit_error (FS_STREAM (self), FS_ERROR_CONNECTION_FAILED,
@@ -747,23 +854,28 @@ _substream_error (FsRtpSubStream *substream,
 }
 
 /**
- * fs_rtp_stream_add_substream:
+ * fs_rtp_stream_add_substream_unlock:
  * @stream: a #FsRtpStream
  * @substream: the #FsRtpSubStream to associate with this stream
  *
  * This functions associates a substream with this stream
  *
+ * You must enter this function with the session lock held and it will release
+ * it.
+ *
  * Returns: TRUE on success, FALSE on failure
  */
 gboolean
-fs_rtp_stream_add_substream (FsRtpStream *stream,
+fs_rtp_stream_add_substream_unlock (FsRtpStream *stream,
     FsRtpSubStream *substream,
     GError **error)
 {
-  FsCodec *codec = NULL;
   gboolean ret = TRUE;
+  FsRtpSession *session = fs_rtp_stream_get_session (stream, error);
 
-  FS_RTP_SESSION_LOCK (stream->priv->session);
+  if (!session)
+    return FALSE;
+
   stream->substreams = g_list_prepend (stream->substreams,
       substream);
   g_object_set (substream,
@@ -778,15 +890,13 @@ fs_rtp_stream_add_substream (FsRtpStream *stream,
   g_signal_connect (substream, "error",
                     G_CALLBACK (_substream_error), stream);
 
-  g_object_get (substream, "codec", &codec, NULL);
-
   /* Only announce a pad if it has a codec attached to it */
-  if (codec) {
-    ret = fs_rtp_sub_stream_add_output_ghostpad_locked (substream, error);
-    fs_codec_destroy (codec);
-  }
+  if (substream->codec)
+    ret = fs_rtp_sub_stream_add_output_ghostpad_unlock (substream, error);
+  else
+    FS_RTP_SESSION_UNLOCK (session);
 
-  FS_RTP_SESSION_UNLOCK (stream->priv->session);
+  g_object_unref (session);
 
   return ret;
 }
@@ -806,17 +916,22 @@ _substream_codec_changed (FsRtpSubStream *substream,
     FsRtpStream *stream)
 {
   GList *substream_item = NULL;
-  FsCodec *codec = NULL;
   GList *codeclist = NULL;
+  FsRtpSession *session = fs_rtp_stream_get_session (stream, NULL);
 
-  g_object_get (substream, "codec", &codec, NULL);
-
-  if (!codec)
+  if (!session)
     return;
 
-  codeclist = g_list_prepend (NULL, codec);
+  FS_RTP_SESSION_LOCK (session);
 
-  FS_RTP_SESSION_LOCK (stream->priv->session);
+  if (!substream->codec)
+  {
+    FS_RTP_SESSION_UNLOCK (session);
+    g_object_unref (session);
+    return;
+  }
+
+  codeclist = g_list_prepend (NULL, fs_codec_copy (substream->codec));
 
   for (substream_item = stream->substreams;
        substream_item;
@@ -826,28 +941,19 @@ _substream_codec_changed (FsRtpSubStream *substream,
 
     if (othersubstream != substream)
     {
-      FsCodec *othercodec = NULL;
-
-      g_object_get (othersubstream, "codec", &othercodec, NULL);
-
-      if (othercodec)
+      if (othersubstream->codec)
       {
-        if (fs_codec_are_equal (codec, othercodec))
-        {
-          fs_codec_destroy (othercodec);
+        if (fs_codec_are_equal (substream->codec, othersubstream->codec))
           break;
-        }
 
-        if (!_codec_list_has_codec (codeclist, othercodec))
-          codeclist = g_list_append (codeclist, othercodec);
-        else
-          fs_codec_destroy (othercodec);
-
+        if (!_codec_list_has_codec (codeclist, othersubstream->codec))
+          codeclist = g_list_append (codeclist,
+              fs_codec_copy (othersubstream->codec));
       }
     }
   }
 
-  FS_RTP_SESSION_UNLOCK (stream->priv->session);
+  FS_RTP_SESSION_UNLOCK (session);
 
   if (substream_item == NULL)
   {
@@ -855,7 +961,7 @@ _substream_codec_changed (FsRtpSubStream *substream,
 
     g_object_notify (G_OBJECT (stream), "current-recv-codecs");
 
-    g_object_get (stream->priv->session, "conference", &conf, NULL);
+    g_object_get (session, "conference", &conf, NULL);
 
     gst_element_post_message (conf,
         gst_message_new_element (GST_OBJECT (conf),
@@ -868,35 +974,45 @@ _substream_codec_changed (FsRtpSubStream *substream,
   }
 
   fs_codec_list_destroy (codeclist);
+  g_object_unref (session);
 }
 
 /**
- * fs_rtp_stream_set_negotiated_codecs
+ * fs_rtp_stream_set_negotiated_codecs_unlock
  * @stream: a #FsRtpStream
  * @codecs: The #GList of #FsCodec to set for the negotiated-codecs property
  *
  * This function sets the value of the FsStream:negotiated-codecs property.
  * Unlike most other functions in this element, it TAKES the reference to the
  * codecs, so you have to give it its own copy.
+ *
+ * You must enter this function with the session lock held and it will release
+ * it.
  */
 void
-fs_rtp_stream_set_negotiated_codecs (FsRtpStream *stream,
+fs_rtp_stream_set_negotiated_codecs_unlock (FsRtpStream *stream,
     GList *codecs)
 {
-  FS_RTP_SESSION_LOCK (stream->priv->session);
-  if (fs_codec_list_are_equal (stream->priv->negotiated_codecs, codecs))
+  FsRtpSession *session = fs_rtp_stream_get_session (stream, NULL);
+
+  if (!session)
+    return;
+
+  if (fs_codec_list_are_equal (stream->negotiated_codecs, codecs))
   {
     fs_codec_list_destroy (codecs);
-    FS_RTP_SESSION_UNLOCK (stream->priv->session);
+    FS_RTP_SESSION_UNLOCK (session);
     return;
   }
 
-  if (stream->priv->negotiated_codecs)
-    fs_codec_list_destroy (stream->priv->negotiated_codecs);
+  if (stream->negotiated_codecs)
+    fs_codec_list_destroy (stream->negotiated_codecs);
 
-  stream->priv->negotiated_codecs = codecs;
+  stream->negotiated_codecs = codecs;
 
-  FS_RTP_SESSION_UNLOCK (stream->priv->session);
+  FS_RTP_SESSION_UNLOCK (session);
 
   g_object_notify (G_OBJECT (stream), "negotiated-codecs");
+
+  g_object_unref (session);
 }

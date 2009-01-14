@@ -80,8 +80,6 @@ struct _FsNiceStreamTransmitterPrivate
 
   guint stream_id;
 
-  gboolean sending;
-
   gchar *stun_ip;
   guint stun_port;
 
@@ -103,6 +101,8 @@ struct _FsNiceStreamTransmitterPrivate
   volatile gint associate_on_source;
 
   /* Everything below is protected by the mutex */
+
+  gboolean sending;
 
   gboolean forced_candidates;
   GList *remote_candidates;
@@ -278,12 +278,58 @@ fs_nice_stream_transmitter_class_init (FsNiceStreamTransmitterClass *klass)
           NICE_COMPATIBILITY_DRAFT19,
           G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 
+  /**
+   * FsNiceStreamTransmitter:relay-info:
+   *
+   * This is a #GValueArray containing one or more #GstStructure.
+   *
+   * The fields in the structure are:
+   *  <informaltable>
+   *   <tr><th colspan="2">Required</th></tr>
+   *   <tr>
+   *     <td nowrap="nowrap">(gchar*)</td>
+   *     <td nowrap="nowrap">ip</td>
+   *     <td>The IP address of the TURN server</td>
+   *   </tr>
+   *   <tr>
+   *     <td nowrap="nowrap">(guint)</td>
+   *     <td nowrap="nowrap">port</td>
+   *     <td>The port of the TURN server</td>
+   *   </tr>
+   *   <tr>
+   *     <td nowrap="nowrap">(gchar*)</td>
+   *     <td nowrap="nowrap">username</td>
+   *   </tr>
+   *   <tr>
+   *     <td nowrap="nowrap">(gchar*)</td>
+   *     <td nowrap="nowrap">password</td>
+   *   </tr>
+   *   <tr><th colspan="2">Optional</th></tr>
+   *   <tr>
+   *    <td nowrap="nowrap">(gchar *)</td>
+   *    <td nowrap="nowrap">relay-type</td>
+   *    <td>The type of STUN server, can use "udp", "tcp" or "tls".
+   *        Defaults to "udp" if not specified.</td>
+   *   </tr>
+   *   <tr>
+   *    <td nowrap="nowrap">(guint)</td>
+   *    <td nowrap="nowrap">component</td>
+   *    <td>The component this TURN server and creditials will be used for.
+   *    If no component is specified, it will be used for all components where
+   *    no per-component details were specified.
+   *    This is useful if you want to specify different short term creditial
+   *    username/password combinations for Google and MSN compatibility modes.
+   *    </td>
+   *   </tr>
+   *  </informaltable>
+   */
+
   g_object_class_install_property (gobject_class, PROP_RELAY_INFO,
       g_param_spec_value_array (
           "relay-info",
           "Information for the TURN server",
-          "ip/port/username/password/component of the TURN servers in a"
-          " GValueArray of GstStructures ",
+          "ip/port/username/password/relay-type/component of the TURN servers"
+          " in a GValueArray of GstStructures",
           NULL,
           G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 
@@ -401,7 +447,9 @@ fs_nice_stream_transmitter_get_property (GObject *object,
   switch (prop_id)
   {
     case PROP_SENDING:
+      FS_NICE_STREAM_TRANSMITTER_LOCK (self);
       g_value_set_boolean (value, self->priv->sending);
+      FS_NICE_STREAM_TRANSMITTER_UNLOCK (self);
       break;
     case PROP_PREFERRED_LOCAL_CANDIDATES:
       g_value_set_boxed (value, self->priv->preferred_local_candidates);
@@ -456,9 +504,11 @@ fs_nice_stream_transmitter_set_property (GObject *object,
   switch (prop_id)
   {
     case PROP_SENDING:
+      FS_NICE_STREAM_TRANSMITTER_LOCK (self);
       self->priv->sending = g_value_get_boolean (value);
+      FS_NICE_STREAM_TRANSMITTER_UNLOCK (self);
       fs_nice_transmitter_set_sending (self->priv->transmitter,
-          self->priv->gststream, self->priv->sending);
+          self->priv->gststream, g_value_get_boolean (value));
       break;
     case PROP_PREFERRED_LOCAL_CANDIDATES:
       self->priv->preferred_local_candidates = g_value_dup_boxed (value);

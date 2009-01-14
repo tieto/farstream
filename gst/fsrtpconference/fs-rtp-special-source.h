@@ -57,10 +57,7 @@ typedef struct _FsRtpSpecialSourcePrivate FsRtpSpecialSourcePrivate;
 /**
  * FsRtpSpecialSourceClass:
  * @build: The method builds the source #GstElement from the list of negotiated
- *   codecs and selected codecs, it returns %NULL on error
- * @update: This optional method can update the content of the current source
- *  if its possible. If the source can not be modified, it returns %FALSE (and
- *  a new source will be created)
+ *  codecs and selected codecs, it returns %NULL on error
  * @want_source: Returns %TRUE if a source of this type should be created
  *  according to the selected codec and the negotiated codecs
  * @add_blueprint: Adds #CodecBlueprint structs to the list if the proper
@@ -80,10 +77,6 @@ struct _FsRtpSpecialSourceClass
   /* Object methods */
 
   GstElement* (*build) (FsRtpSpecialSource *source,
-      GList *negotiated_codecs,
-      FsCodec *selected_codec);
-
-  gboolean (*update) (FsRtpSpecialSource *source,
       GList *negotiated_codecs,
       FsCodec *selected_codec);
 
@@ -115,18 +108,20 @@ struct _FsRtpSpecialSource
 
 GType fs_rtp_special_source_get_type (void);
 
-GList *
+void
 fs_rtp_special_sources_remove (
-    GList *current_extra_sources,
-    GList *negotiated_codecs,
+    GList **current_extra_sources,
+    GList **negotiated_codecs,
+    GMutex *mutex,
     FsCodec *send_codec,
     GstElement *bin,
     GstElement *rtpmuxer);
 
-GList *
+void
 fs_rtp_special_sources_create (
-    GList *current_extra_sources,
-    GList *negotiated_codecs,
+    GList **extra_sources,
+    GList **negotiated_codecs,
+    GMutex *mutex,
     FsCodec *send_codec,
     GstElement *bin,
     GstElement *rtpmuxer);

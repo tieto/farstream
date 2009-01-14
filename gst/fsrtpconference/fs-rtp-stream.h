@@ -74,10 +74,12 @@ struct _FsRtpStream
   /* Can only be accessed while holding the FsRtpSession lock */
   /* Dont modify, call set_remote_codecs() */
   GList *remote_codecs;
+  GList *negotiated_codecs;
 
-  /* Can only be accessed while holding the FsRtpSession lock */
   /* Dont modify, call add_substream() */
   GList *substreams;
+
+  FsRtpParticipant *participant;
 
   FsRtpStreamPrivate *priv;
 };
@@ -98,12 +100,12 @@ FsRtpStream *fs_rtp_stream_new (FsRtpSession *session,
     gpointer user_data_for_cb,
     GError **error);
 
-gboolean fs_rtp_stream_add_substream (FsRtpStream *stream,
+gboolean fs_rtp_stream_add_substream_unlock (FsRtpStream *stream,
     FsRtpSubStream *substream,
     GError **error);
 
 void
-fs_rtp_stream_set_negotiated_codecs (FsRtpStream *stream,
+fs_rtp_stream_set_negotiated_codecs_unlock (FsRtpStream *stream,
     GList *codecs);
 
 G_END_DECLS
