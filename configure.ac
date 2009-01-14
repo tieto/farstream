@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, cvs and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for cvs/prerelease
-AC_INIT(Farsight2, 0.0.6,
+AC_INIT(Farsight2, 0.0.7,
     https://bugs.freedesktop.org/enter_bug.cgi?product=Farsight,
     farsight2)
 
@@ -245,9 +245,6 @@ AC_CHECK_MEMBER([struct ip_mreqn.imr_ifindex],
 dnl *** checks for compiler characteristics ***
 
 dnl *** checks for library functions ***
-
-dnl Check for a way to display the function name in debug output
-AG_GST_CHECK_FUNCTION
 
 dnl *** checks for dependency libraries ***
 

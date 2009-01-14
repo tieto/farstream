@@ -1,3 +1,646 @@
+commit 2f18cbf114beb4c1e3840d70dd3c5516aced282d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 9 16:50:49 2009 -0500
+
+    Version 0.0.7
+
+commit 09a3b23e8a53c2de135c58f295bfa6aec1b654a5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 9 14:58:29 2009 -0500
+
+    Also allow force disposing of participants
+
+commit da48ddf2c5cb638de7ca130d04998c35742cc0c0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 9 14:51:41 2009 -0500
+
+    Add dispose method to the python bindings
+
+commit d09a16e1b98701120341f165f7e0775727462dcd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 9 14:44:21 2009 -0500
+
+    Update python bindings def file to include diposed
+
+commit 1ba1cebf8cd51b39c79af5bcc9ed20d0f9959b21
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 9 14:43:20 2009 -0500
+
+    Add test for post-dispose calls
+
+commit 51cabe12089105ba72f8f5ac51fccb51c4819abe
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 9 14:26:36 2009 -0500
+
+    Protect rtpsession dispose with a rw lock
+
+commit dafa26580c0053fbf8757f09b94f6e8fe3d19779
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 8 16:57:19 2009 -0500
+
+    Clarify session->conference refs
+
+commit 4b50fbb8df470a1b795f5d65f9735815b80a75ea
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 7 20:48:40 2009 -0500
+
+    Move stuff to dispose/finalize cleanly in rtpsession
+
+commit d95dc199b4e05ff75308168daa389498726f6c39
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 7 20:25:23 2009 -0500
+
+    Protect streamtransmitter in stream against early dispose
+
+commit 849a89d1a98ce31a4808391f6010a0338bf673fb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 7 20:06:17 2009 -0500
+
+    Protect participant in stream with mutex
+
+commit 52541a83889fabfc2b1f66d2ce153b6f56519bb5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 7 20:04:16 2009 -0500
+
+    Make the session inside a stream dispose-safe
+    
+    - Protect it with its own mutex
+    - Take a ref when using it
+    - Unref afterwards
+    - Remove now useless disposed variable
+
+commit 9f5053f5ca8c90ac2fa20550038870b94b0a81fb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 7 19:37:23 2009 -0500
+
+    Stream transmitter is no longer readable
+
+commit 9ec108ce4f720aa5d34b4ab95a559f8cdc818642
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 6 20:23:57 2009 -0500
+
+    Add error for when an object has been disposed
+
+commit 07468bca054a465841b9365cb8a3cd107866b5b6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 6 20:20:07 2009 -0500
+
+    Make fsrtpstream's dispose thread safe
+
+commit df58bbe7b02a56f33de9aecec64650093052e0c6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 9 14:56:41 2009 -0500
+
+    Add force_remote_candidates bindings in python
+
+commit e3154fa95d492a339ff401c57248bcc6656144fe
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 9 14:54:55 2009 -0500
+
+    Fix component defs in python bindings
+
+commit 19e00a88964e326012db5e4fbf077cd000a0bb08
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 7 18:16:08 2009 -0500
+
+    Document the relay-info property completely
+
+commit 71e9aa289661d962cad953c7bf805a33511a59d6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 7 17:21:29 2009 -0500
+
+    Remove gst-function.m4 from makefile.am too
+
+commit f8a7173d877b3af4352a45b885e5405458311a6d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 7 17:08:37 2009 -0500
+
+    Fix potential race in tests
+
+commit 545f7ff35abf61c1a53afbfb61fa6c173f52578f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 6 20:41:35 2009 -0500
+
+    Make the stream transmitter fully private
+
+commit 86f421f6a9612b249cb7def4ca413661679e7456
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 6 20:48:03 2009 -0500
+
+    Remove useless ifs
+
+commit 359f1f690f468596d0c06ace568f2b0c715f7fec
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 6 20:20:14 2009 -0500
+
+    Remove useless checks
+
+commit b09e1ff35011eee4fafd5df9343aa5942ef02f02
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 6 19:44:56 2009 -0500
+
+    Ignore new multicast method
+
+commit aef439dd682d1a17aac6c9ff0992cc8b57e6ba3b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 6 19:07:27 2009 -0500
+
+    remove unused configure macro
+
+commit 88f38b9fc20c532180e1fe887da1e2455bf8d4c9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 6 17:55:15 2009 -0500
+
+    Replace 2.16 g_warn_if_fail() with a g_assert()
+
+commit 43aa65f17d375cf6c466a3e9b50838bd405a4740
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 6 17:50:03 2009 -0500
+
+    Make the stun timeout process respect the max timeout
+
+commit 2803d30dfa087c08b3ab3b13aff9c1f5bdca7ec2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 6 17:48:38 2009 -0500
+
+    Add more debugs in the stun process
+
+commit 759219497c9e0a08678e6955f154344df318f3e1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 6 17:47:32 2009 -0500
+
+    Limit the stun timeout, have a shorter default
+
+commit ace837cb861ad299d60ff06a42d61144c1a3e43d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 6 17:07:28 2009 -0500
+
+    Write debug output when a candidate is emitted
+
+commit 1f26ac3513303f92c13dcab4b1c088dbcd5c151a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 5 16:24:05 2009 -0500
+
+    Properly filter the h263* pipelines
+
+commit 32b2f72025e1cc1b9e626482c53554e54fed1f32
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 29 00:38:51 2008 -0500
+
+    Make multicast stream transmitter code re-entrant
+
+commit f4636ab314e11e96bbef1bb6271e9bf460fd5efd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Dec 28 17:14:02 2008 -0500
+
+    Use an atomic for the send count in mcast
+
+commit 8ecfcb74a8a40285e136cbeb099b6ccd9c597962
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Dec 28 17:11:44 2008 -0500
+
+    Make sure the same udpsock is not created twice in mcast
+
+commit d006a2f390b2302031f7838f49c57cf5c42a622c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Dec 28 17:07:56 2008 -0500
+
+    Protect the udpsocks lists with a mutex in mcast
+
+commit a88a6b5952bad37af78b9ae4ce6d54a9718be89e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Dec 28 15:56:55 2008 -0500
+
+    Update plugin doc section to match renamed internal functions
+
+commit 749c043808b99aaf2e5bc4ff25f81d48881ba05e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Dec 28 15:47:39 2008 -0500
+
+    Protect the udpports list in the rawudp transmitter
+
+commit 5e6fa18ef516f9d99f38fd7d8e255570278015c9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 23 20:36:05 2008 -0500
+
+    Remove unused variable
+
+commit 3b3652fed7d197068137c2da86f388481c4067a3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 23 20:01:39 2008 -0500
+
+    Release lock while changing the sending status of a nice stream
+
+commit ad4c6e414997ba1eb285ea826c20e9bad57e0131
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 23 20:01:22 2008 -0500
+
+    Make sending protected in nice transmitter
+
+commit 84327a52309722044047c69d2bc93c486596104d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 23 18:06:40 2008 -0500
+
+    fix small leak in test
+
+commit 916baf074e02558929b569930d9f6d7058e83a51
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 23 18:06:23 2008 -0500
+
+    Cleanly release the request pads on the funnel's disposal
+
+commit 08ca2f6a3da89b6b6cd4a8ffb4de3e23d66bab31
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 23 17:50:23 2008 -0500
+
+    Use proper locking when creating special codecs
+
+commit 23251002857d0d38c562863fef6c1a25e12f441c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 23 17:50:00 2008 -0500
+
+    re-init global vars on every run in sendcodecs test
+
+commit 7674cf047faf0fd11498aafdd88d3cb8d2514f12
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 23 17:45:47 2008 -0500
+
+    Typo
+
+commit 7cf20b9d5a5cabe8e14f4aec8a66bd90e1f205d8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 23 17:05:52 2008 -0500
+
+    Remove useless check
+
+commit fa8b19ebe8c27a7c6ba974ff40de43e37e587ce3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 23 17:05:45 2008 -0500
+
+    jump to right error label
+
+commit 4da3ac3c9a5506fddc6ea242abe40f40f4dc0bd7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 23 17:04:26 2008 -0500
+
+    Do proper locking in special_sources_remove
+
+commit 5921c0d213d2c48a8f00c3362fd8b050b0a51a0e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 23 16:46:08 2008 -0500
+
+    Remove unused _update special source method
+
+commit da1708c4363476a37d6f0d1149b342cb693c7878
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 23 16:40:45 2008 -0500
+
+    Fix typo
+
+commit 83bf1f77fb0e4c61b4fdfd7f801ea2818c13fed3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 22 22:23:54 2008 -0500
+
+    Release locks while adding ghostpad
+
+commit e3ae726b9059875298439c0e1385f10c79224cfb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 22 22:23:17 2008 -0500
+
+    Remove useless/dangerous casts
+
+commit c35994e7b2b9e737b5e117734805d9f3c3616534
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 22 22:14:01 2008 -0500
+
+    Only copy the right one instead of leaking the others
+
+commit f0b6ea643026cd422be4dab2da19eb0bf6ff51cb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 22 21:14:46 2008 -0500
+
+    Simplify locking a little
+
+commit ebb5662e1f900ad0057dbb47ace92635721ac296
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 22 21:07:47 2008 -0500
+
+    Release locks while modifying the recv pipeline
+
+commit 19d0648b0d676a042d966fb4ece5c6b034a58757
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 22 19:54:53 2008 -0500
+
+    Fix some unsafe code in add_output_ghostpad
+
+commit 58515895e315cbf186bea3955ca960027c523057
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 22 18:35:46 2008 -0500
+
+    Release locks while modifying the discovery pipeline
+
+commit 862c9ddc841aa802263ae659185d62a1c1969ce9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 19 22:44:07 2008 -0500
+
+    Always modify the send pipeline from the streaming thread
+
+commit df2ab1d95d65c5a71eab075837bee51724b9f410
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 19 22:43:37 2008 -0500
+
+    Add audiotestsrc to dtmf tests
+
+commit e3e5ed12e7df5f76634ec7334a10e8256dccc0d8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 19 22:43:19 2008 -0500
+
+    Set extra capsfilters to playing too
+
+commit f71caffe4ec7cba7b278bd6bf56fba179fc931c8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 19 21:03:40 2008 -0500
+
+    Only modify the send codec bin from the streaming thread
+
+commit b39240719ce03214bcda40be976a40dfe0506081
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 19 20:36:02 2008 -0500
+
+    Use regular GMutex instead of static mutex and add some debugging functions
+
+commit 0cd975bfcc3e354b60e0d733bdcd4ee03eb0320b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 19 20:17:04 2008 -0500
+
+    Fix double unlocks
+
+commit c1a212611a69520e577c835aa54b4e4a2bfb3307
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 16 18:43:16 2008 -0500
+
+    Protect transmitter hashtable with a lock
+
+commit a9f6bfcc42651b76c86cfd7235b6e79a9bbca992
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 16 18:28:38 2008 -0500
+
+    Don't re-lock too early after emitting src-pad-added
+
+commit 4bf3fcc7cbe5463ae1b0818f0a56f4107db4f33b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 16 18:15:23 2008 -0500
+
+    Don't re-lock in secret after sending the codec-changed notification
+
+commit f8033f5e470453fe8bd345a28107d0315112a6d1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 16 18:06:14 2008 -0500
+
+    Make set_negotiated_codecs into an unlocking function
+
+commit f3fae388b747f100f3fed32018e121318a74f9a4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 16 17:58:59 2008 -0500
+
+    Make it explicit that the set_codecbin function unlocks the lock and let it flow
+
+commit 7a85f091520fb1b293b8c868bc0d4dc75d7fa7bf
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 16 17:32:48 2008 -0500
+
+    Hold stream ref while letting lock go
+
+commit ebed02b70838d66fdb795007d00d0a3cdc96c102
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 16 17:32:29 2008 -0500
+
+    Emit negotiated-codecs notify after letting the locks go safely
+
+commit cb3a6e0efdd03612c8755f4245fad9561944aa31
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 16 17:23:02 2008 -0500
+
+    Use public members for ssrc, pt and no-rtcp-timeout
+
+commit 9b5ca7f15343813e6bc37ec7884efedc58c361cb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 16 17:18:40 2008 -0500
+
+    Make pt, ssrc and no_rtcp_timeout public members of substream
+
+commit a67e872a4d9a715551be0f4d18ba8386dfb403de
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 16 17:15:07 2008 -0500
+
+    Use substream codec member directly
+
+commit 2c5d62129a9337da532fec4efbe3286ae4e572cc
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 16 17:07:41 2008 -0500
+
+    Make the substream's codec member public
+
+commit b9b42653eb6a577839b07a5d5cb1191f322fbb91
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 16 16:38:53 2008 -0500
+
+    Remove locking in dispose function
+
+commit b5c8cbee9d6bfdae813f54916703281934775768
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 16 16:33:21 2008 -0500
+
+    Fix comment
+
+commit c1509515f3c43ffebdb2caad07218323b2ec35d9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 16 16:31:12 2008 -0500
+
+    remove double set
+
+commit 7cdf044a6c3d261ebe4779e538423e40f95ef4f5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 12 21:13:43 2008 -0500
+
+    unlock lock before emitting signal
+
+commit d8b4582ca40418aa8d7c8041773fbb903194b708
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 12 21:11:38 2008 -0500
+
+    Don't hold locks during disposes
+
+commit 413fe0c53df6af621799c232c9f4616aa8f74469
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 12 21:02:02 2008 -0500
+
+    Make substream property accessor under the session lock
+
+commit 8d1e9d826c50f1d7354debb53902a55f86486e49
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 12 20:59:03 2008 -0500
+
+    Make some properties into public members
+
+commit 9be84dd2989bfc378d0553e17ff55b281dadfa79
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 12 20:46:44 2008 -0500
+
+    Release the rtp session lock when emitted bus messages or signals
+
+commit b9e95fd630518391a0182315fceaf361ea8e436a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 12 20:19:31 2008 -0500
+
+    forgot another
+
+commit 92fd076651a79ddd8a4c36b494ad9daaeecb14f3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 12 20:16:01 2008 -0500
+
+    forgot one in FsRtpSession
+
+commit bd9b1fe43e3c8618e98edae4088e3747fe1742e3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 12 20:15:03 2008 -0500
+
+    Replace recursive mutex with a regular mutex
+
+commit 948ee9942a51eb0b474b4f2a50d5e7e0b0983f20
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 12 20:12:14 2008 -0500
+
+    More locking cleanup
+
+commit 35765d51affe8185d503151769ba3687f583651b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 12 19:55:32 2008 -0500
+
+    Make clear in FsRtpStream what is called with a lock held and what isnt
+
+commit 142e0b50b60635c9148412b7416aab1696a6a807
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 12 19:33:00 2008 -0500
+
+    In FsRtpSession, make it clear what should be locked and what shouldnt
+
+commit 2385e21a47d6d32fb3c782ae2aff558d3af4ccf1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 12 19:25:55 2008 -0500
+
+    Make it clear that the lock is held accross the new_remote_codecs callback
+
+commit 18854fbe448f368cbe46bbc2b2d2d75673b78411
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 12 19:21:06 2008 -0500
+
+    Rename to fs_rtp_session_add_send_codec_bin_locked
+
+commit e92e56ac010bf833f152be19f1c0a836f13373c5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 18 19:49:20 2008 -0500
+
+    Free ttls array too
+
+commit 07a0261bfe1f1b95b98930a28c18b200d064ab69
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 18 17:50:46 2008 -0500
+
+    Its safe not to override associate-on-source
+
+commit e1e67be7545b0095658de0cf2fe1a900f8fb56db
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 18 21:27:35 2008 -0500
+
+    Copy the version.entities file to the xml dir for regular gtk-doc too
+
+commit 6d6fdf58b476386e9422d8b8aa9ef2fadfb76f5d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 18 21:25:38 2008 -0500
+
+    Ignore another file
+
+commit a8b21156a5cf3370acccb570fb2b1e6f63c717ca
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 17 21:10:53 2008 -0500
+
+    Use the locked_state pattern everywhere in rtpsession
+
+commit 29b82d308c8bab9bea5d979b2b3bbba3cab5edca
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 17 21:10:23 2008 -0500
+
+    Stop send elements in the right order
+
+commit 1ce598bba40c86fa9f9e61b9aa6f821e51c6b44b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 17 20:59:44 2008 -0500
+
+    Stop the substream components correctly and in the right order
+
+commit 7846dfe0315eebfd771eedf82ce3758d7f16f6e2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 17 20:55:02 2008 -0500
+
+    Stop substream components in the right order
+
+commit fe3b32ee1bce40e0a48e96b0196a7af2b917a63f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 17 18:11:10 2008 -0500
+
+    Put version in generated documentation
+
+commit d364caad681ca714523f75443f88c23d4bbc489d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 16 15:25:12 2008 -0500
+
+    Revert "Don't change the PT if we're re-using an already existing codecassociation"
+    
+    This reverts commit 53005f7023613a06a80dd34f25f930c62bcaba90.
+
+commit 8c072690fb3224a03976405f28ec9d4f8ce19e96
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 12 11:49:51 2008 -0500
+
+    Close bracket in right place
+
+commit 671cd3e2350571b9a4f7278be2602fc056294682
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 16 15:07:07 2008 -0500
+
+    Add test for dynamic pt
+
+commit 00d75ceef845107a956d0b495414cf1c5e872bba
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 16 14:23:16 2008 -0500
+
+    Quell wrong compiler warning
+
+commit 9f14e4a3e12ca493c7406f2815dfe70a43d6ae15
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 16 12:54:51 2008 -0500
+
+    Remove useless set
+
+commit eb489aeab9821caaf1b1029ff3493a26182bd5f8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 16 12:54:40 2008 -0500
+
+    Only free old candidate once new one has been accepted
+
+commit 3656951827b6fe10ae4e37dbe391a32c1c12c8f7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 16 13:03:26 2008 -0500
+
+    Don't fail on NULL candidates in base functions
+
+commit dc6c52ba745e363387dbce75a964a6268c1977be
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 11 17:39:52 2008 -0500
+
+    Version 0.0.6.1
+
 commit 0f91b46ee7815dcb939b433c2f2740e3b8964bd5
 Author: Olivier Crête <olivier.crete@collabora.co.uk>
 Date:   Thu Dec 11 17:34:56 2008 -0500

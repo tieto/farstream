@@ -63,7 +63,8 @@
 #define DEFAULT_UPNP_MAPPING_TIMEOUT (600)
 #define DEFAULT_UPNP_DISCOVERY_TIMEOUT (10)
 
-#define MAX_STUN_TIMEOUT (30)
+#define MAX_STUN_TIMEOUT (60)
+#define DEFAULT_STUN_TIMEOUT (10)
 
 /* Signals */
 enum
@@ -333,7 +334,7 @@ fs_rawudp_component_class_init (FsRawUdpComponentClass *klass)
       g_param_spec_uint ("stun-timeout",
           "The timeout for the STUN reply",
           "How long to wait for for the STUN reply (in seconds) before giving up",
-          1, G_MAXUINT, MAX_STUN_TIMEOUT,
+          1,  MAX_STUN_TIMEOUT, DEFAULT_STUN_TIMEOUT,
           G_PARAM_CONSTRUCT_ONLY | G_PARAM_WRITABLE));
 
 
@@ -1024,6 +1025,10 @@ fs_rawudp_component_maybe_emit_local_candidates (FsRawUdpComponent *self)
     self->priv->local_active_candidate = self->priv->local_upnp_candidate;
     self->priv->local_upnp_candidate = NULL;
     FS_RAWUDP_COMPONENT_UNLOCK (self);
+    GST_DEBUG ("C:%d Emitting UPnP discovered candidate: %s:%u",
+        self->priv->component,
+        self->priv->local_upnp_candidate->ip,
+        self->priv->local_upnp_candidate->port);
     fs_rawudp_component_emit_candidate (self,
         self->priv->local_active_candidate);
     return;
@@ -1256,6 +1261,9 @@ fs_rawudp_component_start_stun (FsRawUdpComponent *self, GError **error)
 {
   gboolean res = TRUE;
 
+  GST_DEBUG ("C:%d starting the STUN process with server %s:%u",
+      self->priv->component, self->priv->stun_ip, self->priv->stun_port);
+
   FS_RAWUDP_COMPONENT_LOCK (self);
   self->priv->stun_recv_id =
     fs_rawudp_transmitter_udpport_connect_recv (
@@ -1393,6 +1401,9 @@ stun_recv_cb (GstPad *pad, GstBuffer *buffer,
 
   FS_RAWUDP_COMPONENT_UNLOCK(self);
 
+  GST_DEBUG ("C:%d Emitting STUN discovered candidate: %s:%u",
+      self->priv->component,
+      candidate->ip, candidate->port);
   fs_rawudp_component_emit_candidate (self, candidate);
 
   fs_candidate_destroy (candidate);
@@ -1411,24 +1422,22 @@ stun_timeout_func (gpointer user_data)
   gboolean emit = TRUE;
   GstClockTime next_stun_timeout;
   GError *error = NULL;
-  guint total_timeout_ms = 100;
+  guint next_timeout_ms = 100;
+  guint timeout_accum_ms = 0;
 
   sysclock = gst_system_clock_obtain ();
   if (sysclock == NULL)
   {
     fs_rawudp_component_emit_error (self, FS_ERROR_INTERNAL,
         "Could not obtain gst system clock", NULL);
-    emit = FALSE;
     FS_RAWUDP_COMPONENT_LOCK(self);
-    goto error;
+    goto interrupt;
   }
 
   FS_RAWUDP_COMPONENT_LOCK(self);
   while (!self->priv->stun_stop &&
-      (total_timeout_ms / 1000) < self->priv->stun_timeout &&
-      total_timeout_ms < 1000 * MAX_STUN_TIMEOUT)
+      timeout_accum_ms < self->priv->stun_timeout * 1000)
   {
-
     FS_RAWUDP_COMPONENT_UNLOCK(self);
     if (!fs_rawudp_component_send_stun (self, &error))
     {
@@ -1437,20 +1446,21 @@ stun_timeout_func (gpointer user_data)
       g_clear_error (&error);
       FS_RAWUDP_COMPONENT_LOCK (self);
       fs_rawudp_component_stop_stun_locked (self);
-      goto error;
+      goto interrupt;
     }
     FS_RAWUDP_COMPONENT_LOCK(self);
 
     if (self->priv->stun_stop)
-      goto error;
+      goto interrupt;
 
     next_stun_timeout = gst_clock_get_time (sysclock) +
-      total_timeout_ms * GST_MSECOND;
-    total_timeout_ms *= 2;
-    total_timeout_ms += 100;
+      next_timeout_ms * GST_MSECOND;
 
     id = self->priv->stun_timeout_id = gst_clock_new_single_shot_id (sysclock,
         next_stun_timeout);
+
+    GST_LOG ("C:%u Waiting for STUN reply for %u ms, next: %u ms",
+        self->priv->component, next_timeout_ms, timeout_accum_ms);
 
     FS_RAWUDP_COMPONENT_UNLOCK(self);
     gst_clock_id_wait (id, NULL);
@@ -1458,11 +1468,18 @@ stun_timeout_func (gpointer user_data)
 
     gst_clock_id_unref (id);
     self->priv->stun_timeout_id = NULL;
-  }
- error:
 
+    next_timeout_ms *= 2;
+    next_timeout_ms += 100;
+    timeout_accum_ms += next_timeout_ms;
+  }
+
+ interrupt:
   if (self->priv->stun_stop)
+  {
+    GST_DEBUG ("C:%u STUN process interrupted", self->priv->component);
     emit = FALSE;
+  }
 
   fs_rawudp_component_stop_stun_locked (self);
 
@@ -1528,6 +1545,10 @@ fs_rawudp_component_emit_local_candidates (FsRawUdpComponent *self,
         self->priv->local_forced_candidate);
     FS_RAWUDP_COMPONENT_UNLOCK (self);
 
+    GST_DEBUG ("C:%d Emitting forced candidate: %s:%u",
+        self->priv->component,
+        self->priv->local_active_candidate->ip,
+        self->priv->local_active_candidate->port);
     fs_rawudp_component_emit_candidate (self,
         self->priv->local_active_candidate);
     return TRUE;
@@ -1557,6 +1578,10 @@ fs_rawudp_component_emit_local_candidates (FsRawUdpComponent *self,
   if (self->priv->local_active_candidate)
   {
     FS_RAWUDP_COMPONENT_UNLOCK (self);
+    GST_DEBUG ("C:%d Emitting local interface candidate: %s:%u",
+        self->priv->component,
+        self->priv->local_active_candidate->ip,
+        self->priv->local_active_candidate->port);
     fs_rawudp_component_emit_candidate (self,
         self->priv->local_active_candidate);
   }

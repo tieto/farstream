@@ -15,6 +15,20 @@
 @codec: 
 @Returns: 
 
+<!-- ##### FUNCTION fs_session_close ##### -->
+<para>
+
+</para>
+
+@session: 
+
+<!-- ##### FUNCTION fs_stream_close ##### -->
+<para>
+
+</para>
+
+@stream: 
+
 <!-- ##### FUNCTION fs_stream_select_candidate_pair ##### -->
 <para>
 

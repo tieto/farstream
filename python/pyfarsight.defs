@@ -20,6 +20,32 @@
   (copy-func fs_candidate_copy)
   (release-func fs_candidate_destroy)
 )
+
+(define-method dispose
+  (of-object "FsSession")
+  (unblock-threads t)
+  (unblock-threads t)
+  (c-name "fs_session_dispose")
+  (return-type "gboolean")
+  (return-type "none")
+)
+
+(define-method dispose
+  (of-object "FsStream")
+  (unblock-threads t)
+  (unblock-threads t)
+  (c-name "fs_stream_dispose")
+  (return-type "gboolean")
+  (return-type "none")
+)
+
+(define-method dispose
+  (of-object "FsParticipant")
+  (unblock-threads t)
+  (c-name "fs_participant_dispose")
+  (return-type "gboolean")
+  (return-type "none")
+)
 ;; -*- scheme -*-
 ; object definitions ...
 ;; Enumerations and flags ...
@@ -189,8 +215,9 @@
   (c-name "FsComponentType")
   (gtype-id "FS_TYPE_COMPONENT_TYPE")
   (values
-    '("p" "FS_COMPONENT_RTP")
-    '("cp" "FS_COMPONENT_RTCP")
+    '("none" "FS_COMPONENT_NONE")
+    '("rtp" "FS_COMPONENT_RTP")
+    '("rtcp" "FS_COMPONENT_RTCP")
   )
 )
 
@@ -270,6 +297,7 @@
     '("no-codecs" "FS_ERROR_NO_CODECS")
     '("no-codecs-left" "FS_ERROR_NO_CODECS_LEFT")
     '("connection-failed" "FS_ERROR_CONNECTION_FAILED")
+    '("disposed" "FS_ERROR_DISPOSED")
   )
 )
 

@@ -66,6 +66,17 @@ struct _FsRtpSubStreamClass
 struct _FsRtpSubStream
 {
   GObject parent;
+
+  /* Those are read-only and can only be accessed while holding the session lock
+   */
+
+  FsCodec *codec;
+
+  guint32 ssrc;
+  guint pt;
+
+  gint no_rtcp_timeout;
+
   FsRtpSubStreamPrivate *priv;
 };
 
@@ -80,18 +91,18 @@ FsRtpSubStream *fs_rtp_sub_stream_new (FsRtpConference *conference,
     GError **error);
 
 
-gboolean fs_rtp_sub_stream_set_codecbin (FsRtpSubStream *substream,
+gboolean fs_rtp_sub_stream_set_codecbin_unlock (FsRtpSubStream *substream,
     FsCodec *codec,
     GstElement *codecbin,
     GError **error);
 
 void fs_rtp_sub_stream_stop (FsRtpSubStream *substream);
 
-gboolean fs_rtp_sub_stream_add_output_ghostpad_locked (
+gboolean fs_rtp_sub_stream_add_output_ghostpad_unlock (
     FsRtpSubStream *substream,
     GError **error);
 
-void fs_rtp_sub_stream_verify_codec_locked (FsRtpSubStream *substream);
+void fs_rtp_sub_stream_verify_codec (FsRtpSubStream *substream);
 
 
 G_END_DECLS

@@ -108,24 +108,32 @@ struct _FsMulticastStreamTransmitterPrivate
    */
   FsMulticastTransmitter *transmitter;
 
+  GMutex *mutex;
+
+  /* Protected by the mutex */
   gboolean sending;
 
   /*
    * We have at most of those per component (index 0 is unused)
    */
-  FsCandidate **remote_candidate;
   FsCandidate **local_candidate;
+  /* Protected by the mutex */
+  FsCandidate **remote_candidate;
 
+  /* Protected by the mutex */
   UdpSock **udpsocks;
 
   GList *preferred_local_candidates;
-
-  guint next_candidate_id;
 };
 
 #define FS_MULTICAST_STREAM_TRANSMITTER_GET_PRIVATE(o)  \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), FS_TYPE_MULTICAST_STREAM_TRANSMITTER, \
                                 FsMulticastStreamTransmitterPrivate))
+
+#define FS_MULTICAST_STREAM_TRANSMITTER_LOCK(s) \
+  g_mutex_lock ((s)->priv->mutex)
+#define FS_MULTICAST_STREAM_TRANSMITTER_UNLOCK(s) \
+  g_mutex_unlock ((s)->priv->mutex)
 
 static void fs_multicast_stream_transmitter_class_init (FsMulticastStreamTransmitterClass *klass);
 static void fs_multicast_stream_transmitter_init (FsMulticastStreamTransmitter *self);
@@ -211,6 +219,8 @@ fs_multicast_stream_transmitter_init (FsMulticastStreamTransmitter *self)
   self->priv->disposed = FALSE;
 
   self->priv->sending = TRUE;
+
+  self->priv->mutex = g_mutex_new ();
 }
 
 static void
@@ -298,7 +308,9 @@ fs_multicast_stream_transmitter_get_property (GObject *object,
   switch (prop_id)
   {
     case PROP_SENDING:
+      FS_MULTICAST_STREAM_TRANSMITTER_LOCK (self);
       g_value_set_boolean (value, self->priv->sending);
+      FS_MULTICAST_STREAM_TRANSMITTER_UNLOCK (self);
       break;
     case PROP_PREFERRED_LOCAL_CANDIDATES:
       g_value_set_boxed (value, self->priv->preferred_local_candidates);
@@ -321,21 +333,32 @@ fs_multicast_stream_transmitter_set_property (GObject *object,
     case PROP_SENDING:
       {
         gboolean old_sending = self->priv->sending;
+        gboolean sending = g_value_get_boolean (value);
         gint c;
 
-        self->priv->sending = g_value_get_boolean (value);
+        FS_MULTICAST_STREAM_TRANSMITTER_LOCK (self);
+        self->priv->sending = sending;
 
-        if (self->priv->sending != old_sending)
+        if (sending != old_sending)
           for (c = 1; c <= self->priv->transmitter->components; c++)
             if (self->priv->udpsocks[c])
             {
-              if (self->priv->sending)
+              guint8 ttl = self->priv->remote_candidate[c]->ttl;
+              fs_multicast_transmitter_udpsock_ref (self->priv->transmitter,
+                  self->priv->udpsocks[c], ttl);
+              FS_MULTICAST_STREAM_TRANSMITTER_UNLOCK (self);
+              if (sending)
                 fs_multicast_transmitter_udpsock_inc_sending (
                     self->priv->udpsocks[c]);
               else
                 fs_multicast_transmitter_udpsock_dec_sending (
                     self->priv->udpsocks[c]);
+              fs_multicast_transmitter_put_udpsock (self->priv->transmitter,
+                  self->priv->udpsocks[c], ttl);
+              FS_MULTICAST_STREAM_TRANSMITTER_LOCK (self);
             }
+        FS_MULTICAST_STREAM_TRANSMITTER_UNLOCK (self);
+
       }
       break;
     case PROP_PREFERRED_LOCAL_CANDIDATES:
@@ -433,8 +456,8 @@ fs_multicast_stream_transmitter_add_remote_candidate (
     GError **error)
 {
   UdpSock *newudpsock = NULL;
-  guint8 old_ttl = 1;
 
+  FS_MULTICAST_STREAM_TRANSMITTER_LOCK (self);
   if (self->priv->remote_candidate[candidate->component_id])
   {
     FsCandidate *old_candidate =
@@ -444,12 +467,12 @@ fs_multicast_stream_transmitter_add_remote_candidate (
         !strcmp (old_candidate->ip, candidate->ip))
     {
       GST_DEBUG ("Re-set the same candidate, ignoring");
-      return TRUE;
+      FS_MULTICAST_STREAM_TRANSMITTER_UNLOCK (self);
+     return TRUE;
     }
-    old_ttl = old_candidate->ttl;
-    fs_candidate_destroy (old_candidate);
-    self->priv->remote_candidate[candidate->component_id] = NULL;
   }
+
+  FS_MULTICAST_STREAM_TRANSMITTER_UNLOCK (self);
 
   /*
    * IMPROVE ME: We should probably check that the candidate's IP
@@ -469,13 +492,16 @@ fs_multicast_stream_transmitter_add_remote_candidate (
   if (!newudpsock)
     return FALSE;
 
+  FS_MULTICAST_STREAM_TRANSMITTER_LOCK (self);
+
   if (self->priv->udpsocks[candidate->component_id])
   {
     if (self->priv->sending)
       fs_multicast_transmitter_udpsock_dec_sending (
           self->priv->udpsocks[candidate->component_id]);
     fs_multicast_transmitter_put_udpsock (self->priv->transmitter,
-        self->priv->udpsocks[candidate->component_id], old_ttl);
+        self->priv->udpsocks[candidate->component_id],
+        self->priv->remote_candidate[candidate->component_id]->ttl);
   }
 
   self->priv->udpsocks[candidate->component_id] = newudpsock;
@@ -484,11 +510,11 @@ fs_multicast_stream_transmitter_add_remote_candidate (
     fs_multicast_transmitter_udpsock_inc_sending (
         self->priv->udpsocks[candidate->component_id]);
 
+  fs_candidate_destroy (self->priv->remote_candidate[candidate->component_id]);
   self->priv->remote_candidate[candidate->component_id] =
     fs_candidate_copy (candidate);
 
-  self->priv->local_candidate[candidate->component_id]->port = candidate->port;
-
+  FS_MULTICAST_STREAM_TRANSMITTER_UNLOCK (self);
 
   g_signal_emit_by_name (self, "new-active-candidate-pair",
       self->priv->local_candidate[candidate->component_id],
