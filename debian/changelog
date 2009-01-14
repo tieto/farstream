@@ -1,15 +1,15 @@
-farsight2 (0.0.6-1) UNRELEASED; urgency=low
+farsight2 (0.0.7-1) UNRELEASED; urgency=low
 
   [ Sjoerd Simons ]
   * Enable libnice support
-  * New upstream release (0.0.6)
+  * New upstream release
 
   [ Simon McVittie ]
   * Move packaging to git
   * Add `debian/rules update-patches` and gbp.conf for maintainers
   * Add README.source
 
- -- Sjoerd Simons <sjoerd@debian.org>  Thu, 27 Nov 2008 15:03:14 +0100
+ -- Sjoerd Simons <sjoerd@debian.org>  Wed, 14 Jan 2009 11:28:43 +0000
 
 farsight2 (0.0.4-1) experimental; urgency=low
 
