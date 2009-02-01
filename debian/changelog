@@ -1,4 +1,4 @@
-farsight2 (0.0.7-1) UNRELEASED; urgency=low
+farsight2 (0.0.7-1) unstable; urgency=low
 
   [ Sjoerd Simons ]
   * Enable libnice support
@@ -9,7 +9,7 @@ farsight2 (0.0.7-1) UNRELEASED; urgency=low
   * Add `debian/rules update-patches` and gbp.conf for maintainers
   * Add README.source
 
- -- Sjoerd Simons <sjoerd@debian.org>  Wed, 14 Jan 2009 11:28:43 +0000
+ -- Sjoerd Simons <sjoerd@debian.org>  Sun, 01 Feb 2009 11:37:33 +0000
 
 farsight2 (0.0.4-1) experimental; urgency=low
 
