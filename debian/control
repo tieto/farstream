@@ -54,7 +54,7 @@ Description: Audio/Video communications framework: development files
 
 Package: libgstfarsight0.10-doc
 Section: doc
-Architecture: any
+Architecture: all
 Description: Audio/Video communications framework: documentation
  The Farsight project is an effort to create a framework to deal with all
  known audio/video conferencing protocols. On one side it offers a generic
