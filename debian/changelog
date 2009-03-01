@@ -2,8 +2,9 @@ farsight2 (0.0.7-2) unstable; urgency=low
 
   * debian/control:
     + Changed Architecture from any to all. (Closes: #517608)
+    + Added myself to Uploaders.
 
- -- Jonny Lamb <jonny@debian.org>  Sun, 01 Mar 2009 14:01:31 +0000
+ -- Jonny Lamb <jonny@debian.org>  Sun, 01 Mar 2009 14:03:46 +0000
 
 farsight2 (0.0.7-1) unstable; urgency=low
 

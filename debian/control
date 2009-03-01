@@ -5,7 +5,8 @@ Maintainer: Debian Telepathy maintainers <pkg-telepathy-maintainers@lists.alioth
 Uploaders: Dafydd Harries <daf@debian.org>,
            Simon McVittie <smcv@debian.org>,
            Sjoerd Simons <sjoerd@debian.org>,
-           Laurent Bigonville <bigon@debian.org>
+           Laurent Bigonville <bigon@debian.org>,
+           Jonny Lamb <jonny@debian.org>
 Build-Depends: debhelper (>= 5.0.0),
                cdbs,
                libglib2.0-dev (>= 2.14),
