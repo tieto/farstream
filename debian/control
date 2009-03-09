@@ -63,7 +63,7 @@ Description: Audio/Video communications framework: documentation
  protocols, on the other side it offers an API for clients to use those
  plugins.
  .
- This package provides contains documentation for Farsight 2
+ This package provides documentation for Farsight 2.
 
 Package: libgstfarsight0.10-dbg
 Section: libdevel
@@ -77,7 +77,7 @@ Description: Audio/Video communications framework: debugging symbols
  protocols, on the other side it offers an API for clients to use those
  plugins.
  .
- This package provides debugging symbols for Farsight 2
+ This package provides debugging symbols for Farsight 2.
 
 Package: python-farsight
 Section: python
@@ -92,4 +92,4 @@ Description: Audio/Video communications framework: Python bindings
  protocols, on the other side it offers an API for clients to use those
  plugins.
  .
- This package provides Python bindings for Farsight 2
+ This package provides Python bindings for Farsight 2.

@@ -1,3 +1,9 @@
+farsight2 (0.0.7-3) UNRELEASED; urgency=low
+
+  * debian/control: Misc. fixes to long descriptions. (Closes: #518933)
+
+ -- Jonny Lamb <jonny@debian.org>  Mon, 09 Mar 2009 11:43:47 +0000
+
 farsight2 (0.0.7-2) unstable; urgency=low
 
   * debian/control:
