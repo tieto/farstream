@@ -1,18 +1,14 @@
-farsight2 (0.0.7-3) UNRELEASED; urgency=low
+farsight2 (0.0.7-2) UNRELEASED; urgency=low
 
-  * debian/control: Misc. fixes to long descriptions. (Closes: #518933)
+  * debian/control:
+    + Changed libgstfarsight0.10-doc Architecture from any to all.
+      (Closes: #517608)
+    + Added myself to Uploaders.
+    + Misc. fixes to long descriptions. (Closes: #518933)
 
  -- Jonny Lamb <jonny@debian.org>  Mon, 09 Mar 2009 11:43:47 +0000
 
-farsight2 (0.0.7-2) unstable; urgency=low
-
-  * debian/control:
-    + Changed Architecture from any to all. (Closes: #517608)
-    + Added myself to Uploaders.
-
- -- Jonny Lamb <jonny@debian.org>  Sun, 01 Mar 2009 14:03:46 +0000
-
-farsight2 (0.0.7-1) unstable; urgency=low
+ farsight2 (0.0.7-1) unstable; urgency=low
 
   [ Sjoerd Simons ]
   * Enable libnice support
