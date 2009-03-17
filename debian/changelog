@@ -7,10 +7,11 @@ farsight2 (0.0.8-1) UNRELEASED; urgency=low
     + Added myself to Uploaders.
     + Misc. fixes to long descriptions. (Closes: #518933)
     + Upped Build-Deps and Deps due to requirements of new version.
+    + Added ${misc:Depends} entries to please Lintian.
   * debian/gbp.conf: Removed no-create-orig line.
   * debian/libgstfarsight0.10-0.symbols: Updated symbols file.
 
- -- Jonny Lamb <jonny@debian.org>  Tue, 17 Mar 2009 22:06:34 +0000
+ -- Jonny Lamb <jonny@debian.org>  Tue, 17 Mar 2009 22:07:38 +0000
 
 farsight2 (0.0.7-1) unstable; urgency=low
 
