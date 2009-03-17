@@ -510,6 +510,10 @@ struct _UdpPort {
   GstElement *udpsink;
   GstPad *udpsink_requested_pad;
 
+  GstElement *recvonly_filter;
+  GstElement *recvonly_udpsink;
+  GstPad *recvonly_requested_pad;
+
   gchar *requested_ip;
   guint requested_port;
 
@@ -601,13 +605,14 @@ _create_sinksource (
     gchar *elementname,
     GstBin *bin,
     GstElement *teefunnel,
+    GstElement *filter,
     gint fd,
     GstPadDirection direction,
     GstPad **requested_pad,
     GError **error)
 {
   GstElement *elem;
-  GstPadLinkReturn ret;
+  GstPadLinkReturn ret = GST_PAD_LINK_OK;
   GstPad *elempad = NULL;
   GstStateChangeReturn state_ret;
 
@@ -659,12 +664,55 @@ _create_sinksource (
   else
     elempad = gst_element_get_static_pad (elem, "src");
 
-  if (direction == GST_PAD_SINK)
-    ret = gst_pad_link (*requested_pad, elempad);
-  else
-    ret = gst_pad_link (elempad, *requested_pad);
+  if (filter)
+  {
+    GstPad *filterpad = NULL;
 
-  gst_object_unref (elempad);
+    if (!gst_bin_add (bin, filter))
+    {
+      g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
+          "Could not add the filter element to the gst %s bin",
+          (direction == GST_PAD_SINK) ? "sink" : "src");
+      goto error;
+    }
+
+    if (direction == GST_PAD_SINK)
+      filterpad = gst_element_get_static_pad (filter, "src");
+    else
+      filterpad = gst_element_get_static_pad (filter, "sink");
+
+    if (direction == GST_PAD_SINK)
+      ret = gst_pad_link (filterpad, elempad);
+    else
+      ret = gst_pad_link (elempad, filterpad);
+
+    gst_object_unref (elempad);
+    gst_object_unref (filterpad);
+    elempad = NULL;
+
+    if (GST_PAD_LINK_FAILED(ret))
+    {
+      g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
+          "Could not link the new element %s (%d)", elementname, ret);
+      goto error;
+    }
+
+    if (direction == GST_PAD_SINK)
+      elempad = gst_element_get_static_pad (filter, "sink");
+    else
+      elempad = gst_element_get_static_pad (filter, "src");
+
+
+    if (!gst_element_sync_state_with_parent (filter))
+    {
+      g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
+          "Could not sync the state of the new filte rwith its parent");
+      goto error;
+    }
+  }
+
+  if (direction != GST_PAD_SINK)
+    ret = gst_pad_link (elempad, *requested_pad);
 
   if (GST_PAD_LINK_FAILED(ret))
   {
@@ -680,6 +728,18 @@ _create_sinksource (
         elementname);
     goto error;
   }
+
+  if (direction == GST_PAD_SINK)
+    ret = gst_pad_link (*requested_pad, elempad);
+
+  if (GST_PAD_LINK_FAILED(ret))
+  {
+    g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
+        "Could not link the new element %s (%d)", elementname, ret);
+    goto error;
+  }
+
+  gst_object_unref (elempad);
 
   return elem;
 
@@ -782,14 +842,14 @@ fs_rawudp_transmitter_get_udpport (FsRawUdpTransmitter *trans,
   udpport->funnel = trans->priv->udpsrc_funnels[component_id];
 
   udpport->udpsrc = _create_sinksource ("udpsrc",
-      GST_BIN (trans->priv->gst_src), udpport->funnel, udpport->fd, GST_PAD_SRC,
-      &udpport->udpsrc_requested_pad, error);
+      GST_BIN (trans->priv->gst_src), udpport->funnel, NULL,
+      udpport->fd, GST_PAD_SRC, &udpport->udpsrc_requested_pad, error);
   if (!udpport->udpsrc)
     goto error;
 
   udpport->udpsink = _create_sinksource ("multiudpsink",
-      GST_BIN (trans->priv->gst_sink), udpport->tee, udpport->fd, GST_PAD_SINK,
-      &udpport->udpsink_requested_pad, error);
+      GST_BIN (trans->priv->gst_sink), udpport->tee, NULL,
+      udpport->fd, GST_PAD_SINK, &udpport->udpsink_requested_pad, error);
   if (!udpport->udpsink)
     goto error;
 
@@ -797,6 +857,24 @@ fs_rawudp_transmitter_get_udpport (FsRawUdpTransmitter *trans,
       "async", FALSE,
       "sync", FALSE,
       NULL);
+
+  udpport->recvonly_filter = fs_transmitter_get_recvonly_filter (
+      FS_TRANSMITTER (trans), udpport->component_id);
+
+  if (udpport->recvonly_filter)
+  {
+    udpport->recvonly_udpsink = _create_sinksource ("multiudpsink",
+        GST_BIN (trans->priv->gst_sink), udpport->tee, udpport->recvonly_filter,
+        udpport->fd, GST_PAD_SINK, &udpport->recvonly_requested_pad, error);
+    if (!udpport->recvonly_udpsink)
+      goto error;
+
+
+    g_object_set (udpport->recvonly_udpsink,
+        "async", FALSE,
+        "sync", FALSE,
+        NULL);
+  }
 
   g_mutex_lock (trans->priv->mutex);
 
@@ -881,6 +959,26 @@ fs_rawudp_transmitter_put_udpport (FsRawUdpTransmitter *trans,
       GST_ERROR ("Could not remove udpsink element from transmitter source");
   }
 
+  if (udpport->recvonly_requested_pad)
+  {
+    gst_element_release_request_pad (udpport->tee,
+        udpport->recvonly_requested_pad);
+    gst_object_unref (udpport->recvonly_requested_pad);
+  }
+
+  if (udpport->recvonly_udpsink)
+  {
+    GstStateChangeReturn ret;
+    gst_element_set_locked_state (udpport->recvonly_udpsink, TRUE);
+    ret = gst_element_set_state (udpport->recvonly_udpsink, GST_STATE_NULL);
+    if (ret != GST_STATE_CHANGE_SUCCESS)
+      GST_ERROR ("Error changing state of udpsink: %s",
+          gst_element_state_change_return_get_name (ret));
+    if (!gst_bin_remove (GST_BIN (trans->priv->gst_sink),
+            udpport->recvonly_udpsink))
+      GST_ERROR ("Could not remove udpsink element from transmitter source");
+  }
+
   if (udpport->fd >= 0)
     close (udpport->fd);
 
@@ -895,7 +993,7 @@ fs_rawudp_transmitter_put_udpport (FsRawUdpTransmitter *trans,
 
 void
 fs_rawudp_transmitter_udpport_add_dest (UdpPort *udpport,
-  const gchar *ip,
+    const gchar *ip,
     gint port)
 {
   GST_DEBUG ("Adding dest %s:%d", ip, port);
@@ -1110,4 +1208,23 @@ fs_rawudp_transmitter_udpport_remove_known_address (UdpPort *udpport,
  out:
 
   g_mutex_unlock (udpport->mutex);
+}
+
+void
+fs_rawudp_transmitter_udpport_add_recvonly_dest (UdpPort *udpport,
+    const gchar *ip,
+    gint port)
+{
+  if (udpport->recvonly_udpsink)
+    g_signal_emit_by_name (udpport->recvonly_udpsink, "add", ip, port);
+}
+
+
+void
+fs_rawudp_transmitter_udpport_remove_recvonly_dest (UdpPort *udpport,
+    const gchar *ip,
+    gint port)
+{
+  if (udpport->recvonly_udpsink)
+    g_signal_emit_by_name (udpport->recvonly_udpsink, "remove", ip, port);
 }

@@ -59,7 +59,7 @@ static FsCodec *
 sdp_is_compat_ilbc (FsCodec *local_codec, FsCodec *remote_codec,
     gboolean validate_config);
 static FsCodec *
-sdp_is_compat_h263_1998 (FsCodec *local_codec, FsCodec *remote_codec,
+sdp_is_compat_h263_2000 (FsCodec *local_codec, FsCodec *remote_codec,
     gboolean validate_config);
 static FsCodec *
 sdp_is_compat_theora_vorbis (FsCodec *local_codec, FsCodec *remote_codec,
@@ -68,7 +68,7 @@ sdp_is_compat_theora_vorbis (FsCodec *local_codec, FsCodec *remote_codec,
 static struct SdpCompatCheck sdp_compat_checks[] = {
   {FS_MEDIA_TYPE_AUDIO, "iLBC", sdp_is_compat_ilbc,
    {NULL}},
-  {FS_MEDIA_TYPE_VIDEO, "H263-1998", sdp_is_compat_h263_1998,
+  {FS_MEDIA_TYPE_VIDEO, "H263-2000", sdp_is_compat_h263_2000,
    {NULL}},
   {FS_MEDIA_TYPE_AUDIO, "VORBIS", sdp_is_compat_theora_vorbis,
    {"configuration", NULL}},
@@ -180,7 +180,7 @@ sdp_is_compat (FsCodec *local_codec, FsCodec *remote_codec,
 
   if (local_codec->media_type != remote_codec->media_type)
   {
-    GST_DEBUG ("Wrong media type, local: %s, remote: %s",
+    GST_LOG ("Wrong media type, local: %s, remote: %s",
         fs_media_type_to_string (local_codec->media_type),
         fs_media_type_to_string (remote_codec->media_type));
     return NULL;
@@ -188,7 +188,7 @@ sdp_is_compat (FsCodec *local_codec, FsCodec *remote_codec,
   if (g_ascii_strcasecmp (local_codec->encoding_name,
         remote_codec->encoding_name))
   {
-    GST_DEBUG ("Encoding names dont match, local: %s, remote: %s",
+    GST_LOG ("Encoding names dont match, local: %s, remote: %s",
         local_codec->encoding_name, remote_codec->encoding_name);
     return NULL;
   }
@@ -213,13 +213,13 @@ sdp_is_compat_default (FsCodec *local_codec, FsCodec *remote_codec,
   FsCodec *negotiated_codec = NULL;
   GList *local_param_list = NULL, *negotiated_param_list = NULL;
 
-  GST_DEBUG ("Using default codec negotiation function");
+  GST_LOG ("Using default codec negotiation function");
 
   if ((local_codec->clock_rate || validate_config) &&
       remote_codec->clock_rate &&
       local_codec->clock_rate != remote_codec->clock_rate)
   {
-    GST_DEBUG ("Clock rates differ local=%u remote=%u", local_codec->clock_rate,
+    GST_LOG ("Clock rates differ local=%u remote=%u", local_codec->clock_rate,
         remote_codec->clock_rate);
     return NULL;
   }
@@ -227,7 +227,7 @@ sdp_is_compat_default (FsCodec *local_codec, FsCodec *remote_codec,
   if (local_codec->channels && remote_codec->channels &&
       local_codec->channels != remote_codec->channels)
   {
-    GST_DEBUG ("Channel counts differ local=%u remote=%u",
+    GST_LOG ("Channel counts differ local=%u remote=%u",
         local_codec->channels,
         remote_codec->channels);
     return NULL;
@@ -260,7 +260,7 @@ sdp_is_compat_default (FsCodec *local_codec, FsCodec *remote_codec,
         }
         else
         {
-          GST_DEBUG ("Different values for %s, local=%s remote=%s",
+          GST_LOG ("Different values for %s, local=%s remote=%s",
               local_param->name, local_param->value, negotiated_param->value);
           fs_codec_destroy (negotiated_codec);
           return NULL;
@@ -291,7 +291,7 @@ sdp_is_compat_ilbc (FsCodec *local_codec, FsCodec *remote_codec,
   if (remote_codec->clock_rate &&
       local_codec->clock_rate != remote_codec->clock_rate)
   {
-    GST_DEBUG ("Clock rates differ local=%u remote=%u", local_codec->clock_rate,
+    GST_LOG ("Clock rates differ local=%u remote=%u", local_codec->clock_rate,
         remote_codec->clock_rate);
     return NULL;
   }
@@ -299,7 +299,7 @@ sdp_is_compat_ilbc (FsCodec *local_codec, FsCodec *remote_codec,
   if (local_codec->channels && remote_codec->channels &&
       local_codec->channels != remote_codec->channels)
   {
-    GST_DEBUG ("Channel counts differ local=%u remote=%u",
+    GST_LOG ("Channel counts differ local=%u remote=%u",
         local_codec->channels,
         remote_codec->channels);
     return NULL;
@@ -336,7 +336,7 @@ sdp_is_compat_ilbc (FsCodec *local_codec, FsCodec *remote_codec,
 
           if (remote_mode != 20 && remote_mode != 30)
           {
-            GST_DEBUG ("Invalid mode on ilbc");
+            GST_WARNING ("Invalid mode on ilbc");
             goto failure;
           }
           if (local_mode != remote_mode)
@@ -354,7 +354,7 @@ sdp_is_compat_ilbc (FsCodec *local_codec, FsCodec *remote_codec,
           }
           else
           {
-            GST_DEBUG ("Different values for %s, local=%s remote=%s",
+            GST_LOG ("Different values for %s, local=%s remote=%s",
                 local_param->name, local_param->value, negotiated_param->value);
             goto failure;
           }
@@ -409,17 +409,17 @@ sdp_is_compat_ilbc (FsCodec *local_codec, FsCodec *remote_codec,
 
 
 static FsCodec *
-sdp_is_compat_h263_1998 (FsCodec *local_codec, FsCodec *remote_codec,
+sdp_is_compat_h263_2000 (FsCodec *local_codec, FsCodec *remote_codec,
     gboolean validate_config)
 {
   GList *mylistitem = NULL, *remote_param_list = NULL;
   FsCodecParameter *profile = NULL;
 
-  GST_DEBUG ("Using H263-1998 negotiation function");
+  GST_DEBUG ("Using H263-2000 negotiation function");
 
   if (remote_codec->clock_rate != 90000)
   {
-    GST_DEBUG ("Remote clock rate is %d which is not 90000",
+    GST_WARNING ("Remote clock rate is %d which is not 90000",
         remote_codec->clock_rate);
     return NULL;
   }
@@ -427,11 +427,13 @@ sdp_is_compat_h263_1998 (FsCodec *local_codec, FsCodec *remote_codec,
 
   if (remote_codec->channels > 1)
   {
-    GST_DEBUG ("Channel count  %d > 1", remote_codec->channels);
+    GST_WARNING ("Channel count  %d > 1", remote_codec->channels);
     return NULL;
   }
 
-  /* First lets check if there is a profile */
+  /* First lets check if there is a profile, it MUST be the same
+   * as ours
+   */
 
   for (remote_param_list = remote_codec->optional_params;
        remote_param_list;
@@ -444,8 +446,8 @@ sdp_is_compat_h263_1998 (FsCodec *local_codec, FsCodec *remote_codec,
 
       if (profile)
       {
-        GST_DEBUG ("The remote codecs contain the profile item more than once,"
-            " ignoring");
+        GST_WARNING ("The remote codecs contain the profile item more than"
+            " once, ignoring");
         return NULL;
       }
       else
@@ -464,13 +466,13 @@ sdp_is_compat_h263_1998 (FsCodec *local_codec, FsCodec *remote_codec,
 
           if (g_ascii_strcasecmp (local_param->value, remote_param->value))
           {
-            GST_DEBUG ("Local (%s) and remote (%s) profiles are different",
+            GST_LOG ("Local (%s) and remote (%s) profiles are different",
                 local_param->value, remote_param->value);
             return NULL;
           }
           else
           {
-            GST_DEBUG ("We have the same profile, lets return the remote codec");
+            GST_LOG ("We have the same profile, lets return the remote codec");
             return fs_codec_copy (local_codec);
           }
         }

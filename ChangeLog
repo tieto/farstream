@@ -1,3 +1,608 @@
+commit c2f4b1c52f7d601678d8008ba5ed8fa5d82dcd4d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Mar 15 16:53:21 2009 -0400
+
+    Bump version to 0.0.8
+
+commit 00866207d3bbe0fab6c5f651b72cc4ac1d1cc86f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Mar 15 17:06:28 2009 -0400
+
+    Our h263-1998 negotiation function was really for h263-2000...
+
+commit 49043f860f9de91e561949775f491a47e00359ac
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 24 17:22:18 2009 -0500
+
+    Set remote codecs with same id to keep the same config
+
+commit 88997e86f4b4b5826da80e8bb622e0d53b09c9c7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 24 17:04:50 2009 -0500
+
+    Remove deprecated delivery-method property
+
+commit 0092891a388e113fc612eeb8eabb9966959a1f47
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Feb 13 18:22:01 2009 +0000
+
+    Keep the discovered codec config when re-negotiating
+
+commit 8e08a8611b7845c3543529d40b352caf1e97f951
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 24 16:58:31 2009 -0500
+
+    Remove special case to keep codecs configs
+
+commit c836f483b47fd393eae65b3038da6c2f3f8da9a5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 24 15:43:55 2009 -0500
+
+    Hide most negotiation details messages to LOG level
+
+commit cdb0b6803a90db370e2f30cfd2df37443244392d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 23 20:26:11 2009 -0500
+
+    Make codec config regression test more strict
+
+commit 14009993476cada27a4882c9099cdfb24a3c209c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 26 22:45:28 2009 -0500
+
+    Always verify a substream's codec after it has been added to a stream
+    
+    This fixes a subtle race where the codecs are changed between the time
+    when the codecbin is set on the substream and the moment the substream
+    is added to a stream (during this perioud the substream is "free floating", so
+    we need to verify that nothing nasty happened during that period).
+
+commit de28370480715fb9b8fed46a07595804f56e566f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 26 19:04:13 2009 -0500
+
+    Drop buffers that don't match with our caps, don't leak intersected caps
+
+commit c4ea1072376004e963451a41b06e36d1a7647d3a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Mar 15 15:23:52 2009 -0400
+
+    Update gst requirements
+
+commit 02c327d08560b0836e1ed81e7144ff3a699db888
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Mar 15 15:05:29 2009 -0400
+
+    Add checks for the stream codecs change notifications
+
+commit e79203ea6d4803fd393bf72ac9a1e809b57e8be4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Mar 15 15:05:12 2009 -0400
+
+    Emit notify for FsStream::remote-codecs
+
+commit 079b22d5d8491ef4eb86885b2934553ea72a63b1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Mar 15 14:53:58 2009 -0400
+
+    Emit codecs notifications if only the recv-only state of a codec has changed
+
+commit f14baee14fce3b6a85e117f86490eaead7eae981
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 23 21:12:07 2009 -0500
+
+    Rename has_negotiatied to a more meaningful name
+
+commit b5ebd16f57c2f9be5f475ea1f2dcb69d077c7193
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 25 21:18:35 2009 -0500
+
+    Use autoconvert as fsselector too
+
+commit 6a30b64995f725624e13eb13025c7f454e22dc5c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Mar 5 22:35:35 2009 -0500
+
+    Add a bit more debug on the nice transmitter
+
+commit b72eac7dcbe274920e8c89cce147a3551e44ac11
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Mar 5 20:04:21 2009 -0500
+
+    Force the child name to be rtpbin
+
+commit ef12330aafc65807b1589bd2aa88608c83367eeb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 26 15:49:21 2009 -0500
+
+    Print the right variable
+
+commit 70597011612f01270f576302fe4d7f0e3b8e7704
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 23 18:47:39 2009 -0500
+
+    Really set page size to zero on spinbutton adjustement
+
+commit 2011d92b3f655d09122e21ee19c40b2acdf2b7f2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 23 18:43:04 2009 -0500
+
+    Actually use the stream negotatiated codecs to create the codec bins
+
+commit 412ba58856b4b10c955d02aa40a5193986f0aa97
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 23 18:42:19 2009 -0500
+
+    Ignore new cache dir
+
+commit 7ebd18f5fa4c235107f35a76adf7c3262749b912
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 23 16:47:42 2009 -0500
+
+    Move examples to examples dir
+
+commit 548f9520d56d7a0efd23482e1b02ff63d2a3e5be
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 23 15:13:47 2009 -0500
+
+    Set page size to zero on spinbutton adjustement
+
+commit 6d80cb925c0ac3964dbc64510d587ff36859e3c2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Feb 21 09:47:15 2009 -0500
+
+    Add pluginsdir to the .pc files
+
+commit 15776d132fe6933f34b705b7f34c79f5889127ee
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Feb 20 14:45:08 2009 -0500
+
+    Add test for 0 clock rate codec
+
+commit a5b5fae2bf489772e416a7ae5dbd8ac8d3cb9404
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Feb 20 14:45:27 2009 -0500
+
+    Allow remote codecs without a clock rate
+
+commit d6dd346d168f19fec5ef3bec6d05f3897fe43f4c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Feb 20 14:44:39 2009 -0500
+
+    Reset has_negotiated to false before next test
+
+commit 6a508286719e1079b0d726e4abbce7237a0edecd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 18 16:04:42 2009 -0500
+
+    Remove use of deprecated clock-rate property
+
+commit 9954eaf267764c75a195ce85283cd42f348cfb68
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 18 16:05:07 2009 -0500
+
+    Add missing GError setting
+
+commit df5cf6f9ed20c732794df1a8eb2396e6abe97720
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Feb 20 12:12:22 2009 -0500
+
+    Don't set global remote creds in google/msn modes
+
+commit fd0ea6cf933cb1884714384d4ce50eae3cfd6cd7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Feb 20 11:40:35 2009 -0500
+
+    Release lock on various errors
+
+commit 6cd21e72ed9f89fae7b97b6b37098dfe33888a4b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 18 13:47:36 2009 -0500
+
+    Move the cache into the XDG cache dir
+
+commit 5c3491c6062e13155daf52832651319f164f0ab2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 10 13:38:13 2009 +0000
+
+    Don't force base ip/port, its optional
+
+commit 20356773667bf9c78579225acfd792e34ae4722f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 10 13:37:37 2009 +0000
+
+    Don't add baseaddr to host candidates
+
+commit 3f6c306c47e98cc61a07e46d5ec5276cb44eb7c7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 10 13:32:31 2009 +0000
+
+    Fix indentation in new patches
+
+commit 039f08122cf25b3a84180722d6cea13ceb97ff62
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 10 13:31:15 2009 +0000
+
+    Add more sanity checks on ICE candidates
+
+commit 807b0fa892397be8053574d655d0f26a5b2b78a0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 10 01:03:14 2009 +0000
+
+    Set the global credentials in draft-19 mode
+
+commit 708657045bf1a5a8e2287cf01fb54320a4042944
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 10 01:00:52 2009 +0000
+
+    Fix potential leak of unset remote candidates
+
+commit 304eece2c5b96643a93438bbf8f50be11fcc698e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 17 15:04:14 2009 -0500
+
+    Add new m4 file to configure, etc
+
+commit 30f6cfddd866a8b43a31af59ec1b7022b0ae43da
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Feb 13 22:13:57 2009 +0000
+
+    Don't force non-exist configure switch
+
+commit e49a1dc2081c685ecbb81fb845cf0b311b6c6918
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Feb 13 22:11:42 2009 +0000
+
+    Add python headers check from gst-python
+
+commit 92c4dddf7931d284dd3227317da92411ba7d2193
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Feb 13 22:01:41 2009 +0000
+
+    Remove autopoint from autogen
+
+commit 41524871bc203bd29b76697664cc30fc3cb99964
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 12 14:33:00 2009 +0000
+
+    Don't use ca after unlocking, and invalidate ca just in case
+
+commit 3fbc07d4d145b5c9d27822dc420415713be19190
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Feb 6 13:36:39 2009 +0100
+
+    Implement filtering out of unused telephone-event clock-rates
+
+commit 552dd5f80ab560aebe6d9274440a7aa7d1a11815
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Feb 6 12:48:33 2009 +0100
+
+    Use the new filtering function on the negotiation result
+
+commit 5646c98e62c36eb660a960eb725ee5b9058aea8c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Feb 6 12:45:15 2009 +0100
+
+    Add negotiation_filter method to the special source class
+
+commit 49cf8a4fc4c5d485662ba9bbe40faab08d77e5d0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 5 15:54:50 2009 +0000
+
+    Clarify what CodecAssoc->disable means
+
+commit d20c4cbfa97f129b889137b14beb566eb139ea23
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 10 13:47:11 2009 +0000
+
+    Don't leak upnp timeout src
+
+commit 8206bace3743cadee08c53a34b9249c817056ee6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 10 13:46:56 2009 +0000
+
+    Don't try to test for valid case of in-band config
+
+commit 93722fdd68e520f175b2e12903a2b5abbf27564b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Feb 6 15:56:08 2009 +0100
+
+    Accept remote candidates without valid codec configuration
+
+commit f6a3526db81759673929d8ef7da205111d230025
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 5 14:05:54 2009 +0000
+
+    Use common-modified glib-gen.mak for rtcpfilter
+
+commit 88da2deef7981109321c475b9d788b744f856191
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 5 14:05:16 2009 +0000
+
+    Bump up requirement to gst 0.10.22 for new rtcp filtering
+
+commit f6889f37eb26ceb9be864990e8f9f3157854eee1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 5 13:59:48 2009 +0000
+
+    Merge the sending property in multicast properly
+
+commit a7d420424d000815e6ab3cf0fa175ca823c59d38
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 19 18:32:22 2008 -0500
+
+    Add tests for rtcpfilter element
+
+commit 7326b57b65176c946b93d9f91a72534e3840c0d2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Dec 19 18:19:03 2008 -0500
+
+    Reduce rtcp packet size if we modify it
+
+commit 15f23f723bbf6268a3998d9de9f6905f8fd502ac
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 18 21:09:56 2008 -0500
+
+    Add nice tests for the sending property
+
+commit 87fa4179a17fa9f64283397b07b8e2c2f41fbba0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 18 20:54:09 2008 -0500
+
+    Make mcast test flags into an enum
+
+commit d1b081871a6713b5f0b1bef3a0560ba2535286b0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 18 20:52:38 2008 -0500
+
+    Use fake filter in multicast test
+
+commit d4561a61ed18492a6ab8e9de679b012051e66cfb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 18 20:52:26 2008 -0500
+
+    Add Fake filter element for transmitter tests
+
+commit 4a7e1b1851dbc36d4d0003aa69c845d9182fdda2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 18 20:40:31 2008 -0500
+
+    Set sending state at start
+
+commit 282c42b8452a250f9ae180cda8b4143f84086700
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 18 20:40:21 2008 -0500
+
+    Test sending with filter
+
+commit 82257fb478db818baf81d61cfc89e6c99996f892
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 18 20:37:00 2008 -0500
+
+    Test with filter while sending too
+
+commit 366fbb4ceb87337d9f7c36f1562f590dcadc97ae
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 18 20:35:41 2008 -0500
+
+    Split setting recvonly filter from not-sending behavior
+
+commit 96b4f820c36cc8c318391b0a5cbd294f5f52ccb7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 18 20:34:12 2008 -0500
+
+    Use not_sending flag directly
+
+commit c3f0e42d600edaec651ad49c34af1f6406c67149
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 18 20:23:57 2008 -0500
+
+    Use the sending property to change the sending state of the filter
+
+commit a4eed44afdc6af9e36a74f272dd1ee0071f58ef6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 18 20:21:21 2008 -0500
+
+    Introduce recvonly filter in nice transmitter
+
+commit 616a880ef019472ff81325d6ebdce317cda5ac64
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 18 20:12:44 2008 -0500
+
+    Factor out nice sink freeing
+
+commit 90911d9efd9670b02672d2d995591d22f63c5338
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 18 20:09:40 2008 -0500
+
+    Extend the nice sink/src creation function to support filters
+
+commit ef0c11a292f36a69e01f1600f75f0b7ebf168bca
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 18 17:56:57 2008 -0500
+
+    Add test for partial-sending mode in multicast transmitter
+
+commit 8a8da9bf3df3006eac8177fa2cc2ecb031ee915e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 18 19:41:59 2008 -0500
+
+    Use sending property in multicast filter
+
+commit f4bc6e3ada7eba5b7d25fa579070701e277ee77b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 18 16:36:47 2008 -0500
+
+    Remove filter with sink
+
+commit 1697e5543c6f7da8afce6dc57071e0bfe0bea01c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 18 16:20:58 2008 -0500
+
+    Allow multicast sockets to start in the sending state
+
+commit ddcbad5f411545d500cf19ce8a2cf550104e7e97
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 9 18:58:45 2008 -0500
+
+    Extend the multicast sink/src creation function to support filters
+
+commit 76e9556e0754cd1e22b75cba180ea7fa695f068b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 9 17:42:58 2008 -0500
+
+    Add test to rawudp for partial send case
+
+commit baf33b494cc5a6fc3a5b9c12a4b6b52222af796d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 9 14:59:54 2008 -0500
+
+    Add sendonly targets in rawudp
+
+commit 24a5e93264dcd340e9a0a276ef9ac0fa0c8ee95a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 9 18:02:59 2008 -0500
+
+    Free recvonly pipeline when putting port too
+
+commit 3a1a784d01bb39ed6386606d9d9a5b361e077542
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 9 13:20:55 2008 -0500
+
+    Add recvonly pipeline and functions to add dests to it
+
+commit 6948939eb6b377741f72a99f98eb896c8b05822f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 8 20:18:39 2008 -0500
+
+    Extend the rawudp sink/src creation function to support filters
+
+commit 6b7beb56e12d92759db5a7c3facbbf2c31160d17
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 8 18:40:51 2008 -0500
+
+    Connect the get-recvonly-filter and error signals from the transmitter
+
+commit 8a3925c3cf1a9b3edd6d444a5822b2921ac2bfde
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 8 14:20:22 2008 -0500
+
+    add get-recvonly-filter signal
+
+commit ec55fda78a4b2dbd13ce40f25e3b6530b0c00c0a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 4 16:14:32 2008 -0500
+
+    Implement dropping the SR if sending is false
+
+commit 5f411ba4fff21f6e262ed5308442f50e665a38fb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 3 17:09:26 2008 -0500
+
+    Add sending property to rtcp filter
+
+commit f80aca36d9a02410de9bc719efdc24654c8d1444
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 3 16:29:10 2008 -0500
+
+    Import empty RTCP filter element
+
+commit 1d2568ebf0902c4f6bc8a9ef9d9024460b93b1b2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 5 12:55:31 2009 +0000
+
+    Ignore new registry file
+
+commit 089d9e24955854a988cfc190b3b8b4dc2bf14a32
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 5 12:48:02 2009 +0000
+
+    By STUN, I mean TURN
+
+commit 4789542dc48b5a6970d44acb4ba851801b6f1673
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 5 12:38:37 2009 +0000
+
+    Replace copy of common with git submodule
+
+commit d1ea53d5635966800c6cd431afe40ed255d6849a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 5 12:36:44 2009 +0000
+
+    Keep our glib-gen.mak
+
+commit 79b655581ef3d575a5bfdbebf1505e5db8c0fbad
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 5 12:18:39 2009 +0000
+
+    Move our modified gtkdoc plugins sutff out of common
+
+commit 110e5451e3324b1ccad662b0064d5324db54ea0b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 3 19:11:49 2009 -0500
+
+    Protect against multiple threads calling into the pad block callback
+
+commit 247267b91367635bbc2a373a6ef435d81971388c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 3 18:42:48 2009 -0500
+
+    Rename confusing function to _discovery
+
+commit f827fe388eec7aae823f716119f1482c1c573eec
+Author: Antoine Tremblay <hexa00@gmail.com>
+Date:   Sun Jan 25 11:15:08 2009 -0500
+
+    Fix Makefiles for gst-plugins-base includes and libs
+    
+    The makefiles were using GST_BASE_LIBS/CFLAGS rather
+    then GST_PLUGINS_BASE_LIBS/CFLAGS for the base rtp libs
+    
+      Also add -lgstrtp/gstnetbuffer at the end of the LDADD
+
+commit a5eccc7c16dae57e4cd5074330cb0a07475b961c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 21 17:15:37 2009 +1100
+
+    Use the standard/merged python bin_to_do_file in our test
+
+commit 8779b777d280c63f428f3f956b63adf316fb1b70
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 20 15:32:15 2009 +1100
+
+    Make sure we don't call the pad blocked callback twice in the case of pad_alloc+pad_push
+
+commit 6337ac815c8c4a40313c33a020fd916199c55bba
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 20 14:06:06 2009 +1100
+
+    Print error too
+
+commit d09c1026385d570d8072dd30a93dfe00c1922f01
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 15 14:51:37 2009 -0500
+
+    Accept remote codecs without a clock rate
+    Old jingle did not provide it
+
+commit a2c9db3cc79813f7b26820a923920a3af6131a57
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 15 14:48:24 2009 -0500
+
+    Test setting a static codec without its clock-rate
+
+commit 93c655a55a5e5be5ef12902b530a01d4bfd1475b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 9 21:25:36 2009 -0500
+
+    Share the same default stun timeout in stream and component
+
+commit de3c90819e61c92dfb685205aecd12d4216b9bf3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 9 17:01:03 2009 -0500
+
+    Version 0.0.7.1
+
 commit 2f18cbf114beb4c1e3840d70dd3c5516aced282d
 Author: Olivier Crête <olivier.crete@collabora.co.uk>
 Date:   Fri Jan 9 16:50:49 2009 -0500

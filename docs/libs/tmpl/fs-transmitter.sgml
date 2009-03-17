@@ -33,6 +33,15 @@ FsTransmitter
 @arg2: 
 @arg3: 
 
+<!-- ##### SIGNAL FsTransmitter::get-recvonly-filter ##### -->
+<para>
+
+</para>
+
+@fstransmitter: the object which received the signal.
+@arg1: 
+@Returns: 
+
 <!-- ##### ARG FsTransmitter:components ##### -->
 <para>
 
@@ -99,6 +108,16 @@ FsTransmitter
 @error_no: 
 @error_msg: 
 @debug_msg: 
+
+
+<!-- ##### FUNCTION fs_transmitter_get_recvonly_filter ##### -->
+<para>
+
+</para>
+
+@transmitter: 
+@component: 
+@Returns: 
 
 
 <!-- ##### FUNCTION fs_transmitter_list_available ##### -->

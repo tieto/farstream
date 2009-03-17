@@ -42,7 +42,8 @@ build_triplet = @build@
 host_triplet = @host@
 @ENABLE_GTK_DOC_TRUE@am__append_1 = gstfsrtpconference_doc.c
 DIST_COMMON = $(noinst_HEADERS) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in $(top_srcdir)/common/glib-gen.mak
+	$(srcdir)/Makefile.in \
+	$(top_srcdir)/common-modified/glib-gen.mak
 subdir = gst/fsrtpconference
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
@@ -60,8 +61,11 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst-plugin-docs.m4 \
 	$(top_srcdir)/common/m4/gst-plugindir.m4 \
 	$(top_srcdir)/common/m4/gst.m4 \
+	$(top_srcdir)/common/m4/gtk-doc.m4 \
 	$(top_srcdir)/common/m4/isc-posix.m4 \
-	$(top_srcdir)/acinclude.m4 $(top_srcdir)/configure.ac
+	$(top_srcdir)/common/m4/pkg.m4 \
+	$(top_srcdir)/m4/as-check-python-headers.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -386,9 +390,9 @@ libfsrtpconference_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
 libfsrtpconference_la_LIBADD = \
 	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-0.10.la \
 	$(FS2_LIBS) \
-	-lgstrtp-@GST_MAJORMINOR@ \
-	$(GST_BASE_LIBS) \
-	$(GST_LIBS)
+	$(GST_PLUGINS_BASE_LIBS) \
+	$(GST_LIBS) \
+	-lgstrtp-@GST_MAJORMINOR@
 
 @ENABLE_GTK_DOC_TRUE@noinst_LTLIBRARIES = libfsrtpconference_doc.la
 @ENABLE_GTK_DOC_TRUE@nodist_libfsrtpconference_doc_la_SOURCES = \
@@ -406,7 +410,7 @@ all: $(BUILT_SOURCES)
 
 .SUFFIXES:
 .SUFFIXES: .c .lo .o .obj
-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/common/glib-gen.mak $(am__configure_deps)
+$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/common-modified/glib-gen.mak $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \

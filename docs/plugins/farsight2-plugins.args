@@ -181,7 +181,7 @@
 <ARG>
 <NAME>FsNiceStreamTransmitter::compatibility-mode</NAME>
 <TYPE>guint</TYPE>
-<RANGE><= 2</RANGE>
+<RANGE><= 3</RANGE>
 <FLAGS>wX</FLAGS>
 <NICK>The compability-mode</NICK>
 <BLURB>The id of the stream according to libnice.</BLURB>

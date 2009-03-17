@@ -161,6 +161,7 @@
 <ANCHOR id="fs-transmitter-new-stream-transmitter" href="farsight2-libs-0.10/FsTransmitter.html#fs-transmitter-new-stream-transmitter">
 <ANCHOR id="fs-transmitter-get-stream-transmitter-type" href="farsight2-libs-0.10/FsTransmitter.html#fs-transmitter-get-stream-transmitter-type">
 <ANCHOR id="fs-transmitter-emit-error" href="farsight2-libs-0.10/FsTransmitter.html#fs-transmitter-emit-error">
+<ANCHOR id="fs-transmitter-get-recvonly-filter" href="farsight2-libs-0.10/FsTransmitter.html#fs-transmitter-get-recvonly-filter">
 <ANCHOR id="fs-transmitter-list-available" href="farsight2-libs-0.10/FsTransmitter.html#fs-transmitter-list-available">
 <ANCHOR id="FsTransmitter.property-details" href="farsight2-libs-0.10/FsTransmitter.html#FsTransmitter.property-details">
 <ANCHOR id="FsTransmitter--components" href="farsight2-libs-0.10/FsTransmitter.html#FsTransmitter--components">
@@ -168,6 +169,7 @@
 <ANCHOR id="FsTransmitter--gst-src" href="farsight2-libs-0.10/FsTransmitter.html#FsTransmitter--gst-src">
 <ANCHOR id="FsTransmitter.signal-details" href="farsight2-libs-0.10/FsTransmitter.html#FsTransmitter.signal-details">
 <ANCHOR id="FsTransmitter-error" href="farsight2-libs-0.10/FsTransmitter.html#FsTransmitter-error">
+<ANCHOR id="FsTransmitter-get-recvonly-filter" href="farsight2-libs-0.10/FsTransmitter.html#FsTransmitter-get-recvonly-filter">
 <ANCHOR id="FsStreamTransmitter" href="farsight2-libs-0.10/FsStreamTransmitter.html">
 <ANCHOR id="FsStreamTransmitter.synopsis" href="farsight2-libs-0.10/FsStreamTransmitter.html#FsStreamTransmitter.synopsis">
 <ANCHOR id="FsStreamTransmitter.object-hierarchy" href="farsight2-libs-0.10/FsStreamTransmitter.html#FsStreamTransmitter.object-hierarchy">
