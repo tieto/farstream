@@ -73,6 +73,7 @@ libgstfarsight-0.10.so.0 libgstfarsight0.10-0 #MINVER#
   fs_stream_transmitter_set_remote_candidates@Base 0.0.3
   fs_stream_transmitter_stop@Base 0.0.3
   fs_transmitter_emit_error@Base 0.0.3
+  fs_transmitter_get_recvonly_filter@Base 0.0.8
   fs_transmitter_get_type@Base 0.0.1
   fs_transmitter_list_available@Base 0.0.4
   fs_transmitter_new@Base 0.0.1
