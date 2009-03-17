@@ -23,7 +23,6 @@ Homepage: http://farsight.freedesktop.org
 XS-Dm-Upload-Allowed: yes
 
 Package: libgstfarsight0.10-0
-Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
          gstreamer0.10-plugins-base (>= 0.10.22),
