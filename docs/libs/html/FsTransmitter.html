@@ -90,6 +90,12 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
                                                          const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *debug_msg);
+<a
+href="../gstreamer-0.10/GstElement.html"
+>GstElement</a>*         <a class="link" href="FsTransmitter.html#fs-transmitter-get-recvonly-filter" title="fs_transmitter_get_recvonly_filter ()">fs_transmitter_get_recvonly_filter</a>  (<a class="link" href="FsTransmitter.html" title="FsTransmitter">FsTransmitter</a> *transmitter,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
+>guint</a> component);
 char**              <a class="link" href="FsTransmitter.html#fs-transmitter-list-available" title="fs_transmitter_list_available ()">fs_transmitter_list_available</a>       (void);
 </pre>
 </div>
@@ -120,6 +126,7 @@ href="../gstreamer-0.10/GstElement.html"
 <a name="FsTransmitter.signals"></a><h2>Signals</h2>
 <pre class="synopsis">
   "<a class="link" href="FsTransmitter.html#FsTransmitter-error" title='The "error" signal'>error</a>"                                          : Run Last
+  "<a class="link" href="FsTransmitter.html#FsTransmitter-get-recvonly-filter" title='The "get-recvonly-filter" signal'>get-recvonly-filter</a>"                            : Run Last
 </pre>
 </div>
 <div class="refsect1" lang="en">
@@ -380,6 +387,48 @@ only be called by subclasses.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
+<a name="fs-transmitter-get-recvonly-filter"></a><h3>fs_transmitter_get_recvonly_filter ()</h3>
+<pre class="programlisting"><a
+href="../gstreamer-0.10/GstElement.html"
+>GstElement</a>*         fs_transmitter_get_recvonly_filter  (<a class="link" href="FsTransmitter.html" title="FsTransmitter">FsTransmitter</a> *transmitter,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
+>guint</a> component);</pre>
+<p>
+Get the filter to add on the send pipeline if sending is disabled.
+</p>
+<p>
+Only for use by subclasses.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>transmitter</code></em> :</span></p></td>
+<td> A <a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>component</code></em> :</span></p></td>
+<td> The component to get the filter for
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a <a
+href="../gstreamer-0.10/GstElement.html"
+><span class="type">GstElement</span></a> to use as the filter or <a
+href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
 <a name="fs-transmitter-list-available"></a><h3>fs_transmitter_list_available ()</h3>
 <pre class="programlisting">char**              fs_transmitter_list_available       (void);</pre>
 <p>
@@ -502,6 +551,60 @@ This signal is emitted in any error condition</p>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
 <td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="FsTransmitter-get-recvonly-filter"></a><h3>The <code class="literal">"get-recvonly-filter"</code> signal</h3>
+<pre class="programlisting"><a
+href="../gstreamer-0.10/GstElement.html"
+>GstElement</a>*         user_function                      (<a class="link" href="FsTransmitter.html" title="FsTransmitter">FsTransmitter</a> *self,
+                                                        <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
+>guint</a>          component,
+                                                        <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+>gpointer</a>       user_data)      : Run Last</pre>
+<p>
+This signal is emitted when the transmitter wants to get a filter for
+to use if sending is disabled. If you want to drop all buffers, just
+don't listen to the signal.
+</p>
+<p>
+This element should have a "sending" property that can be changed with the
+sending state of the stream. It should default to <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
+<td> <a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a> that emitted the signal
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>component</code></em> :</span></p></td>
+<td> The component that the filter will be used for
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the <a
+href="../gstreamer-0.10/GstElement.html"
+><span class="type">GstElement</span></a> to use as the filter, or <a
+href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
+><code class="literal">NULL</code></a> to drop everything
+</td>
 </tr>
 </tbody>
 </table></div>

@@ -175,14 +175,18 @@ GST_START_TEST (test_rtpcodecs_codec_preferences)
 }
 GST_END_TEST;
 
-static gboolean has_negotiated = FALSE;
+static gboolean session_codecs_notified = FALSE;
+static gboolean stream_remote_codecs_notified = FALSE;
+static gboolean stream_nego_codecs_notified = FALSE;
 
 static void
-_negotiated_codecs_notify (GObject *object, GParamSpec *paramspec,
+_codecs_notify (GObject *object, GParamSpec *paramspec,
     gpointer user_data)
 {
-  has_negotiated = TRUE;
+  gboolean *notified_marker = user_data;
+  *notified_marker = TRUE;
 }
+
 
 GST_START_TEST (test_rtpcodecs_two_way_negotiation)
 {
@@ -194,8 +198,16 @@ GST_START_TEST (test_rtpcodecs_two_way_negotiation)
   dat = setup_simple_conference (1, "fsrtpconference", "bob@127.0.0.1");
   st = simple_conference_add_stream (dat, dat, 0, NULL);
 
+  session_codecs_notified = FALSE;
+  stream_remote_codecs_notified = FALSE;
+  stream_nego_codecs_notified = FALSE;
+
   g_signal_connect (dat->session, "notify::codecs",
-      G_CALLBACK (_negotiated_codecs_notify), dat);
+      G_CALLBACK (_codecs_notify), &session_codecs_notified);
+  g_signal_connect (st->stream, "notify::remote-codecs",
+      G_CALLBACK (_codecs_notify), &stream_remote_codecs_notified);
+  g_signal_connect (st->stream, "notify::negotiated-codecs",
+      G_CALLBACK (_codecs_notify), &stream_nego_codecs_notified);
 
   codecs = g_list_append (codecs,
       fs_codec_new (
@@ -212,6 +224,10 @@ GST_START_TEST (test_rtpcodecs_two_way_negotiation)
 
   g_clear_error (&error);
 
+  fail_if (session_codecs_notified);
+  fail_if (stream_remote_codecs_notified);
+  fail_if (stream_nego_codecs_notified);
+
   fs_codec_list_destroy (codecs);
   codecs = NULL;
 
@@ -226,8 +242,9 @@ GST_START_TEST (test_rtpcodecs_two_way_negotiation)
   fail_unless (fs_stream_set_remote_codecs (st->stream, codecs, &error),
       "Could not set remote PCMU codec");
 
-  fail_unless (has_negotiated == TRUE,
-      "Did not receive the notify::codecs signal");
+  fail_unless (session_codecs_notified);
+  fail_unless (stream_remote_codecs_notified);
+  fail_unless (stream_nego_codecs_notified);
 
   g_object_get (dat->session, "codecs", &codecs2, NULL);
   fail_unless (g_list_length (codecs2) == 1, "Too many negotiated codecs");
@@ -235,17 +252,23 @@ GST_START_TEST (test_rtpcodecs_two_way_negotiation)
       "Negotiated codec does not match remote codec");
   fs_codec_list_destroy (codecs2);
 
-  has_negotiated = FALSE;
+  session_codecs_notified = FALSE;
+  stream_remote_codecs_notified = FALSE;
+  stream_nego_codecs_notified = FALSE;
 
   fail_unless (fs_stream_set_remote_codecs (st->stream, codecs, &error),
       "Could not re-set remote PCMU codec");
 
-  fail_if (has_negotiated == TRUE,
-      "We received the notify::codecs signal even though codecs"
-      " have not changed");
+  fail_if (session_codecs_notified);
+  fail_if (stream_nego_codecs_notified);
+  fail_if (stream_remote_codecs_notified);
 
   fs_codec_list_destroy (codecs);
   codecs = NULL;
+
+  session_codecs_notified = FALSE;
+  stream_remote_codecs_notified = FALSE;
+  stream_nego_codecs_notified = FALSE;
 
   codecs = g_list_append (codecs,
       fs_codec_new (
@@ -257,8 +280,50 @@ GST_START_TEST (test_rtpcodecs_two_way_negotiation)
   fail_unless (fs_stream_set_remote_codecs (st->stream, codecs, &error),
       "Could not set remote PCMU codec with Pt 118");
 
-  fail_unless (has_negotiated == TRUE,
-      "Did not receive the notify::codecs signal");
+  fail_unless (session_codecs_notified);
+  fail_unless (stream_nego_codecs_notified);
+  fail_unless (stream_remote_codecs_notified);
+
+  g_object_get (dat->session, "codecs", &codecs2, NULL);
+  fail_unless (g_list_length (codecs2) == 1, "Too many negotiated codecs");
+  fail_unless (fs_codec_are_equal (codecs->data, codecs2->data),
+      "Negotiated codec does not match remote codec");
+  fs_codec_list_destroy (codecs2);
+  codecs2 = NULL;
+
+  session_codecs_notified = FALSE;
+  stream_remote_codecs_notified = FALSE;
+  stream_nego_codecs_notified = FALSE;
+
+  fail_unless (fs_stream_set_remote_codecs (st->stream, codecs, &error),
+      "Could not re-set remote PCMU codec");
+
+  fail_if (session_codecs_notified);
+  fail_if (stream_remote_codecs_notified);
+  fail_if (stream_nego_codecs_notified);
+
+  fs_codec_list_destroy (codecs);
+  codecs = NULL;
+
+  codecs = g_list_append (NULL,
+      fs_codec_new (
+          0,
+          "PCMU",
+          FS_MEDIA_TYPE_AUDIO,
+          0));
+
+  session_codecs_notified = FALSE;
+  stream_remote_codecs_notified = FALSE;
+  stream_nego_codecs_notified = FALSE;
+  fail_unless (fs_stream_set_remote_codecs (st->stream, codecs, &error),
+      "Could not set remote PCMU codec with clock rate 0");
+  g_clear_error (&error);
+
+  fail_unless (session_codecs_notified);
+  fail_unless (stream_remote_codecs_notified);
+  fail_unless (stream_nego_codecs_notified);
+
+  ((FsCodec*)codecs->data)->clock_rate = 8000;
 
   g_object_get (dat->session, "codecs", &codecs2, NULL);
   fail_unless (g_list_length (codecs2) == 1, "Too many negotiated codecs");
@@ -266,14 +331,26 @@ GST_START_TEST (test_rtpcodecs_two_way_negotiation)
       "Negotiated codec does not match remote codec");
   fs_codec_list_destroy (codecs2);
 
-  has_negotiated = FALSE;
+  fs_codec_list_destroy (codecs);
+  codecs = NULL;
+
+  codecs = g_list_append (codecs,
+      fs_codec_new (
+          0,
+          "PCMU",
+          FS_MEDIA_TYPE_AUDIO,
+          0));
 
   fail_unless (fs_stream_set_remote_codecs (st->stream, codecs, &error),
-      "Could not re-set remote PCMU codec");
+      "Could not set remote PCMU codec with unknown clock-rate");
 
-  fail_if (has_negotiated == TRUE,
-      "We received the notify::codecs signal even though codecs"
-      " have not changed");
+  g_object_get (dat->session, "codecs", &codecs2, NULL);
+  fail_unless (g_list_length (codecs2) == 1, "Too many negotiated codecs");
+  ((FsCodec*)(codecs->data))->clock_rate = 8000;
+  fail_unless (fs_codec_are_equal (codecs->data, codecs2->data),
+      "Negotiated codec does not match remote codec");
+  fs_codec_list_destroy (codecs2);
+  codecs2 = NULL;
 
   fs_codec_list_destroy (codecs);
   codecs = NULL;
@@ -430,7 +507,7 @@ GST_START_TEST (test_rtpcodecs_reserved_pt)
 }
 GST_END_TEST;
 
-static void
+static FsCodec *
 check_vorbis_and_configuration (const gchar *text, GList *codecs,
     const gchar *config)
 {
@@ -461,6 +538,8 @@ check_vorbis_and_configuration (const gchar *text, GList *codecs,
   }
 
   fail_if (item == NULL, "%s: The configuration parameter is not there", text);
+
+  return codec;
 }
 
 
@@ -487,6 +566,9 @@ _bus_message_element (GstBus *bus, GstMessage *message,
     "enfiuewfkdnwqiucnwiufenciuawndiunfucnweciuqfiucina";
   const gchar config2[] = "sadsajdsakdjlksajdsajldsaldjsalkjdl";
   GError *error = NULL;
+  gchar *discovered_config = NULL;
+  FsCodecParameter *param;
+  guint vorbis_id;
 
   if (!gst_structure_has_name (s, "farsight-codecs-changed"))
     return;
@@ -497,7 +579,12 @@ _bus_message_element (GstBus *bus, GstMessage *message,
     return;
 
   g_object_get (cd->dat->session, "codecs", &codecs, NULL);
-  check_vorbis_and_configuration ("codecs before negotiation", codecs, NULL);
+  codec = check_vorbis_and_configuration ("codecs before negotiation", codecs,
+      NULL);
+  vorbis_id = codec->id;
+
+  param = fs_codec_get_optional_parameter (codec, "configuration", NULL);
+  discovered_config = g_strdup (param->value);
 
   g_object_get (cd->dat->session, "codecs-without-config", &codecs2, NULL);
   fail_if (codecs2 == NULL, "Could not get codecs without config");
@@ -532,30 +619,12 @@ _bus_message_element (GstBus *bus, GstMessage *message,
   {
     g_object_get (cd->stream, "negotiated-codecs", &codecs, NULL);
     check_vorbis_and_configuration ("stream codecs before negotiation",
-        codecs ,cd->config);
+        codecs, cd->config);
     fs_codec_list_destroy (codecs);
   }
 
-  codec = fs_codec_new (105, "VORBIS", FS_MEDIA_TYPE_AUDIO, 44100);
-  codecs = g_list_prepend (NULL, codec);
 
-  fail_if (fs_stream_set_remote_codecs (cd->stream, codecs, &error),
-      "Succeed in setting vorbis codec without configuration");
-
-  fail_if (error == NULL, "Failed to set vorbis without config, but did not"
-      " get an error");
-
-  fail_unless (error->code == FS_ERROR_NEGOTIATION_FAILED,
-      "Did not get the right error, expected %d, got %d",
-      FS_ERROR_NEGOTIATION_FAILED, error->code);
-
-  g_clear_error (&error);
-
-  fs_codec_list_destroy (codecs);
-
-
-  codec = fs_codec_new (105, "VORBIS", FS_MEDIA_TYPE_AUDIO, 44100);
-  fs_codec_add_optional_parameter (codec, "delivery-method", "inline");
+  codec = fs_codec_new (vorbis_id,  "VORBIS", FS_MEDIA_TYPE_AUDIO, 44100);
   fs_codec_add_optional_parameter (codec, "configuration", config);
   codecs = g_list_prepend (NULL, codec);
 
@@ -577,7 +646,7 @@ _bus_message_element (GstBus *bus, GstMessage *message,
 
   g_object_get (cd->dat->session, "codecs", &codecs, NULL);
   check_vorbis_and_configuration ("session codecs after negotiation",
-      codecs, NULL);
+      codecs, discovered_config);
   fs_codec_list_destroy (codecs);
 
   g_object_get (cd->stream, "negotiated-codecs", &codecs, NULL);
@@ -596,8 +665,7 @@ _bus_message_element (GstBus *bus, GstMessage *message,
   fail_if (stream2 == NULL, "Could not second create new stream");
 
 
-  codec = fs_codec_new (117, "VORBIS", FS_MEDIA_TYPE_AUDIO, 44100);
-  fs_codec_add_optional_parameter (codec, "delivery-method", "inline");
+  codec = fs_codec_new (vorbis_id, "VORBIS", FS_MEDIA_TYPE_AUDIO, 44100);
   fs_codec_add_optional_parameter (codec, "configuration", config2);
   codecs = g_list_prepend (NULL, codec);
 
@@ -619,7 +687,7 @@ _bus_message_element (GstBus *bus, GstMessage *message,
 
   g_object_get (cd->dat->session, "codecs", &codecs, NULL);
   check_vorbis_and_configuration ("session codecs after renegotiation",
-      codecs, NULL);
+      codecs, discovered_config);
   fs_codec_list_destroy (codecs);
 
   g_object_get (cd->stream, "negotiated-codecs", &codecs, NULL);
@@ -635,6 +703,8 @@ _bus_message_element (GstBus *bus, GstMessage *message,
 
   g_object_unref (p2);
   g_object_unref (stream2);
+
+  g_free (discovered_config);
 
   g_main_loop_quit (loop);
 }
@@ -707,7 +777,6 @@ run_test_rtpcodecs_config_data (gboolean preset_remotes)
 
     cd.config = config;
     codec = fs_codec_new (105, "VORBIS", FS_MEDIA_TYPE_AUDIO, 44100);
-    fs_codec_add_optional_parameter (codec, "delivery-method", "inline");
     fs_codec_add_optional_parameter (codec, "configuration", config);
     codecs = g_list_prepend (NULL, codec);
 

@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, cvs and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for cvs/prerelease
-AC_INIT(Farsight2, 0.0.7,
+AC_INIT(Farsight2, 0.0.8,
     https://bugs.freedesktop.org/enter_bug.cgi?product=Farsight,
     farsight2)
 
@@ -55,8 +55,8 @@ dnl AS_LIBTOOL_TAGS
 AM_PROG_LIBTOOL
 
 dnl *** required versions of GStreamer stuff ***
-GST_REQ=0.10.20
-GSTPB_REQ=0.10.20
+GST_REQ=0.10.22
+GSTPB_REQ=0.10.22
 
 dnl *** autotools stuff ****
 
@@ -102,6 +102,7 @@ dnl these are all the gst plug-ins, compilable without additional libs
 FS2_PLUGINS_ALL=" \
 	fsrtpconference \
 	funnel \
+	rtcpfilter \
  	videoanyrate
 	"
 AC_SUBST(FS2_PLUGINS_ALL)
@@ -393,9 +394,11 @@ Makefile
 farsight2.pc
 common/Makefile
 common/m4/Makefile
+common-modified/Makefile
 gst/Makefile
 gst/fsrtpconference/Makefile
 gst/funnel/Makefile
+gst/rtcpfilter/Makefile
 gst/videoanyrate/Makefile
 gst-libs/Makefile
 gst-libs/gst/Makefile
@@ -410,13 +413,15 @@ dnl pkgconfig/farsight2-uninstalled.pc
 tests/Makefile
 tests/check/Makefile
 tests/rtp/Makefile
-tests/gui/Makefile
-tests/commandline/Makefile
+examples/Makefile
+examples/gui/Makefile
+examples/commandline/Makefile
 docs/Makefile
 docs/libs/Makefile
 docs/plugins/Makefile
 docs/version.entities
 python/Makefile
+m4/Makefile
 dnl docs/plugins/Makefile
 )
 AC_OUTPUT

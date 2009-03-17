@@ -35,12 +35,19 @@
 
 #include "check-threadsafe.h"
 #include "generic.h"
+#include "fake-filter.h"
 
 gint buffer_count[2] = {0, 0};
 GMainLoop *loop = NULL;
 gint candidates[2] = {0, 0};
 GstElement *pipeline = NULL;
 gboolean src_setup[2] = {FALSE, FALSE};
+
+enum {
+  FLAG_NOT_SENDING = 1<<0,
+  FLAG_RECVONLY_FILTER = 1<<1
+};
+
 
 GST_START_TEST (test_multicasttransmitter_new)
 {
@@ -107,8 +114,19 @@ _start_pipeline (gpointer user_data)
   return FALSE;
 }
 
+
+static GstElement *
+_get_recvonly_filter (FsTransmitter *trans, guint component, gpointer user_data)
+{
+  if (component == 1)
+    return NULL;
+
+  return gst_element_factory_make ("fsfakefilter", NULL);
+}
+
 static void
-run_multicast_transmitter_test (gint n_parameters, GParameter *params)
+run_multicast_transmitter_test (gint n_parameters, GParameter *params,
+                                gint flags)
 {
   GError *error = NULL;
   FsTransmitter *trans;
@@ -116,6 +134,15 @@ run_multicast_transmitter_test (gint n_parameters, GParameter *params)
   FsCandidate *tmpcand = NULL;
   GList *candidates = NULL;
   GstBus *bus = NULL;
+
+  buffer_count[0] = 0;
+  buffer_count[1] = 0;
+
+  if (flags & FLAG_NOT_SENDING && flags & FLAG_RECVONLY_FILTER)
+    buffer_count[0] = 20;
+
+  if (flags & FLAG_RECVONLY_FILTER)
+    fail_unless (fs_fake_filter_register ());
 
   loop = g_main_loop_new (NULL, FALSE);
   trans = fs_transmitter_new ("multicast", 2, &error);
@@ -126,6 +153,11 @@ run_multicast_transmitter_test (gint n_parameters, GParameter *params)
   }
 
   ts_fail_if (trans == NULL, "No transmitter create, yet error is still NULL");
+
+  if (flags & FLAG_RECVONLY_FILTER)
+    ts_fail_unless (g_signal_connect (trans, "get-recvonly-filter",
+            G_CALLBACK (_get_recvonly_filter), NULL));
+
 
   pipeline = setup_pipeline (trans, G_CALLBACK (_handoff_handler));
 
@@ -138,6 +170,8 @@ run_multicast_transmitter_test (gint n_parameters, GParameter *params)
   }
 
   ts_fail_if (st == NULL, "No stream transmitter created, yet error is NULL");
+
+  g_object_set (st, "sending", !(flags & FLAG_NOT_SENDING), NULL);
 
   bus = gst_element_get_bus (pipeline);
   gst_bus_add_watch (bus, bus_error_callback, NULL);
@@ -189,7 +223,7 @@ run_multicast_transmitter_test (gint n_parameters, GParameter *params)
 
 GST_START_TEST (test_multicasttransmitter_run)
 {
-  run_multicast_transmitter_test (0, NULL);
+  run_multicast_transmitter_test (0, NULL, 0);
 }
 GST_END_TEST;
 
@@ -267,7 +301,7 @@ GST_START_TEST (test_multicasttransmitter_run_local_candidates)
   g_value_init (&params[0].value, FS_TYPE_CANDIDATE_LIST);
   g_value_set_boxed (&params[0].value, list);
 
-  run_multicast_transmitter_test (1, params);
+  run_multicast_transmitter_test (1, params, 0);
 
   g_value_reset (&params[0].value);
 
@@ -276,6 +310,22 @@ GST_START_TEST (test_multicasttransmitter_run_local_candidates)
 }
 GST_END_TEST;
 
+GST_START_TEST (test_multicasttransmitter_with_filter)
+{
+  run_multicast_transmitter_test (0, NULL,
+      FLAG_RECVONLY_FILTER);
+}
+GST_END_TEST;
+
+GST_START_TEST (test_multicasttransmitter_sending_half)
+{
+  run_multicast_transmitter_test (0, NULL,
+      FLAG_NOT_SENDING | FLAG_RECVONLY_FILTER);
+}
+GST_END_TEST;
+
+
+
 static Suite *
 multicasttransmitter_suite (void)
 {
@@ -283,7 +333,6 @@ multicasttransmitter_suite (void)
   TCase *tc_chain;
   GLogLevelFlags fatal_mask;
   gchar *tmp_addr;
-
 
   tmp_addr = _find_multicast_capable_address ();
 
@@ -303,6 +352,14 @@ multicasttransmitter_suite (void)
 
   tc_chain = tcase_create ("multicast_transmitter_local_candidates");
   tcase_add_test (tc_chain, test_multicasttransmitter_run_local_candidates);
+  suite_add_tcase (s, tc_chain);
+
+  tc_chain = tcase_create ("multicast_transmitter-with-filter");
+  tcase_add_test (tc_chain, test_multicasttransmitter_with_filter);
+  suite_add_tcase (s, tc_chain);
+
+  tc_chain = tcase_create ("multicast_transmitter_sending_half");
+  tcase_add_test (tc_chain, test_multicasttransmitter_sending_half);
   suite_add_tcase (s, tc_chain);
 
   return s;

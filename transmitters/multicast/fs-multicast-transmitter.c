@@ -485,6 +485,7 @@ struct _UdpSock {
   GstPad *udpsrc_requested_pad;
 
   GstElement *udpsink;
+  GstElement *udpsink_recvonly_filter;
   GstPad *udpsink_requested_pad;
 
   gchar *local_ip;
@@ -656,11 +657,11 @@ _bind_port (
 
 static GstElement *
 _create_sinksource (gchar *elementname, GstBin *bin,
-  GstElement *teefunnel, gint fd, GstPadDirection direction,
-  GstPad **requested_pad, GError **error)
+    GstElement *teefunnel, GstElement *filter, gint fd,
+    GstPadDirection direction, GstPad **requested_pad, GError **error)
 {
   GstElement *elem;
-  GstPadLinkReturn ret;
+  GstPadLinkReturn ret = GST_PAD_LINK_OK;
   GstPad *elempad = NULL;
   GstStateChangeReturn state_ret;
 
@@ -708,14 +709,58 @@ _create_sinksource (gchar *elementname, GstBin *bin,
   else
     elempad = gst_element_get_static_pad (elem, "src");
 
-  if (direction == GST_PAD_SINK)
-    ret = gst_pad_link (*requested_pad, elempad);
-  else
+  if (filter)
+  {
+    GstPad *filterpad = NULL;
+
+    if (!gst_bin_add (bin, filter))
+    {
+      g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
+          "Could not add the filter element to the gst %s bin",
+          (direction == GST_PAD_SINK) ? "sink" : "src");
+      goto error;
+    }
+
+    if (direction == GST_PAD_SINK)
+      filterpad = gst_element_get_static_pad (filter, "src");
+    else
+      filterpad = gst_element_get_static_pad (filter, "sink");
+
+    if (direction == GST_PAD_SINK)
+      ret = gst_pad_link (filterpad, elempad);
+    else
+      ret = gst_pad_link (elempad, filterpad);
+
+    gst_object_unref (elempad);
+    gst_object_unref (filterpad);
+    elempad = NULL;
+
+    if (GST_PAD_LINK_FAILED(ret))
+    {
+      g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
+          "Could not link the new element %s (%d)", elementname, ret);
+      goto error;
+    }
+
+    if (direction == GST_PAD_SINK)
+      elempad = gst_element_get_static_pad (filter, "sink");
+    else
+      elempad = gst_element_get_static_pad (filter, "src");
+
+
+    if (!gst_element_sync_state_with_parent (filter))
+    {
+      g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
+          "Could not sync the state of the new filte rwith its parent");
+      goto error;
+    }
+  }
+
+  if (direction != GST_PAD_SINK)
     ret = gst_pad_link (elempad, *requested_pad);
 
-  gst_object_unref (elempad);
-
-  if (GST_PAD_LINK_FAILED(ret)) {
+  if (GST_PAD_LINK_FAILED(ret))
+  {
     g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
       "Could not link the new element %s (%d)", elementname, ret);
     goto error;
@@ -727,6 +772,18 @@ _create_sinksource (gchar *elementname, GstBin *bin,
       elementname);
     goto error;
   }
+
+  if (direction == GST_PAD_SINK)
+    ret = gst_pad_link (*requested_pad, elempad);
+
+  if (GST_PAD_LINK_FAILED(ret))
+  {
+    g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
+        "Could not link the new element %s (%d)", elementname, ret);
+    goto error;
+  }
+
+  gst_object_unref (elempad);
 
   return elem;
 
@@ -753,6 +810,7 @@ fs_multicast_transmitter_get_udpsock_locked (FsMulticastTransmitter *trans,
     const gchar *multicast_ip,
     guint16 port,
     guint8 ttl,
+    gboolean sending,
     GError **error)
 {
   UdpSock *udpsock;
@@ -783,7 +841,7 @@ fs_multicast_transmitter_get_udpsock_locked (FsMulticastTransmitter *trans,
         udpsock->current_ttl = ttl;
       }
       g_byte_array_append (udpsock->ttls, &ttl, 1);
-      g_mutex_unlock (trans->priv->mutex);
+
       return udpsock;
     }
   }
@@ -797,6 +855,7 @@ fs_multicast_transmitter_get_udpsock (FsMulticastTransmitter *trans,
     const gchar *multicast_ip,
     guint16 port,
     guint8 ttl,
+    gboolean sending,
     GError **error)
 {
   UdpSock *udpsock;
@@ -812,11 +871,15 @@ fs_multicast_transmitter_get_udpsock (FsMulticastTransmitter *trans,
 
   g_mutex_lock (trans->priv->mutex);
   udpsock = fs_multicast_transmitter_get_udpsock_locked (trans, component_id,
-      local_ip, multicast_ip, port, ttl, error);
+      local_ip, multicast_ip, port, ttl, sending, error);
   g_mutex_unlock (trans->priv->mutex);
 
   if (udpsock)
+  {
+    if (sending)
+      fs_multicast_transmitter_udpsock_inc_sending (udpsock);
     return udpsock;
+  }
 
   udpsock = g_slice_new0 (UdpSock);
 
@@ -841,14 +904,18 @@ fs_multicast_transmitter_get_udpsock (FsMulticastTransmitter *trans,
   udpsock->funnel = trans->priv->udpsrc_funnels[component_id];
 
   udpsock->udpsrc = _create_sinksource ("udpsrc",
-      GST_BIN (trans->priv->gst_src), udpsock->funnel, udpsock->fd,
+      GST_BIN (trans->priv->gst_src), udpsock->funnel, NULL, udpsock->fd,
       GST_PAD_SRC, &udpsock->udpsrc_requested_pad, error);
   if (!udpsock->udpsrc)
     goto error;
 
+  udpsock->udpsink_recvonly_filter = fs_transmitter_get_recvonly_filter (
+      FS_TRANSMITTER (trans), udpsock->component_id);
+
   udpsock->udpsink = _create_sinksource ("multiudpsink",
-    GST_BIN (trans->priv->gst_sink), udpsock->tee, udpsock->fd, GST_PAD_SINK,
-    &udpsock->udpsink_requested_pad, error);
+      GST_BIN (trans->priv->gst_sink), udpsock->tee,
+      udpsock->udpsink_recvonly_filter,
+      udpsock->fd, GST_PAD_SINK, &udpsock->udpsink_requested_pad, error);
   if (!udpsock->udpsink)
     goto error;
 
@@ -860,18 +927,30 @@ fs_multicast_transmitter_get_udpsock (FsMulticastTransmitter *trans,
   g_mutex_lock (trans->priv->mutex);
   /* Check if someone else has added the same thing at the same time */
   tmpudpsock = fs_multicast_transmitter_get_udpsock_locked (trans, component_id,
-      local_ip, multicast_ip, port, ttl, error);
+      local_ip, multicast_ip, port, ttl, sending, error);
 
   if (tmpudpsock)
   {
     g_mutex_unlock (trans->priv->mutex);
     fs_multicast_transmitter_put_udpsock (trans, udpsock, ttl);
+    if (sending)
+      fs_multicast_transmitter_udpsock_inc_sending (udpsock);
     return tmpudpsock;
   }
 
   trans->priv->udpsocks[component_id] =
     g_list_prepend (trans->priv->udpsocks[component_id], udpsock);
   g_mutex_unlock (trans->priv->mutex);
+
+  if (udpsock->udpsink_recvonly_filter)
+  {
+    g_object_set (udpsock->udpsink_recvonly_filter, "sending", sending, NULL);
+    g_signal_emit_by_name (udpsock->udpsink, "add", udpsock->multicast_ip,
+        udpsock->port);
+  }
+
+  if (sending)
+    fs_multicast_transmitter_udpsock_inc_sending (udpsock);
 
   return udpsock;
 
@@ -974,6 +1053,20 @@ fs_multicast_transmitter_put_udpsock (FsMulticastTransmitter *trans,
       GST_ERROR ("Could not remove udpsink element from transmitter source");
   }
 
+  if (udpsock->udpsink_recvonly_filter)
+  {
+    GstStateChangeReturn ret;
+    gst_element_set_locked_state (udpsock->udpsink_recvonly_filter, TRUE);
+    ret = gst_element_set_state (udpsock->udpsink_recvonly_filter,
+        GST_STATE_NULL);
+    if (ret != GST_STATE_CHANGE_SUCCESS)
+      GST_ERROR ("Error changing state of udpsink filter: %s",
+          gst_element_state_change_return_get_name (ret));
+    if (!gst_bin_remove (GST_BIN (trans->priv->gst_sink),
+            udpsock->udpsink_recvonly_filter))
+      GST_ERROR ("Could not remove sink filter element from transmitter sink");
+  }
+
   if (udpsock->fd >= 0)
     close (udpsock->fd);
 
@@ -987,16 +1080,26 @@ void
 fs_multicast_transmitter_udpsock_inc_sending (UdpSock *udpsock)
 {
   if (g_atomic_int_exchange_and_add (&udpsock->sendcount, 1) == 0)
-    g_signal_emit_by_name (udpsock->udpsink, "add", udpsock->multicast_ip,
-        udpsock->port);
+  {
+    if (udpsock->udpsink_recvonly_filter)
+      g_object_set (udpsock->udpsink_recvonly_filter, "sending", TRUE, NULL);
+    else
+      g_signal_emit_by_name (udpsock->udpsink, "add", udpsock->multicast_ip,
+          udpsock->port);
+  }
 }
 
 void
 fs_multicast_transmitter_udpsock_dec_sending (UdpSock *udpsock)
 {
   if (g_atomic_int_dec_and_test (&udpsock->sendcount))
-    g_signal_emit_by_name (udpsock->udpsink, "remove", udpsock->multicast_ip,
-        udpsock->port);
+  {
+    if (udpsock->udpsink_recvonly_filter)
+      g_object_set (udpsock->udpsink_recvonly_filter, "sending", FALSE, NULL);
+    else
+      g_signal_emit_by_name (udpsock->udpsink, "remove", udpsock->multicast_ip,
+          udpsock->port);
+  }
 }
 
 static GType

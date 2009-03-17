@@ -107,6 +107,10 @@ struct _FsNiceStreamTransmitterPrivate
   gboolean forced_candidates;
   GList *remote_candidates;
 
+  /* These are fixed and must be identical in the latest draft */
+  gchar *username;
+  gchar *password;
+
   gboolean gathered;
 
   NiceGstStream *gststream;
@@ -308,7 +312,7 @@ fs_nice_stream_transmitter_class_init (FsNiceStreamTransmitterClass *klass)
    *   <tr>
    *    <td nowrap="nowrap">(gchar *)</td>
    *    <td nowrap="nowrap">relay-type</td>
-   *    <td>The type of STUN server, can use "udp", "tcp" or "tls".
+   *    <td>The type of TURN server, can use "udp", "tcp" or "tls".
    *        Defaults to "udp" if not specified.</td>
    *   </tr>
    *   <tr>
@@ -426,12 +430,17 @@ fs_nice_stream_transmitter_finalize (GObject *object)
 
   fs_candidate_list_destroy (self->priv->preferred_local_candidates);
 
+  fs_candidate_list_destroy (self->priv->remote_candidates);
+
   if (self->priv->relay_info)
     g_value_array_free (self->priv->relay_info);
 
   g_free (self->priv->stun_ip);
 
   g_mutex_free (self->priv->mutex);
+
+  g_free (self->priv->username);
+  g_free (self->priv->password);
 
   parent_class->finalize (object);
 }
@@ -633,6 +642,8 @@ fs_nice_stream_transmitter_set_remote_candidates (
   GList  *item;
   GSList *nice_candidates = NULL;
   gint c;
+  const gchar *username;
+  const gchar *password;
 
   if (!candidates)
   {
@@ -642,12 +653,106 @@ fs_nice_stream_transmitter_set_remote_candidates (
       fs_candidate_list_destroy (self->priv->remote_candidates);
     self->priv->remote_candidates = NULL;
     self->priv->forced_candidates = FALSE;
+    g_free (self->priv->username);
+    g_free (self->priv->password);
+    self->priv->username = NULL;
+    self->priv->password = NULL;
     FS_NICE_STREAM_TRANSMITTER_UNLOCK (self);
     nice_agent_restart (self->priv->agent->agent);
     return TRUE;
   }
 
   FS_NICE_STREAM_TRANSMITTER_LOCK (self);
+
+  username = self->priv->username;
+  password = self->priv->password;
+
+  /* Validate candidates */
+  for (item = candidates;
+       item;
+       item = g_list_next (item))
+  {
+    FsCandidate *candidate = item->data;
+
+    if (!candidate->ip)
+    {
+      FS_NICE_STREAM_TRANSMITTER_UNLOCK (self);
+      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+          "Candidate MUST have an IP address");
+      return FALSE;
+    }
+
+    if (candidate->component_id == 0 ||
+        candidate->component_id > self->priv->transmitter->components)
+    {
+      FS_NICE_STREAM_TRANSMITTER_UNLOCK (self);
+      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+          "Candidate MUST have a component id between 1 and %d, %d is invalid",
+          self->priv->transmitter->components, candidate->component_id);
+      return FALSE;
+    }
+
+    if (candidate->type == FS_CANDIDATE_TYPE_MULTICAST)
+    {
+      FS_NICE_STREAM_TRANSMITTER_UNLOCK (self);
+      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+          "libnice transmitter does not accept multicast candidates");
+      return FALSE;
+    }
+
+    if (!candidate->username)
+    {
+      FS_NICE_STREAM_TRANSMITTER_UNLOCK (self);
+      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+          "Invalid remote candidates passed, does not have a username");
+      return FALSE;
+    }
+
+    if (self->priv->compatibility_mode != NICE_COMPATIBILITY_GOOGLE &&
+        !candidate->password)
+    {
+      FS_NICE_STREAM_TRANSMITTER_UNLOCK (self);
+      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+          "Invalid remote candidates passed, does not have a password");
+      return FALSE;
+    }
+
+    if (self->priv->compatibility_mode != NICE_COMPATIBILITY_GOOGLE &&
+        self->priv->compatibility_mode != NICE_COMPATIBILITY_MSN)
+    {
+      if (!username)
+      {
+        username = candidate->username;
+      }
+      else if (strcmp (username, candidate->username))
+      {
+        FS_NICE_STREAM_TRANSMITTER_UNLOCK (self);
+        g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+            "Invalid remote candidates passed, does not have the right"
+            " username");
+        return FALSE;
+      }
+
+      if (!password)
+      {
+        password = candidate->password;
+      }
+      else if (strcmp (password, candidate->password))
+      {
+        FS_NICE_STREAM_TRANSMITTER_UNLOCK (self);
+        g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+            "Invalid remote candidates passed, does not have the right"
+            " password");
+        return FALSE;
+      }
+    }
+  }
+
+  if (!self->priv->username)
+    self->priv->username = g_strdup (username);
+  if (!self->priv->password)
+    self->priv->password = g_strdup (password);
+
   if (self->priv->forced_candidates)
   {
     FS_NICE_STREAM_TRANSMITTER_UNLOCK (self);
@@ -664,7 +769,30 @@ fs_nice_stream_transmitter_set_remote_candidates (
     FS_NICE_STREAM_TRANSMITTER_UNLOCK (self);
     return TRUE;
   }
-  FS_NICE_STREAM_TRANSMITTER_UNLOCK (self);
+
+  if (self->priv->compatibility_mode != NICE_COMPATIBILITY_GOOGLE &&
+        self->priv->compatibility_mode != NICE_COMPATIBILITY_MSN)
+  {
+    username = g_strdup (username);
+    password = g_strdup (password);
+    FS_NICE_STREAM_TRANSMITTER_UNLOCK (self);
+
+    if (!nice_agent_set_remote_credentials (self->priv->agent->agent,
+            self->priv->stream_id, username, password))
+    {
+      g_free ((gchar*) username);
+      g_free ((gchar*) password);
+      g_set_error (error, FS_ERROR, FS_ERROR_INTERNAL,
+          "Could not set the security credentials");
+      return FALSE;
+    }
+    g_free ((gchar*) username);
+    g_free ((gchar*) password);
+  }
+  else
+  {
+    FS_NICE_STREAM_TRANSMITTER_UNLOCK (self);
+  }
 
   for (c = 1; c <= self->priv->transmitter->components; c++)
   {
@@ -859,7 +987,8 @@ nice_candidate_to_fs_candidate (NiceAgent *agent, NiceCandidate *nicecandidate,
       ipaddr,
       nice_address_get_port (&nicecandidate->addr));
 
-  if (nice_address_is_valid (&nicecandidate->base_addr))
+  if (nice_address_is_valid (&nicecandidate->base_addr) &&
+      nicecandidate->type != NICE_CANDIDATE_TYPE_HOST)
   {
     nice_address_to_string (&nicecandidate->base_addr, ipaddr);
     fscandidate->base_ip = ipaddr;
@@ -1458,6 +1587,22 @@ agent_gathering_done (NiceAgent *agent, guint stream_id, gpointer user_data)
     else
     {
       GError *error = NULL;
+
+      if (self->priv->compatibility_mode != NICE_COMPATIBILITY_GOOGLE &&
+          self->priv->compatibility_mode != NICE_COMPATIBILITY_MSN)
+      {
+        if (!nice_agent_set_remote_credentials (agent, self->priv->stream_id,
+                self->priv->username, self->priv->password))
+        {
+          fs_stream_transmitter_emit_error (FS_STREAM_TRANSMITTER (self),
+              FS_ERROR_INTERNAL, "Error setting delayed remote candidates",
+              "Could not set the security credentials");
+          fs_candidate_list_destroy (remote_candidates);
+          return;
+        }
+      }
+
+
       if (!fs_nice_stream_transmitter_set_remote_candidates (
               FS_STREAM_TRANSMITTER_CAST (self),
               remote_candidates, &error))

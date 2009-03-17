@@ -32,7 +32,7 @@
     </sub>
   </chapters>
   <functions>
-    <keyword type="" name="The &quot;farsight-error&quot; message" link="FsConference.html#id2982413"/>
+    <keyword type="" name="The &quot;farsight-error&quot; message" link="FsConference.html#id2603056"/>
     <keyword type="struct" name="FsConference" link="FsConference.html#FsConference-struct"/>
     <keyword type="function" name="fs_conference_new_session ()" link="FsConference.html#fs-conference-new-session"/>
     <keyword type="function" name="fs_conference_new_participant ()" link="FsConference.html#fs-conference-new-participant"/>
@@ -45,8 +45,8 @@
     <keyword type="macro" name="FS_PARTICIPANT_DATA_UNLOCK()" link="FsParticipant.html#FS-PARTICIPANT-DATA-UNLOCK:CAPS"/>
     <keyword type="" name="The &quot;cname&quot; property" link="FsParticipant.html#FsParticipant--cname"/>
     <keyword type="" name="The &quot;error&quot; signal" link="FsParticipant.html#FsParticipant-error"/>
-    <keyword type="" name="The &quot;farsight-send-codec-changed&quot;&#10;  message" link="FsSession.html#id3046392"/>
-    <keyword type="" name="The &quot;farsight-codecs-changed&quot;&#10; message" link="FsSession.html#id3046436"/>
+    <keyword type="" name="The &quot;farsight-send-codec-changed&quot;&#10;  message" link="FsSession.html#id2667034"/>
+    <keyword type="" name="The &quot;farsight-codecs-changed&quot;&#10; message" link="FsSession.html#id2667078"/>
     <keyword type="enum" name="enum FsDTMFEvent" link="FsSession.html#FsDTMFEvent"/>
     <keyword type="enum" name="enum FsDTMFMethod" link="FsSession.html#FsDTMFMethod"/>
     <keyword type="struct" name="FsSession" link="FsSession.html#FsSession-struct"/>
@@ -67,11 +67,11 @@
     <keyword type="" name="The &quot;media-type&quot; property" link="FsSession.html#FsSession--media-type"/>
     <keyword type="" name="The &quot;sink-pad&quot; property" link="FsSession.html#FsSession--sink-pad"/>
     <keyword type="" name="The &quot;error&quot; signal" link="FsSession.html#FsSession-error"/>
-    <keyword type="" name="The &quot;farsight-new-local-candidate&quot; message" link="FsStream.html#id3033179"/>
-    <keyword type="" name="The &quot;farsight-local-candidates-prepared&quot; message" link="FsStream.html#id3033216"/>
-    <keyword type="" name="The &quot;farsight-new-active-candidate-pair&quot; message" link="FsStream.html#id3033248"/>
-    <keyword type="" name="The &quot;farsight-recv-codecs-changed&quot; message" link="FsStream.html#id3033297"/>
-    <keyword type="" name="The &quot;farsight-component-state-changed&quot; message" link="FsStream.html#id3033365"/>
+    <keyword type="" name="The &quot;farsight-new-local-candidate&quot; message" link="FsStream.html#id2653821"/>
+    <keyword type="" name="The &quot;farsight-local-candidates-prepared&quot; message" link="FsStream.html#id2653858"/>
+    <keyword type="" name="The &quot;farsight-new-active-candidate-pair&quot; message" link="FsStream.html#id2653890"/>
+    <keyword type="" name="The &quot;farsight-recv-codecs-changed&quot; message" link="FsStream.html#id2653939"/>
+    <keyword type="" name="The &quot;farsight-component-state-changed&quot; message" link="FsStream.html#id2654007"/>
     <keyword type="struct" name="FsStream" link="FsStream.html#FsStream-struct"/>
     <keyword type="struct" name="FsStreamClass" link="FsStream.html#FsStreamClass"/>
     <keyword type="enum" name="enum FsStreamDirection" link="FsStream.html#FsStreamDirection"/>
@@ -136,11 +136,13 @@
     <keyword type="function" name="fs_transmitter_new_stream_transmitter ()" link="FsTransmitter.html#fs-transmitter-new-stream-transmitter"/>
     <keyword type="function" name="fs_transmitter_get_stream_transmitter_type ()" link="FsTransmitter.html#fs-transmitter-get-stream-transmitter-type"/>
     <keyword type="function" name="fs_transmitter_emit_error ()" link="FsTransmitter.html#fs-transmitter-emit-error"/>
+    <keyword type="function" name="fs_transmitter_get_recvonly_filter ()" link="FsTransmitter.html#fs-transmitter-get-recvonly-filter"/>
     <keyword type="function" name="fs_transmitter_list_available ()" link="FsTransmitter.html#fs-transmitter-list-available"/>
     <keyword type="" name="The &quot;components&quot; property" link="FsTransmitter.html#FsTransmitter--components"/>
     <keyword type="" name="The &quot;gst-sink&quot; property" link="FsTransmitter.html#FsTransmitter--gst-sink"/>
     <keyword type="" name="The &quot;gst-src&quot; property" link="FsTransmitter.html#FsTransmitter--gst-src"/>
     <keyword type="" name="The &quot;error&quot; signal" link="FsTransmitter.html#FsTransmitter-error"/>
+    <keyword type="" name="The &quot;get-recvonly-filter&quot; signal" link="FsTransmitter.html#FsTransmitter-get-recvonly-filter"/>
     <keyword type="struct" name="FsStreamTransmitter" link="FsStreamTransmitter.html#FsStreamTransmitter-struct"/>
     <keyword type="struct" name="FsStreamTransmitterClass" link="FsStreamTransmitter.html#FsStreamTransmitterClass"/>
     <keyword type="function" name="fs_stream_transmitter_set_remote_candidates ()" link="FsStreamTransmitter.html#fs-stream-transmitter-set-remote-candidates"/>

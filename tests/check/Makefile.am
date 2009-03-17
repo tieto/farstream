@@ -13,13 +13,15 @@ TESTS_ENVIRONMENT = \
 	FS_PLUGIN_PATH=$(top_builddir)/transmitters/rawudp/.libs:$(top_builddir)/transmitters/multicast/.libs:$(top_builddir)/transmitters/nice/.libs \
 	LD_LIBRARY_PATH=$(top_builddir)/gst-libs/gst/farsight/.libs:${LD_LIBRARY_PATH} \
 	UPNP_XML_PATH=$(srcdir)/upnp \
-	SRCDIR=$(srcdir)
+	SRCDIR=$(srcdir) \
+	XDG_CACHE_HOME=$(builddir)/cache
 
 
 # ths core dumps of some machines have PIDs appended
 CLEANFILES = core* test-registry.xml
 
 clean-local: clean-local-check
+	rm -rf cache
 
 $(CHECK_REGISTRY):
 	$(TESTS_ENVIRONMENT)
@@ -52,7 +54,8 @@ check_PROGRAMS = \
 	rtp/codecs \
 	rtp/sendcodecs \
 	rtp/conference \
-	utils/binadded
+	utils/binadded \
+	elements/rtcpfilter
 
 AM_CFLAGS = \
 	$(CFLAGS) \
@@ -83,6 +86,8 @@ transmitter_multicast_SOURCES = \
 	check-threadsafe.h  \
 	transmitter/generic.c \
 	transmitter/generic.h \
+	transmitter/fake-filter.c \
+	transmitter/fake-filter.h \
 	transmitter/multicast.c 
 
 transmitter_nice_CFLAGS = $(FS2_INTERNAL_CFLAGS) $(CFLAGS) $(AM_CFLAGS)
@@ -90,6 +95,8 @@ transmitter_nice_SOURCES = \
 	check-threadsafe.h  \
 	transmitter/generic.c \
 	transmitter/generic.h \
+	transmitter/fake-filter.c \
+	transmitter/fake-filter.h \
 	transmitter/nice.c 
 
 rtp_conference_CFLAGS = $(AM_CFLAGS)
@@ -115,3 +122,7 @@ rtp_sendcodecs_SOURCES = \
 utils_binadded_CFLAGS = $(AM_CFLAGS)
 utils_binadded_SOURCES = \
 	utils/binadded.c
+
+elements_rtcpfilter_CFLAGS = $(AM_CFLAGS)
+elements_rtcpfilter_SOURCES = elements/rtcpfilter.c
+elements_rtcpfilter_LDADD = $(LDADD) -lgstrtp-0.10

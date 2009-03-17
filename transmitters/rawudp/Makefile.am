@@ -26,10 +26,10 @@ librawudp_transmitter_la_LDFLAGS = $(FS2_PLUGIN_LDFLAGS)
 librawudp_transmitter_la_LIBADD = \
 	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-0.10.la \
 	$(FS2_LIBS) \
-	-lgstnetbuffer-@GST_MAJORMINOR@ \
-	$(GST_BASE_LIBS) \
+	$(GST_PLUGINS_BASE_LIBS) \
 	$(GST_LIBS) \
-	$(GUPNP_LIBS)
+	$(GUPNP_LIBS) \
+	-lgstnetbuffer-@GST_MAJORMINOR@
 
 noinst_HEADERS = \
 	fs-rawudp-transmitter.h \
@@ -57,5 +57,5 @@ fs-rawudp-marshal.list: $(librawudp_transmitter_la_SOURCES) Makefile.am
 glib_enum_define=FS_RAWUDP
 glib_enum_prefix=_fs_rawudp
 
-include $(top_srcdir)/common/glib-gen.mak
+include $(top_srcdir)/common-modified/glib-gen.mak
 

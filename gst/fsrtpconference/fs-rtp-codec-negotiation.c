@@ -608,19 +608,6 @@ create_local_codec_associations (
         FsCodec *codec = sdp_is_compat (codec_pref, oldca->codec, FALSE);
         if (codec)
         {
-          GList *item = NULL;
-
-          /* Keep the local configuration */
-          for (item = oldca->codec->optional_params;
-               item;
-               item = g_list_next (item))
-          {
-            FsCodecParameter *param = item->data;
-            if (codec_has_config_data_named (codec, param->name))
-              fs_codec_add_optional_parameter (codec, param->name,
-                  param->value);
-          }
-
           ca = g_slice_new (CodecAssociation);
           memcpy (ca, oldca, sizeof (CodecAssociation));
           codec_remove_parameter (codec, SEND_PROFILE_ARG);
@@ -857,7 +844,7 @@ negotiate_stream_codecs (
 
     if (old_ca) {
       GST_DEBUG ("Have local codec in the same PT, lets try it first");
-      nego_codec = sdp_is_compat (old_ca->codec, remote_codec, TRUE);
+      nego_codec = sdp_is_compat (old_ca->codec, remote_codec, FALSE);
     }
 
     if (!nego_codec) {
@@ -868,7 +855,7 @@ negotiate_stream_codecs (
       {
         old_ca = item->data;
 
-        nego_codec = sdp_is_compat (old_ca->codec, remote_codec, TRUE);
+        nego_codec = sdp_is_compat (old_ca->codec, remote_codec, FALSE);
 
         if (nego_codec)
         {
@@ -941,6 +928,9 @@ negotiate_stream_codecs (
  * It also adds a marker to the list for every previously disabled codec so
  * they're not re-used.
  *
+ * It also keeps the old discovered codec parameters if the other parameters
+ * are the same.
+ *
  * Returns: a modified list of #CodecAssociation
  */
 
@@ -950,6 +940,7 @@ finish_codec_negotiation (
     GList *new_codec_associations)
 {
   int i;
+  GList *item;
 
   /* Now, lets fill all of the PTs that were previously used in the session
    * even if they are not currently used, so they can't be re-used
@@ -973,6 +964,35 @@ finish_codec_negotiation (
       CodecAssociation *new_ca = codec_association_copy (local_ca);
       new_ca->recv_only = TRUE;
       new_codec_associations = g_list_append (new_codec_associations, new_ca);
+    }
+  }
+
+  for (item = new_codec_associations; item; item = g_list_next (item))
+  {
+    CodecAssociation *new_ca = item->data;
+    CodecAssociation *old_ca = NULL;
+
+    if (new_ca->disable || new_ca->reserved || new_ca->recv_only)
+    {
+      new_ca->need_config = FALSE;
+      continue;
+    }
+
+    old_ca = lookup_codec_association_by_pt (old_codec_associations,
+        new_ca->codec->id);
+
+    if (old_ca)
+    {
+      FsCodec *old_without_config = codec_copy_without_config (old_ca->codec);
+
+      if (fs_codec_are_equal (new_ca->codec, old_without_config))
+      {
+        fs_codec_destroy (new_ca->codec);
+        new_ca->codec = fs_codec_copy (old_ca->codec);
+        new_ca->need_config = codec_needs_config (new_ca->codec);
+      }
+
+      fs_codec_destroy (old_without_config);
     }
   }
 
@@ -1194,6 +1214,12 @@ codec_associations_list_are_equal (GList *list1, GList *list2)
 
     if (list1 == NULL || list2 == NULL)
       break;
+
+    /* We must emit the notification if the recv-only status
+     * of a codec has changed
+     */
+    if (ca1->recv_only != ca2->recv_only)
+      return FALSE;
 
     if (!fs_codec_are_equal (ca1->codec, ca2->codec))
       return FALSE;

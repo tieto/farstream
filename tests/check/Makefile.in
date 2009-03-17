@@ -36,7 +36,8 @@ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 check_PROGRAMS = base/fscodec$(EXEEXT) base/fstransmitter$(EXEEXT) \
 	transmitter/rawudp$(EXEEXT) transmitter/multicast$(EXEEXT) \
 	$(am__EXEEXT_1) rtp/codecs$(EXEEXT) rtp/sendcodecs$(EXEEXT) \
-	rtp/conference$(EXEEXT) utils/binadded$(EXEEXT)
+	rtp/conference$(EXEEXT) utils/binadded$(EXEEXT) \
+	elements/rtcpfilter$(EXEEXT)
 subdir = tests/check
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
@@ -54,8 +55,11 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst-plugin-docs.m4 \
 	$(top_srcdir)/common/m4/gst-plugindir.m4 \
 	$(top_srcdir)/common/m4/gst.m4 \
+	$(top_srcdir)/common/m4/gtk-doc.m4 \
 	$(top_srcdir)/common/m4/isc-posix.m4 \
-	$(top_srcdir)/acinclude.m4 $(top_srcdir)/configure.ac
+	$(top_srcdir)/common/m4/pkg.m4 \
+	$(top_srcdir)/m4/as-check-python-headers.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -76,6 +80,17 @@ base_fstransmitter_LDADD = $(LDADD)
 base_fstransmitter_DEPENDENCIES =  \
 	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-0.10.la \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+am_elements_rtcpfilter_OBJECTS =  \
+	elements_rtcpfilter-rtcpfilter.$(OBJEXT)
+elements_rtcpfilter_OBJECTS = $(am_elements_rtcpfilter_OBJECTS)
+am__DEPENDENCIES_2 =  \
+	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-0.10.la \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+elements_rtcpfilter_DEPENDENCIES = $(am__DEPENDENCIES_2)
+elements_rtcpfilter_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(elements_rtcpfilter_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
 am_rtp_codecs_OBJECTS = rtp_codecs-generic.$(OBJEXT) \
 	rtp_codecs-codecs.$(OBJEXT)
 rtp_codecs_OBJECTS = $(am_rtp_codecs_OBJECTS)
@@ -99,15 +114,13 @@ rtp_conference_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 am_rtp_sendcodecs_OBJECTS = rtp_sendcodecs-generic.$(OBJEXT) \
 	rtp_sendcodecs-sendcodecs.$(OBJEXT)
 rtp_sendcodecs_OBJECTS = $(am_rtp_sendcodecs_OBJECTS)
-am__DEPENDENCIES_2 =  \
-	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-0.10.la \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 rtp_sendcodecs_DEPENDENCIES = $(am__DEPENDENCIES_2)
 rtp_sendcodecs_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(rtp_sendcodecs_CFLAGS) \
 	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 am_transmitter_multicast_OBJECTS =  \
 	transmitter_multicast-generic.$(OBJEXT) \
+	transmitter_multicast-fake-filter.$(OBJEXT) \
 	transmitter_multicast-multicast.$(OBJEXT)
 transmitter_multicast_OBJECTS = $(am_transmitter_multicast_OBJECTS)
 transmitter_multicast_LDADD = $(LDADD)
@@ -119,6 +132,7 @@ transmitter_multicast_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(transmitter_multicast_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 am_transmitter_nice_OBJECTS = transmitter_nice-generic.$(OBJEXT) \
+	transmitter_nice-fake-filter.$(OBJEXT) \
 	transmitter_nice-nice.$(OBJEXT)
 transmitter_nice_OBJECTS = $(am_transmitter_nice_OBJECTS)
 transmitter_nice_LDADD = $(LDADD)
@@ -159,15 +173,16 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = base/fscodec.c base/fstransmitter.c $(rtp_codecs_SOURCES) \
+SOURCES = base/fscodec.c base/fstransmitter.c \
+	$(elements_rtcpfilter_SOURCES) $(rtp_codecs_SOURCES) \
 	$(rtp_conference_SOURCES) $(rtp_sendcodecs_SOURCES) \
 	$(transmitter_multicast_SOURCES) $(transmitter_nice_SOURCES) \
 	$(transmitter_rawudp_SOURCES) $(utils_binadded_SOURCES)
 DIST_SOURCES = base/fscodec.c base/fstransmitter.c \
-	$(rtp_codecs_SOURCES) $(rtp_conference_SOURCES) \
-	$(rtp_sendcodecs_SOURCES) $(transmitter_multicast_SOURCES) \
-	$(transmitter_nice_SOURCES) $(transmitter_rawudp_SOURCES) \
-	$(utils_binadded_SOURCES)
+	$(elements_rtcpfilter_SOURCES) $(rtp_codecs_SOURCES) \
+	$(rtp_conference_SOURCES) $(rtp_sendcodecs_SOURCES) \
+	$(transmitter_multicast_SOURCES) $(transmitter_nice_SOURCES) \
+	$(transmitter_rawudp_SOURCES) $(utils_binadded_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -375,7 +390,8 @@ TESTS_ENVIRONMENT = \
 	FS_PLUGIN_PATH=$(top_builddir)/transmitters/rawudp/.libs:$(top_builddir)/transmitters/multicast/.libs:$(top_builddir)/transmitters/nice/.libs \
 	LD_LIBRARY_PATH=$(top_builddir)/gst-libs/gst/farsight/.libs:${LD_LIBRARY_PATH} \
 	UPNP_XML_PATH=$(srcdir)/upnp \
-	SRCDIR=$(srcdir)
+	SRCDIR=$(srcdir) \
+	XDG_CACHE_HOME=$(builddir)/cache
 
 
 # ths core dumps of some machines have PIDs appended
@@ -418,6 +434,8 @@ transmitter_multicast_SOURCES = \
 	check-threadsafe.h  \
 	transmitter/generic.c \
 	transmitter/generic.h \
+	transmitter/fake-filter.c \
+	transmitter/fake-filter.h \
 	transmitter/multicast.c 
 
 transmitter_nice_CFLAGS = $(FS2_INTERNAL_CFLAGS) $(CFLAGS) $(AM_CFLAGS)
@@ -425,6 +443,8 @@ transmitter_nice_SOURCES = \
 	check-threadsafe.h  \
 	transmitter/generic.c \
 	transmitter/generic.h \
+	transmitter/fake-filter.c \
+	transmitter/fake-filter.h \
 	transmitter/nice.c 
 
 rtp_conference_CFLAGS = $(AM_CFLAGS)
@@ -451,6 +471,9 @@ utils_binadded_CFLAGS = $(AM_CFLAGS)
 utils_binadded_SOURCES = \
 	utils/binadded.c
 
+elements_rtcpfilter_CFLAGS = $(AM_CFLAGS)
+elements_rtcpfilter_SOURCES = elements/rtcpfilter.c
+elements_rtcpfilter_LDADD = $(LDADD) -lgstrtp-0.10
 all: all-am
 
 .SUFFIXES:
@@ -500,6 +523,12 @@ base/fscodec$(EXEEXT): $(base_fscodec_OBJECTS) $(base_fscodec_DEPENDENCIES) base
 base/fstransmitter$(EXEEXT): $(base_fstransmitter_OBJECTS) $(base_fstransmitter_DEPENDENCIES) base/$(am__dirstamp)
 	@rm -f base/fstransmitter$(EXEEXT)
 	$(LINK) $(base_fstransmitter_OBJECTS) $(base_fstransmitter_LDADD) $(LIBS)
+elements/$(am__dirstamp):
+	@$(MKDIR_P) elements
+	@: > elements/$(am__dirstamp)
+elements/rtcpfilter$(EXEEXT): $(elements_rtcpfilter_OBJECTS) $(elements_rtcpfilter_DEPENDENCIES) elements/$(am__dirstamp)
+	@rm -f elements/rtcpfilter$(EXEEXT)
+	$(elements_rtcpfilter_LINK) $(elements_rtcpfilter_OBJECTS) $(elements_rtcpfilter_LDADD) $(LIBS)
 rtp/$(am__dirstamp):
 	@$(MKDIR_P) rtp
 	@: > rtp/$(am__dirstamp)
@@ -537,6 +566,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/elements_rtcpfilter-rtcpfilter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fscodec.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fstransmitter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rtp_codecs-codecs.Po@am__quote@
@@ -545,8 +575,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rtp_conference-generic.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rtp_sendcodecs-generic.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rtp_sendcodecs-sendcodecs.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_multicast-fake-filter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_multicast-generic.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_multicast-multicast.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_nice-fake-filter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_nice-generic.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_nice-nice.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_rawudp-generic.Po@am__quote@
@@ -602,6 +634,20 @@ fstransmitter.obj: base/fstransmitter.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='base/fstransmitter.c' object='fstransmitter.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o fstransmitter.obj `if test -f 'base/fstransmitter.c'; then $(CYGPATH_W) 'base/fstransmitter.c'; else $(CYGPATH_W) '$(srcdir)/base/fstransmitter.c'; fi`
+
+elements_rtcpfilter-rtcpfilter.o: elements/rtcpfilter.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(elements_rtcpfilter_CFLAGS) $(CFLAGS) -MT elements_rtcpfilter-rtcpfilter.o -MD -MP -MF $(DEPDIR)/elements_rtcpfilter-rtcpfilter.Tpo -c -o elements_rtcpfilter-rtcpfilter.o `test -f 'elements/rtcpfilter.c' || echo '$(srcdir)/'`elements/rtcpfilter.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/elements_rtcpfilter-rtcpfilter.Tpo $(DEPDIR)/elements_rtcpfilter-rtcpfilter.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='elements/rtcpfilter.c' object='elements_rtcpfilter-rtcpfilter.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(elements_rtcpfilter_CFLAGS) $(CFLAGS) -c -o elements_rtcpfilter-rtcpfilter.o `test -f 'elements/rtcpfilter.c' || echo '$(srcdir)/'`elements/rtcpfilter.c
+
+elements_rtcpfilter-rtcpfilter.obj: elements/rtcpfilter.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(elements_rtcpfilter_CFLAGS) $(CFLAGS) -MT elements_rtcpfilter-rtcpfilter.obj -MD -MP -MF $(DEPDIR)/elements_rtcpfilter-rtcpfilter.Tpo -c -o elements_rtcpfilter-rtcpfilter.obj `if test -f 'elements/rtcpfilter.c'; then $(CYGPATH_W) 'elements/rtcpfilter.c'; else $(CYGPATH_W) '$(srcdir)/elements/rtcpfilter.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/elements_rtcpfilter-rtcpfilter.Tpo $(DEPDIR)/elements_rtcpfilter-rtcpfilter.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='elements/rtcpfilter.c' object='elements_rtcpfilter-rtcpfilter.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(elements_rtcpfilter_CFLAGS) $(CFLAGS) -c -o elements_rtcpfilter-rtcpfilter.obj `if test -f 'elements/rtcpfilter.c'; then $(CYGPATH_W) 'elements/rtcpfilter.c'; else $(CYGPATH_W) '$(srcdir)/elements/rtcpfilter.c'; fi`
 
 rtp_codecs-generic.o: rtp/generic.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(rtp_codecs_CFLAGS) $(CFLAGS) -MT rtp_codecs-generic.o -MD -MP -MF $(DEPDIR)/rtp_codecs-generic.Tpo -c -o rtp_codecs-generic.o `test -f 'rtp/generic.c' || echo '$(srcdir)/'`rtp/generic.c
@@ -701,6 +747,20 @@ transmitter_multicast-generic.obj: transmitter/generic.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_multicast_CFLAGS) $(CFLAGS) -c -o transmitter_multicast-generic.obj `if test -f 'transmitter/generic.c'; then $(CYGPATH_W) 'transmitter/generic.c'; else $(CYGPATH_W) '$(srcdir)/transmitter/generic.c'; fi`
 
+transmitter_multicast-fake-filter.o: transmitter/fake-filter.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_multicast_CFLAGS) $(CFLAGS) -MT transmitter_multicast-fake-filter.o -MD -MP -MF $(DEPDIR)/transmitter_multicast-fake-filter.Tpo -c -o transmitter_multicast-fake-filter.o `test -f 'transmitter/fake-filter.c' || echo '$(srcdir)/'`transmitter/fake-filter.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/transmitter_multicast-fake-filter.Tpo $(DEPDIR)/transmitter_multicast-fake-filter.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='transmitter/fake-filter.c' object='transmitter_multicast-fake-filter.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_multicast_CFLAGS) $(CFLAGS) -c -o transmitter_multicast-fake-filter.o `test -f 'transmitter/fake-filter.c' || echo '$(srcdir)/'`transmitter/fake-filter.c
+
+transmitter_multicast-fake-filter.obj: transmitter/fake-filter.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_multicast_CFLAGS) $(CFLAGS) -MT transmitter_multicast-fake-filter.obj -MD -MP -MF $(DEPDIR)/transmitter_multicast-fake-filter.Tpo -c -o transmitter_multicast-fake-filter.obj `if test -f 'transmitter/fake-filter.c'; then $(CYGPATH_W) 'transmitter/fake-filter.c'; else $(CYGPATH_W) '$(srcdir)/transmitter/fake-filter.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/transmitter_multicast-fake-filter.Tpo $(DEPDIR)/transmitter_multicast-fake-filter.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='transmitter/fake-filter.c' object='transmitter_multicast-fake-filter.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_multicast_CFLAGS) $(CFLAGS) -c -o transmitter_multicast-fake-filter.obj `if test -f 'transmitter/fake-filter.c'; then $(CYGPATH_W) 'transmitter/fake-filter.c'; else $(CYGPATH_W) '$(srcdir)/transmitter/fake-filter.c'; fi`
+
 transmitter_multicast-multicast.o: transmitter/multicast.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_multicast_CFLAGS) $(CFLAGS) -MT transmitter_multicast-multicast.o -MD -MP -MF $(DEPDIR)/transmitter_multicast-multicast.Tpo -c -o transmitter_multicast-multicast.o `test -f 'transmitter/multicast.c' || echo '$(srcdir)/'`transmitter/multicast.c
 @am__fastdepCC_TRUE@	mv -f $(DEPDIR)/transmitter_multicast-multicast.Tpo $(DEPDIR)/transmitter_multicast-multicast.Po
@@ -728,6 +788,20 @@ transmitter_nice-generic.obj: transmitter/generic.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='transmitter/generic.c' object='transmitter_nice-generic.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_nice_CFLAGS) $(CFLAGS) -c -o transmitter_nice-generic.obj `if test -f 'transmitter/generic.c'; then $(CYGPATH_W) 'transmitter/generic.c'; else $(CYGPATH_W) '$(srcdir)/transmitter/generic.c'; fi`
+
+transmitter_nice-fake-filter.o: transmitter/fake-filter.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_nice_CFLAGS) $(CFLAGS) -MT transmitter_nice-fake-filter.o -MD -MP -MF $(DEPDIR)/transmitter_nice-fake-filter.Tpo -c -o transmitter_nice-fake-filter.o `test -f 'transmitter/fake-filter.c' || echo '$(srcdir)/'`transmitter/fake-filter.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/transmitter_nice-fake-filter.Tpo $(DEPDIR)/transmitter_nice-fake-filter.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='transmitter/fake-filter.c' object='transmitter_nice-fake-filter.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_nice_CFLAGS) $(CFLAGS) -c -o transmitter_nice-fake-filter.o `test -f 'transmitter/fake-filter.c' || echo '$(srcdir)/'`transmitter/fake-filter.c
+
+transmitter_nice-fake-filter.obj: transmitter/fake-filter.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_nice_CFLAGS) $(CFLAGS) -MT transmitter_nice-fake-filter.obj -MD -MP -MF $(DEPDIR)/transmitter_nice-fake-filter.Tpo -c -o transmitter_nice-fake-filter.obj `if test -f 'transmitter/fake-filter.c'; then $(CYGPATH_W) 'transmitter/fake-filter.c'; else $(CYGPATH_W) '$(srcdir)/transmitter/fake-filter.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/transmitter_nice-fake-filter.Tpo $(DEPDIR)/transmitter_nice-fake-filter.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='transmitter/fake-filter.c' object='transmitter_nice-fake-filter.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_nice_CFLAGS) $(CFLAGS) -c -o transmitter_nice-fake-filter.obj `if test -f 'transmitter/fake-filter.c'; then $(CYGPATH_W) 'transmitter/fake-filter.c'; else $(CYGPATH_W) '$(srcdir)/transmitter/fake-filter.c'; fi`
 
 transmitter_nice-nice.o: transmitter/nice.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_nice_CFLAGS) $(CFLAGS) -MT transmitter_nice-nice.o -MD -MP -MF $(DEPDIR)/transmitter_nice-nice.Tpo -c -o transmitter_nice-nice.o `test -f 'transmitter/nice.c' || echo '$(srcdir)/'`transmitter/nice.c
@@ -805,6 +879,7 @@ mostlyclean-libtool:
 clean-libtool:
 	-rm -rf .libs _libs
 	-rm -rf base/.libs base/_libs
+	-rm -rf elements/.libs elements/_libs
 	-rm -rf rtp/.libs rtp/_libs
 	-rm -rf transmitter/.libs transmitter/_libs
 	-rm -rf utils/.libs utils/_libs
@@ -996,6 +1071,7 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-rm -f base/$(am__dirstamp)
+	-rm -f elements/$(am__dirstamp)
 	-rm -f rtp/$(am__dirstamp)
 	-rm -f transmitter/$(am__dirstamp)
 	-rm -f utils/$(am__dirstamp)
@@ -1220,6 +1296,7 @@ help:
 	@echo "make inspect                       -- inspect all plugin features"
 
 clean-local: clean-local-check
+	rm -rf cache
 
 $(CHECK_REGISTRY):
 	$(TESTS_ENVIRONMENT)
