@@ -1,4 +1,4 @@
-farsight2 (0.0.8-1) UNRELEASED; urgency=low
+farsight2 (0.0.8-1) unstable; urgency=low
 
   * New upstream release.
   * debian/control:
@@ -13,7 +13,7 @@ farsight2 (0.0.8-1) UNRELEASED; urgency=low
   * debian/gbp.conf: Removed no-create-orig line.
   * debian/libgstfarsight0.10-0.symbols: Updated symbols file.
 
- -- Jonny Lamb <jonny@debian.org>  Tue, 17 Mar 2009 22:09:20 +0000
+ -- Jonny Lamb <jonny@debian.org>  Tue, 17 Mar 2009 22:14:56 +0000
 
 farsight2 (0.0.7-1) unstable; urgency=low
 
