@@ -6,9 +6,10 @@ farsight2 (0.0.8-1) UNRELEASED; urgency=low
       (Closes: #517608)
     + Added myself to Uploaders.
     + Misc. fixes to long descriptions. (Closes: #518933)
+    + Upped Build-Deps and Deps due to requirements of new version.
   * debian/gbp.conf: Removed no-create-orig line.
 
- -- Jonny Lamb <jonny@debian.org>  Tue, 17 Mar 2009 21:46:16 +0000
+ -- Jonny Lamb <jonny@debian.org>  Tue, 17 Mar 2009 21:51:45 +0000
 
 farsight2 (0.0.7-1) unstable; urgency=low
 

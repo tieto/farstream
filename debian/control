@@ -9,9 +9,9 @@ Uploaders: Dafydd Harries <daf@debian.org>,
            Jonny Lamb <jonny@debian.org>
 Build-Depends: debhelper (>= 5.0.0),
                cdbs,
-               libglib2.0-dev (>= 2.14),
-               libgstreamer0.10-dev (>= 0.10.17),
-               libgstreamer-plugins-base0.10-dev (>= 0.10.17),
+               libglib2.0-dev (>= 2.16),
+               libgstreamer0.10-dev (>= 0.10.22),
+               libgstreamer-plugins-base0.10-dev (>= 0.10.22),
                python-central (>= 0.5),
                python-gtk2-dev,
                python-gst0.10,
@@ -26,10 +26,10 @@ Package: libgstfarsight0.10-0
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
-         gstreamer0.10-plugins-base (>= 0.10.17),
+         gstreamer0.10-plugins-base (>= 0.10.22),
          gstreamer0.10-plugins-good (>= 0.10.8),
-         gstreamer0.10-plugins-bad (>= 0.10.7),
-         gstreamer0.10-plugins-farsight (>= 0.12.9),
+         gstreamer0.10-plugins-bad (>= 0.10.10),
+         gstreamer0.10-plugins-farsight (>= 0.12.10),
          gstreamer0.10-nice
 Description: Audio/Video communications framework: core library
  The Farsight project is an effort to create a framework to deal with all
