@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, cvs and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for cvs/prerelease
-AC_INIT(Farsight2, 0.0.8,
+AC_INIT(Farsight2, 0.0.9,
     https://bugs.freedesktop.org/enter_bug.cgi?product=Farsight,
     farsight2)
 
@@ -154,34 +154,12 @@ AC_ARG_WITH(transmitter-plugins,
     [FS2_TRANSMITTER_PLUGINS_SELECTED=$FS2_TRANSMITTER_PLUGINS_ALL])
 
 
-dnl check for libnice
-if echo $FS2_TRANSMITTER_PLUGINS_SELECTED | grep -qi nice; then
+NICE_REQUIRED=0.0.3
 
-  NICE_REQUIRED=0.0.3
-
-  PKG_CHECK_MODULES(NICE, \
-       nice >= $NICE_REQUIRED,
-       HAVE_NICE=yes,
-       HAVE_NICE=no)
-
-  if test "x$HAVE_NICE" = "xno"; then
-    if test "x$TRANSMITTERS_DEFAULT" = "xyes"; then
-      FS2_TRANSMITTER_PLUGINS_SELECTED="${FS2_TRANSMITTER_PLUGINS_SELECTED/nice/}"
-      AC_MSG_WARN([Will not build libnice transmitter because libnice is not available])
-    else
-      AC_MSG_ERROR([Can not build requested libnice transmitter because libnice is not installed])
-    fi
-  else
-    USE_NICE=yes
-  fi
-
-  AC_SUBST(NICE_CFLAGS)
-  AC_SUBST(NICE_LIBS)
-else
-  AC_MSG_NOTICE(nice transmitter disabled by user request)
-fi
-
-AM_CONDITIONAL(USE_NICE, test "x$USE_NICE" == "xyes")
+PKG_CHECK_MODULES(NICE, \
+       nice >= $NICE_REQUIRED,, AC_MSG_ERROR([Need libnice >= $NICE_REQUIRED]))
+AC_SUBST(NICE_CFLAGS)
+AC_SUBST(NICE_LIBS)
 
 AC_SUBST(FS2_TRANSMITTER_PLUGINS_SELECTED)
 
@@ -207,7 +185,7 @@ AM_CONDITIONAL(HAVE_VALGRIND, test ! "x$VALGRIND_PATH" = "xno")
 
 dnl check for documentation tools
 GTK_DOC_CHECK([1.8])
-AS_PATH_PYTHON([2.4])
+AM_PATH_PYTHON([2.4])
 LT_AC_PROG_SED
 AG_GST_PLUGIN_DOCS([1.8],[2.1])
 AC_SUBST(SED)
@@ -355,7 +333,6 @@ AC_ARG_ENABLE([python],
         esac],
 	WANT_PYTHON=yes)
 if test "x$WANT_PYTHON" = "xyes"; then
-   AM_PATH_PYTHON
    AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR(could not find Python headers)])
    PKG_CHECK_MODULES(PYFARSIGHT, [ 	pygobject-2.0 >= 2.12.0
 					gst-python-0.10 >= 0.10.10

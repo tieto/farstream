@@ -35,11 +35,6 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@USE_NICE_TRUE@am__append_1 = $(top_builddir)/transmitters/nice/libnice-transmitter.la
-@USE_NICE_TRUE@am__append_2 = \
-@USE_NICE_TRUE@	$(top_srcdir)/transmitters/nice/fs-nice-transmitter.h \
-@USE_NICE_TRUE@	$(top_srcdir)/transmitters/nice/fs-nice-stream-transmitter.h
-
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(top_srcdir)/common-modified/gtk-doc-plugins.mak
 subdir = docs/plugins
@@ -48,7 +43,6 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-auto-alt.m4 \
 	$(top_srcdir)/common/m4/as-compiler-flag.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
-	$(top_srcdir)/common/m4/as-python.m4 \
 	$(top_srcdir)/common/m4/as-scrub-include.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
@@ -60,7 +54,6 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst-plugindir.m4 \
 	$(top_srcdir)/common/m4/gst.m4 \
 	$(top_srcdir)/common/m4/gtk-doc.m4 \
-	$(top_srcdir)/common/m4/isc-posix.m4 \
 	$(top_srcdir)/common/m4/pkg.m4 \
 	$(top_srcdir)/m4/as-check-python-headers.m4 \
 	$(top_srcdir)/configure.ac
@@ -184,8 +177,6 @@ PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
 PLUGINDIR = @PLUGINDIR@
 PROFILE_CFLAGS = @PROFILE_CFLAGS@
-PYDOCSTUFF_CFLAGS = @PYDOCSTUFF_CFLAGS@
-PYDOCSTUFF_LIBS = @PYDOCSTUFF_LIBS@
 PYFARSIGHT_CFLAGS = @PYFARSIGHT_CFLAGS@
 PYFARSIGHT_LIBS = @PYFARSIGHT_LIBS@
 PYTHON = @PYTHON@
@@ -313,12 +304,14 @@ CFILE_GLOB = $(DOC_SOURCE_DIR)/gst/*/*.c $(DOC_SOURCE_DIR)/transmitters/*/*.c
 # this is a wingo addition
 # thomasvs: another nice wingo addition would be an explanation on why
 # this is useful ;)
-SCANOBJ_DEPS = $(top_builddir)/transmitters/multicast/libmulticast-transmitter.la \
+SCANOBJ_DEPS = \
+	$(top_builddir)/transmitters/multicast/libmulticast-transmitter.la \
 	$(top_builddir)/transmitters/rawudp/librawudp-transmitter.la \
+	$(top_builddir)/transmitters/nice/libnice-transmitter.la \
 	$(top_builddir)/gst/fsrtpconference/libfsrtpconference_doc.la \
 	$(top_builddir)/gst/funnel/libfsfunnel.la \
-	$(top_builddir)/gst/videoanyrate/libfsvideoanyrate.la \
-	$(am__append_1)
+	$(top_builddir)/gst/videoanyrate/libfsvideoanyrate.la 
+
 
 # Header files to ignore when scanning.
 IGNORE_HFILES = 
@@ -331,7 +324,8 @@ IGNORE_CFILES =
 # or not the plugin will actually build
 # but I'm not sure about that - it might be this Just Works given that
 # the registry won't have the element
-EXTRA_HFILES = $(top_srcdir)/gst/funnel/fs-funnel.h \
+EXTRA_HFILES = \
+	$(top_srcdir)/gst/funnel/fs-funnel.h \
 	$(top_srcdir)/gst/videoanyrate/videoanyrate.h \
 	$(top_srcdir)/gst/fsrtpconference/fs-rtp-conference.h \
 	$(top_srcdir)/gst/fsrtpconference/fs-rtp-session.h \
@@ -341,7 +335,9 @@ EXTRA_HFILES = $(top_srcdir)/gst/funnel/fs-funnel.h \
 	$(top_srcdir)/transmitters/rawudp/fs-rawudp-stream-transmitter.h \
 	$(top_srcdir)/transmitters/multicast/fs-multicast-transmitter.h \
 	$(top_srcdir)/transmitters/multicast/fs-multicast-stream-transmitter.h \
-	$(am__append_2)
+	$(top_srcdir)/transmitters/nice/fs-nice-transmitter.h \
+	$(top_srcdir)/transmitters/nice/fs-nice-stream-transmitter.h
+
 
 # Images to copy into HTML directory.
 HTML_IMAGES = 

@@ -1,3 +1,117 @@
+commit 4fe6016ec86e748342ee3fa35b607cbefc049109
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 6 20:29:37 2009 -0400
+
+    Version 0.0.9
+
+commit 6025f3cedd2171d596513effe1d40fb00ae318df
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 2 19:10:11 2009 -0400
+
+    Make libnice non-optional
+
+commit ac7dc4a43ac6098397ca8feaff5c4f75c00fec45
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 18 19:09:59 2008 -0500
+
+    Improve dtmf tests a bit
+
+commit a020bf8c34656e8c5b1ebfde478847e6aebbfa51
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 18 15:16:13 2008 -0500
+
+    Add transmitter sink just in time
+
+commit 5c91c2278e85a4465640ba398fc47fbdf73dc6a8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 18 15:06:24 2008 -0500
+
+    Factor out the transmitter sink addition
+
+commit f9fc5976df3cd689b2f2950e8e486bdaeaae64e8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Mar 31 13:40:34 2009 -0400
+
+    Check if both fields are not NULL before strcmping them
+
+commit c3ceaf59765f90dcc438bf38ceae8d0669121b55
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Mar 31 13:38:51 2009 -0400
+
+    Ignore stun binding responses with no mapped address
+
+commit ec64b568b2c471f94eff579f86de944e63ce00c2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Mar 31 13:36:14 2009 -0400
+
+    Don't offerflow if nice candidate is inet6
+
+commit d3083e1068ff1c3bbb7cf46ae1ae2af34458b895
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Mar 31 12:35:37 2009 -0400
+
+    Remove unused variables
+
+commit 6883c96812a322f5717b758488c160da6efbc77e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Mar 23 14:58:22 2009 -0400
+
+    Drop the buffers before decoding if the direction is not receiving or both
+
+commit ded8205cc9d9c6e98961fb620a3dca3cd9ea8801
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Mar 15 20:56:20 2009 -0400
+
+    Remove rtp/rtcp tee fakesinks
+
+commit c2b1bf7104f9e367cb199bf906e05c34c4071390
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Mar 17 18:00:12 2009 -0400
+
+    Disallow invalid relay-info parameters
+
+commit 3338bab01a35a792bff24397d53e50fce3a0b2c3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Mar 17 18:12:54 2009 -0400
+
+    Test for invalid relay info argument correctly
+
+commit 2cc6bb13aeb056c317b2eeacb091b6ebc05a917c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Mar 20 19:22:35 2009 +0200
+
+    Already always requires gst 0.10.12
+
+commit 68d2c034c6e12e5e7219c0e7885179fc9cd6ebe2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 18 04:44:51 2009 -0400
+
+    Update python requirements
+
+commit 8615191479ed0842bb9082cedd17e2259c7edb9b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 18 04:38:57 2009 -0400
+
+    Use AM_PYTHON_PATH instead of AS_PYTHON_PATH
+
+commit aa8fc29ab49dae0e51e246837f55f88dd6907783
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Mar 22 20:12:59 2009 -0400
+
+    fsvalve is now valve in -bad
+
+commit 21a170180c69f8af4ead8efb66ce493b46c8ecb8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Mar 22 20:11:40 2009 -0400
+
+    Officially depend on new gst-plugins-bad
+
+commit 9eddf78c30d18c5b68fb8c5b808dacb9764917cd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Mar 15 17:01:38 2009 -0400
+
+    Version 0.0.8.1
+
 commit c2f4b1c52f7d601678d8008ba5ed8fa5d82dcd4d
 Author: Olivier Crête <olivier.crete@collabora.co.uk>
 Date:   Sun Mar 15 16:53:21 2009 -0400
