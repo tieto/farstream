@@ -1,8 +1,12 @@
-farsight2 (0.0.8-2) UNRELEASED; urgency=low
+farsight2 (0.0.9-1) UNRELEASED; urgency=low
 
+  [ Jonny Lamb ]
   * debian/control: Changed libgstfarsight0.10-dbg's Section to debug.
 
- -- Jonny Lamb <jonny@debian.org>  Tue, 17 Mar 2009 22:43:21 +0000
+  [ Sjoerd Simons ]
+  * New Upstream Version
+
+ -- Sjoerd Simons <sjoerd@debian.org>  Thu, 16 Apr 2009 00:00:48 +0100
 
 farsight2 (0.0.8-1) unstable; urgency=low
 
