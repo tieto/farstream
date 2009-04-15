@@ -35,16 +35,15 @@ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(top_srcdir)/common/check.mak
 check_PROGRAMS = base/fscodec$(EXEEXT) base/fstransmitter$(EXEEXT) \
 	transmitter/rawudp$(EXEEXT) transmitter/multicast$(EXEEXT) \
-	$(am__EXEEXT_1) rtp/codecs$(EXEEXT) rtp/sendcodecs$(EXEEXT) \
-	rtp/conference$(EXEEXT) utils/binadded$(EXEEXT) \
-	elements/rtcpfilter$(EXEEXT)
+	transmitter/nice$(EXEEXT) rtp/codecs$(EXEEXT) \
+	rtp/sendcodecs$(EXEEXT) rtp/conference$(EXEEXT) \
+	utils/binadded$(EXEEXT) elements/rtcpfilter$(EXEEXT)
 subdir = tests/check
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-auto-alt.m4 \
 	$(top_srcdir)/common/m4/as-compiler-flag.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
-	$(top_srcdir)/common/m4/as-python.m4 \
 	$(top_srcdir)/common/m4/as-scrub-include.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
@@ -56,7 +55,6 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst-plugindir.m4 \
 	$(top_srcdir)/common/m4/gst.m4 \
 	$(top_srcdir)/common/m4/gtk-doc.m4 \
-	$(top_srcdir)/common/m4/isc-posix.m4 \
 	$(top_srcdir)/common/m4/pkg.m4 \
 	$(top_srcdir)/m4/as-check-python-headers.m4 \
 	$(top_srcdir)/configure.ac
@@ -65,7 +63,6 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-@USE_NICE_TRUE@am__EXEEXT_1 = transmitter/nice$(EXEEXT)
 base_fscodec_SOURCES = base/fscodec.c
 base_fscodec_OBJECTS = fscodec.$(OBJEXT)
 base_fscodec_LDADD = $(LDADD)
@@ -298,8 +295,6 @@ PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
 PLUGINDIR = @PLUGINDIR@
 PROFILE_CFLAGS = @PROFILE_CFLAGS@
-PYDOCSTUFF_CFLAGS = @PYDOCSTUFF_CFLAGS@
-PYDOCSTUFF_LIBS = @PYDOCSTUFF_LIBS@
 PYFARSIGHT_CFLAGS = @PYFARSIGHT_CFLAGS@
 PYFARSIGHT_LIBS = @PYFARSIGHT_LIBS@
 PYTHON = @PYTHON@
@@ -403,8 +398,6 @@ EXTRA_DIST = \
 	upnp/WANIPConnection.xml \
 	base/test1.conf
 
-@USE_NICE_FALSE@NICE_TRANSMITTER = 
-@USE_NICE_TRUE@NICE_TRANSMITTER = transmitter/nice
 AM_CFLAGS = \
 	$(CFLAGS) \
 	$(FS2_INTERNAL_CFLAGS) \
@@ -1161,7 +1154,7 @@ clean-local-check:
 
 # hangs spectacularly on some machines, so let's not do this by default yet
 @HAVE_VALGRIND_TRUE@check-valgrind:
-@HAVE_VALGRIND_TRUE@	make valgrind
+@HAVE_VALGRIND_TRUE@	$(MAKE) valgrind
 @HAVE_VALGRIND_FALSE@check-valgrind:
 @HAVE_VALGRIND_FALSE@	@true
 
@@ -1222,7 +1215,7 @@ clean-local-check:
 
 # valgrind any given test until failure by running make test.valgrind-forever
 %.valgrind-forever: %
-	@while make $*.valgrind; do				\
+	@while $(MAKE) $*.valgrind; do				\
 	  true; done
 
 # gdb any given test by running make test.gdb
@@ -1237,7 +1230,7 @@ torture: $(TESTS)
 	-rm test-registry.xml
 	@echo "Torturing tests ..."
 	for i in `seq 1 $(LOOPS)`; do				\
-		make check ||					\
+		$(MAKE) check ||					\
 		(echo "Failure after $$i runs"; exit 1) ||	\
 		exit 1;						\
 	done
@@ -1250,7 +1243,7 @@ forever: $(TESTS)
 	-rm test-registry.xml
 	@echo "Forever tests ..."
 	while true; do						\
-		make check ||					\
+		$(MAKE) check ||					\
 		(echo "Failure"; exit 1) ||			\
 		exit 1;						\
 	done
@@ -1260,7 +1253,7 @@ valgrind: $(TESTS)
 	@echo "Valgrinding tests ..."
 	@failed=0;							\
 	for t in $(filter-out $(VALGRIND_TESTS_DISABLE),$(TESTS)); do	\
-		make $$t.valgrind;					\
+		$(MAKE) $$t.valgrind;					\
 		if test "$$?" -ne 0; then                               \
                         echo "Valgrind error for test $$t";		\
 			failed=`expr $$failed + 1`;			\
@@ -1280,6 +1273,7 @@ inspect:
 	     $(GST_INSPECT) $$e > /dev/null 2>&1; done
 
 help:
+	@echo
 	@echo "make check                         -- run all checks"
 	@echo "make torture                       -- run all checks $(LOOPS) times"
 	@echo "make (dir)/(test).check            -- run the given check once"
@@ -1294,6 +1288,18 @@ help:
 	@echo "make (dir)/(test).valgrind.gen-suppressions -- generate suppressions"
 	@echo "                                               and save to suppressions.log"
 	@echo "make inspect                       -- inspect all plugin features"
+	@echo
+	@echo
+	@echo "Additionally, you can use the GST_CHECKS environment variable to"
+	@echo "specify which test(s) should be run. This is useful if you are"
+	@echo "debugging a failure in one particular test, or want to reproduce"
+	@echo "a race condition in a single test."
+	@echo
+	@echo "Examples:"
+	@echo
+	@echo "  GST_CHECKS=test_this,test_that  make element/foobar.check"
+	@echo "  GST_CHECKS=test_many_threads    make element/foobar.forever"
+	@echo
 
 clean-local: clean-local-check
 	rm -rf cache

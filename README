@@ -18,21 +18,19 @@ Build time:
  - gstreamer 0.10.22
  - gst-plugins-base 0.10.22
  - glib 2.16
+ - Python 2.4
+ - libnice 0.0.3
 
 For UPnP support:
  - GUPnP-IGD
 
-For the ICE transmitter:
- - libnice 0.0.3
 
 Run time for the RTP plugin:
  All of the build time requirements (except gtk-doc) plus
  - gst-plugins-good 0.10.7
- - gst-plugins-bad 0.10.10
- - gst-plugins-farsight 0.12.10 (or lower) OR -bad 0.10.11
+ - gst-plugins-bad 0.10.11
 
 For the python module and examples you also need:
- - Python 2.1
  - PyGObject 2.12
  - PyGTK 2.10
  - gst-python 0.10.10

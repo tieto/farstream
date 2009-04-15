@@ -1,6 +1,5 @@
 # This is an include file specifically tuned for building documentation
 # for GStreamer plug-ins
-# It has been further specialized to farsight2 plugins stuff
 
 help:
 	@echo
@@ -29,6 +28,7 @@ GPATH = $(srcdir)
 TARGET_DIR=$(HTML_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@
 
 EXTRA_DIST = 				\
+	scanobj-build.stamp		\
 	$(srcdir)/inspect/*.xml		\
 	inspect.stamp			\
 	inspect-build.stamp		\
@@ -40,6 +40,13 @@ EXTRA_DIST = 				\
 	$(DOC_OVERRIDES)		\
 	$(DOC_MODULE)-sections.txt
 
+MAINTAINER_DOC_STAMPS =			\
+	scanobj-build.stamp		\
+	inspect-build.stamp		\
+	inspect.stamp
+
+# we don't add inspect-build.stamp and scanobj-build.stamp here since they are
+# built manually by docs maintainers and result is commited to CVS
 DOC_STAMPS =				\
 	scan-build.stamp		\
 	tmpl-build.stamp		\
@@ -48,18 +55,16 @@ DOC_STAMPS =				\
 	scan.stamp			\
 	tmpl.stamp			\
 	sgml.stamp			\
-	html.stamp			\
-	scanobj-build.stamp		\
-	scanobj-trans-build.stamp
+	html.stamp
 
 # files generated/updated by gtkdoc-scangobj
 SCANOBJ_FILES =				\
-	$(DOC_MODULE).signals		\
-	$(DOC_MODULE).hierarchy		\
-	$(DOC_MODULE).interfaces	\
-	$(DOC_MODULE).prerequisites	\
+	$(DOC_MODULE).signals           \
+        $(DOC_MODULE).hierarchy         \
+        $(DOC_MODULE).interfaces        \
+        $(DOC_MODULE).prerequisites     \
 	$(DOC_MODULE).types		\
-	$(DOC_MODULE).args
+        $(DOC_MODULE).args
 
 SCANOBJ_FILES_O =			\
 	.libs/$(DOC_MODULE)-scan.o
@@ -122,7 +127,7 @@ scanobj-build.stamp: $(SCANOBJ_DEPS) $(basefiles)
 	fi
 	touch scanobj-build.stamp
 
-$(DOC_MODULE)-decl.txt $(SCANOBJ_FILES) $(SCANOBJ_FILES_O): scan-build.stamp scanobj-trans-build.stamp
+$(DOC_MODULE)-decl.txt $(SCANOBJ_FILES) $(SCANOBJ_FILES_O): scan-build.stamp
 	@true
 
 ### inspect GStreamer plug-ins; done by documentation maintainer ###
@@ -134,18 +139,18 @@ INSPECT_ENVIRONMENT=\
         GST_PLUGIN_PATH=$(top_builddir)/gst:$(top_builddir)/sys:$(top_builddir)/ext:$(top_builddir)/plugins:$(top_builddir)/src:$(top_builddir)/gnl \
         GST_REGISTRY=$(INSPECT_REGISTRY)
 
+# update the element and plugin XML descriptions; store in inspect/
+inspect:
+	mkdir inspect
+
 inspect-update: inspect
 	-rm -f $(INSPECT_REGISTRY) inspect-build.stamp
 	$(MAKE) inspect-build.stamp
-
-if ENABLE_PLUGIN_DOCS
 
 # FIXME: inspect.stamp should be written to by gst-xmlinspect.py
 # IF the output changed; see gtkdoc-mktmpl
 inspect-build.stamp:
 	@echo '*** Rebuilding plugin inspection files ***'
-	if test -d inspect; then rm -rf inspect; fi
-	mkdir inspect
 	if test x"$(srcdir)" != x. ; then \
 	    cp $(srcdir)/inspect.stamp . ; \
 	    cp $(srcdir)/inspect-build.stamp . ; \
@@ -156,13 +161,8 @@ inspect-build.stamp:
 	    touch inspect-build.stamp; \
         fi
 
-else
-inspect-build.stamp:
-	@true:
-endif
-
 ### scan headers; done on every build ###
-scan-build.stamp: $(HFILE_GLOB) $(EXTRA_HFILES) $(basefiles) scanobj-build.stamp inspect-build.stamp scanobj-trans-build.stamp
+scan-build.stamp: $(HFILE_GLOB) $(EXTRA_HFILES) $(basefiles) scanobj-build.stamp inspect-build.stamp
 	if test "x$(top_srcdir)" != "x$(top_builddir)" &&		\
 	   test -d "$(top_builddir)/gst";				\
         then								\
@@ -201,7 +201,7 @@ tmpl.stamp: tmpl-build.stamp
 #### build xml; done on every build ####
 
 ### FIXME: make this error out again when docs are fixed for 0.9
-sgml-build.stamp: tmpl.stamp inspect.stamp $(CFILE_GLOB) $(top_srcdir)/common/plugins.xsl
+sgml-build.stamp: tmpl.stamp inspect.stamp $(CFILE_GLOB) $(top_srcdir)/common/plugins.xsl $(expand_content_files)
 	@echo '*** Building XML ***'
 	@-mkdir -p xml
 	@for a in $(srcdir)/inspect/*.xml; do \
@@ -212,6 +212,7 @@ sgml-build.stamp: tmpl.stamp inspect.stamp $(CFILE_GLOB) $(top_srcdir)/common/pl
 	gtkdoc-mkdb \
 		--module=$(DOC_MODULE) \
 		--source-dir=$(DOC_SOURCE_DIR) \
+                 --expand-content-files="$(expand_content_files)" \
 		--main-sgml-file=$(srcdir)/$(DOC_MAIN_SGML_FILE) \
 		--output-format=xml \
 		--ignore-files="$(IGNORE_HFILES) $(IGNORE_CFILES)" \
@@ -249,7 +250,7 @@ html-build.stamp: sgml.stamp $(DOC_MAIN_SGML_FILE) $(content_files)
 	test "x$(HTML_IMAGES)" = "x" || for i in "" $(HTML_IMAGES) ; do \
 	    if test "$$i" != ""; then cp $(srcdir)/$$i html ; fi; done
 	@echo '-- Fixing Crossreferences' 
-	gtkdoc-fixxref --module-dir=html --html-dir=$(HTML_DIR) $(FIXXREF_OPTIONS)
+	gtkdoc-fixxref --module=$(DOC_MODULE) --module-dir=html --html-dir=$(HTML_DIR) $(FIXXREF_OPTIONS)
 	touch html-build.stamp
 
 clean-local-gtkdoc:
@@ -257,7 +258,6 @@ clean-local-gtkdoc:
 # clean files copied for nonsrcdir templates build
 	if test x"$(srcdir)" != x. ; then \
 	    rm -rf $(SCANOBJ_FILES) $(SCAN_FILES); \
-	    rm -f *.stamp; \
 	fi
 else
 all-local:
@@ -296,43 +296,19 @@ install-data-local:
 	  $(INSTALL_DATA) $(srcdir)/html/$(DOC_MODULE).devhelp \
 	    $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@.devhelp; \
 	  if test -e $(srcdir)/html/$(DOC_MODULE).devhelp2; then \
-	    $(INSTALL_DATA) $(srcdir)/html/$(DOC_MODULE).devhelp2 \
+        	    $(INSTALL_DATA) $(srcdir)/html/$(DOC_MODULE).devhelp2 \
 	           $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@.devhelp2; \
 	  fi; \
 	  (which gtkdoc-rebase >/dev/null && \
 	    gtkdoc-rebase --relative --dest-dir=$(DESTDIR) --html-dir=$(DESTDIR)$(TARGET_DIR)) || true ; \
 	fi) 
 uninstall-local:
-	(installfiles=`echo ./html/*.html`; \
-	if test "$$installfiles" = './html/*.html'; \
-	then echo '-- Nothing to uninstall' ; \
+	if test -d $(DESTDIR)$(TARGET_DIR); then \
+	  rm -rf $(DESTDIR)$(TARGET_DIR)/*; \
+	  rmdir -p $(DESTDIR)$(TARGET_DIR) 2>/dev/null || true; \
 	else \
-	  for i in $$installfiles; do \
-	    rmfile=`basename $$i` ; \
-	    echo '-- Uninstalling $(DESTDIR)$(TARGET_DIR)/'$$rmfile ; \
-	    rm -f $(DESTDIR)$(TARGET_DIR)/$$rmfile; \
-	  done; \
-	  pngfiles=`echo ./html/*.png`; \
-	  if test "$$pngfiles" != './html/*.png'; then \
-	    for i in $$pngfiles; do \
-	      rmfile=`basename $$i` ; \
-	      echo '-- Uninstalling $(DESTDIR)$(TARGET_DIR)/'$$rmfile ; \
-	      rm -f $(DESTDIR)$(TARGET_DIR)/$$rmfile; \
-	    done; \
-	  fi; \
-	  echo '-- Uninstalling $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE).devhelp' ; \
-	  rm -f $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@.devhelp; \
-	  if test -e $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@.devhelp2; then \
-	    rm -f $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@.devhelp2; \
-	  fi; \
-	  echo '-- Uninstalling $(DESTDIR)$(TARGET_DIR)/index.sgml' ; \
-	  rm -f $(DESTDIR)$(TARGET_DIR)/index.sgml; \
-		if test -e $(DESTDIR)$(TARGET_DIR)/style.css; then \
-			echo '-- Uninstalling $(DESTDIR)$(TARGET_DIR)/style.css' ; \
-			rm -f $(DESTDIR)$(TARGET_DIR)/style.css; \
-		fi; \
-	fi) 
-	if test -d $(DESTDIR)$(TARGET_DIR); then rmdir -p --ignore-fail-on-non-empty $(DESTDIR)$(TARGET_DIR) 2>/dev/null; fi; true
+	  echo '-- Nothing to uninstall' ; \
+	fi;
 
 #
 # Checks
@@ -360,31 +336,6 @@ check-inspected-versions:
 	  fi ; \
 	done ; \
 	exit $$fail
-
-scanobj-trans-update:
-	-rm scanobj-trans-build.stamp
-	$(MAKE) scanobj-trans-build.stamp
-
-# We have a scanobj-build.stamp just to prevent both from running at the same
-# time as they use temp files with the same name
-
-scanobj-trans-build.stamp: $(SCANOBJ_DEPS) $(basefiles) scanobj-build.stamp
-	@echo '*** Scanning Transmitters ***'
-	if test x"$(srcdir)" = x. ; then				\
-	    GST_PLUGIN_PATH=$(top_builddir)/gst:$(top_builddir)/ext	\
-	    GST_REGISTRY=$(INSPECT_REGISTRY)				\
-	    FS_PLUGIN_PATH="$(FS_PLUGIN_PATH)"				\
-	    CC="$(GTKDOC_CC)" LD="$(GTKDOC_LD)"				\
-	    CFLAGS="$(GTKDOC_CFLAGS) $(CFLAGS)"				\
-	    LDFLAGS="$(GTKDOC_LIBS) $(LDFLAGS)"				\
-	    $(srcdir)/gtkdoc-scangobj-transmitters			\
-		 --type-init-func="gst_init(NULL,NULL)"			\
-		 --types=farsight2-transmitters.types			\
-	         --module=$(DOC_MODULE) &&				\
-		$(PYTHON)						\
-		$(top_srcdir)/common/scangobj-merge.py $(DOC_MODULE);	\
-	fi
-	touch scanobj-trans-build.stamp
 
 #
 # Require gtk-doc when making dist

@@ -110,6 +110,8 @@ struct _FsRtpSessionPrivate
 
   GHashTable *transmitters;
 
+  GList *transmitters_add_sink;
+
   /* We keep references to these elements
    */
 
@@ -120,8 +122,6 @@ struct _FsRtpSessionPrivate
   GstElement *transmitter_rtcp_tee;
   GstElement *transmitter_rtp_funnel;
   GstElement *transmitter_rtcp_funnel;
-  GstElement *transmitter_rtp_fakesink;
-  GstElement *transmitter_rtcp_fakesink;
 
   GstElement *rtpmuxer;
 
@@ -393,18 +393,21 @@ _remove_transmitter (gpointer key, gpointer value, gpointer user_data)
   FsRtpSession *self = FS_RTP_SESSION (user_data);
   FsTransmitter *transmitter = FS_TRANSMITTER (value);
   GstElement *src, *sink;
+  GstObject *parent;
 
   g_object_get (transmitter, "gst-sink", &sink, "gst-src", &src, NULL);
 
   gst_element_set_locked_state (src, TRUE);
   gst_element_set_state (src, GST_STATE_NULL);
   gst_bin_remove (GST_BIN (self->priv->conference), src);
-  gst_element_set_locked_state (src, FALSE);
 
   gst_element_set_locked_state (sink, TRUE);
   gst_element_set_state (sink, GST_STATE_NULL);
-  gst_bin_remove (GST_BIN (self->priv->conference), sink);
-  gst_element_set_locked_state (sink, FALSE);
+  if ((parent = gst_object_get_parent (GST_OBJECT (sink))))
+  {
+    gst_object_unref (parent);
+    gst_bin_remove (GST_BIN (self->priv->conference), sink);
+  }
 
   gst_object_unref (src);
   gst_object_unref (sink);
@@ -464,8 +467,6 @@ fs_rtp_session_dispose (GObject *object)
     g_hash_table_foreach (self->priv->transmitters, _stop_transmitter_elem,
       "gst-sink");
 
-  stop_and_remove (conferencebin, &self->priv->transmitter_rtp_fakesink, TRUE);
-  stop_and_remove (conferencebin, &self->priv->transmitter_rtcp_fakesink, TRUE);
   stop_and_remove (conferencebin, &self->priv->transmitter_rtp_tee, TRUE);
   stop_and_remove (conferencebin, &self->priv->transmitter_rtcp_tee, TRUE);
 
@@ -629,6 +630,11 @@ fs_rtp_session_dispose (GObject *object)
     g_hash_table_destroy (self->priv->transmitters);
     self->priv->transmitters = NULL;
   }
+
+  g_list_foreach (self->priv->transmitters_add_sink, (GFunc) g_object_unref,
+      NULL);
+  g_list_free (self->priv->transmitters_add_sink);
+  self->priv->transmitters_add_sink = NULL;
 
   if (self->priv->free_substreams)
   {
@@ -845,13 +851,12 @@ fs_rtp_session_constructed (GObject *object)
   GstElement *tee = NULL;
   GstElement *funnel = NULL;
   GstElement *muxer = NULL;
-  GstElement *fakesink = NULL;
   GstPad *tee_sink_pad = NULL;
   GstPad *valve_sink_pad = NULL;
   GstPad *funnel_src_pad = NULL;
   GstPad *muxer_src_pad = NULL;
   GstPad *transmitter_rtcp_tee_sink_pad;
-  GstPad *pad1, *pad2;
+  GstPad *pad;
   GstPadLinkReturn ret;
   gchar *tmp;
 
@@ -955,14 +960,14 @@ fs_rtp_session_constructed (GObject *object)
   }
 
   tmp = g_strdup_printf ("valve_send_%u", self->id);
-  valve = gst_element_factory_make ("fsvalve", tmp);
+  valve = gst_element_factory_make ("valve", tmp);
   g_free (tmp);
 
   if (!valve)
   {
     self->priv->construction_error = g_error_new (FS_ERROR,
       FS_ERROR_CONSTRUCTION,
-      "Could not create the fsvalve element");
+      "Could not create the valve element");
     return;
   }
 
@@ -1196,51 +1201,6 @@ fs_rtp_session_constructed (GObject *object)
   }
   g_free (tmp);
 
-  /* Now add a fakesink to the RTP tee */
-
-  tmp = g_strdup_printf ("sink_rtp_fakesink_%u", self->id);
-  fakesink = gst_element_factory_make ("fakesink", tmp);
-  g_free (tmp);
-
-  if (!fakesink)
-  {
-    self->priv->construction_error = g_error_new (FS_ERROR,
-      FS_ERROR_CONSTRUCTION,
-      "Could not create the rtp fakesink element");
-    return;
-  }
-
-  if (!gst_bin_add (GST_BIN (self->priv->conference), fakesink))
-  {
-    self->priv->construction_error = g_error_new (FS_ERROR,
-      FS_ERROR_CONSTRUCTION,
-      "Could not add the rtp fakesink element to the FsRtpConference");
-    gst_object_unref (tee);
-    return;
-  }
-
-  g_object_set (fakesink, "sync", FALSE, "async", FALSE, NULL);
-
-  gst_element_set_state (fakesink, GST_STATE_PLAYING);
-
-  self->priv->transmitter_rtp_fakesink = gst_object_ref (fakesink);
-
-  pad1 = gst_element_get_request_pad (tee, "src%d");
-  pad2 = gst_element_get_static_pad (fakesink, "sink");
-
-  ret = gst_pad_link (pad1, pad2);
-
-  gst_object_unref (pad2);
-  gst_object_unref (pad1);
-
-  if (GST_PAD_LINK_FAILED (ret))
-  {
-    self->priv->construction_error = g_error_new (FS_ERROR,
-      FS_ERROR_CONSTRUCTION,
-        "Could not link the rtp tee to its fakesink");
-    return;
-  }
-
   /* Now create the transmitter RTCP tee */
 
   tmp = g_strdup_printf ("send_rtcp_tee_%u", self->id);
@@ -1300,51 +1260,6 @@ fs_rtp_session_constructed (GObject *object)
     return;
   }
 
-  /* Now add a fakesink to the RTCP tee */
-
-  tmp = g_strdup_printf ("sink_rtcp_fakesink_%u", self->id);
-  fakesink = gst_element_factory_make ("fakesink", tmp);
-  g_free (tmp);
-
-  if (!fakesink)
-  {
-    self->priv->construction_error = g_error_new (FS_ERROR,
-      FS_ERROR_CONSTRUCTION,
-      "Could not create the rtcp fakesink element");
-    return;
-  }
-
-  if (!gst_bin_add (GST_BIN (self->priv->conference), fakesink))
-  {
-    self->priv->construction_error = g_error_new (FS_ERROR,
-      FS_ERROR_CONSTRUCTION,
-      "Could not add the rtcp fakesink element to the FsRtcpConference");
-    gst_object_unref (tee);
-    return;
-  }
-
-  g_object_set (fakesink, "sync", FALSE, "async", FALSE, NULL);
-
-  gst_element_set_state (fakesink, GST_STATE_PLAYING);
-
-  self->priv->transmitter_rtcp_fakesink = gst_object_ref (fakesink);
-
-  pad1 = gst_element_get_request_pad (tee, "src%d");
-  pad2 = gst_element_get_static_pad (fakesink, "sink");
-
-  ret = gst_pad_link (pad1, pad2);
-
-  gst_object_unref (pad2);
-  gst_object_unref (pad1);
-
-  if (GST_PAD_LINK_FAILED (ret))
-  {
-    self->priv->construction_error = g_error_new (FS_ERROR,
-      FS_ERROR_CONSTRUCTION,
-        "Could not link the rtcp tee to its fakesink");
-    return;
-  }
-
   /* Lets now do the send_capsfilter */
 
   tmp = g_strdup_printf ("send_rtp_capsfilter_%u", self->id);
@@ -1368,10 +1283,10 @@ fs_rtp_session_constructed (GObject *object)
     return;
   }
 
-  pad1 = gst_element_get_static_pad (capsfilter, "src");
-  g_signal_connect (pad1, "notify::caps", G_CALLBACK (_send_caps_changed),
+  pad = gst_element_get_static_pad (capsfilter, "src");
+  g_signal_connect (pad, "notify::caps", G_CALLBACK (_send_caps_changed),
       self);
-  gst_object_unref (pad1);
+  gst_object_unref (pad);
 
   self->priv->send_capsfilter = gst_object_ref (capsfilter);
 
@@ -1814,7 +1729,6 @@ _get_request_pad_and_link (GstElement *tee_funnel, const gchar *tee_funnel_name,
   return TRUE;
 }
 
-
 static void
 _transmitter_error (
     FsStreamTransmitter *stream_transmitter,
@@ -1838,6 +1752,43 @@ _get_recvonly_filter (FsTransmitter *transmitter, guint component,
     return NULL;
 }
 
+static gboolean
+fs_rtp_session_add_transmitter_gst_sink (FsRtpSession *self,
+    FsTransmitter *transmitter,
+    GError **error)
+{
+  GstElement *sink;
+
+  g_object_get (transmitter, "gst-sink", &sink, NULL);
+
+  if (!gst_bin_add (GST_BIN (self->priv->conference), sink))
+  {
+    g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
+      "Could not add the transmitter sink for %s to the conference",
+        G_OBJECT_TYPE_NAME(transmitter));
+    goto error;
+  }
+
+  if (!_get_request_pad_and_link (self->priv->transmitter_rtp_tee,
+      "rtp tee", sink, "sink1", GST_PAD_SINK, error))
+    goto error;
+
+  if (!_get_request_pad_and_link (self->priv->transmitter_rtcp_tee,
+      "rtcp tee", sink, "sink2", GST_PAD_SINK, error))
+    goto error;
+
+  gst_element_sync_state_with_parent (sink);
+
+  gst_object_unref (sink);
+
+  return TRUE;
+
+ error:
+  if (sink)
+    gst_object_unref (sink);
+
+  return FALSE;
+}
 
 /**
  * fs_rtp_session_get_new_stream_transmitter:
@@ -1859,7 +1810,8 @@ fs_rtp_session_get_new_stream_transmitter (FsRtpSession *self,
   GParameter *parameters, GError **error)
 {
   FsTransmitter *transmitter;
-  GstElement *src, *sink;
+  GstElement *src;
+  gboolean sink_add_later = FALSE;
 
   FS_RTP_SESSION_LOCK (self);
 
@@ -1883,20 +1835,22 @@ fs_rtp_session_get_new_stream_transmitter (FsRtpSession *self,
   if (!transmitter)
     return NULL;
 
-  g_object_get (transmitter, "gst-sink", &sink, "gst-src", &src, NULL);
-
   g_signal_connect (transmitter, "error", G_CALLBACK (_transmitter_error),
       self);
   g_signal_connect (transmitter, "get-recvonly-filter",
       G_CALLBACK (_get_recvonly_filter), NULL);
 
-  if (!gst_bin_add (GST_BIN (self->priv->conference), sink))
+  if (self->priv->send_codecbin)
   {
-    g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
-      "Could not add the transmitter sink for %s to the conference",
-      transmitter_name);
-    goto error;
+    if (!fs_rtp_session_add_transmitter_gst_sink (self, transmitter, error))
+      goto error;
   }
+  else
+  {
+    sink_add_later = TRUE;
+  }
+
+  g_object_get (transmitter, "gst-src", &src, NULL);
 
   if (!gst_bin_add (GST_BIN (self->priv->conference), src))
   {
@@ -1905,14 +1859,6 @@ fs_rtp_session_get_new_stream_transmitter (FsRtpSession *self,
       transmitter_name);
     goto error;
   }
-
-  if (!_get_request_pad_and_link (self->priv->transmitter_rtp_tee,
-      "rtp tee", sink, "sink1", GST_PAD_SINK, error))
-    goto error;
-
-  if (!_get_request_pad_and_link (self->priv->transmitter_rtcp_tee,
-      "rtcp tee", sink, "sink2", GST_PAD_SINK, error))
-    goto error;
 
   if (!_get_request_pad_and_link (self->priv->transmitter_rtp_funnel,
       "rtp funnel", src, "src1", GST_PAD_SRC, error))
@@ -1923,7 +1869,6 @@ fs_rtp_session_get_new_stream_transmitter (FsRtpSession *self,
     goto error;
 
   gst_element_sync_state_with_parent (src);
-  gst_element_sync_state_with_parent (sink);
 
   FS_RTP_SESSION_LOCK (self);
   /* Check if two were added at the same time */
@@ -1932,18 +1877,18 @@ fs_rtp_session_get_new_stream_transmitter (FsRtpSession *self,
     FS_RTP_SESSION_UNLOCK (self);
 
     gst_element_set_locked_state (src, TRUE);
-    gst_element_set_locked_state (sink, TRUE);
     gst_element_set_state (src, GST_STATE_NULL);
-    gst_element_set_state (sink, GST_STATE_NULL);
     goto error;
   }
 
+  if (sink_add_later)
+    self->priv->transmitters_add_sink = g_list_prepend (
+        self->priv->transmitters_add_sink, g_object_ref (transmitter));
   g_hash_table_insert (self->priv->transmitters, g_strdup (transmitter_name),
-    transmitter);
+      transmitter);
   FS_RTP_SESSION_UNLOCK (self);
 
   gst_object_unref (src);
-  gst_object_unref (sink);
 
   return fs_transmitter_new_stream_transmitter (transmitter, participant,
     n_parameters, parameters, error);
@@ -1957,8 +1902,6 @@ fs_rtp_session_get_new_stream_transmitter (FsRtpSession *self,
  error:
   if (src)
     gst_object_unref (src);
-  if (sink)
-    gst_object_unref (sink);
   if (transmitter)
     g_object_unref (transmitter);
 
@@ -2683,12 +2626,9 @@ _create_codec_bin (const CodecAssociation *ca, const FsCodec *codec,
       current_element = gst_element_factory_make ("autoconvert", NULL);
 
       if (!current_element)
-        current_element = gst_element_factory_make ("fsselector", NULL);
-
-      if (!current_element)
       {
         g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
-          "Could not create autoconvert (ex-fsselector) element");
+          "Could not create autoconvert element");
         goto error;
       }
 
@@ -3307,6 +3247,7 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
   GstIterator *iter;
   GValue link_rv = {0};
   struct link_data data;
+  GList *item;
 
   GST_DEBUG ("Trying to add send codecbin for " FS_CODEC_FORMAT,
       FS_CODEC_ARGS (codec));
@@ -3411,6 +3352,33 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
         " of the conference", codec->id);
     goto error;
   }
+
+
+  FS_RTP_SESSION_LOCK (session);
+  while ((item = session->priv->transmitters_add_sink) != NULL)
+  {
+    FsTransmitter *transmitter = item->data;
+
+    session->priv->transmitters_add_sink = g_list_delete_link (
+        session->priv->transmitters_add_sink, item);
+
+    FS_RTP_SESSION_UNLOCK (session);
+
+    if (!fs_rtp_session_add_transmitter_gst_sink (session, transmitter, error))
+    {
+      FS_RTP_SESSION_LOCK (session);
+      g_object_unref (transmitter);
+      g_list_foreach (session->priv->transmitters_add_sink,
+          (GFunc) g_object_unref, NULL);
+      g_list_free (session->priv->transmitters_add_sink);
+      session->priv->transmitters_add_sink = NULL;
+      goto error;
+    }
+
+    g_object_unref (transmitter);
+    FS_RTP_SESSION_LOCK (session);
+  }
+  FS_RTP_SESSION_UNLOCK (session);
 
   g_object_set (session->priv->media_sink_valve, "drop", FALSE, NULL);
 

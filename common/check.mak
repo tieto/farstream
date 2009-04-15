@@ -6,7 +6,7 @@ clean-local-check:
 if HAVE_VALGRIND
 # hangs spectacularly on some machines, so let's not do this by default yet
 check-valgrind:
-	make valgrind
+	$(MAKE) valgrind
 else
 check-valgrind:
 	@true
@@ -71,7 +71,7 @@ LOOPS = 10
 	
 # valgrind any given test until failure by running make test.valgrind-forever
 %.valgrind-forever: %
-	@while make $*.valgrind; do				\
+	@while $(MAKE) $*.valgrind; do				\
 	  true; done
 
 # gdb any given test by running make test.gdb
@@ -86,7 +86,7 @@ torture: $(TESTS)
 	-rm test-registry.xml
 	@echo "Torturing tests ..."
 	for i in `seq 1 $(LOOPS)`; do				\
-		make check ||					\
+		$(MAKE) check ||					\
 		(echo "Failure after $$i runs"; exit 1) ||	\
 		exit 1;						\
 	done
@@ -99,7 +99,7 @@ forever: $(TESTS)
 	-rm test-registry.xml
 	@echo "Forever tests ..."
 	while true; do						\
-		make check ||					\
+		$(MAKE) check ||					\
 		(echo "Failure"; exit 1) ||			\
 		exit 1;						\
 	done
@@ -109,7 +109,7 @@ valgrind: $(TESTS)
 	@echo "Valgrinding tests ..."
 	@failed=0;							\
 	for t in $(filter-out $(VALGRIND_TESTS_DISABLE),$(TESTS)); do	\
-		make $$t.valgrind;					\
+		$(MAKE) $$t.valgrind;					\
 		if test "$$?" -ne 0; then                               \
                         echo "Valgrind error for test $$t";		\
 			failed=`expr $$failed + 1`;			\
@@ -132,6 +132,7 @@ inspect:
 	     $(GST_INSPECT) $$e > /dev/null 2>&1; done
 
 help:
+	@echo
 	@echo "make check                         -- run all checks"
 	@echo "make torture                       -- run all checks $(LOOPS) times"
 	@echo "make (dir)/(test).check            -- run the given check once"
@@ -146,4 +147,16 @@ help:
 	@echo "make (dir)/(test).valgrind.gen-suppressions -- generate suppressions"
 	@echo "                                               and save to suppressions.log"
 	@echo "make inspect                       -- inspect all plugin features"
+	@echo
+	@echo
+	@echo "Additionally, you can use the GST_CHECKS environment variable to"
+	@echo "specify which test(s) should be run. This is useful if you are"
+	@echo "debugging a failure in one particular test, or want to reproduce"
+	@echo "a race condition in a single test."
+	@echo
+	@echo "Examples:"
+	@echo
+	@echo "  GST_CHECKS=test_this,test_that  make element/foobar.check"
+	@echo "  GST_CHECKS=test_many_threads    make element/foobar.forever"
+	@echo
 
