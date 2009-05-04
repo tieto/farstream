@@ -27,8 +27,7 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
          gstreamer0.10-plugins-base (>= 0.10.22),
          gstreamer0.10-plugins-good (>= 0.10.8),
-         gstreamer0.10-plugins-bad (>= 0.10.10),
-         gstreamer0.10-plugins-farsight (>= 0.12.10),
+         gstreamer0.10-plugins-bad (>= 0.10.11),
          gstreamer0.10-nice
 Description: Audio/Video communications framework: core library
  The Farsight project is an effort to create a framework to deal with all
