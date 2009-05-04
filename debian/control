@@ -21,6 +21,7 @@ Vcs-Git: git://git.debian.org/git/pkg-telepathy/farsight2.git
 Vcs-Browser: http://git.debian.org/?p=pkg-telepathy/farsight2.git
 Homepage: http://farsight.freedesktop.org
 XS-Dm-Upload-Allowed: yes
+XS-Python-Version: >= 2.4
 
 Package: libgstfarsight0.10-0
 Architecture: any
@@ -80,7 +81,7 @@ Description: Audio/Video communications framework: debugging symbols
 
 Package: python-farsight
 Section: python
-XS-Python-Version: >= 2.4
+XB-Python-Version: ${python:Versions}
 Priority: extra
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, python-gst0.10
