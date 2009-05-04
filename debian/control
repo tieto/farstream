@@ -20,7 +20,6 @@ Standards-Version: 3.8.1
 Vcs-Git: git://git.debian.org/git/pkg-telepathy/farsight2.git
 Vcs-Browser: http://git.debian.org/?p=pkg-telepathy/farsight2.git
 Homepage: http://farsight.freedesktop.org
-XS-Dm-Upload-Allowed: yes
 XS-Python-Version: >= 2.4
 
 Package: libgstfarsight0.10-0
