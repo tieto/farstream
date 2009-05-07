@@ -83,7 +83,7 @@ Section: python
 XB-Python-Version: ${python:Versions}
 Priority: extra
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, python-gst0.10
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python:Depends}, python-gst0.10
 Description: Audio/Video communications framework: Python bindings
  The Farsight project is an effort to create a framework to deal with all
  known audio/video conferencing protocols. On one side it offers a generic
