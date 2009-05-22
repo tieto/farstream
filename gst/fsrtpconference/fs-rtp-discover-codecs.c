@@ -225,7 +225,13 @@ fs_rtp_blueprints_get (FsMediaType media_type, GError **error)
 
   /* if already computed just return list */
   if (codecs_lists_ref[media_type] > 1)
+  {
+    if (!list_codec_blueprints[media_type])
+      g_set_error (error, FS_ERROR, FS_ERROR_NO_CODECS,
+          "No codecs for media type %s detected",
+          fs_media_type_to_string (media_type));
     return list_codec_blueprints[media_type];
+  }
 
   list_codec_blueprints[media_type] = load_codecs_cache (media_type);
   if (list_codec_blueprints[media_type]) {
@@ -585,8 +591,6 @@ parse_codec_cap_list (GList *list, FsMediaType media_type)
         break;
     }
 
-  another:
-
     codec_blueprint = g_slice_new0 (CodecBlueprint);
     codec_blueprint->codec = codec;
     codec_blueprint->media_caps = gst_caps_copy (codec_cap->caps);
@@ -662,13 +666,6 @@ parse_codec_cap_list (GList *list, FsMediaType media_type)
     g_free (tmp);
     debug_pipeline (codec_blueprint->send_pipeline_factory);
     debug_pipeline (codec_blueprint->receive_pipeline_factory);
-
-    if (!g_ascii_strcasecmp (codec->encoding_name, "H263-1998")) {
-      codec = fs_codec_copy (codec);
-      g_free (codec->encoding_name);
-      codec->encoding_name = g_strdup ("H263-N800");
-      goto another;
-    }
   }
 }
 
@@ -1207,12 +1204,11 @@ create_codec_cap_list (GstElementFactory *factory,
             gst_caps_unref (entry->rtp_caps);
             entry->rtp_caps = new_rtp_caps;
           } else {
-            entry->rtp_caps = rtp_caps;
+            entry->rtp_caps = gst_caps_ref (rtp_caps);
             /* This shouldn't happen, its we're looking at rtp elements
              * or we're not */
             g_assert_not_reached ();
           }
-          gst_caps_unref (rtp_caps);
         }
 
         newcaps = gst_caps_union (cur_caps, entry->caps);

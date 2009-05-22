@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, cvs and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for cvs/prerelease
-AC_INIT(Farsight2, 0.0.9,
+AC_INIT(Farsight2, 0.0.10,
     https://bugs.freedesktop.org/enter_bug.cgi?product=Farsight,
     farsight2)
 
@@ -45,7 +45,7 @@ dnl - interfaces added/removed/changed -> increment CURRENT, REVISION = 0
 dnl - interfaces added -> increment AGE
 dnl - interfaces removed -> AGE = 0
 dnl sets FS2_LT_LDFLAGS
-AS_LIBTOOL(FS2, 0, 0, 0)
+AS_LIBTOOL(FS2, 0, 1, 0)
 
 dnl FIXME: this macro doesn't actually work;
 dnl the generated libtool script has no support for the listed tags.
@@ -154,7 +154,7 @@ AC_ARG_WITH(transmitter-plugins,
     [FS2_TRANSMITTER_PLUGINS_SELECTED=$FS2_TRANSMITTER_PLUGINS_ALL])
 
 
-NICE_REQUIRED=0.0.3
+NICE_REQUIRED=0.0.6
 
 PKG_CHECK_MODULES(NICE, \
        nice >= $NICE_REQUIRED,, AC_MSG_ERROR([Need libnice >= $NICE_REQUIRED]))
@@ -334,10 +334,15 @@ AC_ARG_ENABLE([python],
 	WANT_PYTHON=yes)
 if test "x$WANT_PYTHON" = "xyes"; then
    AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR(could not find Python headers)])
-   PKG_CHECK_MODULES(PYFARSIGHT, [ 	pygobject-2.0 >= 2.12.0
-					gst-python-0.10 >= 0.10.10
-					pygtk-2.0 >= 2.10 ] )
+   PKG_CHECK_MODULES(PYFARSIGHT, [ pygobject-2.0 >= 2.12.0
+				   gst-python-0.10 >= 0.10.10] )
+   PKG_CHECK_MODULES(PYCODEGEN, [ pygobject-2.0 >= 2.16.0 ],
+     PYCODEGEN=pygobject-codegen-2.0,
+     PKG_CHECK_MODULES(PYCODEGEN, [ pygtk-2.0 >= 2.10 ],
+       PYCODEGEN=pygtk-codegen-2.0,
+       AC_MSG_ERROR([You need pygobject 2.16+ or pygtk for the codegen])))
 fi
+AC_SUBST(PYCODEGEN)
 AM_CONDITIONAL(WANT_PYTHON, test "x$WANT_PYTHON" = "xyes")
 
 AC_ARG_ENABLE([gupnp],
@@ -363,6 +368,7 @@ if test "x$HAVE_GUPNP" = "xyes"; then
    AC_DEFINE(HAVE_GUPNP,,[Have the GUPnP IGD library])
 fi
 
+SHAVE_INIT([common],[enable])
 
 dnl *** output files ***
 
@@ -372,6 +378,8 @@ farsight2.pc
 common/Makefile
 common/m4/Makefile
 common-modified/Makefile
+common/shave
+common/shave-libtool
 gst/Makefile
 gst/fsrtpconference/Makefile
 gst/funnel/Makefile

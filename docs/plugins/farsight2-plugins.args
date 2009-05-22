@@ -89,6 +89,16 @@
 </ARG>
 
 <ARG>
+<NAME>FsRtpSession::ssrc</NAME>
+<TYPE>guint</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>The SSRC of the sent data</NICK>
+<BLURB>This is the current SSRC used to send data (defaults to a random value).</BLURB>
+<DEFAULT>0</DEFAULT>
+</ARG>
+
+<ARG>
 <NAME>FsRawUdpStreamTransmitter::stun-ip</NAME>
 <TYPE>gchar*</TYPE>
 <RANGE></RANGE>
@@ -256,5 +266,15 @@
 <NICK>Sending RTP?</NICK>
 <BLURB>If set to FALSE, it assumes that all RTP has been dropped.</BLURB>
 <DEFAULT>FALSE</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>FsRtpStream::stream-transmitter</NAME>
+<TYPE>FsStreamTransmitter*</TYPE>
+<RANGE></RANGE>
+<FLAGS>wX</FLAGS>
+<NICK>The transmitter use by the stream</NICK>
+<BLURB>An FsStreamTransmitter used by this stream.</BLURB>
+<DEFAULT></DEFAULT>
 </ARG>
 

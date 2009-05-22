@@ -772,7 +772,6 @@ remove_sink (FsNiceTransmitter *self, NiceGstStream *ns, guint component_id)
           ns->nicesinks[component_id]))
     GST_ERROR ("Could not remove nicesink element from transmitter"
         " sink");
-  gst_element_set_locked_state (ns->nicesinks[component_id], FALSE);
 }
 
 
@@ -903,6 +902,10 @@ fs_nice_transmitter_set_sending (FsNiceTransmitter *self,
           if (GST_PAD_LINK_FAILED(ret))
             GST_ERROR ("Could not link nicesink to its tee pad");
           gst_object_unref (elempad);
+
+          gst_element_send_event (ns->nicesinks[c],
+              gst_event_new_custom (GST_EVENT_CUSTOM_UPSTREAM,
+                  gst_structure_new ("GstForceKeyUnit", NULL)));
         }
       }
     }

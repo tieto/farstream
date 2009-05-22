@@ -627,37 +627,32 @@ fs_rtp_conference_new_participant (FsBaseConference *conf,
     return NULL;
   }
 
-  if (!cname)
+  if (cname)
   {
-    g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
-        "Invalid NULL cname");
-    return NULL;
-  }
-
-  GST_OBJECT_LOCK (self);
-  for (item = g_list_first (self->priv->participants);
-       item;
-       item = g_list_next (item))
-  {
-    gchar *lcname;
-
-    g_object_get (item->data, "cname", &lcname, NULL);
-    if (!strcmp (lcname, cname))
+    GST_OBJECT_LOCK (self);
+    for (item = g_list_first (self->priv->participants);
+         item;
+         item = g_list_next (item))
     {
-      g_free (lcname);
+      gchar *lcname;
+
+      g_object_get (item->data, "cname", &lcname, NULL);
+      if (lcname && !strcmp (lcname, cname))
+      {
+        g_free (lcname);
         break;
+      }
+      g_free (lcname);
     }
-    g_free (lcname);
-  }
-  GST_OBJECT_UNLOCK (self);
+    GST_OBJECT_UNLOCK (self);
 
-  if (item)
-  {
-    g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
-        "There is already a participant with this cname");
-    return NULL;
+    if (item)
+    {
+      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+          "There is already a participant with this cname");
+      return NULL;
+    }
   }
-
 
   new_participant = FS_PARTICIPANT_CAST (fs_rtp_participant_new (cname));
 
@@ -706,6 +701,14 @@ fs_rtp_conference_handle_message (
         ssrc = g_value_get_uint (val);
 
         cname = gst_structure_get_string (s, "cname");
+
+        if (!ssrc || !cname)
+        {
+          GST_WARNING_OBJECT (self,
+              "Got GstRTPBinSDES without a ssrc or a cname (ssrc:%u cname:%p)",
+              ssrc, cname);
+          break;
+        }
 
         session = fs_rtp_conference_get_session_by_id (self, session_id);
 
@@ -788,11 +791,6 @@ fs_codec_to_gst_caps (const FsCodec *codec)
   if (codec->encoding_name)
   {
     gchar *encoding_name = g_ascii_strup (codec->encoding_name, -1);
-
-    if (!g_ascii_strcasecmp (encoding_name, "H263-N800")) {
-      g_free (encoding_name);
-      encoding_name = g_strdup ("H263-1998");
-    }
 
     gst_structure_set (structure,
         "encoding-name", G_TYPE_STRING, encoding_name,
