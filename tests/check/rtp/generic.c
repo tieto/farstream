@@ -67,6 +67,7 @@ struct SimpleTestStream *
 simple_conference_add_stream (
     struct SimpleTestConference *dat,
     struct SimpleTestConference *target,
+    const gchar *transmitter,
     guint st_param_count,
     GParameter *st_params)
 {
@@ -77,14 +78,14 @@ simple_conference_add_stream (
   st->target = target;
 
   st->participant = fs_conference_new_participant (
-      FS_CONFERENCE (dat->conference), target->cname, &error);
+      FS_CONFERENCE (dat->conference), NULL, &error);
   if (error)
     fail ("Error while creating new participant (%d): %s",
         error->code, error->message);
   fail_if (st->participant == NULL, "Could not make participant, but no GError!");
 
   st->stream = fs_session_new_stream (dat->session, st->participant,
-      FS_DIRECTION_BOTH, "rawudp", st_param_count, st_params, &error);
+      FS_DIRECTION_BOTH, transmitter, st_param_count, st_params, &error);
   if (error)
     fail ("Error while creating new stream (%d): %s",
         error->code, error->message);

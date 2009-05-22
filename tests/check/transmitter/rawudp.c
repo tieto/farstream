@@ -35,6 +35,9 @@
 #include "generic.h"
 #include "transmitter/rawudp-upnp.h"
 
+#include "stunalternd.h"
+
+
 gint buffer_count[2] = {0, 0};
 GMainLoop *loop = NULL;
 gint candidates[2] = {0, 0};
@@ -48,6 +51,7 @@ gboolean associate_on_source = TRUE;
 gboolean pipeline_done = FALSE;
 GStaticMutex pipeline_mod_mutex = G_STATIC_MUTEX_INIT;
 
+void *stun_alternd_data = NULL;
 
 enum {
   FLAG_HAS_STUN  = 1 << 0,
@@ -373,7 +377,7 @@ run_rawudp_transmitter_test (gint n_parameters, GParameter *params,
 
   g_idle_add (check_running, NULL);
 
-  g_main_run (loop);
+  g_main_loop_run (loop);
 
  skip:
 
@@ -631,7 +635,7 @@ GST_START_TEST (test_rawudptransmitter_stop_stream)
 
   g_idle_add (check_running, NULL);
 
-  g_main_run (loop);
+  g_main_loop_run (loop);
 
   gst_element_set_state (pipeline, GST_STATE_NULL);
 
@@ -804,6 +808,117 @@ GST_START_TEST (test_rawudptransmitter_sending_half)
 }
 GST_END_TEST;
 
+
+GST_START_TEST (test_rawudptransmitter_run_stunalternd)
+{
+  GParameter params[4];
+
+  if (stund_pid <= 0 || stun_alternd_data == NULL)
+    return;
+
+  memset (params, 0, sizeof (GParameter) * 4);
+
+  params[0].name = "stun-ip";
+  g_value_init (&params[0].value, G_TYPE_STRING);
+  g_value_set_static_string (&params[0].value, "127.0.0.1");
+
+  params[1].name = "stun-port";
+  g_value_init (&params[1].value, G_TYPE_UINT);
+  g_value_set_uint (&params[1].value, 3480);
+
+  params[2].name = "stun-timeout";
+  g_value_init (&params[2].value, G_TYPE_UINT);
+  g_value_set_uint (&params[2].value, 5);
+
+  params[3].name = "upnp-discovery";
+  g_value_init (&params[3].value, G_TYPE_BOOLEAN);
+  g_value_set_boolean (&params[3].value, FALSE);
+
+
+  run_rawudp_transmitter_test (3, params, FLAG_HAS_STUN);
+}
+GST_END_TEST;
+
+
+GST_START_TEST (test_rawudptransmitter_run_stun_altern_to_nowhere)
+{
+  GParameter params[3];
+
+  if (stun_alternd_data == NULL)
+    return;
+
+  /*
+   * Hopefully not one is runing a stun server on local port 3478
+   */
+
+  memset (params, 0, sizeof (GParameter) * 3);
+
+  params[0].name = "stun-ip";
+  g_value_init (&params[0].value, G_TYPE_STRING);
+  g_value_set_static_string (&params[0].value, "127.0.0.1");
+
+  params[1].name = "stun-port";
+  g_value_init (&params[1].value, G_TYPE_UINT);
+  g_value_set_uint (&params[1].value, 3480);
+
+  params[2].name = "stun-timeout";
+  g_value_init (&params[2].value, G_TYPE_UINT);
+  g_value_set_uint (&params[2].value, 10);
+
+  run_rawudp_transmitter_test (3, params, 0);
+
+}
+GST_END_TEST;
+
+
+void
+setup_stunalternd_valid (void)
+{
+  stun_alternd_data = stun_alternd_init (AF_INET,
+      "127.0.0.1", 3478, 3480);
+
+  if (!stun_alternd_data)
+    g_debug ("Could not spawn stunalternd,"
+        " skipping stun alternate server testing");
+}
+
+static void
+setup_stunalternd_loop (void)
+{
+  stun_alternd_data = stun_alternd_init (AF_INET,
+      "127.0.0.1", 3478, 3478);
+
+  if (!stun_alternd_data)
+    g_debug ("Could not spawn stunalternd,"
+        " skipping stun alternate server testing");
+}
+
+static void
+teardown_stunalternd (void)
+{
+  if (!stun_alternd_data)
+    return;
+
+  stun_alternd_stop (stun_alternd_data);
+  stun_alternd_data = NULL;
+}
+
+static void
+setup_stund_stunalternd (void)
+{
+  setup_stund ();
+  setup_stunalternd_valid ();
+}
+
+
+static void
+teardown_stund_stunalternd (void)
+{
+  teardown_stund ();
+  teardown_stunalternd ();
+}
+
+
 static Suite *
 rawudptransmitter_suite (void)
 {
@@ -867,6 +982,27 @@ rawudptransmitter_suite (void)
 
   tc_chain = tcase_create ("rawudptransmitter-sending-half");
   tcase_add_test (tc_chain, test_rawudptransmitter_sending_half);
+  suite_add_tcase (s, tc_chain);
+
+  tc_chain = tcase_create ("rawudptransmitter-stunalternd");
+  tcase_set_timeout (tc_chain, 5);
+  tcase_add_checked_fixture (tc_chain, setup_stund_stunalternd,
+      teardown_stund_stunalternd);
+  tcase_add_test (tc_chain, test_rawudptransmitter_run_stunalternd);
+  suite_add_tcase (s, tc_chain);
+
+  tc_chain = tcase_create ("rawudptransmitter-stunalternd-to-nowhere");
+  tcase_set_timeout (tc_chain, 12);
+  tcase_add_checked_fixture (tc_chain, setup_stunalternd_valid,
+      teardown_stunalternd);
+  tcase_add_test (tc_chain, test_rawudptransmitter_run_stun_altern_to_nowhere);
+  suite_add_tcase (s, tc_chain);
+
+  tc_chain = tcase_create ("rawudptransmitter-stunalternd-loop");
+  tcase_set_timeout (tc_chain, 12);
+  tcase_add_checked_fixture (tc_chain, setup_stunalternd_loop,
+      teardown_stunalternd);
+  tcase_add_test (tc_chain, test_rawudptransmitter_run_stun_altern_to_nowhere);
   suite_add_tcase (s, tc_chain);
 
   return s;

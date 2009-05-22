@@ -167,6 +167,7 @@ struct _FsRtpSessionPrivate
   GList *streams;
   guint streams_cookie;
   GList *free_substreams;
+  guint streams_sending;
 
   /* The static list of all the blueprints */
   GList *blueprints;
@@ -1371,6 +1372,24 @@ _stream_known_source_packet_received (FsRtpStream *stream, guint component,
   fs_rtp_session_has_disposed_exit (self);
 }
 
+static void
+_stream_sending_changed_locked (FsRtpStream *stream, gboolean sending,
+    gpointer user_data)
+{
+  FsRtpSession *session = user_data;
+
+  if (sending)
+    session->priv->streams_sending++;
+  else
+    session->priv->streams_sending--;
+
+  if (session->priv->streams_sending && session->priv->send_codecbin)
+    g_object_set (session->priv->media_sink_valve, "drop", FALSE, NULL);
+  else
+    g_object_set (session->priv->media_sink_valve, "drop", TRUE, NULL);
+
+}
+
 static gboolean
 _remove_stream_from_ht (gpointer key, gpointer value, gpointer user_data)
 {
@@ -1449,7 +1468,8 @@ fs_rtp_session_new_stream (FsSession *session,
 
   new_stream = FS_STREAM_CAST (fs_rtp_stream_new (self, rtpparticipant,
           direction, st, _stream_new_remote_codecs,
-          _stream_known_source_packet_received, self, error));
+          _stream_known_source_packet_received,
+          _stream_sending_changed_locked, self, error));
 
   FS_RTP_SESSION_LOCK (self);
   self->priv->streams = g_list_append (self->priv->streams, new_stream);
@@ -2296,6 +2316,35 @@ _substream_error (FsRtpSubStream *substream,
   fs_session_emit_error (session, errorno, error_msg, debug_msg);
 }
 
+static void
+_substream_unlinked (FsRtpSubStream *substream, gpointer user_data)
+{
+  FsRtpSession *self = FS_RTP_SESSION (user_data);
+
+
+  if (fs_rtp_session_has_disposed_enter (self, NULL))
+    return;
+
+  FS_RTP_SESSION_LOCK (self);
+
+  if (g_list_find (self->priv->free_substreams, substream))
+  {
+    self->priv->free_substreams = g_list_remove (self->priv->free_substreams,
+        substream);
+    FS_RTP_SESSION_UNLOCK (self);
+
+    fs_rtp_sub_stream_stop (substream);
+    g_object_unref (substream);
+  }
+  else
+  {
+    FS_RTP_SESSION_UNLOCK (self);
+  }
+
+  fs_rtp_session_has_disposed_exit (self);
+}
+
+
 /**
  * fs_rtp_session_new_recv_pad:
  * @session: a #FsSession
@@ -2344,6 +2393,9 @@ fs_rtp_session_new_recv_pad (FsRtpSession *session, GstPad *new_pad,
   }
 
   g_signal_connect (substream, "blocked", G_CALLBACK (_substream_blocked),
+      session);
+
+  g_signal_connect (substream, "unlinked", G_CALLBACK (_substream_unlinked),
       session);
 
   /* Lets find the FsRtpStream for this substream, if no Stream claims it
@@ -3378,13 +3430,13 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
     g_object_unref (transmitter);
     FS_RTP_SESSION_LOCK (session);
   }
-  FS_RTP_SESSION_UNLOCK (session);
 
-  g_object_set (session->priv->media_sink_valve, "drop", FALSE, NULL);
+  if (session->priv->streams_sending)
+    g_object_set (session->priv->media_sink_valve, "drop", FALSE, NULL);
+
 
   session->priv->send_codecbin = codecbin;
 
-  FS_RTP_SESSION_LOCK (session);
   session->priv->current_send_codec = fs_codec_copy (codec);
   FS_RTP_SESSION_UNLOCK (session);
 
@@ -3654,6 +3706,14 @@ fs_rtp_session_associate_ssrc_cname (FsRtpSession *session,
     return;
 
   FS_RTP_SESSION_LOCK (session);
+
+  if (!session->priv->free_substreams)
+  {
+    FS_RTP_SESSION_UNLOCK (session);
+    fs_rtp_session_has_disposed_exit (session);
+    return;
+  }
+
   for (item = g_list_first (session->priv->streams);
        item;
        item = g_list_next (item))
@@ -3663,9 +3723,7 @@ fs_rtp_session_associate_ssrc_cname (FsRtpSession *session,
 
     g_object_get (localstream->participant, "cname", &localcname, NULL);
 
-    g_assert (localcname);
-
-    if (!strcmp (localcname, cname))
+    if (localcname && !strcmp (localcname, cname))
     {
       stream = localstream;
       g_free (localcname);
@@ -3676,12 +3734,9 @@ fs_rtp_session_associate_ssrc_cname (FsRtpSession *session,
 
   if (!stream)
   {
-    gchar *str = g_strdup_printf ("There is no particpant with cname %s for"
-        " ssrc %u", cname, ssrc);
+    GST_LOG ("There is no participant with cname %s, but"
+        " we have streams of unknown origin", cname);
     FS_RTP_SESSION_UNLOCK (session);
-    fs_session_emit_error (FS_SESSION (session), FS_ERROR_UNKNOWN_CNAME,
-        str, str);
-    g_free (str);
     fs_rtp_session_has_disposed_exit (session);
     return;
   }
@@ -3914,6 +3969,7 @@ _discovery_caps_changed (GstPad *pad, GParamSpec *pspec, FsRtpSession *session)
 {
   CodecAssociation *ca = NULL;
   GstCaps *caps = NULL;
+  gboolean block = TRUE;
 
   g_object_get (pad, "caps", &caps, NULL);
 
@@ -3927,25 +3983,23 @@ _discovery_caps_changed (GstPad *pad, GParamSpec *pspec, FsRtpSession *session)
 
   FS_RTP_SESSION_LOCK (session);
 
+  /* If there is no codec, its because we're shutting down */
   if (!session->priv->discovery_codec)
   {
-    fs_session_emit_error (FS_SESSION (session), FS_ERROR_INTERNAL,
-        "Internal error while discovering codecs configurations",
-        "Got notify::caps signal on the discovery codecs whith no codecs"
-        " being discovered");
+    GST_DEBUG ("Got caps while discovery is stopping");
     goto out;
   }
 
   ca = lookup_codec_association_by_codec (session->priv->codec_associations,
       session->priv->discovery_codec);
 
-  fs_codec_destroy (session->priv->discovery_codec);
-  session->priv->discovery_codec = NULL;
 
   if (ca && ca->need_config)
   {
     gather_caps_parameters (ca, caps);
+    fs_codec_destroy (session->priv->discovery_codec);
     session->priv->discovery_codec = fs_codec_copy (ca->codec);
+    block = !ca->need_config;
   }
 
  out:
@@ -3954,8 +4008,9 @@ _discovery_caps_changed (GstPad *pad, GParamSpec *pspec, FsRtpSession *session)
 
   gst_caps_unref (caps);
 
-  gst_pad_set_blocked_async (session->priv->send_tee_discovery_pad, TRUE,
-      _discovery_pad_blocked_callback, session);
+  if (block)
+    gst_pad_set_blocked_async (session->priv->send_tee_discovery_pad, TRUE,
+        _discovery_pad_blocked_callback, session);
   fs_rtp_session_has_disposed_exit (session);
 }
 

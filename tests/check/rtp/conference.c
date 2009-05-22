@@ -29,6 +29,7 @@
 #include "check-threadsafe.h"
 
 #include "generic.h"
+#include "testutils.h"
 
 static struct SimpleTestStream *
 find_pointback_stream (
@@ -66,12 +67,16 @@ GST_START_TEST (test_rtpconference_new)
   FsStreamDirection dir;
 
   dat = setup_simple_conference (1, "fsrtpconference", "bob@127.0.0.1");
-  st = simple_conference_add_stream (dat, dat, 0, NULL);
+  st = simple_conference_add_stream (dat, dat, "rawudp", 0, NULL);
 
   g_object_get (dat->conference, "sdes-cname", &str, NULL);
   ts_fail_unless (!strcmp (str, "bob@127.0.0.1"), "Conference CNAME is wrong");
   g_free (str);
 
+  g_object_get (st->participant, "cname", &str, NULL);
+  ts_fail_unless (str == NULL);
+
+  g_object_set (st->participant, "cname", "bob@127.0.0.1", NULL);
   g_object_get (st->participant, "cname", &str, NULL);
   ts_fail_unless (!strcmp (str, "bob@127.0.0.1"), "Participant CNAME is wrong");
   g_free (str);
@@ -714,23 +719,30 @@ set_initial_codecs (
 typedef void (*extra_init) (void);
 
 static void
-nway_test (int in_count, extra_init extrainit,
+nway_test (int in_count, extra_init extrainit, const gchar *transmitter,
     guint st_param_count, GParameter *st_params)
 {
   int i, j;
-  GParameter *params;
+  GParameter *params = NULL;
 
-  params = g_new0 (GParameter, st_param_count+2);
 
-  memcpy (params, st_params, st_param_count * sizeof (GParameter));
+  if (!strcmp ("rawudp", transmitter))
+  {
+    params = g_new0 (GParameter, st_param_count+2);
 
-  params[st_param_count].name = "upnp-discovery";
-  g_value_init (&params[st_param_count].value, G_TYPE_BOOLEAN);
-  g_value_set_boolean (&params[st_param_count].value, FALSE);
+    memcpy (params, st_params, st_param_count * sizeof (GParameter));
 
-  params[st_param_count+1].name = "upnp-mapping";
-  g_value_init (&params[st_param_count+1].value, G_TYPE_BOOLEAN);
-  g_value_set_boolean (&params[st_param_count+1].value, FALSE);
+    params[st_param_count].name = "upnp-discovery";
+    g_value_init (&params[st_param_count].value, G_TYPE_BOOLEAN);
+    g_value_set_boolean (&params[st_param_count].value, FALSE);
+
+    params[st_param_count+1].name = "upnp-mapping";
+    g_value_init (&params[st_param_count+1].value, G_TYPE_BOOLEAN);
+    g_value_set_boolean (&params[st_param_count+1].value, FALSE);
+
+    st_param_count += 2;
+    st_params = params;
+  }
 
   count = in_count;
 
@@ -762,8 +774,8 @@ nway_test (int in_count, extra_init extrainit,
       {
         struct SimpleTestStream *st = NULL;
 
-        st = simple_conference_add_stream (dats[i], dats[j], st_param_count+2,
-            params);
+        st = simple_conference_add_stream (dats[i], dats[j], transmitter,
+            st_param_count, st_params);
         st->handoff_handler = G_CALLBACK (_handoff_handler);
         g_signal_connect (st->stream, "src-pad-added",
             G_CALLBACK (_src_pad_added), st);
@@ -796,21 +808,21 @@ nway_test (int in_count, extra_init extrainit,
 
 GST_START_TEST (test_rtpconference_two_way)
 {
-  nway_test (2, NULL, 0, NULL);
+  nway_test (2, NULL, "rawudp", 0, NULL);
 }
 GST_END_TEST;
 
 
 GST_START_TEST (test_rtpconference_three_way)
 {
-  nway_test (3, NULL, 0, NULL);
+  nway_test (3, NULL, "rawudp", 0, NULL);
 }
 GST_END_TEST;
 
 
 GST_START_TEST (test_rtpconference_ten_way)
 {
-  nway_test (10, NULL, 0, NULL);
+  nway_test (10, NULL, "rawudp", 0, NULL);
 }
 GST_END_TEST;
 
@@ -852,7 +864,7 @@ GST_END_TEST;
 GST_START_TEST (test_rtpconference_select_send_codec)
 {
   select_last_codec = TRUE;
-  nway_test (2, NULL, 0, NULL);
+  nway_test (2, NULL, "rawudp", 0, NULL);
   select_last_codec = FALSE;
 }
 GST_END_TEST;
@@ -861,7 +873,7 @@ GST_END_TEST;
 GST_START_TEST (test_rtpconference_select_send_codec_while_running)
 {
   reset_to_last_codec = TRUE;
-  nway_test (2, NULL, 0, NULL);
+  nway_test (2, NULL, "rawudp", 0, NULL);
   reset_to_last_codec = FALSE;
 }
 GST_END_TEST;
@@ -914,8 +926,8 @@ _recv_only_init_2 (void)
 
 GST_START_TEST (test_rtpconference_recv_only)
 {
-  nway_test (2, _recv_only_init_1, 0, NULL);
-  nway_test (2, _recv_only_init_2, 0, NULL);
+  nway_test (2, _recv_only_init_1, "rawudp", 0, NULL);
+  nway_test (2, _recv_only_init_2, "rawudp", 0, NULL);
 }
 GST_END_TEST;
 
@@ -945,8 +957,8 @@ _send_only_init_2 (void)
 
 GST_START_TEST (test_rtpconference_send_only)
 {
-  nway_test (2, _send_only_init_1, 0, NULL);
-  nway_test (2, _send_only_init_2, 0, NULL);
+  nway_test (2, _send_only_init_1, "rawudp", 0, NULL);
+  nway_test (2, _send_only_init_2, "rawudp", 0, NULL);
 }
 GST_END_TEST;
 
@@ -980,7 +992,7 @@ _change_to_send_only_init (void)
 
 GST_START_TEST (test_rtpconference_change_to_send_only)
 {
-  nway_test (2, _change_to_send_only_init, 0, NULL);
+  nway_test (2, _change_to_send_only_init, "rawudp", 0, NULL);
 }
 GST_END_TEST;
 
@@ -989,21 +1001,40 @@ GST_START_TEST (test_rtpconference_no_rtcp)
 {
   no_rtcp = TRUE;
 
-  nway_test (2, NULL, 0, NULL);
+  nway_test (2, NULL, "rawudp", 0, NULL);
 
   no_rtcp = FALSE;
 }
 GST_END_TEST;
 
-GST_START_TEST (test_rtpconference_three_way_no_source_assoc)
+static void
+associate_cnames_init (void)
+{
+  int i;
+
+  for (i = 0; i < 3; i++)
+  {
+    GList *item;
+    for (item = dats[i]->streams; item; item = item->next)
+    {
+      struct SimpleTestStream *st = item->data;
+
+      g_object_set (st->participant, "cname", st->target->cname, NULL);
+    }
+  }
+}
+
+GST_START_TEST (test_rtpconference_three_way_cname_assoc)
 {
   GParameter param = {0};
+
+  return;
 
   param.name = "associate-on-source";
   g_value_init (&param.value, G_TYPE_BOOLEAN);
   g_value_set_boolean (&param.value, FALSE);
 
-  nway_test (3, NULL, 1, &param);
+  nway_test (3, associate_cnames_init, "rawudp", 1, &param);
 }
 GST_END_TEST;
 
@@ -1036,7 +1067,7 @@ _simple_profile_init (void)
 
 GST_START_TEST (test_rtpconference_simple_profile)
 {
-  nway_test (2, _simple_profile_init, 0, NULL);
+  nway_test (2, _simple_profile_init, "rawudp", 0, NULL);
 }
 GST_END_TEST;
 
@@ -1125,7 +1156,7 @@ _double_profile_init (void)
 
 GST_START_TEST (test_rtpconference_double_codec_profile)
 {
-  nway_test (2, _double_profile_init, 0, NULL);
+  nway_test (2, _double_profile_init, "rawudp", 0, NULL);
 }
 GST_END_TEST;
 
@@ -1206,6 +1237,76 @@ GST_START_TEST (test_rtpconference_dispose)
 }
 GST_END_TEST;
 
+static guint mcast_confs;
+
+static void
+multicast_init(void)
+{
+  guint i;
+  GList *candidates = NULL;
+  FsCandidate *cand;
+
+  cand = fs_candidate_new ("1", FS_COMPONENT_RTP,
+      FS_CANDIDATE_TYPE_MULTICAST, FS_NETWORK_PROTOCOL_UDP, "224.0.0.11",
+      2324);
+  cand->ttl = 1;
+  candidates = g_list_prepend (candidates, cand);
+
+  cand = fs_candidate_copy (cand);
+  cand->component_id = FS_COMPONENT_RTCP;
+  cand->port = 2325;
+  candidates = g_list_prepend (candidates, cand);
+
+  for (i = 0; i < mcast_confs; i++)
+  {
+    GList *item;
+
+    for (item = dats[i]->streams; item; item = item->next)
+    {
+      struct SimpleTestStream *st = item->data;
+      GError *error = NULL;
+
+      ts_fail_unless (fs_stream_set_remote_candidates (st->stream, candidates,
+              &error), "Error %s", error ? error->message : "No GError");
+    }
+  }
+
+  fs_candidate_list_destroy (candidates);
+}
+
+static void
+multicast_cname_init(void)
+{
+  multicast_init();
+  associate_cnames_init ();
+}
+
+
+GST_START_TEST (test_rtpconference_multicast_two_way_cname_assoc)
+{
+  gchar *mcast_addr = find_multicast_capable_address ();
+
+  if (!mcast_addr)
+    return;
+  g_free (mcast_addr);
+
+  mcast_confs = 3;
+  nway_test (mcast_confs, multicast_cname_init, "multicast", 0, NULL);
+}
+GST_END_TEST;
+
+
+static void
+min_timeout (TCase *tc_chain, guint min)
+{
+  const gchar *env = g_getenv("CK_DEFAULT_TIMEOUT");
+  int tmp = 0;
+
+  if (env != NULL)
+    tmp = atoi(env);
+
+  tcase_set_timeout (tc_chain, MAX (min, tmp));
+}
 
 static Suite *
 fsrtpconference_suite (void)
@@ -1262,8 +1363,8 @@ fsrtpconference_suite (void)
   tcase_add_test (tc_chain, test_rtpconference_no_rtcp);
   suite_add_tcase (s, tc_chain);
 
-  tc_chain = tcase_create ("fsrtpconference_three_way_no_source_assoc");
-  tcase_add_test (tc_chain, test_rtpconference_three_way_no_source_assoc);
+  tc_chain = tcase_create ("fsrtpconference_three_way_cname_assoc");
+  tcase_add_test (tc_chain, test_rtpconference_three_way_cname_assoc);
   suite_add_tcase (s, tc_chain);
 
   tc_chain = tcase_create ("fsrtpconference_simple_profile");
@@ -1276,6 +1377,11 @@ fsrtpconference_suite (void)
 
   tc_chain = tcase_create ("fsrtpconference_dispose");
   tcase_add_test (tc_chain, test_rtpconference_dispose);
+  suite_add_tcase (s, tc_chain);
+
+  tc_chain = tcase_create ("fsrtpconference_multicast_two_way_cname_assoc");
+  min_timeout (tc_chain, 30);
+  tcase_add_test (tc_chain, test_rtpconference_multicast_two_way_cname_assoc);
   suite_add_tcase (s, tc_chain);
 
   return s;

@@ -32,7 +32,6 @@
 #include "check-threadsafe.h"
 #include "generic.h"
 
-
 static void
 _transmitter_error (FsTransmitter *transmitter, gint errorno, gchar *error_msg,
   gchar *debug_msg, gpointer user_data)
@@ -241,3 +240,4 @@ teardown_stund (void)
   g_spawn_close_pid (stund_pid);
   stund_pid = 0;
 }
+

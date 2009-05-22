@@ -1,3 +1,320 @@
+commit 31d9d40883b7df444d28a89e7d445c877185bfbf
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed May 20 18:54:34 2009 -0400
+
+    Version 0.0.10
+
+commit 2fefd38935055282f0e9f8f08f5349259ef0d861
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 19 16:23:57 2009 -0400
+
+    codec: Ignore case when comparing codec parameter names
+
+commit ab58cfd77f2cb50be081c2a6430fdb698cf22015
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 19 16:21:33 2009 -0400
+
+    codec: Ignore case when comparing codec names
+
+commit 307660cbb1f4c785d029366b52d96e7f9fe2ef2e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 19 16:21:14 2009 -0400
+
+    codec: Accept special arguments with any case
+
+commit 4eb594b91b135956edbc5d77b840a6aa7361db6d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 19 15:43:06 2009 -0400
+
+    rtcpfilter: Replace SR with empty RR if there was no RR
+
+commit ebe4d6f0692cf5f713e567d7472b63801d3a137e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 19 14:43:09 2009 -0400
+
+    rtcpfilter: Test for no-rr case
+
+commit 688eb530fddf21f7b1a93380097d3cadd14e1b0a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 19 13:58:06 2009 -0400
+
+    rtp: Don't unref passed caps in discovery
+    
+    Don't try to unref the caps pass as input, instead ref them when they are
+    added somewhere.
+
+commit 59df5a00e4ea0ef5840f637d67328c5742aa625f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed May 13 17:18:32 2009 -0400
+
+    rtp: Free substream if its parent is unlinked
+
+commit 34eb9f312cecaa53c4e51f68d674b221be02f09b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed May 13 16:47:28 2009 -0400
+
+    rtp: Make sure substream is stopped before disposing of it
+
+commit bcb3d7ad3fabbfd196e4e029d555be65d5b9d683
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed May 13 15:27:03 2009 -0400
+
+    Have substream emit a unlinked signal
+
+commit 92a7eac0b5ff87e89c770beaea3de66e893ae775
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed May 13 12:20:39 2009 -0400
+
+    nice: Free nice candidate with the right function
+
+commit bbefabf9da7fc4a695a8e18591fe1309e79b1479
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 12 12:24:27 2009 -0400
+
+    nice: remove useless state unlock
+
+commit ea8b7bf7e31a40b1e4e64c09c795dce9d5090ccf
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 12 12:07:20 2009 -0400
+
+    Safeguard against malformed GstRTPBinSDES messages
+
+commit e4b2dbb273171888fef35e30e5a9b773cf36dc7b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 12 12:03:38 2009 -0400
+
+    rtcpfilter: Verify if there is at least one packet
+
+commit 32c15a7520f65ba5fabb4933036aa91366492b7b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 12 12:01:51 2009 -0400
+
+    nice transm: Make sure foundation ends with a NUL byte
+
+commit 5651022a4a8acf6bb296be512758f68cc787f224
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 12 11:59:59 2009 -0400
+
+    substream: Add missing break
+
+commit bbd8db90081fdc96ecd6cd513abbf1e95eb379d9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 5 15:05:51 2009 -0400
+
+    Continue discovery until the caps have been found
+
+commit 7efe8ad1732ecaadf22ad3ea5e912e60231ead1f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu May 7 13:51:20 2009 -0400
+
+    Remove unused variable when debug disabled
+
+commit a6829deb59d85e26349d92a6da7b632b729d9d43
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Apr 26 18:16:01 2009 -0400
+
+    Remove deprecated GLib symbols
+
+commit 2250f8e4c3d8e7615e3bd180a7f881778dcbc035
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 5 12:37:03 2009 -0400
+
+    funnel: Change the pad caps on source change
+
+commit 5e79e5ed87c5615f80db761048e3ae7c2a3426d3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 28 17:10:51 2009 -0400
+
+    Use a convenience lib to avoid building everything twice
+
+commit e5937fa4c41abdff87855b361dd5bbc05e7fea4f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 28 16:49:40 2009 -0400
+
+    Update common and use shave
+
+commit 677bdc62a5c612ba34037b6de2d9b55a6ad9e9b2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 23 18:25:00 2009 -0400
+
+    Add full conference multicast test
+    
+    This test uses cname for the association
+
+commit f17b7f3af4f694170a9fdfa06ec60e893c07882e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 23 20:03:34 2009 -0400
+
+    Return more errors in multicast transmitter
+
+commit f296ea9b403fe9165c24aa03042627a933049c6d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 23 17:48:35 2009 -0400
+
+    Factor out the utility func to find multicast addresses
+
+commit 666aaa493d3fb011db2fd6c6d31d0dbb4c6a5b24
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 23 17:37:00 2009 -0400
+
+    Select the transmitter name for each test in rtp tests
+
+commit 064b3fff689bd0f7f32abde95c76e796bebb50ad
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 23 21:36:08 2009 -0400
+
+    Remove usage of cname in the most tests
+
+commit 7dad3b6432fa3965584026f60624211ff92f1aa4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 23 20:54:53 2009 -0400
+
+    Make the cname optional in participants
+
+commit 0e4ec9f0c6811a120ff31d9d39538c965350ea33
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 23 20:39:54 2009 -0400
+
+    Don't emit the UNKWOWN_CNAME error anymore
+
+commit f376c3ff602c89e8757e25eea9347b3a40dcaddf
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 21 19:41:04 2009 -0400
+
+    Fix doc typo
+
+commit 6e04cf3ab2ff1b3ae077ad11d6f30032646dda86
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 23 19:20:12 2009 -0400
+
+    Return an error if no codecs where detected, every time
+
+commit 93fd20fddbf0c3841499fb00a21351717c268391
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 15 18:29:22 2009 -0400
+
+    Use internal stunalternd for testing
+
+commit 68732ff3e7a769d4c150139d6b9dd47a981d7c6a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 10 14:13:19 2009 -0400
+
+    Emit GstForceKeyUnit when multicast starts sending
+
+commit 442a43705c4121c41c6e60f50244fff40e7cb776
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 10 14:09:47 2009 -0400
+
+    Emit GstForceKeyUnit when nice starts sending
+
+commit 2b94c4aa5fb26f48d50a3873dfaff1d6eb64681a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 10 14:06:22 2009 -0400
+
+    Emit GstForceKeyUnit when rawudp starts sending
+
+commit 1de519a700932fdb37a88bca1d1c62bff1ea0c03
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 10 17:23:00 2009 -0400
+
+    Only enable stun debug if rawudp debug level is debug or log
+
+commit 9cbbdc2dd7efd1a06aa1c197fc1eb916da7e3ffb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 8 21:03:32 2009 -0400
+
+    Use NiceAddress to parse stun ip
+
+commit e04ccafdf2990ae96b49113f117f9403927bb76e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 8 17:07:44 2009 -0400
+
+    Update libnice dep to 0.0.6 for stable stun API
+
+commit 4dc735149c08003fff154c6f5902c2e2afae7022
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 7 20:29:04 2009 -0400
+
+    Add stun alternate-server tests
+
+commit 77286bdba89619f59c08d086f0e25a658042b017
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 7 18:32:46 2009 -0400
+
+    Implement stun alternate server
+
+commit 97de77fe3f12c84f527ab4c9dab171a2e30ead8a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 7 18:17:49 2009 -0400
+
+    Use libnice stun timer
+
+commit 580a0fbf168a94f87de3d39584f128449146bfe0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 7 17:12:15 2009 -0400
+
+    use libnice to parse incoming stun
+
+commit afe00f2ca7a339b72b5bd0d1ef6ad0c4df5604d0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 7 15:57:17 2009 -0400
+
+    Remove stun for old libnice
+
+commit befe532b310bf9763b9a87e2492020b590734bb6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 7 15:56:48 2009 -0400
+
+    Use libnice when sending STUN requests
+
+commit 342f097a3fbe9af972d76429c5eb69278e00d412
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 10 14:56:48 2009 -0400
+
+    Don't print NULL candidate
+
+commit a89f6b1df1fd2fbb08ab95c8180fe23a9caaa196
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 10 13:24:20 2009 -0400
+
+    Remove unused label
+
+commit 753462cfbc0cce96a84eaa3dfd96b682ec68c443
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 9 19:06:30 2009 -0400
+
+    Remove support for H263-N800 hack
+
+commit 34b52b61ec10e573db0ab3c77a3d01d377cd807f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 9 14:02:04 2009 -0400
+
+    Update references diagram to match reality
+
+commit f20f61665b7b225fd91dba6d2b52c260e237d6a5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 8 20:39:47 2009 -0400
+
+    Stop encoding when no one is sending
+
+commit 3c8acacf9120fa5b7962e4062a31eef0ca761385
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 8 19:26:37 2009 -0400
+
+    Don't try to use gdk/gtk defs in python codegen
+
+commit 386c809953600827c6c7637839bcb702f60b1e2a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 8 18:11:52 2009 -0400
+
+    Remove dep on pygtk if pygobject 2.16 is present
+
+commit 6904d6df1959168646946dc431339074a5a3fb08
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 6 20:35:23 2009 -0400
+
+    Version 0.0.9.1
+
 commit 4fe6016ec86e748342ee3fa35b607cbefc049109
 Author: Olivier Crête <olivier.crete@collabora.co.uk>
 Date:   Mon Apr 6 20:29:37 2009 -0400

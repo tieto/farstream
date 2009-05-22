@@ -32,21 +32,21 @@
     </sub>
   </chapters>
   <functions>
-    <function name="The &quot;farsight-error&quot; message" link="FsConference.html#id2576999"/>
+    <function name="The &quot;farsight-error&quot; message" link="FsConference.html#id2895759"/>
     <function name="FsConference" link="FsConference.html#FsConference-struct"/>
     <function name="fs_conference_new_session ()" link="FsConference.html#fs-conference-new-session"/>
     <function name="fs_conference_new_participant ()" link="FsConference.html#fs-conference-new-participant"/>
-    <function name="FS_ERROR" link="FsConference.html#FS-ERROR:CAPS"/>
+    <function name="FS_ERROR" link="FsConference.html#FS-ERROR--CAPS"/>
     <function name="enum FsError" link="FsConference.html#FsError"/>
-    <function name="FS_ERROR_IS_FATAL()" link="FsConference.html#FS-ERROR-IS-FATAL:CAPS"/>
+    <function name="FS_ERROR_IS_FATAL()" link="FsConference.html#FS-ERROR-IS-FATAL--CAPS"/>
     <function name="FsParticipant" link="FsParticipant.html#FsParticipant-struct"/>
     <function name="FsParticipantClass" link="FsParticipant.html#FsParticipantClass"/>
-    <function name="FS_PARTICIPANT_DATA_LOCK()" link="FsParticipant.html#FS-PARTICIPANT-DATA-LOCK:CAPS"/>
-    <function name="FS_PARTICIPANT_DATA_UNLOCK()" link="FsParticipant.html#FS-PARTICIPANT-DATA-UNLOCK:CAPS"/>
+    <function name="FS_PARTICIPANT_DATA_LOCK()" link="FsParticipant.html#FS-PARTICIPANT-DATA-LOCK--CAPS"/>
+    <function name="FS_PARTICIPANT_DATA_UNLOCK()" link="FsParticipant.html#FS-PARTICIPANT-DATA-UNLOCK--CAPS"/>
     <function name="The &quot;cname&quot; property" link="FsParticipant.html#FsParticipant--cname"/>
     <function name="The &quot;error&quot; signal" link="FsParticipant.html#FsParticipant-error"/>
-    <function name="The &quot;farsight-send-codec-changed&quot;&#10;  message" link="FsSession.html#id2644079"/>
-    <function name="The &quot;farsight-codecs-changed&quot;&#10; message" link="FsSession.html#id2644123"/>
+    <function name="The &quot;farsight-send-codec-changed&quot;&#10;  message" link="FsSession.html#id2966989"/>
+    <function name="The &quot;farsight-codecs-changed&quot;&#10; message" link="FsSession.html#id2967033"/>
     <function name="enum FsDTMFEvent" link="FsSession.html#FsDTMFEvent"/>
     <function name="enum FsDTMFMethod" link="FsSession.html#FsDTMFMethod"/>
     <function name="FsSession" link="FsSession.html#FsSession-struct"/>
@@ -67,11 +67,11 @@
     <function name="The &quot;media-type&quot; property" link="FsSession.html#FsSession--media-type"/>
     <function name="The &quot;sink-pad&quot; property" link="FsSession.html#FsSession--sink-pad"/>
     <function name="The &quot;error&quot; signal" link="FsSession.html#FsSession-error"/>
-    <function name="The &quot;farsight-new-local-candidate&quot; message" link="FsStream.html#id2662807"/>
-    <function name="The &quot;farsight-local-candidates-prepared&quot; message" link="FsStream.html#id2662843"/>
-    <function name="The &quot;farsight-new-active-candidate-pair&quot; message" link="FsStream.html#id2662875"/>
-    <function name="The &quot;farsight-recv-codecs-changed&quot; message" link="FsStream.html#id2662924"/>
-    <function name="The &quot;farsight-component-state-changed&quot; message" link="FsStream.html#id2662992"/>
+    <function name="The &quot;farsight-new-local-candidate&quot; message" link="FsStream.html#id2950584"/>
+    <function name="The &quot;farsight-local-candidates-prepared&quot; message" link="FsStream.html#id2950621"/>
+    <function name="The &quot;farsight-new-active-candidate-pair&quot; message" link="FsStream.html#id2950652"/>
+    <function name="The &quot;farsight-recv-codecs-changed&quot; message" link="FsStream.html#id2950702"/>
+    <function name="The &quot;farsight-component-state-changed&quot; message" link="FsStream.html#id2950770"/>
     <function name="FsStream" link="FsStream.html#FsStream-struct"/>
     <function name="FsStreamClass" link="FsStream.html#FsStreamClass"/>
     <function name="enum FsStreamDirection" link="FsStream.html#FsStreamDirection"/>
@@ -102,8 +102,8 @@
     <function name="FsCodec" link="farsight2-libs-FsCodec.html#FsCodec"/>
     <function name="enum FsMediaType" link="farsight2-libs-FsCodec.html#FsMediaType"/>
     <function name="FsCodecParameter" link="farsight2-libs-FsCodec.html#FsCodecParameter"/>
-    <function name="FS_CODEC_ID_ANY" link="farsight2-libs-FsCodec.html#FS-CODEC-ID-ANY:CAPS"/>
-    <function name="FS_CODEC_ID_DISABLE" link="farsight2-libs-FsCodec.html#FS-CODEC-ID-DISABLE:CAPS"/>
+    <function name="FS_CODEC_ID_ANY" link="farsight2-libs-FsCodec.html#FS-CODEC-ID-ANY--CAPS"/>
+    <function name="FS_CODEC_ID_DISABLE" link="farsight2-libs-FsCodec.html#FS-CODEC-ID-DISABLE--CAPS"/>
     <function name="fs_codec_new ()" link="farsight2-libs-FsCodec.html#fs-codec-new"/>
     <function name="fs_codec_destroy ()" link="farsight2-libs-FsCodec.html#fs-codec-destroy"/>
     <function name="fs_codec_copy ()" link="farsight2-libs-FsCodec.html#fs-codec-copy"/>
@@ -116,8 +116,8 @@
     <function name="fs_codec_add_optional_parameter ()" link="farsight2-libs-FsCodec.html#fs-codec-add-optional-parameter"/>
     <function name="fs_codec_remove_optional_parameter ()" link="farsight2-libs-FsCodec.html#fs-codec-remove-optional-parameter"/>
     <function name="fs_codec_get_optional_parameter ()" link="farsight2-libs-FsCodec.html#fs-codec-get-optional-parameter"/>
-    <function name="FS_CODEC_FORMAT" link="farsight2-libs-FsCodec.html#FS-CODEC-FORMAT:CAPS"/>
-    <function name="FS_CODEC_ARGS()" link="farsight2-libs-FsCodec.html#FS-CODEC-ARGS:CAPS"/>
+    <function name="FS_CODEC_FORMAT" link="farsight2-libs-FsCodec.html#FS-CODEC-FORMAT--CAPS"/>
+    <function name="FS_CODEC_ARGS()" link="farsight2-libs-FsCodec.html#FS-CODEC-ARGS--CAPS"/>
     <function name="fs_media_type_to_string ()" link="farsight2-libs-FsCodec.html#fs-media-type-to-string"/>
     <function name="FsElementAddedNotifier" link="FsElementAddedNotifier.html#FsElementAddedNotifier-struct"/>
     <function name="fs_element_added_notifier_new ()" link="FsElementAddedNotifier.html#fs-element-added-notifier-new"/>
@@ -162,7 +162,7 @@
     <function name="FsPlugin" link="farsight2-libs-FsPlugin.html#FsPlugin"/>
     <function name="fs_plugin_create_valist ()" link="farsight2-libs-FsPlugin.html#fs-plugin-create-valist"/>
     <function name="fs_plugin_create ()" link="farsight2-libs-FsPlugin.html#fs-plugin-create"/>
-    <function name="FS_INIT_PLUGIN()" link="farsight2-libs-FsPlugin.html#FS-INIT-PLUGIN:CAPS"/>
+    <function name="FS_INIT_PLUGIN()" link="farsight2-libs-FsPlugin.html#FS-INIT-PLUGIN--CAPS"/>
     <function name="fs_plugin_list_available ()" link="farsight2-libs-FsPlugin.html#fs-plugin-list-available"/>
   </functions>
 </book>
