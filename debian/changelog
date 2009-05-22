@@ -1,10 +1,11 @@
-farsight2 (0.0.9-3) UNRELEASED; urgency=low
+farsight2 (0.0.10-1) UNRELEASED; urgency=low
 
+  * New upstream release
   * debian/control:
     - remove XS-Dm-Upload-Allowed
     - Add ${python:Depends} to python-farsight dependencies 
 
- -- Laurent Bigonville <bigon@debian.org>  Thu, 07 May 2009 14:14:54 +0200
+ -- Laurent Bigonville <bigon@debian.org>  Fri, 22 May 2009 12:09:07 +0200
 
 farsight2 (0.0.9-2) unstable; urgency=low
 
