@@ -6,8 +6,9 @@ farsight2 (0.0.10-1) UNRELEASED; urgency=low
     - Add ${python:Depends} to python-farsight dependencies 
     - Build-dep on python-gst0.10-dev instead of python-gst0.10
     - Versionize libnice-dev build-dependency
+  * debian/update-patches.mk: Fix script to work with new git version
 
- -- Laurent Bigonville <bigon@debian.org>  Fri, 22 May 2009 12:19:13 +0200
+ -- Laurent Bigonville <bigon@debian.org>  Mon, 25 May 2009 14:05:14 +0200
 
 farsight2 (0.0.9-2) unstable; urgency=low
 
