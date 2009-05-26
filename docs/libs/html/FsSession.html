@@ -175,7 +175,7 @@ href="../gstreamer-0.10/GstBus.html"
 ><span class="type">GstBus</span></a>.
 </p>
 <div class="refsect2" lang="en">
-<a name="id2966989"></a><h3>The "<code class="literal">farsight-send-codec-changed</code>"
+<a name="id3019396"></a><h3>The "<code class="literal">farsight-send-codec-changed</code>"
   message</h3>
 <div class="informalexample"><pre class="programlisting">
 "session"          <a class="link" href="FsSession.html" title="FsSession">FsSession</a>          The session that emits the message
@@ -188,7 +188,7 @@ This message is sent on the bus when the value of the
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2967033"></a><h3>The "<code class="literal">farsight-codecs-changed</code>"
+<a name="id3019439"></a><h3>The "<code class="literal">farsight-codecs-changed</code>"
  message</h3>
 <div class="informalexample"><pre class="programlisting">
 "session"          <a class="link" href="FsSession.html" title="FsSession">FsSession</a>          The session that emits the message
@@ -199,7 +199,9 @@ This message is sent on the bus when the value of the
 If one is using codecs that have configuration data that needs to be
 transmitted reliably, once should check the value of <a class="link" href="FsSession.html#FsSession--codecs-ready" title='The "codecs-ready" property'><span class="type">"codecs-ready"</span></a>
 property to make sure all of the codecs configuration are ready and have been
-discovered before using the codecs. If its not <code class="literal">TRUE</code>, one should wait for the
+discovered before using the codecs. If its not <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, one should wait for the
 next "farsight-codecs-changed" message until reading the codecs.
 </p>
 </div>
@@ -424,7 +426,9 @@ href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GParamet
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
 <td> location of a <a
 href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
-><span class="type">GError</span></a>, or <code class="literal">NULL</code> if no error occured
+><span class="type">GError</span></a>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if no error occured
 </td>
 </tr>
 <tr>
@@ -484,7 +488,11 @@ http://www.iana.org/assignments/audio-telephone-event-registry
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if sucessful, it can return <code class="literal">FALSE</code> if the <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a>
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if sucessful, it can return <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> if the <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a>
 does not support this telephony event.
 </td>
 </tr>
@@ -521,7 +529,11 @@ short.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if sucessful, it can return <code class="literal">FALSE</code> if the <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if sucessful, it can return <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> if the <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>
 does not support telephony events or if no telephony event is being sent
 </td>
 </tr>
@@ -542,7 +554,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 This function will set the currently being sent codec for all streams in this
 session. The given <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> must be taken directly from the <span class="type">codecs</span>
 property of the session. If the given codec is not in the codecs
-list, <em class="parameter"><code>error</code></em> will be set and <code class="literal">FALSE</code> will be returned. The <em class="parameter"><code>send_codec</code></em> will be
+list, <em class="parameter"><code>error</code></em> will be set and <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> will be returned. The <em class="parameter"><code>send_codec</code></em> will be
 copied so it must be free'd using <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-destroy" title="fs_codec_destroy ()"><code class="function">fs_codec_destroy()</code></a> when done.</p>
 <p>
 </p>
@@ -563,12 +577,16 @@ copied so it must be free'd using <a class="link" href="farsight2-libs-FsCodec.h
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
 <td> location of a <a
 href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
-><span class="type">GError</span></a>, or <code class="literal">NULL</code> if no error occured
+><span class="type">GError</span></a>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if no error occured
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">FALSE</code> if the send codec couldn't be set.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> if the send codec couldn't be set.
 </td>
 </tr>
 </tbody>
@@ -626,12 +644,18 @@ href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
 <td> location of a <a
 href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
-><span class="type">GError</span></a>, or <code class="literal">NULL</code> if no error occured
+><span class="type">GError</span></a>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if no error occured
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> on success, <code class="literal">FALSE</code> on error.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> on success, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> on error.
 </td>
 </tr>
 </tbody>
@@ -657,8 +681,12 @@ Get the list of all available transmitters for this session.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> a newly-allocagted <code class="literal">NULL</code> terminated array of named of transmitters
-or <code class="literal">NULL</code> if no transmitter is needed for this type of session. It should
+<td> a newly-allocagted <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> terminated array of named of transmitters
+or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if no transmitter is needed for this type of session. It should
 be freed with <a
 href="/usr/share/gtk-doc/html/glib/glib-String-Utility-Functions.html#g-strfreev"
 ><code class="function">g_strfreev()</code></a>.
@@ -753,7 +781,9 @@ asynchronously when new config data is discovered.
 </p>
 <p>
 You can only assume that the configuration parameters are valid when
-the <a class="link" href="FsSession.html#FsSession--codecs-ready" title='The "codecs-ready" property'><span class="type">"codecs-ready"</span></a> property is <code class="literal">TRUE</code>.
+the <a class="link" href="FsSession.html#FsSession--codecs-ready" title='The "codecs-ready" property'><span class="type">"codecs-ready"</span></a> property is <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>.
 The "farsight-codecs-changed" message will be emitted whenever the value
 of this property changes.
 </p>
@@ -774,10 +804,16 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 <p>
 Some codecs that have configuration data that needs to be sent reliably
 may need to be initialized from actual data before being ready. If your
-application uses such codecs, wait until this property is <code class="literal">TRUE</code> before
+application uses such codecs, wait until this property is <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> before
 using the <a class="link" href="FsSession.html#FsSession--codecs" title='The "codecs" property'><span class="type">"codecs"</span></a>
-property. If the value if not <code class="literal">TRUE</code>, the "farsight-codecs-changed"
-message will be emitted when it becomes <code class="literal">TRUE</code>. You should re-check
+property. If the value if not <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, the "farsight-codecs-changed"
+message will be emitted when it becomes <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>. You should re-check
 the value of this property when you receive the message.</p>
 <p>
 </p>
