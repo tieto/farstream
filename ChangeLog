@@ -1,3 +1,83 @@
+commit 2267454214e5e026c0e77003e728ae335b1d5d9b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon May 25 14:06:15 2009 -0400
+
+    Version 0.0.11
+
+commit c396561f25ca8d7f8a35c86df2f3b231894fefb4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon May 25 16:24:55 2009 -0400
+
+    Revert "Add test for changing the sending ssrc"
+    
+    This reverts commit c8ccc1d254a167e88fc25bf28547c90609385230.
+
+commit a46e57c168338c8a2e3b39771e10aa5e626abeda
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun May 24 14:44:58 2009 -0400
+
+    rtp: Re-add plugin ldflags
+
+commit 5c2609de1101faa2409680e8b7ca3321bb27c6af
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri May 22 14:52:25 2009 -0400
+
+    tests: Disable upnp for invalid stun test
+
+commit bb17542752c655957580a25892d1082aa33af85d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri May 22 13:40:06 2009 -0400
+
+    tests: Do g_debug instead of warning when skipping tests
+
+commit 79ce8d23643eda8ddb45fb3bbf5444e6c225f299
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed May 20 19:02:34 2009 -0400
+
+    Update -bad dep for ssrc setting property
+
+commit b51b61984e7e2f465c375f9781eec7c3bf9b9089
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 23 18:25:00 2009 -0400
+
+    Add ssrc based multicast test
+
+commit 80a81edd9ee3085426ac755b33c2226b0f6270a6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 22 17:42:04 2009 -0400
+
+    Implement fs_stream_add_id in RTP plugin
+
+commit 6aaadd3066a8ab0133ad3feb72c5c657e608240a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 21 19:53:20 2009 -0400
+
+    Add fs_stream_add_id api
+
+commit c8ccc1d254a167e88fc25bf28547c90609385230
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 20 20:18:41 2009 -0400
+
+    Add test for changing the sending ssrc
+
+commit 91325df0c3835686abaa654ced8d63e45fc57d22
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 20 19:10:22 2009 -0400
+
+    Implement the ssrc property on the rtp session
+
+commit f9e660f88e6226d023e4a55ddd3adae4f185662a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 24 12:15:15 2009 -0400
+
+    Get rtpbin internal session
+
+commit ad703c2a8a4a728e53c7993d9cf055607e22801c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed May 20 19:00:50 2009 -0400
+
+    Version 0.0.10.1
+
 commit 31d9d40883b7df444d28a89e7d445c877185bfbf
 Author: Olivier Crête <olivier.crete@collabora.co.uk>
 Date:   Wed May 20 18:54:34 2009 -0400

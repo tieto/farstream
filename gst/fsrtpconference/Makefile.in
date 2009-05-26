@@ -101,6 +101,9 @@ libfsrtpconference_la_DEPENDENCIES =  \
 	$(am__DEPENDENCIES_1)
 am_libfsrtpconference_la_OBJECTS = gstfsrtpconference.lo
 libfsrtpconference_la_OBJECTS = $(am_libfsrtpconference_la_OBJECTS)
+libfsrtpconference_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(libfsrtpconference_la_LDFLAGS) $(LDFLAGS) -o $@
 am__DEPENDENCIES_2 = libfsrtpconference-convenience.la \
 	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-0.10.la \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
@@ -386,6 +389,7 @@ libfsrtpconference_la_LIBADD = \
 	$(GST_LIBS) \
 	-lgstrtp-@GST_MAJORMINOR@
 
+libfsrtpconference_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
 @ENABLE_GTK_DOC_TRUE@nodist_libfsrtpconference_doc_la_SOURCES = \
 @ENABLE_GTK_DOC_TRUE@	gstfsrtpconference_doc.c  \
 @ENABLE_GTK_DOC_TRUE@	$(nodist_libfsrtpconference_la_SOURCES)
@@ -467,7 +471,7 @@ clean-pluginLTLIBRARIES:
 libfsrtpconference-convenience.la: $(libfsrtpconference_convenience_la_OBJECTS) $(libfsrtpconference_convenience_la_DEPENDENCIES) 
 	$(LINK)  $(libfsrtpconference_convenience_la_OBJECTS) $(libfsrtpconference_convenience_la_LIBADD) $(LIBS)
 libfsrtpconference.la: $(libfsrtpconference_la_OBJECTS) $(libfsrtpconference_la_DEPENDENCIES) 
-	$(LINK) -rpath $(plugindir) $(libfsrtpconference_la_OBJECTS) $(libfsrtpconference_la_LIBADD) $(LIBS)
+	$(libfsrtpconference_la_LINK) -rpath $(plugindir) $(libfsrtpconference_la_OBJECTS) $(libfsrtpconference_la_LIBADD) $(LIBS)
 libfsrtpconference_doc.la: $(libfsrtpconference_doc_la_OBJECTS) $(libfsrtpconference_doc_la_DEPENDENCIES) 
 	$(LINK) $(am_libfsrtpconference_doc_la_rpath) $(libfsrtpconference_doc_la_OBJECTS) $(libfsrtpconference_doc_la_LIBADD) $(LIBS)
 

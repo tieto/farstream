@@ -334,7 +334,9 @@ Allocates and initializes a <a class="link" href="farsight2-libs-FsCodec.html#Fs
 href="/usr/share/gtk-doc/html/gnutls/gnutls-gnutls.html#void"
 >void</a>                fs_codec_destroy                    (<a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec">FsCodec</a> *codec);</pre>
 <p>
-Deletes a <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> structure and all its data. Is a no-op on <code class="literal">NULL</code> codec</p>
+Deletes a <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> structure and all its data. Is a no-op on <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> codec</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -379,7 +381,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
                                                          const <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec">FsCodec</a> *codec2);</pre>
 <p>
 Compare two codecs, it will declare two codecs to be identical even
-if their optional parameters are in a different order. <code class="literal">NULL</code> encoding names
+if their optional parameters are in a different order. <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> encoding names
 are ignored.</p>
 <p>
 </p>
@@ -398,7 +402,11 @@ are ignored.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> of the codecs are identical, <code class="literal">FALSE</code> otherwise
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> of the codecs are identical, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> otherwise
 </td>
 </tr>
 </tbody>
@@ -460,7 +468,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> The <a
 href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
-><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> or <code class="literal">NULL</code> if the keyfile was empty
+><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the keyfile was empty
  or an error occured.
 </td>
 </tr>
@@ -477,7 +487,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
 >GList</a> *codec_list);</pre>
 <p>
 Deletes a list of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> structures and the list itself.
-Does nothing on <code class="literal">NULL</code> lists.</p>
+Does nothing on <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> lists.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -551,7 +563,11 @@ href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if they are identical, <code class="literal">FALSE</code> otherwise
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if they are identical, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> otherwise
 </td>
 </tr>
 </tbody>
@@ -659,7 +675,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *value);</pre>
 <p>
 Finds the <a class="link" href="farsight2-libs-FsCodec.html#FsCodecParameter" title="FsCodecParameter"><span class="type">FsCodecParameter</span></a> in the <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> that has the requested name
-and, if not <code class="literal">NULL</code>, the requested value</p>
+and, if not <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>, the requested value</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -677,12 +695,16 @@ and, if not <code class="literal">NULL</code>, the requested value</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
-<td> The value of the parameter to search for or <code class="literal">NULL</code> for any value
+<td> The value of the parameter to search for or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> for any value
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the <a class="link" href="farsight2-libs-FsCodec.html#FsCodecParameter" title="FsCodecParameter"><span class="type">FsCodecParameter</span></a> from the <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> or <code class="literal">NULL</code>
+<td> the <a class="link" href="farsight2-libs-FsCodec.html#FsCodecParameter" title="FsCodecParameter"><span class="type">FsCodecParameter</span></a> from the <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>

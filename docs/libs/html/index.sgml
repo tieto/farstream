@@ -70,6 +70,7 @@
 <ANCHOR id="fs-stream-set-remote-candidates" href="farsight2-libs-0.10/FsStream.html#fs-stream-set-remote-candidates">
 <ANCHOR id="fs-stream-set-remote-codecs" href="farsight2-libs-0.10/FsStream.html#fs-stream-set-remote-codecs">
 <ANCHOR id="fs-stream-force-remote-candidates" href="farsight2-libs-0.10/FsStream.html#fs-stream-force-remote-candidates">
+<ANCHOR id="fs-stream-add-id" href="farsight2-libs-0.10/FsStream.html#fs-stream-add-id">
 <ANCHOR id="fs-stream-emit-error" href="farsight2-libs-0.10/FsStream.html#fs-stream-emit-error">
 <ANCHOR id="fs-stream-emit-src-pad-added" href="farsight2-libs-0.10/FsStream.html#fs-stream-emit-src-pad-added">
 <ANCHOR id="FsStream.property-details" href="farsight2-libs-0.10/FsStream.html#FsStream.property-details">
@@ -79,7 +80,6 @@
 <ANCHOR id="FsStream--participant" href="farsight2-libs-0.10/FsStream.html#FsStream--participant">
 <ANCHOR id="FsStream--remote-codecs" href="farsight2-libs-0.10/FsStream.html#FsStream--remote-codecs">
 <ANCHOR id="FsStream--session" href="farsight2-libs-0.10/FsStream.html#FsStream--session">
-<ANCHOR id="FsStream--stream-transmitter" href="farsight2-libs-0.10/FsStream.html#FsStream--stream-transmitter">
 <ANCHOR id="FsStream.signal-details" href="farsight2-libs-0.10/FsStream.html#FsStream.signal-details">
 <ANCHOR id="FsStream-error" href="farsight2-libs-0.10/FsStream.html#FsStream-error">
 <ANCHOR id="FsStream-src-pad-added" href="farsight2-libs-0.10/FsStream.html#FsStream-src-pad-added">
