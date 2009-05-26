@@ -57,6 +57,7 @@ libgstfarsight-0.10.so.0 libgstfarsight0.10-0 #MINVER#
   fs_session_set_send_codec@Base 0.0.1
   fs_session_start_telephony_event@Base 0.0.1
   fs_session_stop_telephony_event@Base 0.0.1
+  fs_stream_add_id@Base 0.0.11
   fs_stream_direction_get_type@Base 0.0.1
   fs_stream_emit_error@Base 0.0.1
   fs_stream_emit_src_pad_added@Base 0.0.1
