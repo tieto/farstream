@@ -1,16 +1,62 @@
-commit 2267454214e5e026c0e77003e728ae335b1d5d9b
+commit 3f40b79a04bfc89d9fd318b5bf9ef7857b539dea
 Author: Olivier Crête <olivier.crete@collabora.co.uk>
-Date:   Mon May 25 14:06:15 2009 -0400
+Date:   Thu May 28 17:50:18 2009 -0400
 
-    Version 0.0.11
+    Version 0.0.12
 
-commit c396561f25ca8d7f8a35c86df2f3b231894fefb4
+commit 8a64db4a0035559a34b84ab5593512a8061ff232
 Author: Olivier Crête <olivier.crete@collabora.co.uk>
-Date:   Mon May 25 16:24:55 2009 -0400
+Date:   Thu May 28 17:39:21 2009 -0400
 
-    Revert "Add test for changing the sending ssrc"
+    Disable RTCP CNAME based association tests
     
-    This reverts commit c8ccc1d254a167e88fc25bf28547c90609385230.
+    The message is broken in gst-plugins-bad 0.10.12, so it won't work.
+
+commit 4c476d49211f2f387b5f050a6bde853765dd4303
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu May 28 17:36:57 2009 -0400
+
+    rtp: Check for the new name of the sdes message
+
+commit 4a60b35295dbc1f9b70f33cb15bbbc6b8df5502a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu May 28 16:38:49 2009 -0400
+
+    tests: Reduce nice test debug output
+
+commit 8c46154df085bf91c71ac62e18a19c8a93393356
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu May 28 14:05:33 2009 -0400
+
+    tests: Name multicast rtp tests more accurately
+
+commit a53438667b01b10fd15645c53764be071a0d1361
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 26 20:46:25 2009 -0400
+
+    Revert "nice: remove useless state unlock"
+    
+    This reverts commit bbefabf9da7fc4a695a8e18591fe1309e79b1479.
+
+commit 42181a7499c669fdb29b6dbc3c3bc995c426f356
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 26 15:52:27 2009 -0400
+
+    Set link to playing before linking it
+
+commit 586b649e80f316a2dfc0cef8df398ea68e3f3673
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 26 15:51:20 2009 -0400
+
+    rtp: Do proper locking when removing send codec bin
+
+commit d443e642c4e453cb028b5670536cf1699a843a68
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon May 25 17:16:55 2009 -0400
+
+    Version 0.0.11.1
+    
+    Version 0.0.11 is in a branch
 
 commit a46e57c168338c8a2e3b39771e10aa5e626abeda
 Author: Olivier Crête <olivier.crete@collabora.co.uk>
