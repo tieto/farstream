@@ -64,7 +64,7 @@ _handoff_handler (GstElement *element, GstBuffer *buffer, GstPad *pad,
   buffer_count[component_id-1]++;
 
   /*
-  g_debug ("Buffer %d component: %d size: %u", buffer_count[component_id-1],
+  GST_DEBUG ("Buffer %d component: %d size: %u", buffer_count[component_id-1],
     component_id, GST_BUFFER_SIZE (buffer));
   */
 
@@ -88,7 +88,7 @@ _new_active_candidate_pair (FsStreamTransmitter *st, FsCandidate *local,
   ts_fail_unless (local->component_id == remote->component_id,
     "Local and remote candidates dont have the same component id");
 
-  g_debug ("New active candidate pair for component %d", local->component_id);
+  GST_DEBUG ("New active candidate pair for component %d", local->component_id);
 
   if (!src_setup[local->component_id-1])
     setup_fakesrc (user_data, pipeline, local->component_id);
@@ -100,7 +100,7 @@ _start_pipeline (gpointer user_data)
 {
   GstElement *pipeline = user_data;
 
-  g_debug ("Starting pipeline");
+  GST_DEBUG ("Starting pipeline");
 
   ts_fail_if (gst_element_set_state (pipeline, GST_STATE_PLAYING) ==
     GST_STATE_CHANGE_FAILURE, "Could not set the pipeline to playing");
@@ -128,6 +128,7 @@ run_multicast_transmitter_test (gint n_parameters, GParameter *params,
   FsCandidate *tmpcand = NULL;
   GList *candidates = NULL;
   GstBus *bus = NULL;
+  guint tos;
 
   buffer_count[0] = 0;
   buffer_count[1] = 0;
@@ -139,7 +140,7 @@ run_multicast_transmitter_test (gint n_parameters, GParameter *params,
     fail_unless (fs_fake_filter_register ());
 
   loop = g_main_loop_new (NULL, FALSE);
-  trans = fs_transmitter_new ("multicast", 2, &error);
+  trans = fs_transmitter_new ("multicast", 2, 0, &error);
 
   if (error) {
     ts_fail ("Error creating transmitter: (%s:%d) %s",
@@ -147,6 +148,10 @@ run_multicast_transmitter_test (gint n_parameters, GParameter *params,
   }
 
   ts_fail_if (trans == NULL, "No transmitter create, yet error is still NULL");
+
+  g_object_set (trans, "tos", 2, NULL);
+  g_object_get (trans, "tos", &tos, NULL);
+  ts_fail_unless (tos == 2);
 
   if (flags & FLAG_RECVONLY_FILTER)
     ts_fail_unless (g_signal_connect (trans, "get-recvonly-filter",

@@ -116,7 +116,7 @@ struct _FsRtpSubStreamPrivate {
    */
   gboolean receiving;
 
-  /* Both of these are session mutex protected */
+  /* Both of these are sub-stream mutex protected */
   /* This is TRUE while someone is modifying the recv pipeline */
   gboolean modifying;
   /* This becomes true when the substream is stopped */
@@ -188,7 +188,7 @@ fs_rtp_sub_stream_class_init (FsRtpSubStreamClass *klass)
       "The FsRtpConference this substream stream refers to",
       "This is a convience pointer for the Conference",
       FS_TYPE_RTP_CONFERENCE,
-      G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
+      G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_property (gobject_class,
     PROP_SESSION,
@@ -196,7 +196,7 @@ fs_rtp_sub_stream_class_init (FsRtpSubStreamClass *klass)
       "The FsRtpSession this substream stream refers to",
       "This is a convience pointer for the parent FsRtpSession",
       FS_TYPE_RTP_SESSION,
-      G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
+      G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
 
   g_object_class_install_property (gobject_class,
@@ -205,7 +205,7 @@ fs_rtp_sub_stream_class_init (FsRtpSubStreamClass *klass)
       "The FsRtpStream this substream stream refers to",
       "This is a convience pointer for the parent FsRtpStream",
       FS_TYPE_RTP_STREAM,
-      G_PARAM_READWRITE));
+      G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
 
   g_object_class_install_property (gobject_class,
@@ -214,7 +214,7 @@ fs_rtp_sub_stream_class_init (FsRtpSubStreamClass *klass)
       "The GstPad this substrea is linked to",
       "This is the pad on which this substream will attach itself",
       GST_TYPE_PAD,
-      G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
+      G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
 
   g_object_class_install_property (gobject_class,
@@ -223,7 +223,7 @@ fs_rtp_sub_stream_class_init (FsRtpSubStreamClass *klass)
       "The ssrc this stream is used for",
       "This is the SSRC from the pad",
       0, G_MAXUINT32, 0,
-      G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
+      G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_property (gobject_class,
     PROP_PT,
@@ -231,7 +231,7 @@ fs_rtp_sub_stream_class_init (FsRtpSubStreamClass *klass)
       "The payload type this stream is used for",
       "This is the payload type from the pad",
       0, 128, 0,
-      G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
+      G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_property (gobject_class,
     PROP_CODEC,
@@ -239,7 +239,7 @@ fs_rtp_sub_stream_class_init (FsRtpSubStreamClass *klass)
       "The FsCodec this substream is received",
       "The FsCodec currently received from this substream",
       FS_TYPE_CODEC,
-      G_PARAM_READABLE));
+      G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_property (gobject_class,
       PROP_RECEIVING,
@@ -247,7 +247,7 @@ fs_rtp_sub_stream_class_init (FsRtpSubStreamClass *klass)
           "Whether this substream will receive any data",
           "A toggle that prevents the substream from outputting any data",
           TRUE,
-          G_PARAM_READWRITE));
+          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_property (gobject_class,
       PROP_OUTPUT_GHOSTPAD,
@@ -256,7 +256,7 @@ fs_rtp_sub_stream_class_init (FsRtpSubStreamClass *klass)
           "The GstPad which is on the outside of the fsrtpconference element"
           " for this substream",
           GST_TYPE_PAD,
-          G_PARAM_READABLE));
+          G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_property (gobject_class,
       PROP_NO_RTCP_TIMEOUT,
@@ -266,7 +266,7 @@ fs_rtp_sub_stream_class_init (FsRtpSubStreamClass *klass)
           " is attached the FsStream, this only works if there is only one"
           " FsStream. <=0 will do nothing",
           -1, G_MAXINT, DEFAULT_NO_RTCP_TIMEOUT,
-          G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
+          G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
 
   /**
@@ -534,8 +534,9 @@ fs_rtp_sub_stream_constructed (GObject *object)
     return;
   }
 
-  self->priv->rtpbin_unlinked_sig = g_signal_connect (self->priv->rtpbin_pad,
-      "unlinked", G_CALLBACK (rtpbin_pad_unlinked), self);
+  self->priv->rtpbin_unlinked_sig = g_signal_connect_object (
+      self->priv->rtpbin_pad, "unlinked", G_CALLBACK (rtpbin_pad_unlinked),
+      self, 0);
 
   tmp = g_strdup_printf ("output_recv_valve_%d_%d_%d", self->priv->session->id,
       self->ssrc, self->pt);
@@ -876,8 +877,11 @@ fs_rtp_sub_stream_set_codecbin_unlock (FsRtpSubStream *substream,
   GstPad *pad;
   gboolean codec_changed = TRUE;
 
+  FS_RTP_SUB_STREAM_LOCK (substream);
+
   if (substream->priv->stopped)
   {
+    FS_RTP_SUB_STREAM_UNLOCK (substream);
     FS_RTP_SESSION_UNLOCK (substream->priv->session);
     gst_object_unref (codecbin);
     fs_codec_destroy (codec);
@@ -885,6 +889,7 @@ fs_rtp_sub_stream_set_codecbin_unlock (FsRtpSubStream *substream,
     return TRUE;
   }
   substream->priv->modifying = TRUE;
+  FS_RTP_SUB_STREAM_UNLOCK (substream);
 
   if (substream->codec)
   {
@@ -907,7 +912,9 @@ fs_rtp_sub_stream_set_codecbin_unlock (FsRtpSubStream *substream,
           "Could not set the codec bin for ssrc %u"
           " and payload type %d to the state NULL", substream->ssrc,
           substream->pt);
+      FS_RTP_SUB_STREAM_LOCK (substream);
       substream->priv->modifying = FALSE;
+      FS_RTP_SUB_STREAM_UNLOCK (substream);
       FS_RTP_SESSION_UNLOCK (substream->priv->session);
       gst_object_unref (codecbin);
       fs_codec_destroy (codec);
@@ -940,7 +947,9 @@ fs_rtp_sub_stream_set_codecbin_unlock (FsRtpSubStream *substream,
     gst_object_unref (codecbin);
     g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
       "Could not add the codec bin to the conference");
+    FS_RTP_SUB_STREAM_LOCK (substream);
     substream->priv->modifying = FALSE;
+    FS_RTP_SUB_STREAM_UNLOCK (substream);
     fs_rtp_sub_stream_try_stop (substream);
     return FALSE;
   }
@@ -1007,7 +1016,9 @@ fs_rtp_sub_stream_set_codecbin_unlock (FsRtpSubStream *substream,
   substream->priv->caps = caps;
   substream->priv->codecbin = codecbin;
   substream->codec = codec;
+  FS_RTP_SUB_STREAM_LOCK (substream);
   substream->priv->modifying = FALSE;
+  FS_RTP_SUB_STREAM_UNLOCK (substream);
 
   if (substream->priv->stream && !substream->priv->output_ghostpad)
   {
@@ -1028,7 +1039,9 @@ fs_rtp_sub_stream_set_codecbin_unlock (FsRtpSubStream *substream,
   return TRUE;
 
  error:
+  FS_RTP_SUB_STREAM_LOCK (substream);
   substream->priv->modifying = FALSE;
+  FS_RTP_SUB_STREAM_UNLOCK (substream);
 
 
   gst_element_set_locked_state (codecbin, TRUE);
@@ -1072,21 +1085,29 @@ fs_rtp_sub_stream_new (FsRtpConference *conference,
 }
 
 static void
+do_nothing_blocked_callback (GstPad *pad, gboolean blocked, gpointer user_data)
+{
+}
+
+static void
 fs_rtp_sub_stream_try_stop (FsRtpSubStream *substream)
 {
-  FS_RTP_SESSION_LOCK (substream->priv->session);
+  FS_RTP_SUB_STREAM_LOCK (substream);
   if (!substream->priv->stopped || substream->priv->modifying)
   {
-    FS_RTP_SESSION_UNLOCK (substream->priv->session);
+    FS_RTP_SUB_STREAM_UNLOCK (substream);
     return;
   }
-  FS_RTP_SESSION_UNLOCK (substream->priv->session);
+  FS_RTP_SUB_STREAM_UNLOCK (substream);
 
   if (substream->priv->rtpbin_unlinked_sig) {
     g_signal_handler_disconnect (substream->priv->rtpbin_pad,
         substream->priv->rtpbin_unlinked_sig);
     substream->priv->rtpbin_unlinked_sig = 0;
   }
+
+  gst_pad_set_blocked_async (substream->priv->rtpbin_pad, FALSE,
+      do_nothing_blocked_callback, NULL);
 
   if (substream->priv->output_ghostpad)
     gst_pad_set_active (substream->priv->output_ghostpad, FALSE);
@@ -1125,9 +1146,9 @@ fs_rtp_sub_stream_try_stop (FsRtpSubStream *substream)
 void
 fs_rtp_sub_stream_stop (FsRtpSubStream *substream)
 {
-  FS_RTP_SESSION_LOCK (substream->priv->session);
+  FS_RTP_SUB_STREAM_LOCK (substream);
   substream->priv->stopped = TRUE;
-  FS_RTP_SESSION_UNLOCK (substream->priv->session);
+  FS_RTP_SUB_STREAM_UNLOCK (substream);
 
   fs_rtp_sub_stream_try_stop (substream);
 }
@@ -1290,19 +1311,13 @@ _rtpbin_pad_have_data_callback (GstPad *pad, GstMiniObject *miniobj,
 }
 
 static void
-do_nothing_blocked_callback (GstPad *pad, gboolean blocked, gpointer user_data)
-{
-}
-
-static void
 _rtpbin_pad_blocked_callback (GstPad *pad, gboolean blocked, gpointer user_data)
 {
   FsRtpSubStream *substream = user_data;
 
   g_signal_emit (substream, signals[BLOCKED], 0, substream->priv->stream);
 
-  gst_pad_set_blocked_async (substream->priv->rtpbin_pad, FALSE,
-      do_nothing_blocked_callback, NULL);
+  gst_pad_set_blocked_async (pad, FALSE, do_nothing_blocked_callback, NULL);
 }
 
 static void
@@ -1315,7 +1330,7 @@ fs_rtp_sub_stream_add_probe_locked (FsRtpSubStream *substream)
 }
 
 /**
- * fs_rtp_sub_stream_verify_codec:
+ * fs_rtp_sub_stream_verify_codec_locked:
  * @substream: A #FsRtpSubStream
  *
  * This function will start the process that invalidates the codec
@@ -1325,7 +1340,7 @@ fs_rtp_sub_stream_add_probe_locked (FsRtpSubStream *substream)
  */
 
 void
-fs_rtp_sub_stream_verify_codec (FsRtpSubStream *substream)
+fs_rtp_sub_stream_verify_codec_locked (FsRtpSubStream *substream)
 {
   GST_LOG ("Starting codec verification process for substream with"
       " SSRC:%x pt:%d", substream->ssrc, substream->pt);

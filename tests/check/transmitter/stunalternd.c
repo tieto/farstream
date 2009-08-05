@@ -76,9 +76,11 @@ int listen_socket (int fam, int type, int proto, unsigned int port)
     struct sockaddr_in6 in6;
     struct sockaddr_storage storage;
   } addr;
+  socklen_t socklen;
+
   if (fd == -1)
   {
-    perror ("Error opening IP port");
+    perror ("Error creating socket");
     return -1;
   }
   if (fd < 3)
@@ -91,16 +93,21 @@ int listen_socket (int fam, int type, int proto, unsigned int port)
   {
     case AF_INET:
       addr.in.sin_port = htons (port);
+      socklen = sizeof (struct sockaddr_in);
       break;
 
     case AF_INET6:
       addr.in6.sin6_port = htons (port);
+      socklen = sizeof (struct sockaddr_in6);
       break;
+    default:
+      socklen = 0;
+      abort ();
   }
 
-  if (bind (fd, (struct sockaddr *)&addr, sizeof (addr)))
+  if (bind (fd, (struct sockaddr *)&addr, socklen))
   {
-    perror ("Error opening IP port");
+    perror ("Error binding to port");
     goto error;
   }
 
@@ -108,20 +115,23 @@ int listen_socket (int fam, int type, int proto, unsigned int port)
   {
     switch (fam)
     {
+#ifdef IP_RECVERR
       case AF_INET:
         setsockopt (fd, SOL_IP, IP_RECVERR, &yes, sizeof (yes));
         break;
-
+#endif
+#ifdef IPV6_RECVERR
       case AF_INET6:
         setsockopt (fd, SOL_IPV6, IPV6_RECVERR, &yes, sizeof (yes));
         break;
+#endif
     }
   }
   else
   {
     if (listen (fd, INT_MAX))
     {
-      perror ("Error opening IP port");
+      perror ("Error listening on port");
       goto error;
     }
   }
@@ -138,8 +148,10 @@ error:
 static int recv_err (int fd)
 {
   struct msghdr hdr;
+#ifdef MSG_ERRQUEUE
   memset (&hdr, 0, sizeof (hdr));
   return recvmsg (fd, &hdr, MSG_ERRQUEUE) >= 0;
+#endif
 }
 
 
