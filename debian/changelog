@@ -2,9 +2,10 @@ farsight2 (0.0.14-1) UNRELEASED; urgency=low
 
   * New upstream release.
     - Bump build-deps
+    - Adjust libgstfarsight0.10-0.symbols
   * Bump Standards-Version (no further changes)
 
- -- Laurent Bigonville <bigon@debian.org>  Wed, 05 Aug 2009 13:33:24 +0200
+ -- Laurent Bigonville <bigon@debian.org>  Wed, 05 Aug 2009 13:39:55 +0200
 
 farsight2 (0.0.12-1) unstable; urgency=low
 

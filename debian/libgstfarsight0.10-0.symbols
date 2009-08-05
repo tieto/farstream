@@ -35,6 +35,7 @@ libgstfarsight-0.10.so.0 libgstfarsight0.10-0 #MINVER#
   fs_element_added_notifier_get_type@Base 0.0.1
   fs_element_added_notifier_new@Base 0.0.1
   fs_element_added_notifier_remove@Base 0.0.1
+  fs_element_added_notifier_set_properties_from_file@Base 0.0.14
   fs_element_added_notifier_set_properties_from_keyfile@Base 0.0.1
   fs_error_get_type@Base 0.0.1
   fs_error_quark@Base 0.0.1
@@ -50,6 +51,7 @@ libgstfarsight-0.10.so.0 libgstfarsight0.10-0 #MINVER#
   fs_plugin_get_type@Base 0.0.1
   fs_plugin_list_available@Base 0.0.4
   fs_session_emit_error@Base 0.0.1
+  fs_session_get_stream_transmitter_type@Base 0.0.14
   fs_session_get_type@Base 0.0.1
   fs_session_list_transmitters@Base 0.0.4
   fs_session_new_stream@Base 0.0.1
