@@ -10,12 +10,12 @@ Uploaders: Dafydd Harries <daf@debian.org>,
 Build-Depends: debhelper (>= 5.0.0),
                cdbs,
                libglib2.0-dev (>= 2.16),
-               libgstreamer0.10-dev (>= 0.10.22),
-               libgstreamer-plugins-base0.10-dev (>= 0.10.22),
+               libgstreamer0.10-dev (>= 0.10.23),
+               libgstreamer-plugins-base0.10-dev (>= 0.10.23),
                python-central (>= 0.5),
                python-gtk2-dev,
                python-gst0.10-dev,
-               libnice-dev (>= 0.0.6)
+               libnice-dev (>= 0.0.9)
 Standards-Version: 3.8.2
 Vcs-Git: git://git.debian.org/git/pkg-telepathy/farsight2.git
 Vcs-Browser: http://git.debian.org/?p=pkg-telepathy/farsight2.git
