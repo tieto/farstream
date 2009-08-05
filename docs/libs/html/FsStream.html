@@ -60,53 +60,47 @@
 enum                <a class="link" href="FsStream.html#FsStreamDirection" title="enum FsStreamDirection">FsStreamDirection</a>;
 enum                <a class="link" href="FsStream.html#FsStreamState" title="enum FsStreamState">FsStreamState</a>;
 <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+href="../glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            <a class="link" href="FsStream.html#fs-stream-set-remote-candidates" title="fs_stream_set_remote_candidates ()">fs_stream_set_remote_candidates</a>     (<a class="link" href="FsStream.html" title="FsStream">FsStream</a> *stream,
                                                          <a
-href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
+href="../glib/glib-Doubly-Linked-Lists.html#GList"
 >GList</a> *candidates,
                                                          <a
-href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+href="../glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);
 <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+href="../glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            <a class="link" href="FsStream.html#fs-stream-set-remote-codecs" title="fs_stream_set_remote_codecs ()">fs_stream_set_remote_codecs</a>         (<a class="link" href="FsStream.html" title="FsStream">FsStream</a> *stream,
                                                          <a
-href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
+href="../glib/glib-Doubly-Linked-Lists.html#GList"
 >GList</a> *remote_codecs,
                                                          <a
-href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+href="../glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);
 <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+href="../glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            <a class="link" href="FsStream.html#fs-stream-force-remote-candidates" title="fs_stream_force_remote_candidates ()">fs_stream_force_remote_candidates</a>   (<a class="link" href="FsStream.html" title="FsStream">FsStream</a> *stream,
                                                          <a
-href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
+href="../glib/glib-Doubly-Linked-Lists.html#GList"
 >GList</a> *remote_candidates,
                                                          <a
-href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+href="../glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);
-<a
-href="/usr/share/gtk-doc/html/gnutls/gnutls-gnutls.html#void"
->void</a>                <a class="link" href="FsStream.html#fs-stream-add-id" title="fs_stream_add_id ()">fs_stream_add_id</a>                    (<a class="link" href="FsStream.html" title="FsStream">FsStream</a> *stream,
+void                <a class="link" href="FsStream.html#fs-stream-add-id" title="fs_stream_add_id ()">fs_stream_add_id</a>                    (<a class="link" href="FsStream.html" title="FsStream">FsStream</a> *stream,
                                                          <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
+href="../glib/glib-Basic-Types.html#guint"
 >guint</a> id);
-<a
-href="/usr/share/gtk-doc/html/gnutls/gnutls-gnutls.html#void"
->void</a>                <a class="link" href="FsStream.html#fs-stream-emit-error" title="fs_stream_emit_error ()">fs_stream_emit_error</a>                (<a class="link" href="FsStream.html" title="FsStream">FsStream</a> *stream,
+void                <a class="link" href="FsStream.html#fs-stream-emit-error" title="fs_stream_emit_error ()">fs_stream_emit_error</a>                (<a class="link" href="FsStream.html" title="FsStream">FsStream</a> *stream,
                                                          <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+href="../glib/glib-Basic-Types.html#gint"
 >gint</a> error_no,
                                                          const <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="../glib/glib-Basic-Types.html#gchar"
 >gchar</a> *error_msg,
                                                          const <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="../glib/glib-Basic-Types.html#gchar"
 >gchar</a> *debug_msg);
-<a
-href="/usr/share/gtk-doc/html/gnutls/gnutls-gnutls.html#void"
->void</a>                <a class="link" href="FsStream.html#fs-stream-emit-src-pad-added" title="fs_stream_emit_src_pad_added ()">fs_stream_emit_src_pad_added</a>        (<a class="link" href="FsStream.html" title="FsStream">FsStream</a> *stream,
+void                <a class="link" href="FsStream.html#fs-stream-emit-src-pad-added" title="fs_stream_emit_src_pad_added ()">fs_stream_emit_src_pad_added</a>        (<a class="link" href="FsStream.html" title="FsStream">FsStream</a> *stream,
                                                          <a
 href="../gstreamer-0.10/GstPad.html"
 >GstPad</a> *pad,
@@ -117,7 +111,7 @@ href="../gstreamer-0.10/GstPad.html"
 <a name="FsStream.object-hierarchy"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
   <a
-href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
 >GObject</a>
    +----FsStream
 </pre>
@@ -131,7 +125,6 @@ href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
   "<a class="link" href="FsStream.html#FsStream--participant" title='The "participant" property'>participant</a>"              <a class="link" href="FsParticipant.html" title="FsParticipant">FsParticipant</a>*        : Read / Write / Construct Only
   "<a class="link" href="FsStream.html#FsStream--remote-codecs" title='The "remote-codecs" property'>remote-codecs</a>"            FsCodecGList*         : Read
   "<a class="link" href="FsStream.html#FsStream--session" title='The "session" property'>session</a>"                  <a class="link" href="FsSession.html" title="FsSession">FsSession</a>*            : Read / Write / Construct Only
-  "<a class="link" href="FsStream.html#FsStream--stream-transmitter" title='The "stream-transmitter" property'>stream-transmitter</a>"       <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter">FsStreamTransmitter</a>*  : Write / Construct Only
 </pre>
 </div>
 <div class="refsect1" lang="en">
@@ -159,7 +152,7 @@ href="../gstreamer-0.10/GstBus.html"
 ><span class="type">GstBus</span></a>.
 </p>
 <div class="refsect2" lang="en">
-<a name="id3111177"></a><h3>The "<code class="literal">farsight-new-local-candidate</code>" message</h3>
+<a name="id2912365"></a><h3>The "<code class="literal">farsight-new-local-candidate</code>" message</h3>
 <div class="informalexample"><pre class="programlisting">
 "stream"           <a class="link" href="FsStream.html" title="FsStream">FsStream</a>          The stream that emits the message
 "candidate"        <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate">FsCandidate</a>       The new candidate
@@ -170,7 +163,7 @@ This message is emitted when a new local candidate is discovered.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3111213"></a><h3>The "<code class="literal">farsight-local-candidates-prepared</code>" message</h3>
+<a name="id2912402"></a><h3>The "<code class="literal">farsight-local-candidates-prepared</code>" message</h3>
 <div class="informalexample"><pre class="programlisting">
 "stream"           <a class="link" href="FsStream.html" title="FsStream">FsStream</a>          The stream that emits the message
 </pre></div>
@@ -181,7 +174,7 @@ prepared, an ICE implementation would send its SDP offer or answer.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3076017"></a><h3>The "<code class="literal">farsight-new-active-candidate-pair</code>" message</h3>
+<a name="id2912434"></a><h3>The "<code class="literal">farsight-new-active-candidate-pair</code>" message</h3>
 <div class="informalexample"><pre class="programlisting">
 "stream"           <a class="link" href="FsStream.html" title="FsStream">FsStream</a>          The stream that emits the message
 "local-candidate"  <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate">FsCandidate</a>       Local candidate being used
@@ -197,11 +190,11 @@ outside the callback scope. This message is emitted once per component.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3076067"></a><h3>The "<code class="literal">farsight-recv-codecs-changed</code>" message</h3>
+<a name="id2912483"></a><h3>The "<code class="literal">farsight-recv-codecs-changed</code>" message</h3>
 <div class="informalexample"><pre class="programlisting">
 "stream"           <a class="link" href="FsStream.html" title="FsStream">FsStream</a>          The stream that emits the message
 "codecs"           FsCodecGList      A <a
-href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
+href="../glib/glib-Doubly-Linked-Lists.html#GList"
 >GList</a> of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec">FsCodec</a>
 </pre></div>
 <p>
@@ -215,11 +208,11 @@ The list of new recv-codecs is included in the message
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3076134"></a><h3>The "<code class="literal">farsight-component-state-changed</code>" message</h3>
+<a name="id2912551"></a><h3>The "<code class="literal">farsight-component-state-changed</code>" message</h3>
 <div class="informalexample"><pre class="programlisting">
 "stream"           <a class="link" href="FsStream.html" title="FsStream">FsStream</a>          The stream that emits the message
 "component"        <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
+href="../glib/glib-Basic-Types.html#guint"
 >guint</a>             The component whose state changed
 "state"            <a class="link" href="FsStream.html#FsStreamState" title="enum FsStreamState">FsStreamState</a>     The new state of the component
 </pre></div>
@@ -273,7 +266,7 @@ If you have to negotiate codecs, then you must override set_remote_codecs too</p
 <tbody>
 <tr>
 <td><p><span class="term"><a
-href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObjectClass"
+href="../gobject/gobject-The-Base-Object-Type.html#GObjectClass"
 >GObjectClass</a> <em class="structfield"><code>parent_class</code></em>;</span></p></td>
 <td> Our parent
 </td>
@@ -295,7 +288,7 @@ href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObjectC
 </tr>
 <tr>
 <td><p><span class="term"><em class="structfield"><code>add_id</code></em> ()</span></p></td>
-<td>
+<td> Add a known id to be associated with this stream
 </td>
 </tr>
 </tbody>
@@ -402,13 +395,13 @@ An stream using an ICE transmitter would use all of these.</p>
 <div class="refsect2" lang="en">
 <a name="fs-stream-set-remote-candidates"></a><h3>fs_stream_set_remote_candidates ()</h3>
 <pre class="programlisting"><a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+href="../glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            fs_stream_set_remote_candidates     (<a class="link" href="FsStream.html" title="FsStream">FsStream</a> *stream,
                                                          <a
-href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
+href="../glib/glib-Doubly-Linked-Lists.html#GList"
 >GList</a> *candidates,
                                                          <a
-href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+href="../glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);</pre>
 <p>
 This function sets the list of remote candidates. Any new candidates are
@@ -428,16 +421,16 @@ passed candidate using <a class="link" href="farsight2-libs-FsCandidate.html#fs-
 <tr>
 <td><p><span class="term"><em class="parameter"><code>candidates</code></em> :</span></p></td>
 <td> an <a
-href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
+href="../glib/glib-Doubly-Linked-Lists.html#GList"
 ><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate"><span class="type">FsCandidate</span></a> representing the remote candidates
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
 <td> location of a <a
-href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+href="../glib/glib-Error-Reporting.html#GError"
 ><span class="type">GError</span></a>, or <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+href="../glib/glib-Standard-Macros.html#NULL--CAPS"
 ><code class="literal">NULL</code></a> if no error occured
 </td>
 </tr>
@@ -453,20 +446,20 @@ href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
 <div class="refsect2" lang="en">
 <a name="fs-stream-set-remote-codecs"></a><h3>fs_stream_set_remote_codecs ()</h3>
 <pre class="programlisting"><a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+href="../glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            fs_stream_set_remote_codecs         (<a class="link" href="FsStream.html" title="FsStream">FsStream</a> *stream,
                                                          <a
-href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
+href="../glib/glib-Doubly-Linked-Lists.html#GList"
 >GList</a> *remote_codecs,
                                                          <a
-href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+href="../glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);</pre>
 <p>
 This function will set the list of remote codecs for this stream. If
 the given remote codecs couldn't be negotiated with the list of local
 codecs or already negotiated codecs for the corresponding <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>, <em class="parameter"><code>error</code></em>
 will be set and <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+href="../glib/glib-Standard-Macros.html#FALSE--CAPS"
 ><code class="literal">FALSE</code></a> will be returned. The <em class="parameter"><code>remote_codecs</code></em> list will be
 copied so it must be free'd using <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-list-destroy" title="fs_codec_list_destroy ()"><code class="function">fs_codec_list_destroy()</code></a> when done.</p>
 <p>
@@ -482,23 +475,23 @@ copied so it must be free'd using <a class="link" href="farsight2-libs-FsCodec.h
 <tr>
 <td><p><span class="term"><em class="parameter"><code>remote_codecs</code></em> :</span></p></td>
 <td> a <a
-href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
+href="../glib/glib-Doubly-Linked-Lists.html#GList"
 ><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> representing the remote codecs
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
 <td> location of a <a
-href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+href="../glib/glib-Error-Reporting.html#GError"
 ><span class="type">GError</span></a>, or <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+href="../glib/glib-Standard-Macros.html#NULL--CAPS"
 ><code class="literal">NULL</code></a> if no error occured
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+href="../glib/glib-Standard-Macros.html#FALSE--CAPS"
 ><code class="literal">FALSE</code></a> if the remote codecs couldn't be set.
 </td>
 </tr>
@@ -509,13 +502,13 @@ href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
 <div class="refsect2" lang="en">
 <a name="fs-stream-force-remote-candidates"></a><h3>fs_stream_force_remote_candidates ()</h3>
 <pre class="programlisting"><a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+href="../glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            fs_stream_force_remote_candidates   (<a class="link" href="FsStream.html" title="FsStream">FsStream</a> *stream,
                                                          <a
-href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
+href="../glib/glib-Doubly-Linked-Lists.html#GList"
 >GList</a> *remote_candidates,
                                                          <a
-href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+href="../glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);</pre>
 <p>
 This function forces data to be sent immediately to the selected remote
@@ -534,25 +527,25 @@ one candidate per component.</p>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>remote_candidates</code></em> :</span></p></td>
 <td> a <a
-href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
+href="../glib/glib-Doubly-Linked-Lists.html#GList"
 ><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-FsCandidate.html#FsCandidate" title="FsCandidate"><span class="type">FsCandidate</span></a> to force
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
 <td> location of a <a
-href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+href="../glib/glib-Error-Reporting.html#GError"
 ><span class="type">GError</span></a>, or <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+href="../glib/glib-Standard-Macros.html#NULL--CAPS"
 ><code class="literal">NULL</code></a> if no error occured
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+href="../glib/glib-Standard-Macros.html#TRUE--CAPS"
 ><code class="literal">TRUE</code></a> if the candidates could be forced, <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+href="../glib/glib-Standard-Macros.html#FALSE--CAPS"
 ><code class="literal">FALSE</code></a> otherwise
 </td>
 </tr>
@@ -562,11 +555,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
 <hr>
 <div class="refsect2" lang="en">
 <a name="fs-stream-add-id"></a><h3>fs_stream_add_id ()</h3>
-<pre class="programlisting"><a
-href="/usr/share/gtk-doc/html/gnutls/gnutls-gnutls.html#void"
->void</a>                fs_stream_add_id                    (<a class="link" href="FsStream.html" title="FsStream">FsStream</a> *stream,
+<pre class="programlisting">void                fs_stream_add_id                    (<a class="link" href="FsStream.html" title="FsStream">FsStream</a> *stream,
                                                          <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
+href="../glib/glib-Basic-Types.html#guint"
 >guint</a> id);</pre>
 <p>
 This function is used to add data identifiers that allow the
@@ -605,17 +596,15 @@ if one is using multicast or is behind a muxer server.</p>
 <hr>
 <div class="refsect2" lang="en">
 <a name="fs-stream-emit-error"></a><h3>fs_stream_emit_error ()</h3>
-<pre class="programlisting"><a
-href="/usr/share/gtk-doc/html/gnutls/gnutls-gnutls.html#void"
->void</a>                fs_stream_emit_error                (<a class="link" href="FsStream.html" title="FsStream">FsStream</a> *stream,
+<pre class="programlisting">void                fs_stream_emit_error                (<a class="link" href="FsStream.html" title="FsStream">FsStream</a> *stream,
                                                          <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+href="../glib/glib-Basic-Types.html#gint"
 >gint</a> error_no,
                                                          const <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="../glib/glib-Basic-Types.html#gchar"
 >gchar</a> *error_msg,
                                                          const <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="../glib/glib-Basic-Types.html#gchar"
 >gchar</a> *debug_msg);</pre>
 <p>
 This function emits the <a class="link" href="FsStream.html#FsStream-error" title='The "error" signal'><span class="type">"error"</span></a>" signal, it should only be
@@ -651,9 +640,7 @@ called by subclasses.</p>
 <hr>
 <div class="refsect2" lang="en">
 <a name="fs-stream-emit-src-pad-added"></a><h3>fs_stream_emit_src_pad_added ()</h3>
-<pre class="programlisting"><a
-href="/usr/share/gtk-doc/html/gnutls/gnutls-gnutls.html#void"
->void</a>                fs_stream_emit_src_pad_added        (<a class="link" href="FsStream.html" title="FsStream">FsStream</a> *stream,
+<pre class="programlisting">void                fs_stream_emit_src_pad_added        (<a class="link" href="FsStream.html" title="FsStream">FsStream</a> *stream,
                                                          <a
 href="../gstreamer-0.10/GstPad.html"
 >GstPad</a> *pad,
@@ -727,7 +714,7 @@ of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><s
 has been replaced with the data from the remote codecs for this stream.
 This is the list of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> used to receive data from this stream.
 It is a <a
-href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
+href="../glib/glib-Doubly-Linked-Lists.html#GList"
 ><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a>.</p>
 <p>
 </p>
@@ -750,7 +737,7 @@ is read-only construction.</p>
 This is the list of remote codecs for this stream. They must be set by the
 user as soon as they are known using <a class="link" href="FsStream.html#fs-stream-set-remote-codecs" title="fs_stream_set_remote_codecs ()"><code class="function">fs_stream_set_remote_codecs()</code></a>
 (generally through external signaling). It is a <a
-href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
+href="../glib/glib-Doubly-Linked-Lists.html#GList"
 ><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a>.</p>
 <p>
 </p>
@@ -765,32 +752,21 @@ is read-only construction.</p>
 <p>
 </p>
 </div>
-<hr>
-<div class="refsect2" lang="en">
-<a name="FsStream--stream-transmitter"></a><h3>The <code class="literal">"stream-transmitter"</code> property</h3>
-<pre class="programlisting">  "stream-transmitter"       <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter">FsStreamTransmitter</a>*  : Write / Construct Only</pre>
-<p>
-The <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> for this stream.</p>
-<p>
-</p>
-</div>
 </div>
 <div class="refsect1" lang="en">
 <a name="FsStream.signal-details"></a><h2>Signal Details</h2>
 <div class="refsect2" lang="en">
 <a name="FsStream-error"></a><h3>The <code class="literal">"error"</code> signal</h3>
-<pre class="programlisting"><a
-href="/usr/share/gtk-doc/html/gnutls/gnutls-gnutls.html#void"
->void</a>                user_function                      (<a class="link" href="FsStream.html" title="FsStream">FsStream</a> *self,
+<pre class="programlisting">void                user_function                      (<a class="link" href="FsStream.html" title="FsStream">FsStream</a> *self,
                                                         <a class="link" href="FsConference.html#FsError" title="enum FsError">FsError</a>   errorno,
                                                         <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="../glib/glib-Basic-Types.html#gchar"
 >gchar</a>    *error_msg,
                                                         <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="../glib/glib-Basic-Types.html#gchar"
 >gchar</a>    *debug_msg,
                                                         <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="../glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>  user_data)      : Run Last</pre>
 <p>
 This signal is emitted in any error condition</p>
@@ -829,15 +805,13 @@ This signal is emitted in any error condition</p>
 <hr>
 <div class="refsect2" lang="en">
 <a name="FsStream-src-pad-added"></a><h3>The <code class="literal">"src-pad-added"</code> signal</h3>
-<pre class="programlisting"><a
-href="/usr/share/gtk-doc/html/gnutls/gnutls-gnutls.html#void"
->void</a>                user_function                      (<a class="link" href="FsStream.html" title="FsStream">FsStream</a> *self,
+<pre class="programlisting">void                user_function                      (<a class="link" href="FsStream.html" title="FsStream">FsStream</a> *self,
                                                         <a
 href="../gstreamer-0.10/GstPad.html"
 >GstPad</a>   *pad,
                                                         <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec">FsCodec</a>  *codec,
                                                         <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="../glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>  user_data)      : Run Last</pre>
 <p>
 This signal is emitted when a new gst source pad has been created for a

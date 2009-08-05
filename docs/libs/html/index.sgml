@@ -44,6 +44,7 @@
 <ANCHOR id="fs-session-set-send-codec" href="farsight2-libs-0.10/FsSession.html#fs-session-set-send-codec">
 <ANCHOR id="fs-session-set-codec-preferences" href="farsight2-libs-0.10/FsSession.html#fs-session-set-codec-preferences">
 <ANCHOR id="fs-session-list-transmitters" href="farsight2-libs-0.10/FsSession.html#fs-session-list-transmitters">
+<ANCHOR id="fs-session-get-stream-transmitter-type" href="farsight2-libs-0.10/FsSession.html#fs-session-get-stream-transmitter-type">
 <ANCHOR id="fs-session-emit-error" href="farsight2-libs-0.10/FsSession.html#fs-session-emit-error">
 <ANCHOR id="FsSession.property-details" href="farsight2-libs-0.10/FsSession.html#FsSession.property-details">
 <ANCHOR id="FsSession--codec-preferences" href="farsight2-libs-0.10/FsSession.html#FsSession--codec-preferences">
@@ -54,6 +55,7 @@
 <ANCHOR id="FsSession--id" href="farsight2-libs-0.10/FsSession.html#FsSession--id">
 <ANCHOR id="FsSession--media-type" href="farsight2-libs-0.10/FsSession.html#FsSession--media-type">
 <ANCHOR id="FsSession--sink-pad" href="farsight2-libs-0.10/FsSession.html#FsSession--sink-pad">
+<ANCHOR id="FsSession--tos" href="farsight2-libs-0.10/FsSession.html#FsSession--tos">
 <ANCHOR id="FsSession.signal-details" href="farsight2-libs-0.10/FsSession.html#FsSession.signal-details">
 <ANCHOR id="FsSession-error" href="farsight2-libs-0.10/FsSession.html#FsSession-error">
 <ANCHOR id="FsStream" href="farsight2-libs-0.10/FsStream.html">
@@ -80,7 +82,6 @@
 <ANCHOR id="FsStream--participant" href="farsight2-libs-0.10/FsStream.html#FsStream--participant">
 <ANCHOR id="FsStream--remote-codecs" href="farsight2-libs-0.10/FsStream.html#FsStream--remote-codecs">
 <ANCHOR id="FsStream--session" href="farsight2-libs-0.10/FsStream.html#FsStream--session">
-<ANCHOR id="FsStream--stream-transmitter" href="farsight2-libs-0.10/FsStream.html#FsStream--stream-transmitter">
 <ANCHOR id="FsStream.signal-details" href="farsight2-libs-0.10/FsStream.html#FsStream.signal-details">
 <ANCHOR id="FsStream-error" href="farsight2-libs-0.10/FsStream.html#FsStream-error">
 <ANCHOR id="FsStream-src-pad-added" href="farsight2-libs-0.10/FsStream.html#FsStream-src-pad-added">
@@ -132,6 +133,7 @@
 <ANCHOR id="fs-element-added-notifier-add" href="farsight2-libs-0.10/FsElementAddedNotifier.html#fs-element-added-notifier-add">
 <ANCHOR id="fs-element-added-notifier-remove" href="farsight2-libs-0.10/FsElementAddedNotifier.html#fs-element-added-notifier-remove">
 <ANCHOR id="fs-element-added-notifier-set-properties-from-keyfile" href="farsight2-libs-0.10/FsElementAddedNotifier.html#fs-element-added-notifier-set-properties-from-keyfile">
+<ANCHOR id="fs-element-added-notifier-set-properties-from-file" href="farsight2-libs-0.10/FsElementAddedNotifier.html#fs-element-added-notifier-set-properties-from-file">
 <ANCHOR id="FsElementAddedNotifier.signal-details" href="farsight2-libs-0.10/FsElementAddedNotifier.html#FsElementAddedNotifier.signal-details">
 <ANCHOR id="FsElementAddedNotifier-element-added" href="farsight2-libs-0.10/FsElementAddedNotifier.html#FsElementAddedNotifier-element-added">
 <ANCHOR id="farsight2-libs-Network-interfaces-discovery" href="farsight2-libs-0.10/farsight2-libs-Network-interfaces-discovery.html">
@@ -168,6 +170,7 @@
 <ANCHOR id="FsTransmitter--components" href="farsight2-libs-0.10/FsTransmitter.html#FsTransmitter--components">
 <ANCHOR id="FsTransmitter--gst-sink" href="farsight2-libs-0.10/FsTransmitter.html#FsTransmitter--gst-sink">
 <ANCHOR id="FsTransmitter--gst-src" href="farsight2-libs-0.10/FsTransmitter.html#FsTransmitter--gst-src">
+<ANCHOR id="FsTransmitter--tos" href="farsight2-libs-0.10/FsTransmitter.html#FsTransmitter--tos">
 <ANCHOR id="FsTransmitter.signal-details" href="farsight2-libs-0.10/FsTransmitter.html#FsTransmitter.signal-details">
 <ANCHOR id="FsTransmitter-error" href="farsight2-libs-0.10/FsTransmitter.html#FsTransmitter-error">
 <ANCHOR id="FsTransmitter-get-recvonly-filter" href="farsight2-libs-0.10/FsTransmitter.html#FsTransmitter-get-recvonly-filter">

@@ -228,8 +228,6 @@ fs_rtp_conference_class_init (FsRtpConferenceClass * klass)
 
   g_type_class_add_private (klass, sizeof (FsRtpConferencePrivate));
 
-  parent_class = g_type_class_peek_parent (klass);
-
   baseconf_class->new_session =
     GST_DEBUG_FUNCPTR (fs_rtp_conference_new_session);
   baseconf_class->new_participant =
@@ -251,37 +249,37 @@ fs_rtp_conference_class_init (FsRtpConferenceClass * klass)
   g_object_class_install_property (gobject_class, PROP_SDES_CNAME,
       g_param_spec_string ("sdes-cname", "Canonical name",
           "The CNAME for the RTP sessions",
-          NULL, G_PARAM_READWRITE));
+          NULL, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_property (gobject_class, PROP_SDES_NAME,
       g_param_spec_string ("sdes-name", "SDES NAME",
           "The NAME to put in SDES messages of this session",
-          NULL, G_PARAM_READWRITE));
+          NULL, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_property (gobject_class, PROP_SDES_EMAIL,
       g_param_spec_string ("sdes-email", "SDES EMAIL",
           "The EMAIL to put in SDES messages of this session",
-          NULL, G_PARAM_READWRITE));
+          NULL, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_property (gobject_class, PROP_SDES_PHONE,
       g_param_spec_string ("sdes-phone", "SDES PHONE",
           "The PHONE to put in SDES messages of this session",
-          NULL, G_PARAM_READWRITE));
+          NULL, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_property (gobject_class, PROP_SDES_LOCATION,
       g_param_spec_string ("sdes-location", "SDES LOCATION",
           "The LOCATION to put in SDES messages of this session",
-          NULL, G_PARAM_READWRITE));
+          NULL, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_property (gobject_class, PROP_SDES_TOOL,
       g_param_spec_string ("sdes-tool", "SDES TOOL",
           "The TOOL to put in SDES messages of this session",
-          NULL, G_PARAM_READWRITE));
+          NULL, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_property (gobject_class, PROP_SDES_NOTE,
       g_param_spec_string ("sdes-note", "SDES NOTE",
           "The NOTE to put in SDES messages of this session",
-          NULL, G_PARAM_READWRITE));
+          NULL, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 }
 
 static void
@@ -340,6 +338,25 @@ fs_rtp_conference_init (FsRtpConference *conf,
 }
 
 static void
+rtpbin_get_sdes (FsRtpConference *self, const gchar *prop, GValue *val)
+{
+  if (g_object_class_find_property (G_OBJECT_GET_CLASS (self->gstrtpbin),
+          "sdes"))
+  {
+    GstStructure *s;
+    g_object_get (self->gstrtpbin, "sdes", &s, NULL);
+    g_value_copy (gst_structure_get_value (s, prop), val);
+    gst_structure_free (s);
+  }
+  else
+  {
+    gchar *str = g_strdup_printf ("sdes-%s", prop);
+    g_object_get_property (G_OBJECT (self->gstrtpbin), str, val);
+    g_free (str);
+  }
+}
+
+static void
 fs_rtp_conference_get_property (GObject *object,
     guint prop_id,
     GValue *value,
@@ -353,32 +370,52 @@ fs_rtp_conference_get_property (GObject *object,
   switch (prop_id)
   {
     case PROP_SDES_CNAME:
-      g_object_get_property (G_OBJECT (self->gstrtpbin), "sdes-cname", value);
+      rtpbin_get_sdes (self, "cname", value);
       break;
     case PROP_SDES_NAME:
-      g_object_get_property (G_OBJECT (self->gstrtpbin), "sdes-name", value);
+      rtpbin_get_sdes (self, "name", value);
       break;
     case PROP_SDES_EMAIL:
-      g_object_get_property (G_OBJECT (self->gstrtpbin), "sdes-email", value);
+      rtpbin_get_sdes (self, "email", value);
       break;
     case PROP_SDES_PHONE:
-      g_object_get_property (G_OBJECT (self->gstrtpbin), "sdes-phone", value);
+      rtpbin_get_sdes (self, "phone", value);
       break;
     case PROP_SDES_LOCATION:
-      g_object_get_property (G_OBJECT (self->gstrtpbin), "sdes-location",
-          value);
+      rtpbin_get_sdes (self, "location", value);
       break;
     case PROP_SDES_TOOL:
-      g_object_get_property (G_OBJECT (self->gstrtpbin), "sdes-tool", value);
+      rtpbin_get_sdes (self, "tool", value);
       break;
     case PROP_SDES_NOTE:
-      g_object_get_property (G_OBJECT (self->gstrtpbin), "sdes-note", value);
+      rtpbin_get_sdes (self, "note", value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
   }
 }
+
+static void
+rtpbin_set_sdes (FsRtpConference *self, const gchar *prop, const GValue *val)
+{
+  if (g_object_class_find_property (G_OBJECT_GET_CLASS (self->gstrtpbin),
+          "sdes"))
+  {
+    GstStructure *s;
+    g_object_get (self->gstrtpbin, "sdes", &s, NULL);
+    gst_structure_set_value (s, prop, val);
+    g_object_set (self->gstrtpbin, "sdes", s, NULL);
+    gst_structure_free (s);
+  }
+  else
+  {
+    gchar *str = g_strdup_printf ("sdes-%s", prop);
+    g_object_set_property (G_OBJECT (self->gstrtpbin), str, val);
+    g_free (str);
+  }
+}
+
 static void
 fs_rtp_conference_set_property (GObject *object,
     guint prop_id,
@@ -393,26 +430,25 @@ fs_rtp_conference_set_property (GObject *object,
   switch (prop_id)
   {
     case PROP_SDES_CNAME:
-      g_object_set_property (G_OBJECT (self->gstrtpbin), "sdes-cname", value);
+      rtpbin_set_sdes (self, "cname", value);
       break;
     case PROP_SDES_NAME:
-      g_object_set_property (G_OBJECT (self->gstrtpbin), "sdes-name", value);
+      rtpbin_set_sdes (self, "name", value);
       break;
     case PROP_SDES_EMAIL:
-      g_object_set_property (G_OBJECT (self->gstrtpbin), "sdes-email", value);
+      rtpbin_set_sdes (self, "email", value);
       break;
     case PROP_SDES_PHONE:
-      g_object_set_property (G_OBJECT (self->gstrtpbin), "sdes-phone", value);
+      rtpbin_set_sdes (self, "phone", value);
       break;
     case PROP_SDES_LOCATION:
-      g_object_set_property (G_OBJECT (self->gstrtpbin), "sdes-location",
-          value);
+      rtpbin_set_sdes (self, "location", value);
       break;
     case PROP_SDES_TOOL:
-      g_object_set_property (G_OBJECT (self->gstrtpbin), "sdes-tool", value);
+      rtpbin_set_sdes (self, "tool", value);
       break;
     case PROP_SDES_NOTE:
-      g_object_set_property (G_OBJECT (self->gstrtpbin), "sdes-note", value);
+      rtpbin_set_sdes (self, "note", value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -675,7 +711,7 @@ fs_rtp_conference_handle_message (
   FsRtpConference *self = FS_RTP_CONFERENCE (bin);
 
   if (!self->gstrtpbin)
-    return;
+    goto out;
 
   switch (GST_MESSAGE_TYPE (message)) {
     case GST_MESSAGE_ELEMENT:
@@ -721,14 +757,13 @@ fs_rtp_conference_handle_message (
               session_id, ssrc, cname);
         }
       }
-      /* fallthrough to forward the modified message to the parent */
     }
     default:
-    {
-      GST_BIN_CLASS (parent_class)->handle_message (bin, message);
       break;
-    }
   }
+
+ out:
+  GST_BIN_CLASS (parent_class)->handle_message (bin, message);
 }
 
 static GstStateChangeReturn

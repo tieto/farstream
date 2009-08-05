@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, cvs and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for cvs/prerelease
-AC_INIT(Farsight2, 0.0.12,
+AC_INIT(Farsight2, 0.0.14,
     https://bugs.freedesktop.org/enter_bug.cgi?product=Farsight,
     farsight2)
 
@@ -45,7 +45,7 @@ dnl - interfaces added/removed/changed -> increment CURRENT, REVISION = 0
 dnl - interfaces added -> increment AGE
 dnl - interfaces removed -> AGE = 0
 dnl sets FS2_LT_LDFLAGS
-AS_LIBTOOL(FS2, 1, 0, 1)
+AS_LIBTOOL(FS2, 3, 0, 3)
 
 dnl FIXME: this macro doesn't actually work;
 dnl the generated libtool script has no support for the listed tags.
@@ -55,8 +55,8 @@ dnl AS_LIBTOOL_TAGS
 AM_PROG_LIBTOOL
 
 dnl *** required versions of GStreamer stuff ***
-GST_REQ=0.10.22
-GSTPB_REQ=0.10.22
+GST_REQ=0.10.23
+GSTPB_REQ=0.10.23
 
 dnl *** autotools stuff ****
 
@@ -101,6 +101,7 @@ AC_SUBST(GST_INSTALL_PLUGINS_HELPER)
 dnl these are all the gst plug-ins, compilable without additional libs
 FS2_PLUGINS_ALL=" \
 	fsrtpconference \
+	fsmsnconference \
 	funnel \
 	rtcpfilter \
  	videoanyrate
@@ -154,7 +155,7 @@ AC_ARG_WITH(transmitter-plugins,
     [FS2_TRANSMITTER_PLUGINS_SELECTED=$FS2_TRANSMITTER_PLUGINS_ALL])
 
 
-NICE_REQUIRED=0.0.6
+NICE_REQUIRED=0.0.9
 
 PKG_CHECK_MODULES(NICE, \
        nice >= $NICE_REQUIRED,, AC_MSG_ERROR([Need libnice >= $NICE_REQUIRED]))
@@ -382,6 +383,7 @@ common/shave
 common/shave-libtool
 gst/Makefile
 gst/fsrtpconference/Makefile
+gst/fsmsnconference/Makefile
 gst/funnel/Makefile
 gst/rtcpfilter/Makefile
 gst/videoanyrate/Makefile

@@ -65,7 +65,7 @@
 <a name="FsParticipant.object-hierarchy"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
   <a
-href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
 >GObject</a>
    +----FsParticipant
 </pre>
@@ -74,7 +74,7 @@ href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
 <a name="FsParticipant.properties"></a><h2>Properties</h2>
 <pre class="synopsis">
   "<a class="link" href="FsParticipant.html#FsParticipant--cname" title='The "cname" property'>cname</a>"                    <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="../glib/glib-Basic-Types.html#gchar"
 >gchar</a>*                : Read / Write / Construct
 </pre>
 </div>
@@ -122,7 +122,7 @@ but you may want to override the properties or attach more date to it</p>
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><a
-href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObjectClass"
+href="../gobject/gobject-The-Base-Object-Type.html#GObjectClass"
 >GObjectClass</a> <em class="structfield"><code>parent_class</code></em>;</span></p></td>
 <td> Our parent
 </td>
@@ -135,10 +135,10 @@ href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObjectC
 <pre class="programlisting">#define             FS_PARTICIPANT_DATA_LOCK(participant)</pre>
 <p>
 Locks the participant for data set with <a
-href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-data"
+href="../gobject/gobject-The-Base-Object-Type.html#g-object-set-data"
 ><code class="function">g_object_set_data()</code></a> or
 <a
-href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-qdata"
+href="../gobject/gobject-The-Base-Object-Type.html#g-object-set-qdata"
 ><code class="function">g_object_set_qdata()</code></a>.</p>
 <p>
 </p>
@@ -157,10 +157,10 @@ href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object
 <pre class="programlisting">#define             FS_PARTICIPANT_DATA_UNLOCK(participant)</pre>
 <p>
 Unlocks the participant for data set with <a
-href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-data"
+href="../gobject/gobject-The-Base-Object-Type.html#g-object-set-data"
 ><code class="function">g_object_set_data()</code></a> or
 <a
-href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-qdata"
+href="../gobject/gobject-The-Base-Object-Type.html#g-object-set-qdata"
 ><code class="function">g_object_set_qdata()</code></a>.</p>
 <p>
 </p>
@@ -179,7 +179,7 @@ href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object
 <div class="refsect2" lang="en">
 <a name="FsParticipant--cname"></a><h3>The <code class="literal">"cname"</code> property</h3>
 <pre class="programlisting">  "cname"                    <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="../glib/glib-Basic-Types.html#gchar"
 >gchar</a>*                : Read / Write / Construct</pre>
 <p>
 A string representing the cname of the current participant.
@@ -193,21 +193,19 @@ User must free the string after getting it.</p>
 <a name="FsParticipant.signal-details"></a><h2>Signal Details</h2>
 <div class="refsect2" lang="en">
 <a name="FsParticipant-error"></a><h3>The <code class="literal">"error"</code> signal</h3>
-<pre class="programlisting"><a
-href="/usr/share/gtk-doc/html/gnutls/gnutls-gnutls.html#void"
->void</a>                user_function                      (<a class="link" href="FsParticipant.html" title="FsParticipant">FsParticipant</a> *self,
+<pre class="programlisting">void                user_function                      (<a class="link" href="FsParticipant.html" title="FsParticipant">FsParticipant</a> *self,
                                                         <a
-href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
+href="../gobject/gobject-The-Base-Object-Type.html#GObject"
 >GObject</a>       *object,
                                                         <a class="link" href="FsConference.html#FsError" title="enum FsError">FsError</a>        errorno,
                                                         <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="../glib/glib-Basic-Types.html#gchar"
 >gchar</a>         *error_msg,
                                                         <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="../glib/glib-Basic-Types.html#gchar"
 >gchar</a>         *dbg_msg,
                                                         <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="../glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>       user_data)      : Run Last</pre>
 <p>
 This signal is emitted in any error condition</p>
