@@ -1,3 +1,10 @@
+farsight2 (0.0.14-1) UNRELEASED; urgency=low
+
+  * New upstream release.
+  * Bump Standards-Version (no further changes)
+
+ -- Laurent Bigonville <bigon@debian.org>  Wed, 05 Aug 2009 13:29:58 +0200
+
 farsight2 (0.0.12-1) unstable; urgency=low
 
   * New Upstream Version
