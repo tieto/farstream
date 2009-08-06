@@ -1,3 +1,9 @@
+farsight2 (0.0.14-2) unstable; urgency=low
+
+  * Enable gupnp-igd support
+
+ -- Laurent Bigonville <bigon@debian.org>  Thu, 06 Aug 2009 22:23:21 +0200
+
 farsight2 (0.0.14-1) unstable; urgency=low
 
   * New upstream release.

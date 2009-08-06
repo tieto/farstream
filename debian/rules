@@ -4,7 +4,7 @@ include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/autotools.mk
 include /usr/share/cdbs/1/rules/simple-patchsys.mk
 
-DEB_CONFIGURE_EXTRA_FLAGS = --enable-python
+DEB_CONFIGURE_EXTRA_FLAGS = --enable-python --enable-gupnp
 
 # Testsuit has a race-condition, so disable it for now
 #DEB_MAKE_CHECK_TARGET = check
