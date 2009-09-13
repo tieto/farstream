@@ -1,8 +1,8 @@
-farsight2 (0.0.15-1) UNRELEASED; urgency=low
+farsight2 (0.0.15-1) unstable; urgency=low
 
   * New upstream release
 
- -- Sjoerd Simons <sjoerd@debian.org>  Sun, 13 Sep 2009 17:52:43 +0100
+ -- Sjoerd Simons <sjoerd@debian.org>  Sun, 13 Sep 2009 19:26:54 +0100
 
 farsight2 (0.0.14-2) unstable; urgency=low
 
