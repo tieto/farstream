@@ -447,6 +447,8 @@ _stop_transmitter_elem (gpointer key, gpointer value, gpointer elem_name)
 
   gst_element_set_locked_state (elem, TRUE);
   gst_element_set_state (elem, GST_STATE_NULL);
+
+  gst_object_unref (elem);
 }
 
 static void
@@ -1705,11 +1707,13 @@ fs_rtp_session_set_codec_preferences (FsSession *session,
 {
   FsRtpSession *self = FS_RTP_SESSION (session);
   GList *old_codec_prefs = NULL;
-  GList *new_codec_prefs = fs_codec_list_copy (codec_preferences);
+  GList *new_codec_prefs = NULL;
   gboolean ret;
 
   if (fs_rtp_session_has_disposed_enter (self, error))
     return FALSE;
+
+  new_codec_prefs = fs_codec_list_copy (codec_preferences);
 
   new_codec_prefs =
     validate_codecs_configuration (
@@ -1925,7 +1929,7 @@ fs_rtp_session_get_transmitter (FsRtpSession *self,
     GError **error)
 {
   FsTransmitter *transmitter;
-  GstElement *src;
+  GstElement *src = NULL;
   gboolean sink_add_later = FALSE;
   guint tos;
 
@@ -3553,7 +3557,7 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
           (GFunc) g_object_unref, NULL);
       g_list_free (session->priv->transmitters_add_sink);
       session->priv->transmitters_add_sink = NULL;
-      goto error;
+      goto error_locked;
     }
 
     g_object_unref (transmitter);
@@ -3586,9 +3590,12 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
  error:
   fs_rtp_session_remove_send_codec_bin (session, NULL, FALSE);
   fs_codec_list_destroy (codecs);
-  FS_RTP_SESSION_UNLOCK (session);
-
   return NULL;
+
+ error_locked:
+
+  FS_RTP_SESSION_UNLOCK (session);
+  goto error;
 }
 
 static void
@@ -3881,9 +3888,12 @@ fs_rtp_session_associate_ssrc_cname (FsRtpSession *session,
     g_hash_table_insert (session->priv->ssrc_streams, GUINT_TO_POINTER (ssrc),
         stream);
 
+  g_object_ref (stream);
   FS_RTP_SESSION_UNLOCK (session);
 
   fs_rtp_session_associate_free_substreams (session, stream, ssrc);
+  g_object_unref (stream);
+
   fs_rtp_session_has_disposed_exit (session);
 }
 
@@ -4047,7 +4057,10 @@ _send_caps_changed (GstPad *pad, GParamSpec *pspec, FsRtpSession *session)
   g_return_if_fail (GST_CAPS_IS_SIMPLE(caps));
 
   if (fs_rtp_session_has_disposed_enter (session, NULL))
+  {
+    gst_caps_unref (caps);
     return;
+  }
 
   FS_RTP_SESSION_LOCK (session);
 
@@ -4118,7 +4131,10 @@ _discovery_caps_changed (GstPad *pad, GParamSpec *pspec, FsRtpSession *session)
   g_return_if_fail (GST_CAPS_IS_SIMPLE(caps));
 
   if (fs_rtp_session_has_disposed_enter (session, NULL))
+  {
+    gst_caps_unref (caps);
     return;
+  }
 
   FS_RTP_SESSION_LOCK (session);
 

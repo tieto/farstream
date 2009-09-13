@@ -559,7 +559,6 @@ fs_msn_connection_attempt_connection_locked (FsMsnConnection *connection,
     GError **error)
 {
   FsMsnConnection *self = FS_MSN_CONNECTION (connection);
-  FsMsnPollFD *pollfd;
   gint fd = -1;
   gint ret;
   struct sockaddr_in theiraddr;
@@ -597,8 +596,7 @@ fs_msn_connection_attempt_connection_locked (FsMsnConnection *connection,
   }
 
   FS_MSN_CONNECTION_LOCK (self);
-  pollfd = add_pollfd_locked (self, fd, successful_connection_cb, TRUE, TRUE,
-      FALSE);
+  add_pollfd_locked (self, fd, successful_connection_cb, TRUE, TRUE, FALSE);
   FS_MSN_CONNECTION_UNLOCK (self);
 
   return TRUE;
@@ -610,7 +608,6 @@ accept_connection_cb (FsMsnConnection *self, FsMsnPollFD *pollfd)
   struct sockaddr_in in;
   int fd = -1;
   socklen_t n = sizeof (in);
-  FsMsnPollFD *newpollfd = NULL;
 
   if (gst_poll_fd_has_error (self->poll, &pollfd->pollfd) ||
       gst_poll_fd_has_closed (self->poll, &pollfd->pollfd))
@@ -627,7 +624,7 @@ accept_connection_cb (FsMsnConnection *self, FsMsnPollFD *pollfd)
   }
 
   FS_MSN_CONNECTION_LOCK (self);
-  newpollfd = add_pollfd_locked (self, fd, connection_cb, TRUE, FALSE, TRUE);
+  add_pollfd_locked (self, fd, connection_cb, TRUE, FALSE, TRUE);
   FS_MSN_CONNECTION_UNLOCK (self);
 
   return;
@@ -716,7 +713,7 @@ connection_cb (FsMsnConnection *self, FsMsnPollFD *pollfd)
           gchar str[35] = {0};
           gchar check[35] = {0};
 
-          if (recv(pollfd->pollfd.fd, str, 34, 0) != -1)
+          if (recv (pollfd->pollfd.fd, str, 34, 0) == 34)
           {
             GST_DEBUG ("Got %s, checking if it's auth", str);
             FS_MSN_CONNECTION_LOCK(self);
@@ -753,14 +750,16 @@ connection_cb (FsMsnConnection *self, FsMsnPollFD *pollfd)
         if (!pollfd->server)
         {
           gchar str[14] = {0};
+          ssize_t size;
 
-          if (recv(pollfd->pollfd.fd, str, 13, MSG_PEEK) != -1)
+          size = recv (pollfd->pollfd.fd, str, 13, MSG_PEEK);
+          if (size > 0)
           {
             GST_DEBUG ("Got %s, checking if it's connected", str);
-            if (strcmp (str, "connected\r\n\r\n") == 0)
+            if (size == 13 && strcmp (str, "connected\r\n\r\n") == 0)
             {
               GST_DEBUG ("connection successful");
-              recv(pollfd->pollfd.fd, str, 13, 0);
+              recv (pollfd->pollfd.fd, str, 13, 0);
               pollfd->status = FS_MSN_STATUS_CONNECTED2;
               pollfd->want_write = TRUE;
               gst_poll_fd_ctl_write (self->poll, &pollfd->pollfd, TRUE);
@@ -793,14 +792,16 @@ connection_cb (FsMsnConnection *self, FsMsnPollFD *pollfd)
         if (pollfd->server)
         {
           gchar str[14] = {0};
+          ssize_t size;
 
-          if (recv(pollfd->pollfd.fd, str, 13, MSG_PEEK) != -1)
+          size = recv (pollfd->pollfd.fd, str, 13, MSG_PEEK);
+          if (size > 0)
           {
             GST_DEBUG ("Got %s, checking if it's connected", str);
-            if (strcmp (str, "connected\r\n\r\n") == 0)
+            if (size == 13 && strcmp (str, "connected\r\n\r\n") == 0)
             {
               GST_DEBUG ("connection successful");
-              recv(pollfd->pollfd.fd, str, 13, 0);
+              recv (pollfd->pollfd.fd, str, 13, 0);
               pollfd->status = FS_MSN_STATUS_SEND_RECEIVE;
               success = TRUE;
             }
