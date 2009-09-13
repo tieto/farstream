@@ -277,7 +277,7 @@ fs_msn_session_get_property (GObject *object,
   FsMsnSession *self = FS_MSN_SESSION (object);
   FsMsnConference *conference = fs_msn_session_get_conference (self, NULL);
 
-  if (!conference && !(pspec->flags & G_PARAM_CONSTRUCT_ONLY))
+  if (!conference)
     return;
 
   switch (prop_id)
@@ -327,8 +327,7 @@ fs_msn_session_get_property (GObject *object,
       break;
   }
 
-  if (conference)
-    gst_object_unref (conference);
+  gst_object_unref (conference);
 }
 
 static void
@@ -354,11 +353,13 @@ fs_msn_session_set_property (GObject *object,
       self->priv->conference = FS_MSN_CONFERENCE (g_value_dup_object (value));
       break;
     case PROP_TOS:
-      GST_OBJECT_LOCK (conference);
+      if (conference)
+        GST_OBJECT_LOCK (conference);
       self->priv->tos = g_value_get_uint (value);
       if (self->priv->stream)
         fs_msn_stream_set_tos_locked (self->priv->stream, self->priv->tos);
-      GST_OBJECT_UNLOCK (conference);
+      if (conference)
+        GST_OBJECT_UNLOCK (conference);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);

@@ -1,3 +1,158 @@
+commit 0c0baf1e171afb2e9f3622486398a957f11fece2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 3 18:24:08 2009 -0400
+
+    Version 0.0.15
+
+commit 3453a584cea2c7272e0a5cc5b3b42d130d91e5ba
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 3 18:17:25 2009 -0400
+
+    Require gst-p-bad 0.10.14 for mimic
+
+commit e3708e794bc68c482fd76fbf57b503913ea38d30
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 3 17:56:53 2009 -0400
+
+    tests: Unlock src before setting it to playing
+
+commit b1019f6c98f2a10b1eb975d3ebab8d281f565d87
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 3 17:55:57 2009 -0400
+
+    tests: Refrain from using the thread unsafe version of failure in the nice test
+
+commit 32fe84dae17f4fc5fd4816bc4f13454b683e727d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 3 15:20:10 2009 -0400
+
+    rtpsession: Keep ref on stream while associating substreams to it
+
+commit 46f89ab40e611a5ed0697fe4592935e70b19a0da
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 3 14:22:00 2009 -0400
+
+    rtpsubstream: Remove another double-unlock in error case
+
+commit 304e7ac095e8c539b917fccc3e771231dae5c0ee
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 1 19:38:01 2009 -0400
+
+    rtpsession: Don't double-unlock
+
+commit eeae1d72e8b95d416f1c96f9de624cab4223760d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 1 19:35:32 2009 -0400
+
+    rtpsession: Fix leaking caps on signals after dispose
+
+commit 67f291df926ffc381abb571bdb7f5f3d88093c74
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 1 18:51:05 2009 -0400
+
+    rtpsession: Fix potential leak if already disposed
+
+commit 9432e1e2d57bfe7a3f1bd94ce7b302162c1d3ad0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 1 18:50:51 2009 -0400
+
+    rtpsubstrea: Remove unused variable
+
+commit 9c6f5e1b9bbc7543e527a088a27bda9563e407c1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Aug 31 15:01:32 2009 -0400
+
+    elementaddednotifier: Use g_connect_signal_object
+    
+    Otherwise each element had a ref on the notifier and relied on the not thread
+    safe weak references.
+
+commit 8d102cfee303c77020f7c3ddd6370c88792e5bb9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Aug 20 10:19:40 2009 -0400
+
+    rawudp: Emit local candidates if there are no local interfaces suitable for UPnP
+
+commit c6b9fd4eda3cbf2082ac5b07a6e9dc5f9f8cf534
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Aug 20 10:19:13 2009 -0400
+
+    rawudp: Add some UPnP debug messages
+
+commit 5bbd242795b143f862b775220f89a2e652bd9ee0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Aug 17 17:03:37 2009 -0400
+
+    glib-gen: Use single = instead of == for portability
+
+commit 160cea00257fcce1924f1696725208c79dab50f9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Aug 12 14:48:47 2009 -0400
+
+    msnconnection: Check return values from recv()
+
+commit e71f86bc3ab0185c0e1ef00406bdb48fd1dbc050
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Aug 12 14:28:26 2009 -0400
+
+    msnsession: Conference must always set before get_property
+
+commit c8aac249cd1aa38882644bde1c78ddd76c5cb2b5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Aug 12 14:27:14 2009 -0400
+
+    msnsession: Only try to lock conference if it has been set
+
+commit f61c6fdfcd7763fa0e640455c6b67ed51b600faf
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Aug 12 14:24:14 2009 -0400
+
+    rtpsession: Initialise variable to NULL
+    
+    Makes coverity happy
+
+commit cc0c86bd6a3cb4cad5da753ed57e40fd3d17db84
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Aug 12 14:23:52 2009 -0400
+
+    msnconnection: Remove unused variables
+
+commit 5872086d4d3d72dc675c190206138231b0edf26f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 7 19:14:13 2009 -0400
+
+    rtpstream: Correct documentation
+
+commit 84161b32250d847e4b200b99589b1359b7822f9a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 7 16:43:40 2009 -0400
+
+    rtpsession: Unref transmitter src/sink in dispose
+    
+    Unref element from g_object_get(), fixes leak
+
+commit bdc51c5a3d829bd2fcf041ce06e6ff3a35c80ebd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 7 16:43:11 2009 -0400
+
+    elementaddednotifier: Unref element in iterator loop
+    
+    Fixes leak
+
+commit 4f698cbfecb89258397d29ffb82e8c8e3b6c8de1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 4 15:37:36 2009 -0400
+
+    elementadded: Use gst_value_deserialize to read properties
+    
+    Use the existing function instead of having our own less-capable re-implementation
+
+commit 9ecc88b7d54d2037053bb3e5beba1c5f491598a5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Aug 3 16:47:44 2009 -0400
+
+    Version 0.0.14.1
+
 commit 20ffe3888a03c9e762b03419eba46d55ad56ceb7
 Author: Olivier Crête <olivier.crete@collabora.co.uk>
 Date:   Mon Aug 3 16:32:19 2009 -0400
