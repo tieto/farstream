@@ -1,9 +1,9 @@
-farsight2 (0.0.16-1) UNRELEASED; urgency=low
+farsight2 (0.0.16-1) unstable; urgency=low
 
   * New upstream release
   * debian/control: Bump Standards-Version to 3.8.3 (no further changes)
 
- -- Laurent Bigonville <bigon@debian.org>  Wed, 14 Oct 2009 10:02:35 +0200
+ -- Laurent Bigonville <bigon@debian.org>  Wed, 14 Oct 2009 10:10:40 +0200
 
 farsight2 (0.0.15-1) unstable; urgency=low
 
