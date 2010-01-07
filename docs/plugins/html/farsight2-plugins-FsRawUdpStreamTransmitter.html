@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>FsRawUdpStreamTransmitter</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="index.html" title="Farsight2 Plugins Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="Farsight2 Plugins Manual">
 <link rel="up" href="ch02.html" title="Transmitters">
 <link rel="prev" href="ch02.html" title="Transmitters">
 <link rel="next" href="farsight2-plugins-FsMulticastStreamTransmitter.html" title="FsMulticastStreamTransmitter">
@@ -34,7 +34,7 @@
                 <a href="#farsight2-plugins-FsRawUdpStreamTransmitter.properties" class="shortcut">Properties</a>
 </td></tr>
 </table>
-<div class="refentry" lang="en">
+<div class="refentry" title="FsRawUdpStreamTransmitter">
 <a name="farsight2-plugins-FsRawUdpStreamTransmitter"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
@@ -43,42 +43,42 @@
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
-<div class="refsynopsisdiv">
+<div class="refsynopsisdiv" title="Synopsis">
 <a name="farsight2-plugins-FsRawUdpStreamTransmitter.synopsis"></a><h2>Synopsis</h2>
 <pre class="synopsis">
                     <a class="link" href="farsight2-plugins-FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter" title="FsRawUdpStreamTransmitter">FsRawUdpStreamTransmitter</a>;
 </pre>
 </div>
-<div class="refsect1" lang="en">
+<div class="refsect1" title="Properties">
 <a name="farsight2-plugins-FsRawUdpStreamTransmitter.properties"></a><h2>Properties</h2>
 <pre class="synopsis">
   "<a class="link" href="farsight2-plugins-FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--stun-ip" title='The "stun-ip" property'>stun-ip</a>"                  <a
-href="../glib/glib-Basic-Types.html#gchar"
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a>*                : Read / Write / Construct Only
   "<a class="link" href="farsight2-plugins-FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--stun-port" title='The "stun-port" property'>stun-port</a>"                <a
-href="../glib/glib-Basic-Types.html#guint"
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>                 : Read / Write / Construct Only
   "<a class="link" href="farsight2-plugins-FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--stun-timeout" title='The "stun-timeout" property'>stun-timeout</a>"             <a
-href="../glib/glib-Basic-Types.html#guint"
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>                 : Read / Write / Construct Only
   "<a class="link" href="farsight2-plugins-FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--upnp-discovery" title='The "upnp-discovery" property'>upnp-discovery</a>"           <a
-href="../glib/glib-Basic-Types.html#gboolean"
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write / Construct Only
   "<a class="link" href="farsight2-plugins-FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--upnp-discovery-timeout" title='The "upnp-discovery-timeout" property'>upnp-discovery-timeout</a>"   <a
-href="../glib/glib-Basic-Types.html#guint"
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>                 : Read / Write / Construct Only
   "<a class="link" href="farsight2-plugins-FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--upnp-mapping" title='The "upnp-mapping" property'>upnp-mapping</a>"             <a
-href="../glib/glib-Basic-Types.html#gboolean"
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write / Construct Only
   "<a class="link" href="farsight2-plugins-FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--upnp-mapping-timeout" title='The "upnp-mapping-timeout" property'>upnp-mapping-timeout</a>"     <a
-href="../glib/glib-Basic-Types.html#guint"
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>                 : Read / Write / Construct Only
   "<a class="link" href="farsight2-plugins-FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--upnp-request-timeout" title='The "upnp-request-timeout" property'>upnp-request-timeout</a>"     <a
-href="../glib/glib-Basic-Types.html#guint"
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>                 : Read / Write / Construct Only
 </pre>
 </div>
-<div class="refsect1" lang="en">
+<div class="refsect1" title="Description">
 <a name="farsight2-plugins-FsRawUdpStreamTransmitter.description"></a><h2>Description</h2>
 <p>
 This transmitter sends and receives unicast UDP packets.
@@ -94,7 +94,7 @@ and the loopback interface last.
 <p>
 You can configure the address and port it will listen on by setting the
 "preferred-local-candidates" property. This property will contain a <a
-href="../glib/glib-Doubly-Linked-Lists.html#GList"
+href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
 ><span class="type">GList</span></a>
 of <a
 href="../farsight2-libs-0.10/farsight2-libs-FsCandidate.html#FsCandidate"
@@ -122,9 +122,9 @@ The name of this transmitter is "rawudp".</p>
 <p>
 </p>
 </div>
-<div class="refsect1" lang="en">
+<div class="refsect1" title="Details">
 <a name="farsight2-plugins-FsRawUdpStreamTransmitter.details"></a><h2>Details</h2>
-<div class="refsect2" lang="en">
+<div class="refsect2" title="FsRawUdpStreamTransmitter">
 <a name="FsRawUdpStreamTransmitter"></a><h3>FsRawUdpStreamTransmitter</h3>
 <pre class="programlisting">typedef struct {
   FsStreamTransmitter parent;
@@ -146,84 +146,84 @@ href="../farsight2-libs-0.10/FsStreamTransmitter.html"
 </table></div>
 </div>
 </div>
-<div class="refsect1" lang="en">
+<div class="refsect1" title="Property Details">
 <a name="farsight2-plugins-FsRawUdpStreamTransmitter.property-details"></a><h2>Property Details</h2>
-<div class="refsect2" lang="en">
+<div class="refsect2" title='The "stun-ip" property'>
 <a name="FsRawUdpStreamTransmitter--stun-ip"></a><h3>The <code class="literal">"stun-ip"</code> property</h3>
 <pre class="programlisting">  "stun-ip"                  <a
-href="../glib/glib-Basic-Types.html#gchar"
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a>*                : Read / Write / Construct Only</pre>
 <p>The IPv4 address of the STUN server as a x.x.x.x string.</p>
 <p>Default value: NULL</p>
 </div>
 <hr>
-<div class="refsect2" lang="en">
+<div class="refsect2" title='The "stun-port" property'>
 <a name="FsRawUdpStreamTransmitter--stun-port"></a><h3>The <code class="literal">"stun-port"</code> property</h3>
 <pre class="programlisting">  "stun-port"                <a
-href="../glib/glib-Basic-Types.html#guint"
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>                 : Read / Write / Construct Only</pre>
 <p>The IPv4 UDP port of the STUN server as a .</p>
 <p>Allowed values: [1,65535]</p>
 <p>Default value: 3478</p>
 </div>
 <hr>
-<div class="refsect2" lang="en">
+<div class="refsect2" title='The "stun-timeout" property'>
 <a name="FsRawUdpStreamTransmitter--stun-timeout"></a><h3>The <code class="literal">"stun-timeout"</code> property</h3>
 <pre class="programlisting">  "stun-timeout"             <a
-href="../glib/glib-Basic-Types.html#guint"
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>                 : Read / Write / Construct Only</pre>
 <p>How long to wait for for the STUN reply (in seconds) before giving up.</p>
 <p>Allowed values: &gt;= 1</p>
 <p>Default value: 30</p>
 </div>
 <hr>
-<div class="refsect2" lang="en">
+<div class="refsect2" title='The "upnp-discovery" property'>
 <a name="FsRawUdpStreamTransmitter--upnp-discovery"></a><h3>The <code class="literal">"upnp-discovery"</code> property</h3>
 <pre class="programlisting">  "upnp-discovery"           <a
-href="../glib/glib-Basic-Types.html#gboolean"
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write / Construct Only</pre>
 <p>Tries to discovery the external IP with UPnP if stun fails.</p>
 <p>Default value: TRUE</p>
 </div>
 <hr>
-<div class="refsect2" lang="en">
+<div class="refsect2" title='The "upnp-discovery-timeout" property'>
 <a name="FsRawUdpStreamTransmitter--upnp-discovery-timeout"></a><h3>The <code class="literal">"upnp-discovery-timeout"</code> property</h3>
 <pre class="programlisting">  "upnp-discovery-timeout"   <a
-href="../glib/glib-Basic-Types.html#guint"
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>                 : Read / Write / Construct Only</pre>
 <p>After this period, UPnP discovery is considered to have failed and the local IP is returned.</p>
 <p>Default value: 10</p>
 </div>
 <hr>
-<div class="refsect2" lang="en">
+<div class="refsect2" title='The "upnp-mapping" property'>
 <a name="FsRawUdpStreamTransmitter--upnp-mapping"></a><h3>The <code class="literal">"upnp-mapping"</code> property</h3>
 <pre class="programlisting">  "upnp-mapping"             <a
-href="../glib/glib-Basic-Types.html#gboolean"
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write / Construct Only</pre>
 <p>Tries to map ports using UPnP if enabled.</p>
 <p>Default value: TRUE</p>
 </div>
 <hr>
-<div class="refsect2" lang="en">
+<div class="refsect2" title='The "upnp-mapping-timeout" property'>
 <a name="FsRawUdpStreamTransmitter--upnp-mapping-timeout"></a><h3>The <code class="literal">"upnp-mapping-timeout"</code> property</h3>
 <pre class="programlisting">  "upnp-mapping-timeout"     <a
-href="../glib/glib-Basic-Types.html#guint"
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>                 : Read / Write / Construct Only</pre>
 <p>The UPnP port mappings expire after this period if the app has crashed (in seconds).</p>
 <p>Default value: 600</p>
 </div>
 <hr>
-<div class="refsect2" lang="en">
+<div class="refsect2" title='The "upnp-request-timeout" property'>
 <a name="FsRawUdpStreamTransmitter--upnp-request-timeout"></a><h3>The <code class="literal">"upnp-request-timeout"</code> property</h3>
 <pre class="programlisting">  "upnp-request-timeout"     <a
-href="../glib/glib-Basic-Types.html#guint"
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>                 : Read / Write / Construct Only</pre>
 <p>After this delay, UPnP requests fails.</p>
 <p>Allowed values: [1,600]</p>
 <p>Default value: 10</p>
 </div>
 </div>
-<div class="refsect1" lang="en">
+<div class="refsect1" title="See Also">
 <a name="farsight2-plugins-FsRawUdpStreamTransmitter.see-also"></a><h2>See Also</h2>
 #FsMulticastStreamTransmitter
 </div>

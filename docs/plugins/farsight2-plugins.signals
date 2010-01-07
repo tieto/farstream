@@ -1,1 +1,16 @@
+<SIGNAL>
+<NAME>GstShmSink::client-connected</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>l</FLAGS>
+GstShmSink *gstshmsink
+gint  arg1
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GstShmSink::client-disconnected</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>l</FLAGS>
+GstShmSink *gstshmsink
+gint  arg1
+</SIGNAL>
 

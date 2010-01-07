@@ -328,3 +328,53 @@
 <DEFAULT>NULL</DEFAULT>
 </ARG>
 
+<ARG>
+<NAME>GstShmSrc::socket-path</NAME>
+<TYPE>gchar*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Path to the control socket</NICK>
+<BLURB>The path to the control socket used to control the shared memory transport.</BLURB>
+<DEFAULT>NULL</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GstShmSink::perms</NAME>
+<TYPE>guint</TYPE>
+<RANGE><= 4095</RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Permissions on the shm area</NICK>
+<BLURB>Permissions to set on the shm area.</BLURB>
+<DEFAULT>504</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GstShmSink::shm-size</NAME>
+<TYPE>guint</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Size of the shm area</NICK>
+<BLURB>Size of the shared memory area.</BLURB>
+<DEFAULT>262144</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GstShmSink::socket-path</NAME>
+<TYPE>gchar*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Path to the control socket</NICK>
+<BLURB>The path to the control socket used to control the shared memory transport.</BLURB>
+<DEFAULT>NULL</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GstShmSink::wait-for-connection</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Wait for a connection until rendering</NICK>
+<BLURB>Block the stream until the shm pipe is connected.</BLURB>
+<DEFAULT>TRUE</DEFAULT>
+</ARG>
+
