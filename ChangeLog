@@ -1,3 +1,328 @@
+commit 56c1eecaa134a71d2c46ccbe1b63194aacacc782
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 5 12:14:40 2010 -0500
+
+    Version 0.0.17
+
+commit f64d09baa3a3ddc798859c8b32e43d4826747a06
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 4 15:57:08 2010 -0500
+
+    tests: Add test for telephone-event events parameter nego
+
+commit b29d812239f3871d2fd79e687d6206fecc4fa4e7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Jan 2 17:47:09 2010 -0500
+
+    rtpspecificnego: Add handling of telephone-event event ranges
+
+commit 070ff2aba5c04cd3f7491e3583e1d0180c2a1206
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Jan 3 20:25:28 2010 -0500
+
+    tests: Skip tests if no local candidates are produced
+
+commit 327e825d42c46678e6d4ba818af98c8c9e9633b0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Jan 3 20:16:12 2010 -0500
+
+    rtcpfilter: Reduce the packet size when reducing the packet
+
+commit 31e1b458076c88bb2dc990bbd2543f8c7caa2093
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Jan 3 19:07:14 2010 -0500
+
+    tests: Skip libnice tests if it finds no local candidates
+
+commit 1cf636312b3e78833bdeb22a41176575c8d5aed4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Jan 3 19:05:01 2010 -0500
+
+    rtpdtmfsoundsource: Respect the ptime/maxptime too
+
+commit fb8059850299c2c9ae3cbcd9d64527a523ec5690
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 29 14:09:03 2009 -0500
+
+    tests: Add test ptime/maxptime passing
+
+commit 5e0a762ab70d2a098059420c3eafc9666d2448f1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 28 21:19:54 2009 -0500
+
+    rtpsession: Set the ptime/maxptime on the send codec bin caps
+
+commit 69d70c143143347f26fe591a960e32dcbfb82ddf
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 28 21:19:39 2009 -0500
+
+    rtpcodecnego: Negotiate the ptime/maxptime
+
+commit 16084893a78030d8865decc57c9112d03678396b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 28 21:18:50 2009 -0500
+
+    rtpconference: Add function to make gst caps while keeping the ptime
+
+commit 5733939b65124648620e5aa9e2bdba6368b0680b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 28 21:16:11 2009 -0500
+
+    rtpcodecnego: Add function to copy the list of codecs with the send-side ptime
+
+commit 06df2cba3cd242a373b87039dd26a57369cec1e3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 28 20:18:59 2009 -0500
+
+    tests; Add test for fscodec ptime/maxptime handling
+
+commit 16af4796550b512b6568e96d8f342bbeb068ce49
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 28 20:13:56 2009 -0500
+
+    codec: Add ptime
+
+commit ccdddc4941ff53713f9b5d148b268742cb7e8ee5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Dec 3 10:12:36 2009 +0530
+
+    codec: Add maxptime
+
+commit 0e81d852d0d3f2aac280f01a87ae6dd4f8781a05
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 22 15:55:41 2009 -0500
+
+    tests: Take rtpsession lock during message emissions
+    
+    This ensures that it is not held across message emissions.
+
+commit 39e92f6356b533adb4e378cb830b770eff6b3332
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 22 13:06:39 2009 -0500
+
+    tests: Add debug-blocks
+
+commit 039cda44dd0e41f7f4e1a4ca409343d0b5361b61
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 22 13:06:30 2009 -0500
+
+    rtpsubstream: Keep ref on substream while callbacks are invoked
+
+commit f71363416f7845fe60faf47b88ffd0220f890334
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Dec 22 13:06:08 2009 -0500
+
+    rtpsubstream: Put codec/codecbin inside loop
+
+commit d3aa11f608eb7a1225f79db31034a6d60e7d4401
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 21 17:10:43 2009 -0500
+
+    rtpsubstream: Use rw-lock to make sure the substream really stops
+
+commit 98fd50c7f74dfbd58b31ea3522ee68cdb5ab8263
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 21 16:45:57 2009 -0500
+
+    rtp: Move locking into callback
+
+commit 35c11d71f4482d241b47b82401f079baa1eba521
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 21 15:39:33 2009 -0500
+
+    rtpsubstream: Don't hold session lock too much while setting new codecbin
+
+commit 9cbd95a8958478b1b4537f11d4ba705f81be6ed6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 21 15:24:56 2009 -0500
+
+    rtpsubstream: Move modification locking to blocked function
+    
+    Also allow only one thread to be in substream blocked function at once.
+
+commit e11ef1a346baf58dcf67f59ae4e3e0dc787dd639
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 21 14:09:06 2009 -0500
+
+    rtp: Move substream blocking logic into substream
+
+commit 6c5129ac32684b9a80094a0e2071b9754ea7f307
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 21 14:08:40 2009 -0500
+
+    rtp: Don't include marshaller headers in headers
+
+commit 24182b1d04e2350a56831dac6dc5cb050bd917fa
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 21 14:07:47 2009 -0500
+
+    rtp: Depend on the correct var for marshaller list generation
+
+commit f0ca4af5c9b3583ab8ffc9bbc01840e2184a20d8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun Dec 27 11:38:41 2009 -0500
+
+    rtcpfilter: Add gst-p-base paths to Makefile.am
+    
+    Patch contributed by Armijn Hemel <armijn@loohuis-consulting.nl>
+
+commit d84cff657a7057fef1218580449ecc71daffc5f3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Dec 5 14:25:24 2009 +0530
+
+    rawudp: Remove upnp-request-timeout, it was a terrible idea
+
+commit 4c6a92d54b2ea441d14ac296aaf9625e78cdef31
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Thu Dec 3 22:43:21 2009 +0100
+
+    Substitute deprecated Glib symbol: g_mapped_file_free
+    
+    Use g_mapped_file_unref if Glib >= 2.22 is available
+    
+    http://bugs.freedesktop.org/show_bug.cgi?id=21422
+
+commit 4a0ac4a9275bc0a634e9137c422f23c311e5012c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 20 19:12:47 2009 -0500
+
+    rtpsession: Only add stream to list if its creation worked
+
+commit 42c565ec5e3d0e2bdb8e7b90c297425f1984254f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 18 10:52:08 2009 -0500
+
+    README: Require gst-p-bad 0.10.17 for dtmfsrc
+    
+    dtmfsrc can do do more than 8000 Hz, that has only been fixed in
+    gst-plugins-bad 0.10.17
+
+commit af3392d0634b1cf084afc164459394125d041e8b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 11 16:48:09 2009 -0500
+
+    rtpdtmfsound: Try hardwired PCMx only if the clock-rate is 8000
+
+commit 3e7b98ade4ffede0fb8bc5ce326daff6a1a360ae
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 9 15:33:52 2009 -0500
+
+    rtp: Lookup codec with config is always for sending, so make it explicit
+    
+    Also, the dtmf sound will always get a valid codec now.
+
+commit b9c3f87e23c4e08a93abf2b2ed735ca447235863
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 9 13:03:08 2009 -0500
+
+    rtpconference: Make message about gst_bin_add failure more accurate
+
+commit ae09f2625284ba27dcc8a0c5fb54745c41501e98
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 9 13:02:30 2009 -0500
+
+    rtpdtmfsoundsource: Ignore codecs that don't have a blueprint
+
+commit a4b660da2d2863fea824b384811ee0edfb617378
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 5 16:44:07 2009 -0500
+
+    tests: Test dtmf as sound
+
+commit 3fc8eaeb003e475044063c34a205fa52e9af3249
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 5 16:01:49 2009 -0500
+
+    tests: Make recv-pipeline per test
+
+commit a154b292b530873eadc62119a28c63373eafd9a7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 4 17:54:03 2009 -0500
+
+    rtpdtmfsoundsource: Use main codec if PCMA/U are not available
+
+commit b8d3b2b9f969b982d5ea07f26b81c397959392f3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 4 16:07:51 2009 -0500
+
+    rtpspecialsource: Make local class_get_codec function static
+
+commit a908a023039fe62a4da51749d99118c2d0578945
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 4 16:03:04 2009 -0500
+
+    rtp: Regroup CodecBlueprint related functions in one place
+
+commit c5a996fadd8bc24bdac4549792d6aa152ee68a20
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Nov 4 14:50:44 2009 -0500
+
+    rtpspecialsource: Rename negotiated_codecs to negotiated_codec_associations
+    
+    This way, the list contents can be guessed
+
+commit 446e5b38951ba4dc85b4081db923cd713fac8084
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Oct 9 20:31:22 2009 -0400
+
+    rtpsession: Don't need to set queue-delay anymore
+
+commit f09359f8e8ba07f283bbced4a74c5b9d51a80fa5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Oct 9 20:30:29 2009 -0400
+
+    rtpsession: Split codecbin generation from factory from profile
+
+commit 1657e35c10ff73e2cf191b9c86578d884c23af32
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 13 19:44:25 2009 -0500
+
+    tests: Make it build against GUPnP 0.13
+
+commit f9f9d5a3895ecf6669012dcba7c8cb68adc1e575
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 6 13:49:12 2009 -0500
+
+    msnsession: Check if dispose has already been called
+
+commit 04c5ea7586f6d6559be3d2bd963bda2c27285475
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 6 13:47:05 2009 -0500
+
+    fstransmitter: uint can't be < 0
+
+commit 2efb3ffbfcb533b003f0b426a6ec01690f7e95c5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 26 13:52:55 2009 +0000
+
+    rawudp: Bring upnp discovery timeout down to 2 seconds
+
+commit 27d875f7e1e632272a3e1b5ae07ce676a448c0f2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 26 12:32:58 2009 +0000
+
+    tests: Verify that it is not possible to disable all codecs
+    
+    Add a reserve-pt to guarantee that it is not possible to disable all codecs
+
+commit aa346ebd2a6d29f7ba0ec65aad45590331660fcb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 26 12:42:06 2009 +0000
+
+    rtpcodecnego: Verify if there are any valid local codecs left after applying preferences
+
+commit 573ff392b197c6255e3cb4c6935eabb45f7ddca7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Oct 9 16:07:33 2009 -0400
+
+    rtpsession: Make error message less cryptic
+
+commit 3d9847d67304a1b7de05f936fd7d5d39e9b6bf9b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 6 14:42:30 2009 -0400
+
+    Version 0.0.16.1
+
 commit 30889433aec2a3ac9e91c69235bb91a920df1fe1
 Author: Olivier Crête <olivier.crete@collabora.co.uk>
 Date:   Tue Oct 6 14:23:32 2009 -0400

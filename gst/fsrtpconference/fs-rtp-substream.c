@@ -1,9 +1,9 @@
 /*
  * Farsight2 - Farsight RTP Sub Stream
  *
- * Copyright 2007 Collabora Ltd.
+ * Copyright 2007-2009 Collabora Ltd.
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
- * Copyright 2007 Nokia Corp.
+ * Copyright 2007-2009 Nokia Corp.
  *
  * fs-rtp-substream.c - A Farsight RTP Substream gobject
  *
@@ -29,6 +29,7 @@
 
 #include "fs-rtp-substream.h"
 #include "fs-rtp-stream.h"
+#include "fs-rtp-marshal.h"
 
 #include <gst/farsight/fs-stream.h>
 #include <gst/farsight/fs-session.h>
@@ -52,7 +53,7 @@ enum
   SRC_PAD_ADDED,
   CODEC_CHANGED,
   ERROR_SIGNAL,
-  BLOCKED,
+  GET_CODEC_BIN,
   UNLINKED,
   LAST_SIGNAL
 };
@@ -76,7 +77,6 @@ enum
 #define DEFAULT_NO_RTCP_TIMEOUT (7000)
 
 struct _FsRtpSubStreamPrivate {
-  gboolean disposed;
 
   /* These are only pointers, we don't own references */
   FsRtpConference *conference;
@@ -116,17 +116,16 @@ struct _FsRtpSubStreamPrivate {
    */
   gboolean receiving;
 
-  /* Both of these are sub-stream mutex protected */
-  /* This is TRUE while someone is modifying the recv pipeline */
-  gboolean modifying;
-  /* This becomes true when the substream is stopped */
-  gboolean stopped;
-
   /* Protected by the this mutex */
   GMutex *mutex;
   GstClockID no_rtcp_timeout_id;
   GstClockTime next_no_rtcp_timeout;
   GThread *no_rtcp_timeout_thread;
+
+  /* Can only be used while using the lock */
+  GStaticRWLock stopped_lock;
+  gboolean stopped;
+
 
   GError *construction_error;
 };
@@ -165,8 +164,29 @@ fs_rtp_sub_stream_emit_error (FsRtpSubStream *substream,
     gchar *error_msg,
     gchar *debug_msg);
 
+
+static gboolean
+fs_rtp_sub_stream_has_stopped_enter (FsRtpSubStream *self)
+{
+  g_object_ref (self);
+  g_static_rw_lock_reader_lock (&self->priv->stopped_lock);
+
+  if (self->priv->stopped)
+  {
+    g_static_rw_lock_reader_unlock (&self->priv->stopped_lock);
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
+
 static void
-fs_rtp_sub_stream_try_stop (FsRtpSubStream *substream);
+fs_rtp_sub_stream_has_stopped_exit (FsRtpSubStream *self)
+{
+  g_static_rw_lock_reader_unlock (&self->priv->stopped_lock);
+  g_object_unref (self);
+}
 
 
 static void
@@ -351,21 +371,27 @@ fs_rtp_sub_stream_class_init (FsRtpSubStreamClass *klass)
       G_TYPE_NONE, 0);
 
  /**
-   * FsRtpSubStream:blocked
+   * FsRtpSubStream:get-codec-bin-locked
    * @self: #FsRtpSubStream that emitted the signal
    * @stream: the #FsRtpStream this substream is attached to if any (or %NULL)
+   * @current_codec: The current codec
+   * @new_codec: A pointer to a location where the codec can be stored
+   * @error: The location of a GError where an error can be stored
    *
-   * This signal is emitted after the substream has been blocked because its
-   * codec has been invalidated OR because no codecbin was set on its creation.
+   * This emitted when the substream want to get a codecbin or replace
+   * the current one.
+   *
+   * Returns: The Codec Bin
    */
-  signals[BLOCKED] = g_signal_new ("blocked",
+  signals[GET_CODEC_BIN] = g_signal_new ("get-codec-bin",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
       0,
       NULL,
       NULL,
-      g_cclosure_marshal_VOID__POINTER,
-      G_TYPE_NONE, 1, G_TYPE_POINTER);
+      _fs_rtp_marshal_POINTER__POINTER_POINTER_POINTER_POINTER,
+      G_TYPE_POINTER, 4, G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_POINTER,
+      G_TYPE_POINTER);
 
 
  /**
@@ -392,9 +418,10 @@ static void
 fs_rtp_sub_stream_init (FsRtpSubStream *self)
 {
   self->priv = FS_RTP_SUB_STREAM_GET_PRIVATE (self);
-  self->priv->disposed = FALSE;
   self->priv->receiving = TRUE;
   self->priv->mutex = g_mutex_new ();
+
+  g_static_rw_lock_init (&self->priv->stopped_lock);
 }
 
 
@@ -727,7 +754,6 @@ fs_rtp_sub_stream_dispose (GObject *object)
     self->priv->rtpbin_pad = NULL;
   }
 
-  self->priv->disposed = TRUE;
   G_OBJECT_CLASS (fs_rtp_sub_stream_parent_class)->dispose (object);
 }
 
@@ -852,21 +878,18 @@ fs_rtp_sub_stream_get_property (GObject *object,
 }
 
 /**
- * fs_rtp_sub_stream_set_codecbin_unlock:
+ * fs_rtp_sub_stream_set_codecbin:
  *
  * Add and links the rtpbin for a given substream.
  * Removes any codecbin that was previously there.
  *
- * This function will swallow one ref to the codecbin and the codec.x
- *
- * You must enter this function with the session lock held and it will release
- * it.
+ * This function will swallow one ref to the codecbin and the codec.
  *
  * Returns: TRUE on success
  */
 
-gboolean
-fs_rtp_sub_stream_set_codecbin_unlock (FsRtpSubStream *substream,
+static gboolean
+fs_rtp_sub_stream_set_codecbin (FsRtpSubStream *substream,
     FsCodec *codec,
     GstElement *codecbin,
     GError **error)
@@ -875,33 +898,9 @@ fs_rtp_sub_stream_set_codecbin_unlock (FsRtpSubStream *substream,
   gchar *tmp;
   gboolean ret = FALSE;
   GstPad *pad;
-  gboolean codec_changed = TRUE;
-
-  FS_RTP_SUB_STREAM_LOCK (substream);
-
-  if (substream->priv->stopped)
-  {
-    FS_RTP_SUB_STREAM_UNLOCK (substream);
-    FS_RTP_SESSION_UNLOCK (substream->priv->session);
-    gst_object_unref (codecbin);
-    fs_codec_destroy (codec);
-    fs_rtp_sub_stream_try_stop (substream);
-    return TRUE;
-  }
-  substream->priv->modifying = TRUE;
-  FS_RTP_SUB_STREAM_UNLOCK (substream);
-
-  if (substream->codec)
-  {
-    if (!fs_codec_are_equal (codec, substream->codec))
-      codec_changed = FALSE;
-  }
 
   if (substream->priv->codecbin)
   {
-    FsCodec *saved_codec = substream->codec;
-    GstElement *old_codecbin;
-
     gst_element_set_locked_state (substream->priv->codecbin, TRUE);
     if (gst_element_set_state (substream->priv->codecbin, GST_STATE_NULL) !=
         GST_STATE_CHANGE_SUCCESS)
@@ -911,24 +910,17 @@ fs_rtp_sub_stream_set_codecbin_unlock (FsRtpSubStream *substream,
           "Could not set the codec bin for ssrc %u"
           " and payload type %d to the state NULL", substream->ssrc,
           substream->pt);
-      FS_RTP_SUB_STREAM_LOCK (substream);
-      substream->priv->modifying = FALSE;
-      FS_RTP_SUB_STREAM_UNLOCK (substream);
-      FS_RTP_SESSION_UNLOCK (substream->priv->session);
       gst_object_unref (codecbin);
       fs_codec_destroy (codec);
-      fs_rtp_sub_stream_try_stop (substream);
       return FALSE;
     }
 
-    old_codecbin = substream->priv->codecbin;
-    substream->priv->codecbin = NULL;
-    FS_RTP_SESSION_UNLOCK (substream->priv->session);
-
-    gst_bin_remove (GST_BIN (substream->priv->conference), old_codecbin);
+    gst_bin_remove (GST_BIN (substream->priv->conference),
+        substream->priv->codecbin);
 
     FS_RTP_SESSION_LOCK (substream->priv->session);
-    if (substream->codec == saved_codec)
+    substream->priv->codecbin = NULL;
+    if (substream->codec)
     {
       fs_codec_destroy (substream->codec);
       substream->codec = NULL;
@@ -937,21 +929,16 @@ fs_rtp_sub_stream_set_codecbin_unlock (FsRtpSubStream *substream,
     if (substream->priv->caps)
       gst_caps_unref (substream->priv->caps);
     substream->priv->caps = NULL;
+    FS_RTP_SESSION_UNLOCK (substream->priv->session);
   }
 
-  FS_RTP_SESSION_UNLOCK (substream->priv->session);
-
-  gst_object_ref (codecbin);
 
   if (!gst_bin_add (GST_BIN (substream->priv->conference), codecbin))
   {
     gst_object_unref (codecbin);
+    fs_codec_destroy (codec);
     g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
       "Could not add the codec bin to the conference");
-    FS_RTP_SUB_STREAM_LOCK (substream);
-    substream->priv->modifying = FALSE;
-    FS_RTP_SUB_STREAM_UNLOCK (substream);
-    fs_rtp_sub_stream_try_stop (substream);
     return FALSE;
   }
 
@@ -1017,9 +1004,7 @@ fs_rtp_sub_stream_set_codecbin_unlock (FsRtpSubStream *substream,
   substream->priv->caps = caps;
   substream->priv->codecbin = codecbin;
   substream->codec = codec;
-  FS_RTP_SUB_STREAM_LOCK (substream);
-  substream->priv->modifying = FALSE;
-  FS_RTP_SUB_STREAM_UNLOCK (substream);
+  codec = NULL;
 
   if (substream->priv->stream && !substream->priv->output_ghostpad)
   {
@@ -1029,31 +1014,19 @@ fs_rtp_sub_stream_set_codecbin_unlock (FsRtpSubStream *substream,
   else
   {
     FS_RTP_SESSION_UNLOCK (substream->priv->session);
-    if (codec_changed)
-      g_signal_emit (substream, signals[CODEC_CHANGED], 0);
+    g_signal_emit (substream, signals[CODEC_CHANGED], 0);
   }
 
-  gst_object_unref (codecbin);
-
-  fs_rtp_sub_stream_try_stop (substream);
 
   return TRUE;
 
  error:
-  FS_RTP_SUB_STREAM_LOCK (substream);
-  substream->priv->modifying = FALSE;
-  FS_RTP_SUB_STREAM_UNLOCK (substream);
-
 
   gst_element_set_locked_state (codecbin, TRUE);
   gst_element_set_state (codecbin, GST_STATE_NULL);
-  gst_object_ref (codecbin);
   gst_bin_remove (GST_BIN (substream->priv->conference), codecbin);
 
-  gst_object_unref (codecbin);
   fs_codec_destroy (codec);
-
-  fs_rtp_sub_stream_try_stop (substream);
 
   return ret;
 }
@@ -1090,16 +1063,20 @@ do_nothing_blocked_callback (GstPad *pad, gboolean blocked, gpointer user_data)
 {
 }
 
-static void
-fs_rtp_sub_stream_try_stop (FsRtpSubStream *substream)
+
+/**
+ * fs_rtp_sub_stream_stop:
+ *
+ * Stops all of the elements on a #FsRtpSubstream
+ */
+
+void
+fs_rtp_sub_stream_stop (FsRtpSubStream *substream)
 {
-  FS_RTP_SUB_STREAM_LOCK (substream);
-  if (!substream->priv->stopped || substream->priv->modifying)
-  {
-    FS_RTP_SUB_STREAM_UNLOCK (substream);
-    return;
-  }
-  FS_RTP_SUB_STREAM_UNLOCK (substream);
+  substream->priv->stopped = TRUE;
+  g_static_rw_lock_writer_lock (&substream->priv->stopped_lock);
+  substream->priv->stopped = TRUE;
+  g_static_rw_lock_writer_unlock (&substream->priv->stopped_lock);
 
   if (substream->priv->rtpbin_unlinked_sig) {
     g_signal_handler_disconnect (substream->priv->rtpbin_pad,
@@ -1139,22 +1116,6 @@ fs_rtp_sub_stream_try_stop (FsRtpSubStream *substream)
 }
 
 /**
- * fs_rtp_sub_stream_stop:
- *
- * Stops all of the elements on a #FsRtpSubstream
- */
-
-void
-fs_rtp_sub_stream_stop (FsRtpSubStream *substream)
-{
-  FS_RTP_SUB_STREAM_LOCK (substream);
-  substream->priv->stopped = TRUE;
-  FS_RTP_SUB_STREAM_UNLOCK (substream);
-
-  fs_rtp_sub_stream_try_stop (substream);
-}
-
-/**
  * fs_rtp_sub_stream_add_output_ghostpad_unlock:
  *
  * Creates and adds an output ghostpad for this substreams
@@ -1173,10 +1134,16 @@ fs_rtp_sub_stream_add_output_ghostpad_unlock (FsRtpSubStream *substream,
   GstPad *ghostpad = NULL;
   FsCodec *codec = NULL;
 
-  if (substream->priv->adding_output_ghostpad)
+  if (fs_rtp_sub_stream_has_stopped_enter (substream))
   {
     FS_RTP_SESSION_UNLOCK (substream->priv->session);
     return TRUE;
+  }
+
+  if (substream->priv->adding_output_ghostpad)
+  {
+    FS_RTP_SESSION_UNLOCK (substream->priv->session);
+    goto out;
   }
 
   g_assert (substream->priv->output_ghostpad == NULL);
@@ -1206,8 +1173,7 @@ fs_rtp_sub_stream_add_output_ghostpad_unlock (FsRtpSubStream *substream,
     g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
         "Could not build ghostpad src_%u_%u_%d", substream->priv->session->id,
         substream->ssrc, substream->pt);
-    substream->priv->adding_output_ghostpad = FALSE;
-    return FALSE;
+    goto error;
   }
 
   if (!gst_pad_set_active (ghostpad, TRUE))
@@ -1216,8 +1182,7 @@ fs_rtp_sub_stream_add_output_ghostpad_unlock (FsRtpSubStream *substream,
         "Could not activate the src_%u_%u_%d", substream->priv->session->id,
         substream->ssrc, substream->pt);
     gst_object_unref (ghostpad);
-    substream->priv->adding_output_ghostpad = FALSE;
-    return FALSE;
+    goto error;
   }
 
   if (!gst_element_add_pad (GST_ELEMENT (substream->priv->conference),
@@ -1227,8 +1192,7 @@ fs_rtp_sub_stream_add_output_ghostpad_unlock (FsRtpSubStream *substream,
         "Could add build ghostpad src_%u_%u_%d to the conference",
         substream->priv->session->id, substream->ssrc, substream->pt);
     gst_object_unref (ghostpad);
-    substream->priv->adding_output_ghostpad = FALSE;
-    return FALSE;
+    goto error;
   }
 
   FS_RTP_SESSION_LOCK (substream->priv->session);
@@ -1250,9 +1214,16 @@ fs_rtp_sub_stream_add_output_ghostpad_unlock (FsRtpSubStream *substream,
 
   g_object_set (substream->priv->output_valve, "drop", FALSE, NULL);
 
-  fs_rtp_sub_stream_try_stop (substream);
+ out:
 
+  fs_rtp_sub_stream_has_stopped_exit (substream);
   return TRUE;
+
+ error:
+
+  substream->priv->adding_output_ghostpad = FALSE;
+  fs_rtp_sub_stream_has_stopped_exit (substream);
+  return FALSE;
 }
 
 /**
@@ -1272,6 +1243,9 @@ _rtpbin_pad_have_data_callback (GstPad *pad, GstMiniObject *miniobj,
   FsRtpSubStream *self = FS_RTP_SUB_STREAM (user_data);
   gboolean ret = TRUE;
   gboolean remove = FALSE;
+
+  if (fs_rtp_sub_stream_has_stopped_enter (self))
+    return FALSE;
 
   FS_RTP_SESSION_LOCK (self->priv->session);
 
@@ -1306,6 +1280,8 @@ _rtpbin_pad_have_data_callback (GstPad *pad, GstMiniObject *miniobj,
 
   FS_RTP_SESSION_UNLOCK (self->priv->session);
 
+  fs_rtp_sub_stream_has_stopped_exit (self);
+
   return ret;
 }
 
@@ -1313,19 +1289,78 @@ static void
 _rtpbin_pad_blocked_callback (GstPad *pad, gboolean blocked, gpointer user_data)
 {
   FsRtpSubStream *substream = user_data;
+  GError *error = NULL;
 
-  g_signal_emit (substream, signals[BLOCKED], 0, substream->priv->stream);
+  if (fs_rtp_sub_stream_has_stopped_enter (substream))
+    return;
+
+  GST_DEBUG ("Substream blocked for codec change (session:%d SSRC:%x pt:%d)",
+      substream->priv->session->id, substream->ssrc, substream->pt);
+
+  for (;;)
+  {
+    GstElement *codecbin = NULL;
+    FsCodec *codec = NULL;
+
+    g_signal_emit (substream, signals[GET_CODEC_BIN], 0,
+        substream->priv->stream, substream->codec, &codec, &error, &codecbin);
+
+   if (!codecbin)
+    {
+      if (error)
+        goto error;
+      else
+        goto out;
+    }
+
+    if (!fs_rtp_sub_stream_set_codecbin (substream,
+            codec, codecbin, &error))
+      goto error;
+
+    if (substream->priv->stopped)
+      goto out;
+  }
+
+ out:
+
+  g_clear_error (&error);
 
   gst_pad_set_blocked_async (pad, FALSE, do_nothing_blocked_callback, NULL);
+
+  fs_rtp_sub_stream_has_stopped_exit (substream);
+
+  return;
+
+ error:
+  {
+    gchar *str = g_strdup_printf ("Could not add the new recv codec bin for"
+        " ssrc %u and payload type %d to the state NULL", substream->ssrc,
+        substream->pt);
+
+    if (substream->priv->stream)
+      fs_stream_emit_error (FS_STREAM (substream->priv->stream),
+          FS_ERROR_CONSTRUCTION, str, error->message);
+    else
+      fs_session_emit_error (FS_SESSION (substream->priv->session),
+          FS_ERROR_CONSTRUCTION, str, error->message);
+    g_free (str);
+  }
+
+  goto out;
 }
 
 static void
 fs_rtp_sub_stream_add_probe_locked (FsRtpSubStream *substream)
 {
+  if (fs_rtp_sub_stream_has_stopped_enter (substream))
+    return;
+
   if (!substream->priv->blocking_id)
     substream->priv->blocking_id = gst_pad_add_data_probe (
         substream->priv->rtpbin_pad,
         G_CALLBACK (_rtpbin_pad_have_data_callback), substream);
+
+  fs_rtp_sub_stream_has_stopped_exit (substream);
 }
 
 /**
@@ -1341,6 +1376,9 @@ fs_rtp_sub_stream_add_probe_locked (FsRtpSubStream *substream)
 void
 fs_rtp_sub_stream_verify_codec_locked (FsRtpSubStream *substream)
 {
+  if (fs_rtp_sub_stream_has_stopped_enter (substream))
+    return;
+
   GST_LOG ("Starting codec verification process for substream with"
       " SSRC:%x pt:%d", substream->ssrc, substream->pt);
 
@@ -1349,6 +1387,8 @@ fs_rtp_sub_stream_verify_codec_locked (FsRtpSubStream *substream)
 
   gst_pad_set_blocked_async (substream->priv->rtpbin_pad, TRUE,
       _rtpbin_pad_blocked_callback, substream);
+
+  fs_rtp_sub_stream_has_stopped_exit (substream);
 }
 
 

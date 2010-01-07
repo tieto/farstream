@@ -78,6 +78,9 @@
 /* Have the GUPnP IGD library */
 #undef HAVE_GUPNP
 
+/* Have GUPnP 0.13 or higher */
+#undef HAVE_GUPNP_013
+
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 

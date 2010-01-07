@@ -539,6 +539,7 @@ create_local_codec_associations (
   GList *bp_e = NULL;
   GList *codec_pref_e = NULL;
   GList *lca_e = NULL;
+  gboolean has_valid_codec = FALSE;
 
   if (blueprints == NULL)
     return NULL;
@@ -612,6 +613,8 @@ create_local_codec_associations (
           memcpy (ca, oldca, sizeof (CodecAssociation));
           codec_remove_parameter (codec, SEND_PROFILE_ARG);
           codec_remove_parameter (codec, RECV_PROFILE_ARG);
+          codec->ABI.ABI.maxptime = codec_pref->ABI.ABI.maxptime;
+          codec->ABI.ABI.ptime = codec_pref->ABI.ABI.ptime;
           ca->codec = codec;
 
           ca->send_profile = dup_param_value (codec_pref, SEND_PROFILE_ARG);
@@ -792,8 +795,16 @@ create_local_codec_associations (
       ca->need_config = FALSE;
     else
       ca->need_config = codec_needs_config (ca->codec);
+
+    if (codec_association_is_valid_for_sending (ca, TRUE))
+      has_valid_codec = TRUE;
   }
 
+  if (!has_valid_codec)
+  {
+    GST_WARNING ("All codecs disabled by preferences");
+    goto error;
+  }
 
   return codec_associations;
 
@@ -875,6 +886,19 @@ negotiate_stream_codecs (
       new_ca->blueprint = old_ca->blueprint;
       new_ca->send_profile = g_strdup (old_ca->send_profile);
       new_ca->recv_profile = g_strdup (old_ca->recv_profile);
+      if (remote_codec->ABI.ABI.ptime && old_ca->ptime)
+        new_ca->ptime = MIN (remote_codec->ABI.ABI.ptime, old_ca->ptime);
+      else if (remote_codec->ABI.ABI.ptime)
+        new_ca->ptime = remote_codec->ABI.ABI.ptime;
+      else if (old_ca->ptime)
+        new_ca->ptime = old_ca->ptime;
+      if (remote_codec->ABI.ABI.maxptime && old_ca->maxptime)
+        new_ca->maxptime = MIN (remote_codec->ABI.ABI.maxptime,
+            old_ca->maxptime);
+      else if (remote_codec->ABI.ABI.maxptime)
+        new_ca->maxptime = remote_codec->ABI.ABI.maxptime;
+      else if (old_ca->maxptime)
+        new_ca->maxptime = old_ca->maxptime;
       tmp = fs_codec_to_string (nego_codec);
       GST_DEBUG ("Negotiated codec %s", tmp);
       g_free (tmp);
@@ -1093,20 +1117,9 @@ codec_association_copy (CodecAssociation *ca)
   return newca;
 }
 
-/**
- * codec_associations_to_codecs:
- * @codec_associations: a #GList of #CodecAssociation
- * @include_config: whether to include the config data
- *
- * Returns a #GList of the #FsCodec that are inside the list of associations
- * excluding those that are disabled or otherwise receive-only. It copies
- * the #FsCodec structures.
- *
- * Returns: a #GList of #FsCodec
- */
 GList *
-codec_associations_to_codecs (GList *codec_associations,
-    gboolean include_config)
+codec_associations_to_codecs_internal (GList *codec_associations,
+    gboolean include_config, gboolean with_ptime)
 {
   GList *codecs = NULL;
   GList *item = NULL;
@@ -1124,11 +1137,57 @@ codec_associations_to_codecs (GList *codec_associations,
         codec = fs_codec_copy (ca->codec);
       else
         codec = codec_copy_without_config (ca->codec);
+      if (with_ptime)
+      {
+        codec->ABI.ABI.ptime = ca->ptime;
+        codec->ABI.ABI.maxptime = ca->maxptime;
+      }
       codecs = g_list_append (codecs, codec);
     }
   }
 
   return codecs;
+}
+
+
+/**
+ * codec_associations_to_codecs:
+ * @codec_associations: a #GList of #CodecAssociation
+ * @include_config: whether to include the config data
+ *
+ * Returns a #GList of the #FsCodec that are inside the list of associations
+ * excluding those that are disabled or otherwise receive-only. It copies
+ * the #FsCodec structures.
+ *
+ * Returns: a #GList of #FsCodec
+ */
+GList *
+codec_associations_to_codecs (GList *codec_associations,
+    gboolean include_config)
+{
+  return codec_associations_to_codecs_internal (codec_associations,
+      include_config, FALSE);
+}
+
+
+
+/**
+ * codec_associations_to_codecs_with_ptime:
+ * @codec_associations: a #GList of #CodecAssociation
+ *
+ * Returns a #GList of the #FsCodec that are inside the list of associations
+ * excluding those that are disabled or otherwise receive-only. It copies
+ * the #FsCodec structures, but takes the ptime and maxptime from the
+ * CodecAssociation. So it includes the ptime and maxptime that must be used
+ * for sending.
+ *
+ * Returns: a #GList of #FsCodec
+ */
+GList *
+codec_associations_to_codecs_with_ptime (GList *codec_associations)
+{
+  return codec_associations_to_codecs_internal (codec_associations,
+      FALSE, TRUE);
 }
 
 gboolean
@@ -1139,7 +1198,8 @@ codec_association_is_valid_for_sending (CodecAssociation *ca,
       !ca->reserved &&
       !ca->recv_only &&
       (!needs_codecbin ||
-          (ca->blueprint && ca->blueprint->send_pipeline_factory) ||
+          (ca->blueprint &&
+              codec_blueprint_has_factory (ca->blueprint, TRUE)) ||
           ca->send_profile))
     return TRUE;
   else
@@ -1235,18 +1295,18 @@ codec_associations_list_are_equal (GList *list1, GList *list2)
 
 
 /**
- * lookup_codec_association_by_codec_without_config:
+ * lookup_codec_association_by_codec_for_sending
  * @codec_associations: a #GList of #CodecAssociation
  * @codec: The #FsCodec to look for
  *
- * Finds the first #CodecAssociation that matches the #FsCodec, the config data
- * inside both are removed.
+ * Finds the first #CodecAssociation that matches the #FsCodec and that is
+ * valid for sending, the config data inside both are ignored.
  *
  * Returns: a #CodecAssociation
  */
 
 CodecAssociation *
-lookup_codec_association_by_codec_without_config (GList *codec_associations,
+lookup_codec_association_by_codec_for_sending (GList *codec_associations,
     FsCodec *codec)
 {
   FsCodec *lookup_codec = codec_copy_without_config (codec);
@@ -1255,7 +1315,12 @@ lookup_codec_association_by_codec_without_config (GList *codec_associations,
   while (codec_associations)
   {
     CodecAssociation *tmpca = codec_associations->data;
-    FsCodec *tmpcodec = codec_copy_without_config (tmpca->codec);
+    FsCodec *tmpcodec;
+
+    if (!codec_association_is_valid_for_sending (tmpca, FALSE))
+      continue;
+
+    tmpcodec = codec_copy_without_config (tmpca->codec);
 
     if (fs_codec_are_equal (tmpcodec, lookup_codec))
       ca = tmpca;

@@ -53,6 +53,9 @@ typedef struct _CodecAssociation {
   gchar *send_profile;
   gchar *recv_profile;
 
+  guint ptime;
+  guint maxptime;
+
   /*< private >*/
 
   gboolean reserved;
@@ -92,7 +95,7 @@ CodecAssociation *
 lookup_codec_association_by_codec (GList *codec_associations, FsCodec *codec);
 
 CodecAssociation *
-lookup_codec_association_by_codec_without_config (GList *codec_associations,
+lookup_codec_association_by_codec_for_sending (GList *codec_associations,
     FsCodec *codec);
 
 gboolean
@@ -102,6 +105,9 @@ codec_association_is_valid_for_sending (CodecAssociation *ca,
 GList *
 codec_associations_to_codecs (GList *codec_associations,
     gboolean include_config);
+
+GList *
+codec_associations_to_codecs_with_ptime (GList *codec_associations);
 
 gboolean
 codec_associations_list_are_equal (GList *list1, GList *list2);
