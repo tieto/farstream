@@ -1,8 +1,8 @@
-farsight2 (0.0.17-1) UNRELEASED; urgency=low
+farsight2 (0.0.17-1) unstable; urgency=low
 
   * New upstream release
 
- -- Laurent Bigonville <bigon@debian.org>  Thu, 07 Jan 2010 19:29:40 +0100
+ -- Laurent Bigonville <bigon@debian.org>  Tue, 12 Jan 2010 15:23:13 +0100
 
 farsight2 (0.0.16-1) unstable; urgency=low
 
