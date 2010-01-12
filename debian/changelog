@@ -1,8 +1,8 @@
-farsight2 (0.0.17-2) UNRELEASED; urgency=low
+farsight2 (0.0.17-2) unstable; urgency=low
 
   * Bump gstreamer0.10-plugins-bad dependency
 
- -- Laurent Bigonville <bigon@debian.org>  Tue, 12 Jan 2010 16:52:13 +0100
+ -- Laurent Bigonville <bigon@debian.org>  Tue, 12 Jan 2010 16:54:54 +0100
 
 farsight2 (0.0.17-1) unstable; urgency=low
 
