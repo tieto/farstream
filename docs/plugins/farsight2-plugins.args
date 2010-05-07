@@ -339,6 +339,16 @@
 </ARG>
 
 <ARG>
+<NAME>GstShmSrc::is-live</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Is this a live source</NICK>
+<BLURB>True if the element cannot produce data in PAUSED.</BLURB>
+<DEFAULT>FALSE</DEFAULT>
+</ARG>
+
+<ARG>
 <NAME>GstShmSink::perms</NAME>
 <TYPE>guint</TYPE>
 <RANGE><= 4095</RANGE>

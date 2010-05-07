@@ -1205,7 +1205,7 @@ fs_rawudp_component_gather_local_candidates (FsRawUdpComponent *self,
 
       gupnp_simple_igd_add_port (GUPNP_SIMPLE_IGD (self->priv->upnp_igd),
           "UDP", port, ip, port, self->priv->upnp_mapping_timeout,
-          "Farsight Raw UDP transmitter");
+          "Farsight Raw UDP transmitter " PACKAGE_VERSION);
 
 
       if (self->priv->upnp_discovery)
@@ -1293,6 +1293,7 @@ fs_rawudp_component_start_stun (FsRawUdpComponent *self, GError **error)
   {
     g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
         "Invalid IP address %s passed for STUN", self->priv->stun_ip);
+    FS_RAWUDP_COMPONENT_UNLOCK (self);
     return FALSE;
   }
   nice_address_set_port (&niceaddr, self->priv->stun_port);

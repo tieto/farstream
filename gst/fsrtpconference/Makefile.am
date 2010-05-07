@@ -13,7 +13,7 @@ libfsrtpconference_convenience_la_SOURCES = \
 	fs-rtp-discover-codecs.c \
 	fs-rtp-codec-cache.c \
 	fs-rtp-codec-negotiation.c \
-	fs-rtp-specific-nego.c \
+	fs-rtp-codec-specific.c \
 	fs-rtp-special-source.c \
 	fs-rtp-dtmf-event-source.c \
 	fs-rtp-dtmf-sound-source.c
@@ -33,7 +33,7 @@ noinst_HEADERS = \
 	fs-rtp-discover-codecs.h \
 	fs-rtp-codec-cache.h \
 	fs-rtp-codec-negotiation.h \
-	fs-rtp-specific-nego.h \
+	fs-rtp-codec-specific.h \
 	fs-rtp-special-source.h \
 	fs-rtp-dtmf-event-source.h \
 	fs-rtp-dtmf-sound-source.h
@@ -48,7 +48,7 @@ AM_CFLAGS = \
 
 # Build the main plugin
 
-libfsrtpconference_la_SOURCES = gstfsrtpconference.c
+libfsrtpconference_la_SOURCES = fs-rtp-conference-plugin.c
 
 libfsrtpconference_la_LIBADD = \
 	libfsrtpconference-convenience.la \
@@ -66,15 +66,14 @@ if ENABLE_GTK_DOC
 noinst_LTLIBRARIES += libfsrtpconference_doc.la
 
 nodist_libfsrtpconference_doc_la_SOURCES = \
-	gstfsrtpconference_doc.c  \
+	fs-rtp-conference-plugin.doc.c  \
 	$(nodist_libfsrtpconference_la_SOURCES)
 libfsrtpconference_doc_la_LIBADD = $(libfsrtpconference_la_LIBADD)
 
-gstfsrtpconference_doc.c: gstfsrtpconference.c
-	sed -e 's:GST_PLUGIN_DEFINE:GST_PLUGIN_DEFINE_STATIC:' \
-		$(srcdir)/gstfsrtpconference.c > gstfsrtpconference_doc.c
+%.doc.c: %.c
+	sed -e 's:GST_PLUGIN_DEFINE:GST_PLUGIN_DEFINE_STATIC:' $< > $@
 
-BUILT_SOURCES += gstfsrtpconference_doc.c
+BUILT_SOURCES += fs-rtp-conference-plugin.doc.c
 endif
 
 # Build the build sources

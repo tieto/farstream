@@ -27,13 +27,13 @@
 #include "config.h"
 #endif
 
+#include "fs-rtp-dtmf-event-source.h"
+
 #include <gst/farsight/fs-base-conference.h>
 
 #include "fs-rtp-conference.h"
 #include "fs-rtp-discover-codecs.h"
 #include "fs-rtp-codec-negotiation.h"
-
-#include "fs-rtp-dtmf-event-source.h"
 
 #define GST_CAT_DEFAULT fsrtpconference_debug
 
@@ -230,7 +230,7 @@ fs_rtp_dtmf_event_source_get_codec (FsRtpSpecialSourceClass *klass,
       _is_telephony_codec, GUINT_TO_POINTER (selected_codec->clock_rate));
 
   if (ca)
-    return ca->codec;
+    return ca->send_codec;
   else
     return NULL;
 }
