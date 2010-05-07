@@ -46,11 +46,12 @@
 #include "config.h"
 #endif
 
+#include "fs-msn-session.h"
+
 #include <string.h>
 
 #include <gst/gst.h>
 
-#include "fs-msn-session.h"
 #include "fs-msn-stream.h"
 #include "fs-msn-participant.h"
 
@@ -225,7 +226,7 @@ fs_msn_session_dispose (GObject *object)
   self->priv->conference = NULL;
   g_mutex_unlock (self->priv->mutex);
 
-  if (conference)
+  if (!conference)
     goto out;
 
   conferencebin = GST_BIN (conference);

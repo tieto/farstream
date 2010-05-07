@@ -28,11 +28,13 @@
 #endif
 
 #include "fs-rtp-substream.h"
-#include "fs-rtp-stream.h"
-#include "fs-rtp-marshal.h"
 
 #include <gst/farsight/fs-stream.h>
 #include <gst/farsight/fs-session.h>
+
+#include "fs-rtp-stream.h"
+#include "fs-rtp-marshal.h"
+
 
 #define GST_CAT_DEFAULT fsrtpconference_debug
 
@@ -168,7 +170,6 @@ fs_rtp_sub_stream_emit_error (FsRtpSubStream *substream,
 static gboolean
 fs_rtp_sub_stream_has_stopped_enter (FsRtpSubStream *self)
 {
-  g_object_ref (self);
   g_static_rw_lock_reader_lock (&self->priv->stopped_lock);
 
   if (self->priv->stopped)
@@ -185,7 +186,6 @@ static void
 fs_rtp_sub_stream_has_stopped_exit (FsRtpSubStream *self)
 {
   g_static_rw_lock_reader_unlock (&self->priv->stopped_lock);
-  g_object_unref (self);
 }
 
 
@@ -998,6 +998,8 @@ fs_rtp_sub_stream_set_codecbin (FsRtpSubStream *substream,
     goto error;
   }
 
+  GST_DEBUG ("New recv codec accepted");
+
   gst_object_unref (pad);
 
   FS_RTP_SESSION_LOCK (substream->priv->session);
@@ -1243,9 +1245,19 @@ _rtpbin_pad_have_data_callback (GstPad *pad, GstMiniObject *miniobj,
   FsRtpSubStream *self = FS_RTP_SUB_STREAM (user_data);
   gboolean ret = TRUE;
   gboolean remove = FALSE;
+  FsRtpSession *session;
+
+  if (fs_rtp_session_has_disposed_enter (self->priv->session, NULL))
+    return FALSE;
 
   if (fs_rtp_sub_stream_has_stopped_enter (self))
+  {
+    fs_rtp_session_has_disposed_exit (self->priv->session);
     return FALSE;
+  }
+
+  g_object_ref (self);
+  session = g_object_ref (self->priv->session);
 
   FS_RTP_SESSION_LOCK (self->priv->session);
 
@@ -1257,14 +1269,9 @@ _rtpbin_pad_have_data_callback (GstPad *pad, GstMiniObject *miniobj,
   {
     if (!gst_caps_is_equal_fixed (GST_BUFFER_CAPS (miniobj), self->priv->caps))
     {
-      GstCaps *intersect = gst_caps_intersect (GST_BUFFER_CAPS (miniobj),
-          self->priv->caps);
-
-      if (gst_caps_is_empty (intersect))
+      if (!gst_caps_can_intersect (GST_BUFFER_CAPS (miniobj),
+              self->priv->caps))
         ret = FALSE;
-      else
-        gst_buffer_set_caps (GST_BUFFER (miniobj), self->priv->caps);
-      gst_caps_unref (intersect);
     }
     else
     {
@@ -1282,6 +1289,11 @@ _rtpbin_pad_have_data_callback (GstPad *pad, GstMiniObject *miniobj,
 
   fs_rtp_sub_stream_has_stopped_exit (self);
 
+  fs_rtp_session_has_disposed_exit (self->priv->session);
+
+  g_object_unref (self);
+  g_object_unref (session);
+
   return ret;
 }
 
@@ -1290,44 +1302,52 @@ _rtpbin_pad_blocked_callback (GstPad *pad, gboolean blocked, gpointer user_data)
 {
   FsRtpSubStream *substream = user_data;
   GError *error = NULL;
+  GstElement *codecbin = NULL;
+  FsCodec *codec = NULL;
+  FsRtpSession *session;
+
+  if (fs_rtp_session_has_disposed_enter (substream->priv->session, NULL))
+  {
+    gst_pad_set_blocked_async (pad, FALSE, do_nothing_blocked_callback, NULL);
+    return;
+  }
 
   if (fs_rtp_sub_stream_has_stopped_enter (substream))
+  {
+    gst_pad_set_blocked_async (pad, FALSE, do_nothing_blocked_callback, NULL);
+    fs_rtp_session_has_disposed_exit (substream->priv->session);
     return;
+  }
+
+  g_object_ref (substream);
+  session = g_object_ref (substream->priv->session);
 
   GST_DEBUG ("Substream blocked for codec change (session:%d SSRC:%x pt:%d)",
       substream->priv->session->id, substream->ssrc, substream->pt);
 
-  for (;;)
-  {
-    GstElement *codecbin = NULL;
-    FsCodec *codec = NULL;
 
-    g_signal_emit (substream, signals[GET_CODEC_BIN], 0,
-        substream->priv->stream, substream->codec, &codec, &error, &codecbin);
+  gst_pad_set_blocked_async (pad, FALSE, do_nothing_blocked_callback, NULL);
 
-   if (!codecbin)
-    {
-      if (error)
-        goto error;
-      else
-        goto out;
-    }
+  g_signal_emit (substream, signals[GET_CODEC_BIN], 0,
+      substream->priv->stream, substream->codec, &codec, &error, &codecbin);
 
-    if (!fs_rtp_sub_stream_set_codecbin (substream,
-            codec, codecbin, &error))
+  if (error)
+    goto error;
+
+  if (codecbin)
+    if (!fs_rtp_sub_stream_set_codecbin (substream, codec, codecbin, &error))
       goto error;
-
-    if (substream->priv->stopped)
-      goto out;
-  }
 
  out:
 
   g_clear_error (&error);
 
-  gst_pad_set_blocked_async (pad, FALSE, do_nothing_blocked_callback, NULL);
-
   fs_rtp_sub_stream_has_stopped_exit (substream);
+
+  fs_rtp_session_has_disposed_exit (substream->priv->session);
+
+  g_object_unref (substream);
+  g_object_unref (session);
 
   return;
 

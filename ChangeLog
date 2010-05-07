@@ -1,3 +1,512 @@
+commit faaa85d3746799c0bb4c6dc0545fc12f4af98b58
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 4 19:52:38 2010 -0400
+
+    Version 0.0.18
+
+commit cfa5727ffb40cd5c22fce59721f4d0c1c1c0a998
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon May 3 14:31:34 2010 -0400
+
+    tests: Add test for H.264 parameter negotiation
+
+commit 90f61c184656399783539f6fbfbfded0390fda2c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon May 3 14:27:53 2010 -0400
+
+    rtpcodecspecific: Read the vales in the H.264 profile-level-id in the right order
+
+commit 4560f835883c097335b62bb45717b12786f6b0c6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon May 3 14:27:23 2010 -0400
+
+    rtpcodecspecific: Give enough space for H.264 profile-level-id
+
+commit 0912af993b494d6dfe7baaf0eb7eef3689125847
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 30 18:32:33 2010 -0400
+
+    tests: H263-2000 negotiation tests
+    
+    Also fixes some bugs in the implementation
+
+commit 8e60f92c79903a96dd12c9bb8e0893a4acd0d43b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 30 17:31:29 2010 -0400
+
+    tests: Add tests for H263-1998 paramete negotiation
+
+commit 438c602844b3f03944ac3eb2f24cd31b35e89993
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 30 17:27:25 2010 -0400
+
+    rtpcodecspecific: For H.261/H.261 SQCIF/QCIF are restrictors
+    
+    These parameters restrict the default, so we have to keep them
+    even if one side has them. The other ones are larger than the default, so
+    they should only be present if both sides support them.
+
+commit e772760ce08fadfdba6ee3976ddebdb006b8311c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 30 16:05:19 2010 -0400
+
+    rtpcodecspecific: Ignore H263-2000 with profile but no level
+
+commit 7645aead7e031b03aa21be78b49266e61df467f2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 30 13:41:48 2010 -0400
+
+    tests: Add test for H.261 negotiation
+
+commit 25b81d029411576331ce0dd0453733aec168d1df
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 29 20:03:11 2010 -0400
+
+    tests: Add test for G.729 param nego
+
+commit 66c925d3858cfbd2712c2aebc182a4832220ca06
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 29 19:52:04 2010 -0400
+
+    rtpcodecspecific: Support G.729 annexb=yes correctly
+    
+    The parameter restricts the codec, so it has to be kept even if only
+    one side supports it.
+
+commit 02f47f758638d1f42d418a7e39fefdaf8c8c413e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 29 18:08:27 2010 -0400
+
+    tests: Add test for iLBC param negotiation
+
+commit ddc7a691a11c12e938f66ce8cd42aa15ce8a4206
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 29 18:08:10 2010 -0400
+
+    rtpcodecnego: Don't keep previously negotiation params when re-creating the local list
+
+commit 6ffe4fa9cdd12cc05bbc68f5b897a5aebf4943cf
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 29 16:09:13 2010 -0400
+
+    rtpcodecnego: Allow profile-based codecs with dynamically allocated payload types
+
+commit fc144cd9dca94a7d8e07463c192e34fa8c72ab0e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 29 15:55:04 2010 -0400
+
+    tests: Fix small leak in test
+
+commit bad4e98475fae154af43604355849e6a7ff407c2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 29 15:06:50 2010 -0400
+
+    tests: Factor out the setup phase for codec negotiation tests
+
+commit e62722b3002bb74e28fb2153073e10aca3626bbf
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 28 17:54:14 2010 -0400
+
+    rtpcodecspecific: Add H.264 negotiation
+
+commit 0e3d829169860362d6ef7b65a11b874c80345bb4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 28 16:27:55 2010 -0400
+
+    rtpcodecspecific: Add jpeg2000 param negotiation
+
+commit 3b553203462579ef607be1b42e90996d123b777c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 28 16:07:07 2010 -0400
+
+    rtpcodecspecific: Add negotiation data for H.261
+
+commit e16ac9342492f3aef5659dc54d53ed1492c12e31
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 28 13:47:12 2010 -0400
+
+    rtp: Keep a separate send_codec in the list to separate send and recv parameters
+    
+    Instead of treating ptime/maxptime as if they were special, now treat them like any other
+    parameter and have two codecs with potentially different parameters. This means
+    that the send side can now just take the send_codec from the CodecAssociation.
+    
+    This also has the side-effet that the ptime/maxptime can be put in optional_parameters.
+
+commit 1542f02478dce2da3caabbf200312d0326e7555a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 27 17:51:39 2010 -0400
+
+    rtp: Replace codec_copy_without_config with more generic codec_copy_filtered
+
+commit 59e2c9511c14c1f42d989a6c60b92b6c34a7beb7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 27 15:31:20 2010 -0400
+
+    rtpcodecspecific: Use the default function to telephone-event events
+
+commit 14c8ab67903095174ce8e54cde84cc5c1959e294
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 27 13:14:24 2010 -0400
+
+    rtpcodecnego: Replace use_local_ids by multi_stream
+
+commit 18896af565d106c9a814209fe30863ef6d0cb62c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 26 20:47:42 2010 -0400
+
+    rtpcodecspecific: Handle ptime/maxptime in the text parameters
+
+commit 24eaa05748e32a211ccd6d1e97867e80bcee3994
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 26 20:47:26 2010 -0400
+
+    rtpcodecspecific: Split the param type filter into local and remote filters
+
+commit 26f4d51ab0ca7e219fd9f1938ea70c0ec95cb455
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 26 20:40:59 2010 -0400
+
+    rtpcodecnego: Add a few debug messages
+
+commit 0076e73568ec26e7ed7eb363f25a389f764b0895
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 26 20:00:26 2010 -0400
+
+    rtpcodecnego: Remove duplicated list traversal
+    
+    The fs_codec_get_optional_parameter function does the exact same thing.
+    That is finding an optional parameter by name.
+
+commit 9c08f0a3b52c0532930a62e10ef84f54b42faccd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 26 18:01:14 2010 -0400
+
+    rtpcodecspecific: Replace FsStreamDirection with FsParamType
+
+commit 2bb6e38c954427a950885a80dd54747e04b92a30
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Apr 24 15:17:19 2010 -0400
+
+    tests: Make message more accurate
+    
+    This test is done on stream and session codecs.
+
+commit 20f0bbe1c7aa6eea0d51e3db3fec8f368a0b1669
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 23 12:58:38 2010 -0400
+
+    rtpsession: Do correct atomic manipulation of codec preferences
+
+commit 3e7ccae619e4e2899c8c9ea86abfc4e44040e2ed
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 23 12:42:08 2010 -0400
+
+    rtpcodecnego: Verify the codecs using the negotiation function
+
+commit 859f9eb9244e65830c71d6a5b023c80fd423bccf
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 22 19:54:16 2010 -0400
+
+    rtpcodecspecific: Massively simplify codec-specific negotiation
+    
+    Have per parameter functions instead of a massive one.
+
+commit 3db32c219bce64cbc3fe8847d69d2d8e37b4811b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 23 12:45:07 2010 -0400
+
+    fscodec: Let the param parameter of remove_optional_param be NULL
+
+commit b0640d53cdf7742c38cc81426943fd4140d36a84
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 16 17:41:09 2010 -0400
+
+    rtpcodecnego: Rename lookup_codec_association_custom_intern to _internal
+
+commit 474593d19b33d690e62e6cf1c69d832d58512c22
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 16 14:37:27 2010 -0400
+
+    rtpcodecspecific: Remove mode=20 from iLBC if both sides support it
+    
+    This should implement the negotiation from RFC 3952.
+
+commit 3d5002b55d0e805b2b2d155f78d7662265eca8de
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jun 25 19:21:13 2009 -0400
+
+    rtp: Release the request pads from gstrtpbin, require gst-p-bad 0.10.17 to match
+
+commit f169dec1535dbc00699fa801b50309fe0198a2c1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jul 29 16:55:37 2009 -0400
+
+    rtpsession: Defer dispose to another thread if dispose is called from a streaming thread
+
+commit 4721b6f63c772b1f7eeef663798c5108e7bf1b58
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jul 29 16:44:42 2009 -0400
+
+    rtp: Keep track of all internal threads
+
+commit b24a9c7403760cb728ff82ba4c289361fff3d6ac
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 1 19:45:56 2010 -0400
+
+    rtpsubstream: Use the session's enter/leave mechanism and keep refs in substream callbacks
+
+commit ab0519f2ae4c6ba3a522c27c72b0822148b9a77f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 7 21:24:08 2010 -0400
+
+    rtpsubstream: Don't loop to get new codec bins
+    
+    It will be re-locked if the codecs is changed so the callback will be called again
+
+commit 6ba456df1694aeaba2d80f10572a27c7bdac073f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 7 21:16:53 2010 -0400
+
+    tests: Add test for theora reception without config
+
+commit 63f2178ff41ee0134560b2e5b5d78fd100c99d08
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 4 14:21:49 2010 -0400
+
+    Use gst_pad_get_caps_reffed
+    
+    Use this new function where logical. Now require GStreamer 0.10.26
+
+commit fd1f9a3d09122c031fa06729611e14209d03566e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 4 14:12:58 2010 -0400
+
+    rtp: Use gst_caps_can_intersect() where possible
+    
+    Use the new function where possible, required gstremaer 0.10.25 for it.
+
+commit 9afc783721081f2d3cc1bd64084e8ed7c38f00bb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 4 13:55:30 2010 -0400
+
+    rtpsubstream: Don't try to modify caps from buffer
+
+commit d707dff35724b8f54001ea0b039dff5431483d2c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 15 15:19:32 2010 -0400
+
+    rtpspecificnego: Use the default function for H263-2000, so less duplicated code
+
+commit f566173d832c0e468435f3261946186ff8c078b9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 13 18:09:23 2010 -0400
+
+    gitignore: Remove no longer existant file
+
+commit 999960e74e2f4409afe9dbb868647072a78cf7b7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 13 17:59:46 2010 -0400
+
+    Rename _doc.c files to .doc.c
+
+commit 5e8bbdf945df61eb5df77aeec796a671204f26d5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 13 17:58:18 2010 -0400
+
+    rtp: Rename gstfsrtpconference.c to fs-rtp-conference-plugin.c
+
+commit b9cb72e59ff7e5aa51fef11b45a844a4bcd1677e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 13 17:43:16 2010 -0400
+
+    lib: Put the includes in the order according to the coding style
+
+commit 5b94e5d645968b4823a8691eccbb7aff60ac8521
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 13 17:40:13 2010 -0400
+
+    msn: Put the includes in the order according to the coding style
+
+commit 71e23fb7571632ad92108924ecb6f0d57171534f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 13 17:36:09 2010 -0400
+
+    rtp: Put the includes in the order according to the coding style
+
+commit e014f667f7f535be64b6cc899d033f7ea62cf709
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 13 17:37:29 2010 -0400
+
+    docs: Add header order to the CodingStyle file
+
+commit 15639bea2501bac9725b75258d9a5d17ee900e07
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 13 17:28:50 2010 -0400
+
+    rtp: Rename fs-rtp-specific-nego to fs-rtp-codec-specific
+
+commit 3495664c1de60a1ba385ab0a980948d215d83c46
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 13 16:49:17 2010 -0400
+
+    rtpspecificnego: Rename sdp_is_compat to more accurate sdp_negotiate_codec
+
+commit aa71f48e51c8afcaad67db29d237e52b54d95aef
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 13 16:46:19 2010 -0400
+
+    rtp: Remove validate_config option from sdp_is_compat
+    
+    Option is not useful anymore, taking a remote codec without the config does no
+    harm.
+
+commit 0d5bdb9d79f239b39173e23233d54d2d5f643a92
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 13 16:34:44 2010 -0400
+
+    rtpspecificnego: Document the goal of the various specific config functions
+
+commit 54034b29d5a151f9514efa4c63902478ed1e9e11
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 12 15:08:25 2010 -0400
+
+    docs: Fix the unused warnings
+
+commit 0f4404d86b22b41ba5b508bf0176ebfed6ad44b5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 9 18:14:00 2010 -0400
+
+    rtpsession: Fix line above 80 chars
+
+commit 2b06614455a059f61d3cba9bb86d10ae9c8bc347
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 9 17:28:11 2010 -0400
+
+    nicestreamtransmitter: Don't include udp-bsd.h
+    
+    It is no longer needed
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=27260
+
+commit b35321b7e9fa54311f41e7e520884c29ec7eeaeb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 9 17:22:05 2010 -0400
+
+    interfaces: Use union to prevent strict-aliasing violation
+    
+    Patch by Reimundo Heluani <rheluani@gmail.com>
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=25797
+
+commit 6ca5ea83a63389d7b2eb5cf13ab4e980d2ea8aeb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 5 14:37:21 2010 -0400
+
+    rtpsubstream: Fix ref leak if substream is stopped
+
+commit 49eaf7976c2b3ebf0d54134bac537f4d4b7c1f56
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 1 18:47:02 2010 -0400
+
+    rawudptransmitter: Make sure stack variable is empty before using
+
+commit 459c46a2af31de2fd47e06c3c0e122e84b089dfb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 1 18:45:40 2010 -0400
+
+    rtpsession: Remove leaked element
+
+commit 03b8f9fb6e70e400ed7c189bbcdcefe0435e4c83
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 1 18:41:28 2010 -0400
+
+    rtpcodecache: Sanity check the number of blueprints
+
+commit b19e3e7582e210a8f85a4b043c7b4615aeb87cee
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 23 18:36:10 2010 -0500
+
+    rtpnego: Ignore ptime/maxptime when copying the CodecAssociation
+    
+    The maxptime in the CodecAssociation only comes from the remote side, not
+    from the local one.
+
+commit acbb1698ed55d6ea87d41195ba351db9d26a2841
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 22 21:26:49 2010 -0500
+
+    rtpcodecnego: Take ptime into account when looking for sending codec association
+
+commit 4a11b95fde8843673acae7a7632720e4552c3384
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 22 21:20:14 2010 -0500
+
+    rtpcodecnego: Don't deadloop if codec isn't valid for sending
+
+commit f7304fa2dd546d60562401e53320109cb931b33d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 22 17:45:12 2010 -0500
+
+    rawudpcomponent: Put version number in upnp comment
+
+commit 3ede4eefda3ae6f548d8562b130279d11d26b0a4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 18 17:24:04 2010 -0500
+
+    rawudpcomponent: Unlock on invalid IP error
+
+commit bc6ffc8d967ac741330c0bc3b3423208a6511c3d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 23 16:08:50 2009 +0100
+
+    rtp: Force new keyframe when a new SSRC is validated
+    
+    A new SSRC being validated means we have received RTP packets from a new
+    source. It means the NAT bindings exist.
+
+commit 814ebee8d98adeb42c0b6aad9073c0b8128b0265
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 23 12:28:15 2009 +0100
+
+    nice: Request new keyunit when a component becomes ready
+
+commit b05b01559918cec54069e28f9c2bbb99c770acf6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 8 19:03:14 2010 +0000
+
+    tests: ptime test had inverted condition
+
+commit 333cdc6b88ac724bef0f5874471ac8b448e9c661
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 8 18:55:09 2010 +0000
+
+    rtpspecificnego: Fix corner cases in dtmf events processing
+
+commit c3b0aad4283476a9e478b9613e7ffd03069fd6e7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 8 18:54:18 2010 +0000
+
+    tests: Correct double dtmf test result
+
+commit c8e0f4eaa36506bbb9e03ae736a24bdf6fa1dd7c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 8 16:53:36 2010 +0000
+
+    tests: DTMF events will be at most 15 in real life and requires events=
+
+commit 9339d7e758f6497760286b0639ab507b4e783a1f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 25 18:30:58 2010 +0200
+
+    msnsession: Already disposed condition was inverted
+
+commit 4d89782b0d6a8c96f459ce23df4dad26b5b1d195
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 5 12:35:38 2010 -0500
+
+    Version 0.0.17.1
+
 commit 56c1eecaa134a71d2c46ccbe1b63194aacacc782
 Author: Olivier Crête <olivier.crete@collabora.co.uk>
 Date:   Tue Jan 5 12:14:40 2010 -0500

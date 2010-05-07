@@ -40,11 +40,13 @@
 #endif
 
 #include "fs-rtp-conference.h"
+
+#include <string.h>
+
 #include "fs-rtp-session.h"
 #include "fs-rtp-stream.h"
 #include "fs-rtp-participant.h"
 
-#include <string.h>
 
 GST_DEBUG_CATEGORY (fsrtpconference_debug);
 GST_DEBUG_CATEGORY (fsrtpconference_disco);
@@ -105,6 +107,9 @@ struct _FsRtpConferencePrivate
   guint max_session_id;
 
   GList *participants;
+
+  /* Array of all internal threads, as GThreads */
+  GPtrArray *threads;
 };
 
 static void fs_rtp_conference_do_init (GType type);
@@ -143,6 +148,10 @@ static void _rtpbin_pad_added (GstElement *rtpbin,
     GstPad *new_pad,
     gpointer user_data);
 static void _rtpbin_on_bye_ssrc (GstElement *rtpbin,
+    guint session_id,
+    guint ssrc,
+    gpointer user_data);
+static void _rtpbin_on_ssrc_validated (GstElement *rtpbin,
     guint session_id,
     guint ssrc,
     gpointer user_data);
@@ -212,8 +221,12 @@ fs_rtp_conference_dispose (GObject * object)
 static void
 fs_rtp_conference_finalize (GObject * object)
 {
+  FsRtpConference *self = FS_RTP_CONFERENCE (object);
+
   /* Peek will always succeed here because we 'refed the class in the _init */
   g_type_class_unref (g_type_class_peek (FS_TYPE_RTP_SUB_STREAM));
+
+  g_ptr_array_free (self->priv->threads, TRUE);
 
   G_OBJECT_CLASS (parent_class)->finalize (object);
 }
@@ -306,6 +319,8 @@ fs_rtp_conference_init (FsRtpConference *conf,
   conf->priv->disposed = FALSE;
   conf->priv->max_session_id = 1;
 
+  conf->priv->threads = g_ptr_array_new ();
+
   conf->gstrtpbin = gst_element_factory_make ("gstrtpbin", "rtpbin");
 
   if (!conf->gstrtpbin) {
@@ -328,6 +343,8 @@ fs_rtp_conference_init (FsRtpConference *conf,
                     G_CALLBACK (_rtpbin_pad_added), conf);
   g_signal_connect (conf->gstrtpbin, "on-bye-ssrc",
                     G_CALLBACK (_rtpbin_on_bye_ssrc), conf);
+  g_signal_connect (conf->gstrtpbin, "on-ssrc-validated",
+                    G_CALLBACK (_rtpbin_on_ssrc_validated), conf);
 
   /* We have to ref the class here because the class initialization
    * in GLib is not thread safe
@@ -761,11 +778,48 @@ fs_rtp_conference_handle_message (
         }
       }
     }
+    break;
+    case GST_MESSAGE_STREAM_STATUS:
+    {
+      GstStreamStatusType type;
+      guint i;
+
+      gst_message_parse_stream_status (message, &type, NULL);
+
+      switch (type)
+      {
+        case GST_STREAM_STATUS_TYPE_ENTER:
+          GST_OBJECT_LOCK (self);
+          for (i = 0; i < self->priv->threads->len; i++)
+          {
+            if (g_ptr_array_index (self->priv->threads, i) ==
+                g_thread_self ())
+              goto done;
+          }
+          g_ptr_array_add (self->priv->threads, g_thread_self ());
+        done:
+          GST_OBJECT_UNLOCK (self);
+          break;
+
+        case GST_STREAM_STATUS_TYPE_LEAVE:
+          GST_OBJECT_LOCK (self);
+          while (g_ptr_array_remove_fast (self->priv->threads,
+                  g_thread_self ()));
+          GST_OBJECT_UNLOCK (self);
+          break;
+
+        default:
+          /* Do nothing */
+          break;
+      }
+    }
+      break;
     default:
       break;
   }
 
  out:
+  /* forward all messages to the parent */
   GST_BIN_CLASS (parent_class)->handle_message (bin, message);
 }
 
@@ -866,32 +920,73 @@ fs_codec_to_gst_caps (const FsCodec *codec)
   return caps;
 }
 
-
-/**
- * fs_codec_to_gst_caps_with_ptime
- * @codec: A #FsCodec to be converted
- *
- * This function converts a #FsCodec to a fixed #GstCaps with media type
- * application/x-rtp. This will also add the ptime/maxptime from the codec
- * into the #GstCaps.
- *
- * Return value: A newly-allocated #GstCaps or %NULL if the codec was %NULL
- */
-
-GstCaps *
-fs_codec_to_gst_caps_with_ptime (const FsCodec *codec)
+static void
+_rtpbin_on_ssrc_validated (GstElement *rtpbin,
+    guint session_id,
+    guint ssrc,
+    gpointer user_data)
 {
-  GstCaps *caps = fs_codec_to_gst_caps (codec);
+  FsRtpConference *self = FS_RTP_CONFERENCE (user_data);
+  FsRtpSession *session =
+    fs_rtp_conference_get_session_by_id (self, session_id);
 
-  if (caps)
+  if (session)
   {
-    if (codec->ABI.ABI.ptime)
-      gst_caps_set_simple (caps,
-          "ptime", G_TYPE_UINT, codec->ABI.ABI.ptime, NULL);
-    if (codec->ABI.ABI.maxptime)
-      gst_caps_set_simple (caps,
-          "maxptime", G_TYPE_UINT, codec->ABI.ABI.maxptime, NULL);
+    fs_rtp_session_ssrc_validated (session, ssrc);
+
+    g_object_unref (session);
+  }
+}
+
+gboolean
+fs_rtp_conference_is_internal_thread (FsRtpConference *self)
+{
+  guint i;
+  gboolean ret = FALSE;
+
+  GST_OBJECT_LOCK (self);
+  for (i = 0; i < self->priv->threads->len; i++)
+  {
+    if (g_ptr_array_index (self->priv->threads, i))
+    {
+      ret = TRUE;
+      break;
+    }
+  }
+  GST_OBJECT_UNLOCK (self);
+
+  return ret;
+}
+
+GList *
+codecs_copy_with_new_ptime (GList *codecs)
+{
+  GList *copy = fs_codec_list_copy (codecs);
+  GList *item;
+
+  for (item = copy; item ; item = g_list_next (item))
+  {
+    FsCodec *codec = item->data;
+
+    if (codec->ABI.ABI.ptime &&
+        !fs_codec_get_optional_parameter (codec, "ptime", NULL))
+    {
+      gchar *tmp = g_strdup_printf ("%u", codec->ABI.ABI.ptime);
+      fs_codec_add_optional_parameter (codec, "ptime", tmp);
+      g_free (tmp);
+    }
+
+    if (codec->ABI.ABI.maxptime &&
+        !fs_codec_get_optional_parameter (codec, "maxptime", NULL))
+    {
+      gchar *tmp = g_strdup_printf ("%u", codec->ABI.ABI.maxptime);
+      fs_codec_add_optional_parameter (codec, "maxptime", tmp);
+      g_free (tmp);
+    }
+
+    codec->ABI.ABI.ptime = 0;
+    codec->ABI.ABI.maxptime = 0;
   }
 
-  return caps;
+  return copy;
 }

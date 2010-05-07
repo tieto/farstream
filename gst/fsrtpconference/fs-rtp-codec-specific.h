@@ -1,9 +1,9 @@
 /*
- * fs-rtp-specific-nego.h - Per-codec SDP negotiation
+ * fs-rtp-codec-specific.h - Per-codec SDP negotiation
  *
  * Farsight RTP/AVP/SAVP/AVPF Module
- * Copyright (C) 2007 Collabora Ltd.
- * Copyright (C) 2007 Nokia Corporation
+ * Copyright (C) 2007-2010 Collabora Ltd.
+ * Copyright (C) 2007-2010 Nokia Corporation
  *   @author Olivier Crete <olivier.crete@collabora.co.uk>
  *
  * This library is free software; you can redistribute it and/or
@@ -31,9 +31,20 @@
 
 G_BEGIN_DECLS
 
+typedef enum {
+  FS_PARAM_TYPE_SEND = 1 << 0,
+  FS_PARAM_TYPE_RECV = 1 << 1,
+  FS_PARAM_TYPE_BOTH = FS_PARAM_TYPE_SEND | FS_PARAM_TYPE_RECV,
+  FS_PARAM_TYPE_CONFIG = 1 << 2,
+  FS_PARAM_TYPE_SEND_AVOID_NEGO = 1 << 3,
+  FS_PARAM_TYPE_MANDATORY = 1 << 4,
+  FS_PARAM_TYPE_ALL = FS_PARAM_TYPE_BOTH | FS_PARAM_TYPE_CONFIG
+  | FS_PARAM_TYPE_SEND_AVOID_NEGO
+} FsParamType;
+
 FsCodec *
-sdp_is_compat (FsCodec *local_codec, FsCodec *remote_codec,
-    gboolean validate_config);
+sdp_negotiate_codec (FsCodec *local_recv_codec, FsParamType local_paramtypes,
+    FsCodec *remote_codec, FsParamType remote_paramtypes);
 
 gboolean
 codec_needs_config (FsCodec *codec);
@@ -42,7 +53,7 @@ gboolean
 codec_has_config_data_named (FsCodec *codec, const gchar *name);
 
 FsCodec *
-codec_copy_without_config (FsCodec *codec);
+codec_copy_filtered (FsCodec *codec, FsParamType types);
 
 G_END_DECLS
 

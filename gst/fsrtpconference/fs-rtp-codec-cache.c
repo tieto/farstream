@@ -23,21 +23,21 @@
  */
 
 
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
 #include "fs-rtp-codec-cache.h"
 
-#include "fs-rtp-conference.h"
-
-#include <gst/farsight/fs-conference-iface.h>
-
 #include <string.h>
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
 #endif
+
+#include <gst/farsight/fs-conference-iface.h>
+
+#include "fs-rtp-conference.h"
+
 
 /* Because of annoying CRTs */
 #if defined (_MSC_VER) && _MSC_VER >= 1400
@@ -347,6 +347,13 @@ load_codecs_cache (FsMediaType media_type)
   memcpy (&num_blueprints, in, sizeof(gint));
   in += sizeof (gint);
   size -= sizeof (gint);
+
+  if (num_blueprints > 50)
+  {
+    GST_WARNING ("Impossible number of blueprints in cache %d, ignoring",
+        num_blueprints);
+    goto error;
+  }
 
   for (i = 0; i < num_blueprints; i++) {
     CodecBlueprint *blueprint = load_codec_blueprint (media_type, &in, &size);

@@ -34,13 +34,15 @@
 
 #include "fs-rtp-discover-codecs.h"
 
+#include <string.h>
+
+#include <gst/farsight/fs-conference-iface.h>
+
 #include "fs-rtp-conference.h"
 #include "fs-rtp-codec-cache.h"
 #include "fs-rtp-special-source.h"
 
-#include <gst/farsight/fs-conference-iface.h>
 
-#include <string.h>
 
 #define GST_CAT_DEFAULT fsrtpconference_disco
 
@@ -1060,19 +1062,8 @@ compare_media_caps (gconstpointer a, gconstpointer b)
 {
   CodecCap *element = (CodecCap *)a;
   GstCaps *c_caps = (GstCaps *)b;
-  GstCaps *intersect = gst_caps_intersect (element->caps, c_caps);
-  if (!gst_caps_is_empty (intersect))
-  {
-    /* found */
-    gst_caps_unref (intersect);
-    return 0;
-  }
-  else
-  {
-    /* not found */
-    gst_caps_unref (intersect);
-    return 1;
-  }
+
+  return !gst_caps_can_intersect (element->caps, c_caps);
 }
 
 static gint
@@ -1080,19 +1071,8 @@ compare_rtp_caps (gconstpointer a, gconstpointer b)
 {
   CodecCap *element = (CodecCap *)a;
   GstCaps *c_caps = (GstCaps *)b;
-  GstCaps *intersect = gst_caps_intersect (element->rtp_caps, c_caps);
-  if (!gst_caps_is_empty (intersect))
-  {
-    /* found */
-    gst_caps_unref (intersect);
-    return 0;
-  }
-  else
-  {
-    /* not found */
-    gst_caps_unref (intersect);
-    return 1;
-  }
+
+  return !gst_caps_can_intersect (element->rtp_caps, c_caps);
 }
 
 

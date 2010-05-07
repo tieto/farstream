@@ -49,12 +49,10 @@ G_BEGIN_DECLS
 typedef struct _CodecAssociation {
   CodecBlueprint *blueprint;
   FsCodec *codec;
+  FsCodec *send_codec;
 
   gchar *send_profile;
   gchar *recv_profile;
-
-  guint ptime;
-  guint maxptime;
 
   /*< private >*/
 
@@ -81,7 +79,7 @@ GList *
 negotiate_stream_codecs (
     const GList *remote_codecs,
     GList *current_codec_associations,
-    gboolean use_local_ids);
+    gboolean multi_stream);
 
 GList *
 finish_codec_negotiation (
@@ -107,7 +105,7 @@ codec_associations_to_codecs (GList *codec_associations,
     gboolean include_config);
 
 GList *
-codec_associations_to_codecs_with_ptime (GList *codec_associations);
+codec_associations_to_send_codecs (GList *codec_associations);
 
 gboolean
 codec_associations_list_are_equal (GList *list1, GList *list2);
