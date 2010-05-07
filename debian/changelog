@@ -1,9 +1,9 @@
-farsight2 (0.0.18-1) UNRELEASED; urgency=low
+farsight2 (0.0.18-1) unstable; urgency=low
 
   * New upstream release
   * bump gstreamer0.10 and gstreamer0.10-plugins-bad dependency to >= 0.10.26
 
- -- Sjoerd Simons <sjoerd@debian.org>  Fri, 07 May 2010 12:09:00 +0100
+ -- Sjoerd Simons <sjoerd@debian.org>  Fri, 07 May 2010 13:27:11 +0100
 
 farsight2 (0.0.17-2) unstable; urgency=low
 
