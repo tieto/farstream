@@ -73,6 +73,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
   "<a class="link" href="farsight2-plugins-FsRtpConference.html#FsRtpConference--sdes-tool" title='The "sdes-tool" property'>sdes-tool</a>"                <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a>*                : Read / Write
+  "<a class="link" href="farsight2-plugins-FsRtpConference.html#FsRtpConference--sdes" title='The "sdes" property'>sdes</a>"                     <a
+href="../gstreamer-0.10/gstreamer-GstStructure.html#GstStructure"
+>GstStructure</a>*         : Read / Write
 </pre>
 </div>
 <div class="refsect1" title="Description">
@@ -90,7 +93,7 @@ in the sent RTCP reports.</p>
 <div class="refsynopsisdiv" title="Synopsis">
 <h2>Synopsis</h2>
 <div class="refsect2" title="Element Information">
-<a name="id3131531"></a><h3>Element Information</h3>
+<a name="id2914032"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -113,7 +116,7 @@ in the sent RTCP reports.</p>
 </div>
 <hr>
 <div class="refsect2" title="Element Pads">
-<a name="id3056440"></a><h3>Element Pads</h3>
+<a name="id2839782"></a><h3>Element Pads</h3>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -236,6 +239,14 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a>*                : Read / Write</pre>
 <p>The TOOL to put in SDES messages of this session.</p>
 <p>Default value: NULL</p>
+</div>
+<hr>
+<div class="refsect2" title='The "sdes" property'>
+<a name="FsRtpConference--sdes"></a><h3>The <code class="literal">"sdes"</code> property</h3>
+<pre class="programlisting">  "sdes"                     <a
+href="../gstreamer-0.10/gstreamer-GstStructure.html#GstStructure"
+>GstStructure</a>*         : Read / Write</pre>
+<p>SDES items to use for sessions in this conference.</p>
 </div>
 </div>
 </div>

@@ -69,6 +69,16 @@
 </ARG>
 
 <ARG>
+<NAME>FsRtpConference::sdes</NAME>
+<TYPE>GstStructure*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>SDES Items for this conference</NICK>
+<BLURB>SDES items to use for sessions in this conference.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
 <NAME>FsRtpSession::no-rtcp-timeout</NAME>
 <TYPE>gint</TYPE>
 <RANGE>>= -1</RANGE>
