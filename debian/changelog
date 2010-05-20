@@ -1,9 +1,9 @@
-farsight2 (0.0.19-2) UNRELEASED; urgency=low
+farsight2 (0.0.19-2) unstable; urgency=low
 
   * debian/python-farsight.install:
     - Make the wildcard match both dist-packages and site-packages
 
- -- Sjoerd Simons <sjoerd@debian.org>  Thu, 20 May 2010 14:58:16 +0100
+ -- Sjoerd Simons <sjoerd@debian.org>  Thu, 20 May 2010 15:05:47 +0100
 
 farsight2 (0.0.19-1) unstable; urgency=low
 
