@@ -17,7 +17,7 @@ Build-Depends: debhelper (>= 5.0.0),
                python-gst0.10-dev,
                libnice-dev (>= 0.0.9),
                libgupnp-igd-1.0-dev
-Standards-Version: 3.8.3
+Standards-Version: 3.8.4
 Vcs-Git: git://git.debian.org/git/pkg-telepathy/farsight2.git
 Vcs-Browser: http://git.debian.org/?p=pkg-telepathy/farsight2.git
 Homepage: http://farsight.freedesktop.org
