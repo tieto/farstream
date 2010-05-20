@@ -1,3 +1,84 @@
+commit 9f833f49ed4ac7a4a578d0a3266c000486314c7b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed May 19 15:25:16 2010 -0400
+
+    Version 0.0.19
+
+commit 7d1c909fbd276c79f5464efcf50082c896d946fb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun May 9 22:48:59 2010 -0400
+
+    rtpcodecnego: Get the codec params after the negotiation
+    
+    Only keep the codec params after the negotiation if the send codec has not changed
+
+commit 0f99348a7c89eefc45d72ddb003267b0496a27ec
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon May 17 17:43:10 2010 -0400
+
+    rtpsession: Keep the recv codec as the discovery codec
+
+commit 5ac07d8e7e5b34218f9ca1e6e2c9131d29d62591
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 18 22:10:56 2010 -0400
+
+    fsplugin: Lock global variables
+
+commit 74ace7988083fd5cc284bdd07fa8cee6cf8ad74e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 18 20:12:42 2010 -0400
+
+    Update common/ and remove shave in favor of automake silent rules
+
+commit fb9843f846ab72cd10010e6deb166977d4277cc1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun May 9 22:46:46 2010 -0400
+
+    rtp: Only emit send-codec-changed if something changed
+
+commit bc23b47dad9aa6e975789a4a6db5117c70d804c0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun May 9 22:45:38 2010 -0400
+
+    gui: Ignore elements with no factory
+
+commit 4f0e2d4dd23a837a5eaa6bd7acddfcb1a0af3d21
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sun May 9 21:56:11 2010 -0400
+
+    rtp: Work with new rtpdtmfmux using priority_pad for dtmf
+
+commit 6a0e2eff9eed12f5dcd20fcd62a92c2ec7aa222d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 21 14:29:10 2010 -0500
+
+    rtpsession: Set "favor-new" property when it exists
+
+commit 809408b31a48764054ef08cbbb1eef1336a720b2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed May 5 15:17:27 2010 -0400
+
+    tests: Remove test on ptime in send-codec-changed
+    
+    The ptime in send-codec-changed is now the ptime used to receive
+    on the same payload type (ie, it is the codec from "codecs"). Not
+    the actual codec used to send.
+
+commit a8d1f30d2c1698ce0f94a00b939da7f29b89f55c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed May 5 14:51:43 2010 -0400
+
+    tests: There may be more than one send-codec-changed message on the bus
+    
+    If the timing is unlucky, there may be a first send-codec-changed message before
+    the new one.
+
+commit 418137f1f6cfbca6ee5b53801469d657cfa0f18f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 4 20:11:49 2010 -0400
+
+    Version 0.0.18.1
+
 commit faaa85d3746799c0bb4c6dc0545fc12f4af98b58
 Author: Olivier Crête <olivier.crete@collabora.co.uk>
 Date:   Tue May 4 19:52:38 2010 -0400

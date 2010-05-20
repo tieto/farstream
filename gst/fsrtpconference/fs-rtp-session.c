@@ -1380,7 +1380,7 @@ fs_rtp_session_constructed (GObject *object)
 
   self->priv->send_capsfilter = gst_object_ref (capsfilter);
 
-  if (!gst_element_link_pads (capsfilter, "src", muxer, NULL))
+  if (!gst_element_link_pads (capsfilter, "src", muxer, "sink_%d"))
   {
     self->priv->construction_error = g_error_new (FS_ERROR,
         FS_ERROR_CONSTRUCTION,
@@ -1404,6 +1404,12 @@ fs_rtp_session_constructed (GObject *object)
   g_signal_connect (self->priv->rtpbin_internal_session,
       "notify::internal-ssrc",
       G_CALLBACK (_rtpbin_internal_session_notify_internal_ssrc), self);
+
+  if (g_object_class_find_property (
+          G_OBJECT_GET_CLASS (self->priv->rtpbin_internal_session),
+          "favor-new"))
+    g_object_set (self->priv->rtpbin_internal_session, "favor-new", TRUE,
+        NULL);
 
   FS_RTP_SESSION_LOCK (self);
   fs_rtp_session_start_codec_param_gathering_locked (self);
@@ -3046,7 +3052,8 @@ link_other_pads (gpointer item, GValue *ret, gpointer user_data)
   gst_object_unref (pad);
   pad = NULL;
 
-  if (!gst_element_link (capsfilter, data->session->priv->rtpmuxer))
+  if (!gst_element_link_pads (capsfilter, NULL,
+          data->session->priv->rtpmuxer, "sink_%d"))
   {
     g_set_error (data->error, FS_ERROR, FS_ERROR_CONSTRUCTION,
         "Could not an extra capsfilter to the muxer");
@@ -3369,6 +3376,7 @@ _send_src_pad_blocked_callback (GstPad *pad, gboolean blocked,
   FsRtpSession *self = FS_RTP_SESSION (user_data);
   CodecAssociation *ca = NULL;
   GError *error = NULL;
+  gboolean changed = FALSE;
 
   if (fs_rtp_session_has_disposed_enter (self, NULL))
   {
@@ -3399,7 +3407,7 @@ _send_src_pad_blocked_callback (GstPad *pad, gboolean blocked,
      * about it.
      */
 
-    fs_rtp_special_sources_remove (
+    changed |= fs_rtp_special_sources_remove (
         &self->priv->extra_sources,
         &self->priv->codec_associations,
         FS_RTP_SESSION_GET_LOCK (self),
@@ -3434,9 +3442,11 @@ _send_src_pad_blocked_callback (GstPad *pad, gboolean blocked,
         "Could not build a new send codec bin", error->message);
   }
 
+  changed = TRUE;
+
  skip_main_codec:
 
-  fs_rtp_special_sources_create (
+  changed |= fs_rtp_special_sources_create (
       &self->priv->extra_sources,
       &self->priv->codec_associations,
       FS_RTP_SESSION_GET_LOCK (self),
@@ -3444,7 +3454,7 @@ _send_src_pad_blocked_callback (GstPad *pad, gboolean blocked,
       GST_ELEMENT (self->priv->conference),
       self->priv->rtpmuxer);
 
-  if (!error)
+  if (changed && !error)
   {
     g_object_notify (G_OBJECT (self), "current-send-codec");
     gst_element_post_message (GST_ELEMENT (self->priv->conference),
@@ -3917,12 +3927,11 @@ _discovery_caps_changed (GstPad *pad, GParamSpec *pspec, FsRtpSession *session)
       session->priv->codec_associations,
       session->priv->discovery_codec);
 
-
   if (ca && ca->need_config)
   {
     gather_caps_parameters (ca, caps);
     fs_codec_destroy (session->priv->discovery_codec);
-    session->priv->discovery_codec = fs_codec_copy (ca->send_codec);
+    session->priv->discovery_codec = fs_codec_copy (ca->codec);
     block = !ca->need_config;
   }
 
@@ -3955,7 +3964,8 @@ fs_rtp_session_get_codec_params_unlock (FsRtpSession *session,
   GstPad *pad = NULL;
   gchar *tmp;
   GstCaps *caps;
-  FsCodec *discovery_codec = fs_codec_copy (ca->send_codec);
+  FsCodec *discovery_codec = fs_codec_copy (ca->codec);
+  FsCodec *send_codec = fs_codec_copy (ca->send_codec);
   GstElement *codecbin = NULL;
 
   GST_LOG ("Gathering params for codec " FS_CODEC_FORMAT,
@@ -4090,7 +4100,7 @@ fs_rtp_session_get_codec_params_unlock (FsRtpSession *session,
     goto error;
   }
 
-  caps = fs_codec_to_gst_caps (discovery_codec);
+  caps = fs_codec_to_gst_caps (send_codec);
   g_object_set (session->priv->discovery_capsfilter,
       "caps", caps,
       NULL);
@@ -4118,13 +4128,14 @@ fs_rtp_session_get_codec_params_unlock (FsRtpSession *session,
 
   gst_object_unref (pad);
 
-
+  fs_codec_destroy (send_codec);
   session->priv->discovery_codec = discovery_codec;
 
   return TRUE;
 
  error:
 
+  fs_codec_destroy (send_codec);
   fs_codec_destroy (discovery_codec);
 
   if (codecbin)
@@ -4205,7 +4216,7 @@ _discovery_pad_blocked_callback (GstPad *pad, gboolean blocked,
     goto out_unlocked;
   }
 
-  if (fs_codec_are_equal (ca->send_codec, session->priv->discovery_codec))
+  if (fs_codec_are_equal (ca->codec, session->priv->discovery_codec))
     goto out_locked;
 
   if (!fs_rtp_session_get_codec_params_unlock (session, ca, &error))

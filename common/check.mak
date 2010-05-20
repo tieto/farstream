@@ -40,10 +40,10 @@ LOOPS = 10
 
 # valgrind any given test by running make test.valgrind
 %.valgrind: %
-	$(TESTS_ENVIRONMENT)					\
+	@$(TESTS_ENVIRONMENT)					\
 	CK_DEFAULT_TIMEOUT=360					\
 	G_SLICE=always-malloc					\
-	libtool --mode=execute					\
+	$(LIBTOOL) --mode=execute				\
 	$(VALGRIND_PATH) -q					\
 	$(foreach s,$(SUPPRESSIONS),--suppressions=$(s))	\
 	--tool=memcheck --leak-check=full --trace-children=yes	\
@@ -57,10 +57,10 @@ LOOPS = 10
 	
 # valgrind any given test and generate suppressions for it
 %.valgrind.gen-suppressions: %
-	$(TESTS_ENVIRONMENT)					\
+	@$(TESTS_ENVIRONMENT)					\
 	CK_DEFAULT_TIMEOUT=360					\
 	G_SLICE=always-malloc					\
-	libtool --mode=execute					\
+	$(LIBTOOL) --mode=execute				\
 	$(VALGRIND_PATH) -q 					\
 	$(foreach s,$(SUPPRESSIONS),--suppressions=$(s))	\
 	--tool=memcheck --leak-check=full --trace-children=yes	\
@@ -75,17 +75,17 @@ LOOPS = 10
 
 # gdb any given test by running make test.gdb
 %.gdb: %
-	$(TESTS_ENVIRONMENT)					\
+	@$(TESTS_ENVIRONMENT)					\
 	CK_FORK=no						\
-	libtool --mode=execute					\
+	$(LIBTOOL) --mode=execute				\
 	gdb $*
 
 # torture tests
 torture: $(TESTS)
 	-rm test-registry.xml
 	@echo "Torturing tests ..."
-	for i in `seq 1 $(LOOPS)`; do				\
-		$(MAKE) check ||					\
+	@for i in `seq 1 $(LOOPS)`; do				\
+		$(MAKE) check ||				\
 		(echo "Failure after $$i runs"; exit 1) ||	\
 		exit 1;						\
 	done
@@ -97,8 +97,8 @@ torture: $(TESTS)
 forever: $(TESTS)
 	-rm test-registry.xml
 	@echo "Forever tests ..."
-	while true; do						\
-		$(MAKE) check ||					\
+	@while true; do						\
+		$(MAKE) check ||				\
 		(echo "Failure"; exit 1) ||			\
 		exit 1;						\
 	done
@@ -110,10 +110,28 @@ valgrind: $(TESTS)
 	for t in $(filter-out $(VALGRIND_TESTS_DISABLE),$(TESTS)); do	\
 		$(MAKE) $$t.valgrind;					\
 		if test "$$?" -ne 0; then                               \
-                        echo "Valgrind error for test $$t";		\
+			echo "Valgrind error for test $$t";		\
 			failed=`expr $$failed + 1`;			\
 			whicht="$$whicht $$t";				\
-                fi;							\
+		fi;							\
+	done;								\
+	if test "$$failed" -ne 0; then					\
+		echo "$$failed tests had leaks or errors under valgrind:";	\
+		echo "$$whicht";					\
+		false;							\
+	fi
+
+# valgrind all tests and generate suppressions
+valgrind.gen-suppressions: $(TESTS)
+	@echo "Valgrinding tests ..."
+	@failed=0;							\
+	for t in $(filter-out $(VALGRIND_TESTS_DISABLE),$(TESTS)); do	\
+		$(MAKE) $$t.valgrind.gen-suppressions;			\
+		if test "$$?" -ne 0; then                               \
+			echo "Valgrind error for test $$t";		\
+			failed=`expr $$failed + 1`;			\
+			whicht="$$whicht $$t";				\
+		fi;							\
 	done;								\
 	if test "$$failed" -ne 0; then					\
 		echo "$$failed tests had leaks or errors under valgrind:";	\
@@ -125,7 +143,7 @@ valgrind: $(TESTS)
 GST_INSPECT = $(GST_TOOLS_DIR)/gst-inspect-$(GST_MAJORMINOR)
 inspect:
 	@echo "Inspecting features ..."
-	for e in `$(TESTS_ENVIRONMENT) $(GST_INSPECT) | head -n -2 	\
+	@for e in `$(TESTS_ENVIRONMENT) $(GST_INSPECT) | head -n -2 	\
 	  | cut -d: -f2`;						\
 	  do echo Inspecting $$e;					\
 	     $(GST_INSPECT) $$e > /dev/null 2>&1; done
@@ -141,6 +159,8 @@ help:
 	@echo "make (dir)/(test).gdb              -- start up gdb for the given test"
 	@echo
 	@echo "make valgrind                      -- valgrind all tests"
+	@echo "make valgrind.gen-suppressions     -- generate suppressions for all tests"
+	@echo "                                      and save to suppressions.log"
 	@echo "make (dir)/(test).valgrind         -- valgrind the given test"
 	@echo "make (dir)/(test).valgrind-forever -- valgrind the given test forever"
 	@echo "make (dir)/(test).valgrind.gen-suppressions -- generate suppressions"
