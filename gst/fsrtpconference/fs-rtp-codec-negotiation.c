@@ -886,6 +886,9 @@ negotiate_stream_codecs (
       {
         old_ca = item->data;
 
+        if (old_ca->disable || old_ca->reserved)
+          continue;
+
         negotiate_stream_codec (old_ca, remote_codec, multi_stream,
             &nego_codec, &nego_send_codec);
 
@@ -974,6 +977,9 @@ match_send_codec_no_pt (CodecAssociation *old_ca, gpointer user_data)
   FsCodec *tmpcodec = NULL;
   CodecAssociation *new_ca = user_data;
   gboolean ret;
+
+  if (old_ca->disable || old_ca->reserved)
+    return FALSE;
 
   if (new_ca->send_codec->id == old_ca->send_codec->id)
   {

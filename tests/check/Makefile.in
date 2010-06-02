@@ -40,7 +40,8 @@ check_PROGRAMS = base/fscodec$(EXEEXT) base/fstransmitter$(EXEEXT) \
 	transmitter/nice$(EXEEXT) rtp/codecs$(EXEEXT) \
 	rtp/sendcodecs$(EXEEXT) rtp/conference$(EXEEXT) \
 	rtp/recvcodecs$(EXEEXT) msn/conference$(EXEEXT) \
-	utils/binadded$(EXEEXT) elements/rtcpfilter$(EXEEXT)
+	utils/binadded$(EXEEXT) elements/rtcpfilter$(EXEEXT) \
+	elements/funnel$(EXEEXT)
 subdir = tests/check
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
@@ -86,6 +87,16 @@ base_fstransmitter_LDADD = $(LDADD)
 base_fstransmitter_DEPENDENCIES =  \
 	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-0.10.la \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+am_elements_funnel_OBJECTS = elements_funnel-funnel.$(OBJEXT)
+elements_funnel_OBJECTS = $(am_elements_funnel_OBJECTS)
+elements_funnel_LDADD = $(LDADD)
+elements_funnel_DEPENDENCIES =  \
+	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-0.10.la \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+elements_funnel_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(elements_funnel_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
+	-o $@
 am_elements_rtcpfilter_OBJECTS =  \
 	elements_rtcpfilter-rtcpfilter.$(OBJEXT)
 elements_rtcpfilter_OBJECTS = $(am_elements_rtcpfilter_OBJECTS)
@@ -218,17 +229,19 @@ AM_V_GEN = $(am__v_GEN_$(V))
 am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
 am__v_GEN_0 = @echo "  GEN   " $@;
 SOURCES = $(base_fscodec_SOURCES) base/fstransmitter.c \
-	$(elements_rtcpfilter_SOURCES) $(msn_conference_SOURCES) \
-	$(rtp_codecs_SOURCES) $(rtp_conference_SOURCES) \
-	rtp/recvcodecs.c $(rtp_sendcodecs_SOURCES) \
-	$(transmitter_multicast_SOURCES) $(transmitter_nice_SOURCES) \
-	$(transmitter_rawudp_SOURCES) $(utils_binadded_SOURCES)
+	$(elements_funnel_SOURCES) $(elements_rtcpfilter_SOURCES) \
+	$(msn_conference_SOURCES) $(rtp_codecs_SOURCES) \
+	$(rtp_conference_SOURCES) rtp/recvcodecs.c \
+	$(rtp_sendcodecs_SOURCES) $(transmitter_multicast_SOURCES) \
+	$(transmitter_nice_SOURCES) $(transmitter_rawudp_SOURCES) \
+	$(utils_binadded_SOURCES)
 DIST_SOURCES = $(base_fscodec_SOURCES) base/fstransmitter.c \
-	$(elements_rtcpfilter_SOURCES) $(msn_conference_SOURCES) \
-	$(rtp_codecs_SOURCES) $(rtp_conference_SOURCES) \
-	rtp/recvcodecs.c $(rtp_sendcodecs_SOURCES) \
-	$(transmitter_multicast_SOURCES) $(transmitter_nice_SOURCES) \
-	$(transmitter_rawudp_SOURCES) $(utils_binadded_SOURCES)
+	$(elements_funnel_SOURCES) $(elements_rtcpfilter_SOURCES) \
+	$(msn_conference_SOURCES) $(rtp_codecs_SOURCES) \
+	$(rtp_conference_SOURCES) rtp/recvcodecs.c \
+	$(rtp_sendcodecs_SOURCES) $(transmitter_multicast_SOURCES) \
+	$(transmitter_nice_SOURCES) $(transmitter_rawudp_SOURCES) \
+	$(utils_binadded_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 am__tty_colors = \
@@ -549,6 +562,8 @@ utils_binadded_SOURCES = \
 elements_rtcpfilter_CFLAGS = $(AM_CFLAGS)
 elements_rtcpfilter_SOURCES = elements/rtcpfilter.c
 elements_rtcpfilter_LDADD = $(LDADD) -lgstrtp-0.10
+elements_funnel_CFLAGS = $(AM_CFLAGS)
+elements_funnel_SOURCES = elements/funnel.c
 all: all-am
 
 .SUFFIXES:
@@ -604,6 +619,9 @@ base/fstransmitter$(EXEEXT): $(base_fstransmitter_OBJECTS) $(base_fstransmitter_
 elements/$(am__dirstamp):
 	@$(MKDIR_P) elements
 	@: > elements/$(am__dirstamp)
+elements/funnel$(EXEEXT): $(elements_funnel_OBJECTS) $(elements_funnel_DEPENDENCIES) elements/$(am__dirstamp)
+	@rm -f elements/funnel$(EXEEXT)
+	$(AM_V_CCLD)$(elements_funnel_LINK) $(elements_funnel_OBJECTS) $(elements_funnel_LDADD) $(LIBS)
 elements/rtcpfilter$(EXEEXT): $(elements_rtcpfilter_OBJECTS) $(elements_rtcpfilter_DEPENDENCIES) elements/$(am__dirstamp)
 	@rm -f elements/rtcpfilter$(EXEEXT)
 	$(AM_V_CCLD)$(elements_rtcpfilter_LINK) $(elements_rtcpfilter_OBJECTS) $(elements_rtcpfilter_LDADD) $(LIBS)
@@ -653,6 +671,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/elements_funnel-funnel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/elements_rtcpfilter-rtcpfilter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fscodec.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fstransmitter.Po@am__quote@
@@ -735,6 +754,22 @@ fstransmitter.obj: base/fstransmitter.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='base/fstransmitter.c' object='fstransmitter.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o fstransmitter.obj `if test -f 'base/fstransmitter.c'; then $(CYGPATH_W) 'base/fstransmitter.c'; else $(CYGPATH_W) '$(srcdir)/base/fstransmitter.c'; fi`
+
+elements_funnel-funnel.o: elements/funnel.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(elements_funnel_CFLAGS) $(CFLAGS) -MT elements_funnel-funnel.o -MD -MP -MF $(DEPDIR)/elements_funnel-funnel.Tpo -c -o elements_funnel-funnel.o `test -f 'elements/funnel.c' || echo '$(srcdir)/'`elements/funnel.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/elements_funnel-funnel.Tpo $(DEPDIR)/elements_funnel-funnel.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='elements/funnel.c' object='elements_funnel-funnel.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(elements_funnel_CFLAGS) $(CFLAGS) -c -o elements_funnel-funnel.o `test -f 'elements/funnel.c' || echo '$(srcdir)/'`elements/funnel.c
+
+elements_funnel-funnel.obj: elements/funnel.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(elements_funnel_CFLAGS) $(CFLAGS) -MT elements_funnel-funnel.obj -MD -MP -MF $(DEPDIR)/elements_funnel-funnel.Tpo -c -o elements_funnel-funnel.obj `if test -f 'elements/funnel.c'; then $(CYGPATH_W) 'elements/funnel.c'; else $(CYGPATH_W) '$(srcdir)/elements/funnel.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/elements_funnel-funnel.Tpo $(DEPDIR)/elements_funnel-funnel.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='elements/funnel.c' object='elements_funnel-funnel.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(elements_funnel_CFLAGS) $(CFLAGS) -c -o elements_funnel-funnel.obj `if test -f 'elements/funnel.c'; then $(CYGPATH_W) 'elements/funnel.c'; else $(CYGPATH_W) '$(srcdir)/elements/funnel.c'; fi`
 
 elements_rtcpfilter-rtcpfilter.o: elements/rtcpfilter.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(elements_rtcpfilter_CFLAGS) $(CFLAGS) -MT elements_rtcpfilter-rtcpfilter.o -MD -MP -MF $(DEPDIR)/elements_rtcpfilter-rtcpfilter.Tpo -c -o elements_rtcpfilter-rtcpfilter.o `test -f 'elements/rtcpfilter.c' || echo '$(srcdir)/'`elements/rtcpfilter.c
