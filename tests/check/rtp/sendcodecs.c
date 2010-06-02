@@ -113,7 +113,34 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
         }
         else if (gst_structure_has_name (s, "farsight-send-codec-changed"))
         {
-          ready_to_send = TRUE;
+          FsCodec *codec = NULL;
+          GList *secondary_codec_list = NULL;
+          GList *item;
+
+          ts_fail_unless (gst_structure_get ((GstStructure *) s,
+                  "secondary-codecs", FS_TYPE_CODEC_LIST, &secondary_codec_list,
+                  "codec", FS_TYPE_CODEC, &codec,
+                  NULL));
+
+          ts_fail_unless (codec != NULL);
+          ts_fail_unless (secondary_codec_list != NULL);
+
+          for (item = secondary_codec_list; item; item = item->next)
+          {
+            FsCodec *codec = item->data;
+
+            if (codec->clock_rate == 8000 &&
+                !g_strcasecmp ("telephone-event", codec->encoding_name))
+            {
+              ts_fail_unless (codec->id == dtmf_id);
+              ready_to_send = TRUE;
+            }
+          }
+
+          fail_unless (ready_to_send == TRUE);
+
+          fs_codec_list_destroy (secondary_codec_list);
+          fs_codec_destroy (codec);
         }
 
       }

@@ -8,7 +8,7 @@
 <link rel="up" href="ch01.html" title="Core interface classes">
 <link rel="prev" href="farsight2-plugins-FsRtpParticipant.html" title="FsRtpParticipant">
 <link rel="next" href="farsight2-plugins-FsRtpStream.html" title="FsRtpStream">
-<meta name="generator" content="GTK-Doc V1.11 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="pt01.html" title="Part I. RTP Plugin">
 <link rel="chapter" href="ch01.html" title="Core interface classes">
@@ -28,10 +28,10 @@
 </tr>
 <tr><td colspan="5" class="shortcuts">
 <a href="#farsight2-plugins-FsRtpSession.synopsis" class="shortcut">Top</a>
-                 | 
-                <a href="#farsight2-plugins-FsRtpSession.description" class="shortcut">Description</a>
-                 | 
-                <a href="#farsight2-plugins-FsRtpSession.properties" class="shortcut">Properties</a>
+                   | 
+                  <a href="#farsight2-plugins-FsRtpSession.description" class="shortcut">Description</a>
+                   | 
+                  <a href="#farsight2-plugins-FsRtpSession.properties" class="shortcut">Properties</a>
 </td></tr>
 </table>
 <div class="refentry" title="FsRtpSession">
@@ -45,34 +45,27 @@
 </tr></table></div>
 <div class="refsynopsisdiv" title="Synopsis">
 <a name="farsight2-plugins-FsRtpSession.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">
-                    <a class="link" href="farsight2-plugins-FsRtpSession.html#FsRtpSession" title="FsRtpSession">FsRtpSession</a>;
+<pre class="synopsis">                    <a class="link" href="farsight2-plugins-FsRtpSession.html#FsRtpSession" title="FsRtpSession">FsRtpSession</a>;
 </pre>
 </div>
 <div class="refsect1" title="Properties">
 <a name="farsight2-plugins-FsRtpSession.properties"></a><h2>Properties</h2>
 <pre class="synopsis">
-  "<a class="link" href="farsight2-plugins-FsRtpSession.html#FsRtpSession--no-rtcp-timeout" title='The "no-rtcp-timeout" property'>no-rtcp-timeout</a>"          <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
->gint</a>                  : Read / Write
-  "<a class="link" href="farsight2-plugins-FsRtpSession.html#FsRtpSession--conference" title='The "conference" property'>conference</a>"               <a class="link" href="farsight2-plugins-FsRtpConference.html#FsRtpConference" title="FsRtpConference">FsRtpConference</a>*      : Read / Write / Construct Only
-  "<a class="link" href="farsight2-plugins-FsRtpSession.html#FsRtpSession--ssrc" title='The "ssrc" property'>ssrc</a>"                     <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
->guint</a>                 : Read / Write
+  "<a class="link" href="farsight2-plugins-FsRtpSession.html#FsRtpSession--no-rtcp-timeout" title='The "no-rtcp-timeout" property'>no-rtcp-timeout</a>"          <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a>                  : Read / Write
+  "<a class="link" href="farsight2-plugins-FsRtpSession.html#FsRtpSession--conference" title='The "conference" property'>conference</a>"               <a class="link" href="farsight2-plugins-FsRtpConference.html#FsRtpConference" title="FsRtpConference"><span class="type">FsRtpConference</span></a>*      : Read / Write / Construct Only
+  "<a class="link" href="farsight2-plugins-FsRtpSession.html#FsRtpSession--ssrc" title='The "ssrc" property'>ssrc</a>"                     <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write
 </pre>
 </div>
 <div class="refsect1" title="Description">
 <a name="farsight2-plugins-FsRtpSession.description"></a><h2>Description</h2>
 <p>
 This object represents one session, it is created by called
-<a
-href="../farsight2-libs-0.10/FsConference.html#fs-conference-new-session"
-><code class="function">fs_conference_new_session()</code></a> on a <a class="link" href="farsight2-plugins-FsRtpConference.html#FsRtpConference" title="FsRtpConference"><span class="type">FsRtpConference</span></a>. It can be either
+<a href="../farsight2-libs-0.10/FsConference.html#fs-conference-new-session"><code class="function">fs_conference_new_session()</code></a> on a <a class="link" href="farsight2-plugins-FsRtpConference.html#FsRtpConference" title="FsRtpConference"><span class="type">FsRtpConference</span></a>. It can be either
 Audio or Video. It also represents data send with one and only one
 SSRC (although if there is a SSRC collision, that SSRC may change).
 </p>
 <div class="refsect2" title="Codec profiles">
-<a name="id2838938"></a><h3>Codec profiles</h3>
+<a name="id3040993"></a><h3>Codec profiles</h3>
 <p>
 It is possible to define "codec profiles", that is non-autodetected
 encoding and decoding pipelines for codecs. It is even possible to declare
@@ -97,8 +90,6 @@ secondary pad of some other codec.
 </p>
 </div>
 <p></p>
-<p>
-</p>
 </div>
 <div class="refsect1" title="Details">
 <a name="farsight2-plugins-FsRtpSession.details"></a><h2>Details</h2>
@@ -108,19 +99,13 @@ secondary pad of some other codec.
   FsSession parent;
 } FsRtpSession;
 </pre>
-<p>
-</p>
-<p>
-</p>
 </div>
 </div>
 <div class="refsect1" title="Property Details">
 <a name="farsight2-plugins-FsRtpSession.property-details"></a><h2>Property Details</h2>
 <div class="refsect2" title='The "no-rtcp-timeout" property'>
 <a name="FsRtpSession--no-rtcp-timeout"></a><h3>The <code class="literal">"no-rtcp-timeout"</code> property</h3>
-<pre class="programlisting">  "no-rtcp-timeout"          <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
->gint</a>                  : Read / Write</pre>
+<pre class="programlisting">  "no-rtcp-timeout"          <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a>                  : Read / Write</pre>
 <p>This is the time (in ms) after which data received without RTCP is attached the FsStream, this only works if there is only one FsStream. -1 will wait forever. 0 will not wait for RTCP and attach it immediataly to the FsStream and prohibit the creation of a second FsStream.</p>
 <p>Allowed values: &gt;= -1</p>
 <p>Default value: 7000</p>
@@ -128,15 +113,13 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 <hr>
 <div class="refsect2" title='The "conference" property'>
 <a name="FsRtpSession--conference"></a><h3>The <code class="literal">"conference"</code> property</h3>
-<pre class="programlisting">  "conference"               <a class="link" href="farsight2-plugins-FsRtpConference.html#FsRtpConference" title="FsRtpConference">FsRtpConference</a>*      : Read / Write / Construct Only</pre>
+<pre class="programlisting">  "conference"               <a class="link" href="farsight2-plugins-FsRtpConference.html#FsRtpConference" title="FsRtpConference"><span class="type">FsRtpConference</span></a>*      : Read / Write / Construct Only</pre>
 <p>This is a convience pointer for the Conference.</p>
 </div>
 <hr>
 <div class="refsect2" title='The "ssrc" property'>
 <a name="FsRtpSession--ssrc"></a><h3>The <code class="literal">"ssrc"</code> property</h3>
-<pre class="programlisting">  "ssrc"                     <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
->guint</a>                 : Read / Write</pre>
+<pre class="programlisting">  "ssrc"                     <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write</pre>
 <p>This is the current SSRC used to send data (defaults to a random value).</p>
 <p>Default value: 0</p>
 </div>
@@ -144,6 +127,6 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.11</div>
+          Generated by GTK-Doc V1.13</div>
 </body>
 </html>

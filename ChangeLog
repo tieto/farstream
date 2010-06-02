@@ -1,3 +1,113 @@
+commit 95fcdf18b0b877d073614fd322dcccfd870a7f87
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jun 1 17:12:33 2010 -0400
+
+    Version 0.0.20
+
+commit b757f7cd345cb50b7413fc8688f6aea845d006de
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jun 1 16:55:26 2010 -0400
+
+    tests: Remove extra debug
+
+commit 2d0aff947d1bc25adbaad25c6fe520e7363e3036
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu May 20 14:10:17 2010 -0400
+
+    tests: Add test for stream pads iterator
+
+commit a4f2fc80ba843023643ae7d1b121e17ac9882aa1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu May 20 13:03:23 2010 -0400
+
+    fsstream: Add iterator to get src pads
+    
+    Allows finding which src pads belong to which FsStream
+
+commit c0a26ab7442103fb46011ebd8698e5ecd6b3cb75
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu May 20 13:02:56 2010 -0400
+
+    fsstream: Keep track of src pads
+
+commit 3f2ca3bb5aeb5733733d9a4d4bc19e520e73edbf
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon May 31 15:18:40 2010 -0400
+
+    tests: Check that secondary-codecs are correct in dtmf test
+
+commit 9f63f05575c0722025702d2855ce7ca009819640
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed May 26 15:09:06 2010 -0400
+
+    Add secondary codecs to the farsight-send-codecs-changed message
+    
+    This way, the user can know when a change in DTMF codec has taken effect.
+
+commit 0a5462944878ab7c64893b35d1ae9e137955dfa7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon May 31 16:13:19 2010 -0400
+
+    rtpcodecspecific: Separate mandatory and optional config parameters
+    
+    Only be happy with the mandatory ones. Also add "delivery-method" as an
+    optional one.
+
+commit d4f5cb0dd2f46a09c52b09747e84afdca2023c12
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon May 31 15:24:31 2010 -0400
+
+    nicetransmitter: Remove nicesrc before stopping it
+    
+    This should prevent any EOS
+
+commit 56cb75eca2f161e801e391735e7e4b3b406941cf
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Mar 6 22:29:57 2010 -0500
+
+    tests: Add simple test for funnel element
+
+commit 7a258f3d6ee2630774476ca2c3fffd2e3fe67a86
+Author: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Date:   Fri May 28 20:55:00 2010 +0100
+
+    rtpsession: Correctly lock codec association in send_src_pad_blocked_callback()
+
+commit 48181445f0663d8a8cbfd5e88c50997dc490b005
+Author: Sjoerd Sjoerd <sjoerd.simons@collabora.co.uk>
+Date:   Fri May 28 20:07:59 2010 +0100
+
+    rtpcodecnego: Skip disabled and reserved codec-associations in match function
+
+commit 6412913150cad978d9a9d7f05784dfb169ac201c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri May 28 13:45:47 2010 -0400
+
+    rtpsession: Use a copy of the codec because the lock has been released
+
+commit 506191030cbb9d868ea1d7dbb43304d8bad2bc93
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri May 28 13:45:31 2010 -0400
+
+    rtpcodecnego: Skip disabled/reserved codecs while negotiating
+
+commit f9a2ce305e342e897a3499db40c154cf0e5b2639
+Author: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Date:   Fri May 28 13:58:59 2010 +0100
+
+    Make a temporary copy of the send codec
+    
+    It's not safe to use a pointer to our codec associations without holding
+    the FsRtpSession lock as other functions might destroy/replace them. Instead
+    make a temporary copy of the selected send codec, which can be used safely
+    outside of the locked sections
+
+commit 739290af44b7f2abc07fc142175321ffc7f614bd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed May 19 15:40:21 2010 -0400
+
+    Version 0.0.19.1
+
 commit 9f833f49ed4ac7a4a578d0a3266c000486314c7b
 Author: Olivier Crête <olivier.crete@collabora.co.uk>
 Date:   Wed May 19 15:25:16 2010 -0400

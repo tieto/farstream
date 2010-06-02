@@ -3190,6 +3190,7 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
   struct link_data data;
   GList *item;
   FsCodec *send_codec_copy = fs_codec_copy (ca->send_codec);
+  FsCodec *codec_copy = fs_codec_copy (ca->codec);
 
   GST_DEBUG ("Trying to add send codecbin for " FS_CODEC_FORMAT,
       FS_CODEC_ARGS (ca->send_codec));
@@ -3207,6 +3208,7 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
   if (!codecbin)
   {
     fs_codec_destroy (send_codec_copy);
+    fs_codec_destroy (codec_copy);
     fs_codec_list_destroy (codecs);
     return NULL;
   }
@@ -3221,6 +3223,7 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
     gst_object_unref (codecbin);
     fs_codec_list_destroy (codecs);
     fs_codec_destroy (send_codec_copy);
+    fs_codec_destroy (codec_copy);
     gst_caps_unref (sendcaps);
     return NULL;
   }
@@ -3233,6 +3236,7 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
     gst_bin_remove (GST_BIN (session->priv->conference), (codecbin));
     fs_codec_list_destroy (codecs);
     gst_caps_unref (sendcaps);
+    fs_codec_destroy (codec_copy);
     fs_codec_destroy (send_codec_copy);
     return NULL;
   }
@@ -3337,7 +3341,7 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
 
   session->priv->send_codecbin = codecbin;
 
-  session->priv->current_send_codec = fs_codec_copy (ca->codec);
+  session->priv->current_send_codec = codec_copy;
   FS_RTP_SESSION_UNLOCK (session);
 
   fs_codec_list_destroy (codecs);
@@ -3348,6 +3352,7 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
  error:
   fs_rtp_session_remove_send_codec_bin (session, NULL, codecbin, FALSE);
   fs_codec_list_destroy (codecs);
+  fs_codec_destroy (codec_copy);
   fs_codec_destroy (send_codec_copy);
   return NULL;
 
@@ -3375,6 +3380,8 @@ _send_src_pad_blocked_callback (GstPad *pad, gboolean blocked,
 {
   FsRtpSession *self = FS_RTP_SESSION (user_data);
   CodecAssociation *ca = NULL;
+  FsCodec *send_codec_copy = NULL;
+  FsCodec *codec_copy = NULL;
   GError *error = NULL;
   gboolean changed = FALSE;
 
@@ -3398,8 +3405,10 @@ _send_src_pad_blocked_callback (GstPad *pad, gboolean blocked,
 
   g_clear_error (&error);
 
+  send_codec_copy = fs_codec_copy (ca->send_codec);
   if (fs_codec_are_equal (ca->codec, self->priv->current_send_codec))
   {
+    codec_copy = fs_codec_copy (ca->codec);
     FS_RTP_SESSION_UNLOCK (self);
 
     /* If the main codec has not changed, the special codecs could still
@@ -3411,7 +3420,7 @@ _send_src_pad_blocked_callback (GstPad *pad, gboolean blocked,
         &self->priv->extra_sources,
         &self->priv->codec_associations,
         FS_RTP_SESSION_GET_LOCK (self),
-        ca->send_codec);
+        send_codec_copy);
     goto skip_main_codec;
   }
 
@@ -3419,12 +3428,14 @@ _send_src_pad_blocked_callback (GstPad *pad, gboolean blocked,
 
   g_object_set (self->priv->media_sink_valve, "drop", TRUE, NULL);
 
-  if (!fs_rtp_session_remove_send_codec_bin (self, ca->send_codec, NULL, TRUE))
+  if (!fs_rtp_session_remove_send_codec_bin (self, send_codec_copy, NULL, TRUE))
     goto done;
 
 
   FS_RTP_SESSION_LOCK (self);
   /* We have to re-fetch the ca because we lifted the lock */
+  fs_codec_destroy (send_codec_copy);
+  send_codec_copy = NULL;
   ca = fs_rtp_session_select_send_codec_locked (self, &error);
 
   if (!ca)
@@ -3435,6 +3446,9 @@ _send_src_pad_blocked_callback (GstPad *pad, gboolean blocked,
   }
 
   g_clear_error (&error);
+
+  send_codec_copy = fs_codec_copy (ca->send_codec);
+  codec_copy = fs_codec_copy (ca->codec);
 
   if (!fs_rtp_session_add_send_codec_bin_unlock (self, ca, &error))
   {
@@ -3450,23 +3464,36 @@ _send_src_pad_blocked_callback (GstPad *pad, gboolean blocked,
       &self->priv->extra_sources,
       &self->priv->codec_associations,
       FS_RTP_SESSION_GET_LOCK (self),
-      ca->send_codec,
+      send_codec_copy,
       GST_ELEMENT (self->priv->conference),
       self->priv->rtpmuxer);
 
   if (changed && !error)
   {
+    GList *secondary_codecs;
+
+    FS_RTP_SESSION_LOCK (self);
+    secondary_codecs = fs_rtp_special_sources_get_codecs_locked (
+        self->priv->extra_sources, self->priv->codec_associations,
+        ca->codec);
+    FS_RTP_SESSION_UNLOCK (self);
+
     g_object_notify (G_OBJECT (self), "current-send-codec");
     gst_element_post_message (GST_ELEMENT (self->priv->conference),
         gst_message_new_element (GST_OBJECT (self->priv->conference),
             gst_structure_new ("farsight-send-codec-changed",
                 "session", FS_TYPE_SESSION, self,
-                "codec", FS_TYPE_CODEC, ca->codec,
+                "codec", FS_TYPE_CODEC, codec_copy,
+                "secondary-codecs", FS_TYPE_CODEC_LIST, secondary_codecs,
                 NULL)));
+
+    fs_codec_list_destroy (secondary_codecs);
   }
 
  done:
   g_clear_error (&error);
+  fs_codec_destroy (send_codec_copy);
+  fs_codec_destroy (codec_copy);
 
   /* If we have a codec bin, the required/preferred caps may have changed,
    * in this case, we need to drop the current buffer and wait for a buffer
