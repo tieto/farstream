@@ -1,8 +1,12 @@
-farsight2 (0.0.19-3) UNRELEASED; urgency=low
+farsight2 (0.0.20-1) UNRELEASED; urgency=low
 
+  [ Laurent Bigonville ]
   * Bump Standards-Version to 3.8.4 (no further changes)
 
- -- Laurent Bigonville <bigon@debian.org>  Thu, 20 May 2010 21:51:48 +0200
+  [ Sjoerd Simons ]
+  * New upstream bugfix release
+
+ -- Sjoerd Simons <sjoerd@debian.org>  Wed, 02 Jun 2010 10:46:41 +0100
 
 farsight2 (0.0.19-2) unstable; urgency=low
 
