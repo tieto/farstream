@@ -64,6 +64,7 @@ libgstfarsight-0.10.so.0 libgstfarsight0.10-0 #MINVER#
   fs_stream_emit_error@Base 0.0.1
   fs_stream_emit_src_pad_added@Base 0.0.1
   fs_stream_force_remote_candidates@Base 0.0.3
+  fs_stream_get_src_pads_iterator@Base 0.0.20
   fs_stream_get_type@Base 0.0.1
   fs_stream_set_remote_candidates@Base 0.0.3
   fs_stream_set_remote_codecs@Base 0.0.1
