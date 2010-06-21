@@ -1,3 +1,12 @@
+farsight2 (0.0.20-2) unstable; urgency=medium
+
+  * added debian/patches/0001-rtpdiscocodecs-Remove-a-bad-cast-when-listing-codecs.patch 
+    - Prevents an invalid memory access when discovering codecs
+  * priority medium, fixes a bug causing calls to completely fail for
+    some users
+
+ -- Sjoerd Simons <sjoerd@debian.org>  Mon, 21 Jun 2010 21:59:16 +0100
+
 farsight2 (0.0.20-1) unstable; urgency=low
 
   [ Laurent Bigonville ]
