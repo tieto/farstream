@@ -110,7 +110,7 @@
 #include "fs-candidate.h"
 #include "fs-stream-transmitter.h"
 #include "fs-conference-iface.h"
-#include "fs-enum-types.h"
+#include "fs-enumtypes.h"
 #include "fs-private.h"
 
 /* Signals */
@@ -125,10 +125,6 @@ enum
 enum
 {
   PROP_0,
-#if 0
-  /* TODO Do we really need this? */
-  PROP_SOURCE_PADS,
-#endif
   PROP_REMOTE_CODECS,
   PROP_NEGOTIATED_CODECS,
   PROP_CURRENT_RECV_CODECS,
@@ -159,6 +155,7 @@ static void fs_stream_set_property (GObject *object,
                                     guint prop_id,
                                     const GValue *value,
                                     GParamSpec *pspec);
+static void fs_stream_finalize (GObject *obj);
 
 static guint signals[LAST_SIGNAL] = { 0 };
 
@@ -174,24 +171,7 @@ fs_stream_class_init (FsStreamClass *klass)
 
   gobject_class->set_property = fs_stream_set_property;
   gobject_class->get_property = fs_stream_get_property;
-
-#if 0
-  /**
-   * FsStream:source-pads:
-   *
-   * A #GList of #GstPad of source pads being used by this stream to receive the
-   * different codecs.
-   *
-   */
-  g_object_class_install_property (gobject_class,
-      PROP_SOURCE_PADS,
-      g_param_spec_object ("source-pads",
-        "A list of source pads being used in this stream",
-        "A GList of GstPads representing the source pads being used by this"
-        " stream for the different codecs",
-        ,
-        G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
-#endif
+  gobject_class->finalize = fs_stream_finalize;
 
   /**
    * FsStream:remote-codecs:
@@ -355,8 +335,10 @@ fs_stream_finalize (GObject *obj)
 {
   FsStream *stream = FS_STREAM (obj);
 
-  g_warn_if_fail (stream->priv->src_pads == NULL);
+  g_list_free (stream->priv->src_pads);
   g_mutex_free (stream->priv->mutex);
+
+  G_OBJECT_CLASS (fs_stream_parent_class)->finalize (obj);
 }
 
 static void

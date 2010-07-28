@@ -3,7 +3,7 @@
   <description>Farsight MSN Conference plugin</description>
   <filename>../../gst/fsmsnconference/.libs/libfsmsnconference.so</filename>
   <basename>libfsmsnconference.so</basename>
-  <version>0.0.13</version>
+  <version>0.0.20.1</version>
   <license>LGPL</license>
   <source>farsight2</source>
   <package>Farsight</package>

@@ -270,7 +270,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 EXTRA_DIST = \
 	gtk-doc-plugins.mak	\
-	glib-gen.mak
+	gst-glib-gen.mak
 
 all: all-am
 

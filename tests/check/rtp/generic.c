@@ -201,6 +201,8 @@ pad_count_fold (gpointer pad, GValue *val, gpointer user_data)
   g_value_set_uint (val, g_value_get_uint (val) + 1);
 
   gst_object_unref (pad);
+
+  return TRUE;
 }
 
 guint
@@ -227,6 +229,8 @@ count_stream_pads (FsStream *stream)
       count = g_value_get_uint (&val);
       break;
     }
+
+    gst_iterator_resync (iter);
   }
 
   gst_iterator_free (iter);

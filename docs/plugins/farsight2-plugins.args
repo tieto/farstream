@@ -81,7 +81,7 @@
 <ARG>
 <NAME>FsRtpSession::no-rtcp-timeout</NAME>
 <TYPE>gint</TYPE>
-<RANGE>>= -1</RANGE>
+<RANGE>>= G_MAXULONG</RANGE>
 <FLAGS>rw</FLAGS>
 <NICK>The timeout (in ms) before no RTCP is assumed</NICK>
 <BLURB>This is the time (in ms) after which data received without RTCP is attached the FsStream, this only works if there is only one FsStream. -1 will wait forever. 0 will not wait for RTCP and attach it immediataly to the FsStream and prohibit the creation of a second FsStream.</BLURB>

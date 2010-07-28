@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, cvs and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for cvs/prerelease
-AC_INIT(Farsight2, 0.0.20,
+AC_INIT(Farsight2, 0.0.21,
     https://bugs.freedesktop.org/enter_bug.cgi?product=Farsight,
     farsight2)
 
@@ -50,7 +50,7 @@ dnl - interfaces added/removed/changed -> increment CURRENT, REVISION = 0
 dnl - interfaces added -> increment AGE
 dnl - interfaces removed -> AGE = 0
 dnl sets FS2_LT_LDFLAGS
-AS_LIBTOOL(FS2, 5, 0, 5)
+AS_LIBTOOL(FS2, 5, 1, 5)
 
 dnl FIXME: this macro doesn't actually work;
 dnl the generated libtool script has no support for the listed tags.
@@ -287,7 +287,7 @@ fi
 AC_SUBST(PROFILE_CFLAGS)
 
 dnl every flag in FS2_OPTION_CFLAGS can be overridden at make time
-FS2_OPTION_CFLAGS="\$(ERROR_CFLAGS) \$(DEBUG_CFLAGS) \$(PROFILE_CFLAGS) \$(GCOV_CFLAGS) \$(OPT_CFLAGS)"
+FS2_OPTION_CFLAGS="\$(WARNING_CFLAGS) \$(ERROR_CFLAGS) \$(DEBUG_CFLAGS) \$(PROFILE_CFLAGS) \$(GCOV_CFLAGS) \$(OPT_CFLAGS)"
 AC_SUBST(FS2_OPTION_CFLAGS)
 
 dnl our libraries need to be versioned correctly

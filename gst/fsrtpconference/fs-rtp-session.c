@@ -2907,6 +2907,8 @@ struct link_data {
 
   GList *all_codecs;
 
+  GList *other_codecs;
+
   GError **error;
 };
 
@@ -3018,7 +3020,6 @@ link_other_pads (gpointer item, GValue *ret, gpointer user_data)
 
   capsfilter = gst_element_factory_make ("capsfilter", NULL);
   g_object_set (capsfilter, "caps", filter_caps, NULL);
-  gst_caps_unref (filter_caps);
 
   if (!gst_bin_add (GST_BIN (data->session->priv->conference), capsfilter))
   {
@@ -3057,8 +3058,7 @@ link_other_pads (gpointer item, GValue *ret, gpointer user_data)
   {
     g_set_error (data->error, FS_ERROR, FS_ERROR_CONSTRUCTION,
         "Could not an extra capsfilter to the muxer");
-    g_value_set_boolean (ret, FALSE);
-    return FALSE;
+    goto error;
   }
 
 
@@ -3070,6 +3070,8 @@ link_other_pads (gpointer item, GValue *ret, gpointer user_data)
     goto error;
   }
 
+  data->other_codecs = g_list_append (data->other_codecs, filter_caps);
+
   return TRUE;
 
  error:
@@ -3080,6 +3082,7 @@ link_other_pads (gpointer item, GValue *ret, gpointer user_data)
     g_list_remove (data->session->priv->extra_send_capsfilters,
         capsfilter);
   gst_object_unref (pad);
+  gst_caps_unref (filter_caps);
 
   return FALSE;
 }
@@ -3179,6 +3182,7 @@ fs_rtp_session_remove_send_codec_bin (FsRtpSession *self,
 static GstElement *
 fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
     const CodecAssociation *ca,
+    GList **other_codecs,
     GError **error)
 {
   GstElement *codecbin = NULL;
@@ -3252,8 +3256,9 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
 
   data.session = session;
   data.caps = sendcaps;
-  data.error = NULL;
   data.all_codecs = codecs;
+  data.error = error;
+  data.other_codecs = NULL;
 
   if (gst_iterator_fold (iter, link_main_pad, &link_rv, &data) ==
       GST_ITERATOR_ERROR)
@@ -3269,9 +3274,6 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
 
   if (!g_value_get_boolean (&link_rv))
   {
-    g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
-        "Could not link main pad of codec bin for: " FS_CODEC_FORMAT,
-        FS_CODEC_ARGS (send_codec_copy));
     gst_iterator_free (iter);
     goto error;
   }
@@ -3292,12 +3294,7 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
   gst_iterator_free (iter);
 
   if (!g_value_get_boolean (&link_rv))
-  {
-    g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
-        "Could not link all other pads of codec bin for: " FS_CODEC_FORMAT,
-        FS_CODEC_ARGS (send_codec_copy));
     goto error;
-  }
 
   gst_element_set_locked_state (codecbin, FALSE);
 
@@ -3338,6 +3335,20 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
   if (session->priv->streams_sending)
     g_object_set (session->priv->media_sink_valve, "drop", FALSE, NULL);
 
+  while (data.other_codecs)
+  {
+    FsCodec *other_send_codec = data.other_codecs->data;
+    CodecAssociation *ca;
+
+    data.other_codecs = g_list_remove (data.other_codecs, other_send_codec);
+
+    ca = lookup_codec_association_by_pt (session->priv->codec_associations,
+        other_send_codec->id);
+
+    if (ca)
+      *other_codecs = g_list_append (*other_codecs,
+          fs_codec_copy (ca->codec));
+  }
 
   session->priv->send_codecbin = codecbin;
 
@@ -3350,6 +3361,7 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
   return codecbin;
 
  error:
+  g_list_free (data.other_codecs);
   fs_rtp_session_remove_send_codec_bin (session, NULL, codecbin, FALSE);
   fs_codec_list_destroy (codecs);
   fs_codec_destroy (codec_copy);
@@ -3384,6 +3396,7 @@ _send_src_pad_blocked_callback (GstPad *pad, gboolean blocked,
   FsCodec *codec_copy = NULL;
   GError *error = NULL;
   gboolean changed = FALSE;
+  GList *other_codecs = NULL;
 
   if (fs_rtp_session_has_disposed_enter (self, NULL))
   {
@@ -3450,7 +3463,8 @@ _send_src_pad_blocked_callback (GstPad *pad, gboolean blocked,
   send_codec_copy = fs_codec_copy (ca->send_codec);
   codec_copy = fs_codec_copy (ca->codec);
 
-  if (!fs_rtp_session_add_send_codec_bin_unlock (self, ca, &error))
+  if (!fs_rtp_session_add_send_codec_bin_unlock (self, ca, &other_codecs,
+          &error))
   {
     fs_session_emit_error (FS_SESSION (self), error->code,
         "Could not build a new send codec bin", error->message);
@@ -3477,6 +3491,8 @@ _send_src_pad_blocked_callback (GstPad *pad, gboolean blocked,
         self->priv->extra_sources, self->priv->codec_associations,
         ca->codec);
     FS_RTP_SESSION_UNLOCK (self);
+
+    secondary_codecs = g_list_concat (secondary_codecs, other_codecs);
 
     g_object_notify (G_OBJECT (self), "current-send-codec");
     gst_element_post_message (GST_ELEMENT (self->priv->conference),
