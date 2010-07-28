@@ -1,10 +1,10 @@
-farsight2 (0.0.21-1) UNRELEASED; urgency=low
+farsight2 (0.0.21-1) unstable; urgency=low
 
   * New upstream release
   * removed d/p/0001-rtpdiscocodecs-Remove-a-bad-cast-when-listing-codecs.patch
     - merged upstream
 
- -- Sjoerd Simons <sjoerd@debian.org>  Wed, 28 Jul 2010 16:12:14 +0200
+ -- Sjoerd Simons <sjoerd@debian.org>  Wed, 28 Jul 2010 16:34:02 +0200
 
 farsight2 (0.0.20-2) unstable; urgency=medium
 
