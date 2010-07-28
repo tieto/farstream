@@ -7,17 +7,9 @@
 <link rel="home" href="index.html" title="Farsight2 Reference Manual">
 <link rel="up" href="ch02.html" title="Farsight Core Library">
 <link rel="prev" href="ch02.html" title="Farsight Core Library">
-<link rel="next" href="FsSession.html" title="FsSession">
-<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
+<link rel="next" href="farsight2-libs-fs-session.html" title="FsSession">
+<meta name="generator" content="GTK-Doc V1.14 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
-<link rel="part" href="pt01.html" title="Part I. User-oriented classes, interfaces and functions">
-<link rel="chapter" href="ch01.html" title="Farsight GStreamer Interfaces">
-<link rel="chapter" href="ch02.html" title="Farsight Core Library">
-<link rel="chapter" href="ch03.html" title="Farsight Utility Functions and Objects">
-<link rel="part" href="pt02.html" title="Part II. Classes used to implement Farsight plugins">
-<link rel="chapter" href="ch04.html" title="Farsight Classes Base Implementations">
-<link rel="chapter" href="ch05.html" title="Farsight Transmitter Classes">
-<link rel="chapter" href="ch06.html" title="Farsight Plugins Infrastructure">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -26,7 +18,7 @@
 <td><a accesskey="u" href="ch02.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">Farsight2 Reference Manual</th>
-<td><a accesskey="n" href="FsSession.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="farsight2-libs-fs-session.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
 <a href="#FsParticipant.synopsis" class="shortcut">Top</a>
@@ -85,7 +77,8 @@
 This object is the base implementation of a Farsight Participant. It needs to be
 derived and implemented by a farsight conference gstreamer element. A
 participant represents any source of media in a conference. This could be a
-human-participant or an automaton.</p>
+human-participant or an automaton.
+</p>
 </div>
 <div class="refsect1" title="Details">
 <a name="FsParticipant.details"></a><h2>Details</h2>
@@ -93,7 +86,8 @@ human-participant or an automaton.</p>
 <a name="FsParticipant-struct"></a><h3>FsParticipant</h3>
 <pre class="programlisting">typedef struct _FsParticipant FsParticipant;</pre>
 <p>
-All members are private (access them using the properties)</p>
+All members are private (access them using the properties)
+</p>
 </div>
 <hr>
 <div class="refsect2" title="FsParticipantClass">
@@ -106,12 +100,13 @@ All members are private (access them using the properties)</p>
 </pre>
 <p>
 The FsParticipant class has no virtual methods to implement,
-but you may want to override the properties or attach more date to it</p>
+but you may want to override the properties or attach more date to it
+</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObjectClass"><span class="type">GObjectClass</span></a> <em class="structfield"><code><a name="FsParticipantClass.parent-class"></a>parent_class</code></em>;</span></p></td>
-<td> Our parent
+<td>Our parent
 </td>
 </tr></tbody>
 </table></div>
@@ -122,12 +117,13 @@ but you may want to override the properties or attach more date to it</p>
 <pre class="programlisting">#define             FS_PARTICIPANT_DATA_LOCK(participant)</pre>
 <p>
 Locks the participant for data set with <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-data"><code class="function">g_object_set_data()</code></a> or
-<a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-qdata"><code class="function">g_object_set_qdata()</code></a>.</p>
+<a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-qdata"><code class="function">g_object_set_qdata()</code></a>.
+</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>participant</code></em> :</span></p></td>
-<td> A <a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a>
+<td>A <a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a>
 </td>
 </tr></tbody>
 </table></div>
@@ -138,12 +134,13 @@ Locks the participant for data set with <a href="/usr/share/gtk-doc/html/gobject
 <pre class="programlisting">#define             FS_PARTICIPANT_DATA_UNLOCK(participant)</pre>
 <p>
 Unlocks the participant for data set with <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-data"><code class="function">g_object_set_data()</code></a> or
-<a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-qdata"><code class="function">g_object_set_qdata()</code></a>.</p>
+<a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-qdata"><code class="function">g_object_set_qdata()</code></a>.
+</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>participant</code></em> :</span></p></td>
-<td> A <a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a>
+<td>A <a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a>
 </td>
 </tr></tbody>
 </table></div>
@@ -156,7 +153,8 @@ Unlocks the participant for data set with <a href="/usr/share/gtk-doc/html/gobje
 <pre class="programlisting">  "cname"                    <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write / Construct</pre>
 <p>
 A string representing the cname of the current participant.
-User must free the string after getting it.</p>
+User must free the string after getting it.
+</p>
 <p>Default value: NULL</p>
 </div>
 </div>
@@ -171,33 +169,35 @@ User must free the string after getting it.</p>
                                                         <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>         *dbg_msg,
                                                         <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>       user_data)      : Run Last</pre>
 <p>
-This signal is emitted in any error condition</p>
+This signal is emitted in any error condition
+</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
-<td> <a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a> that emitted the signal
+<td>
+<a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a> that emitted the signal
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
-<td> The <span class="type">Gobject</span> that emitted the signal
+<td>The <span class="type">Gobject</span> that emitted the signal
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>errorno</code></em> :</span></p></td>
-<td> The number of the error
+<td>The number of the error
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error_msg</code></em> :</span></p></td>
-<td> Error message to be displayed to user
+<td>Error message to be displayed to user
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>dbg_msg</code></em> :</span></p></td>
-<td> Debugging error message
+<td>Debugging error message
 </td>
 </tr>
 <tr>
@@ -211,6 +211,6 @@ This signal is emitted in any error condition</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.13</div>
+          Generated by GTK-Doc V1.14</div>
 </body>
 </html>

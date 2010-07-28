@@ -1,3 +1,214 @@
+commit 09c35f45fb4137dd8e0e2972ebca39ff2cdf9abd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jul 16 19:01:14 2010 -0400
+
+    Version 0.0.21
+
+commit ecacf4f86a51470aca6de8747642e4224d906407
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jul 15 12:20:31 2010 -0400
+
+    tests: Have iteratory fold func return TRUE
+
+commit 09b528df52d4b92872fa3dcf9f63270cfb081c33
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jul 15 12:04:37 2010 -0400
+
+    rtpcodecspecific: Don't dereference potentially NULL variable
+
+commit 527a8361ea3297e35112ec7d3637e73820692a96
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jul 14 16:42:24 2010 -0400
+
+    Add warning cflags
+
+commit 1e1752d1cd2731d96ac13b25c8cb62184ea7ab5e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jun 30 16:12:21 2010 -0400
+
+    tests: Fix broken tests
+
+commit 4a55046e411205d1322e87e207054576ffd3942c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jun 29 17:54:14 2010 -0400
+
+    common-modified: Rename file in Makefile.am too
+
+commit e0af30df990c3363b78c44999b972e11a18b8209
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jun 29 17:47:39 2010 -0400
+
+    Add new enum-types file names to .gitignore
+
+commit c54b58700b53cc015a18bc648dbc4556d5f7a3fc
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jun 29 17:44:58 2010 -0400
+
+    docs: Add crosslinks between libs and plugins doc
+
+commit a98e459707789e8b6f1f4a387102967a0747c0db
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jun 29 17:00:52 2010 -0400
+
+    gtk-doc-plugins: Update from common
+
+commit bea77f711e714be449363eb2306a0ddb81673d52
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jun 29 16:32:10 2010 -0400
+
+    rtpsession: Put codecs from from "other" pads in the secondary codecs
+    
+    If the send_codec_bin has more than one src pad, then the codecs from the
+    pads that dont match the main codec will show up in the "secondary-codecs"
+    property of the "farsight-send-codec-changed" message.
+
+commit d70bc03956b1ad74a00eb9900e06e850fca67cf6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jun 29 16:07:15 2010 -0400
+
+    rtpsession: Return error detaisl when linking send codec src pads
+
+commit 76ca77924b44367eda150ed7e6439b289f2b9078
+Author: Olivier Crête <tester@tester.ca>
+Date:   Sun Jun 27 04:37:55 2010 -0400
+
+    nice: Use nice_interfaces to get local addresses
+
+commit a98e85e79b74b932c40fdbcbf84547f584f8139c
+Author: Olivier Crête <tester@tester.ca>
+Date:   Sun Jun 27 03:32:46 2010 -0400
+
+    Actually need dep on fs-enutypes.h to regenerate it
+
+commit d5d98ca1715a2a1d0db00b2cf566a56a9262156f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Jun 26 16:56:36 2010 -0400
+
+    tests: Use GST_PLUGIN_LOADING_WHITELIST to prevent unintented failures
+
+commit 1932e991d46f36bffdb5896de8e4b525890c0567
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Jun 26 16:30:57 2010 -0400
+
+    Don't regen fs-enum-types.h symlink if not needed
+
+commit c5496115517064047f8b64646bba88c4982754d5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jun 23 19:29:51 2010 -0400
+
+    tests: Drop messages in codec tests
+
+commit a4bc9ee1d1a7fa7565d30248d2afb52c3fff6e71
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jun 23 18:22:00 2010 -0400
+
+    Don't re-create symlink when target changes
+
+commit ad33fc798ce6b16351180fc6857f804fa8ae5799
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jun 23 17:14:36 2010 -0400
+
+    tests: media_type isn't a pointer
+
+commit 60772f6cd9d280bfe9249448f6b8eeef944131fc
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jun 23 17:13:40 2010 -0400
+
+    fsstream: Allow src_pads to not be empty
+    
+    It could be non-empty if the src pads are removed during
+    the dispose phase.
+
+commit 177299ecdd35fd1e441ba65c9dd78dac6b6118ae
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jun 21 16:29:46 2010 -0400
+
+    fsstream: Chain finalize to parent
+
+commit 1043a7f8e5f3209fffe1fe0583be6afd62da0aef
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jun 21 14:31:33 2010 -0400
+
+    rtpdiscocodec: Add useful info to debug message
+
+commit 8768b5fad83bc6b147bb2d33b776552656708b7f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jun 21 14:30:09 2010 -0400
+
+    rtpdiscocodec: Use the proper getter functions
+
+commit 96c96fa9b1bccc9232b191ca6483b82177baf311
+Author: Philip Withnall <philip@tecnocode.co.uk>
+Date:   Mon Jun 21 17:18:38 2010 +0100
+
+    rtpdiscocodecs: Remove a bad cast when listing codecs
+
+commit 8af63824c3fad84bc0e3a45f0018f75700b3e0cb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jun 15 17:25:35 2010 -0400
+
+    rtpcodecdisco: Use gst_caps_copy_nth
+
+commit dea00429e8eb9cee778afbc656bb48cd38714b0b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jun 15 17:24:23 2010 -0400
+
+    rtpdiscocodec: Simplify loop a bit more
+
+commit a646df62454567ba71c06cfea652453d935c9843
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jun 15 17:23:40 2010 -0400
+
+    rtpdiscocodec: Remove commented out code
+
+commit 746af45fad4616e89703bf390572d7d84e2a287e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jun 15 17:23:15 2010 -0400
+
+    rtpdiscocodec: Simplify loop a bit
+
+commit 00a7cb2ef3ed6acb35069dbc9e3f89a0b192719b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jun 14 20:02:19 2010 -0400
+
+    fsstream: Remove #if0'd code
+
+commit 2dc1f1ceca585f474df5a0a9111987ef4f67632b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jun 14 20:01:54 2010 -0400
+
+    fsstream: Actually do finalize
+
+commit 9428c3903bb46ca9232349f3593cef1f96d45bd1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jun 14 19:57:36 2010 -0400
+
+    tests: Add lock to prevent unref before initialisation has finished
+
+commit 83c6b7229d49811c47fb03a576982907b580848b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jun 3 17:24:23 2010 -0400
+
+    Remove divergent copy of glib-gen.mk and use silent rules where possible
+
+commit a0e112dc9cfede0f86e74601869ddedc2ea4f338
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jun 3 17:18:51 2010 -0400
+
+    gst-glib-gen: Rename enum types tp FS_
+
+commit 7ccde3d466703f5c82aa85ed9e87d5a5eae35bf5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jun 3 17:18:15 2010 -0400
+
+    Add gst-glib-gen.mak From gst common 357b0db99f9957e1003df3979506cf6ca3278138
+
+commit ff14bc7b1d71a68bd32ebb363a76622f1c5c1ecd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jun 1 17:27:03 2010 -0400
+
+    Version 0.0.20.1
+
 commit 95fcdf18b0b877d073614fd322dcccfd870a7f87
 Author: Olivier Crête <olivier.crete@collabora.co.uk>
 Date:   Tue Jun 1 17:12:33 2010 -0400
