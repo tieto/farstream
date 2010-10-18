@@ -1,10 +1,10 @@
-farsight2 (0.0.21-2) UNRELEASED; urgency=low
+farsight2 (0.0.21-2) unstable; urgency=low
 
   * d/p/0001-rtpconference-The-ptime-maxptime-in-caps-are-actuall.patch
     + Added. Fixes interoperability with various SIP phones that only work when
     ptime is properly used.
 
- -- Sjoerd Simons <sjoerd@debian.org>  Mon, 18 Oct 2010 13:57:47 +0100
+ -- Sjoerd Simons <sjoerd@debian.org>  Mon, 18 Oct 2010 14:31:06 +0100
 
 farsight2 (0.0.21-1) unstable; urgency=low
 
