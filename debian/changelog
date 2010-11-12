@@ -6,8 +6,9 @@ farsight2 (0.0.22-1) UNRELEASED; urgency=low
     - Move python-farsight to priority optional instead of extra
     - Bump Standards-Version to 3.9.1
   * Bump debhelper version to 7
+  * Switch to dpkg-source 3.0 (quilt) format
 
- -- Laurent Bigonville <bigon@debian.org>  Fri, 12 Nov 2010 12:33:07 +0100
+ -- Laurent Bigonville <bigon@debian.org>  Fri, 12 Nov 2010 12:33:47 +0100
 
 farsight2 (0.0.21-2) unstable; urgency=low
 
