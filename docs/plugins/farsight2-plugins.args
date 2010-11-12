@@ -109,6 +109,16 @@
 </ARG>
 
 <ARG>
+<NAME>FsRtpSession::send-bitrate</NAME>
+<TYPE>guint</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>The bitrate at which data will be sent</NICK>
+<BLURB>The bitrate that the session will try to send at in bits/sec.</BLURB>
+<DEFAULT>0</DEFAULT>
+</ARG>
+
+<ARG>
 <NAME>FsRawUdpStreamTransmitter::stun-ip</NAME>
 <TYPE>gchar*</TYPE>
 <RANGE></RANGE>
@@ -396,5 +406,15 @@
 <NICK>Wait for a connection until rendering</NICK>
 <BLURB>Block the stream until the shm pipe is connected.</BLURB>
 <DEFAULT>TRUE</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>FsuVideoSink::xid</NAME>
+<TYPE>gint</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Sink window xid</NICK>
+<BLURB>The xid of the window in which to embed the video sink.</BLURB>
+<DEFAULT>0</DEFAULT>
 </ARG>
 

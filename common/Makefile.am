@@ -8,7 +8,7 @@ EXTRA_DIST = \
 	parallel-subdirs.mak \
 	gst-autogen.sh \
 	check-exports \
-	c-to-xml.py gst-xmlinspect.py mangle-tmpl.py scangobj-merge.py \
+	c-to-xml.py mangle-tmpl.py scangobj-merge.py \
 	gtk-doc-plugins.mak \
 	plugins.xsl gstdoc-scangobj \
 	gst.supp check.mak \
@@ -16,4 +16,7 @@ EXTRA_DIST = \
 	coverage/coverage-report.pl \
 	coverage/coverage-report.xsl \
 	coverage/coverage-report-entry.pl \
-	download-translations
+	download-translations \
+	extract-release-date-from-doap-file \
+	gst-indent \
+	orc.mak

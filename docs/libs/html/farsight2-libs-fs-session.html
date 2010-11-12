@@ -8,7 +8,7 @@
 <link rel="up" href="ch02.html" title="Farsight Core Library">
 <link rel="prev" href="FsParticipant.html" title="FsParticipant">
 <link rel="next" href="FsStream.html" title="FsStream">
-<meta name="generator" content="GTK-Doc V1.14 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -53,36 +53,36 @@ enum                <a class="link" href="farsight2-libs-fs-session.html#FsDTMFM
 <a class="link" href="FsStream.html" title="FsStream"><span class="returnvalue">FsStream</span></a> *          <a class="link" href="farsight2-libs-fs-session.html#fs-session-new-stream" title="fs_session_new_stream ()">fs_session_new_stream</a>               (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>,
                                                          <em class="parameter"><code><a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a> *participant</code></em>,
                                                          <em class="parameter"><code><a class="link" href="FsStream.html#FsStreamDirection" title="enum FsStreamDirection"><span class="type">FsStreamDirection</span></a> direction</code></em>,
-                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *transmitter</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> stream_transmitter_n_parameters</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GParameter"><span class="type">GParameter</span></a> *stream_transmitter_parameters</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="farsight2-libs-fs-session.html#fs-session-start-telephony-event" title="fs_session_start_telephony_event ()">fs_session_start_telephony_event</a>    (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint8"><span class="type">guint8</span></a> event</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint8"><span class="type">guint8</span></a> volume</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *transmitter</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> stream_transmitter_n_parameters</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GParameter"><span class="type">GParameter</span></a> *stream_transmitter_parameters</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="farsight2-libs-fs-session.html#fs-session-start-telephony-event" title="fs_session_start_telephony_event ()">fs_session_start_telephony_event</a>    (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint8"><span class="type">guint8</span></a> event</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint8"><span class="type">guint8</span></a> volume</code></em>,
                                                          <em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsDTMFMethod" title="enum FsDTMFMethod"><span class="type">FsDTMFMethod</span></a> method</code></em>);
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="farsight2-libs-fs-session.html#fs-session-stop-telephony-event" title="fs_session_stop_telephony_event ()">fs_session_stop_telephony_event</a>     (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>,
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="farsight2-libs-fs-session.html#fs-session-stop-telephony-event" title="fs_session_stop_telephony_event ()">fs_session_stop_telephony_event</a>     (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>,
                                                          <em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsDTMFMethod" title="enum FsDTMFMethod"><span class="type">FsDTMFMethod</span></a> method</code></em>);
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="farsight2-libs-fs-session.html#fs-session-set-send-codec" title="fs_session_set_send_codec ()">fs_session_set_send_codec</a>           (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>,
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="farsight2-libs-fs-session.html#fs-session-set-send-codec" title="fs_session_set_send_codec ()">fs_session_set_send_codec</a>           (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>,
                                                          <em class="parameter"><code><a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> *send_codec</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="farsight2-libs-fs-session.html#fs-session-set-codec-preferences" title="fs_session_set_codec_preferences ()">fs_session_set_codec_preferences</a>    (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *codec_preferences</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **            <a class="link" href="farsight2-libs-fs-session.html#fs-session-list-transmitters" title="fs_session_list_transmitters ()">fs_session_list_transmitters</a>        (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>);
-<a href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>               <a class="link" href="farsight2-libs-fs-session.html#fs-session-get-stream-transmitter-type" title="fs_session_get_stream_transmitter_type ()">fs_session_get_stream_transmitter_type</a>
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="farsight2-libs-fs-session.html#fs-session-set-codec-preferences" title="fs_session_set_codec_preferences ()">fs_session_set_codec_preferences</a>    (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *codec_preferences</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **            <a class="link" href="farsight2-libs-fs-session.html#fs-session-list-transmitters" title="fs_session_list_transmitters ()">fs_session_list_transmitters</a>        (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>);
+<a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>               <a class="link" href="farsight2-libs-fs-session.html#fs-session-get-stream-transmitter-type" title="fs_session_get_stream_transmitter_type ()">fs_session_get_stream_transmitter_type</a>
                                                         (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *transmitter</code></em>);
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *transmitter</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="farsight2-libs-fs-session.html#fs-session-emit-error" title="fs_session_emit_error ()">fs_session_emit_error</a>               (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> error_no</code></em>,
-                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *error_msg</code></em>,
-                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *debug_msg</code></em>);
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> error_no</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *error_msg</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *debug_msg</code></em>);
 </pre>
 </div>
 <div class="refsect1" title="Object Hierarchy">
 <a name="farsight2-libs-fs-session.object-hierarchy"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
-  <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+  <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
    +----FsSession
 </pre>
 </div>
@@ -91,13 +91,13 @@ enum                <a class="link" href="farsight2-libs-fs-session.html#FsDTMFM
 <pre class="synopsis">
   "<a class="link" href="farsight2-libs-fs-session.html#FsSession--codec-preferences" title='The "codec-preferences" property'>codec-preferences</a>"        <span class="type">FsCodecGList</span>*         : Read
   "<a class="link" href="farsight2-libs-fs-session.html#FsSession--codecs" title='The "codecs" property'>codecs</a>"                   <span class="type">FsCodecGList</span>*         : Read
-  "<a class="link" href="farsight2-libs-fs-session.html#FsSession--codecs-ready" title='The "codecs-ready" property'>codecs-ready</a>"             <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read
+  "<a class="link" href="farsight2-libs-fs-session.html#FsSession--codecs-ready" title='The "codecs-ready" property'>codecs-ready</a>"             <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read
   "<a class="link" href="farsight2-libs-fs-session.html#FsSession--codecs-without-config" title='The "codecs-without-config" property'>codecs-without-config</a>"    <span class="type">FsCodecGList</span>*         : Read
   "<a class="link" href="farsight2-libs-fs-session.html#FsSession--current-send-codec" title='The "current-send-codec" property'>current-send-codec</a>"       <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a>*              : Read
-  "<a class="link" href="farsight2-libs-fs-session.html#FsSession--id" title='The "id" property'>id</a>"                       <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write / Construct Only
+  "<a class="link" href="farsight2-libs-fs-session.html#FsSession--id" title='The "id" property'>id</a>"                       <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write / Construct Only
   "<a class="link" href="farsight2-libs-fs-session.html#FsSession--media-type" title='The "media-type" property'>media-type</a>"               <a class="link" href="farsight2-libs-FsCodec.html#FsMediaType" title="enum FsMediaType"><span class="type">FsMediaType</span></a>           : Read / Write / Construct Only
-  "<a class="link" href="farsight2-libs-fs-session.html#FsSession--sink-pad" title='The "sink-pad" property'>sink-pad</a>"                 <a href="../gstreamer-0.10/GstPad.html"><span class="type">GstPad</span></a>*               : Read
-  "<a class="link" href="farsight2-libs-fs-session.html#FsSession--tos" title='The "tos" property'>tos</a>"                      <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write
+  "<a class="link" href="farsight2-libs-fs-session.html#FsSession--sink-pad" title='The "sink-pad" property'>sink-pad</a>"                 <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a>*               : Read
+  "<a class="link" href="farsight2-libs-fs-session.html#FsSession--tos" title='The "tos" property'>tos</a>"                      <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write
 </pre>
 </div>
 <div class="refsect1" title="Signals">
@@ -118,11 +118,11 @@ contained in the same conference will be synchronised together during
 playback.
 </p>
 <p>
-This will communicate asynchronous events to the user through <a href="../gstreamer-0.10/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a>
-of type <a href="../gstreamer-0.10/gstreamer-GstMessage.html#GST-MESSAGE-ELEMENT:CAPS"><span class="type">GST_MESSAGE_ELEMENT</span></a> sent over the <a href="../gstreamer-0.10/GstBus.html"><span class="type">GstBus</span></a>.
+This will communicate asynchronous events to the user through <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a>
+of type <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GST-MESSAGE-ELEMENT:CAPS"><span class="type">GST_MESSAGE_ELEMENT</span></a> sent over the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBus.html"><span class="type">GstBus</span></a>.
 </p>
 <div class="refsect2" title='The "farsight-send-codec-changed" message'>
-<a name="id583198"></a><h3>The "<code class="literal">farsight-send-codec-changed</code>"
+<a name="id483606"></a><h3>The "<code class="literal">farsight-send-codec-changed</code>"
   message</h3>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
@@ -132,10 +132,10 @@ of type <a href="../gstreamer-0.10/gstreamer-GstMessage.html#GST-MESSAGE-ELEMENT
 2
 3
 4</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="string">"session"</span><span class="normal">          </span><span class="symbol">&lt;</span><span class="normal">a class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"farsight2-libs-fs-session.html#FsSession"</span><span class="symbol">&gt;</span><span class="normal"><a href="../farsight2-libs-0.10/farsight2-libs-fs-session.html#FsSession">FsSession</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">          The session that emits the message</span>
-<span class="string">"codec"</span><span class="normal">            </span><span class="symbol">&lt;</span><span class="normal">a class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"farsight2-libs-FsCodec.html#FsCodec"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"FsCodec"</span><span class="symbol">&gt;</span><span class="normal"><a href="../farsight2-libs-0.10/farsight2-libs-FsCodec.html#FsCodec">FsCodec</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">            The new send codec</span>
-<span class="string">"secondary-codecs"</span><span class="normal"> </span><span class="symbol">&lt;</span><span class="normal">GTKDOCLINK HREF</span><span class="symbol">=</span><span class="string">"GList"</span><span class="symbol">&gt;</span><span class="normal"><a href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList">GList</a></span><span class="symbol">&lt;/</span><span class="normal">GTKDOCLINK</span><span class="symbol">&gt;</span><span class="normal">              A </span><span class="symbol">&lt;</span><span class="normal">GTKDOCLINK HREF</span><span class="symbol">=</span><span class="string">"GList"</span><span class="symbol">&gt;</span><span class="normal"><a href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList">GList</a></span><span class="symbol">&lt;/</span><span class="normal">GTKDOCLINK</span><span class="symbol">&gt;</span><span class="normal"> of </span><span class="symbol">&lt;</span><span class="normal">a class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"farsight2-libs-FsCodec.html#FsCodec"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"FsCodec"</span><span class="symbol">&gt;</span><span class="normal"><a href="../farsight2-libs-0.10/farsight2-libs-FsCodec.html#FsCodec">FsCodec</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">to be freed</span>
-<span class="normal">                                       with </span><span class="function"><a href="../farsight2-libs-0.10/farsight2-libs-FsCodec.html#fs-codec-list-destroy">fs_codec_list_destroy</a></span><span class="symbol">())</span></pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="string">"session"</span><span class="normal">          </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"farsight2-libs-fs-session.html#FsSession"</span><span class="symbol">&gt;</span><span class="normal"><a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/farsight2-libs-fs-session.html#FsSession">FsSession</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">          The session that emits the message</span>
+<span class="string">"codec"</span><span class="normal">            </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"farsight2-libs-FsCodec.html#FsCodec"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"FsCodec"</span><span class="symbol">&gt;</span><span class="normal"><a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/farsight2-libs-FsCodec.html#FsCodec">FsCodec</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">            The new send codec</span>
+<span class="string">"secondary-codecs"</span><span class="normal"> </span><span class="symbol">&lt;</span><span class="usertype">GTKDOCLINK</span><span class="normal"> HREF</span><span class="symbol">=</span><span class="string">"GList"</span><span class="symbol">&gt;</span><span class="usertype">GList&lt;/GTKDOCLINK&gt;              A &lt;GTKDOCLINK HREF="GList"&gt;GList&lt;/GTKDOCLINK&gt;</span><span class="normal"> of </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"farsight2-libs-FsCodec.html#FsCodec"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"FsCodec"</span><span class="symbol">&gt;</span><span class="normal"><a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/farsight2-libs-FsCodec.html#FsCodec">FsCodec</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">to be freed</span>
+<span class="normal">                                       </span><span class="usertype">with</span><span class="normal"> </span><span class="function"><a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/farsight2-libs-FsCodec.html#fs-codec-list-destroy">fs_codec_list_destroy</a></span><span class="symbol">())</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -148,14 +148,14 @@ This message is sent on the bus when the value of the
 </div>
 <hr>
 <div class="refsect2" title='The "farsight-codecs-changed" message'>
-<a name="id583258"></a><h3>The "<code class="literal">farsight-codecs-changed</code>"
+<a name="id483666"></a><h3>The "<code class="literal">farsight-codecs-changed</code>"
  message</h3>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="string">"session"</span><span class="normal">          </span><span class="symbol">&lt;</span><span class="normal">a class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"farsight2-libs-fs-session.html#FsSession"</span><span class="symbol">&gt;</span><span class="normal"><a href="../farsight2-libs-0.10/farsight2-libs-fs-session.html#FsSession">FsSession</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">          The session that emits the message</span></pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="string">"session"</span><span class="normal">          </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"farsight2-libs-fs-session.html#FsSession"</span><span class="symbol">&gt;</span><span class="normal"><a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/farsight2-libs-fs-session.html#FsSession">FsSession</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">          The session that emits the message</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -167,7 +167,7 @@ This message is sent on the bus when the value of the
 If one is using codecs that have configuration data that needs to be
 transmitted reliably, once should check the value of <a class="link" href="farsight2-libs-fs-session.html#FsSession--codecs-ready" title='The "codecs-ready" property'><span class="type">"codecs-ready"</span></a>
 property to make sure all of the codecs configuration are ready and have been
-discovered before using the codecs. If its not <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, one should wait for the
+discovered before using the codecs. If its not <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, one should wait for the
 next "farsight-codecs-changed" message until reading the codecs.
 </p>
 </div>
@@ -286,7 +286,7 @@ You must override at least new_stream in a subclass.
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObjectClass"><span class="type">GObjectClass</span></a> <em class="structfield"><code><a name="FsSessionClass.parent-class"></a>parent_class</code></em>;</span></p></td>
+<td><p><span class="term"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObjectClass"><span class="type">GObjectClass</span></a> <em class="structfield"><code><a name="FsSessionClass.parent-class"></a>parent_class</code></em>;</span></p></td>
 <td>Our parent
 </td>
 </tr>
@@ -334,10 +334,10 @@ You must override at least new_stream in a subclass.
 <pre class="programlisting"><a class="link" href="FsStream.html" title="FsStream"><span class="returnvalue">FsStream</span></a> *          fs_session_new_stream               (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>,
                                                          <em class="parameter"><code><a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a> *participant</code></em>,
                                                          <em class="parameter"><code><a class="link" href="FsStream.html#FsStreamDirection" title="enum FsStreamDirection"><span class="type">FsStreamDirection</span></a> direction</code></em>,
-                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *transmitter</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> stream_transmitter_n_parameters</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GParameter"><span class="type">GParameter</span></a> *stream_transmitter_parameters</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *transmitter</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> stream_transmitter_n_parameters</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GParameter"><span class="type">GParameter</span></a> *stream_transmitter_parameters</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
 <p>
 This function creates a stream for the given participant into the active session.
 </p>
@@ -375,14 +375,14 @@ be created for this participant
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>stream_transmitter_parameters</code></em> :</span></p></td>
-<td>an array of n_parameters <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GParameter"><span class="type">GParameter</span></a> struct
+<td>an array of n_parameters <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GParameter"><span class="type">GParameter</span></a> struct
  that will be passed
   to the newly-create <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td>location of a <a href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if no error occured
+<td>location of a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if no error occured
 </td>
 </tr>
 <tr>
@@ -397,9 +397,9 @@ be created for this participant
 <hr>
 <div class="refsect2" title="fs_session_start_telephony_event ()">
 <a name="fs-session-start-telephony-event"></a><h3>fs_session_start_telephony_event ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            fs_session_start_telephony_event    (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint8"><span class="type">guint8</span></a> event</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint8"><span class="type">guint8</span></a> volume</code></em>,
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            fs_session_start_telephony_event    (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint8"><span class="type">guint8</span></a> event</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint8"><span class="type">guint8</span></a> volume</code></em>,
                                                          <em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsDTMFMethod" title="enum FsDTMFMethod"><span class="type">FsDTMFMethod</span></a> method</code></em>);</pre>
 <p>
 This function will start sending a telephony event (such as a DTMF
@@ -435,7 +435,7 @@ http://www.iana.org/assignments/audio-telephone-event-registry
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if sucessful, it can return <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if the <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a>
+<td> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if sucessful, it can return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if the <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a>
 does not support this telephony event.
 </td>
 </tr>
@@ -445,7 +445,7 @@ does not support this telephony event.
 <hr>
 <div class="refsect2" title="fs_session_stop_telephony_event ()">
 <a name="fs-session-stop-telephony-event"></a><h3>fs_session_stop_telephony_event ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            fs_session_stop_telephony_event     (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>,
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            fs_session_stop_telephony_event     (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>,
                                                          <em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsDTMFMethod" title="enum FsDTMFMethod"><span class="type">FsDTMFMethod</span></a> method</code></em>);</pre>
 <p>
 This function will stop sending a telephony event started by
@@ -469,7 +469,7 @@ short.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if sucessful, it can return <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if the <a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a>
+<td> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if sucessful, it can return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if the <a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a>
 does not support telephony events or if no telephony event is being sent
 </td>
 </tr>
@@ -479,14 +479,14 @@ does not support telephony events or if no telephony event is being sent
 <hr>
 <div class="refsect2" title="fs_session_set_send_codec ()">
 <a name="fs-session-set-send-codec"></a><h3>fs_session_set_send_codec ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            fs_session_set_send_codec           (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>,
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            fs_session_set_send_codec           (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>,
                                                          <em class="parameter"><code><a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> *send_codec</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
 <p>
 This function will set the currently being sent codec for all streams in this
 session. The given <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> must be taken directly from the <span class="type">codecs</span>
 property of the session. If the given codec is not in the codecs
-list, <em class="parameter"><code>error</code></em> will be set and <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> will be returned. The <em class="parameter"><code>send_codec</code></em> will be
+list, <em class="parameter"><code>error</code></em> will be set and <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> will be returned. The <em class="parameter"><code>send_codec</code></em> will be
 copied so it must be free'd using <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-destroy" title="fs_codec_destroy ()"><code class="function">fs_codec_destroy()</code></a> when done.
 </p>
 <div class="variablelist"><table border="0">
@@ -504,12 +504,12 @@ copied so it must be free'd using <a class="link" href="farsight2-libs-FsCodec.h
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td>location of a <a href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if no error occured
+<td>location of a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if no error occured
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if the send codec couldn't be set.
+<td> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if the send codec couldn't be set.
 </td>
 </tr>
 </tbody>
@@ -518,14 +518,14 @@ copied so it must be free'd using <a class="link" href="farsight2-libs-FsCodec.h
 <hr>
 <div class="refsect2" title="fs_session_set_codec_preferences ()">
 <a name="fs-session-set-codec-preferences"></a><h3>fs_session_set_codec_preferences ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            fs_session_set_codec_preferences    (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *codec_preferences</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            fs_session_set_codec_preferences    (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *codec_preferences</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
 <p>
 Set the list of desired codec preferences. The user may
 change this value during an ongoing session. Note that doing this can cause
 the codecs to change. Therefore this requires the user to fetch
-the new codecs and renegotiate them with the peers. It is a <a href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a>
+the new codecs and renegotiate them with the peers. It is a <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a>
 of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a>. The changes are immediately effective.
 The function does not take ownership of the list.
 </p>
@@ -549,17 +549,17 @@ be returned.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>codec_preferences</code></em> :</span></p></td>
-<td>a <a href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> with the desired configuration
+<td>a <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> with the desired configuration
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td>location of a <a href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if no error occured
+<td>location of a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if no error occured
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> on error.
+<td> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> on error.
 </td>
 </tr>
 </tbody>
@@ -568,7 +568,7 @@ be returned.
 <hr>
 <div class="refsect2" title="fs_session_list_transmitters ()">
 <a name="fs-session-list-transmitters"></a><h3>fs_session_list_transmitters ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **            fs_session_list_transmitters        (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>);</pre>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **            fs_session_list_transmitters        (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>);</pre>
 <p>
 Get the list of all available transmitters for this session.
 </p>
@@ -584,7 +584,7 @@ Get the list of all available transmitters for this session.
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> a newly-allocagted <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> terminated array of named of transmitters
 or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if no transmitter is needed for this type of session. It should
-be freed with <a href="/usr/share/gtk-doc/html/glib/glib-String-Utility-Functions.html#g-strfreev"><code class="function">g_strfreev()</code></a>.
+be freed with <a href="http://library.gnome.org/devel/glib/unstable/glib-String-Utility-Functions.html#g-strfreev"><code class="function">g_strfreev()</code></a>.
 </td>
 </tr>
 </tbody>
@@ -593,9 +593,9 @@ be freed with <a href="/usr/share/gtk-doc/html/glib/glib-String-Utility-Function
 <hr>
 <div class="refsect2" title="fs_session_get_stream_transmitter_type ()">
 <a name="fs-session-get-stream-transmitter-type"></a><h3>fs_session_get_stream_transmitter_type ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>               fs_session_get_stream_transmitter_type
+<pre class="programlisting"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>               fs_session_get_stream_transmitter_type
                                                         (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *transmitter</code></em>);</pre>
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *transmitter</code></em>);</pre>
 <p>
 Returns the GType of the stream transmitter, bindings can use it
 to validate/convert the parameters passed to <a class="link" href="farsight2-libs-fs-session.html#fs-session-new-stream" title="fs_session_new_stream ()"><code class="function">fs_session_new_stream()</code></a>.
@@ -615,7 +615,7 @@ to validate/convert the parameters passed to <a class="link" href="farsight2-lib
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> The <a href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"><span class="type">GType</span></a> of the stream transmitter
+<td> The <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> of the stream transmitter
 </td>
 </tr>
 </tbody>
@@ -625,9 +625,9 @@ to validate/convert the parameters passed to <a class="link" href="farsight2-lib
 <div class="refsect2" title="fs_session_emit_error ()">
 <a name="fs-session-emit-error"></a><h3>fs_session_emit_error ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                fs_session_emit_error               (<em class="parameter"><code><a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> error_no</code></em>,
-                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *error_msg</code></em>,
-                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *debug_msg</code></em>);</pre>
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> error_no</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *error_msg</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *debug_msg</code></em>);</pre>
 <p>
 This function emit the "error" signal on a <a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a>, it should only be
 called by subclasses.
@@ -669,7 +669,7 @@ called by subclasses.
 This is the current preferences list for the local codecs. It is
 set by the user to specify the codec options and priorities. The user may
 change its value with <a class="link" href="farsight2-libs-fs-session.html#fs-session-set-codec-preferences" title="fs_session_set_codec_preferences ()"><code class="function">fs_session_set_codec_preferences()</code></a> at any time
-during a session. It is a <a href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a>.
+during a session. It is a <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a>.
 The user must free this codec list using <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-list-destroy" title="fs_codec_list_destroy ()"><code class="function">fs_codec_list_destroy()</code></a> when done.
 </p>
 <p>
@@ -696,26 +696,26 @@ asynchronously when new config data is discovered.
 </p>
 <p>
 You can only assume that the configuration parameters are valid when
-the <a class="link" href="farsight2-libs-fs-session.html#FsSession--codecs-ready" title='The "codecs-ready" property'><span class="type">"codecs-ready"</span></a> property is <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.
+the <a class="link" href="farsight2-libs-fs-session.html#FsSession--codecs-ready" title='The "codecs-ready" property'><span class="type">"codecs-ready"</span></a> property is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.
 The "farsight-codecs-changed" message will be emitted whenever the value
 of this property changes.
 </p>
 <p>
-It is a <a href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a>. User must free this codec list using
+It is a <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a>. User must free this codec list using
 <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-list-destroy" title="fs_codec_list_destroy ()"><code class="function">fs_codec_list_destroy()</code></a> when done.
 </p>
 </div>
 <hr>
 <div class="refsect2" title='The "codecs-ready" property'>
 <a name="FsSession--codecs-ready"></a><h3>The <code class="literal">"codecs-ready"</code> property</h3>
-<pre class="programlisting">  "codecs-ready"             <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read</pre>
+<pre class="programlisting">  "codecs-ready"             <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read</pre>
 <p>
 Some codecs that have configuration data that needs to be sent reliably
 may need to be initialized from actual data before being ready. If your
-application uses such codecs, wait until this property is <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> before
+application uses such codecs, wait until this property is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> before
 using the <a class="link" href="farsight2-libs-fs-session.html#FsSession--codecs" title='The "codecs" property'><span class="type">"codecs"</span></a>
-property. If the value if not <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, the "farsight-codecs-changed"
-message will be emitted when it becomes <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>. You should re-check
+property. If the value if not <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, the "farsight-codecs-changed"
+message will be emitted when it becomes <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>. You should re-check
 the value of this property when you receive the message.
 </p>
 <p>Default value: TRUE</p>
@@ -742,7 +742,7 @@ The "farsight-codecs-changed" message will be emitted whenever the value
 of this property changes.
 </p>
 <p>
-It is a <a href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a>. User must free this codec list using
+It is a <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a>. User must free this codec list using
 <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-list-destroy" title="fs_codec_list_destroy ()"><code class="function">fs_codec_list_destroy()</code></a> when done.
 </p>
 </div>
@@ -762,7 +762,7 @@ the value of this property changes.
 <hr>
 <div class="refsect2" title='The "id" property'>
 <a name="FsSession--id"></a><h3>The <code class="literal">"id"</code> property</h3>
-<pre class="programlisting">  "id"                       <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write / Construct Only</pre>
+<pre class="programlisting">  "id"                       <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write / Construct Only</pre>
 <p>
 The ID of the session, the first number of the pads linked to this session
 will be this id
@@ -782,7 +782,7 @@ This is a constructor parameter that cannot be changed.
 <hr>
 <div class="refsect2" title='The "sink-pad" property'>
 <a name="FsSession--sink-pad"></a><h3>The <code class="literal">"sink-pad"</code> property</h3>
-<pre class="programlisting">  "sink-pad"                 <a href="../gstreamer-0.10/GstPad.html"><span class="type">GstPad</span></a>*               : Read</pre>
+<pre class="programlisting">  "sink-pad"                 <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a>*               : Read</pre>
 <p>
 The Gstreamer sink pad that must be used to send media data on this
 session. User must unref this GstPad when done with it.
@@ -791,7 +791,7 @@ session. User must unref this GstPad when done with it.
 <hr>
 <div class="refsect2" title='The "tos" property'>
 <a name="FsSession--tos"></a><h3>The <code class="literal">"tos"</code> property</h3>
-<pre class="programlisting">  "tos"                      <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write</pre>
+<pre class="programlisting">  "tos"                      <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write</pre>
 <p>
 Sets the IP ToS field (and if possible the IPv6 TCLASS field
 </p>
@@ -804,11 +804,11 @@ Sets the IP ToS field (and if possible the IPv6 TCLASS field
 <div class="refsect2" title='The "error" signal'>
 <a name="FsSession-error"></a><h3>The <code class="literal">"error"</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> *self,
-                                                        <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a>   *object,
+                                                        <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a>   *object,
                                                         <a class="link" href="FsConference.html#FsError" title="enum FsError"><span class="type">FsError</span></a>    error_no,
-                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>     *error_msg,
-                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>     *debug_msg,
-                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>   user_data)      : Run Last</pre>
+                                                        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>     *error_msg,
+                                                        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>     *debug_msg,
+                                                        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>   user_data)      : Run Last</pre>
 <p>
 This signal is emitted in any error condition, it can be emitted on any
 thread. Applications should listen to the GstBus for errors.
@@ -853,6 +853,6 @@ thread. Applications should listen to the GstBus for errors.
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.14</div>
+          Generated by GTK-Doc V1.15</div>
 </body>
 </html>

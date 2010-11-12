@@ -28,6 +28,7 @@ EXTRA_DIST = \
 	gst-glib2.m4 \
 	gst-libxml2.m4 \
 	gst-parser.m4 \
+	gst-package-release-datetime.m4 \
 	gst-platform.m4 \
 	gst-plugindir.m4 \
 	gst-plugin-docs.m4 \
@@ -37,4 +38,5 @@ EXTRA_DIST = \
 	gtk-doc.m4 \
 	introspection.m4 \
 	pkg.m4 \
-	check.m4
+	check.m4 \
+	orc.m4

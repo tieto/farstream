@@ -1,3 +1,206 @@
+commit b356af11e71889eb64daa01553307dbbad4e4717
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 1 16:06:58 2010 -0400
+
+    Version 0.0.22
+
+commit 36a7fc2ec61dc6d69448542d5546d1cf0bdfa0ef
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 1 16:47:03 2010 -0400
+
+    Disable the test for changing the DTMF PT for now
+
+commit 559b582051b83eda33e2cf8e5563d22d6e8e5de4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 1 16:05:51 2010 -0400
+
+    python: Require pygobject 2.16 to build
+
+commit c5bf786f663c65881c3375101db36c5f28fcc89f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Oct 8 12:41:10 2010 -0400
+
+    rtpconference: The ptime/maxptime in caps are actually uints, not strings
+
+commit de1b8406948278d182dff54965241d940cbefbac
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Oct 4 17:24:31 2010 -0400
+
+    Update common and tabify Makefiles
+
+commit 2643cb8a870509074002c408e59f941f2eee15c0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 13 18:07:24 2010 -0400
+
+    gitignore: Hide shm test
+
+commit 495b81157bf4856752085b7cc9d919b9cb468761
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 8 14:26:26 2010 +0300
+
+    readme: bump -bad requirement for shm plugin
+
+commit b772ff59d4f7aa2bebca5a1c3ca149918dad8b35
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 8 14:06:14 2010 +0300
+
+    tests: Whitelist shm plugin
+
+commit dcb980da78ddd3d97103508e2110ca02987af6ff
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 8 10:50:44 2010 +0300
+
+    tests: Clear GError* between tests
+
+commit 530cf1c46f232f4b2990249813480d0363d321db
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 8 10:50:18 2010 +0300
+
+    shmtrans: Don't try to unref NULL pointer on error
+
+commit 7dd8951d6583dc5e8e61a32f9e13c9b378da08c3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 8 10:37:04 2010 +0300
+
+    configure: Require GLib 2.16 for GIO
+    
+    GIO is required by the shm example, require it.
+
+commit fcafc3b510a8f8be6c26c50ad1fafe4c4cea04bc
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 9 11:19:54 2010 +0000
+
+    tests shm: check that prepared is called
+
+commit 89ca5fa4f6fedbc5f69c965f591c88aedb71c633
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 3 18:03:12 2010 +0200
+
+    shmtrans: Sync downstream element states before linking them
+
+commit be502e3d8334dfe450e8b1214c3cc4dac0022eb6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 26 14:59:38 2010 +0200
+
+    shmtrans: Add debug
+
+commit fd916e1a71e5e2530c6a5c38a6241b8c479cf19c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 3 17:31:38 2010 +0200
+
+    shmtrans: Release teepad before stopping downstream elements
+
+commit ed0937ed0eb62c354de4c327061821756c57e1f1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 26 12:37:28 2010 +0200
+
+    shmtrans: Emit local candidate with new path
+
+commit 7d9d69b75f7a0ee749f9d8e62d74e452340dea5e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 26 14:48:51 2010 +0200
+
+    shmstreamtrans: Set the sending in set property (not get)
+
+commit 631ef3725315f94597e09ee4136b65b68e26944c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 26 14:22:31 2010 +0200
+
+    shmtrans: Set do-timestamp and is-live to true on shmsrc
+
+commit df48a86229a4cc1d2e1e47918c2ea8c773af4417
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 25 08:39:46 2010 -0500
+
+    shmstreamtransmitter: Emit local-candidates-prepared
+
+commit eb7be5cfab3007fc5c05acaa3ad9390fb43e35d8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 20 20:04:05 2009 -0500
+
+    shm: Document shm stream transmitter
+
+commit d2bd51bbcda4b51f93df8c5b8cf76eee198c793a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 20 19:55:04 2009 -0500
+
+    shmstream: Also ignore usernames that are empty
+
+commit 3d3f7d093c4450923ca429367bee39bd822d1ee7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 20 19:52:28 2009 -0500
+
+    shm: Replace base_ip with username
+
+commit 405175be1ccb24440d018e374d2c933b7a5d607f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 20 19:36:08 2009 -0500
+
+    simplecall: Add shm version of simple-call
+
+commit bd79115bc77891ee33914b4478510a2d778616e5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 20 19:06:20 2009 -0500
+
+    shm: Verify the success of state changes
+
+commit 2126b76eb46a74e4bd142cc2dc664f59c499f5db
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Oct 21 10:27:21 2009 +0300
+
+    tests: Add tests for the shm transmitter
+
+commit f6b69e63a83a07be8833b55fd61c69e675ee0891
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 20 12:01:33 2009 +0300
+
+    shm: Implement shm transmitter
+
+commit 76da655c11a52545a19b073dd22c242a74115ba9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Oct 16 16:40:27 2009 -0400
+
+    shm: Add empty transmitter
+
+commit 3d14332b2d3992c9a3f14f158135c26751ee3c4d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 2 21:09:17 2010 -0400
+
+    tests: Unlock lock in all cases
+
+commit 9605bd0371a36cae6c203cc9d9f3840b246ebae6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 2 18:36:03 2010 -0400
+
+    fsplugin: Release lock on errors
+
+commit 38fca349840efb464b58856a97b393f8d1e7bdcd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 24 14:08:33 2010 -0400
+
+    elementaddednotifier: Don't abort on elements that have no factory
+
+commit 1348c07f7c6306905691b96d9ad6774d03725804
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Aug 16 18:51:52 2010 -0400
+
+    rtpsession: Use copy of codec because mutex has been unlocked
+    
+    Can't use the ca pointer because it is part of a list that
+    has been unlocked.
+
+commit 94ea369ca309f5b4a5d80b3fafec4aec8e4d783c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Aug 12 15:08:35 2010 +0200
+
+    tests: Skip theora reception test if theora is not detected
+
+commit c022406deac41c5b3e356d537f8c1ad8cc4f480b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jul 16 19:12:41 2010 -0400
+
+    Version 0.0.21.1
+
 commit 09c35f45fb4137dd8e0e2972ebca39ff2cdf9abd
 Author: Olivier Crête <olivier.crete@collabora.co.uk>
 Date:   Fri Jul 16 19:01:14 2010 -0400

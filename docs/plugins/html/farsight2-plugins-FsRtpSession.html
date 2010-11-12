@@ -48,6 +48,7 @@
   "<a class="link" href="farsight2-plugins-FsRtpSession.html#FsRtpSession--no-rtcp-timeout" title='The "no-rtcp-timeout" property'>no-rtcp-timeout</a>"          <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a>                  : Read / Write
   "<a class="link" href="farsight2-plugins-FsRtpSession.html#FsRtpSession--conference" title='The "conference" property'>conference</a>"               <a class="link" href="farsight2-plugins-FsRtpConference.html#FsRtpConference" title="FsRtpConference"><span class="type">FsRtpConference</span></a>*      : Read / Write / Construct Only
   "<a class="link" href="farsight2-plugins-FsRtpSession.html#FsRtpSession--ssrc" title='The "ssrc" property'>ssrc</a>"                     <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write
+  "<a class="link" href="farsight2-plugins-FsRtpSession.html#FsRtpSession--send-bitrate" title='The "send-bitrate" property'>send-bitrate</a>"             <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write
 </pre>
 </div>
 <div class="refsect1" title="Description">
@@ -59,7 +60,7 @@ Audio or Video. It also represents data send with one and only one
 SSRC (although if there is a SSRC collision, that SSRC may change).
 </p>
 <div class="refsect2" title="Codec profiles">
-<a name="id633951"></a><h3>Codec profiles</h3>
+<a name="id500605"></a><h3>Codec profiles</h3>
 <p>
 It is possible to define "codec profiles", that is non-autodetected
 encoding and decoding pipelines for codecs. It is even possible to declare
@@ -116,6 +117,13 @@ secondary pad of some other codec.
 <a name="FsRtpSession--ssrc"></a><h3>The <code class="literal">"ssrc"</code> property</h3>
 <pre class="programlisting">  "ssrc"                     <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write</pre>
 <p>This is the current SSRC used to send data (defaults to a random value).</p>
+<p>Default value: 0</p>
+</div>
+<hr>
+<div class="refsect2" title='The "send-bitrate" property'>
+<a name="FsRtpSession--send-bitrate"></a><h3>The <code class="literal">"send-bitrate"</code> property</h3>
+<pre class="programlisting">  "send-bitrate"             <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write</pre>
+<p>The bitrate that the session will try to send at in bits/sec.</p>
 <p>Default value: 0</p>
 </div>
 </div>

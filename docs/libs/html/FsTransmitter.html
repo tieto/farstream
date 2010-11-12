@@ -8,7 +8,7 @@
 <link rel="up" href="ch05.html" title="Farsight Transmitter Classes">
 <link rel="prev" href="ch05.html" title="Farsight Transmitter Classes">
 <link rel="next" href="FsStreamTransmitter.html" title="FsStreamTransmitter">
-<meta name="generator" content="GTK-Doc V1.14 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -48,41 +48,41 @@
 
                     <a class="link" href="FsTransmitter.html#FsTransmitter-struct" title="FsTransmitter">FsTransmitter</a>;
                     <a class="link" href="FsTransmitter.html#FsTransmitterClass" title="FsTransmitterClass">FsTransmitterClass</a>;
-<a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="returnvalue">FsTransmitter</span></a> *     <a class="link" href="FsTransmitter.html#fs-transmitter-new" title="fs_transmitter_new ()">fs_transmitter_new</a>                  (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *type</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> components</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> tos</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);
+<a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="returnvalue">FsTransmitter</span></a> *     <a class="link" href="FsTransmitter.html#fs-transmitter-new" title="fs_transmitter_new ()">fs_transmitter_new</a>                  (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *type</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> components</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> tos</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);
 <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="returnvalue">FsStreamTransmitter</span></a> * <a class="link" href="FsTransmitter.html#fs-transmitter-new-stream-transmitter" title="fs_transmitter_new_stream_transmitter ()">fs_transmitter_new_stream_transmitter</a>
                                                         (<em class="parameter"><code><a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a> *transmitter</code></em>,
                                                          <em class="parameter"><code><a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a> *participant</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> n_parameters</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GParameter"><span class="type">GParameter</span></a> *parameters</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);
-<a href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>               <a class="link" href="FsTransmitter.html#fs-transmitter-get-stream-transmitter-type" title="fs_transmitter_get_stream_transmitter_type ()">fs_transmitter_get_stream_transmitter_type</a>
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> n_parameters</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GParameter"><span class="type">GParameter</span></a> *parameters</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);
+<a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>               <a class="link" href="FsTransmitter.html#fs-transmitter-get-stream-transmitter-type" title="fs_transmitter_get_stream_transmitter_type ()">fs_transmitter_get_stream_transmitter_type</a>
                                                         (<em class="parameter"><code><a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a> *transmitter</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="FsTransmitter.html#fs-transmitter-emit-error" title="fs_transmitter_emit_error ()">fs_transmitter_emit_error</a>           (<em class="parameter"><code><a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a> *transmitter</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> error_no</code></em>,
-                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *error_msg</code></em>,
-                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *debug_msg</code></em>);
-<a href="../gstreamer-0.10/GstElement.html"><span class="returnvalue">GstElement</span></a> *        <a class="link" href="FsTransmitter.html#fs-transmitter-get-recvonly-filter" title="fs_transmitter_get_recvonly_filter ()">fs_transmitter_get_recvonly_filter</a>  (<em class="parameter"><code><a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a> *transmitter</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> component</code></em>);
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> error_no</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *error_msg</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *debug_msg</code></em>);
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="returnvalue">GstElement</span></a> *        <a class="link" href="FsTransmitter.html#fs-transmitter-get-recvonly-filter" title="fs_transmitter_get_recvonly_filter ()">fs_transmitter_get_recvonly_filter</a>  (<em class="parameter"><code><a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a> *transmitter</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> component</code></em>);
 <span class="returnvalue">char</span> **             <a class="link" href="FsTransmitter.html#fs-transmitter-list-available" title="fs_transmitter_list_available ()">fs_transmitter_list_available</a>       (<em class="parameter"><code><span class="type">void</span></code></em>);
 </pre>
 </div>
 <div class="refsect1" title="Object Hierarchy">
 <a name="FsTransmitter.object-hierarchy"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
-  <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+  <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
    +----FsTransmitter
 </pre>
 </div>
 <div class="refsect1" title="Properties">
 <a name="FsTransmitter.properties"></a><h2>Properties</h2>
 <pre class="synopsis">
-  "<a class="link" href="FsTransmitter.html#FsTransmitter--components" title='The "components" property'>components</a>"               <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write / Construct Only
-  "<a class="link" href="FsTransmitter.html#FsTransmitter--gst-sink" title='The "gst-sink" property'>gst-sink</a>"                 <a href="../gstreamer-0.10/GstElement.html"><span class="type">GstElement</span></a>*           : Read
-  "<a class="link" href="FsTransmitter.html#FsTransmitter--gst-src" title='The "gst-src" property'>gst-src</a>"                  <a href="../gstreamer-0.10/GstElement.html"><span class="type">GstElement</span></a>*           : Read
-  "<a class="link" href="FsTransmitter.html#FsTransmitter--tos" title='The "tos" property'>tos</a>"                      <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write
+  "<a class="link" href="FsTransmitter.html#FsTransmitter--components" title='The "components" property'>components</a>"               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write / Construct Only
+  "<a class="link" href="FsTransmitter.html#FsTransmitter--gst-sink" title='The "gst-sink" property'>gst-sink</a>"                 <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a>*           : Read
+  "<a class="link" href="FsTransmitter.html#FsTransmitter--gst-src" title='The "gst-src" property'>gst-src</a>"                  <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a>*           : Read
+  "<a class="link" href="FsTransmitter.html#FsTransmitter--tos" title='The "tos" property'>tos</a>"                      <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write
 </pre>
 </div>
 <div class="refsect1" title="Signals">
@@ -133,7 +133,7 @@ You must override both methods in a subclass.
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObjectClass"><span class="type">GObjectClass</span></a> <em class="structfield"><code><a name="FsTransmitterClass.parent-class"></a>parent_class</code></em>;</span></p></td>
+<td><p><span class="term"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObjectClass"><span class="type">GObjectClass</span></a> <em class="structfield"><code><a name="FsTransmitterClass.parent-class"></a>parent_class</code></em>;</span></p></td>
 <td>Our parent
 </td>
 </tr>
@@ -144,7 +144,7 @@ You must override both methods in a subclass.
 </tr>
 <tr>
 <td><p><span class="term"><em class="structfield"><code><a name="FsTransmitterClass.get-stream-transmitter-type"></a>get_stream_transmitter_type</code></em> ()</span></p></td>
-<td>Returns the <a href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"><span class="type">GType</span></a> of the stream transmitter
+<td>Returns the <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> of the stream transmitter
  created by this class (useful for bindings)
 </td>
 </tr>
@@ -154,10 +154,10 @@ You must override both methods in a subclass.
 <hr>
 <div class="refsect2" title="fs_transmitter_new ()">
 <a name="fs-transmitter-new"></a><h3>fs_transmitter_new ()</h3>
-<pre class="programlisting"><a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="returnvalue">FsTransmitter</span></a> *     fs_transmitter_new                  (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *type</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> components</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> tos</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
+<pre class="programlisting"><a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="returnvalue">FsTransmitter</span></a> *     fs_transmitter_new                  (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *type</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> components</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> tos</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
 <p>
 This function creates a new transmitter of the requested type.
 It will load the appropriate plugin as required.
@@ -182,7 +182,7 @@ It will load the appropriate plugin as required.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td>location of a <a href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or NULL if no error occured
+<td>location of a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or NULL if no error occured
 </td>
 </tr>
 <tr>
@@ -200,9 +200,9 @@ It will load the appropriate plugin as required.
 <pre class="programlisting"><a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="returnvalue">FsStreamTransmitter</span></a> * fs_transmitter_new_stream_transmitter
                                                         (<em class="parameter"><code><a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a> *transmitter</code></em>,
                                                          <em class="parameter"><code><a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a> *participant</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> n_parameters</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GParameter"><span class="type">GParameter</span></a> *parameters</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> n_parameters</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GParameter"><span class="type">GParameter</span></a> *parameters</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
 <p>
 This function will create a new <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> element for a
 specific participant for this <a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a>
@@ -229,12 +229,12 @@ new <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter">
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parameters</code></em> :</span></p></td>
-<td>an array of <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GParameter"><span class="type">GParameter</span></a>
+<td>an array of <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GParameter"><span class="type">GParameter</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td>location of a <a href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or NULL if no error occured
+<td>location of a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or NULL if no error occured
 </td>
 </tr>
 <tr>
@@ -248,7 +248,7 @@ new <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter">
 <hr>
 <div class="refsect2" title="fs_transmitter_get_stream_transmitter_type ()">
 <a name="fs-transmitter-get-stream-transmitter-type"></a><h3>fs_transmitter_get_stream_transmitter_type ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>               fs_transmitter_get_stream_transmitter_type
+<pre class="programlisting"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>               fs_transmitter_get_stream_transmitter_type
                                                         (<em class="parameter"><code><a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a> *transmitter</code></em>);</pre>
 <p>
 This function returns the GObject type for the stream transmitter.
@@ -265,7 +265,7 @@ that can be passed to the _new_stream_transmitter.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the <a href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"><span class="type">GType</span></a>
+<td> the <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a>
 </td>
 </tr>
 </tbody>
@@ -275,9 +275,9 @@ that can be passed to the _new_stream_transmitter.
 <div class="refsect2" title="fs_transmitter_emit_error ()">
 <a name="fs-transmitter-emit-error"></a><h3>fs_transmitter_emit_error ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                fs_transmitter_emit_error           (<em class="parameter"><code><a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a> *transmitter</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> error_no</code></em>,
-                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *error_msg</code></em>,
-                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *debug_msg</code></em>);</pre>
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> error_no</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *error_msg</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *debug_msg</code></em>);</pre>
 <p>
 This function emit the "error" signal on a <a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a>, it should
 only be called by subclasses.
@@ -312,8 +312,8 @@ only be called by subclasses.
 <hr>
 <div class="refsect2" title="fs_transmitter_get_recvonly_filter ()">
 <a name="fs-transmitter-get-recvonly-filter"></a><h3>fs_transmitter_get_recvonly_filter ()</h3>
-<pre class="programlisting"><a href="../gstreamer-0.10/GstElement.html"><span class="returnvalue">GstElement</span></a> *        fs_transmitter_get_recvonly_filter  (<em class="parameter"><code><a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a> *transmitter</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> component</code></em>);</pre>
+<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="returnvalue">GstElement</span></a> *        fs_transmitter_get_recvonly_filter  (<em class="parameter"><code><a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a> *transmitter</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> component</code></em>);</pre>
 <p>
 Get the filter to add on the send pipeline if sending is disabled.
 </p>
@@ -335,7 +335,7 @@ Only for use by subclasses.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> a <a href="../gstreamer-0.10/GstElement.html"><span class="type">GstElement</span></a> to use as the filter or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
+<td> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> to use as the filter or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -354,7 +354,7 @@ Get the list of all available transmitters
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> a newly allocated array of strings containing the list of all
  available transmitters or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if there are none. It should
- be freed with <a href="/usr/share/gtk-doc/html/glib/glib-String-Utility-Functions.html#g-strfreev"><code class="function">g_strfreev()</code></a>.
+ be freed with <a href="http://library.gnome.org/devel/glib/unstable/glib-String-Utility-Functions.html#g-strfreev"><code class="function">g_strfreev()</code></a>.
 </td>
 </tr></tbody>
 </table></div>
@@ -364,7 +364,7 @@ Get the list of all available transmitters
 <a name="FsTransmitter.property-details"></a><h2>Property Details</h2>
 <div class="refsect2" title='The "components" property'>
 <a name="FsTransmitter--components"></a><h3>The <code class="literal">"components"</code> property</h3>
-<pre class="programlisting">  "components"               <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write / Construct Only</pre>
+<pre class="programlisting">  "components"               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write / Construct Only</pre>
 <p>
 The number of components to create
 </p>
@@ -374,9 +374,9 @@ The number of components to create
 <hr>
 <div class="refsect2" title='The "gst-sink" property'>
 <a name="FsTransmitter--gst-sink"></a><h3>The <code class="literal">"gst-sink"</code> property</h3>
-<pre class="programlisting">  "gst-sink"                 <a href="../gstreamer-0.10/GstElement.html"><span class="type">GstElement</span></a>*           : Read</pre>
+<pre class="programlisting">  "gst-sink"                 <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a>*           : Read</pre>
 <p>
-A network source <a href="../gstreamer-0.10/GstElement.html"><span class="type">GstElement</span></a> to be used by the <a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a>
+A network source <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> to be used by the <a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a>
 These element's sink must have async=FALSE
 This element MUST provide a pad named "sink%d" per component.
 These pads number must start at 1 (the %d corresponds to the component
@@ -387,9 +387,9 @@ These pads MUST be static pads.
 <hr>
 <div class="refsect2" title='The "gst-src" property'>
 <a name="FsTransmitter--gst-src"></a><h3>The <code class="literal">"gst-src"</code> property</h3>
-<pre class="programlisting">  "gst-src"                  <a href="../gstreamer-0.10/GstElement.html"><span class="type">GstElement</span></a>*           : Read</pre>
+<pre class="programlisting">  "gst-src"                  <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a>*           : Read</pre>
 <p>
-A network source <a href="../gstreamer-0.10/GstElement.html"><span class="type">GstElement</span></a> to be used by the <a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a>
+A network source <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> to be used by the <a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a>
 This element MUST provide a source pad named "src<code class="literal">d</code>" per component.
 These pads number must start at 1 (the <code class="literal">d</code> corresponds to the component
 number).
@@ -399,7 +399,7 @@ These pads MUST be static pads.
 <hr>
 <div class="refsect2" title='The "tos" property'>
 <a name="FsTransmitter--tos"></a><h3>The <code class="literal">"tos"</code> property</h3>
-<pre class="programlisting">  "tos"                      <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write</pre>
+<pre class="programlisting">  "tos"                      <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write</pre>
 <p>
 Sets the IP ToS field (and if possible the IPv6 TCLASS field
 </p>
@@ -413,9 +413,9 @@ Sets the IP ToS field (and if possible the IPv6 TCLASS field
 <a name="FsTransmitter-error"></a><h3>The <code class="literal">"error"</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a> *self,
                                                         <a class="link" href="FsConference.html#FsError" title="enum FsError"><span class="type">FsError</span></a>        errorno,
-                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>         *error_msg,
-                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>         *debug_msg,
-                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>       user_data)      : Run Last</pre>
+                                                        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>         *error_msg,
+                                                        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>         *debug_msg,
+                                                        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>       user_data)      : Run Last</pre>
 <p>
 This signal is emitted in any error condition
 </p>
@@ -453,9 +453,9 @@ This signal is emitted in any error condition
 <hr>
 <div class="refsect2" title='The "get-recvonly-filter" signal'>
 <a name="FsTransmitter-get-recvonly-filter"></a><h3>The <code class="literal">"get-recvonly-filter"</code> signal</h3>
-<pre class="programlisting"><a href="../gstreamer-0.10/GstElement.html"><span class="returnvalue">GstElement</span></a>*         user_function                      (<a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a> *self,
-                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>          component,
-                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>       user_data)      : Run Last</pre>
+<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="returnvalue">GstElement</span></a>*         user_function                      (<a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a> *self,
+                                                        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>          component,
+                                                        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>       user_data)      : Run Last</pre>
 <p>
 This signal is emitted when the transmitter wants to get a filter for
 to use if sending is disabled. If you want to drop all buffers, just
@@ -463,7 +463,7 @@ don't listen to the signal.
 </p>
 <p>
 This element should have a "sending" property that can be changed with the
-sending state of the stream. It should default to <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.
+sending state of the stream. It should default to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -485,7 +485,7 @@ sending state of the stream. It should default to <a href="/usr/share/gtk-doc/ht
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the <a href="../gstreamer-0.10/GstElement.html"><span class="type">GstElement</span></a> to use as the filter, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> to drop everything
+<td> the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> to use as the filter, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> to drop everything
 </td>
 </tr>
 </tbody>
@@ -495,6 +495,6 @@ sending state of the stream. It should default to <a href="/usr/share/gtk-doc/ht
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.14</div>
+          Generated by GTK-Doc V1.15</div>
 </body>
 </html>

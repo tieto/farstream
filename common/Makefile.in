@@ -163,6 +163,8 @@ FS2_TRANSMITTER_PLUGINS_SELECTED = @FS2_TRANSMITTER_PLUGINS_SELECTED@
 GCOV = @GCOV@
 GCOV_CFLAGS = @GCOV_CFLAGS@
 GCOV_LIBS = @GCOV_LIBS@
+GIO_UNIX_CFLAGS = @GIO_UNIX_CFLAGS@
+GIO_UNIX_LIBS = @GIO_UNIX_LIBS@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_LIBS = @GLIB_LIBS@
 GLIB_PREFIX = @GLIB_PREFIX@
@@ -181,6 +183,7 @@ GST_MAJORMINOR = @GST_MAJORMINOR@
 GST_PACKAGE_NAME = @GST_PACKAGE_NAME@
 GST_PACKAGE_ORIGIN = @GST_PACKAGE_ORIGIN@
 GST_PLUGINS_BASE_CFLAGS = @GST_PLUGINS_BASE_CFLAGS@
+GST_PLUGINS_BASE_DIR = @GST_PLUGINS_BASE_DIR@
 GST_PLUGINS_BASE_LIBS = @GST_PLUGINS_BASE_LIBS@
 GST_PLUGINS_DIR = @GST_PLUGINS_DIR@
 GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
@@ -317,7 +320,7 @@ EXTRA_DIST = \
 	parallel-subdirs.mak \
 	gst-autogen.sh \
 	check-exports \
-	c-to-xml.py gst-xmlinspect.py mangle-tmpl.py scangobj-merge.py \
+	c-to-xml.py mangle-tmpl.py scangobj-merge.py \
 	gtk-doc-plugins.mak \
 	plugins.xsl gstdoc-scangobj \
 	gst.supp check.mak \
@@ -325,7 +328,10 @@ EXTRA_DIST = \
 	coverage/coverage-report.pl \
 	coverage/coverage-report.xsl \
 	coverage/coverage-report-entry.pl \
-	download-translations
+	download-translations \
+	extract-release-date-from-doap-file \
+	gst-indent \
+	orc.mak
 
 all: all-recursive
 
