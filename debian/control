@@ -13,7 +13,7 @@ Build-Depends: debhelper (>= 5.0.0),
                libgstreamer0.10-dev (>= 0.10.26),
                libgstreamer-plugins-base0.10-dev (>= 0.10.26),
                python-central (>= 0.5),
-               python-gtk2-dev,
+               python-gobject-dev (>= 2.16),
                python-gst0.10-dev,
                libnice-dev (>= 0.0.9),
                libgupnp-igd-1.0-dev
