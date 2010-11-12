@@ -1,4 +1,4 @@
-farsight2 (0.0.22-1) UNRELEASED; urgency=low
+farsight2 (0.0.22-1) unstable; urgency=low
 
   * New upstream release
     - Adjust build-dependencies
@@ -10,7 +10,7 @@ farsight2 (0.0.22-1) UNRELEASED; urgency=low
   * Bump debhelper version to 7
   * Switch to dpkg-source 3.0 (quilt) format
 
- -- Laurent Bigonville <bigon@debian.org>  Fri, 12 Nov 2010 12:47:15 +0100
+ -- Laurent Bigonville <bigon@debian.org>  Fri, 12 Nov 2010 12:59:05 +0100
 
 farsight2 (0.0.21-2) unstable; urgency=low
 
