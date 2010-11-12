@@ -128,6 +128,8 @@ FS2_TRANSMITTER_PLUGINS_SELECTED = @FS2_TRANSMITTER_PLUGINS_SELECTED@
 GCOV = @GCOV@
 GCOV_CFLAGS = @GCOV_CFLAGS@
 GCOV_LIBS = @GCOV_LIBS@
+GIO_UNIX_CFLAGS = @GIO_UNIX_CFLAGS@
+GIO_UNIX_LIBS = @GIO_UNIX_LIBS@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_LIBS = @GLIB_LIBS@
 GLIB_PREFIX = @GLIB_PREFIX@
@@ -146,6 +148,7 @@ GST_MAJORMINOR = @GST_MAJORMINOR@
 GST_PACKAGE_NAME = @GST_PACKAGE_NAME@
 GST_PACKAGE_ORIGIN = @GST_PACKAGE_ORIGIN@
 GST_PLUGINS_BASE_CFLAGS = @GST_PLUGINS_BASE_CFLAGS@
+GST_PLUGINS_BASE_DIR = @GST_PLUGINS_BASE_DIR@
 GST_PLUGINS_BASE_LIBS = @GST_PLUGINS_BASE_LIBS@
 GST_PLUGINS_DIR = @GST_PLUGINS_DIR@
 GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
@@ -470,9 +473,9 @@ REPORT_FILES = \
 # only look at the plugins in this module when building inspect .xml stuff
 @ENABLE_GTK_DOC_TRUE@INSPECT_REGISTRY = $(top_builddir)/docs/plugins/inspect-registry.xml
 @ENABLE_GTK_DOC_TRUE@INSPECT_ENVIRONMENT = \
-@ENABLE_GTK_DOC_TRUE@        GST_PLUGIN_SYSTEM_PATH= \
-@ENABLE_GTK_DOC_TRUE@        GST_PLUGIN_PATH=$(top_builddir)/gst:$(top_builddir)/sys:$(top_builddir)/ext:$(top_builddir)/plugins:$(top_builddir)/src:$(top_builddir)/gnl \
-@ENABLE_GTK_DOC_TRUE@        GST_REGISTRY=$(INSPECT_REGISTRY) \
+@ENABLE_GTK_DOC_TRUE@	GST_PLUGIN_SYSTEM_PATH= \
+@ENABLE_GTK_DOC_TRUE@	GST_PLUGIN_PATH=$(top_builddir)/gst:$(top_builddir)/sys:$(top_builddir)/ext:$(top_builddir)/plugins:$(top_builddir)/src:$(top_builddir)/gnl \
+@ENABLE_GTK_DOC_TRUE@	GST_REGISTRY=$(INSPECT_REGISTRY) \
 @ENABLE_GTK_DOC_TRUE@	$(INSPECT_EXTRA_ENVIRONMENT)
 
 MAINTAINERCLEANFILES = $(MAINTAINER_DOC_STAMPS)
@@ -714,15 +717,15 @@ update:
 @ENABLE_GTK_DOC_TRUE@	if test x"$(srcdir)" != x. ; then				\
 @ENABLE_GTK_DOC_TRUE@	    for f in $(SCANOBJ_FILES);					\
 @ENABLE_GTK_DOC_TRUE@	    do								\
-@ENABLE_GTK_DOC_TRUE@	        cp $(srcdir)/$$f . ;					\
+@ENABLE_GTK_DOC_TRUE@		cp $(srcdir)/$$f . ;					\
 @ENABLE_GTK_DOC_TRUE@	    done;							\
 @ENABLE_GTK_DOC_TRUE@	else								\
-@ENABLE_GTK_DOC_TRUE@	    $(INSPECT_ENVIRONMENT) 					\
+@ENABLE_GTK_DOC_TRUE@	    $(INSPECT_ENVIRONMENT)					\
 @ENABLE_GTK_DOC_TRUE@	    CC="$(GTKDOC_CC)" LD="$(GTKDOC_LD)"				\
 @ENABLE_GTK_DOC_TRUE@	    CFLAGS="$(GTKDOC_CFLAGS) $(CFLAGS)"				\
 @ENABLE_GTK_DOC_TRUE@	    LDFLAGS="$(GTKDOC_LIBS) $(LDFLAGS)"				\
 @ENABLE_GTK_DOC_TRUE@	    $(GST_DOC_SCANOBJ) --type-init-func="gst_init(NULL,NULL)"	\
-@ENABLE_GTK_DOC_TRUE@	        --module=$(DOC_MODULE) --source=$(PACKAGE) &&		\
+@ENABLE_GTK_DOC_TRUE@		--module=$(DOC_MODULE) --source=$(PACKAGE) &&		\
 @ENABLE_GTK_DOC_TRUE@		$(PYTHON)						\
 @ENABLE_GTK_DOC_TRUE@		$(top_srcdir)/common/scangobj-merge.py $(DOC_MODULE);	\
 @ENABLE_GTK_DOC_TRUE@	fi
@@ -746,10 +749,10 @@ update:
 @ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_TRUE@	    cp $(srcdir)/inspect-build.stamp . ; \
 @ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_TRUE@	else \
 @ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_TRUE@	    $(INSPECT_ENVIRONMENT) $(PYTHON) \
-@ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_TRUE@	        $(top_srcdir)/common/gst-xmlinspect.py $(PACKAGE) inspect && \
+@ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_TRUE@		$(top_srcdir)/common/gst-xmlinspect.py $(PACKAGE) inspect && \
 @ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_TRUE@	    echo -n "timestamp" > inspect.stamp && \
 @ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_TRUE@	    touch inspect-build.stamp; \
-@ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_TRUE@        fi
+@ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_TRUE@	fi
 
 @ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_FALSE@inspect-build.stamp:
 @ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_FALSE@	@true:
@@ -758,9 +761,9 @@ update:
 @ENABLE_GTK_DOC_TRUE@scan-build.stamp: $(HFILE_GLOB) $(EXTRA_HFILES) $(basefiles) scanobj-build.stamp inspect-build.stamp scanobj-trans-build.stamp
 @ENABLE_GTK_DOC_TRUE@	if test "x$(top_srcdir)" != "x$(top_builddir)" &&		\
 @ENABLE_GTK_DOC_TRUE@	   test -d "$(top_builddir)/gst";				\
-@ENABLE_GTK_DOC_TRUE@        then								\
-@ENABLE_GTK_DOC_TRUE@            export BUILT_OPTIONS="--source-dir=$(top_builddir)/gst";	\
-@ENABLE_GTK_DOC_TRUE@        fi;								\
+@ENABLE_GTK_DOC_TRUE@	then								\
+@ENABLE_GTK_DOC_TRUE@	    export BUILT_OPTIONS="--source-dir=$(top_builddir)/gst";	\
+@ENABLE_GTK_DOC_TRUE@	fi;								\
 @ENABLE_GTK_DOC_TRUE@	gtkdoc-scan							\
 @ENABLE_GTK_DOC_TRUE@	    $(SCAN_OPTIONS) $(EXTRA_HFILES)				\
 @ENABLE_GTK_DOC_TRUE@	    --module=$(DOC_MODULE)					\
@@ -778,7 +781,7 @@ update:
 @ENABLE_GTK_DOC_TRUE@	if test x"$(srcdir)" != x. ; then				\
 @ENABLE_GTK_DOC_TRUE@	    for f in $(SCANOBJ_FILES) $(SCAN_FILES);			\
 @ENABLE_GTK_DOC_TRUE@	    do								\
-@ENABLE_GTK_DOC_TRUE@	        if test -e $(srcdir)/$$f; then cp $(srcdir)/$$f . ; fi; \
+@ENABLE_GTK_DOC_TRUE@		if test -e $(srcdir)/$$f; then cp $(srcdir)/$$f . ; fi; \
 @ENABLE_GTK_DOC_TRUE@	    done;							\
 @ENABLE_GTK_DOC_TRUE@	fi
 @ENABLE_GTK_DOC_TRUE@	gtkdoc-mktmpl --module=$(DOC_MODULE) | tee tmpl-build.log
@@ -798,14 +801,14 @@ update:
 @ENABLE_GTK_DOC_TRUE@	@echo '*** Building XML ***'
 @ENABLE_GTK_DOC_TRUE@	@-mkdir -p xml
 @ENABLE_GTK_DOC_TRUE@	@for a in $(srcdir)/inspect/*.xml; do \
-@ENABLE_GTK_DOC_TRUE@            xsltproc --stringparam module $(MODULE) \
+@ENABLE_GTK_DOC_TRUE@	    xsltproc --stringparam module $(MODULE) \
 @ENABLE_GTK_DOC_TRUE@		$(top_srcdir)/common/plugins.xsl $$a > xml/`basename $$a`; done
 @ENABLE_GTK_DOC_TRUE@	@for f in $(EXAMPLE_CFILES); do \
 @ENABLE_GTK_DOC_TRUE@		$(PYTHON) $(top_srcdir)/common/c-to-xml.py $$f > xml/element-`basename $$f .c`.xml; done
 @ENABLE_GTK_DOC_TRUE@	gtkdoc-mkdb \
 @ENABLE_GTK_DOC_TRUE@		--module=$(DOC_MODULE) \
 @ENABLE_GTK_DOC_TRUE@		--source-dir=$(DOC_SOURCE_DIR) \
-@ENABLE_GTK_DOC_TRUE@                 --expand-content-files="$(expand_content_files)" \
+@ENABLE_GTK_DOC_TRUE@		 --expand-content-files="$(expand_content_files)" \
 @ENABLE_GTK_DOC_TRUE@		--main-sgml-file=$(srcdir)/$(DOC_MAIN_SGML_FILE) \
 @ENABLE_GTK_DOC_TRUE@		--output-format=xml \
 @ENABLE_GTK_DOC_TRUE@		--ignore-files="$(IGNORE_HFILES) $(IGNORE_CFILES)" \
@@ -866,7 +869,7 @@ install-data-local:
 	if test "$$installfiles" = '$(srcdir)/html/*.sgml $(srcdir)/html/*.html $(srcdir)/html/*.png $(srcdir)/html/*.css'; \
 	then echo '-- Nothing to install' ; \
 	else \
-          $(mkinstalldirs) $(DESTDIR)$(TARGET_DIR); \
+	  $(mkinstalldirs) $(DESTDIR)$(TARGET_DIR); \
 	  for i in $$installfiles; do \
 	    echo '-- Installing '$$i ; \
 	    $(INSTALL_DATA) $$i $(DESTDIR)$(TARGET_DIR); \
@@ -883,7 +886,7 @@ install-data-local:
 	    $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@.devhelp; \
 	  if test -e $(srcdir)/html/$(DOC_MODULE).devhelp2; then \
 	    $(INSTALL_DATA) $(srcdir)/html/$(DOC_MODULE).devhelp2 \
-	           $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@.devhelp2; \
+		   $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@.devhelp2; \
 	  fi; \
 	fi) 
 uninstall-local:
@@ -961,7 +964,7 @@ scanobj-trans-build.stamp: $(SCANOBJ_DEPS) $(basefiles) scanobj-build.stamp fars
 	    $(srcdir)/gtkdoc-scangobj-transmitters			\
 		 --type-init-func="gst_init(NULL,NULL)"			\
 		 --types=farsight2-transmitters.types			\
-	         --module=$(DOC_MODULE) &&				\
+		 --module=$(DOC_MODULE) &&				\
 		$(PYTHON)						\
 		$(top_srcdir)/common/scangobj-merge.py $(DOC_MODULE);	\
 	fi

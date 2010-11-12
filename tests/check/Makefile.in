@@ -37,11 +37,11 @@ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(top_srcdir)/common/check.mak
 check_PROGRAMS = base/fscodec$(EXEEXT) base/fstransmitter$(EXEEXT) \
 	transmitter/rawudp$(EXEEXT) transmitter/multicast$(EXEEXT) \
-	transmitter/nice$(EXEEXT) rtp/codecs$(EXEEXT) \
-	rtp/sendcodecs$(EXEEXT) rtp/conference$(EXEEXT) \
-	rtp/recvcodecs$(EXEEXT) msn/conference$(EXEEXT) \
-	utils/binadded$(EXEEXT) elements/rtcpfilter$(EXEEXT) \
-	elements/funnel$(EXEEXT)
+	transmitter/nice$(EXEEXT) transmitter/shm$(EXEEXT) \
+	rtp/codecs$(EXEEXT) rtp/sendcodecs$(EXEEXT) \
+	rtp/conference$(EXEEXT) rtp/recvcodecs$(EXEEXT) \
+	msn/conference$(EXEEXT) utils/binadded$(EXEEXT) \
+	elements/rtcpfilter$(EXEEXT) elements/funnel$(EXEEXT)
 subdir = tests/check
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
@@ -191,6 +191,15 @@ transmitter_rawudp_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(transmitter_rawudp_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
+am_transmitter_shm_OBJECTS = transmitter_shm-generic.$(OBJEXT) \
+	transmitter_shm-shm.$(OBJEXT)
+transmitter_shm_OBJECTS = $(am_transmitter_shm_OBJECTS)
+transmitter_shm_DEPENDENCIES = $(am__DEPENDENCIES_2) \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+transmitter_shm_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(transmitter_shm_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
+	-o $@
 am_utils_binadded_OBJECTS = utils_binadded-testutils.$(OBJEXT) \
 	utils_binadded-binadded.$(OBJEXT)
 utils_binadded_OBJECTS = $(am_utils_binadded_OBJECTS)
@@ -234,14 +243,14 @@ SOURCES = $(base_fscodec_SOURCES) base/fstransmitter.c \
 	$(rtp_conference_SOURCES) rtp/recvcodecs.c \
 	$(rtp_sendcodecs_SOURCES) $(transmitter_multicast_SOURCES) \
 	$(transmitter_nice_SOURCES) $(transmitter_rawudp_SOURCES) \
-	$(utils_binadded_SOURCES)
+	$(transmitter_shm_SOURCES) $(utils_binadded_SOURCES)
 DIST_SOURCES = $(base_fscodec_SOURCES) base/fstransmitter.c \
 	$(elements_funnel_SOURCES) $(elements_rtcpfilter_SOURCES) \
 	$(msn_conference_SOURCES) $(rtp_codecs_SOURCES) \
 	$(rtp_conference_SOURCES) rtp/recvcodecs.c \
 	$(rtp_sendcodecs_SOURCES) $(transmitter_multicast_SOURCES) \
 	$(transmitter_nice_SOURCES) $(transmitter_rawudp_SOURCES) \
-	$(utils_binadded_SOURCES)
+	$(transmitter_shm_SOURCES) $(utils_binadded_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 am__tty_colors = \
@@ -299,6 +308,8 @@ FS2_TRANSMITTER_PLUGINS_SELECTED = @FS2_TRANSMITTER_PLUGINS_SELECTED@
 GCOV = @GCOV@
 GCOV_CFLAGS = @GCOV_CFLAGS@
 GCOV_LIBS = @GCOV_LIBS@
+GIO_UNIX_CFLAGS = @GIO_UNIX_CFLAGS@
+GIO_UNIX_LIBS = @GIO_UNIX_LIBS@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_LIBS = @GLIB_LIBS@
 GLIB_PREFIX = @GLIB_PREFIX@
@@ -317,6 +328,7 @@ GST_MAJORMINOR = @GST_MAJORMINOR@
 GST_PACKAGE_NAME = @GST_PACKAGE_NAME@
 GST_PACKAGE_ORIGIN = @GST_PACKAGE_ORIGIN@
 GST_PLUGINS_BASE_CFLAGS = @GST_PLUGINS_BASE_CFLAGS@
+GST_PLUGINS_BASE_DIR = @GST_PLUGINS_BASE_DIR@
 GST_PLUGINS_BASE_LIBS = @GST_PLUGINS_BASE_LIBS@
 GST_PLUGINS_DIR = @GST_PLUGINS_DIR@
 GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
@@ -457,9 +469,9 @@ TESTS_ENVIRONMENT = \
 	CK_DEFAULT_TIMEOUT=120					\
 	STATE_IGNORE_ELEMENTS="$(STATE_IGNORE_ELEMENTS)"	\
 	$(REGISTRY_ENVIRONMENT)					\
-	GST_PLUGIN_LOADING_WHITELIST=gstreamer:gst-plugins-base:gst-plugins-good:libnice:valve:siren:autoconvert:rtpmux:dtmf:mimic:farsight2@$(top_builddir)/gst \
+	GST_PLUGIN_LOADING_WHITELIST=gstreamer:gst-plugins-base:gst-plugins-good:libnice:valve:siren:autoconvert:rtpmux:dtmf:mimic:shm:farsight2@$(top_builddir)/gst \
 	GST_PLUGIN_PATH=$(top_builddir)/gst:${GST_PLUGIN_PATH}	\
-	FS_PLUGIN_PATH=$(top_builddir)/transmitters/rawudp/.libs:$(top_builddir)/transmitters/multicast/.libs:$(top_builddir)/transmitters/nice/.libs \
+	FS_PLUGIN_PATH=$(top_builddir)/transmitters/rawudp/.libs:$(top_builddir)/transmitters/multicast/.libs:$(top_builddir)/transmitters/nice/.libs:$(top_builddir)/transmitters/shm/.libs \
 	LD_LIBRARY_PATH=$(top_builddir)/gst-libs/gst/farsight/.libs:${LD_LIBRARY_PATH} \
 	UPNP_XML_PATH=$(srcdir)/upnp \
 	SRCDIR=$(srcdir) \
@@ -527,6 +539,17 @@ transmitter_nice_SOURCES = \
 	transmitter/fake-filter.c \
 	transmitter/fake-filter.h \
 	transmitter/nice.c 
+
+transmitter_shm_CFLAGS = $(AM_CFLAGS) $(GUPNP_CFLAGS) $(NICE_CFLAGS)
+transmitter_shm_LDADD = $(LDADD) \
+	$(GUPNP_LIBS) \
+	$(NICE_LIBS)
+
+transmitter_shm_SOURCES = \
+	check-threadsafe.h  \
+	transmitter/generic.c \
+	transmitter/generic.h \
+	transmitter/shm.c
 
 rtp_conference_CFLAGS = $(AM_CFLAGS)
 rtp_conference_SOURCES = \
@@ -659,6 +682,9 @@ transmitter/nice$(EXEEXT): $(transmitter_nice_OBJECTS) $(transmitter_nice_DEPEND
 transmitter/rawudp$(EXEEXT): $(transmitter_rawudp_OBJECTS) $(transmitter_rawudp_DEPENDENCIES) transmitter/$(am__dirstamp)
 	@rm -f transmitter/rawudp$(EXEEXT)
 	$(AM_V_CCLD)$(transmitter_rawudp_LINK) $(transmitter_rawudp_OBJECTS) $(transmitter_rawudp_LDADD) $(LIBS)
+transmitter/shm$(EXEEXT): $(transmitter_shm_OBJECTS) $(transmitter_shm_DEPENDENCIES) transmitter/$(am__dirstamp)
+	@rm -f transmitter/shm$(EXEEXT)
+	$(AM_V_CCLD)$(transmitter_shm_LINK) $(transmitter_shm_OBJECTS) $(transmitter_shm_LDADD) $(LIBS)
 utils/$(am__dirstamp):
 	@$(MKDIR_P) utils
 	@: > utils/$(am__dirstamp)
@@ -697,6 +723,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_rawudp-rawudp-upnp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_rawudp-rawudp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_rawudp-stunalternd.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_shm-generic.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_shm-shm.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utils_binadded-binadded.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utils_binadded-testutils.Po@am__quote@
 
@@ -1107,6 +1135,38 @@ transmitter_rawudp-stunalternd.obj: transmitter/stunalternd.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='transmitter/stunalternd.c' object='transmitter_rawudp-stunalternd.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_rawudp_CFLAGS) $(CFLAGS) -c -o transmitter_rawudp-stunalternd.obj `if test -f 'transmitter/stunalternd.c'; then $(CYGPATH_W) 'transmitter/stunalternd.c'; else $(CYGPATH_W) '$(srcdir)/transmitter/stunalternd.c'; fi`
+
+transmitter_shm-generic.o: transmitter/generic.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_shm_CFLAGS) $(CFLAGS) -MT transmitter_shm-generic.o -MD -MP -MF $(DEPDIR)/transmitter_shm-generic.Tpo -c -o transmitter_shm-generic.o `test -f 'transmitter/generic.c' || echo '$(srcdir)/'`transmitter/generic.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/transmitter_shm-generic.Tpo $(DEPDIR)/transmitter_shm-generic.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='transmitter/generic.c' object='transmitter_shm-generic.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_shm_CFLAGS) $(CFLAGS) -c -o transmitter_shm-generic.o `test -f 'transmitter/generic.c' || echo '$(srcdir)/'`transmitter/generic.c
+
+transmitter_shm-generic.obj: transmitter/generic.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_shm_CFLAGS) $(CFLAGS) -MT transmitter_shm-generic.obj -MD -MP -MF $(DEPDIR)/transmitter_shm-generic.Tpo -c -o transmitter_shm-generic.obj `if test -f 'transmitter/generic.c'; then $(CYGPATH_W) 'transmitter/generic.c'; else $(CYGPATH_W) '$(srcdir)/transmitter/generic.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/transmitter_shm-generic.Tpo $(DEPDIR)/transmitter_shm-generic.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='transmitter/generic.c' object='transmitter_shm-generic.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_shm_CFLAGS) $(CFLAGS) -c -o transmitter_shm-generic.obj `if test -f 'transmitter/generic.c'; then $(CYGPATH_W) 'transmitter/generic.c'; else $(CYGPATH_W) '$(srcdir)/transmitter/generic.c'; fi`
+
+transmitter_shm-shm.o: transmitter/shm.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_shm_CFLAGS) $(CFLAGS) -MT transmitter_shm-shm.o -MD -MP -MF $(DEPDIR)/transmitter_shm-shm.Tpo -c -o transmitter_shm-shm.o `test -f 'transmitter/shm.c' || echo '$(srcdir)/'`transmitter/shm.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/transmitter_shm-shm.Tpo $(DEPDIR)/transmitter_shm-shm.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='transmitter/shm.c' object='transmitter_shm-shm.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_shm_CFLAGS) $(CFLAGS) -c -o transmitter_shm-shm.o `test -f 'transmitter/shm.c' || echo '$(srcdir)/'`transmitter/shm.c
+
+transmitter_shm-shm.obj: transmitter/shm.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_shm_CFLAGS) $(CFLAGS) -MT transmitter_shm-shm.obj -MD -MP -MF $(DEPDIR)/transmitter_shm-shm.Tpo -c -o transmitter_shm-shm.obj `if test -f 'transmitter/shm.c'; then $(CYGPATH_W) 'transmitter/shm.c'; else $(CYGPATH_W) '$(srcdir)/transmitter/shm.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/transmitter_shm-shm.Tpo $(DEPDIR)/transmitter_shm-shm.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='transmitter/shm.c' object='transmitter_shm-shm.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_shm_CFLAGS) $(CFLAGS) -c -o transmitter_shm-shm.obj `if test -f 'transmitter/shm.c'; then $(CYGPATH_W) 'transmitter/shm.c'; else $(CYGPATH_W) '$(srcdir)/transmitter/shm.c'; fi`
 
 utils_binadded-testutils.o: testutils.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(utils_binadded_CFLAGS) $(CFLAGS) -MT utils_binadded-testutils.o -MD -MP -MF $(DEPDIR)/utils_binadded-testutils.Tpo -c -o utils_binadded-testutils.o `test -f 'testutils.c' || echo '$(srcdir)/'`testutils.c

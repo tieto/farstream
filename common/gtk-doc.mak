@@ -74,13 +74,13 @@ scan-build.stamp: $(HFILE_GLOB) $(SCANOBJ_DEPS) $(basefiles)
 	else								\
 	    cd $(srcdir) ;						\
 	    for i in $(SCANOBJ_FILES) ; do				\
-               test -f $$i || touch $$i ;				\
+	       test -f $$i || touch $$i ;				\
 	    done							\
 	fi
 	if test "x$(top_srcdir)" != "x$(top_builddir)";			\
-        then								\
-          export BUILT_OPTIONS="--source-dir=$(DOC_BUILD_DIR)";		\
-        fi;								\
+	then								\
+	  export BUILT_OPTIONS="--source-dir=$(DOC_BUILD_DIR)";		\
+	fi;								\
 	gtkdoc-scan							\
 		$(SCAN_OPTIONS) $(EXTRA_HFILES)				\
 		--module=$(DOC_MODULE)					\
@@ -102,7 +102,11 @@ tmpl-build.stamp: $(DOC_MODULE)-decl.txt $(SCANOBJ_FILES) $(DOC_MODULE)-sections
 	fi
 	gtkdoc-mktmpl --module=$(DOC_MODULE) | tee tmpl-build.log
 	@if test -s $(DOC_MODULE)-unused.txt; then \
-	    exit $(if $(DOCS_ARE_INCOMPLETE_PLEASE_FIXME),0,1); fi
+	  echo "============================================================"; \
+	  echo "Please add the following to $(DOC_MODULE)-sections.txt:     "; \
+	  cat $(DOC_MODULE)-unused.txt;                                        \
+	  echo "============================================================"; \
+	fi
 	rm -f tmpl-build.log
 	touch tmpl-build.stamp
 
@@ -166,7 +170,7 @@ clean-local: clean-local-gtkdoc
 # make distcheck work
 distclean-local:
 	rm -f $(REPORT_FILES) \
-                $(DOC_MODULE)-decl-list.txt $(DOC_MODULE)-decl.txt
+	        $(DOC_MODULE)-decl-list.txt $(DOC_MODULE)-decl.txt
 	rm -rf tmpl/*.sgml.bak
 	rm -f $(DOC_MODULE).hierarchy
 	rm -f *.stamp || true
@@ -174,7 +178,7 @@ distclean-local:
 	    rm -f $(DOC_MODULE)-docs.sgml ; \
 	    rm -f $(DOC_MODULE).types ; \
 	    rm -f $(DOC_MODULE).interfaces ; \
-            rm -f $(DOC_MODULE)-overrides.txt ; \
+	    rm -f $(DOC_MODULE)-overrides.txt ; \
 	    rm -f $(DOC_MODULE).prerequisites ; \
 	    rm -f $(DOC_MODULE)-sections.txt ; \
 	    rm -rf tmpl/*.sgml ; \
@@ -183,7 +187,7 @@ distclean-local:
 
 maintainer-clean-local: clean
 	cd $(srcdir) && rm -rf html \
-                xml $(DOC_MODULE)-decl-list.txt $(DOC_MODULE)-decl.txt
+		xml $(DOC_MODULE)-decl-list.txt $(DOC_MODULE)-decl.txt
 
 # thomas: make docs parallel installable; devhelp requires majorminor too
 install-data-local:
@@ -200,8 +204,8 @@ install-data-local:
 	  $(INSTALL_DATA) $(srcdir)/html/$(DOC_MODULE).devhelp \
 	    $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@.devhelp; \
 	  if test -e $(srcdir)/html/$(DOC_MODULE).devhelp2; then \
-        	    $(INSTALL_DATA) $(srcdir)/html/$(DOC_MODULE).devhelp2 \
-	           $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@.devhelp2; \
+	            $(INSTALL_DATA) $(srcdir)/html/$(DOC_MODULE).devhelp2 \
+	            $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@.devhelp2; \
 	  fi; \
 	  (which gtkdoc-rebase >/dev/null && \
 	    gtkdoc-rebase --relative --dest-dir=$(DESTDIR) --html-dir=$(DESTDIR)$(TARGET_DIR)) || true ; \
@@ -232,6 +236,6 @@ dist-hook: dist-check-gtkdoc dist-hook-local
 	-cp $(srcdir)/$(DOC_MODULE).types $(distdir)/
 	-cp $(srcdir)/$(DOC_MODULE)-sections.txt $(distdir)/
 	cd $(distdir) && rm -f $(DISTCLEANFILES)
-        -gtkdoc-rebase --online --relative --html-dir=$(distdir)/html
+	-gtkdoc-rebase --online --relative --html-dir=$(distdir)/html
 
 .PHONY : dist-hook-local docs

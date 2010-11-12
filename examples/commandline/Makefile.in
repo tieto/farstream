@@ -34,7 +34,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-noinst_PROGRAMS = simple-call$(EXEEXT)
+noinst_PROGRAMS = simple-call$(EXEEXT) simple-call-shm$(EXEEXT)
 subdir = examples/commandline
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -75,6 +75,17 @@ simple_call_DEPENDENCIES =  \
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
 am__v_lt_0 = --silent
+simple_call_shm_SOURCES = simple-call-shm.c
+simple_call_shm_OBJECTS = simple_call_shm-simple-call-shm.$(OBJEXT)
+am__DEPENDENCIES_2 =  \
+	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-0.10.la \
+	$(am__DEPENDENCIES_1)
+simple_call_shm_DEPENDENCIES = $(am__DEPENDENCIES_2) \
+	$(am__DEPENDENCIES_1)
+simple_call_shm_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(simple_call_shm_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
+	-o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -101,8 +112,8 @@ am__v_CCLD_0 = @echo "  CCLD  " $@;
 AM_V_GEN = $(am__v_GEN_$(V))
 am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
 am__v_GEN_0 = @echo "  GEN   " $@;
-SOURCES = simple-call.c
-DIST_SOURCES = simple-call.c
+SOURCES = simple-call.c simple-call-shm.c
+DIST_SOURCES = simple-call.c simple-call-shm.c
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -158,6 +169,8 @@ FS2_TRANSMITTER_PLUGINS_SELECTED = @FS2_TRANSMITTER_PLUGINS_SELECTED@
 GCOV = @GCOV@
 GCOV_CFLAGS = @GCOV_CFLAGS@
 GCOV_LIBS = @GCOV_LIBS@
+GIO_UNIX_CFLAGS = @GIO_UNIX_CFLAGS@
+GIO_UNIX_LIBS = @GIO_UNIX_LIBS@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_LIBS = @GLIB_LIBS@
 GLIB_PREFIX = @GLIB_PREFIX@
@@ -176,6 +189,7 @@ GST_MAJORMINOR = @GST_MAJORMINOR@
 GST_PACKAGE_NAME = @GST_PACKAGE_NAME@
 GST_PACKAGE_ORIGIN = @GST_PACKAGE_ORIGIN@
 GST_PLUGINS_BASE_CFLAGS = @GST_PLUGINS_BASE_CFLAGS@
+GST_PLUGINS_BASE_DIR = @GST_PLUGINS_BASE_DIR@
 GST_PLUGINS_BASE_LIBS = @GST_PLUGINS_BASE_LIBS@
 GST_PLUGINS_DIR = @GST_PLUGINS_DIR@
 GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
@@ -314,6 +328,14 @@ LDADD = \
 	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-0.10.la \
 	$(GST_LIBS) 
 
+simple_call_shm_CFLAGS = \
+	$(AM_CFLAGS) \
+	$(GIO_UNIX_CFLAGS)
+
+simple_call_shm_LDADD = \
+	$(LDADD) \
+	$(GIO_UNIX_LIBS)
+
 all: all-am
 
 .SUFFIXES:
@@ -360,6 +382,9 @@ clean-noinstPROGRAMS:
 simple-call$(EXEEXT): $(simple_call_OBJECTS) $(simple_call_DEPENDENCIES) 
 	@rm -f simple-call$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(simple_call_OBJECTS) $(simple_call_LDADD) $(LIBS)
+simple-call-shm$(EXEEXT): $(simple_call_shm_OBJECTS) $(simple_call_shm_DEPENDENCIES) 
+	@rm -f simple-call-shm$(EXEEXT)
+	$(AM_V_CCLD)$(simple_call_shm_LINK) $(simple_call_shm_OBJECTS) $(simple_call_shm_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -368,6 +393,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/simple-call.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/simple_call_shm-simple-call-shm.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -392,6 +418,22 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
+
+simple_call_shm-simple-call-shm.o: simple-call-shm.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(simple_call_shm_CFLAGS) $(CFLAGS) -MT simple_call_shm-simple-call-shm.o -MD -MP -MF $(DEPDIR)/simple_call_shm-simple-call-shm.Tpo -c -o simple_call_shm-simple-call-shm.o `test -f 'simple-call-shm.c' || echo '$(srcdir)/'`simple-call-shm.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/simple_call_shm-simple-call-shm.Tpo $(DEPDIR)/simple_call_shm-simple-call-shm.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='simple-call-shm.c' object='simple_call_shm-simple-call-shm.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(simple_call_shm_CFLAGS) $(CFLAGS) -c -o simple_call_shm-simple-call-shm.o `test -f 'simple-call-shm.c' || echo '$(srcdir)/'`simple-call-shm.c
+
+simple_call_shm-simple-call-shm.obj: simple-call-shm.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(simple_call_shm_CFLAGS) $(CFLAGS) -MT simple_call_shm-simple-call-shm.obj -MD -MP -MF $(DEPDIR)/simple_call_shm-simple-call-shm.Tpo -c -o simple_call_shm-simple-call-shm.obj `if test -f 'simple-call-shm.c'; then $(CYGPATH_W) 'simple-call-shm.c'; else $(CYGPATH_W) '$(srcdir)/simple-call-shm.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/simple_call_shm-simple-call-shm.Tpo $(DEPDIR)/simple_call_shm-simple-call-shm.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='simple-call-shm.c' object='simple_call_shm-simple-call-shm.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(simple_call_shm_CFLAGS) $(CFLAGS) -c -o simple_call_shm-simple-call-shm.obj `if test -f 'simple-call-shm.c'; then $(CYGPATH_W) 'simple-call-shm.c'; else $(CYGPATH_W) '$(srcdir)/simple-call-shm.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
