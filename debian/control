@@ -7,7 +7,7 @@ Uploaders: Dafydd Harries <daf@debian.org>,
            Sjoerd Simons <sjoerd@debian.org>,
            Laurent Bigonville <bigon@debian.org>,
            Jonny Lamb <jonny@debian.org>
-Build-Depends: debhelper (>= 5.0.0),
+Build-Depends: debhelper (>= 7),
                cdbs,
                libglib2.0-dev (>= 2.16),
                libgstreamer0.10-dev (>= 0.10.26),
