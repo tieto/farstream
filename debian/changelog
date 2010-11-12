@@ -1,3 +1,9 @@
+farsight2 (0.0.21-3) UNRELEASED; urgency=low
+
+  * debian/control: Move python-farsight to priority optional instead of extra
+
+ -- Laurent Bigonville <bigon@debian.org>  Fri, 12 Nov 2010 04:04:06 +0100
+
 farsight2 (0.0.21-2) unstable; urgency=low
 
   * d/p/0001-rtpconference-The-ptime-maxptime-in-caps-are-actuall.patch
