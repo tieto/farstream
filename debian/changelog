@@ -1,10 +1,11 @@
-farsight2 (0.0.21-3) UNRELEASED; urgency=low
+farsight2 (0.0.22-1) UNRELEASED; urgency=low
 
+  * New upstream release
   * debian/control:
     - Move python-farsight to priority optional instead of extra
     - Bump Standards-Version to 3.9.1
 
- -- Laurent Bigonville <bigon@debian.org>  Fri, 12 Nov 2010 04:05:54 +0100
+ -- Laurent Bigonville <bigon@debian.org>  Fri, 12 Nov 2010 12:02:43 +0100
 
 farsight2 (0.0.21-2) unstable; urgency=low
 
