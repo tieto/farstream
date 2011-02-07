@@ -15,7 +15,7 @@ Build-Depends: debhelper (>= 7),
                python-central (>= 0.5),
                python-gobject-dev (>= 2.16),
                python-gst0.10-dev,
-               libnice-dev (>= 0.0.9),
+               libnice-dev (>= 0.1.0),
                libgupnp-igd-1.0-dev
 Standards-Version: 3.9.1
 Vcs-Git: git://git.debian.org/git/pkg-telepathy/farsight2.git
@@ -29,7 +29,7 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
          gstreamer0.10-plugins-base (>= 0.10.26),
          gstreamer0.10-plugins-good (>= 0.10.8),
          gstreamer0.10-plugins-bad (>= 0.10.17),
-         gstreamer0.10-nice
+         gstreamer0.10-nice (>= 0.1.0)
 Description: Audio/Video communications framework: core library
  The Farsight project is an effort to create a framework to deal with all
  known audio/video conferencing protocols. On one side it offers a generic

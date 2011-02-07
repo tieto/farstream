@@ -1,3 +1,11 @@
+farsight2 (0.0.23-1) UNRELEASED; urgency=low
+
+  * New upstream release
+  * Bump nice requirement build-dep to (>= 0.1.0)
+  * Bump gstreamer0.10-nice dep to (>= 0.1.0>
+
+ -- Sjoerd Simons <sjoerd@debian.org>  Mon, 07 Feb 2011 11:52:13 +0100
+
 farsight2 (0.0.22-1) unstable; urgency=low
 
   * New upstream release
