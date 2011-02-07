@@ -1,0 +1,55 @@
+<plugin>
+  <name>fsfec</name>
+  <description>FEC encoding/decoding modules</description>
+  <filename>../../gst/fec/.libs/libfsfec.so</filename>
+  <basename>libfsfec.so</basename>
+  <version>0.0.22.1</version>
+  <license>LGPL</license>
+  <source>farsight2</source>
+  <package>Farsight</package>
+  <origin>http://farsight.sf.net</origin>
+  <elements>
+    <element>
+      <name>fsfecrizzodec</name>
+      <longname>Reed-Solomon Coder</longname>
+      <class>Decoder</class>
+      <description>RTP Reed-Solomon FEC decoder using the Rizzo implementation</description>
+      <author>Olivier Crete &lt;olivier.crete@collabora.co.uk&gt;</author>
+      <pads>
+        <caps>
+          <name>sink</name>
+          <direction>sink</direction>
+          <presence>always</presence>
+          <details>application/x-rtp</details>
+        </caps>
+        <caps>
+          <name>src</name>
+          <direction>source</direction>
+          <presence>always</presence>
+          <details>application/x-rtp</details>
+        </caps>
+      </pads>
+    </element>
+    <element>
+      <name>fsfecrizzoenc</name>
+      <longname>Reed-Solomon Coder</longname>
+      <class>Encoder</class>
+      <description>RTP Reed-Solomon FEC encoder using the Rizzo implementation</description>
+      <author>Olivier Crete &lt;olivier.crete@collabora.co.uk&gt;</author>
+      <pads>
+        <caps>
+          <name>sink</name>
+          <direction>sink</direction>
+          <presence>always</presence>
+          <details>application/x-rtp</details>
+        </caps>
+        <caps>
+          <name>src</name>
+          <direction>source</direction>
+          <presence>always</presence>
+          <details>application/x-rtp</details>
+        </caps>
+      </pads>
+    </element>
+  </elements>
+</plugin>

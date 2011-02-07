@@ -255,7 +255,6 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
 localstatedir = @localstatedir@
-lt_ECHO = @lt_ECHO@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
@@ -333,6 +332,7 @@ SCANOBJ_DEPS = \
 	$(top_builddir)/transmitters/multicast/libmulticast-transmitter.la \
 	$(top_builddir)/transmitters/rawudp/librawudp-transmitter.la \
 	$(top_builddir)/transmitters/nice/libnice-transmitter.la \
+	$(top_builddir)/transmitters/shm/libshm-transmitter.la \
 	$(top_builddir)/gst/fsrtpconference/libfsrtpconference_doc.la \
 	$(top_builddir)/gst/fsmsnconference/libfsmsnconference_doc.la \
 	$(top_builddir)/gst/funnel/libfsfunnel.la \
@@ -368,7 +368,9 @@ EXTRA_HFILES = \
 	$(top_srcdir)/transmitters/multicast/fs-multicast-transmitter.h \
 	$(top_srcdir)/transmitters/multicast/fs-multicast-stream-transmitter.h \
 	$(top_srcdir)/transmitters/nice/fs-nice-transmitter.h \
-	$(top_srcdir)/transmitters/nice/fs-nice-stream-transmitter.h
+	$(top_srcdir)/transmitters/nice/fs-nice-stream-transmitter.h \
+	$(top_srcdir)/transmitters/shm/fs-shm-transmitter.h \
+	$(top_srcdir)/transmitters/shm/fs-shm-stream-transmitter.h
 
 
 # Images to copy into HTML directory.
@@ -405,7 +407,7 @@ GTKDOC_LD = $(LIBTOOL) --tag=CC --mode=link $(CC)
 # and uncomment this line.
 #DOC_OVERRIDES = $(DOC_MODULE)-overrides.txt
 DOC_OVERRIDES = 
-FS_PLUGIN_PATH = $(top_builddir)/transmitters/rawudp/.libs:$(top_builddir)/transmitters/multicast/.libs:$(top_builddir)/transmitters/nice/.libs
+FS_PLUGIN_PATH = $(top_builddir)/transmitters/rawudp/.libs:$(top_builddir)/transmitters/multicast/.libs:$(top_builddir)/transmitters/nice/.libs:$(top_builddir)/transmitters/shm/.libs
 
 # We set GPATH here; this gives us semantics for GNU make
 # which are more like other make's VPATH, when it comes to
@@ -416,10 +418,13 @@ GPATH = $(srcdir)
 
 # thomas: make docs parallel installable
 TARGET_DIR = $(HTML_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@
+MAINTAINER_DOC_STAMPS = \
+	scanobj-build.stamp		\
+	scanobj-trans-build.stamp
+
 EXTRA_DIST = \
+	$(MAINTAINER_DOC_STAMPS)		\
 	$(srcdir)/inspect/*.xml		\
-	inspect.stamp			\
-	inspect-build.stamp		\
 	$(SCANOBJ_FILES)		\
 	$(content_files)		\
 	$(extra_files)			\
@@ -428,6 +433,9 @@ EXTRA_DIST = \
 	$(DOC_OVERRIDES)		\
 	$(DOC_MODULE)-sections.txt
 
+
+# we don't add scanobj-build.stamp here since they are built manually by docs
+# maintainers and result is commited to git
 DOC_STAMPS = \
 	scan-build.stamp		\
 	tmpl-build.stamp		\
@@ -436,17 +444,15 @@ DOC_STAMPS = \
 	scan.stamp			\
 	tmpl.stamp			\
 	sgml.stamp			\
-	html.stamp			\
-	scanobj-build.stamp		\
-	scanobj-trans-build.stamp
+	html.stamp
 
 
 # files generated/updated by gtkdoc-scangobj
 SCANOBJ_FILES = \
-	$(DOC_MODULE).signals		\
-	$(DOC_MODULE).hierarchy		\
-	$(DOC_MODULE).interfaces	\
-	$(DOC_MODULE).prerequisites	\
+	$(DOC_MODULE).signals           \
+	$(DOC_MODULE).hierarchy         \
+	$(DOC_MODULE).interfaces        \
+	$(DOC_MODULE).prerequisites     \
 	$(DOC_MODULE).types		\
 	$(DOC_MODULE).args
 
@@ -695,10 +701,14 @@ help:
 
 # update the stuff maintained by doc maintainers
 update:
-	$(MAKE) inspect-update
 	$(MAKE) scanobj-update
+	$(MAKE) check-outdated-docs
 
 @ENABLE_GTK_DOC_TRUE@all-local: html-build.stamp
+
+# update the element and plugin XML descriptions; store in inspect/
+@ENABLE_GTK_DOC_TRUE@inspect:
+@ENABLE_GTK_DOC_TRUE@	mkdir inspect
 
 #### scan gobjects; done by documentation maintainer ####
 @ENABLE_GTK_DOC_TRUE@scanobj-update:
@@ -712,53 +722,30 @@ update:
 # TODO: finish elite script that updates the output files of this step
 # instead of rewriting them, so that multiple maintainers can generate
 # a collective set of args and signals
-@ENABLE_GTK_DOC_TRUE@scanobj-build.stamp: $(SCANOBJ_DEPS) $(basefiles)
+@ENABLE_GTK_DOC_TRUE@scanobj-build.stamp: $(SCANOBJ_DEPS) $(basefiles) inspect
 @ENABLE_GTK_DOC_TRUE@	@echo '*** Scanning GObjects ***'
 @ENABLE_GTK_DOC_TRUE@	if test x"$(srcdir)" != x. ; then				\
 @ENABLE_GTK_DOC_TRUE@	    for f in $(SCANOBJ_FILES);					\
 @ENABLE_GTK_DOC_TRUE@	    do								\
-@ENABLE_GTK_DOC_TRUE@		cp $(srcdir)/$$f . ;					\
+@ENABLE_GTK_DOC_TRUE@	        cp $(srcdir)/$$f . ;					\
 @ENABLE_GTK_DOC_TRUE@	    done;							\
 @ENABLE_GTK_DOC_TRUE@	else								\
-@ENABLE_GTK_DOC_TRUE@	    $(INSPECT_ENVIRONMENT)					\
+@ENABLE_GTK_DOC_TRUE@	    $(INSPECT_ENVIRONMENT) 					\
 @ENABLE_GTK_DOC_TRUE@	    CC="$(GTKDOC_CC)" LD="$(GTKDOC_LD)"				\
-@ENABLE_GTK_DOC_TRUE@	    CFLAGS="$(GTKDOC_CFLAGS) $(CFLAGS)"				\
+@ENABLE_GTK_DOC_TRUE@	    CFLAGS="$(GTKDOC_CFLAGS) $(CFLAGS) $(WARNING_CFLAGS)"	\
 @ENABLE_GTK_DOC_TRUE@	    LDFLAGS="$(GTKDOC_LIBS) $(LDFLAGS)"				\
 @ENABLE_GTK_DOC_TRUE@	    $(GST_DOC_SCANOBJ) --type-init-func="gst_init(NULL,NULL)"	\
-@ENABLE_GTK_DOC_TRUE@		--module=$(DOC_MODULE) --source=$(PACKAGE) &&		\
+@ENABLE_GTK_DOC_TRUE@	        --module=$(DOC_MODULE) --source=$(PACKAGE) --inspect-dir="inspect" &&		\
 @ENABLE_GTK_DOC_TRUE@		$(PYTHON)						\
 @ENABLE_GTK_DOC_TRUE@		$(top_srcdir)/common/scangobj-merge.py $(DOC_MODULE);	\
 @ENABLE_GTK_DOC_TRUE@	fi
 @ENABLE_GTK_DOC_TRUE@	touch scanobj-build.stamp
 
-@ENABLE_GTK_DOC_TRUE@$(DOC_MODULE)-decl.txt $(SCANOBJ_FILES) $(SCANOBJ_FILES_O): scan-build.stamp scanobj-trans-build.stamp
+@ENABLE_GTK_DOC_TRUE@$(DOC_MODULE)-decl.txt $(SCANOBJ_FILES) $(SCANOBJ_FILES_O): scan-build.stamp
 @ENABLE_GTK_DOC_TRUE@	@true
 
-@ENABLE_GTK_DOC_TRUE@inspect-update: inspect
-@ENABLE_GTK_DOC_TRUE@	-rm -f $(INSPECT_REGISTRY) inspect-build.stamp
-@ENABLE_GTK_DOC_TRUE@	$(MAKE) inspect-build.stamp
-
-# FIXME: inspect.stamp should be written to by gst-xmlinspect.py
-# IF the output changed; see gtkdoc-mktmpl
-@ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_TRUE@inspect-build.stamp:
-@ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_TRUE@	@echo '*** Rebuilding plugin inspection files ***'
-@ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_TRUE@	if test -d inspect; then rm -rf inspect; fi
-@ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_TRUE@	mkdir inspect
-@ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_TRUE@	if test x"$(srcdir)" != x. ; then \
-@ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_TRUE@	    cp $(srcdir)/inspect.stamp . ; \
-@ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_TRUE@	    cp $(srcdir)/inspect-build.stamp . ; \
-@ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_TRUE@	else \
-@ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_TRUE@	    $(INSPECT_ENVIRONMENT) $(PYTHON) \
-@ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_TRUE@		$(top_srcdir)/common/gst-xmlinspect.py $(PACKAGE) inspect && \
-@ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_TRUE@	    echo -n "timestamp" > inspect.stamp && \
-@ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_TRUE@	    touch inspect-build.stamp; \
-@ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_TRUE@	fi
-
-@ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_FALSE@inspect-build.stamp:
-@ENABLE_GTK_DOC_TRUE@@ENABLE_PLUGIN_DOCS_FALSE@	@true:
-
 ### scan headers; done on every build ###
-@ENABLE_GTK_DOC_TRUE@scan-build.stamp: $(HFILE_GLOB) $(EXTRA_HFILES) $(basefiles) scanobj-build.stamp inspect-build.stamp scanobj-trans-build.stamp
+@ENABLE_GTK_DOC_TRUE@scan-build.stamp: $(HFILE_GLOB) $(EXTRA_HFILES) $(basefiles) scanobj-build.stamp scanobj-trans-build.stamp
 @ENABLE_GTK_DOC_TRUE@	if test "x$(top_srcdir)" != "x$(top_builddir)" &&		\
 @ENABLE_GTK_DOC_TRUE@	   test -d "$(top_builddir)/gst";				\
 @ENABLE_GTK_DOC_TRUE@	then								\
@@ -781,7 +768,7 @@ update:
 @ENABLE_GTK_DOC_TRUE@	if test x"$(srcdir)" != x. ; then				\
 @ENABLE_GTK_DOC_TRUE@	    for f in $(SCANOBJ_FILES) $(SCAN_FILES);			\
 @ENABLE_GTK_DOC_TRUE@	    do								\
-@ENABLE_GTK_DOC_TRUE@		if test -e $(srcdir)/$$f; then cp $(srcdir)/$$f . ; fi; \
+@ENABLE_GTK_DOC_TRUE@	        if test -e $(srcdir)/$$f; then cp $(srcdir)/$$f . ; fi; \
 @ENABLE_GTK_DOC_TRUE@	    done;							\
 @ENABLE_GTK_DOC_TRUE@	fi
 @ENABLE_GTK_DOC_TRUE@	gtkdoc-mktmpl --module=$(DOC_MODULE) | tee tmpl-build.log
@@ -797,7 +784,7 @@ update:
 #### build xml; done on every build ####
 
 ### FIXME: make this error out again when docs are fixed for 0.9
-@ENABLE_GTK_DOC_TRUE@sgml-build.stamp: tmpl.stamp inspect.stamp $(CFILE_GLOB) $(top_srcdir)/common/plugins.xsl $(expand_content_files)
+@ENABLE_GTK_DOC_TRUE@sgml-build.stamp: tmpl.stamp scan-build.stamp $(CFILE_GLOB) $(top_srcdir)/common/plugins.xsl $(expand_content_files)
 @ENABLE_GTK_DOC_TRUE@	@echo '*** Building XML ***'
 @ENABLE_GTK_DOC_TRUE@	@-mkdir -p xml
 @ENABLE_GTK_DOC_TRUE@	@for a in $(srcdir)/inspect/*.xml; do \
@@ -849,8 +836,7 @@ update:
 @ENABLE_GTK_DOC_TRUE@	rm -rf xml tmpl html
 # clean files copied for nonsrcdir templates build
 @ENABLE_GTK_DOC_TRUE@	if test x"$(srcdir)" != x. ; then \
-@ENABLE_GTK_DOC_TRUE@	    rm -rf $(SCANOBJ_FILES) $(SCAN_FILES); \
-@ENABLE_GTK_DOC_TRUE@	    rm -f *.stamp; \
+@ENABLE_GTK_DOC_TRUE@	    rm -rf $(SCANOBJ_FILES) $(SCAN_FILES) $(MAINTAINER_DOC_STAMPS); \
 @ENABLE_GTK_DOC_TRUE@	fi
 @ENABLE_GTK_DOC_FALSE@all-local:
 @ENABLE_GTK_DOC_FALSE@clean-local-gtkdoc:
@@ -885,41 +871,19 @@ install-data-local:
 	  $(INSTALL_DATA) $(srcdir)/html/$(DOC_MODULE).devhelp \
 	    $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@.devhelp; \
 	  if test -e $(srcdir)/html/$(DOC_MODULE).devhelp2; then \
-	    $(INSTALL_DATA) $(srcdir)/html/$(DOC_MODULE).devhelp2 \
-		   $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@.devhelp2; \
+	            $(INSTALL_DATA) $(srcdir)/html/$(DOC_MODULE).devhelp2 \
+	            $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@.devhelp2; \
 	  fi; \
-	fi) 
+	  (which gtkdoc-rebase >/dev/null && \
+	    gtkdoc-rebase --relative --dest-dir=$(DESTDIR) --html-dir=$(DESTDIR)$(TARGET_DIR)) || true ; \
+	fi)
 uninstall-local:
-	(installfiles=`echo ./html/*.html`; \
-	if test "$$installfiles" = './html/*.html'; \
-	then echo '-- Nothing to uninstall' ; \
+	if test -d $(DESTDIR)$(TARGET_DIR); then \
+	  rm -rf $(DESTDIR)$(TARGET_DIR)/*; \
+	  rmdir -p $(DESTDIR)$(TARGET_DIR) 2>/dev/null || true; \
 	else \
-	  for i in $$installfiles; do \
-	    rmfile=`basename $$i` ; \
-	    echo '-- Uninstalling $(DESTDIR)$(TARGET_DIR)/'$$rmfile ; \
-	    rm -f $(DESTDIR)$(TARGET_DIR)/$$rmfile; \
-	  done; \
-	  pngfiles=`echo ./html/*.png`; \
-	  if test "$$pngfiles" != './html/*.png'; then \
-	    for i in $$pngfiles; do \
-	      rmfile=`basename $$i` ; \
-	      echo '-- Uninstalling $(DESTDIR)$(TARGET_DIR)/'$$rmfile ; \
-	      rm -f $(DESTDIR)$(TARGET_DIR)/$$rmfile; \
-	    done; \
-	  fi; \
-	  echo '-- Uninstalling $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE).devhelp' ; \
-	  rm -f $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@.devhelp; \
-	  if test -e $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@.devhelp2; then \
-	    rm -f $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@.devhelp2; \
-	  fi; \
-	  echo '-- Uninstalling $(DESTDIR)$(TARGET_DIR)/index.sgml' ; \
-	  rm -f $(DESTDIR)$(TARGET_DIR)/index.sgml; \
-		if test -e $(DESTDIR)$(TARGET_DIR)/style.css; then \
-			echo '-- Uninstalling $(DESTDIR)$(TARGET_DIR)/style.css' ; \
-			rm -f $(DESTDIR)$(TARGET_DIR)/style.css; \
-		fi; \
-	fi) 
-	if test -d $(DESTDIR)$(TARGET_DIR); then rmdir -p --ignore-fail-on-non-empty $(DESTDIR)$(TARGET_DIR) 2>/dev/null; fi; true
+	  echo '-- Nothing to uninstall' ; \
+	fi;
 
 #
 # Checks
@@ -970,6 +934,29 @@ scanobj-trans-build.stamp: $(SCANOBJ_DEPS) $(basefiles) scanobj-build.stamp fars
 	fi
 	touch scanobj-trans-build.stamp
 
+check-outdated-docs:
+	$(AM_V_GEN)echo Checking for outdated plugin inspect data ...; \
+	fail=0 ; \
+	if [ -d $(top_srcdir)/.git/ ]; then \
+	  files=`find $(srcdir)/inspect/ -name '*xml'`; \
+	  for f in $$files; do \
+	    ver=`grep '<version>$(PACKAGE_VERSION)</version>' $$f`; \
+	    if test "x$$ver" = "x"; then \
+	      plugin=`echo $$f | sed -e 's/^.*plugin-//' -e 's/.xml//'`; \
+	      # echo "Checking $$plugin $$f"; \
+	      pushd "$(top_srcdir)" >/dev/null; \
+	      pinit=`git grep -A3 GST_PLUGIN_DEFINE -- ext/ gst/ sys/ | grep "\"$$plugin\""`; \
+	      popd >/dev/null; \
+	      # echo "[$$pinit]"; \
+	      if test "x$$pinit" = "x"; then \
+	        printf " **** outdated docs for plugin %-15s: %s\n" $$plugin $$f; \
+	        fail=1; \
+	      fi; \
+	    fi; \
+	  done; \
+	fi ; \
+	exit $$fail
+
 #
 # Require gtk-doc when making dist
 #
@@ -979,15 +966,18 @@ scanobj-trans-build.stamp: $(SCANOBJ_DEPS) $(basefiles) scanobj-build.stamp fars
 @ENABLE_GTK_DOC_FALSE@	@false
 
 # FIXME: decide whether we want to dist generated html or not
+# also this only works, if the project has been build before
+# we could dist html only if its there, but that might lead to missing html in
+# tarballs
 dist-hook: dist-check-gtkdoc dist-hook-local
 	mkdir $(distdir)/html
 	cp html/* $(distdir)/html
 	-cp $(srcdir)/$(DOC_MODULE).types $(distdir)/
 	-cp $(srcdir)/$(DOC_MODULE)-sections.txt $(distdir)/
-	-cp $(srcdir)/html/$(DOC_MODULE).devhelp* $(distdir)/html
 	cd $(distdir) && rm -f $(DISTCLEANFILES)
+	-gtkdoc-rebase --online --relative --html-dir=$(distdir)/html
 
-.PHONY : dist-hook-local docs
+.PHONY : dist-hook-local docs check-outdated-docs
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

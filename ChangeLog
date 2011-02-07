@@ -1,3 +1,157 @@
+commit 680b46c8a3ac3b782f07a9c82f90cb145eaae7ba
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 20 21:40:17 2011 -0500
+
+    Version 0.0.23
+
+commit bed86be379f2f243474a4475fe42b53e12eae50b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 20 21:49:51 2011 -0500
+
+    common-modified: Dist another stamp file
+
+commit 33c8decb747ca2052cc04006746365abed82093a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 20 21:24:54 2011 -0500
+
+    nice: Update to use the nice 0.1.0 API
+
+commit 8a7ef0893b1f7abca05c24f9829e5c29778abc8f
+Author: Jakub Adam <jakub.adam@ktknet.cz>
+Date:   Thu Jan 20 20:51:04 2011 -0500
+
+    nice: Add compatibility for MS Office Communicator 2007 R2
+
+commit ea8cb34f2027241e348aa27e8bf16ae5be53bd45
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 20 16:15:14 2011 -0500
+
+    example gui: Keep a ref to the FsElementAddedNotifier to keep it alive
+
+commit cbe641522903ad838ec827135ac5f41d2c959de2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 19 14:46:05 2011 -0500
+
+    example gui: Set the necessary properties for x264enc
+
+commit bb9e92964fed41e1abbdfee4dd2205edacb74d06
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 17 22:31:05 2011 -0500
+
+    rtpsession: Really fix dispose checking
+
+commit 684eca007b642630f635de3390430acffa2e8251
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 14 15:09:38 2011 -0500
+
+    rtpsession: Only set disposed to TRUE when actually disposing
+
+commit 84b2047da2ec50dc5417edd910ee9a6d2361e41d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 12 19:19:37 2011 -0500
+
+    tests: Add a test of codecs-ready before calling any method
+    
+    Make sure the codecs-ready is not TRUE if no methods have been called yet
+    and some codecs that require discovered parameters are missing.
+
+commit 342ef3b56ce3ffe09aa5e0fd7f717db9218b8992
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 12 19:16:51 2011 -0500
+
+    rtpsession: Make sure the original codecs are propertly setup
+    
+    Do the update codecs when creating a FsSession so that original codecs have
+    the required bits for the parameter gathering.
+
+commit 78458336223f2f28b61a92e0399d14566ed73815
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 20 16:56:44 2010 +0530
+
+    tests: Add test for pad alloc in fsfunnel
+    
+    Patch by Yongnian Le <yongnian.le@intel.com>
+
+commit 4dafd5471f6a006f41e3eb55d5aa5accff6dbdf7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Dec 20 16:50:07 2010 +0530
+
+    funnel: Implement pad allocation
+    
+    Patch by Yongnian Le <yongnian.le@intel.com>
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=32208
+
+commit 2c56d479b9f5bc29ffdbb119e1f6e7c70840dfda
+Author: Andoni Morales Alastruey <ylatuya@gmail.com>
+Date:   Thu Dec 9 22:33:41 2010 +0100
+
+    Use portable 'g_snprintf' instead of 'snprintf'
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=32276
+
+commit e9ecb91ed9589716883eb3aa05d1eb5ff0f2342d
+Author: Andoni Morales Alastruey <ylatuya@gmail.com>
+Date:   Thu Dec 9 22:54:07 2010 +0100
+
+    Replace legacy index() with strchr() and avoid calculating the index twice
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=32276
+
+commit 8b16e803264325d1941ba420adc72dfcfd1f4e26
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Dec 15 21:56:04 2010 +0530
+
+    mcaststreamtransmitter: Fix error message
+
+commit c2966a229a14da1c751dc8ee2c32535512653563
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 23 16:08:41 2010 -0500
+
+    shmtransmitter: Remove unused header includes
+
+commit cb3de7b50a42a414e59456a10fafc694ad2426d5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Nov 9 15:19:02 2010 -0500
+
+    Update gtk-doc-plugins.mak from common/
+
+commit 9b732e99dd895ff09f67a72cbcb4f77c9b477ad3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 8 15:52:08 2010 -0500
+
+    Verify the sanity of arguments passed to user-facing functions
+
+commit c8302f5170d842c7081520a30cb5280a21dd7140
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 4 18:35:29 2010 -0400
+
+    rtpsession: Unblock pad if the discovery callback is called while disposing of a session
+
+commit f7fb339ef66ec9f1325701d1f2ef4207afd52b34
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 1 17:36:44 2010 -0400
+
+    docs: Add docs for the shm transmitter
+
+commit 717f494dfbdc4ab64c03440f2a384cad8f4e4651
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 1 17:35:55 2010 -0400
+
+    docs: Update custom doc building rules to match newer gst tools
+
+commit 81a7237a05a37c8c973e0114b3d930c5d8035ec4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 1 17:35:28 2010 -0400
+
+    nice: Use the right enum type for pad link return
+
+commit 12d971d58760d89dc0f3a20f43b02567ad3c1049
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 1 16:56:17 2010 -0400
+
+    Version 0.0.22.1
+
 commit b356af11e71889eb64daa01553307dbbad4e4717
 Author: Olivier Crête <olivier.crete@collabora.co.uk>
 Date:   Mon Nov 1 16:06:58 2010 -0400

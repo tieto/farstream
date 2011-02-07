@@ -3,7 +3,7 @@
   <description>Farsight MSN Conference plugin</description>
   <filename>../../gst/fsmsnconference/.libs/libfsmsnconference.so</filename>
   <basename>libfsmsnconference.so</basename>
-  <version>0.0.20.1</version>
+  <version>0.0.22.1</version>
   <license>LGPL</license>
   <source>farsight2</source>
   <package>Farsight</package>
@@ -17,14 +17,14 @@
       <author>Richard Spiers &lt;richard.spiers@gmail.com&gt;, Youness Alaoui &lt;youness.alaoui@collabora.co.uk&gt;, Olivier Crete &lt;olivier.crete@collabora.co.uk&gt;</author>
       <pads>
         <caps>
-          <name>src_%d_%d_%d</name>
-          <direction>source</direction>
+          <name>sink_%d</name>
+          <direction>sink</direction>
           <presence>sometimes</presence>
           <details>ANY</details>
         </caps>
         <caps>
-          <name>sink_%d</name>
-          <direction>sink</direction>
+          <name>src_%d_%d_%d</name>
+          <direction>source</direction>
           <presence>sometimes</presence>
           <details>ANY</details>
         </caps>
@@ -38,14 +38,14 @@
       <author>Richard Spiers &lt;richard.spiers@gmail.com&gt;, Youness Alaoui &lt;youness.alaoui@collabora.co.uk&gt;, Olivier Crete &lt;olivier.crete@collabora.co.uk&gt;</author>
       <pads>
         <caps>
-          <name>src_%d_%d_%d</name>
-          <direction>source</direction>
+          <name>sink_%d</name>
+          <direction>sink</direction>
           <presence>sometimes</presence>
           <details>ANY</details>
         </caps>
         <caps>
-          <name>sink_%d</name>
-          <direction>sink</direction>
+          <name>src_%d_%d_%d</name>
+          <direction>source</direction>
           <presence>sometimes</presence>
           <details>ANY</details>
         </caps>

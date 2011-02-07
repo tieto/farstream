@@ -8,7 +8,7 @@
 <link rel="up" href="ch03.html" title="MSN Webcam plugin">
 <link rel="prev" href="farsight2-plugins-FsMsnSession.html" title="FsMsnSession">
 <link rel="next" href="pt03.html" title="Part III. Utility elements">
-<meta name="generator" content="GTK-Doc V1.14 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -46,8 +46,8 @@
 <a name="farsight2-plugins-FsMsnStream.properties"></a><h2>Properties</h2>
 <pre class="synopsis">
   "<a class="link" href="farsight2-plugins-FsMsnStream.html#FsMsnStream--conference" title='The "conference" property'>conference</a>"               <a class="link" href="farsight2-plugins-FsMsnConference.html#FsMsnConference" title="FsMsnConference"><span class="type">FsMsnConference</span></a>*      : Read / Write / Construct Only
-  "<a class="link" href="farsight2-plugins-FsMsnStream.html#FsMsnStream--initial-port" title='The "initial-port" property'>initial-port</a>"             <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write / Construct Only
-  "<a class="link" href="farsight2-plugins-FsMsnStream.html#FsMsnStream--session-id" title='The "session-id" property'>session-id</a>"               <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write / Construct Only
+  "<a class="link" href="farsight2-plugins-FsMsnStream.html#FsMsnStream--initial-port" title='The "initial-port" property'>initial-port</a>"             <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write / Construct Only
+  "<a class="link" href="farsight2-plugins-FsMsnStream.html#FsMsnStream--session-id" title='The "session-id" property'>session-id</a>"               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write / Construct Only
 </pre>
 </div>
 <div class="refsect1" title="Description">
@@ -58,17 +58,17 @@ to change the direction between sending and receiving since this protocol
 is unidirectional.
 </p>
 <p>
-The "foundation" field of the local <a href="../farsight2-libs-0.10/farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> contains the "recipient-id"
+The "foundation" field of the local <a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> contains the "recipient-id"
 that must be transmitted to the peer.
 </p>
 <p>
 The session id can either be retrieved as a property, but it is also
-put into every <a href="../farsight2-libs-0.10/farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> in the "username" field.
+put into every <a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> in the "username" field.
 </p>
 <p>
 If the peer started the webcam session, it picks the session-id, it can then
-be set either in the transmitter parameters field of <a href="../farsight2-libs-0.10/farsight2-libs-fs-session.html#fs-session-new-stream"><code class="function">fs_session_new_stream()</code></a>
-or by putting it in the "username" field of the remote <a href="../farsight2-libs-0.10/farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a>.
+be set either in the transmitter parameters field of <a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/farsight2-libs-fs-session.html#fs-session-new-stream"><code class="function">fs_session_new_stream()</code></a>
+or by putting it in the "username" field of the remote <a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a>.
 </p>
 </div>
 <div class="refsect1" title="Details">
@@ -91,7 +91,7 @@ or by putting it in the "username" field of the remote <a href="../farsight2-lib
 <hr>
 <div class="refsect2" title='The "initial-port" property'>
 <a name="FsMsnStream--initial-port"></a><h3>The <code class="literal">"initial-port"</code> property</h3>
-<pre class="programlisting">  "initial-port"             <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write / Construct Only</pre>
+<pre class="programlisting">  "initial-port"             <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write / Construct Only</pre>
 <p>The initial port to try to listen on for incoming connection. If already used, port+1 is tried until one succeeds.</p>
 <p>Allowed values: [1025,65535]</p>
 <p>Default value: 1025</p>
@@ -99,7 +99,7 @@ or by putting it in the "username" field of the remote <a href="../farsight2-lib
 <hr>
 <div class="refsect2" title='The "session-id" property'>
 <a name="FsMsnStream--session-id"></a><h3>The <code class="literal">"session-id"</code> property</h3>
-<pre class="programlisting">  "session-id"               <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write / Construct Only</pre>
+<pre class="programlisting">  "session-id"               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write / Construct Only</pre>
 <p>This is the session-id of the MSN session.</p>
 <p>Allowed values: [1000,9999]</p>
 <p>Default value: 9000</p>
@@ -108,6 +108,6 @@ or by putting it in the "username" field of the remote <a href="../farsight2-lib
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.14</div>
+          Generated by GTK-Doc V1.15</div>
 </body>
 </html>

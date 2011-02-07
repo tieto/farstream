@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, cvs and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for cvs/prerelease
-AC_INIT(Farsight2, 0.0.22,
+AC_INIT(Farsight2, 0.0.23,
     https://bugs.freedesktop.org/enter_bug.cgi?product=Farsight,
     farsight2)
 
@@ -50,7 +50,7 @@ dnl - interfaces added/removed/changed -> increment CURRENT, REVISION = 0
 dnl - interfaces added -> increment AGE
 dnl - interfaces removed -> AGE = 0
 dnl sets FS2_LT_LDFLAGS
-AS_LIBTOOL(FS2, 5, 2, 5)
+AS_LIBTOOL(FS2, 5, 3, 5)
 
 dnl FIXME: this macro doesn't actually work;
 dnl the generated libtool script has no support for the listed tags.
@@ -161,7 +161,7 @@ AC_ARG_WITH(transmitter-plugins,
     [FS2_TRANSMITTER_PLUGINS_SELECTED=$FS2_TRANSMITTER_PLUGINS_ALL])
 
 
-NICE_REQUIRED=0.0.9
+NICE_REQUIRED=0.1.0
 
 PKG_CHECK_MODULES(NICE, \
        nice >= $NICE_REQUIRED,, AC_MSG_ERROR([Need libnice >= $NICE_REQUIRED]))

@@ -32,7 +32,7 @@
     </sub>
   </chapters>
   <functions>
-    <keyword type="" name="The &quot;farsight-error&quot; message" link="FsConference.html#id425722"/>
+    <keyword type="" name="The &quot;farsight-error&quot; message" link="FsConference.html#id459650"/>
     <keyword type="struct" name="FsConference" link="FsConference.html#FsConference-struct"/>
     <keyword type="function" name="fs_conference_new_session ()" link="FsConference.html#fs-conference-new-session"/>
     <keyword type="function" name="fs_conference_new_participant ()" link="FsConference.html#fs-conference-new-participant"/>
@@ -45,8 +45,8 @@
     <keyword type="macro" name="FS_PARTICIPANT_DATA_UNLOCK()" link="FsParticipant.html#FS-PARTICIPANT-DATA-UNLOCK:CAPS"/>
     <keyword type="property" name="The &quot;cname&quot; property" link="FsParticipant.html#FsParticipant--cname"/>
     <keyword type="signal" name="The &quot;error&quot; signal" link="FsParticipant.html#FsParticipant-error"/>
-    <keyword type="" name="The &quot;farsight-send-codec-changed&quot;&#10;  message" link="farsight2-libs-fs-session.html#id483606"/>
-    <keyword type="" name="The &quot;farsight-codecs-changed&quot;&#10; message" link="farsight2-libs-fs-session.html#id483666"/>
+    <keyword type="" name="The &quot;farsight-send-codec-changed&quot;&#10;  message" link="farsight2-libs-fs-session.html#id517534"/>
+    <keyword type="" name="The &quot;farsight-codecs-changed&quot;&#10; message" link="farsight2-libs-fs-session.html#id517594"/>
     <keyword type="enum" name="enum FsDTMFEvent" link="farsight2-libs-fs-session.html#FsDTMFEvent"/>
     <keyword type="enum" name="enum FsDTMFMethod" link="farsight2-libs-fs-session.html#FsDTMFMethod"/>
     <keyword type="struct" name="FsSession" link="farsight2-libs-fs-session.html#FsSession-struct"/>
@@ -69,11 +69,11 @@
     <keyword type="property" name="The &quot;sink-pad&quot; property" link="farsight2-libs-fs-session.html#FsSession--sink-pad"/>
     <keyword type="property" name="The &quot;tos&quot; property" link="farsight2-libs-fs-session.html#FsSession--tos"/>
     <keyword type="signal" name="The &quot;error&quot; signal" link="farsight2-libs-fs-session.html#FsSession-error"/>
-    <keyword type="" name="The &quot;farsight-new-local-candidate&quot; message" link="FsStream.html#id505530"/>
-    <keyword type="" name="The &quot;farsight-local-candidates-prepared&quot; message" link="FsStream.html#id505566"/>
-    <keyword type="" name="The &quot;farsight-new-active-candidate-pair&quot; message" link="FsStream.html#id505595"/>
-    <keyword type="" name="The &quot;farsight-recv-codecs-changed&quot; message" link="FsStream.html#id505640"/>
-    <keyword type="" name="The &quot;farsight-component-state-changed&quot; message" link="FsStream.html#id505703"/>
+    <keyword type="" name="The &quot;farsight-new-local-candidate&quot; message" link="FsStream.html#id539458"/>
+    <keyword type="" name="The &quot;farsight-local-candidates-prepared&quot; message" link="FsStream.html#id539494"/>
+    <keyword type="" name="The &quot;farsight-new-active-candidate-pair&quot; message" link="FsStream.html#id539524"/>
+    <keyword type="" name="The &quot;farsight-recv-codecs-changed&quot; message" link="FsStream.html#id539568"/>
+    <keyword type="" name="The &quot;farsight-component-state-changed&quot; message" link="FsStream.html#id539632"/>
     <keyword type="struct" name="FsStream" link="FsStream.html#FsStream-struct"/>
     <keyword type="struct" name="FsStreamClass" link="FsStream.html#FsStreamClass"/>
     <keyword type="enum" name="enum FsStreamDirection" link="FsStream.html#FsStreamDirection"/>

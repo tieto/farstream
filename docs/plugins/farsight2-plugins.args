@@ -418,3 +418,43 @@
 <DEFAULT>0</DEFAULT>
 </ARG>
 
+<ARG>
+<NAME>FsFecRizzoEnc::fec-caps</NAME>
+<TYPE>GstCaps*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>FEC caps to use</NICK>
+<BLURB>FEC caps with encoding-name=x-farsight-reed-solomon-fec.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>FsFecRizzoEnc::k</NAME>
+<TYPE>guint</TYPE>
+<RANGE>>= 1</RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Number of source symbols</NICK>
+<BLURB>The number of source symbols (packets) for a source block.</BLURB>
+<DEFAULT>14</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>FsFecRizzoEnc::n</NAME>
+<TYPE>guint</TYPE>
+<RANGE>>= 1</RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Number of encoding symbols</NICK>
+<BLURB>The number of encoding symbols (packets) for a source block (k + repair packets).</BLURB>
+<DEFAULT>16</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>FsFecRizzoDec::fec-caps</NAME>
+<TYPE>GstCaps*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>FEC caps to use</NICK>
+<BLURB>FEC caps with decoding-name=x-farsight-reed-solomon-fec.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+

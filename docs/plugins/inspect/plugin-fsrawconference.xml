@@ -1,8 +1,8 @@
 <plugin>
-  <name>fsrtpconference</name>
-  <description>Farsight RTP Conference plugin</description>
-  <filename>../../gst/fsrtpconference/.libs/libfsrtpconference.so</filename>
-  <basename>libfsrtpconference.so</basename>
+  <name>fsrawconference</name>
+  <description>Farsight Raw Conference plugin</description>
+  <filename>../../gst/fsrawconference/.libs/libfsrawconference.so</filename>
+  <basename>libfsrawconference.so</basename>
   <version>0.0.22.1</version>
   <license>LGPL</license>
   <source>farsight2</source>
@@ -10,11 +10,11 @@
   <origin>http://farsight.freedesktop.org/</origin>
   <elements>
     <element>
-      <name>fsrtpconference</name>
-      <longname>Farsight RTP Conference</longname>
-      <class>Generic/Bin/RTP</class>
-      <description>A Farsight RTP Conference</description>
-      <author>Olivier Crete &lt;olivier.crete@collabora.co.uk&gt;</author>
+      <name>fsrawconference</name>
+      <longname>Generic bin</longname>
+      <class>Generic/Bin</class>
+      <description>Simple container object</description>
+      <author>Erik Walthinsen &lt;omega@cse.ogi.edu&gt;,Wim Taymans &lt;wim.taymans@gmail.com&gt;</author>
       <pads>
         <caps>
           <name>sink_%d</name>
@@ -23,7 +23,7 @@
           <details>ANY</details>
         </caps>
         <caps>
-          <name>src_%d_%d_%d</name>
+          <name>src_%d</name>
           <direction>source</direction>
           <presence>sometimes</presence>
           <details>ANY</details>
