@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>FsShmStreamTransmitter</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="Farsight2 Plugins Manual">
+<link rel="up" href="ch02.html" title="Transmitters">
+<link rel="prev" href="farsight2-plugins-FsNiceStreamTransmitter.html" title="FsNiceStreamTransmitter">
+<link rel="next" href="pt02.html" title="Part II. MSN plugins">
+<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="farsight2-plugins-FsNiceStreamTransmitter.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch02.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Farsight2 Plugins Manual</th>
+<td><a accesskey="n" href="pt02.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#farsight2-plugins-FsShmStreamTransmitter.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#farsight2-plugins-FsShmStreamTransmitter.description" class="shortcut">Description</a>
+</td></tr>
+</table>
+<div class="refentry" title="FsShmStreamTransmitter">
+<a name="farsight2-plugins-FsShmStreamTransmitter"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="farsight2-plugins-FsShmStreamTransmitter.top_of_page"></a>FsShmStreamTransmitter</span></h2>
+<p>FsShmStreamTransmitter — A stream transmitter object for Shared Memory</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv" title="Synopsis">
+<a name="farsight2-plugins-FsShmStreamTransmitter.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">                    <a class="link" href="farsight2-plugins-FsShmStreamTransmitter.html#FsShmStreamTransmitter" title="FsShmStreamTransmitter">FsShmStreamTransmitter</a>;
+</pre>
+</div>
+<div class="refsect1" title="Description">
+<a name="farsight2-plugins-FsShmStreamTransmitter.description"></a><h2>Description</h2>
+<p>
+The name of this transmitter is "shm".
+</p>
+<p>
+This transmitter is meant to send and received the data from another process
+on the same system while minimizing the memory pressure associated with the
+use of sockets.
+</p>
+<p>
+Two sockets are used to control the shared memory areas. One is used to
+send data and one to receive data. The receiver always connects to the
+sender. The sender socket must exist before the receiver connects to it.
+</p>
+<p>
+The sender socket can be created by giving the transmitter a candidate
+with the path of the socket in the "ip" field of the <a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a>. This
+<a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> can be given to the <a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/FsStreamTransmitter.html"><span class="type">FsStreamTransmitter</span></a> in two ways, either
+by setting the <a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/FsStreamTransmitter.html#FsStreamTransmitter--preferred-local-candidates"><span class="type">"preferred-local-candidates"</span></a> property
+or by calling the <a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/FsStreamTransmitter.html#fs-stream-transmitter-set-remote-candidates"><code class="function">fs_stream_transmitter_set_remote_candidates()</code></a> function.
+There can be only one single send socket per stream. When the send socket
+is ready to be connected to, <a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/FsStreamTransmitter.html#FsStreamTransmitter-new-local-candidate"><span class="type">"new-local-candidate"</span></a> signal
+will be emitted.
+</p>
+<p>
+To connect the receive side to the other application, one must create a
+<a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> with the path of the sender's socket in the "username" field.
+If the receiver can not connect to the sender,
+the <a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/FsStreamTransmitter.html#fs-stream-transmitter-set-remote-candidates"><code class="function">fs_stream_transmitter_set_remote_candidates()</code></a> call will fail.
+</p>
+</div>
+<div class="refsect1" title="Details">
+<a name="farsight2-plugins-FsShmStreamTransmitter.details"></a><h2>Details</h2>
+<div class="refsect2" title="FsShmStreamTransmitter">
+<a name="FsShmStreamTransmitter"></a><h3>FsShmStreamTransmitter</h3>
+<pre class="programlisting">typedef struct {
+  FsStreamTransmitter parent;
+} FsShmStreamTransmitter;
+</pre>
+<p>
+All members are private, access them using methods and properties
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/FsStreamTransmitter.html"><span class="type">FsStreamTransmitter</span></a> <em class="structfield"><code><a name="FsShmStreamTransmitter.parent"></a>parent</code></em>;</span></p></td>
+<td>Parent object
+</td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.15</div>
+</body>
+</html>

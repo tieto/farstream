@@ -107,9 +107,9 @@ class FsUIPipeline:
     def __init__(self, elementname="fsrtpconference"):
         self.pipeline = gst.Pipeline()
         signal.signal(signal.SIGINT, self.int_handler)
-        notifier = farsight.ElementAddedNotifier()
-        notifier.connect("element-added", self.element_added_cb)
-        notifier.add(self.pipeline)
+        self.notifier = farsight.ElementAddedNotifier()
+        self.notifier.connect("element-added", self.element_added_cb)
+        self.notifier.add(self.pipeline)
         self.pipeline.get_bus().set_sync_handler(self.sync_handler)
         self.pipeline.get_bus().add_watch(self.async_handler)
         self.conf = gst.element_factory_make(elementname)
@@ -249,6 +249,9 @@ class FsUIPipeline:
         if element.get_factory().get_name() == "x264enc":
             element.set_property("byte-stream", True)
             element.set_property("bitrate", 128)
+            element.set_property("speed-preset", 2)
+            element.set_property("profile", "baseline")
+            element.set_property("tune", "zerolatency")
         elif element.get_factory().get_name() == "gstrtpbin":
             element.set_property("latency", 100)
             

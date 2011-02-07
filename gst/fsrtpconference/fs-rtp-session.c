@@ -486,6 +486,15 @@ fs_rtp_session_real_dispose (FsRtpSession *self)
   GList *item = NULL;
   GstBin *conferencebin = NULL;
 
+  g_static_rw_lock_writer_lock (&self->priv->disposed_lock);
+  if (self->priv->disposed)
+  {
+    g_static_rw_lock_writer_unlock (&self->priv->disposed_lock);
+    return;
+  }
+  self->priv->disposed = TRUE;
+  g_static_rw_lock_writer_unlock (&self->priv->disposed_lock);
+
   conferencebin = GST_BIN (self->priv->conference);
 
   if (self->priv->rtpbin_internal_session)
@@ -684,6 +693,7 @@ fs_rtp_session_real_dispose (FsRtpSession *self)
   g_hash_table_remove_all (self->priv->ssrc_streams);
   g_hash_table_remove_all (self->priv->ssrc_streams_manual);
 
+
   G_OBJECT_CLASS (fs_rtp_session_parent_class)->dispose (G_OBJECT (self));
 }
 
@@ -692,26 +702,19 @@ fs_rtp_session_dispose (GObject *object)
 {
   FsRtpSession *self = FS_RTP_SESSION (object);
 
-  g_static_rw_lock_writer_lock (&self->priv->disposed_lock);
-  if (self->priv->disposed)
-  {
-    /* If dispose did already run, return. */
-    g_static_rw_lock_writer_unlock (&self->priv->disposed_lock);
+  if (fs_rtp_session_has_disposed_enter (self, NULL))
     return;
-  }
-
-  self->priv->disposed = TRUE;
-
-  g_static_rw_lock_writer_unlock (&self->priv->disposed_lock);
 
   if (fs_rtp_conference_is_internal_thread (self->priv->conference))
   {
     g_object_ref (self);
     if (!g_thread_create (trigger_dispose, self, FALSE, NULL))
       g_error ("Could not create dispose thread");
+    fs_rtp_session_has_disposed_exit (self);
   }
   else
   {
+    fs_rtp_session_has_disposed_exit (self);
     fs_rtp_session_real_dispose (self);
   }
 }
@@ -968,18 +971,6 @@ fs_rtp_session_constructed (GObject *object)
       self->priv->construction_error = g_error_new (FS_ERROR,
         FS_ERROR_INTERNAL,
         "Unknown error while trying to discover codecs");
-    return;
-  }
-
-  /* Create an initial list of local codec associations */
-  self->priv->codec_associations = create_local_codec_associations (
-      self->priv->blueprints, NULL, NULL);
-
-  if (!self->priv->codec_associations)
-  {
-    self->priv->construction_error = g_error_new (FS_ERROR, FS_ERROR_INTERNAL,
-        "Unable to create initial codec associations"
-        " from the discovered codecs");
     return;
   }
 
@@ -1411,9 +1402,13 @@ fs_rtp_session_constructed (GObject *object)
     g_object_set (self->priv->rtpbin_internal_session, "favor-new", TRUE,
         NULL);
 
-  FS_RTP_SESSION_LOCK (self);
-  fs_rtp_session_start_codec_param_gathering_locked (self);
-  FS_RTP_SESSION_UNLOCK (self);
+
+  if (!fs_rtp_session_update_codecs (self, NULL, NULL,
+          &self->priv->construction_error))
+  {
+    g_assert (self->priv->construction_error);
+    return;
+  }
 
   if (G_OBJECT_CLASS (fs_rtp_session_parent_class)->constructed)
     G_OBJECT_CLASS (fs_rtp_session_parent_class)->constructed(object);
@@ -4230,7 +4225,10 @@ _discovery_pad_blocked_callback (GstPad *pad, gboolean blocked,
   CodecAssociation *ca = NULL;
 
   if (fs_rtp_session_has_disposed_enter (session, NULL))
+  {
+    gst_pad_set_blocked_async (pad, FALSE, pad_block_do_nothing, NULL);
     return;
+  }
 
   g_mutex_lock (session->priv->discovery_pad_blocked_mutex);
 

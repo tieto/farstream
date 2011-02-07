@@ -1,3 +1,4 @@
+<ONLINE href="http://farsight.freedesktop.org/apidoc/farsight2-plugins/">
 <ANCHOR id="farsight2-plugins-FsRtpConference" href="farsight2-plugins-0.10/farsight2-plugins-FsRtpConference.html">
 <ANCHOR id="farsight2-plugins-FsRtpConference.synopsis" href="farsight2-plugins-0.10/farsight2-plugins-FsRtpConference.html#farsight2-plugins-FsRtpConference.synopsis">
 <ANCHOR id="farsight2-plugins-FsRtpConference.properties" href="farsight2-plugins-0.10/farsight2-plugins-FsRtpConference.html#farsight2-plugins-FsRtpConference.properties">
@@ -77,6 +78,11 @@
 <ANCHOR id="FsNiceStreamTransmitter--stun-ip" href="farsight2-plugins-0.10/farsight2-plugins-FsNiceStreamTransmitter.html#FsNiceStreamTransmitter--stun-ip">
 <ANCHOR id="FsNiceStreamTransmitter--stun-port" href="farsight2-plugins-0.10/farsight2-plugins-FsNiceStreamTransmitter.html#FsNiceStreamTransmitter--stun-port">
 <ANCHOR id="farsight2-plugins-FsNiceStreamTransmitter.see-also" href="farsight2-plugins-0.10/farsight2-plugins-FsNiceStreamTransmitter.html#farsight2-plugins-FsNiceStreamTransmitter.see-also">
+<ANCHOR id="farsight2-plugins-FsShmStreamTransmitter" href="farsight2-plugins-0.10/farsight2-plugins-FsShmStreamTransmitter.html">
+<ANCHOR id="farsight2-plugins-FsShmStreamTransmitter.synopsis" href="farsight2-plugins-0.10/farsight2-plugins-FsShmStreamTransmitter.html#farsight2-plugins-FsShmStreamTransmitter.synopsis">
+<ANCHOR id="farsight2-plugins-FsShmStreamTransmitter.description" href="farsight2-plugins-0.10/farsight2-plugins-FsShmStreamTransmitter.html#farsight2-plugins-FsShmStreamTransmitter.description">
+<ANCHOR id="farsight2-plugins-FsShmStreamTransmitter.details" href="farsight2-plugins-0.10/farsight2-plugins-FsShmStreamTransmitter.html#farsight2-plugins-FsShmStreamTransmitter.details">
+<ANCHOR id="FsShmStreamTransmitter" href="farsight2-plugins-0.10/farsight2-plugins-FsShmStreamTransmitter.html#FsShmStreamTransmitter">
 <ANCHOR id="farsight2-plugins-FsMsnCamSendConference" href="farsight2-plugins-0.10/farsight2-plugins-FsMsnCamSendConference.html">
 <ANCHOR id="farsight2-plugins-FsMsnCamSendConference.synopsis" href="farsight2-plugins-0.10/farsight2-plugins-FsMsnCamSendConference.html#farsight2-plugins-FsMsnCamSendConference.synopsis">
 <ANCHOR id="farsight2-plugins-FsMsnCamSendConference.description" href="farsight2-plugins-0.10/farsight2-plugins-FsMsnCamSendConference.html#farsight2-plugins-FsMsnCamSendConference.description">

@@ -740,10 +740,12 @@ parse_events (const gchar *events)
   for (i = 0; ranges_strv[i]; i++)
   {
     struct event_range *er = g_slice_new (struct event_range);
+    gchar *p = NULL;
 
     er->first = atoi (ranges_strv[i]);
-    if (index (ranges_strv[i], '-'))
-      er->last = atoi (index (ranges_strv[i], '-') + 1);
+    p = strchr (ranges_strv[i], '-');
+    if (p)
+      er->last = atoi (p + 1);
     else
       er->last = er->first;
 
@@ -1481,7 +1483,7 @@ param_h264_profile_level_id (const struct SdpParam *sdp_param,
   local_level_idc = 0xFF & local_value;
   nego_level_idc = MIN (remote_level_idc, local_level_idc);
 
-  snprintf (buf, 7, "%02hhX%02hhX%02hhX", local_profile_idc, nego_profile_iop,
+  g_snprintf (buf, 7, "%02hhX%02hhX%02hhX", local_profile_idc, nego_profile_iop,
       nego_level_idc);
 
   fs_codec_add_optional_parameter (negotiated_codec, sdp_param->name, buf);
