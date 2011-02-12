@@ -5,7 +5,7 @@
 <title>FsRtpSession</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
 <link rel="home" href="index.html" title="Farsight2 Plugins Manual">
-<link rel="up" href="ch01.html" title="Core interface classes">
+<link rel="up" href="ch01.html" title="RTP Plugin">
 <link rel="prev" href="farsight2-plugins-FsRtpParticipant.html" title="FsRtpParticipant">
 <link rel="next" href="farsight2-plugins-FsRtpStream.html" title="FsRtpStream">
 <meta name="generator" content="GTK-Doc V1.15 (XML mode)">
@@ -46,9 +46,10 @@
 <a name="farsight2-plugins-FsRtpSession.properties"></a><h2>Properties</h2>
 <pre class="synopsis">
   "<a class="link" href="farsight2-plugins-FsRtpSession.html#FsRtpSession--no-rtcp-timeout" title='The "no-rtcp-timeout" property'>no-rtcp-timeout</a>"          <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a>                  : Read / Write
-  "<a class="link" href="farsight2-plugins-FsRtpSession.html#FsRtpSession--conference" title='The "conference" property'>conference</a>"               <a class="link" href="farsight2-plugins-FsRtpConference.html#FsRtpConference" title="FsRtpConference"><span class="type">FsRtpConference</span></a>*      : Read / Write / Construct Only
   "<a class="link" href="farsight2-plugins-FsRtpSession.html#FsRtpSession--ssrc" title='The "ssrc" property'>ssrc</a>"                     <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write
   "<a class="link" href="farsight2-plugins-FsRtpSession.html#FsRtpSession--send-bitrate" title='The "send-bitrate" property'>send-bitrate</a>"             <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write
+  "<a class="link" href="farsight2-plugins-FsRtpSession.html#FsRtpSession--rtp-header-extension-preferences" title='The "rtp-header-extension-preferences" property'>rtp-header-extension-preferences</a>" <span class="type">FsRtpHeaderExtensionGList</span>*  : Read / Write
+  "<a class="link" href="farsight2-plugins-FsRtpSession.html#FsRtpSession--rtp-header-extensions" title='The "rtp-header-extensions" property'>rtp-header-extensions</a>"    <span class="type">FsRtpHeaderExtensionGList</span>*  : Read
 </pre>
 </div>
 <div class="refsect1" title="Description">
@@ -60,7 +61,7 @@ Audio or Video. It also represents data send with one and only one
 SSRC (although if there is a SSRC collision, that SSRC may change).
 </p>
 <div class="refsect2" title="Codec profiles">
-<a name="id502848"></a><h3>Codec profiles</h3>
+<a name="id433132"></a><h3>Codec profiles</h3>
 <p>
 It is possible to define "codec profiles", that is non-autodetected
 encoding and decoding pipelines for codecs. It is even possible to declare
@@ -107,12 +108,6 @@ secondary pad of some other codec.
 <p>Default value: 7000</p>
 </div>
 <hr>
-<div class="refsect2" title='The "conference" property'>
-<a name="FsRtpSession--conference"></a><h3>The <code class="literal">"conference"</code> property</h3>
-<pre class="programlisting">  "conference"               <a class="link" href="farsight2-plugins-FsRtpConference.html#FsRtpConference" title="FsRtpConference"><span class="type">FsRtpConference</span></a>*      : Read / Write / Construct Only</pre>
-<p>This is a convience pointer for the Conference.</p>
-</div>
-<hr>
 <div class="refsect2" title='The "ssrc" property'>
 <a name="FsRtpSession--ssrc"></a><h3>The <code class="literal">"ssrc"</code> property</h3>
 <pre class="programlisting">  "ssrc"                     <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write</pre>
@@ -125,6 +120,18 @@ secondary pad of some other codec.
 <pre class="programlisting">  "send-bitrate"             <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write</pre>
 <p>The bitrate that the session will try to send at in bits/sec.</p>
 <p>Default value: 0</p>
+</div>
+<hr>
+<div class="refsect2" title='The "rtp-header-extension-preferences" property'>
+<a name="FsRtpSession--rtp-header-extension-preferences"></a><h3>The <code class="literal">"rtp-header-extension-preferences"</code> property</h3>
+<pre class="programlisting">  "rtp-header-extension-preferences" <span class="type">FsRtpHeaderExtensionGList</span>*  : Read / Write</pre>
+<p>GList of RTP Header extensions that are locally supported and desired by the application.</p>
+</div>
+<hr>
+<div class="refsect2" title='The "rtp-header-extensions" property'>
+<a name="FsRtpSession--rtp-header-extensions"></a><h3>The <code class="literal">"rtp-header-extensions"</code> property</h3>
+<pre class="programlisting">  "rtp-header-extensions"    <span class="type">FsRtpHeaderExtensionGList</span>*  : Read</pre>
+<p>GList of RTP Header extensions that have been negotiated and will be used when sending of receiving RTP packets.</p>
 </div>
 </div>
 </div>

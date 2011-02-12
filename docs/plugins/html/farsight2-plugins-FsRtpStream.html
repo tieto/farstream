@@ -5,9 +5,9 @@
 <title>FsRtpStream</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
 <link rel="home" href="index.html" title="Farsight2 Plugins Manual">
-<link rel="up" href="ch01.html" title="Core interface classes">
+<link rel="up" href="ch01.html" title="RTP Plugin">
 <link rel="prev" href="farsight2-plugins-FsRtpSession.html" title="FsRtpSession">
-<link rel="next" href="ch02.html" title="Transmitters">
+<link rel="next" href="ch02.html" title="Raw Plugin">
 <meta name="generator" content="GTK-Doc V1.15 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -46,6 +46,7 @@
 <a name="farsight2-plugins-FsRtpStream.properties"></a><h2>Properties</h2>
 <pre class="synopsis">
   "<a class="link" href="farsight2-plugins-FsRtpStream.html#FsRtpStream--stream-transmitter" title='The "stream-transmitter" property'>stream-transmitter</a>"       <a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/FsStreamTransmitter.html"><span class="type">FsStreamTransmitter</span></a>*  : Write / Construct Only
+  "<a class="link" href="farsight2-plugins-FsRtpStream.html#FsRtpStream--rtp-header-extensions" title='The "rtp-header-extensions" property'>rtp-header-extensions</a>"    <span class="type">FsRtpHeaderExtensionGList</span>*  : Read / Write
 </pre>
 </div>
 <div class="refsect1" title="Description">
@@ -74,6 +75,12 @@ it is created by calling <a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/fa
 <p>
 The <a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/FsStreamTransmitter.html"><span class="type">FsStreamTransmitter</span></a> for this stream.
 </p>
+</div>
+<hr>
+<div class="refsect2" title='The "rtp-header-extensions" property'>
+<a name="FsRtpStream--rtp-header-extensions"></a><h3>The <code class="literal">"rtp-header-extensions"</code> property</h3>
+<pre class="programlisting">  "rtp-header-extensions"    <span class="type">FsRtpHeaderExtensionGList</span>*  : Read / Write</pre>
+<p>GList of RTP Header extensions that the participant for this stream would like to use.</p>
 </div>
 </div>
 </div>

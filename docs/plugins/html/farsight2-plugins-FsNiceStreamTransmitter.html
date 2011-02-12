@@ -5,7 +5,7 @@
 <title>FsNiceStreamTransmitter</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
 <link rel="home" href="index.html" title="Farsight2 Plugins Manual">
-<link rel="up" href="ch02.html" title="Transmitters">
+<link rel="up" href="pt02.html" title="Part II. Transmitters">
 <link rel="prev" href="farsight2-plugins-FsMulticastStreamTransmitter.html" title="FsMulticastStreamTransmitter">
 <link rel="next" href="farsight2-plugins-FsShmStreamTransmitter.html" title="FsShmStreamTransmitter">
 <meta name="generator" content="GTK-Doc V1.15 (XML mode)">
@@ -15,7 +15,7 @@
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
 <tr valign="middle">
 <td><a accesskey="p" href="farsight2-plugins-FsMulticastStreamTransmitter.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
-<td><a accesskey="u" href="ch02.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="u" href="pt02.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">Farsight2 Plugins Manual</th>
 <td><a accesskey="n" href="farsight2-plugins-FsShmStreamTransmitter.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
@@ -24,8 +24,6 @@
 <a href="#farsight2-plugins-FsNiceStreamTransmitter.synopsis" class="shortcut">Top</a>
                    | 
                   <a href="#farsight2-plugins-FsNiceStreamTransmitter.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#farsight2-plugins-FsNiceStreamTransmitter.properties" class="shortcut">Properties</a>
 </td></tr>
 </table>
 <div class="refentry" title="FsNiceStreamTransmitter">
@@ -40,18 +38,6 @@
 <div class="refsynopsisdiv" title="Synopsis">
 <a name="farsight2-plugins-FsNiceStreamTransmitter.synopsis"></a><h2>Synopsis</h2>
 <pre class="synopsis">                    <a class="link" href="farsight2-plugins-FsNiceStreamTransmitter.html#FsNiceStreamTransmitter" title="FsNiceStreamTransmitter">FsNiceStreamTransmitter</a>;
-</pre>
-</div>
-<div class="refsect1" title="Properties">
-<a name="farsight2-plugins-FsNiceStreamTransmitter.properties"></a><h2>Properties</h2>
-<pre class="synopsis">
-  "<a class="link" href="farsight2-plugins-FsNiceStreamTransmitter.html#FsNiceStreamTransmitter--compatibility-mode" title='The "compatibility-mode" property'>compatibility-mode</a>"       <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Write / Construct Only
-  "<a class="link" href="farsight2-plugins-FsNiceStreamTransmitter.html#FsNiceStreamTransmitter--controlling-mode" title='The "controlling-mode" property'>controlling-mode</a>"         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write / Construct
-  "<a class="link" href="farsight2-plugins-FsNiceStreamTransmitter.html#FsNiceStreamTransmitter--debug" title='The "debug" property'>debug</a>"                    <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Write
-  "<a class="link" href="farsight2-plugins-FsNiceStreamTransmitter.html#FsNiceStreamTransmitter--relay-info" title='The "relay-info" property'>relay-info</a>"               <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Value-arrays.html#GValueArray"><span class="type">GValueArray</span></a>*          : Write / Construct Only
-  "<a class="link" href="farsight2-plugins-FsNiceStreamTransmitter.html#FsNiceStreamTransmitter--stream-id" title='The "stream-id" property'>stream-id</a>"                <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read
-  "<a class="link" href="farsight2-plugins-FsNiceStreamTransmitter.html#FsNiceStreamTransmitter--stun-ip" title='The "stun-ip" property'>stun-ip</a>"                  <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write / Construct Only
-  "<a class="link" href="farsight2-plugins-FsNiceStreamTransmitter.html#FsNiceStreamTransmitter--stun-port" title='The "stun-port" property'>stun-port</a>"                <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write / Construct Only
 </pre>
 </div>
 <div class="refsect1" title="Description">
@@ -76,104 +62,6 @@ All members are private, access them using methods and properties
 </td>
 </tr></tbody>
 </table></div>
-</div>
-</div>
-<div class="refsect1" title="Property Details">
-<a name="farsight2-plugins-FsNiceStreamTransmitter.property-details"></a><h2>Property Details</h2>
-<div class="refsect2" title='The "compatibility-mode" property'>
-<a name="FsNiceStreamTransmitter--compatibility-mode"></a><h3>The <code class="literal">"compatibility-mode"</code> property</h3>
-<pre class="programlisting">  "compatibility-mode"       <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Write / Construct Only</pre>
-<p>The id of the stream according to libnice.</p>
-<p>Allowed values: &lt;= 3</p>
-<p>Default value: 0</p>
-</div>
-<hr>
-<div class="refsect2" title='The "controlling-mode" property'>
-<a name="FsNiceStreamTransmitter--controlling-mode"></a><h3>The <code class="literal">"controlling-mode"</code> property</h3>
-<pre class="programlisting">  "controlling-mode"         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write / Construct</pre>
-<p>Whether the agent is in controlling mode.</p>
-<p>Default value: TRUE</p>
-</div>
-<hr>
-<div class="refsect2" title='The "debug" property'>
-<a name="FsNiceStreamTransmitter--debug"></a><h3>The <code class="literal">"debug"</code> property</h3>
-<pre class="programlisting">  "debug"                    <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Write</pre>
-<p>Whether the agent should enable libnice and stun debug messages.</p>
-<p>Default value: FALSE</p>
-</div>
-<hr>
-<div class="refsect2" title='The "relay-info" property'>
-<a name="FsNiceStreamTransmitter--relay-info"></a><h3>The <code class="literal">"relay-info"</code> property</h3>
-<pre class="programlisting">  "relay-info"               <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Value-arrays.html#GValueArray"><span class="type">GValueArray</span></a>*          : Write / Construct Only</pre>
-<p>
-This is a <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Value-arrays.html#GValueArray"><span class="type">GValueArray</span></a> containing one or more <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstStructure.html#GstStructure"><span class="type">GstStructure</span></a>.
-</p>
-<p>
-The fields in the structure are:
- </p>
-<table id="id500976">
-<tr><th colspan="2">Required</th></tr>
-<tr>
-    <td nowrap>(gchar*)</td>
-    <td nowrap>ip</td>
-    <td>The IP address of the TURN server</td>
-  </tr>
-<tr>
-    <td nowrap>(guint)</td>
-    <td nowrap>port</td>
-    <td>The port of the TURN server</td>
-  </tr>
-<tr>
-    <td nowrap>(gchar*)</td>
-    <td nowrap>username</td>
-  </tr>
-<tr>
-    <td nowrap>(gchar*)</td>
-    <td nowrap>password</td>
-  </tr>
-<tr><th colspan="2">Optional</th></tr>
-<tr>
-   <td nowrap>(gchar *)</td>
-   <td nowrap>relay-type</td>
-   <td>The type of TURN server, can use "udp", "tcp" or "tls".
-       Defaults to "udp" if not specified.</td>
-  </tr>
-<tr>
-   <td nowrap>(guint)</td>
-   <td nowrap>component</td>
-   <td>The component this TURN server and creditials will be used for.
-   If no component is specified, it will be used for all components where
-   no per-component details were specified.
-   This is useful if you want to specify different short term creditial
-   username/password combinations for Google and MSN compatibility modes.
-   </td>
-  </tr>
-</table>
-<p>
-</p>
-</div>
-<hr>
-<div class="refsect2" title='The "stream-id" property'>
-<a name="FsNiceStreamTransmitter--stream-id"></a><h3>The <code class="literal">"stream-id"</code> property</h3>
-<pre class="programlisting">  "stream-id"                <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read</pre>
-<p>The id of the stream according to libnice.</p>
-<p>Allowed values: &lt;= G_MAXINT</p>
-<p>Default value: 0</p>
-</div>
-<hr>
-<div class="refsect2" title='The "stun-ip" property'>
-<a name="FsNiceStreamTransmitter--stun-ip"></a><h3>The <code class="literal">"stun-ip"</code> property</h3>
-<pre class="programlisting">  "stun-ip"                  <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write / Construct Only</pre>
-<p>The STUN server used to obtain server-reflexive candidates.</p>
-<p>Default value: NULL</p>
-</div>
-<hr>
-<div class="refsect2" title='The "stun-port" property'>
-<a name="FsNiceStreamTransmitter--stun-port"></a><h3>The <code class="literal">"stun-port"</code> property</h3>
-<pre class="programlisting">  "stun-port"                <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write / Construct Only</pre>
-<p>The STUN server used to obtain server-reflexive candidates.</p>
-<p>Allowed values: [1,65536]</p>
-<p>Default value: 3478</p>
 </div>
 </div>
 <div class="refsect1" title="See Also">

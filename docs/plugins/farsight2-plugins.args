@@ -79,6 +79,16 @@
 </ARG>
 
 <ARG>
+<NAME>FsRtcpFilter::sending</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Sending RTP?</NICK>
+<BLURB>If set to FALSE, it assumes that all RTP has been dropped.</BLURB>
+<DEFAULT>FALSE</DEFAULT>
+</ARG>
+
+<ARG>
 <NAME>FsRtpSession::no-rtcp-timeout</NAME>
 <TYPE>gint</TYPE>
 <RANGE>>= G_MAXULONG</RANGE>
@@ -86,16 +96,6 @@
 <NICK>The timeout (in ms) before no RTCP is assumed</NICK>
 <BLURB>This is the time (in ms) after which data received without RTCP is attached the FsStream, this only works if there is only one FsStream. -1 will wait forever. 0 will not wait for RTCP and attach it immediataly to the FsStream and prohibit the creation of a second FsStream.</BLURB>
 <DEFAULT>7000</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>FsRtpSession::conference</NAME>
-<TYPE>FsRtpConference*</TYPE>
-<RANGE></RANGE>
-<FLAGS>rwX</FLAGS>
-<NICK>The Conference this stream refers to</NICK>
-<BLURB>This is a convience pointer for the Conference.</BLURB>
-<DEFAULT></DEFAULT>
 </ARG>
 
 <ARG>
@@ -119,173 +119,23 @@
 </ARG>
 
 <ARG>
-<NAME>FsRawUdpStreamTransmitter::stun-ip</NAME>
-<TYPE>gchar*</TYPE>
-<RANGE></RANGE>
-<FLAGS>rwX</FLAGS>
-<NICK>The IP address of the STUN server</NICK>
-<BLURB>The IPv4 address of the STUN server as a x.x.x.x string.</BLURB>
-<DEFAULT>NULL</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>FsRawUdpStreamTransmitter::stun-port</NAME>
-<TYPE>guint</TYPE>
-<RANGE>[1,65535]</RANGE>
-<FLAGS>rwX</FLAGS>
-<NICK>The port of the STUN server</NICK>
-<BLURB>The IPv4 UDP port of the STUN server as a .</BLURB>
-<DEFAULT>3478</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>FsRawUdpStreamTransmitter::stun-timeout</NAME>
-<TYPE>guint</TYPE>
-<RANGE>>= 1</RANGE>
-<FLAGS>rwX</FLAGS>
-<NICK>The timeout for the STUN reply</NICK>
-<BLURB>How long to wait for for the STUN reply (in seconds) before giving up.</BLURB>
-<DEFAULT>30</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>FsRawUdpStreamTransmitter::upnp-discovery</NAME>
-<TYPE>gboolean</TYPE>
-<RANGE></RANGE>
-<FLAGS>rwX</FLAGS>
-<NICK>Try to use UPnP to find the external IP address</NICK>
-<BLURB>Tries to discovery the external IP with UPnP if stun fails.</BLURB>
-<DEFAULT>TRUE</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>FsRawUdpStreamTransmitter::upnp-discovery-timeout</NAME>
-<TYPE>guint</TYPE>
-<RANGE></RANGE>
-<FLAGS>rwX</FLAGS>
-<NICK>Timeout after which UPnP discovery fails</NICK>
-<BLURB>After this period, UPnP discovery is considered to have failed and the local IP is returned.</BLURB>
-<DEFAULT>10</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>FsRawUdpStreamTransmitter::upnp-mapping</NAME>
-<TYPE>gboolean</TYPE>
-<RANGE></RANGE>
-<FLAGS>rwX</FLAGS>
-<NICK>Try to map ports using UPnP</NICK>
-<BLURB>Tries to map ports using UPnP if enabled.</BLURB>
-<DEFAULT>TRUE</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>FsRawUdpStreamTransmitter::upnp-mapping-timeout</NAME>
-<TYPE>guint</TYPE>
-<RANGE></RANGE>
-<FLAGS>rwX</FLAGS>
-<NICK>Timeout after which UPnP mappings expire</NICK>
-<BLURB>The UPnP port mappings expire after this period if the app has crashed (in seconds).</BLURB>
-<DEFAULT>600</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>FsRawUdpStreamTransmitter::upnp-request-timeout</NAME>
-<TYPE>guint</TYPE>
-<RANGE>[1,600]</RANGE>
-<FLAGS>rwX</FLAGS>
-<NICK>Timeout after which UPnP requests timeout</NICK>
-<BLURB>After this delay, UPnP requests fails.</BLURB>
-<DEFAULT>10</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>FsMsnConference::local-address</NAME>
-<TYPE>gchar*</TYPE>
+<NAME>FsRtpSession::rtp-header-extension-preferences</NAME>
+<TYPE>FsRtpHeaderExtensionGList*</TYPE>
 <RANGE></RANGE>
 <FLAGS>rw</FLAGS>
-<NICK>Msn Address</NICK>
-<BLURB>The local contact address for the MSN sessions.</BLURB>
-<DEFAULT>NULL</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>FsNiceStreamTransmitter::compatibility-mode</NAME>
-<TYPE>guint</TYPE>
-<RANGE><= 3</RANGE>
-<FLAGS>wX</FLAGS>
-<NICK>The compability-mode</NICK>
-<BLURB>The id of the stream according to libnice.</BLURB>
-<DEFAULT>0</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>FsNiceStreamTransmitter::controlling-mode</NAME>
-<TYPE>gboolean</TYPE>
-<RANGE></RANGE>
-<FLAGS>rwx</FLAGS>
-<NICK>ICE controlling mode</NICK>
-<BLURB>Whether the agent is in controlling mode.</BLURB>
-<DEFAULT>TRUE</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>FsNiceStreamTransmitter::debug</NAME>
-<TYPE>gboolean</TYPE>
-<RANGE></RANGE>
-<FLAGS>w</FLAGS>
-<NICK>Enable debug messages</NICK>
-<BLURB>Whether the agent should enable libnice and stun debug messages.</BLURB>
-<DEFAULT>FALSE</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>FsNiceStreamTransmitter::relay-info</NAME>
-<TYPE>GValueArray*</TYPE>
-<RANGE></RANGE>
-<FLAGS>wX</FLAGS>
-<NICK>Information for the TURN server</NICK>
-<BLURB>ip/port/username/password/component of the TURN servers in a GValueArray of GstStructures .</BLURB>
+<NICK>Desired RTP header extensions</NICK>
+<BLURB>GList of RTP Header extensions that are locally supported and desired by the application.</BLURB>
 <DEFAULT></DEFAULT>
 </ARG>
 
 <ARG>
-<NAME>FsNiceStreamTransmitter::stream-id</NAME>
-<TYPE>guint</TYPE>
-<RANGE><= G_MAXINT</RANGE>
+<NAME>FsRtpSession::rtp-header-extensions</NAME>
+<TYPE>FsRtpHeaderExtensionGList*</TYPE>
+<RANGE></RANGE>
 <FLAGS>r</FLAGS>
-<NICK>The id of the stream</NICK>
-<BLURB>The id of the stream according to libnice.</BLURB>
-<DEFAULT>0</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>FsNiceStreamTransmitter::stun-ip</NAME>
-<TYPE>gchar*</TYPE>
-<RANGE></RANGE>
-<FLAGS>rwX</FLAGS>
-<NICK>STUN server</NICK>
-<BLURB>The STUN server used to obtain server-reflexive candidates.</BLURB>
-<DEFAULT>NULL</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>FsNiceStreamTransmitter::stun-port</NAME>
-<TYPE>guint</TYPE>
-<RANGE>[1,65536]</RANGE>
-<FLAGS>rwX</FLAGS>
-<NICK>STUN server port</NICK>
-<BLURB>The STUN server used to obtain server-reflexive candidates.</BLURB>
-<DEFAULT>3478</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>FsRtcpFilter::sending</NAME>
-<TYPE>gboolean</TYPE>
-<RANGE></RANGE>
-<FLAGS>rw</FLAGS>
-<NICK>Sending RTP?</NICK>
-<BLURB>If set to FALSE, it assumes that all RTP has been dropped.</BLURB>
-<DEFAULT>FALSE</DEFAULT>
+<NICK>Currently negotiated RTP header extensions</NICK>
+<BLURB>GList of RTP Header extensions that have been negotiated and will be used when sending of receiving RTP packets.</BLURB>
+<DEFAULT></DEFAULT>
 </ARG>
 
 <ARG>
@@ -299,43 +149,13 @@
 </ARG>
 
 <ARG>
-<NAME>FsMsnSession::conference</NAME>
-<TYPE>FsMsnConference*</TYPE>
+<NAME>FsRtpStream::rtp-header-extensions</NAME>
+<TYPE>FsRtpHeaderExtensionGList*</TYPE>
 <RANGE></RANGE>
-<FLAGS>rwX</FLAGS>
-<NICK>The Conference this stream refers to</NICK>
-<BLURB>This is a convience pointer for the Conference.</BLURB>
+<FLAGS>rw</FLAGS>
+<NICK>RTP Header extension desired by participant in this stream</NICK>
+<BLURB>GList of RTP Header extensions that the participant for this stream would like to use.</BLURB>
 <DEFAULT></DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>FsMsnStream::conference</NAME>
-<TYPE>FsMsnConference*</TYPE>
-<RANGE></RANGE>
-<FLAGS>rwX</FLAGS>
-<NICK>The Conference this stream refers to</NICK>
-<BLURB>This is a conveniance pointer for the Conference.</BLURB>
-<DEFAULT></DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>FsMsnStream::initial-port</NAME>
-<TYPE>guint</TYPE>
-<RANGE>[1025,65535]</RANGE>
-<FLAGS>rwX</FLAGS>
-<NICK>The initial port to listen on</NICK>
-<BLURB>The initial port to try to listen on for incoming connection. If already used, port+1 is tried until one succeeds.</BLURB>
-<DEFAULT>1025</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>FsMsnStream::session-id</NAME>
-<TYPE>guint</TYPE>
-<RANGE>[1000,9999]</RANGE>
-<FLAGS>rwX</FLAGS>
-<NICK>The session-id of the session</NICK>
-<BLURB>This is the session-id of the MSN session.</BLURB>
-<DEFAULT>9000</DEFAULT>
 </ARG>
 
 <ARG>
@@ -346,115 +166,5 @@
 <NICK>The cname of the participant</NICK>
 <BLURB>A string of the cname of the participant.</BLURB>
 <DEFAULT>NULL</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>GstShmSrc::socket-path</NAME>
-<TYPE>gchar*</TYPE>
-<RANGE></RANGE>
-<FLAGS>rw</FLAGS>
-<NICK>Path to the control socket</NICK>
-<BLURB>The path to the control socket used to control the shared memory transport.</BLURB>
-<DEFAULT>NULL</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>GstShmSrc::is-live</NAME>
-<TYPE>gboolean</TYPE>
-<RANGE></RANGE>
-<FLAGS>rw</FLAGS>
-<NICK>Is this a live source</NICK>
-<BLURB>True if the element cannot produce data in PAUSED.</BLURB>
-<DEFAULT>FALSE</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>GstShmSink::perms</NAME>
-<TYPE>guint</TYPE>
-<RANGE><= 4095</RANGE>
-<FLAGS>rw</FLAGS>
-<NICK>Permissions on the shm area</NICK>
-<BLURB>Permissions to set on the shm area.</BLURB>
-<DEFAULT>504</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>GstShmSink::shm-size</NAME>
-<TYPE>guint</TYPE>
-<RANGE></RANGE>
-<FLAGS>rw</FLAGS>
-<NICK>Size of the shm area</NICK>
-<BLURB>Size of the shared memory area.</BLURB>
-<DEFAULT>262144</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>GstShmSink::socket-path</NAME>
-<TYPE>gchar*</TYPE>
-<RANGE></RANGE>
-<FLAGS>rw</FLAGS>
-<NICK>Path to the control socket</NICK>
-<BLURB>The path to the control socket used to control the shared memory transport.</BLURB>
-<DEFAULT>NULL</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>GstShmSink::wait-for-connection</NAME>
-<TYPE>gboolean</TYPE>
-<RANGE></RANGE>
-<FLAGS>rw</FLAGS>
-<NICK>Wait for a connection until rendering</NICK>
-<BLURB>Block the stream until the shm pipe is connected.</BLURB>
-<DEFAULT>TRUE</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>FsuVideoSink::xid</NAME>
-<TYPE>gint</TYPE>
-<RANGE></RANGE>
-<FLAGS>rw</FLAGS>
-<NICK>Sink window xid</NICK>
-<BLURB>The xid of the window in which to embed the video sink.</BLURB>
-<DEFAULT>0</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>FsFecRizzoEnc::fec-caps</NAME>
-<TYPE>GstCaps*</TYPE>
-<RANGE></RANGE>
-<FLAGS>rw</FLAGS>
-<NICK>FEC caps to use</NICK>
-<BLURB>FEC caps with encoding-name=x-farsight-reed-solomon-fec.</BLURB>
-<DEFAULT></DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>FsFecRizzoEnc::k</NAME>
-<TYPE>guint</TYPE>
-<RANGE>>= 1</RANGE>
-<FLAGS>rw</FLAGS>
-<NICK>Number of source symbols</NICK>
-<BLURB>The number of source symbols (packets) for a source block.</BLURB>
-<DEFAULT>14</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>FsFecRizzoEnc::n</NAME>
-<TYPE>guint</TYPE>
-<RANGE>>= 1</RANGE>
-<FLAGS>rw</FLAGS>
-<NICK>Number of encoding symbols</NICK>
-<BLURB>The number of encoding symbols (packets) for a source block (k + repair packets).</BLURB>
-<DEFAULT>16</DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>FsFecRizzoDec::fec-caps</NAME>
-<TYPE>GstCaps*</TYPE>
-<RANGE></RANGE>
-<FLAGS>rw</FLAGS>
-<NICK>FEC caps to use</NICK>
-<BLURB>FEC caps with decoding-name=x-farsight-reed-solomon-fec.</BLURB>
-<DEFAULT></DEFAULT>
 </ARG>
 

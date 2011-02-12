@@ -24,6 +24,7 @@
 #glib_gen_basename=colorbalance
 
 
+
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -98,7 +99,8 @@ am__nobase_list = $(am__nobase_strip_setup); \
 am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
-am__installdirs = "$(DESTDIR)$(plugindir)"
+am__installdirs = "$(DESTDIR)$(plugindir)" \
+	"$(DESTDIR)$(preferencesdir)"
 LTLIBRARIES = $(noinst_LTLIBRARIES) $(plugin_LTLIBRARIES)
 libfsrtpconference_convenience_la_LIBADD =
 am_libfsrtpconference_convenience_la_OBJECTS = fs-rtp-conference.lo \
@@ -169,6 +171,7 @@ SOURCES = $(libfsrtpconference_convenience_la_SOURCES) \
 	$(nodist_libfsrtpconference_doc_la_SOURCES)
 DIST_SOURCES = $(libfsrtpconference_convenience_la_SOURCES) \
 	$(libfsrtpconference_la_SOURCES)
+DATA = $(preferences_DATA)
 HEADERS = $(noinst_HEADERS)
 ETAGS = etags
 CTAGS = ctags
@@ -429,6 +432,12 @@ libfsrtpconference_la_LIBADD = \
 	-lgstrtp-@GST_MAJORMINOR@
 
 libfsrtpconference_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
+preferencesdir = $(datadir)/$(PACKAGE_TARNAME)/$(FS2_MAJORMINOR)/fsrtpconference
+preferences_DATA = \
+	default-codec-preferences \
+	default-element-properties
+
+EXTRA_DIST = $(preferences_DATA)
 @ENABLE_GTK_DOC_TRUE@nodist_libfsrtpconference_doc_la_SOURCES = \
 @ENABLE_GTK_DOC_TRUE@	fs-rtp-conference-plugin.doc.c  \
 @ENABLE_GTK_DOC_TRUE@	$(nodist_libfsrtpconference_la_SOURCES)
@@ -571,6 +580,26 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
+install-preferencesDATA: $(preferences_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(preferencesdir)" || $(MKDIR_P) "$(DESTDIR)$(preferencesdir)"
+	@list='$(preferences_DATA)'; test -n "$(preferencesdir)" || list=; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(preferencesdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(preferencesdir)" || exit $$?; \
+	done
+
+uninstall-preferencesDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(preferences_DATA)'; test -n "$(preferencesdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	test -n "$$files" || exit 0; \
+	echo " ( cd '$(DESTDIR)$(preferencesdir)' && rm -f" $$files ")"; \
+	cd "$(DESTDIR)$(preferencesdir)" && rm -f $$files
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -657,9 +686,9 @@ distdir: $(DISTFILES)
 check-am: all-am
 check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
-all-am: Makefile $(LTLIBRARIES) $(HEADERS)
+all-am: Makefile $(LTLIBRARIES) $(DATA) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(plugindir)"; do \
+	for dir in "$(DESTDIR)$(plugindir)" "$(DESTDIR)$(preferencesdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -713,7 +742,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-pluginLTLIBRARIES
+install-data-am: install-pluginLTLIBRARIES install-preferencesDATA
 
 install-dvi: install-dvi-am
 
@@ -759,7 +788,7 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-pluginLTLIBRARIES
+uninstall-am: uninstall-pluginLTLIBRARIES uninstall-preferencesDATA
 
 .MAKE: all check install install-am install-strip
 
@@ -771,12 +800,13 @@ uninstall-am: uninstall-pluginLTLIBRARIES
 	install-data-am install-dvi install-dvi-am install-exec \
 	install-exec-am install-html install-html-am install-info \
 	install-info-am install-man install-pdf install-pdf-am \
-	install-pluginLTLIBRARIES install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
-	pdf pdf-am ps ps-am tags uninstall uninstall-am \
-	uninstall-pluginLTLIBRARIES
+	install-pluginLTLIBRARIES install-preferencesDATA install-ps \
+	install-ps-am install-strip installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
+	uninstall-am uninstall-pluginLTLIBRARIES \
+	uninstall-preferencesDATA
 
 
 @ENABLE_GTK_DOC_TRUE@%.doc.c: %.c

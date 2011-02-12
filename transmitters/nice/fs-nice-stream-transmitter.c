@@ -100,12 +100,15 @@ struct _FsNiceStreamTransmitterPrivate
 
   volatile gint associate_on_source;
 
+  gboolean *component_has_been_ready; /* only from NiceAgent main thread */
+
   /* Everything below is protected by the mutex */
 
   gboolean sending;
 
   gboolean forced_candidates;
   GList *remote_candidates;
+  GList *local_candidates;
 
   /* These are fixed and must be identical in the latest draft */
   gchar *username;
@@ -439,6 +442,7 @@ fs_nice_stream_transmitter_finalize (GObject *object)
   fs_candidate_list_destroy (self->priv->preferred_local_candidates);
 
   fs_candidate_list_destroy (self->priv->remote_candidates);
+  fs_candidate_list_destroy (self->priv->local_candidates);
 
   if (self->priv->relay_info)
     g_value_array_free (self->priv->relay_info);
@@ -449,6 +453,8 @@ fs_nice_stream_transmitter_finalize (GObject *object)
 
   g_free (self->priv->username);
   g_free (self->priv->password);
+
+  g_free (self->priv->component_has_been_ready);
 
   parent_class->finalize (object);
 }
@@ -1318,6 +1324,9 @@ fs_nice_stream_transmitter_build (FsNiceStreamTransmitter *self,
 
   FS_PARTICIPANT_DATA_UNLOCK (participant);
 
+  self->priv->component_has_been_ready = g_new0 (gboolean,
+      self->priv->transmitter->components);
+
   self->priv->stream_id = nice_agent_add_stream (
       self->priv->agent->agent,
       self->priv->transmitter->components);
@@ -1469,12 +1478,23 @@ agent_state_changed (NiceAgent *agent,
     gpointer user_data)
 {
   FsNiceStreamTransmitter *self = FS_NICE_STREAM_TRANSMITTER (user_data);
-  FsStreamState fs_state = nice_component_state_to_fs_stream_state (state);
-  struct state_changed_signal_data *data =
-    g_slice_new (struct state_changed_signal_data);
+  FsStreamState fs_state;
+  struct state_changed_signal_data *data;
 
   if (stream_id != self->priv->stream_id)
     return;
+
+  /* Ignore failed until we've connected, never time out because
+   * of the dribbling case, more candidates could come later
+   */
+  if (state == NICE_COMPONENT_STATE_FAILED &&
+      !self->priv->component_has_been_ready[component_id])
+    return;
+  else if (state == NICE_COMPONENT_STATE_READY)
+    self->priv->component_has_been_ready[component_id] = TRUE;
+
+  fs_state = nice_component_state_to_fs_stream_state (state);
+  data = g_slice_new (struct state_changed_signal_data);
 
   GST_DEBUG ("Stream: %u Component %u has state %u",
       self->priv->stream_id, component_id, state);
@@ -1624,14 +1644,37 @@ agent_new_candidate (NiceAgent *agent,
 
   if (fscandidate)
   {
-    struct candidate_signal_data *data =
-      g_slice_new (struct candidate_signal_data);
-    data->self = g_object_ref (self);
-    data->signal_name = "new-local-candidate";
-    data->candidate1 = fscandidate;
-    data->candidate2 = NULL;
-    fs_nice_agent_add_idle (self->priv->agent, agent_candidate_signal_idle,
+    FS_NICE_STREAM_TRANSMITTER_LOCK (self);
+    if (!self->priv->gathered)
+    {
+      /* Nice doesn't do connchecks while gathering, so don't tell the upper
+       * layers about the candidates untill gathering is finished.
+       * Also older versions of farsight would fail the connection right away
+       * when the first candidate given failed immediately (e.g. ipv6 on a
+       * non-ipv6 capable host, so we order ipv6 candidates after ipv4 ones */
+
+       if (strchr (fscandidate->ip, ':'))
+        self->priv->local_candidates = g_list_append
+          (self->priv->local_candidates, fscandidate);
+      else
+        self->priv->local_candidates = g_list_prepend
+          (self->priv->local_candidates, fscandidate);
+      FS_NICE_STREAM_TRANSMITTER_UNLOCK (self);
+    }
+    else
+    {
+      struct candidate_signal_data *data =
+        g_slice_new (struct candidate_signal_data);
+
+      FS_NICE_STREAM_TRANSMITTER_UNLOCK (self);
+
+      data->self = g_object_ref (self);
+      data->signal_name = "new-local-candidate";
+      data->candidate1 = fscandidate;
+      data->candidate2 = NULL;
+      fs_nice_agent_add_idle (self->priv->agent, agent_candidate_signal_idle,
         data, free_candidate_signal_data);
+    }
   }
   else
   {
@@ -1647,6 +1690,7 @@ agent_gathering_done_idle (gpointer data)
 {
   FsNiceStreamTransmitter *self = data;
   GList *remote_candidates = NULL;
+  GList *local_candidates = NULL;
   gboolean forced_candidates;
 
   FS_NICE_STREAM_TRANSMITTER_LOCK (self);
@@ -1659,10 +1703,21 @@ agent_gathering_done_idle (gpointer data)
   self->priv->gathered = TRUE;
   remote_candidates = self->priv->remote_candidates;
   self->priv->remote_candidates = NULL;
+  local_candidates = self->priv->local_candidates;
+  self->priv->local_candidates = NULL;
   forced_candidates = self->priv->forced_candidates;
   FS_NICE_STREAM_TRANSMITTER_UNLOCK (self);
 
   GST_DEBUG ("Candidates gathered for stream %u", self->priv->stream_id);
+
+  if (local_candidates)
+  {
+    GList *l;
+
+    for (l = local_candidates ; l != NULL; l = g_list_next (l))
+      g_signal_emit_by_name (self, "new-local-candidate", l->data);
+    fs_candidate_list_destroy (local_candidates);
+  }
 
   g_signal_emit_by_name (self, "local-candidates-prepared");
 

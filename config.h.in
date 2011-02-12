@@ -6,6 +6,9 @@
 /* Farsight2 license */
 #undef FS2_LICENSE
 
+/* Farsight2 major.minor version */
+#undef FS2_MAJORMINOR
+
 /* The path were plugins are installed and search by default */
 #undef FS2_PLUGIN_PATH
 

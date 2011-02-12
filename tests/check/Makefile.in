@@ -38,10 +38,11 @@ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 check_PROGRAMS = base/fscodec$(EXEEXT) base/fstransmitter$(EXEEXT) \
 	transmitter/rawudp$(EXEEXT) transmitter/multicast$(EXEEXT) \
 	transmitter/nice$(EXEEXT) transmitter/shm$(EXEEXT) \
-	rtp/codecs$(EXEEXT) rtp/sendcodecs$(EXEEXT) \
-	rtp/conference$(EXEEXT) rtp/recvcodecs$(EXEEXT) \
-	msn/conference$(EXEEXT) utils/binadded$(EXEEXT) \
-	elements/rtcpfilter$(EXEEXT) elements/funnel$(EXEEXT)
+	raw/conference$(EXEEXT) rtp/codecs$(EXEEXT) \
+	rtp/sendcodecs$(EXEEXT) rtp/conference$(EXEEXT) \
+	rtp/recvcodecs$(EXEEXT) msn/conference$(EXEEXT) \
+	utils/binadded$(EXEEXT) elements/rtcpfilter$(EXEEXT) \
+	elements/funnel$(EXEEXT)
 subdir = tests/check
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
@@ -117,6 +118,17 @@ msn_conference_DEPENDENCIES =  \
 msn_conference_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(msn_conference_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o \
+	$@
+am_raw_conference_OBJECTS = raw_conference-testutils.$(OBJEXT) \
+	raw_conference-conference.$(OBJEXT)
+raw_conference_OBJECTS = $(am_raw_conference_OBJECTS)
+raw_conference_LDADD = $(LDADD)
+raw_conference_DEPENDENCIES =  \
+	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-0.10.la \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+raw_conference_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(raw_conference_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o \
 	$@
 am_rtp_codecs_OBJECTS = rtp_codecs-generic.$(OBJEXT) \
 	rtp_codecs-codecs.$(OBJEXT)
@@ -239,18 +251,20 @@ am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
 am__v_GEN_0 = @echo "  GEN   " $@;
 SOURCES = $(base_fscodec_SOURCES) base/fstransmitter.c \
 	$(elements_funnel_SOURCES) $(elements_rtcpfilter_SOURCES) \
-	$(msn_conference_SOURCES) $(rtp_codecs_SOURCES) \
-	$(rtp_conference_SOURCES) rtp/recvcodecs.c \
-	$(rtp_sendcodecs_SOURCES) $(transmitter_multicast_SOURCES) \
-	$(transmitter_nice_SOURCES) $(transmitter_rawudp_SOURCES) \
-	$(transmitter_shm_SOURCES) $(utils_binadded_SOURCES)
+	$(msn_conference_SOURCES) $(raw_conference_SOURCES) \
+	$(rtp_codecs_SOURCES) $(rtp_conference_SOURCES) \
+	rtp/recvcodecs.c $(rtp_sendcodecs_SOURCES) \
+	$(transmitter_multicast_SOURCES) $(transmitter_nice_SOURCES) \
+	$(transmitter_rawudp_SOURCES) $(transmitter_shm_SOURCES) \
+	$(utils_binadded_SOURCES)
 DIST_SOURCES = $(base_fscodec_SOURCES) base/fstransmitter.c \
 	$(elements_funnel_SOURCES) $(elements_rtcpfilter_SOURCES) \
-	$(msn_conference_SOURCES) $(rtp_codecs_SOURCES) \
-	$(rtp_conference_SOURCES) rtp/recvcodecs.c \
-	$(rtp_sendcodecs_SOURCES) $(transmitter_multicast_SOURCES) \
-	$(transmitter_nice_SOURCES) $(transmitter_rawudp_SOURCES) \
-	$(transmitter_shm_SOURCES) $(utils_binadded_SOURCES)
+	$(msn_conference_SOURCES) $(raw_conference_SOURCES) \
+	$(rtp_codecs_SOURCES) $(rtp_conference_SOURCES) \
+	rtp/recvcodecs.c $(rtp_sendcodecs_SOURCES) \
+	$(transmitter_multicast_SOURCES) $(transmitter_nice_SOURCES) \
+	$(transmitter_rawudp_SOURCES) $(transmitter_shm_SOURCES) \
+	$(utils_binadded_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 am__tty_colors = \
@@ -550,6 +564,13 @@ transmitter_shm_SOURCES = \
 	transmitter/generic.h \
 	transmitter/shm.c
 
+raw_conference_CFLAGS = $(AM_CFLAGS)
+raw_conference_SOURCES = \
+	check-threadsafe.h  \
+	testutils.c \
+	testutils.h \
+	raw/conference.c
+
 rtp_conference_CFLAGS = $(AM_CFLAGS)
 rtp_conference_SOURCES = \
 	check-threadsafe.h  \
@@ -654,6 +675,12 @@ msn/$(am__dirstamp):
 msn/conference$(EXEEXT): $(msn_conference_OBJECTS) $(msn_conference_DEPENDENCIES) msn/$(am__dirstamp)
 	@rm -f msn/conference$(EXEEXT)
 	$(AM_V_CCLD)$(msn_conference_LINK) $(msn_conference_OBJECTS) $(msn_conference_LDADD) $(LIBS)
+raw/$(am__dirstamp):
+	@$(MKDIR_P) raw
+	@: > raw/$(am__dirstamp)
+raw/conference$(EXEEXT): $(raw_conference_OBJECTS) $(raw_conference_DEPENDENCIES) raw/$(am__dirstamp)
+	@rm -f raw/conference$(EXEEXT)
+	$(AM_V_CCLD)$(raw_conference_LINK) $(raw_conference_OBJECTS) $(raw_conference_LDADD) $(LIBS)
 rtp/$(am__dirstamp):
 	@$(MKDIR_P) rtp
 	@: > rtp/$(am__dirstamp)
@@ -702,6 +729,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fscodec.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fstransmitter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/msn_conference-conference.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/raw_conference-conference.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/raw_conference-testutils.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/recvcodecs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rtp_codecs-codecs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rtp_codecs-generic.Po@am__quote@
@@ -830,6 +859,38 @@ msn_conference-conference.obj: msn/conference.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='msn/conference.c' object='msn_conference-conference.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(msn_conference_CFLAGS) $(CFLAGS) -c -o msn_conference-conference.obj `if test -f 'msn/conference.c'; then $(CYGPATH_W) 'msn/conference.c'; else $(CYGPATH_W) '$(srcdir)/msn/conference.c'; fi`
+
+raw_conference-testutils.o: testutils.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(raw_conference_CFLAGS) $(CFLAGS) -MT raw_conference-testutils.o -MD -MP -MF $(DEPDIR)/raw_conference-testutils.Tpo -c -o raw_conference-testutils.o `test -f 'testutils.c' || echo '$(srcdir)/'`testutils.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/raw_conference-testutils.Tpo $(DEPDIR)/raw_conference-testutils.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='testutils.c' object='raw_conference-testutils.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(raw_conference_CFLAGS) $(CFLAGS) -c -o raw_conference-testutils.o `test -f 'testutils.c' || echo '$(srcdir)/'`testutils.c
+
+raw_conference-testutils.obj: testutils.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(raw_conference_CFLAGS) $(CFLAGS) -MT raw_conference-testutils.obj -MD -MP -MF $(DEPDIR)/raw_conference-testutils.Tpo -c -o raw_conference-testutils.obj `if test -f 'testutils.c'; then $(CYGPATH_W) 'testutils.c'; else $(CYGPATH_W) '$(srcdir)/testutils.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/raw_conference-testutils.Tpo $(DEPDIR)/raw_conference-testutils.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='testutils.c' object='raw_conference-testutils.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(raw_conference_CFLAGS) $(CFLAGS) -c -o raw_conference-testutils.obj `if test -f 'testutils.c'; then $(CYGPATH_W) 'testutils.c'; else $(CYGPATH_W) '$(srcdir)/testutils.c'; fi`
+
+raw_conference-conference.o: raw/conference.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(raw_conference_CFLAGS) $(CFLAGS) -MT raw_conference-conference.o -MD -MP -MF $(DEPDIR)/raw_conference-conference.Tpo -c -o raw_conference-conference.o `test -f 'raw/conference.c' || echo '$(srcdir)/'`raw/conference.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/raw_conference-conference.Tpo $(DEPDIR)/raw_conference-conference.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='raw/conference.c' object='raw_conference-conference.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(raw_conference_CFLAGS) $(CFLAGS) -c -o raw_conference-conference.o `test -f 'raw/conference.c' || echo '$(srcdir)/'`raw/conference.c
+
+raw_conference-conference.obj: raw/conference.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(raw_conference_CFLAGS) $(CFLAGS) -MT raw_conference-conference.obj -MD -MP -MF $(DEPDIR)/raw_conference-conference.Tpo -c -o raw_conference-conference.obj `if test -f 'raw/conference.c'; then $(CYGPATH_W) 'raw/conference.c'; else $(CYGPATH_W) '$(srcdir)/raw/conference.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/raw_conference-conference.Tpo $(DEPDIR)/raw_conference-conference.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='raw/conference.c' object='raw_conference-conference.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(raw_conference_CFLAGS) $(CFLAGS) -c -o raw_conference-conference.obj `if test -f 'raw/conference.c'; then $(CYGPATH_W) 'raw/conference.c'; else $(CYGPATH_W) '$(srcdir)/raw/conference.c'; fi`
 
 rtp_codecs-generic.o: rtp/generic.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(rtp_codecs_CFLAGS) $(CFLAGS) -MT rtp_codecs-generic.o -MD -MP -MF $(DEPDIR)/rtp_codecs-generic.Tpo -c -o rtp_codecs-generic.o `test -f 'rtp/generic.c' || echo '$(srcdir)/'`rtp/generic.c
@@ -1207,6 +1268,7 @@ clean-libtool:
 	-rm -rf base/.libs base/_libs
 	-rm -rf elements/.libs elements/_libs
 	-rm -rf msn/.libs msn/_libs
+	-rm -rf raw/.libs raw/_libs
 	-rm -rf rtp/.libs rtp/_libs
 	-rm -rf transmitter/.libs transmitter/_libs
 	-rm -rf utils/.libs utils/_libs
@@ -1416,6 +1478,7 @@ distclean-generic:
 	-rm -f base/$(am__dirstamp)
 	-rm -f elements/$(am__dirstamp)
 	-rm -f msn/$(am__dirstamp)
+	-rm -f raw/$(am__dirstamp)
 	-rm -f rtp/$(am__dirstamp)
 	-rm -f transmitter/$(am__dirstamp)
 	-rm -f utils/$(am__dirstamp)

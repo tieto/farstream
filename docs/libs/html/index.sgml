@@ -184,6 +184,12 @@
 <ANCHOR id="fs-interfaces-get-ip-for-interface" href="farsight2-libs-0.10/farsight2-libs-Network-interfaces-discovery.html#fs-interfaces-get-ip-for-interface">
 <ANCHOR id="fs-interfaces-get-local-interfaces" href="farsight2-libs-0.10/farsight2-libs-Network-interfaces-discovery.html#fs-interfaces-get-local-interfaces">
 <ANCHOR id="fs-interfaces-get-local-ips" href="farsight2-libs-0.10/farsight2-libs-Network-interfaces-discovery.html#fs-interfaces-get-local-ips">
+<ANCHOR id="farsight2-libs-fs-utils" href="farsight2-libs-0.10/farsight2-libs-fs-utils.html">
+<ANCHOR id="farsight2-libs-fs-utils.synopsis" href="farsight2-libs-0.10/farsight2-libs-fs-utils.html#farsight2-libs-fs-utils.synopsis">
+<ANCHOR id="farsight2-libs-fs-utils.description" href="farsight2-libs-0.10/farsight2-libs-fs-utils.html#farsight2-libs-fs-utils.description">
+<ANCHOR id="farsight2-libs-fs-utils.details" href="farsight2-libs-0.10/farsight2-libs-fs-utils.html#farsight2-libs-fs-utils.details">
+<ANCHOR id="fs-utils-get-default-codec-preferences" href="farsight2-libs-0.10/farsight2-libs-fs-utils.html#fs-utils-get-default-codec-preferences">
+<ANCHOR id="fs-utils-get-default-element-properties" href="farsight2-libs-0.10/farsight2-libs-fs-utils.html#fs-utils-get-default-element-properties">
 <ANCHOR id="FsBaseConference" href="farsight2-libs-0.10/FsBaseConference.html">
 <ANCHOR id="FsBaseConference.synopsis" href="farsight2-libs-0.10/FsBaseConference.html#FsBaseConference.synopsis">
 <ANCHOR id="FsBaseConference.object-hierarchy" href="farsight2-libs-0.10/FsBaseConference.html#FsBaseConference.object-hierarchy">

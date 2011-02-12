@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="Farsight2 Plugins Manual">
 <link rel="up" href="ch03.html" title="MSN Webcam plugin">
 <link rel="prev" href="farsight2-plugins-FsMsnSession.html" title="FsMsnSession">
-<link rel="next" href="pt03.html" title="Part III. Utility elements">
+<link rel="next" href="pt02.html" title="Part II. Transmitters">
 <meta name="generator" content="GTK-Doc V1.15 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -18,14 +18,12 @@
 <td><a accesskey="u" href="ch03.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">Farsight2 Plugins Manual</th>
-<td><a accesskey="n" href="pt03.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="pt02.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
 <a href="#farsight2-plugins-FsMsnStream.synopsis" class="shortcut">Top</a>
                    | 
                   <a href="#farsight2-plugins-FsMsnStream.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#farsight2-plugins-FsMsnStream.properties" class="shortcut">Properties</a>
 </td></tr>
 </table>
 <div class="refentry" title="FsMsnStream">
@@ -40,14 +38,6 @@
 <div class="refsynopsisdiv" title="Synopsis">
 <a name="farsight2-plugins-FsMsnStream.synopsis"></a><h2>Synopsis</h2>
 <pre class="synopsis">                    <a class="link" href="farsight2-plugins-FsMsnStream.html#FsMsnStream" title="FsMsnStream">FsMsnStream</a>;
-</pre>
-</div>
-<div class="refsect1" title="Properties">
-<a name="farsight2-plugins-FsMsnStream.properties"></a><h2>Properties</h2>
-<pre class="synopsis">
-  "<a class="link" href="farsight2-plugins-FsMsnStream.html#FsMsnStream--conference" title='The "conference" property'>conference</a>"               <a class="link" href="farsight2-plugins-FsMsnConference.html#FsMsnConference" title="FsMsnConference"><span class="type">FsMsnConference</span></a>*      : Read / Write / Construct Only
-  "<a class="link" href="farsight2-plugins-FsMsnStream.html#FsMsnStream--initial-port" title='The "initial-port" property'>initial-port</a>"             <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write / Construct Only
-  "<a class="link" href="farsight2-plugins-FsMsnStream.html#FsMsnStream--session-id" title='The "session-id" property'>session-id</a>"               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write / Construct Only
 </pre>
 </div>
 <div class="refsect1" title="Description">
@@ -79,30 +69,6 @@ or by putting it in the "username" field of the remote <a href="/usr/share/gtk-d
   FsStream parent;
 } FsMsnStream;
 </pre>
-</div>
-</div>
-<div class="refsect1" title="Property Details">
-<a name="farsight2-plugins-FsMsnStream.property-details"></a><h2>Property Details</h2>
-<div class="refsect2" title='The "conference" property'>
-<a name="FsMsnStream--conference"></a><h3>The <code class="literal">"conference"</code> property</h3>
-<pre class="programlisting">  "conference"               <a class="link" href="farsight2-plugins-FsMsnConference.html#FsMsnConference" title="FsMsnConference"><span class="type">FsMsnConference</span></a>*      : Read / Write / Construct Only</pre>
-<p>This is a conveniance pointer for the Conference.</p>
-</div>
-<hr>
-<div class="refsect2" title='The "initial-port" property'>
-<a name="FsMsnStream--initial-port"></a><h3>The <code class="literal">"initial-port"</code> property</h3>
-<pre class="programlisting">  "initial-port"             <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write / Construct Only</pre>
-<p>The initial port to try to listen on for incoming connection. If already used, port+1 is tried until one succeeds.</p>
-<p>Allowed values: [1025,65535]</p>
-<p>Default value: 1025</p>
-</div>
-<hr>
-<div class="refsect2" title='The "session-id" property'>
-<a name="FsMsnStream--session-id"></a><h3>The <code class="literal">"session-id"</code> property</h3>
-<pre class="programlisting">  "session-id"               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write / Construct Only</pre>
-<p>This is the session-id of the MSN session.</p>
-<p>Allowed values: [1000,9999]</p>
-<p>Default value: 9000</p>
 </div>
 </div>
 </div>
