@@ -3,7 +3,7 @@
   <description>Farsight Raw Conference plugin</description>
   <filename>../../gst/fsrawconference/.libs/libfsrawconference.so</filename>
   <basename>libfsrawconference.so</basename>
-  <version>0.0.22.1</version>
+  <version>0.0.21.1</version>
   <license>LGPL</license>
   <source>farsight2</source>
   <package>Farsight</package>

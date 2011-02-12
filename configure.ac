@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, cvs and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for cvs/prerelease
-AC_INIT(Farsight2, 0.0.23,
+AC_INIT(Farsight2, 0.0.24,
     https://bugs.freedesktop.org/enter_bug.cgi?product=Farsight,
     farsight2)
 
@@ -37,6 +37,8 @@ m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])],
 dnl our libraries and install dirs use major.minor as a version
 FS2_MAJORMINOR=$PACKAGE_VERSION_MAJOR.$PACKAGE_VERSION_MINOR
 AC_SUBST(FS2_MAJORMINOR)
+AC_DEFINE_UNQUOTED(FS2_MAJORMINOR, "$FS2_MAJORMINOR",
+  [Farsight2 major.minor version])
 
 GST_MAJORMINOR=0.10
 AC_SUBST(GST_MAJORMINOR)
@@ -50,7 +52,7 @@ dnl - interfaces added/removed/changed -> increment CURRENT, REVISION = 0
 dnl - interfaces added -> increment AGE
 dnl - interfaces removed -> AGE = 0
 dnl sets FS2_LT_LDFLAGS
-AS_LIBTOOL(FS2, 5, 3, 5)
+AS_LIBTOOL(FS2, 6, 0, 6)
 
 dnl FIXME: this macro doesn't actually work;
 dnl the generated libtool script has no support for the listed tags.
@@ -105,6 +107,7 @@ AC_SUBST(GST_INSTALL_PLUGINS_HELPER)
 
 dnl these are all the gst plug-ins, compilable without additional libs
 FS2_PLUGINS_ALL=" \
+	fsrawconference \
 	fsrtpconference \
 	fsmsnconference \
 	funnel \
@@ -390,6 +393,7 @@ common/Makefile
 common/m4/Makefile
 common-modified/Makefile
 gst/Makefile
+gst/fsrawconference/Makefile
 gst/fsrtpconference/Makefile
 gst/fsmsnconference/Makefile
 gst/funnel/Makefile

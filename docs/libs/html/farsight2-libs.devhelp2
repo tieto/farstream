@@ -16,6 +16,7 @@
       <sub name="Farsight Utility Functions and Objects" link="ch03.html">
         <sub name="FsElementAddedNotifier" link="FsElementAddedNotifier.html"/>
         <sub name="Network interfaces discovery" link="farsight2-libs-Network-interfaces-discovery.html"/>
+        <sub name="fs-utils" link="farsight2-libs-fs-utils.html"/>
       </sub>
     </sub>
     <sub name="Classes used to implement Farsight plugins" link="pt02.html">
@@ -32,7 +33,7 @@
     </sub>
   </chapters>
   <functions>
-    <keyword type="" name="The &quot;farsight-error&quot; message" link="FsConference.html#id459650"/>
+    <keyword type="" name="The &quot;farsight-error&quot; message" link="FsConference.html#id538257"/>
     <keyword type="struct" name="FsConference" link="FsConference.html#FsConference-struct"/>
     <keyword type="function" name="fs_conference_new_session ()" link="FsConference.html#fs-conference-new-session"/>
     <keyword type="function" name="fs_conference_new_participant ()" link="FsConference.html#fs-conference-new-participant"/>
@@ -45,8 +46,8 @@
     <keyword type="macro" name="FS_PARTICIPANT_DATA_UNLOCK()" link="FsParticipant.html#FS-PARTICIPANT-DATA-UNLOCK:CAPS"/>
     <keyword type="property" name="The &quot;cname&quot; property" link="FsParticipant.html#FsParticipant--cname"/>
     <keyword type="signal" name="The &quot;error&quot; signal" link="FsParticipant.html#FsParticipant-error"/>
-    <keyword type="" name="The &quot;farsight-send-codec-changed&quot;&#10;  message" link="farsight2-libs-fs-session.html#id517534"/>
-    <keyword type="" name="The &quot;farsight-codecs-changed&quot;&#10; message" link="farsight2-libs-fs-session.html#id517594"/>
+    <keyword type="" name="The &quot;farsight-send-codec-changed&quot;&#10;  message" link="farsight2-libs-fs-session.html#id596143"/>
+    <keyword type="" name="The &quot;farsight-codecs-changed&quot;&#10; message" link="farsight2-libs-fs-session.html#id596203"/>
     <keyword type="enum" name="enum FsDTMFEvent" link="farsight2-libs-fs-session.html#FsDTMFEvent"/>
     <keyword type="enum" name="enum FsDTMFMethod" link="farsight2-libs-fs-session.html#FsDTMFMethod"/>
     <keyword type="struct" name="FsSession" link="farsight2-libs-fs-session.html#FsSession-struct"/>
@@ -69,11 +70,11 @@
     <keyword type="property" name="The &quot;sink-pad&quot; property" link="farsight2-libs-fs-session.html#FsSession--sink-pad"/>
     <keyword type="property" name="The &quot;tos&quot; property" link="farsight2-libs-fs-session.html#FsSession--tos"/>
     <keyword type="signal" name="The &quot;error&quot; signal" link="farsight2-libs-fs-session.html#FsSession-error"/>
-    <keyword type="" name="The &quot;farsight-new-local-candidate&quot; message" link="FsStream.html#id539458"/>
-    <keyword type="" name="The &quot;farsight-local-candidates-prepared&quot; message" link="FsStream.html#id539494"/>
-    <keyword type="" name="The &quot;farsight-new-active-candidate-pair&quot; message" link="FsStream.html#id539524"/>
-    <keyword type="" name="The &quot;farsight-recv-codecs-changed&quot; message" link="FsStream.html#id539568"/>
-    <keyword type="" name="The &quot;farsight-component-state-changed&quot; message" link="FsStream.html#id539632"/>
+    <keyword type="" name="The &quot;farsight-new-local-candidate&quot; message" link="FsStream.html#id618070"/>
+    <keyword type="" name="The &quot;farsight-local-candidates-prepared&quot; message" link="FsStream.html#id618106"/>
+    <keyword type="" name="The &quot;farsight-new-active-candidate-pair&quot; message" link="FsStream.html#id618135"/>
+    <keyword type="" name="The &quot;farsight-recv-codecs-changed&quot; message" link="FsStream.html#id618180"/>
+    <keyword type="" name="The &quot;farsight-component-state-changed&quot; message" link="FsStream.html#id618243"/>
     <keyword type="struct" name="FsStream" link="FsStream.html#FsStream-struct"/>
     <keyword type="struct" name="FsStreamClass" link="FsStream.html#FsStreamClass"/>
     <keyword type="enum" name="enum FsStreamDirection" link="FsStream.html#FsStreamDirection"/>
@@ -132,6 +133,8 @@
     <keyword type="function" name="fs_interfaces_get_ip_for_interface ()" link="farsight2-libs-Network-interfaces-discovery.html#fs-interfaces-get-ip-for-interface"/>
     <keyword type="function" name="fs_interfaces_get_local_interfaces ()" link="farsight2-libs-Network-interfaces-discovery.html#fs-interfaces-get-local-interfaces"/>
     <keyword type="function" name="fs_interfaces_get_local_ips ()" link="farsight2-libs-Network-interfaces-discovery.html#fs-interfaces-get-local-ips"/>
+    <keyword type="function" name="fs_utils_get_default_codec_preferences ()" link="farsight2-libs-fs-utils.html#fs-utils-get-default-codec-preferences"/>
+    <keyword type="function" name="fs_utils_get_default_element_properties ()" link="farsight2-libs-fs-utils.html#fs-utils-get-default-element-properties"/>
     <keyword type="struct" name="FsBaseConference" link="FsBaseConference.html#FsBaseConference-struct"/>
     <keyword type="struct" name="FsBaseConferenceClass" link="FsBaseConference.html#FsBaseConferenceClass"/>
     <keyword type="struct" name="FsTransmitter" link="FsTransmitter.html#FsTransmitter-struct"/>

@@ -1,3 +1,700 @@
+commit 7fca1a7b94c572fe7430937270cfbeadde80f587
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 10 20:24:58 2011 +0000
+
+    Version 0.0.24
+
+commit 4e38065f498be2f780afa34cce58ca6319832485
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 10 20:16:30 2011 +0000
+
+    tests: Rtcp test doesn't make sense in raw
+
+commit 0933f2a4c79f1c632f1239dc75b6ba2aef9361dc
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 10 20:08:26 2011 +0000
+
+    rtp: add default prefs to EXTRA_DIST
+
+commit b208a2b2e305ffa042b038fe2b769e2291d3bcf0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 10 20:01:49 2011 +0000
+
+    tests: Fix another race in tests
+
+commit 3bbcc8456ef905e20d043b35487015a88f262b38
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 10 19:58:38 2011 +0000
+
+    nicestream: Skip Nice errors if the component has never been ready
+
+commit afc31f00f87a35c83b1ba6623bb49e35225beca3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 10 19:52:12 2011 +0000
+
+    nicestream: Fix small leak
+
+commit 21f5f608c3ab6d6a15de3d584dd11731b7cef108
+Author: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Date:   Thu Feb 10 19:47:27 2011 +0000
+
+    nicestream: Sort ipv4 addresses first
+
+commit bc1fe3674aba764d9c8ac58f5d7d0aa4f57a772b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 10 17:26:12 2011 +0000
+
+    utils: Fix doc string
+
+commit 4bef5ac11bcc9b29838e395e20b4e97e21deb83c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 25 16:02:52 2011 -0500
+
+    utils: the keyfile stuff already checks the user dirs
+
+commit 7091068c01ae9667cd3df048a9b2221e1d819617
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 25 14:56:20 2011 -0500
+
+    utils: Pass the element directly instead of its factory name
+
+commit 0601247f77918d5164d9437b39958488d0c8137e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 25 14:51:35 2011 -0500
+
+    utils: Check default properties/codecs in user data dir too
+
+commit 9fbf87263e6987f1cb3815c1f3f59d0bc81d5e18
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 3 21:29:52 2011 -0500
+
+    rtp: Add default-element-properties
+
+commit 6fd2080695ff480afff472bc702736f701a32926
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 3 21:25:12 2011 -0500
+
+    utils: Add function to get default element properties
+
+commit 937a7024d94cd49c7f0f4b7e67f93a077c04b0eb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 3 21:12:47 2011 -0500
+
+    rtp: Add default codec preferences
+
+commit 995bc91e11e0cdc387c382fb40ee0342d460b165
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 3 21:06:58 2011 -0500
+
+    utils: Add function to get default codec preferences
+
+commit a6b21cf32800ac89328ed7d2dafc5cb5921db042
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 9 14:32:40 2011 +0000
+
+    raw: Don't delete non-generated files
+
+commit 12f411d74cd6806e822b26595ca3c994664c1419
+Author: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Date:   Thu Feb 3 16:08:01 2011 +0000
+
+    Remove the temporary socket directory after usage
+
+commit f7eaafac336e7a0d4bd3095ed23cfc46104adb9c
+Author: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Date:   Wed Feb 2 18:54:06 2011 +0000
+
+    nicetransmitter: Place the local socket in the tmp dir
+    
+    Don't hardcode /tmp, instead use g_get_tmp_dir to potentialy get it from
+    the environment, but falling back to /tmp
+
+commit bcf2e5601e8a6fc5952546f0645314c22c157c8f
+Author: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Date:   Wed Feb 2 18:50:25 2011 +0000
+
+    nicetransmitter: Add documentation for create-local-candidates
+
+commit f31e4f1f81fdbe4e92e3a46aab871496d9cba448
+Author: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Date:   Wed Feb 2 18:34:29 2011 +0000
+
+    nicetransmitter: Add an option for the transmitter to pick the local side
+
+commit 735a9afb2ff464f63e7cc09123b1e48b3019dc5b
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Sun Jan 30 19:09:13 2011 -0600
+
+    rawconference: This is really meant to be called on the stream.
+
+commit 9dcf389fe180d043dd5c0a3f01a00712a16ff82d
+Author: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Date:   Mon Jan 31 18:55:35 2011 +0000
+
+    nicetrans: Only emit local-candidate after gathering
+    
+    Unfortunately libnice doesn't currently support doing connectivity
+    checks untill it has finished gathering. If we send a remote peer our
+    candidates before finishing gathering they can start sending us
+    connectivity checks before we're ready for them...
+    
+    So instead sends the local candidates in one batch when gathering is
+    finished, so we'll be ready for the connectivity checks.
+
+commit 4de2ee6cf7c7a921fe586bac2ddcd96762bf1cde
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Jan 28 18:18:01 2011 -0500
+
+    rawconf: Put the whole caps into the encoding_name in codecs
+
+commit 71241041866f1f88f9332c6d4e523c78fadf63cb
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Fri Jan 28 16:22:21 2011 -0600
+
+    rawconference: Make FsRawStream codec doc visible.
+
+commit 05469ae14cbb244bb5fab0423e0f2974d643cbba
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 27 22:25:23 2011 -0500
+
+    docs: Improve the title
+
+commit 1c7e76e591a2428fac220de7782ebcdc5a6a4660
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 27 22:22:08 2011 -0500
+
+    docs: Add docs for the raw plugin
+
+commit 8c7bce8df1812735a70a4d1fa070b539ee4fed8a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 27 22:00:00 2011 -0500
+
+    raw: Remove trailing whitespace
+
+commit 3af48c2c25b23e635d3e5058dfca24028d393d33
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 27 21:57:52 2011 -0500
+
+    raw: Simplify session notification of new stream codecs
+
+commit 5a0d0be465413d30b6ddcb18ff56279550d56560
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 27 21:52:46 2011 -0500
+
+    rawstream: Simplify set_remote_codecs
+
+commit 1640a0df00f2065b3317c365cda7f407f9d3d317
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 27 21:50:44 2011 -0500
+
+    cuseless
+
+commit 16917a0ce3cbf129c5da55453ee93ffe26638d5c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 27 21:38:25 2011 -0500
+
+    rawsession: Codec has already been validated
+
+commit 22fae947afa44962f80815bf218bd7eeaec34f7b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 27 21:33:22 2011 -0500
+
+    raw: Don't check for stuff in the codecs that is meaningless for raw
+
+commit 93157d2029372249c157b70b52eaf44ef089b0dd
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Wed Jan 26 01:50:23 2011 -0600
+
+    rawconference: Add a test with the shm transmitter.
+
+commit 249546141263e6d5cb0b6c271fe75de3d5ac6697
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Jan 20 22:54:58 2011 -0600
+
+    rawconference: Remove stream from session in stream's dispose.
+    
+    There's a chance that removing the stream when the session has it
+    weak-reffed can be called from a streaming thread. This can cause
+    it to crash and/or deadlock. This patch changes the stream to
+    call the remove_stream function in the session in its dispose
+    function. The stream already protects itself from being disposed
+    in a streaming thread and therefore prevents the crash/deadlock.
+
+commit a71ce2e1e578838576956436fbd5696c44c446b3
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Wed Jan 19 22:25:30 2011 -0600
+
+    rawconference: Use local conference variable.
+
+commit 1182d5e54502576080bbb71aaaba1720a93de237
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 17 21:51:04 2011 -0500
+
+    tests: Split the rtpconf extra init into separate callbacks for stream and conf
+
+commit 88b8af0b7022f0414f2039a34779545535eda0d8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 17 21:36:37 2011 -0500
+
+    tests: Split the rawconf extra init into separate callbacks for stream and conf
+
+commit 299f9bca316e5dc0edbc124783e2d2cbdfc684cd
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Mon Jan 17 21:04:59 2011 -0600
+
+    rawconference: Remove weak_ref when done.
+
+commit 0d995759f2cbe8e4d807609da5925c4475eff190
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Jan 13 23:28:50 2011 -0600
+
+    rawconference: Dispose FsRawStream in a separate thread if needed.
+
+commit ddebdd5331edc9bfb9bc7a6fc31cc52c0207fe28
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Jan 13 23:22:27 2011 -0600
+
+    rawconference: Add fs_raw_conference_is_internal_thread.
+
+commit 5aeb5bb3b477a7c55e99cb112d1bcd0c752d4982
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Jan 13 23:07:50 2011 -0600
+
+    rawconference: Fix trailing whitespace.
+
+commit 3fc1903dd11d04a432c97a388b96e50e6c02c262
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Jan 6 18:37:07 2011 -0600
+
+    rawconference: Correct an error message.
+
+commit 1dc1ec9b5dcc3b93bb63807f20cce07ee57628d3
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Jan 6 16:03:07 2011 -0600
+
+    rawconference: Wait to add the transmitter's gst-sink until sending.
+
+commit 01be250a04dc4e46a5c76ca7d995e602b0c3410e
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Wed Dec 22 20:03:45 2010 -0600
+
+    rawconference: Dispose of objects in a single place in new_stream.
+
+commit c02711cccf1c468dae4c88b0523ad8d711ce0ef5
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Wed Dec 22 19:06:57 2010 -0600
+
+    rawconference: blocking_id will always be 0 here.
+
+commit cdb408a99c72ccaabbfaeb850fcfe13ff34ee911
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Wed Dec 22 19:03:01 2010 -0600
+
+    rawconference: Remove transmitter-pad from the public API.
+
+commit ede1c36fc2ca0657e23575f68a0a32fd2a0baf38
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Wed Dec 22 16:33:13 2010 -0600
+
+    rawconference: Correctly use g_value_set_boxed instead of _take_boxed.
+
+commit 89aaa3f9c93a5c83f0418e49641c44f8c3a95498
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Wed Dec 22 16:12:42 2010 -0600
+
+    rawconference: Use macro instead of g_mutex_lock directly.
+    
+    This patch creates and uses FS_RAW_SESSION_LOCK and _UNLOCK and
+    FS_RAW_STREAM_LOCK and _UNLOCK to improve the ability to debug
+    mutexes.
+
+commit 92b2c0152b6654dce6ecd26e9dce2638703b1185
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Wed Dec 22 15:45:03 2010 -0600
+
+    rawconference: Add @author to the files I made.
+
+commit d40a53ff1fd9fe42ed58e407501400f91d8b75ed
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Jan 6 18:38:39 2011 -0600
+
+    rawconference: Misc style and error checking fixes to Sjoerd's commits.
+
+commit 252365baec664f29c8683f3db9de4e9c39eb40ab
+Author: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Date:   Tue Dec 21 19:15:52 2010 +0000
+
+    When adding streams, sync the element states with the parent element
+
+commit 400e1e243ea53f3fb8948a251ec5884655f46603
+Author: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Date:   Tue Dec 21 19:15:31 2010 +0000
+
+    When removing a stream, make the valve drop packets again
+
+commit ac7b28bc5b7e2d23d21ff63c93bc114a33d6359c
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Fri Dec 10 16:17:11 2010 -0600
+
+    rawconference: Change signature of function to avoid collision.
+    
+    This patch changes the signature of fs_codec_to_gst_caps to
+    fs_raw_codec_to_gst_caps to avoid colliding with a function of
+    the same name in the FsRtpConference plugin.
+
+commit 81786172cafa99550ba56c327bf46afdba0a8401
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 9 23:16:23 2010 -0600
+
+    rawconference: Keep reference to GstObjects in FsRawStream.
+
+commit 3884313398786472d0dbb76f81d1551efbaed31b
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 9 23:15:16 2010 -0600
+
+    rawconference: Actually store the src_pad in FsRawStream.
+
+commit adfaa7d3c677e0dc39f309b8d204c66376664a88
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 9 23:00:02 2010 -0600
+
+    rawconference: Remove unused member from FsRawStream private struct.
+
+commit 403faf6cb341fb3c39ff4445c4b84924b1d003c4
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 9 22:47:12 2010 -0600
+
+    rawconference: Improve locking in FsRawStream.
+
+commit d4483ffff8ec363fb7ad4c0cda5e2e7540496559
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 9 22:25:52 2010 -0600
+
+    rawconference: Simplify FsRawSession dispose a little.
+
+commit b0a31fffcd29b3bf10ebc5094edeaef58bd18a62
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 9 22:17:44 2010 -0600
+
+    rawconference: Hold references to GstObjects in FsRawSession.
+
+commit c5b911455c60d7dadaeae571d7cb840daae0d7c5
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 9 21:49:22 2010 -0600
+
+    rawconference: Improve FsRawSession's locking.
+
+commit b8b318ec394c534c1d01b9a2a3d12c08130f3aa1
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 9 21:06:35 2010 -0600
+
+    rawconference: Remove elements from bin if sync_state_with_parent fails.
+
+commit 2343da21a899c50e21582eea83fab87250f4b906
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 9 20:18:36 2010 -0600
+
+    rawconference: Simplify a little of removing streams.
+
+commit af89d1294910c65ee52399e9d4959bbe70d9fe22
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 9 19:59:45 2010 -0600
+
+    rawconference: Simplify FsRawSession's dispose function.
+
+commit 731a7f97898ee904079922b13504b6b9fd188062
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 9 19:52:32 2010 -0600
+
+    rawconference: Remove redundant gst_element_sync_with_parent call.
+
+commit dca8eee64d96bd3fcfeca63441a9f574f09a1852
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 9 18:59:17 2010 -0600
+
+    rawconference: Fix implemention of FsRawSession's current-send-codec.
+
+commit 3764477bb2e3442d8296c2dc2b51c7151b924807
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 9 17:35:45 2010 -0600
+
+    rawconference: Store FsRawSession codecs and notify on change.
+
+commit 7d49655cf293b40249533cb67842ae7cb7dfe024
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Wed Dec 8 21:10:39 2010 -0600
+
+    rawconference: Fix potential double-free.
+
+commit 79305183c8cd77634b524cae0f43bacd107e01cb
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Wed Dec 8 20:41:47 2010 -0600
+
+    rawconference: Deactivate pad after removing from bin.
+
+commit 497995e1f217ad7a4d1e78aab6eb73dbf3d51ec1
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Wed Dec 8 20:32:44 2010 -0600
+
+    rawconference: Remove unneeded variable and just return value.
+
+commit ac35328ca4c2c6d8f6bda415a8ca2d37f4c1dcf1
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Tue Dec 7 22:52:03 2010 -0600
+
+    rawconference: Fix copy/paste errors.
+
+commit 946d4d96a472805a267b7c43cadbb742e7911622
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Tue Dec 7 22:45:20 2010 -0600
+
+    rawconference: Use correct pad template.
+
+commit 0b5a485f339760a64739042e1d5217af85f19622
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Tue Dec 7 16:32:08 2010 -0600
+
+    rawconference: Fix disposed testcase.
+
+commit 4cb2235dfeb99e3e9712b08927ff6d188523e9db
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Tue Dec 7 16:27:53 2010 -0600
+
+    rawconference: Free transmitter src and sink when removing streams.
+
+commit 793adf54314b05d610ea8e7a893d44c83b6b3994
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Tue Dec 7 16:26:04 2010 -0600
+
+    rawconference: Set the correct error in fs_raw_session_new_stream.
+
+commit 4d33116c5be131431bc41b24f3ac70cdab55d557
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Mon Dec 6 19:36:56 2010 -0600
+
+    rawconference: Fix base test. FsRawConference doesn't generate codecs.
+
+commit 19bcab0f5eac23018ef8b9a1519d406e641ed4f7
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Fri Dec 3 19:53:58 2010 -0600
+
+    rawconference: Use optional_parameters for codec properties.
+
+commit 976455ddaa78bbfa1bce2bee6e9b6819ec852a95
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 2 15:29:14 2010 -0600
+
+    rawconference: Abstract converting FsCodec to GstCaps.
+
+commit aa0f00a35e9f62570c5448fc0a21ac1f2dc655c3
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 2 12:15:22 2010 -0600
+
+    rawconference: Add tests for FsRawConference plugin.
+    
+    This patch adds tests for the FsRawConference plugin. Virtually
+    all of the code is from the FsRtpConference plugin testsuite.
+
+commit fbc01a45ad847a3f4564ba5453e135ac238b6e64
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 2 11:08:22 2010 -0600
+
+    rawconference: Add data probe and src_pad_added emission.
+
+commit 06c964515fd8811451be5c81732cf7b6196164ac
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 2 11:01:19 2010 -0600
+
+    rawconference: Set capsfilter caps when set_remote_codecs is called.
+
+commit dbdca89b1e97cf97aadee885d10e1d9c79b871ff
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 2 10:59:39 2010 -0600
+
+    rawconference: Plug memory leak.
+
+commit 7529cdce2d5a32c5d53b9e6d4cdd5c757e77c940
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 2 10:58:19 2010 -0600
+
+    rawconference: Set initial valve drop settings after creation.
+
+commit 34a2b8146decafb206ca616081e2d76616d85485
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 2 10:56:06 2010 -0600
+
+    rawconference: Set ST's "sending" property when setting "direction".
+
+commit 8589287d2125f772ff4371c113ae629cb7ad1e4a
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 2 10:48:35 2010 -0600
+
+    rawconference: Set booleans instead of bitmasked integers.
+
+commit ae0e46b054f3ae6c660e6c2a7acae780a79039ae
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 2 09:59:07 2010 -0600
+
+    rawconference: Fix some GstElement refcount issues.
+
+commit 8c9aee835102cc55450cdbe8e7786f203b2615fe
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 2 09:47:39 2010 -0600
+
+    rawconference: Implement FsRawSession's remote codec handler.
+
+commit 6a28aca56d1d7ef5849888b69085797546e06d59
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 2 09:46:06 2010 -0600
+
+    rawconference: Implement FsRawSession's codecs properties.
+    
+    Implement the FsRawSession's "codecs" and "codecs-without-config"
+    properties.
+
+commit bd9b9c1a7dfcc298324fe9e4cd08b26d20ac8b18
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 2 09:44:08 2010 -0600
+
+    rawconference: Link the FsRawSession's capsfilter and transmitter_sink.
+
+commit 652fd46887658b751b8f10f2a0db72f2dfbb1d55
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Dec 2 09:16:48 2010 -0600
+
+    rawconference: Free the FsRawSession's FsTransmitter.
+
+commit 7a69ac1b61e25eeec54b224e20ac2baa24d3bbea
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Wed Nov 24 02:02:01 2010 -0600
+
+    rawconference: Add to FsConference and partially link transmitter.
+
+commit e225019df1fd66150e0ea56479ee845989f6aa1a
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Tue Nov 23 23:18:26 2010 -0600
+
+    rawconference: Fix getting an out of range warning on a gboolean value.
+
+commit 8701fe7fa56f9b3d67c78e748b1f1f85476c382b
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Tue Nov 23 01:31:19 2010 -0600
+
+    rawconference: Fix some type issues in fs_raw_session_new_stream.
+
+commit 4e029fecdc46be0557f7d42964f180dbb7117552
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Nov 18 23:10:33 2010 -0600
+
+    rawconference: Improve setting the direction.
+
+commit 4f0087e0c99238c0119768b18b4561d80b872296
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Wed Nov 17 21:57:42 2010 -0600
+
+    rawconference: Implement the remote-codecs FsRawStream property.
+
+commit b70363090e2bebf8ac74bce981df8427af3fca36
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Mon Nov 15 23:05:43 2010 -0600
+
+    rawconference: Implement fs_raw_stream_set_remote_codecs.
+
+commit 063f2638f987b7898dc4d7f2bc4c928098d0bdb1
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Sun Nov 14 18:09:03 2010 -0600
+
+    rawconference: Create and connect FsStreamTransmitter signal handlers.
+
+commit 1e382ae597944c970358d2d4c5f42ef777f09afb
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Fri Nov 12 14:53:28 2010 -0600
+
+    rawconference: Implement fs_raw_stream_set_remote_candidates.
+
+commit 667925eb8248482570ae0ec8f0f76446fac5f631
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Nov 11 21:23:11 2010 -0600
+
+    rawconference: Remove fs_raw_stream_set_tos_locked.
+
+commit 8fef272dfa18140118befe4563692fef3e204b74
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Nov 11 21:22:12 2010 -0600
+
+    rawconference: Add FsStreamTransmitter.
+
+commit f2e97b099d8b108f63bb64f7ad74df41daa19d8d
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Nov 11 20:00:19 2010 -0600
+
+    rawconference: Implement fs_raw_session_get_stream_transmitter_type.
+
+commit f9d4f972c4cf584668c561aa7be4a1ef873e28a7
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Nov 11 19:45:33 2010 -0600
+
+    rawconference: Add FsTransmitter member.
+
+commit 31974c06037c24d8a92c82494d473a5ac86242f1
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Nov 11 17:50:54 2010 -0600
+
+    rawconference: Add FsRawStream class files.
+
+commit 547c2091e4e92666f22f48b13be0127def0c9bb6
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Fri Nov 5 22:07:33 2010 -0500
+
+    rawconference: Add capsfilter to the session pipeline.
+
+commit 6d5546215bc20ed576ac10ec0abe35579530b69b
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Fri Nov 5 20:35:21 2010 -0500
+
+    rawconference: Add an id to FsRawSessions and support creating them.
+
+commit ba067d5b954e119a68d113558d8d2ab630f9ab28
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Nov 4 20:44:14 2010 -0500
+
+    rawconference: Implement fs_raw_conference_list_transmitters.
+
+commit 84060f78d4e2c1f31dc7e047446698dbd4d15b12
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Thu Nov 4 20:26:03 2010 -0500
+
+    rawconference: Add the FsRawSession class.
+    
+    These files have been copied directly from the FsMsnSession class
+    and have simply been renamed. More modifications will be needed.
+    P.S. The section documentation has also been altered to better
+    suit the FsRawSession class.
+
+commit 66d044279d23b7fdf01f125c1c2d42aeb17b9dbb
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Mon Nov 1 17:38:24 2010 -0500
+
+    rawconference: Remove cname from FsRawParticipant.
+
+commit 24e9a7184e18850b172bc7d218900308ccf5619e
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Sat Oct 30 22:37:47 2010 -0500
+
+    rawconference: Add FsRawParticipant.
+
+commit 0418bc34a1cdb701062a3bb5f2a44a4afd0a43f5
+Author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
+Date:   Sat Oct 30 21:50:14 2010 -0500
+
+    rawconference: Add base FsRawConference class and plugin structure.
+
+commit 22774302f3aadba3f1df976aec4462779d4f147f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 20 21:57:31 2011 -0500
+
+    Version 0.0.23.1
+
 commit 680b46c8a3ac3b782f07a9c82f90cb145eaae7ba
 Author: Olivier Crête <olivier.crete@collabora.co.uk>
 Date:   Thu Jan 20 21:40:17 2011 -0500
