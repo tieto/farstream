@@ -1,3 +1,9 @@
+farsight2 (0.0.24-2) UNRELEASED; urgency=low
+
+  * Update symbols file
+
+ -- Sjoerd Simons <sjoerd@debian.org>  Mon, 14 Feb 2011 15:38:40 +0000
+
 farsight2 (0.0.24-1) unstable; urgency=low
 
   * New upstream release

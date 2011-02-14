@@ -82,3 +82,5 @@ libgstfarsight-0.10.so.0 libgstfarsight0.10-0 #MINVER#
   fs_transmitter_list_available@Base 0.0.4
   fs_transmitter_new@Base 0.0.1
   fs_transmitter_new_stream_transmitter@Base 0.0.1
+  fs_utils_get_default_codec_preferences@Base 0.0.24
+  fs_utils_get_default_element_properties@Base 0.0.24
