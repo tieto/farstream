@@ -47,7 +47,7 @@
     <keyword type="property" name="The &quot;sdes&quot; property" link="farsight2-plugins-FsRtpConference.html#FsRtpConference--sdes"/>
     <keyword type="struct" name="FsRtpParticipant" link="farsight2-plugins-FsRtpParticipant.html#FsRtpParticipant"/>
     <keyword type="property" name="The &quot;cname&quot; property" link="farsight2-plugins-FsRtpParticipant.html#FsRtpParticipant--cname"/>
-    <keyword type="" name="Codec profiles" link="farsight2-plugins-FsRtpSession.html#id433132"/>
+    <keyword type="" name="Codec profiles" link="farsight2-plugins-FsRtpSession.html#id568368"/>
     <keyword type="struct" name="FsRtpSession" link="farsight2-plugins-FsRtpSession.html#FsRtpSession"/>
     <keyword type="property" name="The &quot;no-rtcp-timeout&quot; property" link="farsight2-plugins-FsRtpSession.html#FsRtpSession--no-rtcp-timeout"/>
     <keyword type="property" name="The &quot;ssrc&quot; property" link="farsight2-plugins-FsRtpSession.html#FsRtpSession--ssrc"/>

@@ -58,9 +58,6 @@ encoding_name property set to the value returned by gst_caps_to_string.
 <a name="FsRawSession"></a><h3>FsRawSession</h3>
 <pre class="programlisting">typedef struct {
   FsSession parent;
-
-  /* Protected by the conf lock */
-  GstElement *valve;
 } FsRawSession;
 </pre>
 </div>

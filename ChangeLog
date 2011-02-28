@@ -1,3 +1,137 @@
+commit 72ef2c35a48538b6c26ef9900a227611dc9c6cdc
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 23 16:04:46 2011 -0500
+
+    Version 0.0.26
+
+commit 2f30193b1f257579e62275e5dc34d23aead460a6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 23 14:52:43 2011 -0500
+
+    rawconference: Correctly check if thread is internal
+
+commit 1c3854fe3138b213cd1d3278ca86beb6e6a88061
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 23 15:35:51 2011 -0500
+
+    rawstream: Don't start sending before having codecs
+
+commit ccd9a5354b4473ce20fa6ef91fa97d80f3fc7066
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 23 15:36:19 2011 -0500
+
+    rawsession: Only manipulate the valve from the session itlsef
+
+commit 279b78a8d5bcbf6b70a7c76b431c9c139c227e38
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 23 15:12:07 2011 -0500
+
+    rawsession: Simplify transform bins creation
+
+commit 0e176ed25403ab64539c3c2e1b99483d03da116d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 23 15:09:00 2011 -0500
+
+    rawsession: Remove g_debug
+
+commit 0352d3c1cfa0cd10f8816abe83b62931abbc175e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 23 15:07:16 2011 -0500
+
+    rawsession: Unref the right object
+
+commit 256af8d78b10a9aecfe9c75042dc7e8e9f57fea8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 23 15:06:46 2011 -0500
+
+    rawsession: Only remove sink if it has been added
+
+commit 3d25a3ef1116df4d95664ddf8abba64b0ff09244
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 23 14:52:02 2011 -0500
+
+    rtpconference: Correctly check if a thread is internal
+
+commit 9b67a3d5493d7d4645bd48a334765a12bc797dbd
+Author: Jakub Adam <jakub.adam@ktknet.cz>
+Date:   Sun Feb 20 22:17:14 2011 +0100
+
+    rtpstream: Fix reference leak in fs_rtp_stream_set_negotiated_codecs_unlock()
+
+commit 21f7a67eec08db6f2e7325cc3cc942481a741a1a
+Author: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Date:   Mon Feb 21 18:32:11 2011 +0000
+
+    Keep a ref to the fakesink
+
+commit 1459b54dcdc03f14e76dd4cffbd4649af653de33
+Author: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Date:   Mon Feb 21 14:23:25 2011 +0000
+
+    fsrawconference: Make the construction more consistent
+    
+    In the construction of a raw session we add a bunch of elements. For all
+    elements unref them in _constructed if adding them to the bin fails, for
+    all other failures, leave it to the _dispose function to remove and
+    unref the elements
+
+commit 30686e6bde917d1265f399b4f8ab3397437faab6
+Author: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Date:   Mon Feb 21 14:20:00 2011 +0000
+
+    Use full prefix, even for private functions
+
+commit b70c43a141d8183a3354369dae7cd351a289b035
+Author: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Date:   Fri Feb 18 19:40:56 2011 +0000
+
+    Add a transformation bin the source pipeline
+    
+    As upstream negotiation in Gstreamer still doesn't actually work, we'll
+    need to change transform elements around every time the caps are changed
+    as that will cause a re-negotiation and things will keep working..
+    
+    Unfortunately managing dynamic pipelines has its own challenges, so add
+    a tee ! fakesink which will eat all the errors for us...
+
+commit a2650fa32ce7cb28c343efe18d247cd62770fba8
+Author: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Date:   Thu Feb 17 18:00:13 2011 +0000
+
+    fsrawconference: Make fsrawstream explicitely ask the session to set the direction
+
+commit f2bf87379d54d76d832196b5a284599cdc50fffc
+Author: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Date:   Thu Feb 17 17:52:05 2011 +0000
+
+    fsrawconference: Cope with fs_raw_session_new returning NULL
+
+commit 06c1d7cd9322c3d380d7f5482c42f4de57c4cb91
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 15 12:26:22 2011 -0500
+
+    Version 0.0.25.1
+
+commit 82ae43536096773e56d7c454102015a5be1d5877
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 15 12:16:16 2011 -0500
+
+    Version 0.0.25
+
+commit a64fc0e98135e5a39830f6531d777c1c01dfe58b
+Author: Emilio Pozuelo Monfort <emilio.pozuelo@collabora.co.uk>
+Date:   Tue Feb 15 14:24:02 2011 +0000
+
+    nicestreamtrans: Fix off-by-one bug
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=34291
+
+commit 00c51f57e87cfa8a929722e0ca14307bb06a2e8c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 10 20:34:28 2011 +0000
+
+    Version 0.0.24.1
+
 commit 7fca1a7b94c572fe7430937270cfbeadde80f587
 Author: Olivier Crête <olivier.crete@collabora.co.uk>
 Date:   Thu Feb 10 20:24:58 2011 +0000
