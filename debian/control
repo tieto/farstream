@@ -8,11 +8,11 @@ Uploaders: Dafydd Harries <daf@debian.org>,
            Laurent Bigonville <bigon@debian.org>,
            Jonny Lamb <jonny@debian.org>
 Build-Depends: debhelper (>= 7),
-               cdbs,
+               cdbs (>= 0.4.90~),
                libglib2.0-dev (>= 2.16),
                libgstreamer0.10-dev (>= 0.10.26),
                libgstreamer-plugins-base0.10-dev (>= 0.10.26),
-               python-central (>= 0.5),
+               python-all-dev (>= 2.6.6-3~),
                python-gobject-dev (>= 2.16),
                python-gst0.10-dev,
                libnice-dev (>= 0.1.0),
@@ -21,7 +21,7 @@ Standards-Version: 3.9.1
 Vcs-Git: git://git.debian.org/git/pkg-telepathy/farsight2.git
 Vcs-Browser: http://git.debian.org/?p=pkg-telepathy/farsight2.git
 Homepage: http://farsight.freedesktop.org
-XS-Python-Version: >= 2.4
+X-Python-Version: >= 2.4
 
 Package: libgstfarsight0.10-0
 Architecture: any
@@ -81,9 +81,9 @@ Description: Audio/Video communications framework: debugging symbols
 
 Package: python-farsight
 Section: python
-XB-Python-Version: ${python:Versions}
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${python:Depends}, python-gst0.10
+Provides: ${python:Provides}
 Description: Audio/Video communications framework: Python bindings
  The Farsight project is an effort to create a framework to deal with all
  known audio/video conferencing protocols. On one side it offers a generic

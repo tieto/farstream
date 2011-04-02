@@ -1,7 +1,9 @@
 #!/usr/bin/make -f
 
+DEB_BUILDDIR := debian/build
+
 include /usr/share/cdbs/1/rules/debhelper.mk
-include /usr/share/cdbs/1/class/autotools.mk
+include /usr/share/cdbs/1/class/python-autotools.mk
 
 DEB_CONFIGURE_EXTRA_FLAGS = --enable-python --enable-gupnp
 
@@ -13,8 +15,5 @@ DEB_DH_MAKESHLIBS_ARGS_libgstfarsight0.10-0 := -X/usr/lib/gstreamer-0.10 -X/usr/
 # List any files which are not installed
 include /usr/share/cdbs/1/rules/utils.mk
 common-binary-post-install-arch:: list-missing
-
-binary-install/python-farsight::
-	dh_pycentral -p$(cdbs_curpkg)
 
 include $(CURDIR)/debian/update-patches.mk
