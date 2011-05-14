@@ -1,4 +1,4 @@
-farsight2 (0.0.28-1) UNRELEASED; urgency=low
+farsight2 (0.0.28-1) unstable; urgency=low
 
   [ Laurent Bigonville ]
   * Use dh_python2 instead of python-central (Closes: #616804)
@@ -16,7 +16,7 @@ farsight2 (0.0.28-1) UNRELEASED; urgency=low
   * New upstream release
   * Bump build-deps on gst and gst-p-b to >= 0.10.33
 
- -- Sjoerd Simons <sjoerd@debian.org>  Sat, 14 May 2011 14:06:44 +0100
+ -- Sjoerd Simons <sjoerd@debian.org>  Sat, 14 May 2011 14:30:34 +0100
 
 farsight2 (0.0.26-1) unstable; urgency=low
 
