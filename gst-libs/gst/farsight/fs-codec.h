@@ -34,6 +34,7 @@ G_BEGIN_DECLS
 
 typedef struct _FsCodec FsCodec;
 typedef struct _FsCodecParameter FsCodecParameter;
+typedef struct _FsFeedbackParameter FsFeedbackParameter;
 
 #define FS_TYPE_CODEC \
   (fs_codec_get_type ())
@@ -83,6 +84,9 @@ typedef enum
  * @optional_params: key pairs of param name to param data
  * @ptime: The preferred duration (in ms) of a packet
  * @maxptime: The maximum duration (in ms) of a packet
+ * @minimum_reporting_interval: The minimum interval between two RTCP reports,
+ *  If it is not specified (G_MAXUINT), it is up to the protocol to decide
+ * (it is 5 seconds for RTP).
  *
  * This structure reprensents one codec that can be offered or received
  */
@@ -100,6 +104,8 @@ struct _FsCodec
     struct {
       guint ptime;
       guint maxptime;
+      guint minimum_reporting_interval;
+      GList *feedback_params;
     } ABI;
     gpointer _padding[4];         /* padding for binary-compatible
                                    expansion*/
@@ -116,6 +122,20 @@ struct _FsCodec
 struct _FsCodecParameter {
     gchar *name;
     gchar *value;
+};
+
+/**
+ * FsFeedbackParameter:
+ * @type: the type of feedback, like "ack", "name", "ccm"
+ * @subtype: the subtype of feedback (can be an empty string)
+ * @extra_params: a string containing extra parameters (can be empty)
+ *
+ * Use to store feedback parameters
+ */
+struct _FsFeedbackParameter {
+  gchar *type;
+  gchar *subtype;
+  gchar *extra_params;
 };
 
 
@@ -155,21 +175,24 @@ GList *fs_codec_list_copy (const GList *codec_list);
 
 GList *fs_codec_list_from_keyfile (const gchar *filename, GError **error);
 gchar *fs_codec_to_string (const FsCodec *codec);
+const gchar *fs_media_type_to_string (FsMediaType media_type);
 
 gboolean fs_codec_are_equal (const FsCodec *codec1, const FsCodec *codec2);
-
 gboolean fs_codec_list_are_equal (GList *list1, GList *list2);
-
-const gchar *fs_media_type_to_string (FsMediaType media_type);
 
 void fs_codec_add_optional_parameter (FsCodec *codec, const gchar *name,
     const gchar *value);
-
 void fs_codec_remove_optional_parameter (FsCodec *codec,
     FsCodecParameter *param);
-
 FsCodecParameter *fs_codec_get_optional_parameter (FsCodec *codec,
     const gchar *name, const gchar *value);
+
+
+void fs_codec_add_feedback_parameter (FsCodec *codec, const gchar *type,
+    const gchar *subtype, const gchar *extra_params);
+FsFeedbackParameter *fs_codec_get_feedback_parameter (FsCodec *codec,
+    const gchar *type, const gchar *subtype, const gchar *extra_params);
+void fs_codec_remove_feedback_parameter (FsCodec *codec, GList *item);
 
 G_END_DECLS
 

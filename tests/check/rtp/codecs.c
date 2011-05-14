@@ -25,6 +25,7 @@
 #include <gst/check/gstcheck.h>
 #include <gst/farsight/fs-conference-iface.h>
 #include <gst/farsight/fs-stream-transmitter.h>
+#include <gst/farsight/fs-rtp.h>
 
 #include "generic.h"
 
@@ -1126,6 +1127,7 @@ GST_START_TEST (test_rtpcodecs_ptime)
   codecs = g_list_append (NULL, fs_codec_copy (prefcodec));
   fail_unless (fs_stream_set_remote_codecs (stream, codecs, &error));
   fail_unless (error == NULL);
+  fs_codec_list_destroy (codecs);
 
   g_object_get (dat->session, "codecs", &codecs, NULL);
   fail_unless (g_list_length (codecs) == 1);
@@ -1172,10 +1174,12 @@ GST_START_TEST (test_rtpcodecs_ptime)
   codecs = g_list_append (NULL, codec);
   fail_unless (fs_stream_set_remote_codecs (stream, codecs, &error));
   fail_unless (error == NULL);
+  fs_codec_list_destroy (codecs);
 
   fail_if (gst_element_set_state (dat->pipeline, GST_STATE_NULL) !=
       GST_STATE_CHANGE_SUCCESS);
 
+  fs_codec_destroy (prefcodec);
   g_object_unref (stream);
   g_object_unref (participant);
   cleanup_simple_conference (dat);
@@ -1884,8 +1888,6 @@ GST_START_TEST (test_rtpcodecs_nego_h263_1998)
 }
 GST_END_TEST;
 
-
-
 GST_START_TEST (test_rtpcodecs_nego_h263_2000)
 {
   struct SimpleTestConference *dat = NULL;
@@ -1978,6 +1980,7 @@ GST_START_TEST (test_rtpcodecs_nego_h264)
   FsCodec *outcodec = NULL;
   FsCodec *prefcodec = NULL;
   FsCodec *outprefcodec = NULL;
+  FsCodec *tmp_prefcodec, *tmp_outprefcodec;
   FsParticipant *participant;
 
   setup_codec_tests (&dat, &participant, FS_MEDIA_TYPE_VIDEO);
@@ -2066,9 +2069,219 @@ GST_START_TEST (test_rtpcodecs_nego_h264)
   test_one_codec (dat->session, participant, prefcodec, outprefcodec,
       codec, outcodec);
 
+  /* Now test the minimum_reporting_interval property */
+
+  codec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
+  outcodec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
+  codec->ABI.ABI.minimum_reporting_interval = 3;
+  outcodec->ABI.ABI.minimum_reporting_interval = 3;
+  test_one_codec (dat->session, participant, prefcodec, outprefcodec,
+      codec, outcodec);
+
+  tmp_prefcodec = fs_codec_copy (prefcodec);
+  tmp_outprefcodec = fs_codec_copy (outprefcodec);
+  tmp_prefcodec->ABI.ABI.minimum_reporting_interval = 3;
+  tmp_outprefcodec->ABI.ABI.minimum_reporting_interval = 3;
+
+  codec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
+  outcodec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
+  test_one_codec (dat->session, participant, tmp_prefcodec, tmp_outprefcodec,
+      codec, outcodec);
+
+
+  codec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
+  outcodec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
+  codec->ABI.ABI.minimum_reporting_interval = 3;
+  outcodec->ABI.ABI.minimum_reporting_interval = 3;
+  test_one_codec (dat->session, participant, prefcodec, outprefcodec,
+      codec, outcodec);
+
+  fs_codec_destroy (tmp_prefcodec);
+  fs_codec_destroy (tmp_outprefcodec);
+
   fs_codec_destroy (outprefcodec);
   fs_codec_destroy (prefcodec);
   cleanup_codec_tests (dat, participant);
+}
+GST_END_TEST;
+
+
+GST_START_TEST (test_rtpcodecs_nego_feedback)
+{
+  struct SimpleTestConference *dat = NULL;
+  FsCodec *codec = NULL;
+  FsCodec *outcodec = NULL;
+  FsCodec *prefcodec = NULL;
+  FsCodec *outprefcodec = NULL;
+  FsParticipant *participant;
+  setup_codec_tests (&dat, &participant, FS_MEDIA_TYPE_VIDEO);
+
+
+  outprefcodec = fs_codec_new (FS_CODEC_ID_ANY, "H264",
+      FS_MEDIA_TYPE_VIDEO, 90000);
+  prefcodec = fs_codec_copy (outprefcodec);
+  fs_codec_add_optional_parameter (prefcodec, "farsight-recv-profile",
+      "identity");
+  fs_codec_add_optional_parameter (prefcodec, "farsight-send-profile",
+      "identity");
+
+  codec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
+  outcodec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
+  test_one_codec (dat->session, participant, prefcodec, outprefcodec,
+      codec, outcodec);
+
+
+  codec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
+  codec->ABI.ABI.minimum_reporting_interval = 0;
+  outcodec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
+  outcodec->ABI.ABI.minimum_reporting_interval = 0;
+  test_one_codec (dat->session, participant, prefcodec, outprefcodec,
+      codec, outcodec);
+
+  codec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
+  codec->ABI.ABI.minimum_reporting_interval = 3;
+  outcodec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
+  outcodec->ABI.ABI.minimum_reporting_interval = 3;
+  test_one_codec (dat->session, participant, prefcodec, outprefcodec,
+      codec, outcodec);
+
+  codec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
+  outcodec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
+  fs_codec_add_feedback_parameter (codec, "nack", "pli", "");
+  test_one_codec (dat->session, participant, prefcodec, outprefcodec,
+      codec, outcodec);
+
+  codec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
+  outcodec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
+  fs_codec_add_feedback_parameter (prefcodec, "nack", "pli", "");
+  fs_codec_add_feedback_parameter (outprefcodec, "nack", "pli", "");
+  test_one_codec (dat->session, participant, prefcodec, outprefcodec,
+      codec, outcodec);
+
+  codec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
+  outcodec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
+  fs_codec_add_feedback_parameter (codec, "nack", "pli", "");
+  fs_codec_add_feedback_parameter (outcodec, "nack", "pli", "");
+  test_one_codec (dat->session, participant, prefcodec, outprefcodec,
+      codec, outcodec);
+
+  fs_codec_destroy (outprefcodec);
+  fs_codec_destroy (prefcodec);
+  cleanup_codec_tests (dat, participant);
+}
+GST_END_TEST;
+
+static gboolean
+compare_extensions (FsRtpHeaderExtension *ext1, FsRtpHeaderExtension *ext2)
+{
+  if (ext1->id == ext2->id &&
+      ext1->direction == ext2->direction &&
+      !strcmp (ext1->uri, ext2->uri))
+    return TRUE;
+  else
+    return FALSE;
+}
+
+static gboolean
+compare_extensions_list (GList *list1, GList *list2)
+{
+   for (;
+        list1 && list2;
+        list1 = g_list_next (list1), list2 = g_list_next (list2))
+    if (!compare_extensions (list1->data, list2->data))
+      return FALSE;
+
+  if (list1 == NULL && list2 == NULL)
+    return TRUE;
+  else
+    return FALSE;
+}
+
+GST_START_TEST (test_rtpcodecs_nego_hdrext)
+{
+  GstBus *bus;
+  struct SimpleTestConference *dat;
+  FsParticipant *participant;
+  FsStream *stream;
+  GList *hdrexts_prefs;
+  GList *hdrexts;
+  GList *hdrexts2;
+  GList *codecs;
+
+  dat = setup_simple_conference_full (1, "fsrtpconference", "bob@127.0.0.1",
+      FS_MEDIA_TYPE_AUDIO);
+
+  participant = fs_conference_new_participant (
+      FS_CONFERENCE (dat->conference), "name", NULL);
+  fail_if (participant == NULL, "Could not add participant to conference");
+
+  bus = gst_pipeline_get_bus (GST_PIPELINE (dat->pipeline));
+  fail_if (bus == NULL);
+  gst_bus_set_sync_handler (bus, NULL, NULL);
+  gst_bus_set_sync_handler (bus, drop_all_sync_handler, dat);
+  gst_object_unref (bus);
+
+
+  stream = fs_session_new_stream (dat->session, participant,
+      FS_DIRECTION_BOTH, "rawudp", 0, NULL, NULL);
+  fail_if (stream == NULL, "Could not add stream to session");
+
+  hdrexts_prefs = g_list_prepend (NULL, fs_rtp_header_extension_new (1,
+          FS_DIRECTION_BOTH, "URI"));
+
+  g_object_get (dat->session, "rtp-header-extension-preferences", &hdrexts,
+      NULL);
+  fail_unless (hdrexts == NULL);
+  g_object_get (dat->session, "rtp-header-extensions", &hdrexts, NULL);
+  fail_unless (hdrexts == NULL);
+
+  g_object_set (dat->session, "rtp-header-extension-preferences",
+      hdrexts_prefs, NULL);
+  g_object_get (dat->session, "rtp-header-extension-preferences", &hdrexts,
+      NULL);
+  fs_rtp_header_extension_list_destroy (hdrexts);
+
+  g_object_get (dat->session, "codecs", &codecs, NULL);
+  fail_unless (codecs != NULL);
+  fail_unless (fs_stream_set_remote_codecs (stream, codecs, NULL));
+  fs_codec_list_destroy (codecs);
+
+  hdrexts2 = g_list_prepend (NULL, fs_rtp_header_extension_new (2,
+          FS_DIRECTION_SEND, "URI"));
+  g_object_set (stream, "rtp-header-extensions",  hdrexts2, NULL);
+  g_object_get (stream, "rtp-header-extensions", &hdrexts, NULL);
+  fail_unless (compare_extensions_list (hdrexts, hdrexts2));
+  fs_rtp_header_extension_list_destroy (hdrexts);
+
+  g_object_get (dat->session, "rtp-header-extensions", &hdrexts, NULL);
+  fail_unless (compare_extensions_list (hdrexts, hdrexts2));
+  fs_rtp_header_extension_list_destroy (hdrexts);
+  fs_rtp_header_extension_list_destroy (hdrexts2);
+
+  g_object_set (stream, "rtp-header-extensions",  hdrexts_prefs, NULL);
+  g_object_get (stream, "rtp-header-extensions", &hdrexts, NULL);
+  fail_unless (compare_extensions_list (hdrexts, hdrexts_prefs));
+  fs_rtp_header_extension_list_destroy (hdrexts);
+
+  g_object_get (dat->session, "rtp-header-extensions", &hdrexts, NULL);
+  fail_unless (compare_extensions_list (hdrexts, hdrexts_prefs));
+  fs_rtp_header_extension_list_destroy (hdrexts);
+
+
+  hdrexts2 = g_list_prepend (NULL, fs_rtp_header_extension_new (1,
+          FS_DIRECTION_BOTH, "URI2"));
+  g_object_set (stream, "rtp-header-extensions",  hdrexts2, NULL);
+  g_object_get (stream, "rtp-header-extensions", &hdrexts, NULL);
+  fail_unless (compare_extensions_list (hdrexts, hdrexts2));
+  fs_rtp_header_extension_list_destroy (hdrexts);
+  fs_rtp_header_extension_list_destroy (hdrexts2);
+  g_object_get (dat->session, "rtp-header-extensions", &hdrexts, NULL);
+  fail_unless (hdrexts == NULL);
+
+  fs_rtp_header_extension_list_destroy (hdrexts_prefs);
+  g_object_unref (stream);
+  g_object_unref (participant);
+  cleanup_simple_conference (dat);
 }
 GST_END_TEST;
 
@@ -2078,7 +2291,6 @@ fsrtpcodecs_suite (void)
   Suite *s = suite_create ("fsrtpcodecs");
   TCase *tc_chain;
   GLogLevelFlags fatal_mask;
-
 
   fatal_mask = g_log_set_always_fatal (G_LOG_FATAL_MASK);
   fatal_mask |= G_LOG_LEVEL_WARNING | G_LOG_LEVEL_CRITICAL;
@@ -2151,6 +2363,14 @@ fsrtpcodecs_suite (void)
 
   tc_chain = tcase_create ("fsrtpcodecs_nego_h264");
   tcase_add_test (tc_chain, test_rtpcodecs_nego_h264);
+  suite_add_tcase (s, tc_chain);
+
+  tc_chain = tcase_create ("fsrtpcodecs_nego_feedback");
+  tcase_add_test (tc_chain, test_rtpcodecs_nego_feedback);
+  suite_add_tcase (s, tc_chain);
+
+  tc_chain = tcase_create ("fsrtpcodecs_nego_hdrext");
+  tcase_add_test (tc_chain, test_rtpcodecs_nego_hdrext);
   suite_add_tcase (s, tc_chain);
 
   return s;

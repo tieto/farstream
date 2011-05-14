@@ -47,7 +47,7 @@
     <function name="The &quot;sdes&quot; property" link="farsight2-plugins-FsRtpConference.html#FsRtpConference--sdes"/>
     <function name="FsRtpParticipant" link="farsight2-plugins-FsRtpParticipant.html#FsRtpParticipant"/>
     <function name="The &quot;cname&quot; property" link="farsight2-plugins-FsRtpParticipant.html#FsRtpParticipant--cname"/>
-    <function name="Codec profiles" link="farsight2-plugins-FsRtpSession.html#id568368"/>
+    <function name="Codec profiles" link="farsight2-plugins-FsRtpSession.html#id586353"/>
     <function name="FsRtpSession" link="farsight2-plugins-FsRtpSession.html#FsRtpSession"/>
     <function name="The &quot;no-rtcp-timeout&quot; property" link="farsight2-plugins-FsRtpSession.html#FsRtpSession--no-rtcp-timeout"/>
     <function name="The &quot;ssrc&quot; property" link="farsight2-plugins-FsRtpSession.html#FsRtpSession--ssrc"/>

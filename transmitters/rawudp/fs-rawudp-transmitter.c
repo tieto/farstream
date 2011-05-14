@@ -655,14 +655,10 @@ _create_sinksource (
   }
 
   g_object_set (elem,
+      "auto-multicast", FALSE,
       "closefd", FALSE,
       "sockfd", fd,
       NULL);
-
-  if (g_object_class_find_property (G_OBJECT_GET_CLASS (elem),
-          "auto-multicast"))
-    g_object_set (elem, "auto-multicast", FALSE, NULL);
-
 
   if (!gst_bin_add (bin, elem))
   {
@@ -1031,7 +1027,9 @@ fs_rawudp_transmitter_udpport_add_dest (UdpPort *udpport,
   g_signal_emit_by_name (udpport->udpsink, "add", ip, port);
   gst_element_send_event (udpport->udpsink,
       gst_event_new_custom (GST_EVENT_CUSTOM_UPSTREAM,
-          gst_structure_new ("GstForceKeyUnit", NULL)));
+          gst_structure_new ("GstForceKeyUnit",
+              "all-headers", G_TYPE_BOOLEAN, TRUE,
+              NULL)));
 }
 
 

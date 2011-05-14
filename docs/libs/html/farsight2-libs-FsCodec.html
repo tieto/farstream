@@ -3,11 +3,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>FsCodec</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="index.html" title="Farsight2 Reference Manual">
 <link rel="up" href="ch02.html" title="Farsight Core Library">
 <link rel="prev" href="farsight2-libs-FsCandidate.html" title="FsCandidate">
-<link rel="next" href="ch03.html" title="Farsight Utility Functions and Objects">
+<link rel="next" href="ch03.html" title="Protocol Specific types">
 <meta name="generator" content="GTK-Doc V1.15 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -43,6 +43,7 @@
                     <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec">FsCodec</a>;
 enum                <a class="link" href="farsight2-libs-FsCodec.html#FsMediaType" title="enum FsMediaType">FsMediaType</a>;
                     <a class="link" href="farsight2-libs-FsCodec.html#FsCodecParameter" title="FsCodecParameter">FsCodecParameter</a>;
+                    <a class="link" href="farsight2-libs-FsCodec.html#FsFeedbackParameter" title="FsFeedbackParameter">FsFeedbackParameter</a>;
 #define             <a class="link" href="farsight2-libs-FsCodec.html#FS-CODEC-ID-ANY:CAPS" title="FS_CODEC_ID_ANY">FS_CODEC_ID_ANY</a>
 #define             <a class="link" href="farsight2-libs-FsCodec.html#FS-CODEC-ID-DISABLE:CAPS" title="FS_CODEC_ID_DISABLE">FS_CODEC_ID_DISABLE</a>
 <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="returnvalue">FsCodec</span></a> *           <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-new" title="fs_codec_new ()">fs_codec_new</a>                        (<em class="parameter"><code><span class="type">int</span> id</code></em>,
@@ -68,6 +69,16 @@ enum                <a class="link" href="farsight2-libs-FsCodec.html#FsMediaTyp
 <a class="link" href="farsight2-libs-FsCodec.html#FsCodecParameter" title="FsCodecParameter"><span class="returnvalue">FsCodecParameter</span></a> *  <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-get-optional-parameter" title="fs_codec_get_optional_parameter ()">fs_codec_get_optional_parameter</a>     (<em class="parameter"><code><a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> *codec</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *value</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-add-feedback-parameter" title="fs_codec_add_feedback_parameter ()">fs_codec_add_feedback_parameter</a>     (<em class="parameter"><code><a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> *codec</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *type</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *subtype</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *extra_params</code></em>);
+<a class="link" href="farsight2-libs-FsCodec.html#FsFeedbackParameter" title="FsFeedbackParameter"><span class="returnvalue">FsFeedbackParameter</span></a> * <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-get-feedback-parameter" title="fs_codec_get_feedback_parameter ()">fs_codec_get_feedback_parameter</a>   (<em class="parameter"><code><a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> *codec</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *type</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *subtype</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *extra_params</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-remove-feedback-parameter" title="fs_codec_remove_feedback_parameter ()">fs_codec_remove_feedback_parameter</a>  (<em class="parameter"><code><a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> *codec</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *item</code></em>);
 #define             <a class="link" href="farsight2-libs-FsCodec.html#FS-CODEC-FORMAT:CAPS" title="FS_CODEC_FORMAT">FS_CODEC_FORMAT</a>
 #define             <a class="link" href="farsight2-libs-FsCodec.html#FS-CODEC-ARGS:CAPS" title="FS_CODEC_ARGS()">FS_CODEC_ARGS</a>                       (codec)
 const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="farsight2-libs-FsCodec.html#fs-media-type-to-string" title="fs_media_type_to_string ()">fs_media_type_to_string</a>             (<em class="parameter"><code><a class="link" href="farsight2-libs-FsCodec.html#FsMediaType" title="enum FsMediaType"><span class="type">FsMediaType</span></a> media_type</code></em>);
@@ -189,6 +200,39 @@ Used to store arbitary parameters for a codec
 <tr>
 <td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="FsCodecParameter.value"></a>value</code></em>;</span></p></td>
 <td>parameter value.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="FsFeedbackParameter">
+<a name="FsFeedbackParameter"></a><h3>FsFeedbackParameter</h3>
+<pre class="programlisting">typedef struct {
+  gchar *type;
+  gchar *subtype;
+  gchar *extra_params;
+} FsFeedbackParameter;
+</pre>
+<p>
+Use to store feedback parameters
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="FsFeedbackParameter.type"></a>type</code></em>;</span></p></td>
+<td>the type of feedback, like "ack", "name", "ccm"
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="FsFeedbackParameter.subtype"></a>subtype</code></em>;</span></p></td>
+<td>the subtype of feedback (can be an empty string)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="FsFeedbackParameter.extra-params"></a>extra_params</code></em>;</span></p></td>
+<td>a string containing extra parameters (can be empty)
 </td>
 </tr>
 </tbody>
@@ -351,7 +395,12 @@ Example:
 6
 7
 8
-9</pre></td>
+9
+10
+11
+12
+13
+14</pre></td>
         <td class="listing_code"><pre class="programlisting"><span class="symbol">[</span><span class="normal">audio</span><span class="symbol">/</span><span class="normal">codec1</span><span class="symbol">]</span>
 <span class="normal">clock</span><span class="symbol">-</span><span class="normal">rate</span><span class="symbol">=</span><span class="number">8000</span>
 
@@ -360,7 +409,12 @@ Example:
 
 <span class="symbol">[</span><span class="normal">audio</span><span class="symbol">/</span><span class="normal">codec2</span><span class="symbol">]</span>
 <span class="normal">one_param</span><span class="symbol">=</span><span class="normal">QCIF</span>
-<span class="normal">another_param</span><span class="symbol">=</span><span class="normal">WOW</span></pre></td>
+<span class="normal">another_param</span><span class="symbol">=</span><span class="normal">WOW</span>
+
+<span class="symbol">[</span><span class="normal">video</span><span class="symbol">/</span><span class="normal">codec3</span><span class="symbol">]</span>
+<span class="normal">wierd_param</span><span class="symbol">=</span><span class="number">42</span>
+<span class="normal">feedback</span><span class="symbol">:</span><span class="normal">nack</span><span class="symbol">/</span><span class="normal">pli</span><span class="symbol">=</span><span class="number">1</span>
+<span class="normal">feedback</span><span class="symbol">:</span><span class="normal">tfrc</span><span class="symbol">=</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -506,7 +560,7 @@ This function adds an new optional parameter to a <a class="link" href="farsight
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
-<td>The value of the optional parameter
+<td>
 </td>
 </tr>
 </tbody>
@@ -533,7 +587,7 @@ NULL param will do nothing.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>param</code></em> :</span></p></td>
-<td>a pointer to the <a class="link" href="farsight2-libs-FsCodec.html#FsCodecParameter" title="FsCodecParameter"><span class="type">FsCodecParameter</span></a> to remove
+<td>
 </td>
 </tr>
 </tbody>
@@ -570,6 +624,108 @@ and, if not <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> the <a class="link" href="farsight2-libs-FsCodec.html#FsCodecParameter" title="FsCodecParameter"><span class="type">FsCodecParameter</span></a> from the <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="fs_codec_add_feedback_parameter ()">
+<a name="fs-codec-add-feedback-parameter"></a><h3>fs_codec_add_feedback_parameter ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                fs_codec_add_feedback_parameter     (<em class="parameter"><code><a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> *codec</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *type</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *subtype</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *extra_params</code></em>);</pre>
+<p>
+This function adds an new feedback parameter to a <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>codec</code></em> :</span></p></td>
+<td>The <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> to add the parameter to
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
+<td>The type of the feedback parameter
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>subtype</code></em> :</span></p></td>
+<td>The subtype of the feedback parameter
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>extra_params</code></em> :</span></p></td>
+<td>The extra_params of the feeback parameter
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="fs_codec_get_feedback_parameter ()">
+<a name="fs-codec-get-feedback-parameter"></a><h3>fs_codec_get_feedback_parameter ()</h3>
+<pre class="programlisting"><a class="link" href="farsight2-libs-FsCodec.html#FsFeedbackParameter" title="FsFeedbackParameter"><span class="returnvalue">FsFeedbackParameter</span></a> * fs_codec_get_feedback_parameter   (<em class="parameter"><code><a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> *codec</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *type</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *subtype</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *extra_params</code></em>);</pre>
+<p>
+Finds the <a class="link" href="farsight2-libs-FsCodec.html#FsFeedbackParameter" title="FsFeedbackParameter"><span class="type">FsFeedbackParameter</span></a> in the <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> that has the requested
+subtype, type and extra_params. One of which must be non-NULL;
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>codec</code></em> :</span></p></td>
+<td>a <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
+<td>The subtype of the parameter to search for or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> for any type
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>subtype</code></em> :</span></p></td>
+<td>The subtype of the parameter to search for or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> for any subtype
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>extra_params</code></em> :</span></p></td>
+<td>The extra_params of the parameter to search for or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> for
+  any extra_params
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the <a class="link" href="farsight2-libs-FsCodec.html#FsFeedbackParameter" title="FsFeedbackParameter"><span class="type">FsFeedbackParameter</span></a> from the <a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="fs_codec_remove_feedback_parameter ()">
+<a name="fs-codec-remove-feedback-parameter"></a><h3>fs_codec_remove_feedback_parameter ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                fs_codec_remove_feedback_parameter  (<em class="parameter"><code><a class="link" href="farsight2-libs-FsCodec.html#FsCodec" title="FsCodec"><span class="type">FsCodec</span></a> *codec</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *item</code></em>);</pre>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>codec</code></em> :</span></p></td>
+<td>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>item</code></em> :</span></p></td>
+<td>
 </td>
 </tr>
 </tbody>

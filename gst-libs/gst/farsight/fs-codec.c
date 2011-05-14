@@ -100,8 +100,27 @@ fs_codec_new (int id, const char *encoding_name,
   codec->encoding_name = g_strdup (encoding_name);
   codec->media_type = media_type;
   codec->clock_rate = clock_rate;
+  codec->ABI.ABI.minimum_reporting_interval = G_MAXUINT;
 
   return codec;
+}
+
+static void
+free_optional_parameter (FsCodecParameter *param)
+{
+  g_free (param->name);
+  g_free (param->value);
+  g_slice_free (FsCodecParameter, param);
+}
+
+
+static void
+free_feedback_parameter (FsFeedbackParameter *param)
+{
+  g_free (param->type);
+  g_free (param->subtype);
+  g_free (param->extra_params);
+  g_slice_free (FsFeedbackParameter, param);
 }
 
 /**
@@ -117,18 +136,14 @@ fs_codec_destroy (FsCodec * codec)
     return;
 
   g_free (codec->encoding_name);
-  if (codec->optional_params) {
-    GList *lp;
-    FsCodecParameter *param;
 
-    for (lp = codec->optional_params; lp; lp = g_list_next (lp)) {
-      param = (FsCodecParameter *) lp->data;
-      g_free (param->name);
-      g_free (param->value);
-      g_slice_free (FsCodecParameter, param);
-    }
-    g_list_free (codec->optional_params);
-  }
+  g_list_foreach (codec->optional_params, (GFunc) free_optional_parameter,
+        NULL);
+  g_list_free (codec->optional_params);
+
+  g_list_foreach (codec->ABI.ABI.feedback_params,
+      (GFunc) free_feedback_parameter, NULL);
+  g_list_free (codec->ABI.ABI.feedback_params);
 
   g_slice_free (FsCodec, codec);
 }
@@ -146,27 +161,27 @@ fs_codec_copy (const FsCodec * codec)
 {
   FsCodec *copy = NULL;
   GList *lp;
-  FsCodecParameter *param;
-  FsCodecParameter *param_copy;
 
   if (codec == NULL)
     return NULL;
 
-  copy = g_slice_new0 (FsCodec);
+  copy = fs_codec_new (codec->id, codec->encoding_name, codec->media_type,
+      codec->clock_rate);
 
-  copy->id = codec->id;
-  copy->media_type = codec->media_type;
-  copy->clock_rate = codec->clock_rate;
   copy->channels = codec->channels;
   copy->ABI.ABI.maxptime = codec->ABI.ABI.maxptime;
   copy->ABI.ABI.ptime = codec->ABI.ABI.ptime;
+  copy->ABI.ABI.minimum_reporting_interval =
+      codec->ABI.ABI.minimum_reporting_interval;
 
   copy->encoding_name = g_strdup (codec->encoding_name);
 
   for (lp = codec->optional_params; lp; lp = g_list_next (lp))
   {
+    FsCodecParameter *param_copy;
+    FsCodecParameter *param = lp->data;;
+
     param_copy = g_slice_new (FsCodecParameter);
-    param = (FsCodecParameter *) lp->data;
     param_copy->name = g_strdup (param->name);
     param_copy->value = g_strdup (param->value);
     /* prepend then reverse the list for efficiency */
@@ -174,6 +189,22 @@ fs_codec_copy (const FsCodec * codec)
         param_copy);
   }
   copy->optional_params = g_list_reverse (copy->optional_params);
+
+  for (lp = codec->ABI.ABI.feedback_params; lp; lp = g_list_next (lp))
+  {
+    FsFeedbackParameter *param_copy;
+    FsFeedbackParameter *param = lp->data;;
+
+    param_copy = g_slice_new (FsFeedbackParameter);
+    param_copy->type = g_strdup (param->type);
+    param_copy->subtype = g_strdup (param->subtype);
+    param_copy->extra_params = g_strdup (param->extra_params);
+    /* prepend then reverse the list for efficiency */
+    copy->ABI.ABI.feedback_params = g_list_prepend (copy->ABI.ABI.feedback_params,
+        param_copy);
+  }
+  copy->ABI.ABI.feedback_params =
+      g_list_reverse (copy->ABI.ABI.feedback_params);
 
   return copy;
 }
@@ -243,6 +274,11 @@ fs_codec_list_copy (const GList *codec_list)
  * [audio/codec2]
  * one_param=QCIF
  * another_param=WOW
+ *
+ * [video/codec3]
+ * wierd_param=42
+ * feedback:nack/pli=1
+ * feedback:tfrc=
  * ]|
  *
  * Return value: The #GList of #FsCodec or %NULL if the keyfile was empty
@@ -258,7 +294,8 @@ fs_codec_list_from_keyfile (const gchar *filename, GError **error)
   gsize groups_count = 0;
   int i;
 
-  g_assert (filename);
+  g_return_val_if_fail (filename, NULL);
+  g_return_val_if_fail (error == NULL || *error == NULL, NULL);
 
   keyfile = g_key_file_new ();
 
@@ -273,62 +310,68 @@ fs_codec_list_from_keyfile (const gchar *filename, GError **error)
     goto out;
 
   for (i=0; i < groups_count && groups[i]; i++) {
-    FsCodec *codec = g_slice_new0 (FsCodec);
+    FsCodec *codec;
     gchar **keys = NULL;
     gsize keys_count;
     int j;
     gchar *encoding_name = NULL;
     gchar *next_tok = NULL;
-
-    codec->id = FS_CODEC_ID_ANY;
+    FsMediaType media_type;
 
     keys = g_key_file_get_keys (keyfile, groups[i], &keys_count, &gerror);
 
     if (!keys || gerror) {
-      if (gerror) {
+      if (gerror)
         GST_WARNING ("Unable to read parameters for %s: %s\n",
             groups[i], gerror->message);
-
-      } else {
+      else
         GST_WARNING ("Unknown errors while reading parameters for %s",
             groups[i]);
-      }
+
       g_clear_error (&gerror);
 
       goto next_codec;
     }
 
     next_tok = strchr (groups[i], '/');
-    if (!next_tok) {
+    if (!next_tok)
+    {
       GST_WARNING ("Invalid codec name: %s", groups[i]);
       goto next_codec;
     }
 
     if ((next_tok - groups[i]) == 5 /* strlen ("audio") */ &&
         !g_ascii_strncasecmp ("audio", groups[i], 5))
-      codec->media_type = FS_MEDIA_TYPE_AUDIO;
+    {
+      media_type = FS_MEDIA_TYPE_AUDIO;
+    }
     else if ((next_tok - groups[i]) == 5 /* strlen ("video") */ &&
         !g_ascii_strncasecmp ("video", groups[i], 5))
-      codec->media_type = FS_MEDIA_TYPE_VIDEO;
-    else {
+    {
+      media_type = FS_MEDIA_TYPE_VIDEO;
+    }
+    else
+    {
       GST_WARNING ("Invalid media type in codec name name %s", groups[i]);
       goto next_codec;
     }
 
-    encoding_name = next_tok+1;
+    encoding_name = next_tok + 1;
 
-    next_tok = strchr (groups[i], ':');
+    next_tok = strchr (encoding_name, ':');
 
-    if (next_tok) {
-      codec->encoding_name = g_strndup (encoding_name,
-          next_tok - encoding_name);
-    } else {
-      codec->encoding_name = g_strdup (encoding_name);
-    }
-
-    if (!codec->encoding_name || codec->encoding_name[0] == 0) {
+    if (encoding_name[0] == 0 || next_tok - encoding_name == 1)
       goto next_codec;
-    }
+
+    if (next_tok)
+      encoding_name = g_strndup (encoding_name,
+          next_tok - encoding_name);
+    else
+      encoding_name = g_strdup (encoding_name);
+
+    codec = fs_codec_new (FS_CODEC_ID_ANY, encoding_name, media_type, 0);
+
+    g_free (encoding_name);
 
     for (j = 0; j < keys_count && keys[j]; j++) {
       if (!g_ascii_strcasecmp ("clock-rate", keys[j])) {
@@ -372,6 +415,37 @@ fs_codec_list_from_keyfile (const gchar *filename, GError **error)
           codec->ABI.ABI.ptime = 0;
           goto keyerror;
         }
+      } else if (!g_ascii_strcasecmp ("trr-int", keys[j])) {
+        codec->ABI.ABI.minimum_reporting_interval =
+            g_key_file_get_integer (keyfile, groups[i], keys[j], &gerror);
+        if (gerror) {
+          codec->ABI.ABI.minimum_reporting_interval = G_MAXUINT;
+          goto keyerror;
+        }
+      } else if (g_str_has_prefix (keys[j], "feedback:")) {
+        gchar *type = keys[j] + strlen ("feedback:");
+        gchar *subtype = strchr (type, '/');
+        gchar *extra_params;
+
+        extra_params = g_key_file_get_string (keyfile, groups[i], keys[j],
+            &gerror);
+        if (gerror)
+          goto keyerror;
+
+        /* Replace / with \0 and point to name (the next char) */
+        if (subtype)
+        {
+          *subtype=0;
+          subtype++;
+        }
+        else
+        {
+          subtype = "";
+        }
+
+        fs_codec_add_feedback_parameter (codec, type, subtype,
+            extra_params);
+        g_free (extra_params);
       } else {
         FsCodecParameter *param = g_slice_new (FsCodecParameter);
 
@@ -379,20 +453,15 @@ fs_codec_list_from_keyfile (const gchar *filename, GError **error)
         param->value = g_key_file_get_string (keyfile, groups[i], keys[j],
             &gerror);
         if (gerror) {
-          g_free (param->name);
-          g_free (param->value);
-          g_slice_free (FsCodecParameter, param);
+          free_optional_parameter (param);
           goto keyerror;
         }
 
-        if (!param->name || !param->value) {
-          g_free (param->name);
-          g_free (param->value);
-          g_slice_free (FsCodecParameter, param);
-        } else {
+        if (!param->name || !param->value)
+          free_optional_parameter (param);
+        else
           codec->optional_params = g_list_append (codec->optional_params,
               param);
-        }
       }
       continue;
     keyerror:
@@ -404,12 +473,8 @@ fs_codec_list_from_keyfile (const gchar *filename, GError **error)
 
     codecs = g_list_append (codecs, codec);
 
-    g_strfreev (keys);
-    continue;
   next_codec:
-    fs_codec_destroy (codec);
     g_strfreev (keys);
-
   }
 
 
@@ -472,11 +537,23 @@ fs_codec_to_string (const FsCodec *codec)
   if (codec->ABI.ABI.ptime)
     g_string_append_printf (string, " ptime=%u", codec->ABI.ABI.ptime);
 
+  if (codec->ABI.ABI.minimum_reporting_interval != G_MAXUINT)
+    g_string_append_printf (string, " trr-int=%u",
+        codec->ABI.ABI.minimum_reporting_interval);
+
   for (item = codec->optional_params;
        item;
        item = g_list_next (item)) {
     FsCodecParameter *param = item->data;
     g_string_append_printf (string, " %s=%s", param->name, param->value);
+  }
+
+  for (item = codec->ABI.ABI.feedback_params;
+       item;
+       item = g_list_next (item)) {
+    FsFeedbackParameter *param = item->data;
+    g_string_append_printf (string, " %s/%s=%s", param->type, param->subtype,
+        param->extra_params);
   }
 
   charstring = string->str;
@@ -486,13 +563,40 @@ fs_codec_to_string (const FsCodec *codec)
 }
 
 
+static gboolean
+compare_optional_params (const gpointer p1, const gpointer p2)
+{
+  const FsCodecParameter *param1 = p1;
+  const FsCodecParameter *param2 = p2;
+
+  if (!g_ascii_strcasecmp (param1->name, param2->name) &&
+      !strcmp (param1->value, param2->value))
+    return TRUE;
+  else
+    return FALSE;
+}
+
+static gboolean
+compare_feedback_params (const gpointer p1, const gpointer p2)
+{
+  const FsFeedbackParameter *param1 = p1;
+  const FsFeedbackParameter *param2 = p2;
+
+  if (!g_ascii_strcasecmp (param1->subtype, param2->subtype) &&
+      !g_ascii_strcasecmp (param1->type, param2->type) &&
+      !g_strcmp0 (param1->extra_params, param2->extra_params))
+    return TRUE;
+  else
+    return FALSE;
+}
 
 /*
  * Check if all of the elements of list1 are in list2
- * It compares GLists of FarsightCodecParameter
+ * It compares GLists of X using the comparison function
  */
 static gboolean
-compare_lists (GList *list1, GList *list2)
+compare_lists (GList *list1, GList *list2,
+    gboolean (*compare_params) (const gpointer p1, const gpointer p2))
 {
   GList *item1;
 
@@ -507,8 +611,7 @@ compare_lists (GList *list1, GList *list2)
          item2 = g_list_next (item2)) {
       FsCodecParameter *param2 = item2->data;
 
-      if (!g_ascii_strcasecmp (param1->name, param2->name) &&
-          !strcmp (param1->value, param2->value))
+      if (compare_params (param1, param2))
         break;
     }
     if (!item2)
@@ -546,6 +649,8 @@ fs_codec_are_equal (const FsCodec *codec1, const FsCodec *codec2)
       codec1->channels != codec2->channels ||
       codec1->ABI.ABI.maxptime != codec2->ABI.ABI.maxptime ||
       codec1->ABI.ABI.ptime != codec2->ABI.ABI.ptime ||
+      codec1->ABI.ABI.minimum_reporting_interval !=
+      codec2->ABI.ABI.minimum_reporting_interval ||
       codec1->encoding_name == NULL ||
       codec2->encoding_name == NULL ||
       g_ascii_strcasecmp (codec1->encoding_name, codec2->encoding_name))
@@ -555,8 +660,16 @@ fs_codec_are_equal (const FsCodec *codec1, const FsCodec *codec2)
   /* Is there a smarter way to compare to un-ordered linked lists
    * to make sure they contain exactly the same elements??
    */
-  if (!compare_lists (codec1->optional_params, codec2->optional_params) ||
-      !compare_lists (codec2->optional_params, codec1->optional_params))
+  if (!compare_lists (codec1->optional_params, codec2->optional_params,
+          compare_optional_params) ||
+      !compare_lists (codec2->optional_params, codec1->optional_params,
+          compare_optional_params))
+    return FALSE;
+
+  if (!compare_lists (codec1->ABI.ABI.feedback_params,
+          codec2->ABI.ABI.feedback_params, compare_feedback_params) ||
+      !compare_lists (codec2->ABI.ABI.feedback_params,
+          codec1->ABI.ABI.feedback_params, compare_feedback_params))
     return FALSE;
 
   return TRUE;
@@ -594,7 +707,7 @@ fs_codec_list_are_equal (GList *list1, GList *list2)
  * fs_codec_add_optional_parameter:
  * @codec: The #FsCodec to add the parameter to
  * @name: The name of the optional parameter
- * @value: The value of the optional parameter
+ * @extra_params: The extra_params of the optional parameter
  *
  * This function adds an new optional parameter to a #FsCodec
  */
@@ -635,9 +748,7 @@ fs_codec_remove_optional_parameter (FsCodec *codec,
   if (!param)
     return;
 
-  g_free (param->name);
-  g_free (param->value);
-  g_slice_free (FsCodecParameter, param);
+  free_optional_parameter (param);
   codec->optional_params = g_list_remove (codec->optional_params, param);
 }
 
@@ -673,4 +784,99 @@ fs_codec_get_optional_parameter (FsCodec *codec, const gchar *name,
   }
 
   return NULL;
+}
+
+/**
+ * fs_codec_add_feedback_parameter:
+ * @codec: The #FsCodec to add the parameter to
+ * @type: The type of the feedback parameter
+ * @subtype: The subtype of the feedback parameter
+ * @extra_params: The extra_params of the feeback parameter
+ *
+ * This function adds an new feedback parameter to a #FsCodec
+ */
+
+void
+fs_codec_add_feedback_parameter (FsCodec *codec, const gchar *type,
+    const gchar *subtype, const gchar *extra_params)
+{
+  FsFeedbackParameter *param;
+
+  g_return_if_fail (type != NULL);
+  g_return_if_fail (subtype != NULL);
+  g_return_if_fail (extra_params != NULL);
+
+  param = g_slice_new (FsFeedbackParameter);
+
+  param->type = g_strdup (type);
+  param->subtype = g_strdup (subtype);
+  param->extra_params = g_strdup (extra_params);
+
+  codec->ABI.ABI.feedback_params =
+      g_list_append (codec->ABI.ABI.feedback_params, param);
+}
+
+
+/**
+ * fs_codec_get_feedback_parameter:
+ * @codec: a #FsCodec
+ * @type: The subtype of the parameter to search for or %NULL for any type
+ * @subtype: The subtype of the parameter to search for or %NULL for any subtype
+ * @extra_params: The extra_params of the parameter to search for or %NULL for
+ *   any extra_params
+ *
+ * Finds the #FsFeedbackParameter in the #FsCodec that has the requested
+ * subtype, type and extra_params. One of which must be non-NULL;
+ *
+ * Returns: the #FsFeedbackParameter from the #FsCodec or %NULL
+ */
+
+FsFeedbackParameter *
+fs_codec_get_feedback_parameter (FsCodec *codec,
+    const gchar *type, const gchar *subtype, const gchar *extra_params)
+{
+  GList *item = NULL;
+
+  g_return_val_if_fail (codec != NULL, NULL);
+  g_return_val_if_fail (type != NULL || subtype != NULL, NULL);
+
+  for (item = g_list_first (codec->ABI.ABI.feedback_params);
+       item;
+       item = g_list_next (item))
+  {
+    FsFeedbackParameter *param = item->data;
+    if (!g_ascii_strcasecmp (param->type, type) &&
+        (subtype == NULL || !g_ascii_strcasecmp (param->subtype, subtype)) &&
+        (extra_params == NULL || !g_ascii_strcasecmp (param->extra_params,
+            extra_params)))
+      return param;
+  }
+
+  return NULL;
+}
+
+
+
+/**
+ * fs_codec_remove_optional_parameter:
+ * @codec: a #FsCodec
+ * @item: a pointer to the #GList element to remove that contains a
+ * #FsFeedbackParameter
+ *
+ * Removes an optional parameter from a codec.
+ *
+ * NULL param will do nothing.
+ */
+
+void
+fs_codec_remove_feedback_parameter (FsCodec *codec, GList *item)
+{
+  g_return_if_fail (codec);
+
+  if (!item)
+    return;
+
+  free_feedback_parameter (item->data);
+  codec->ABI.ABI.feedback_params =
+      g_list_delete_link (codec->ABI.ABI.feedback_params, item);
 }

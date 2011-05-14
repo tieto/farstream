@@ -115,7 +115,8 @@ am_libgstfarsight_@GST_MAJORMINOR@_la_OBJECTS =  \
 	libgstfarsight_@GST_MAJORMINOR@_la-fs-plugin.lo \
 	libgstfarsight_@GST_MAJORMINOR@_la-fs-element-added-notifier.lo \
 	libgstfarsight_@GST_MAJORMINOR@_la-fs-interfaces.lo \
-	libgstfarsight_@GST_MAJORMINOR@_la-fs-utils.lo
+	libgstfarsight_@GST_MAJORMINOR@_la-fs-utils.lo \
+	libgstfarsight_@GST_MAJORMINOR@_la-fs-rtp.lo
 nodist_libgstfarsight_@GST_MAJORMINOR@_la_OBJECTS =  \
 	libgstfarsight_@GST_MAJORMINOR@_la-fs-marshal.lo \
 	libgstfarsight_@GST_MAJORMINOR@_la-fs-enumtypes.lo
@@ -376,7 +377,8 @@ libgstfarsightinclude_HEADERS = \
 		fs-plugin.h \
 		fs-element-added-notifier.h \
 		fs-interfaces.h \
-		fs-utils.h
+		fs-utils.h \
+		fs-rtp.h
 
 nodist_libgstfarsightinclude_HEADERS = \
 		fs-enum-types.h
@@ -401,6 +403,7 @@ libgstfarsight_@GST_MAJORMINOR@_la_SOURCES = \
 		fs-element-added-notifier.c \
 		fs-interfaces.c \
 		fs-utils.c \
+		fs-rtp.c \
 		fs-private.h
 
 nodist_libgstfarsight_@GST_MAJORMINOR@_la_SOURCES = \
@@ -521,6 +524,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-marshal.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-participant.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-plugin.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-rtp.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-session.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-stream-transmitter.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-stream.Plo@am__quote@
@@ -654,6 +658,14 @@ libgstfarsight_@GST_MAJORMINOR@_la-fs-utils.lo: fs-utils.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='fs-utils.c' object='libgstfarsight_@GST_MAJORMINOR@_la-fs-utils.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstfarsight_@GST_MAJORMINOR@_la_CFLAGS) $(CFLAGS) -c -o libgstfarsight_@GST_MAJORMINOR@_la-fs-utils.lo `test -f 'fs-utils.c' || echo '$(srcdir)/'`fs-utils.c
+
+libgstfarsight_@GST_MAJORMINOR@_la-fs-rtp.lo: fs-rtp.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstfarsight_@GST_MAJORMINOR@_la_CFLAGS) $(CFLAGS) -MT libgstfarsight_@GST_MAJORMINOR@_la-fs-rtp.lo -MD -MP -MF $(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-rtp.Tpo -c -o libgstfarsight_@GST_MAJORMINOR@_la-fs-rtp.lo `test -f 'fs-rtp.c' || echo '$(srcdir)/'`fs-rtp.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-rtp.Tpo $(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-rtp.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='fs-rtp.c' object='libgstfarsight_@GST_MAJORMINOR@_la-fs-rtp.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstfarsight_@GST_MAJORMINOR@_la_CFLAGS) $(CFLAGS) -c -o libgstfarsight_@GST_MAJORMINOR@_la-fs-rtp.lo `test -f 'fs-rtp.c' || echo '$(srcdir)/'`fs-rtp.c
 
 libgstfarsight_@GST_MAJORMINOR@_la-fs-marshal.lo: fs-marshal.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstfarsight_@GST_MAJORMINOR@_la_CFLAGS) $(CFLAGS) -MT libgstfarsight_@GST_MAJORMINOR@_la-fs-marshal.lo -MD -MP -MF $(DEPDIR)/libgstfarsight_@GST_MAJORMINOR@_la-fs-marshal.Tpo -c -o libgstfarsight_@GST_MAJORMINOR@_la-fs-marshal.lo `test -f 'fs-marshal.c' || echo '$(srcdir)/'`fs-marshal.c

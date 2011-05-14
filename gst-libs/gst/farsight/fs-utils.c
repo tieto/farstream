@@ -28,6 +28,8 @@
 
 #include <string.h>
 
+#include "fs-rtp.h"
+
 /**
  * SECTION:fs-utils
  * @short_description: Miscellaneous useful functions
@@ -133,4 +135,135 @@ fs_utils_get_default_element_properties (GstElement *element)
     g_key_file_free (keyfile);
     return NULL;
   }
+}
+
+/**
+ * fs_utils_set_bitrate:
+ * @element: The #GstElement
+ * @bitrate: The bitrate in bits/sec
+ *
+ * This allows setting the bitrate on all elements that have a "bitrate"
+ * property without having to know the type or of the unit used by that element.
+ *
+ * This will be obsolete in 0.11 (when all elements use bit/sec for the
+ * "bitrate" property.
+ */
+
+void
+fs_utils_set_bitrate (GstElement *element, glong bitrate)
+{
+  GParamSpec *spec;
+  const char *elements_in_kbps[] = { "lamemp3enc", "lame", "x264enc", "twolame",
+    "mpeg2enc", NULL
+  };
+  int i;
+  GstElementFactory *factory;
+  const gchar *factory_name = NULL;
+
+  g_return_if_fail (GST_IS_ELEMENT (element));
+
+  spec = g_object_class_find_property (G_OBJECT_GET_CLASS (element), "bitrate");
+  g_return_if_fail (spec != NULL);
+
+  factory = gst_element_get_factory (element);
+  if (factory)
+    factory_name = gst_plugin_feature_get_name (GST_PLUGIN_FEATURE (factory));
+
+  /* divide by 1000 for elements that are known to use kbs */
+  for (i = 0; elements_in_kbps[i]; i++)
+    if (factory_name && !strcmp (factory_name, elements_in_kbps[i]))
+    {
+      bitrate /= 1000;
+      break;
+    }
+
+  if (G_PARAM_SPEC_TYPE (spec) == G_TYPE_LONG)
+  {
+    g_object_set (element, "bitrate", (glong) CLAMP (bitrate,
+            G_PARAM_SPEC_LONG (spec)->minimum,
+            G_PARAM_SPEC_LONG (spec)->maximum), NULL);
+  }
+  else if (G_PARAM_SPEC_VALUE_TYPE (spec) == G_TYPE_ULONG)
+  {
+    g_object_set (element, "bitrate", (gulong) CLAMP (bitrate,
+            G_PARAM_SPEC_ULONG (spec)->minimum,
+            G_PARAM_SPEC_ULONG (spec)->maximum), NULL);
+  }
+  else if (G_PARAM_SPEC_VALUE_TYPE (spec) == G_TYPE_INT)
+  {
+    gint tmp = MIN (bitrate, G_MAXINT);
+
+    g_object_set (element, "bitrate", (gint)  CLAMP (tmp,
+            G_PARAM_SPEC_INT (spec)->minimum,
+            G_PARAM_SPEC_INT (spec)->maximum), NULL);
+  }
+  else if (G_PARAM_SPEC_VALUE_TYPE (spec) == G_TYPE_UINT)
+  {
+    guint tmp = MIN (bitrate, G_MAXUINT);
+
+    g_object_set (element, "bitrate", (guint) CLAMP (tmp,
+            G_PARAM_SPEC_UINT (spec)->minimum,
+            G_PARAM_SPEC_UINT (spec)->maximum), NULL);
+  }
+  else
+  {
+    g_warning ("bitrate parameter of unknown type");
+  }
+}
+
+static GList *
+load_default_rtp_hdrext_preferences_from_path (const gchar *element_name,
+    const gchar *path, FsMediaType media_type)
+{
+  GList *rtp_hdrext_prefs = NULL;
+  gchar *filename;
+
+  filename = g_build_filename (path, PACKAGE, FS2_MAJORMINOR, element_name,
+      "default-codec-preferences", NULL);
+  rtp_hdrext_prefs = fs_rtp_header_extension_list_from_keyfile (filename,
+      media_type, NULL);
+  g_free (filename);
+
+  return rtp_hdrext_prefs;
+}
+
+/**
+ * fs_utils_get_default_rtp_header_extension_preferences
+ * @element: Element for which to fetch default RTP Header Extension preferences
+ * @media_type: The #FsMediaType for which to get default RTP Header Extension
+ *  preferences
+ *
+ * These default rtp header extension preferences should work with the elements
+ * that are available in the main GStreamer element repositories.
+ * They should be suitable for standards based protocols like SIP or XMPP.
+ *
+ * Returns: The default rtp header extension preferences for this plugin,
+ * this #GList should be freed with fs_codec_list_destroy()
+ */
+GList *
+fs_utils_get_default_rtp_header_extension_preferences (GstElement *element,
+    FsMediaType media_type)
+{
+  const gchar * const * system_data_dirs = g_get_system_data_dirs ();
+  GList *rtp_hdrext_prefs = NULL;
+  guint i;
+  const gchar *factory_name = factory_name_from_element (element);
+
+  if (!factory_name)
+    return NULL;
+
+  rtp_hdrext_prefs = load_default_rtp_hdrext_preferences_from_path (
+    factory_name, g_get_user_data_dir (), media_type);
+  if (rtp_hdrext_prefs)
+    return rtp_hdrext_prefs;
+
+  for (i = 0; system_data_dirs[i]; i++)
+  {
+    rtp_hdrext_prefs = load_default_rtp_hdrext_preferences_from_path (
+      factory_name, system_data_dirs[i], media_type);
+    if (rtp_hdrext_prefs)
+      return rtp_hdrext_prefs;
+  }
+
+  return NULL;
 }

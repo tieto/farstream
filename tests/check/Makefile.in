@@ -192,7 +192,9 @@ transmitter_nice_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(transmitter_nice_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
-am_transmitter_rawudp_OBJECTS = transmitter_rawudp-generic.$(OBJEXT) \
+am_transmitter_rawudp_OBJECTS =  \
+	transmitter_rawudp-testutils.$(OBJEXT) \
+	transmitter_rawudp-generic.$(OBJEXT) \
 	transmitter_rawudp-rawudp.$(OBJEXT) \
 	transmitter_rawudp-rawudp-upnp.$(OBJEXT) \
 	transmitter_rawudp-stunalternd.$(OBJEXT)
@@ -525,6 +527,8 @@ transmitter_rawudp_LDADD = $(LDADD) \
 
 transmitter_rawudp_SOURCES = \
 	check-threadsafe.h  \
+	testutils.c \
+	testutils.h \
 	transmitter/generic.c \
 	transmitter/generic.h \
 	transmitter/rawudp.c \
@@ -751,6 +755,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_rawudp-rawudp-upnp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_rawudp-rawudp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_rawudp-stunalternd.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_rawudp-testutils.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_shm-generic.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transmitter_shm-shm.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utils_binadded-binadded.Po@am__quote@
@@ -1131,6 +1136,22 @@ transmitter_nice-nice.obj: transmitter/nice.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='transmitter/nice.c' object='transmitter_nice-nice.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_nice_CFLAGS) $(CFLAGS) -c -o transmitter_nice-nice.obj `if test -f 'transmitter/nice.c'; then $(CYGPATH_W) 'transmitter/nice.c'; else $(CYGPATH_W) '$(srcdir)/transmitter/nice.c'; fi`
+
+transmitter_rawudp-testutils.o: testutils.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_rawudp_CFLAGS) $(CFLAGS) -MT transmitter_rawudp-testutils.o -MD -MP -MF $(DEPDIR)/transmitter_rawudp-testutils.Tpo -c -o transmitter_rawudp-testutils.o `test -f 'testutils.c' || echo '$(srcdir)/'`testutils.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/transmitter_rawudp-testutils.Tpo $(DEPDIR)/transmitter_rawudp-testutils.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='testutils.c' object='transmitter_rawudp-testutils.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_rawudp_CFLAGS) $(CFLAGS) -c -o transmitter_rawudp-testutils.o `test -f 'testutils.c' || echo '$(srcdir)/'`testutils.c
+
+transmitter_rawudp-testutils.obj: testutils.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_rawudp_CFLAGS) $(CFLAGS) -MT transmitter_rawudp-testutils.obj -MD -MP -MF $(DEPDIR)/transmitter_rawudp-testutils.Tpo -c -o transmitter_rawudp-testutils.obj `if test -f 'testutils.c'; then $(CYGPATH_W) 'testutils.c'; else $(CYGPATH_W) '$(srcdir)/testutils.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/transmitter_rawudp-testutils.Tpo $(DEPDIR)/transmitter_rawudp-testutils.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='testutils.c' object='transmitter_rawudp-testutils.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_rawudp_CFLAGS) $(CFLAGS) -c -o transmitter_rawudp-testutils.obj `if test -f 'testutils.c'; then $(CYGPATH_W) 'testutils.c'; else $(CYGPATH_W) '$(srcdir)/testutils.c'; fi`
 
 transmitter_rawudp-generic.o: transmitter/generic.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transmitter_rawudp_CFLAGS) $(CFLAGS) -MT transmitter_rawudp-generic.o -MD -MP -MF $(DEPDIR)/transmitter_rawudp-generic.Tpo -c -o transmitter_rawudp-generic.o `test -f 'transmitter/generic.c' || echo '$(srcdir)/'`transmitter/generic.c

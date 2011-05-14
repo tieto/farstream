@@ -1,0 +1,486 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Utility functions</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="Farsight2 Reference Manual">
+<link rel="up" href="ch04.html" title="Farsight Utility Functions and Objects">
+<link rel="prev" href="farsight2-libs-Network-interfaces-discovery.html" title="Network interfaces discovery">
+<link rel="next" href="pt02.html" title="Part II. Classes used to implement Farsight plugins">
+<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="farsight2-libs-Network-interfaces-discovery.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch04.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Farsight2 Reference Manual</th>
+<td><a accesskey="n" href="pt02.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#farsight2-libs-Utility-functions.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#farsight2-libs-Utility-functions.description" class="shortcut">Description</a>
+</td></tr>
+</table>
+<div class="refentry" title="Utility functions">
+<a name="farsight2-libs-Utility-functions"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="farsight2-libs-Utility-functions.top_of_page"></a>Utility functions</span></h2>
+<p>Utility functions — Miscellaneous useful functions</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv" title="Synopsis">
+<a name="farsight2-libs-Utility-functions.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+#include &lt;gst/farsight/fs-utils.h&gt;
+
+                    <a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension">FsRtpHeaderExtension</a>;
+<a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="returnvalue">FsRtpHeaderExtension</span></a> * <a class="link" href="farsight2-libs-RTP-Specific-types.html#fs-rtp-header-extension-new" title="fs_rtp_header_extension_new ()">fs_rtp_header_extension_new</a>      (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> id</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="FsStream.html#FsStreamDirection" title="enum FsStreamDirection"><span class="type">FsStreamDirection</span></a> direction</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
+<a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="returnvalue">FsRtpHeaderExtension</span></a> * <a class="link" href="farsight2-libs-RTP-Specific-types.html#fs-rtp-header-extension-copy" title="fs_rtp_header_extension_copy ()">fs_rtp_header_extension_copy</a>     (<em class="parameter"><code><a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="type">FsRtpHeaderExtension</span></a> *extension</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="farsight2-libs-RTP-Specific-types.html#fs-rtp-header-extension-destroy" title="fs_rtp_header_extension_destroy ()">fs_rtp_header_extension_destroy</a>     (<em class="parameter"><code><a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="type">FsRtpHeaderExtension</span></a> *extension</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="farsight2-libs-RTP-Specific-types.html#fs-rtp-header-extension-are-equal" title="fs_rtp_header_extension_are_equal ()">fs_rtp_header_extension_are_equal</a>   (<em class="parameter"><code><a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="type">FsRtpHeaderExtension</span></a> *extension1</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="type">FsRtpHeaderExtension</span></a> *extension2</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *             <a class="link" href="farsight2-libs-RTP-Specific-types.html#fs-rtp-header-extension-list-copy" title="fs_rtp_header_extension_list_copy ()">fs_rtp_header_extension_list_copy</a>   (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *extensions</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="farsight2-libs-RTP-Specific-types.html#fs-rtp-header-extension-list-destroy" title="fs_rtp_header_extension_list_destroy ()">fs_rtp_header_extension_list_destroy</a>
+                                                        (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *extensions</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *             <a class="link" href="farsight2-libs-RTP-Specific-types.html#fs-rtp-header-extension-list-from-keyfile" title="fs_rtp_header_extension_list_from_keyfile ()">fs_rtp_header_extension_list_from_keyfile</a>
+                                                        (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="farsight2-libs-FsCodec.html#FsMediaType" title="enum FsMediaType"><span class="type">FsMediaType</span></a> media_type</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);
+#define             <a class="link" href="farsight2-libs-RTP-Specific-types.html#FS-RTP-HEADER-EXTENSION-FORMAT:CAPS" title="FS_RTP_HEADER_EXTENSION_FORMAT">FS_RTP_HEADER_EXTENSION_FORMAT</a>
+#define             <a class="link" href="farsight2-libs-RTP-Specific-types.html#FS-RTP-HEADER-EXTENSION-ARGS:CAPS" title="FS_RTP_HEADER_EXTENSION_ARGS()">FS_RTP_HEADER_EXTENSION_ARGS</a>        (hdrext)
+<span class="returnvalue">void</span>                <a class="link" href="farsight2-libs-Utility-functions.html#fs-utils-set-bitrate" title="fs_utils_set_bitrate ()">fs_utils_set_bitrate</a>                (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#glong"><span class="type">glong</span></a> bitrate</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *             <a class="link" href="farsight2-libs-Utility-functions.html#fs-utils-get-default-codec-preferences" title="fs_utils_get_default_codec_preferences ()">fs_utils_get_default_codec_preferences</a>
+                                                        (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Key-value-file-parser.html#GKeyFile"><span class="returnvalue">GKeyFile</span></a> *          <a class="link" href="farsight2-libs-Utility-functions.html#fs-utils-get-default-element-properties" title="fs_utils_get_default_element_properties ()">fs_utils_get_default_element_properties</a>
+                                                        (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *             <a class="link" href="farsight2-libs-Utility-functions.html#fs-utils-get-default-rtp-header-extension-preferences" title="fs_utils_get_default_rtp_header_extension_preferences ()">fs_utils_get_default_rtp_header_extension_preferences</a>
+                                                        (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="farsight2-libs-FsCodec.html#FsMediaType" title="enum FsMediaType"><span class="type">FsMediaType</span></a> media_type</code></em>);
+</pre>
+</div>
+<div class="refsect1" title="Description">
+<a name="farsight2-libs-Utility-functions.description"></a><h2>Description</h2>
+</div>
+<div class="refsect1" title="Details">
+<a name="farsight2-libs-Utility-functions.details"></a><h2>Details</h2>
+<div class="refsect2" title="FsRtpHeaderExtension">
+<a name="FsRtpHeaderExtension"></a><h3>FsRtpHeaderExtension</h3>
+<pre class="programlisting">typedef struct {
+  guint id;
+  FsStreamDirection direction;
+  gchar *uri;
+} FsRtpHeaderExtension;
+</pre>
+<p>
+Defines a RTP header extension with its negotiated identifier, direction
+and URI. They should only be created with <a class="link" href="farsight2-libs-RTP-Specific-types.html#fs-rtp-header-extension-new" title="fs_rtp_header_extension_new ()"><code class="function">fs_rtp_header_extension_new()</code></a>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="FsRtpHeaderExtension.id"></a>id</code></em>;</span></p></td>
+<td>The identifier of the RTP header extension
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a class="link" href="FsStream.html#FsStreamDirection" title="enum FsStreamDirection"><span class="type">FsStreamDirection</span></a> <em class="structfield"><code><a name="FsRtpHeaderExtension.direction"></a>direction</code></em>;</span></p></td>
+<td>the direction in which this extension can be used
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="FsRtpHeaderExtension.uri"></a>uri</code></em>;</span></p></td>
+<td>The URI that defines this extension
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="fs_rtp_header_extension_new ()">
+<a name="fs-rtp-header-extension-new"></a><h3>fs_rtp_header_extension_new ()</h3>
+<pre class="programlisting"><a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="returnvalue">FsRtpHeaderExtension</span></a> * fs_rtp_header_extension_new      (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> id</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="FsStream.html#FsStreamDirection" title="enum FsStreamDirection"><span class="type">FsStreamDirection</span></a> direction</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);</pre>
+<p>
+Creates a new <a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="type">FsRtpHeaderExtension</span></a>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>id</code></em> :</span></p></td>
+<td>The identifier of the RTP header extension
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>direction</code></em> :</span></p></td>
+<td>the direction in which this extension can be used
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
+<td>The URI that defines this extension
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="type">FsRtpHeaderExtension</span></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="fs_rtp_header_extension_copy ()">
+<a name="fs-rtp-header-extension-copy"></a><h3>fs_rtp_header_extension_copy ()</h3>
+<pre class="programlisting"><a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="returnvalue">FsRtpHeaderExtension</span></a> * fs_rtp_header_extension_copy     (<em class="parameter"><code><a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="type">FsRtpHeaderExtension</span></a> *extension</code></em>);</pre>
+<p>
+Copies a <a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="type">FsRtpHeaderExtension</span></a>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>extension</code></em> :</span></p></td>
+<td>The RTP header extension definition to copy
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="type">FsRtpHeaderExtension</span></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="fs_rtp_header_extension_destroy ()">
+<a name="fs-rtp-header-extension-destroy"></a><h3>fs_rtp_header_extension_destroy ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                fs_rtp_header_extension_destroy     (<em class="parameter"><code><a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="type">FsRtpHeaderExtension</span></a> *extension</code></em>);</pre>
+<p>
+Frees the passed <a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="type">FsRtpHeaderExtension</span></a>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>extension</code></em> :</span></p></td>
+<td>A RTP header extension to free
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="fs_rtp_header_extension_are_equal ()">
+<a name="fs-rtp-header-extension-are-equal"></a><h3>fs_rtp_header_extension_are_equal ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            fs_rtp_header_extension_are_equal   (<em class="parameter"><code><a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="type">FsRtpHeaderExtension</span></a> *extension1</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="type">FsRtpHeaderExtension</span></a> *extension2</code></em>);</pre>
+<p>
+Compares two <a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="type">FsRtpHeaderExtension</span></a> structures
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>extension1</code></em> :</span></p></td>
+<td>The first <a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="type">FsRtpHeaderExtension</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>extension2</code></em> :</span></p></td>
+<td>The second <a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="type">FsRtpHeaderExtension</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if they are identical, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="fs_rtp_header_extension_list_copy ()">
+<a name="fs-rtp-header-extension-list-copy"></a><h3>fs_rtp_header_extension_list_copy ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *             fs_rtp_header_extension_list_copy   (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *extensions</code></em>);</pre>
+<p>
+Does a deep copy of a <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="type">FsRtpHeaderExtension</span></a>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>extensions</code></em> :</span></p></td>
+<td>a <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="type">FsRtpHeaderExtension</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="type">FsRtpHeaderExtension</span></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="fs_rtp_header_extension_list_destroy ()">
+<a name="fs-rtp-header-extension-list-destroy"></a><h3>fs_rtp_header_extension_list_destroy ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                fs_rtp_header_extension_list_destroy
+                                                        (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *extensions</code></em>);</pre>
+<p>
+Frees the passed <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="type">FsRtpHeaderExtension</span></a>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>extensions</code></em> :</span></p></td>
+<td>a <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="type">FsRtpHeaderExtension</span></a>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="fs_rtp_header_extension_list_from_keyfile ()">
+<a name="fs-rtp-header-extension-list-from-keyfile"></a><h3>fs_rtp_header_extension_list_from_keyfile ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *             fs_rtp_header_extension_list_from_keyfile
+                                                        (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="farsight2-libs-FsCodec.html#FsMediaType" title="enum FsMediaType"><span class="type">FsMediaType</span></a> media_type</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
+<p>
+Reads the content of a <a href="http://library.gnome.org/devel/glib/unstable/glib-Key-value-file-parser.html#GKeyFile"><span class="type">GKeyFile</span></a> of the following format into a
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="type">FsRtpHeaderExtension</span></a> structures.
+</p>
+<p>
+The groups have a format "rtp-hdrext:audio:XXX" or
+"rtp-hdrext:video:XXX" where XXX is a unique string (per media type).
+</p>
+<p>
+The valid keys are:
+</p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">id: a int between in the 1-255 and 4096-4351 ranges</li>
+<li class="listitem">uri: a URI describing the RTP Header Extension</li>
+<li class="listitem">direction (optional): To only send or receive a RTP Header
+     Extension, possible values are "send", "receive", "none" or "both".
+     Defaults to "both"</li>
+</ul></div>
+<p>
+</p>
+<p>
+Example:
+</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="symbol">[</span><span class="normal">rtp</span><span class="symbol">-</span><span class="normal">hdrext</span><span class="symbol">:</span><span class="normal">audio</span><span class="symbol">:</span><span class="normal">a</span><span class="symbol">]</span>
+<span class="normal">id</span><span class="symbol">=</span><span class="number">1</span>
+<span class="normal">uri</span><span class="symbol">=</span><span class="normal">urn</span><span class="symbol">:</span><span class="normal">ietf</span><span class="symbol">:</span><span class="normal">params</span><span class="symbol">:</span><span class="normal">rtp</span><span class="symbol">-</span><span class="normal">hdrext</span><span class="symbol">:</span><span class="normal">toffset</span>
+
+<span class="symbol">[</span><span class="normal">rtp</span><span class="symbol">-</span><span class="normal">hdrext</span><span class="symbol">:</span><span class="normal">audio</span><span class="symbol">:</span><span class="normal">abc</span><span class="symbol">]</span>
+<span class="normal">id</span><span class="symbol">=</span><span class="number">3</span>
+<span class="normal">uri</span><span class="symbol">=</span><span class="normal">urn</span><span class="symbol">:</span><span class="normal">ietf</span><span class="symbol">:</span><span class="normal">params</span><span class="symbol">:</span><span class="normal">rtp</span><span class="symbol">-</span><span class="normal">hdrext</span><span class="symbol">:</span><span class="normal">ntp</span><span class="symbol">-</span><span class="number">64</span>
+<span class="normal">direction</span><span class="symbol">=</span><span class="normal">receive</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
+<td>Name of the <a href="http://library.gnome.org/devel/glib/unstable/glib-Key-value-file-parser.html#GKeyFile"><span class="type">GKeyFile</span></a> to read the RTP Header Extensions from
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>media_type</code></em> :</span></p></td>
+<td>The media type for which to get header extensions
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
+<td>location of a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or NULL if no error occured
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="type">FsRtpHeaderExtension</span></a> that must be freed with
+<a class="link" href="farsight2-libs-RTP-Specific-types.html#fs-rtp-header-extension-list-destroy" title="fs_rtp_header_extension_list_destroy ()"><code class="function">fs_rtp_header_extension_list_destroy()</code></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="FS_RTP_HEADER_EXTENSION_FORMAT">
+<a name="FS-RTP-HEADER-EXTENSION-FORMAT:CAPS"></a><h3>FS_RTP_HEADER_EXTENSION_FORMAT</h3>
+<pre class="programlisting">#define FS_RTP_HEADER_EXTENSION_FORMAT "%d: (%s) %s"
+</pre>
+<p>
+A format that can be used in printf like format strings to format a
+FsRtpHeaderExtension
+</p>
+</div>
+<hr>
+<div class="refsect2" title="FS_RTP_HEADER_EXTENSION_ARGS()">
+<a name="FS-RTP-HEADER-EXTENSION-ARGS:CAPS"></a><h3>FS_RTP_HEADER_EXTENSION_ARGS()</h3>
+<pre class="programlisting">#define             FS_RTP_HEADER_EXTENSION_ARGS(hdrext)</pre>
+<p>
+Formats the codec in args for FS_RTP_HEADER_EXTENSION_ARGS
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>hdrext</code></em> :</span></p></td>
+<td>a <a class="link" href="farsight2-libs-RTP-Specific-types.html#FsRtpHeaderExtension" title="FsRtpHeaderExtension"><span class="type">FsRtpHeaderExtension</span></a>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="fs_utils_set_bitrate ()">
+<a name="fs-utils-set-bitrate"></a><h3>fs_utils_set_bitrate ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                fs_utils_set_bitrate                (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#glong"><span class="type">glong</span></a> bitrate</code></em>);</pre>
+<p>
+This allows setting the bitrate on all elements that have a "bitrate"
+property without having to know the type or of the unit used by that element.
+</p>
+<p>
+This will be obsolete in 0.11 (when all elements use bit/sec for the
+"bitrate" property.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
+<td>The <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>bitrate</code></em> :</span></p></td>
+<td>The bitrate in bits/sec
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="fs_utils_get_default_codec_preferences ()">
+<a name="fs-utils-get-default-codec-preferences"></a><h3>fs_utils_get_default_codec_preferences ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *             fs_utils_get_default_codec_preferences
+                                                        (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);</pre>
+<p>
+These default codec preferences should work with the elements that are
+available in the main GStreamer element repositories.
+They should be suitable for standards based protocols like SIP or XMPP.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
+<td>Element for which to fetch default codec preferences
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The default codec preferences for this plugin,
+this <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> should be freed with <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-list-destroy" title="fs_codec_list_destroy ()"><code class="function">fs_codec_list_destroy()</code></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="fs_utils_get_default_element_properties ()">
+<a name="fs-utils-get-default-element-properties"></a><h3>fs_utils_get_default_element_properties ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Key-value-file-parser.html#GKeyFile"><span class="returnvalue">GKeyFile</span></a> *          fs_utils_get_default_element_properties
+                                                        (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);</pre>
+<p>
+This function produces a <a href="http://library.gnome.org/devel/glib/unstable/glib-Key-value-file-parser.html#GKeyFile"><span class="type">GKeyFile</span></a> that can be fed to
+<a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-set-properties-from-keyfile" title="fs_element_added_notifier_set_properties_from_keyfile ()"><code class="function">fs_element_added_notifier_set_properties_from_keyfile()</code></a>. If no
+default properties have been found, it will return <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
+<td>Element for which to fetch default element properties
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a <a href="http://library.gnome.org/devel/glib/unstable/glib-Key-value-file-parser.html#GKeyFile"><span class="type">GKeyFile</span></a> containing the default element properties for this
+ element or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if no properties were found. Caller must free
+the <a href="http://library.gnome.org/devel/glib/unstable/glib-Key-value-file-parser.html#GKeyFile"><span class="type">GKeyFile</span></a> when he is done.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="fs_utils_get_default_rtp_header_extension_preferences ()">
+<a name="fs-utils-get-default-rtp-header-extension-preferences"></a><h3>fs_utils_get_default_rtp_header_extension_preferences ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *             fs_utils_get_default_rtp_header_extension_preferences
+                                                        (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="farsight2-libs-FsCodec.html#FsMediaType" title="enum FsMediaType"><span class="type">FsMediaType</span></a> media_type</code></em>);</pre>
+<p>
+These default rtp header extension preferences should work with the elements
+that are available in the main GStreamer element repositories.
+They should be suitable for standards based protocols like SIP or XMPP.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
+<td>Element for which to fetch default RTP Header Extension preferences
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>media_type</code></em> :</span></p></td>
+<td>The <a class="link" href="farsight2-libs-FsCodec.html#FsMediaType" title="enum FsMediaType"><span class="type">FsMediaType</span></a> for which to get default RTP Header Extension
+ preferences
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The default rtp header extension preferences for this plugin,
+this <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> should be freed with <a class="link" href="farsight2-libs-FsCodec.html#fs-codec-list-destroy" title="fs_codec_list_destroy ()"><code class="function">fs_codec_list_destroy()</code></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.15</div>
+</body>
+</html>
