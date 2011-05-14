@@ -1,5 +1,6 @@
-farsight2 (0.0.26-2) UNRELEASED; urgency=low
+farsight2 (0.0.28-1) UNRELEASED; urgency=low
 
+  [ Laurent Bigonville ]
   * Use dh_python2 instead of python-central (Closes: #616804)
   * debian/control:
     - Bump cdbs build-dependency to (>= 0.4.90~)
@@ -11,7 +12,10 @@ farsight2 (0.0.26-2) UNRELEASED; urgency=low
     - Use python-autotools.mk instead of autotools.mk
     - Drop explicit call to dh_pycentral
 
- -- Laurent Bigonville <bigon@debian.org>  Sat, 02 Apr 2011 17:56:21 +0200
+  [ Sjoerd Simons ]
+  * New upstream release
+
+ -- Sjoerd Simons <sjoerd@debian.org>  Sat, 14 May 2011 14:06:01 +0100
 
 farsight2 (0.0.26-1) unstable; urgency=low
 
