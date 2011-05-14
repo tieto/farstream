@@ -10,8 +10,8 @@ Uploaders: Dafydd Harries <daf@debian.org>,
 Build-Depends: debhelper (>= 7),
                cdbs (>= 0.4.90~),
                libglib2.0-dev (>= 2.16),
-               libgstreamer0.10-dev (>= 0.10.26),
-               libgstreamer-plugins-base0.10-dev (>= 0.10.26),
+               libgstreamer0.10-dev (>= 0.10.33),
+               libgstreamer-plugins-base0.10-dev (>= 0.10.33),
                python-all-dev (>= 2.6.6-3~),
                python-gobject-dev (>= 2.16),
                python-gst0.10-dev,
@@ -26,8 +26,8 @@ X-Python-Version: >= 2.4
 Package: libgstfarsight0.10-0
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
-         gstreamer0.10-plugins-base (>= 0.10.26),
-         gstreamer0.10-plugins-good (>= 0.10.8),
+         gstreamer0.10-plugins-base (>= 0.10.33),
+         gstreamer0.10-plugins-good (>= 0.10.29),
          gstreamer0.10-plugins-bad (>= 0.10.17),
          gstreamer0.10-nice (>= 0.1.0)
 Description: Audio/Video communications framework: core library
