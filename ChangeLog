@@ -1,3 +1,438 @@
+commit 76dc68d80b4ddae7bdb4159ebdf94f447457ae70
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 10 16:50:41 2011 -0400
+
+    Version 0.0.28
+
+commit 8ad7a67d943bc0aae96a97f049c0bd14ce342b5e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 10 17:59:29 2011 -0400
+
+    Don't check for property we know to be there
+    
+    We require a newer version of gst-plugins-good/base/bad/etc now
+    so no need to check if the properties exist at runtime.
+
+commit fb125f32c9bb03e7ff55a97e35b073e04fe4c516
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 28 18:35:50 2011 -0500
+
+    utils: Add function to get the default RTP Header Extensions
+
+commit 9ad130b60723971127f20b2be4e45da1e357b145
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 28 18:25:34 2011 -0500
+
+    tests: Add tests for Rtp Header Extension functions
+
+commit b262c6ccc5eb62f2047fed62b3aa71ce0a6d7daf
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 28 18:14:42 2011 -0500
+
+    rtp: Add function to compare two FsRtpHeaderExtension structures
+
+commit 5b3a20d2e22e835f5e9879ae428e43027a74b9f8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 28 17:12:05 2011 -0500
+
+    rtp: Add function to load header extensions from a keyfile
+
+commit c8782fe69bbf295c77e14785dfc8f4d618ed375b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 28 17:09:59 2011 -0500
+
+    codec: Don't assert on invalid params
+
+commit b3d6aeaad89e8e59330d37c9b6b6c30179de7ef5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Feb 18 17:31:46 2011 -0500
+
+    rtp: Add formatter for hdrext types
+
+commit 3b225697d5865b4d63b2ddbce2d8f263cbe0922e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 27 21:09:43 2011 -0500
+
+    tests: Add tests for RTP header extension negotiation
+
+commit 7eb6ee3991b7252ab957f0452e671ebf98ccafdd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 26 20:26:38 2011 -0500
+
+    rtpsession: Negotiate RTP Header extensions
+
+commit 3198dd02b4e5fde72df5b7099ee98039118f7ea4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 26 20:02:54 2011 -0500
+
+    rtpsession: Set the new codec where they are created
+    
+    Improves the cleanliness a bit
+
+commit be7232a85ba5b94ee2566814f6fb0f3300a40fa3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Jan 26 19:20:47 2011 -0500
+
+    rtpcodecnego: Add functions to do RTP Header Extension Negotiation
+
+commit ea906e92d9cfd17e7894fb8b16d91b584674bb07
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 24 18:11:26 2011 -0500
+
+    rtp: Add rtp-header-extension properties
+
+commit 7d31c8292832b1f9446554a33fe009baebe595f0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 20 20:47:26 2011 -0500
+
+    rtp: Document FsRtpHeaderExtension and its methods
+
+commit 8d1c6e468da8300f9bec8963f8029724465bfe82
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jan 20 20:31:14 2011 -0500
+
+    rtp: Add public header with the FsRtpHeaderExtension type
+    
+    Also now require GLib 2.26, welcome to 2011!
+
+commit 4213400c11666ba223136d1bf7bafca4708782ba
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Mar 1 16:35:59 2011 -0500
+
+    tests: Test minimum reporting interval negotiation
+
+commit 39eef469c8e11fc6bf519e88952de8f0270e9067
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 4 18:49:42 2011 -0500
+
+    tests: Add some other invalid codecs to the GKeyFile loading test
+
+commit 97c2bc06ba7087f5f6f25712a13811bab108a62b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 4 18:49:18 2011 -0500
+
+    codec: Always use fs_codec_new() to allocate a codec
+
+commit 5ea7f5df1cf9320bf4d174757380ba868c369ae8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 21 20:36:29 2011 -0400
+
+    rtpsession: Set the properties on the rtp session correctly
+    
+    Also request it early enough
+
+commit 017d8dd4fbc7815fde01f218e21ebd272daec65f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 4 18:17:47 2011 -0500
+
+    rtpsession: Set the minimum-reporting-interval to the minimum of the codecs
+    
+    Take into account the current sending codec as well as the receiving codecs
+    of all substreams
+
+commit d9a0e18a9c950a532f3e9309fcb2618b14737859
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Jan 4 17:00:54 2011 -0500
+
+    codec: Make the minimum reporting interval invalid value G_MAXUINT
+
+commit 2471788666aeb248dba01577e699ed3cf883446a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Nov 26 16:19:36 2010 -0500
+
+    tests: Test minimum_reporting_interval property
+
+commit 5e09a0d71e7e2935290f03e4169edec40a85d4ef
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Nov 25 18:33:28 2010 -0500
+
+    rtpcodecnego: Negotiate Minimum reporting interval
+
+commit e8833d436b647be6177812722c74763ef61e7347
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Aug 12 16:55:16 2010 +0200
+
+    tests: Add test for AVPF negotiation
+
+commit c253ef2e4ebc167680063333f8df48317ff64079
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 10 14:08:24 2010 +0200
+
+    rtp: Pass feedback params into the caps
+
+commit f2a90db7e0be7e6633796df41840ceef355fa0b2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 10 14:02:13 2010 +0200
+
+    rtpcodecnego: Intersect feedback parameters
+
+commit 807da106f72d47cba98147e4da81ac66bfbd2391
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Aug 11 17:58:00 2010 +0200
+
+    tests: Add test for feedback parameters
+
+commit 6d33637c1e812847ded010c92fc095413c7fe56a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Aug 11 16:54:02 2010 +0200
+
+    tests: Test reading feedback params from GKeyFile
+
+commit f8781be57cb7cae76ccaacd4e30196948bdb0c92
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 10 13:50:44 2010 +0200
+
+    codec: Add function to remove feedback parameters
+
+commit 8254c4f7bf21340a65cd6ad2e7a27cc55f0a89e6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Aug 9 18:06:50 2010 +0200
+
+    codec: Add feedback params to gkeyfile
+
+commit 624a152060dd413d64eb0ecc5b54ad72f0c5a7f9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Aug 9 17:57:13 2010 +0200
+
+    codec: Add feedback parameter
+
+commit f228f6f47d95a10ade20ea9f0258ac1aeb923c66
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Aug 5 19:47:43 2010 +0200
+
+    codec: Add minimum reporting interval parameter
+
+commit 6784b6bb1b86402e4346e86c3c74c7d9def2d8ea
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Aug 5 19:23:30 2010 +0200
+
+    fscodec: Refactor freeing of codec parameters
+
+commit a8d280c7e1c305c665b160be67679bfee847b220
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Aug 11 17:32:43 2010 +0200
+
+    tests: Use standardised function to remove fscodec optional params
+
+commit 5dff4b882ce6f00f01b5b35621e7e74bda7b3d92
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri May 6 15:28:23 2011 -0400
+
+    rawudp: Send the original STUN packets from the same thread
+    
+    This is to make sure the STUN packets for each component are sent in order.
+    Some firewalls just allocate output ports linearly. In that case, we prefer
+    if the order of the outside ports is the same as the order of the local ports,
+    that way, if we do UPnP, we have fewer chances of mixing it up.
+
+commit 88940cf647ae0365e04cd94731406f3a75a777ba
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 3 19:19:13 2011 -0400
+
+    Version 0.0.27.1
+
+commit e6f8664811983b7ebc799b795ee2c3bf25d6b18b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 3 19:11:20 2011 -0400
+
+    Version 0.0.27
+
+commit f6b0768165bae81725297c48ea06da25158d7544
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 27 19:17:39 2011 -0400
+
+    tests: fix some leaks
+    
+    fix some leaks in the tests
+
+commit 63feab41120a48fef5c31269d5c2ad0e6caa9255
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 25 20:07:15 2011 -0400
+
+    nicetransmitter: Check if gststream isn't NULL before using it
+    
+    There could be a delay between the _stop() function and the stream transmitter
+    is disposed during which one could try to access it.
+
+commit 223d1cc50b512dab8cd84c2f8badb85fabf9cb9d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 25 19:28:51 2011 -0400
+
+    rawsession: Set the fakesink to async=sync=FALSE
+    
+    If we don't do that, the whole pipeline may wait for frames to reach it.
+
+commit d9285cc92c39b3b3446e7d63b39b58e47a634a3c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 25 16:32:10 2011 -0400
+
+    tests: Allow for conflict in pad count in multicast test
+
+commit 8f13ba6c97941c2ff5c93f66c799fb737688096d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 21 20:44:33 2011 -0400
+
+    rtpsession: Set the bitrate inside the send codecbin based on the send-bitrate property
+
+commit 900b91121c6f72c49e3325219ff4526c89715bed
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 21 20:43:45 2011 -0400
+
+    rtpsession: Add send bitrate property
+
+commit c50d6e3e6b8d38c6eae1582743136fbdccfab613
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 21 20:42:47 2011 -0400
+
+    fsutils: Add function to set bitrate generically
+    
+    Since upstream GStreamer does not want to do it, lets add
+    a function to set the bitrate on different encoders without having to
+    keep all the knowledge around.
+
+commit 23d85ce645fa96d8c258aa6bc4e67faada7c46d7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 13 18:35:53 2011 -0400
+
+    rtpsession: Use the regular ca->codec, not the send_codec to create dtmf source
+    
+    The special sources lookup codec looks at the ->codec field, not at the ->send_codec
+    field to look up the match CodecAssociation
+
+commit c1df094b8451994ba8efdba279fe1e646d17aee6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 13 18:06:19 2011 -0400
+
+    rtpsession: Return FALSE if there is an error on rtp_set_send_codec
+
+commit 6b8ed9f70b5ca6ec94edde7077d6f628a47706bc
+Author: Youness Alaoui <youness.alaoui@collabora.co.uk>
+Date:   Wed Apr 6 17:31:20 2011 -0400
+
+    shm-transmitter: Do not call sink_set_sending if the shm_sink is NULL
+
+commit 0e582381ef874cb8a6785b6f8d11e2d4edb9a2b3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 5 12:45:37 2011 -0400
+
+    tests: Check for multicast before gupnp tests
+
+commit 67a0fdf66e4f4c73a25292f5b72f617513755df4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Apr 2 21:58:16 2011 -0400
+
+    python: Don't link to libpython
+    
+    Some distributions (Debian) link libpython statically into the python
+    interpreter
+
+commit 467d8807d779743652d48a235ba2647930eee61e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 16 17:40:02 2011 -0400
+
+    rtpsession: Immediately adds transmitter sink, we need to send RTCP even when receiving
+    
+    The parent elements should be be waiting for this bin to continue because
+    transmitter has async=FALSE and async-handling=TRUE
+    
+    Reverts a020bf8c34656e8c5b1ebfde478847e6aebbfa51
+
+commit 68ae7a7b5c55d821d2940db8b200a610e511d16c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Jan 11 15:36:09 2010 -0500
+
+    Request keyframes with all-headers when we have a new target
+
+commit ee9674058b327d3e2fc0c70a41bbd0ae3016147c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 7 17:34:55 2011 +0100
+
+    stream: Add python bindings for src pad iterator
+
+commit bb637b74caec4dccfc186bc0f8a11e5001e0f8bd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 7 16:24:35 2011 +0100
+
+    tests: Ignore some more things in the async dispose case
+
+commit 8f9e381cdcaaf5091f0983b0e8880479ea2ff891
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 9 18:09:17 2011 -0500
+
+    nicestream: Request keyframe only if stream is >= connected
+
+commit 1560b16f912f0ef775274a4962e3870b571bbe86
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 8 16:49:45 2011 +0000
+
+    raw: Move all Gst processing to the session
+
+commit 6aee195dba0efd3533aa9d3fedae32cf38caec42
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 9 17:36:48 2011 -0500
+
+    rawsession: Correctly protect transmitter_linked
+
+commit 48c8cc96d5a26f4f48bd842a34aefff873db3c8f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 9 16:58:14 2011 -0500
+
+    rawsession: Set capsfilter to null when disposing
+
+commit 228f5eaa39d6246f9d13dd3fa494c679b589b3fe
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 8 15:51:05 2011 +0000
+
+    rawstream: Rename capsfilter to recv_capsfilter
+
+commit cec5a855a517d286c999ad700b1739915bbf3cf3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 8 15:46:36 2011 +0000
+
+    rawsession: Correctly name remove_stream method
+
+commit 821fb893894b9a7434d5bf2cd9ea2ebfc0a438a9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 9 16:45:02 2011 -0500
+
+    rawsession: Rename capsfilter to send_capsfilter
+
+commit f1cfa2c2cd0e852a77e5916d1e73feb13fc7fe83
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 8 14:04:12 2011 +0000
+
+    rawstream: Greatly simplify ghostpad addition
+
+commit 8e2f7e2ca05f9b8eba3577c2a398a6df25757f49
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 9 16:42:16 2011 -0500
+
+    rawsession: Add method to get transmitter from stream
+
+commit 6862918b82dec55533b3f0dfa102a9400b8a94fd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 8 11:21:22 2011 +0000
+
+    rawsession: If its !=NULL is useless
+
+commit 347b3b30056646da20c1dfbf7b9dbe59ff63a22b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Mar 1 16:56:08 2011 -0500
+
+    rtp: Use fs_codec_new() everywhere
+
+commit a004b388e5a28d38892a93243e7186a48a08e3e0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 28 15:21:59 2011 -0500
+
+    interfaces: Re-order includes/ifdefs to make it build on windows
+
+commit 4807a91be9d7cb8b1767b5cd416872f0c1aeb4ff
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 23 16:13:24 2011 -0500
+
+    Version 0.0.26.1
+
 commit 72ef2c35a48538b6c26ef9900a227611dc9c6cdc
 Author: Olivier Crête <olivier.crete@collabora.co.uk>
 Date:   Wed Feb 23 16:04:46 2011 -0500

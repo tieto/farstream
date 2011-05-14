@@ -168,3 +168,33 @@
 <DEFAULT>NULL</DEFAULT>
 </ARG>
 
+<ARG>
+<NAME>FsRtpBitrateAdapter::bitrate</NAME>
+<TYPE>guint</TYPE>
+<RANGE></RANGE>
+<FLAGS>w</FLAGS>
+<NICK>Bitrate to adapt for</NICK>
+<BLURB>The bitrate to adapt for (0 means no adaption).</BLURB>
+<DEFAULT>0</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>FsRtpBitrateAdapter::interval</NAME>
+<TYPE>guint64</TYPE>
+<RANGE></RANGE>
+<FLAGS>w</FLAGS>
+<NICK>Minimum interval before adaptation</NICK>
+<BLURB>The minimum interval before adapting after a change.</BLURB>
+<DEFAULT>30000000000</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>FsRtpBitrateAdapter::rtp-caps</NAME>
+<TYPE>gpointer</TYPE>
+<RANGE></RANGE>
+<FLAGS>w</FLAGS>
+<NICK>Current RTP Caps</NICK>
+<BLURB>The RTP caps currently used.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+

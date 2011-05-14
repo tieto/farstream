@@ -707,11 +707,8 @@ _create_sinksource (gchar *elementname, GstBin *bin,
   g_object_set (elem,
     "closefd", FALSE,
     "sockfd", fd,
+    "auto-multicast", FALSE,
     NULL);
-
-  if (g_object_class_find_property (G_OBJECT_GET_CLASS (elem),
-          "auto-multicast"))
-    g_object_set (elem, "auto-multicast", FALSE, NULL);
 
   if (!gst_bin_add (bin, elem)) {
     g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
@@ -1134,7 +1131,9 @@ fs_multicast_transmitter_udpsock_inc_sending (UdpSock *udpsock)
 
     gst_element_send_event (udpsock->udpsink,
         gst_event_new_custom (GST_EVENT_CUSTOM_UPSTREAM,
-            gst_structure_new ("GstForceKeyUnit", NULL)));
+            gst_structure_new ("GstForceKeyUnit",
+                "all-headers", G_TYPE_BOOLEAN, TRUE,
+                NULL)));
   }
 }
 

@@ -31,6 +31,10 @@ G_BEGIN_DECLS
 
 /**
  * CodecAssociation:
+ * @blueprint: Blueprint used to construct this CodecAssociation (or NULL if
+ *  this is strictly from profiles)
+ * @codec: The codec this represents.. With the receive-side paremeters
+ * @send_codec: The same codec, but with the send-side parameters
  * @reserved: Marks a payload-type reserved at the users request
  * @disable: means that its not a real association, just a spot thats disabled,
  *  its marks the PT of a remote codec that has been refused
@@ -123,6 +127,16 @@ GstElement *
 parse_bin_from_description_all_linked (const gchar *bin_description,
     guint *src_pad_count, guint *sink_pad_count, GError **error);
 
+
+
+GList *
+create_local_header_extensions (GList *hdrext_old, GList *hdrext_prefs,
+    guint8 *used_ids);
+GList *
+negotiate_stream_header_extensions (GList *hdrext, GList *hdrext_remote,
+    gboolean favor_remote, guint8 *used_ids);
+GList *
+finish_header_extensions_nego (GList *hdrexts, guint8 *used_ids);
 
 G_END_DECLS
 
