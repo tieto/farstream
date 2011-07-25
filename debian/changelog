@@ -1,8 +1,9 @@
 farsight2 (0.0.29-1) UNRELEASED; urgency=low
 
   * New upstream release.
+  * debian/libgstfarsight0.10-0.symbols: Updated for new release.
 
- -- Jonny Lamb <jonny@debian.org>  Mon, 25 Jul 2011 15:07:59 +0100
+ -- Jonny Lamb <jonny@debian.org>  Mon, 25 Jul 2011 15:56:16 +0100
 
 farsight2 (0.0.28-1) unstable; urgency=low
 
