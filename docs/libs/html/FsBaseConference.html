@@ -8,7 +8,7 @@
 <link rel="up" href="ch05.html" title="Farsight Classes Base Implementations">
 <link rel="prev" href="ch05.html" title="Farsight Classes Base Implementations">
 <link rel="next" href="ch06.html" title="Farsight Transmitter Classes">
-<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.17 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -30,7 +30,7 @@
                   <a href="#FsBaseConference.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
 </td></tr>
 </table>
-<div class="refentry" title="FsBaseConference">
+<div class="refentry">
 <a name="FsBaseConference"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
@@ -39,16 +39,16 @@
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
-<div class="refsynopsisdiv" title="Synopsis">
+<div class="refsynopsisdiv">
 <a name="FsBaseConference.synopsis"></a><h2>Synopsis</h2>
 <pre class="synopsis">
 #include &lt;gst/farsight/fs-base-conference.h&gt;
 
-                    <a class="link" href="FsBaseConference.html#FsBaseConference-struct" title="FsBaseConference">FsBaseConference</a>;
-                    <a class="link" href="FsBaseConference.html#FsBaseConferenceClass" title="FsBaseConferenceClass">FsBaseConferenceClass</a>;
+struct              <a class="link" href="FsBaseConference.html#FsBaseConference-struct" title="struct FsBaseConference">FsBaseConference</a>;
+struct              <a class="link" href="FsBaseConference.html#FsBaseConferenceClass" title="struct FsBaseConferenceClass">FsBaseConferenceClass</a>;
 </pre>
 </div>
-<div class="refsect1" title="Object Hierarchy">
+<div class="refsect1">
 <a name="FsBaseConference.object-hierarchy"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
   <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
@@ -58,13 +58,13 @@
                      +----FsBaseConference
 </pre>
 </div>
-<div class="refsect1" title="Implemented Interfaces">
+<div class="refsect1">
 <a name="FsBaseConference.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
 <p>
 FsBaseConference implements
  <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstChildProxy.html">GstChildProxy</a>,  <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstImplementsInterface.html">GstImplementsInterface</a> and  <a class="link" href="FsConference.html" title="FsConference">FsConference</a>.</p>
 </div>
-<div class="refsect1" title="Description">
+<div class="refsect1">
 <a name="FsBaseConference.description"></a><h2>Description</h2>
 <p>
 This base class must be subclassed by all Farsight Conference elements. It makes
@@ -72,19 +72,19 @@ sure to agreggate the errors and maintain the lifecycles of the instances in
 the API.
 </p>
 </div>
-<div class="refsect1" title="Details">
+<div class="refsect1">
 <a name="FsBaseConference.details"></a><h2>Details</h2>
-<div class="refsect2" title="FsBaseConference">
-<a name="FsBaseConference-struct"></a><h3>FsBaseConference</h3>
-<pre class="programlisting">typedef struct _FsBaseConference FsBaseConference;</pre>
+<div class="refsect2">
+<a name="FsBaseConference-struct"></a><h3>struct FsBaseConference</h3>
+<pre class="programlisting">struct FsBaseConference;</pre>
 <p>
 The <a class="link" href="FsBaseConference.html" title="FsBaseConference"><span class="type">FsBaseConference</span></a> structure, all the members are private
 </p>
 </div>
 <hr>
-<div class="refsect2" title="FsBaseConferenceClass">
-<a name="FsBaseConferenceClass"></a><h3>FsBaseConferenceClass</h3>
-<pre class="programlisting">typedef struct {
+<div class="refsect2">
+<a name="FsBaseConferenceClass"></a><h3>struct FsBaseConferenceClass</h3>
+<pre class="programlisting">struct FsBaseConferenceClass {
   GstBinClass parent_class;
 
   /* virtual methods */
@@ -94,7 +94,7 @@ The <a class="link" href="FsBaseConference.html" title="FsBaseConference"><span 
   FsParticipant *(*new_participant) (FsBaseConference *conference,
       const gchar *cname,
       GError **error);
-} FsBaseConferenceClass;
+};
 </pre>
 <p>
 The class structure of <a class="link" href="FsBaseConference.html" title="FsBaseConference"><span class="type">FsBaseConference</span></a>. Derived classes should override
@@ -105,19 +105,16 @@ all members.
 <tbody>
 <tr>
 <td><p><span class="term"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html#GstBinClass"><span class="type">GstBinClass</span></a> <em class="structfield"><code><a name="FsBaseConferenceClass.parent-class"></a>parent_class</code></em>;</span></p></td>
-<td>Our parent
-</td>
+<td>Our parent</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="structfield"><code><a name="FsBaseConferenceClass.new-session"></a>new_session</code></em> ()</span></p></td>
-<td>allocates a new <a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> for this conference
-</td>
+<td>allocates a new <a class="link" href="farsight2-libs-fs-session.html#FsSession"><span class="type">FsSession</span></a> for this conference</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="structfield"><code><a name="FsBaseConferenceClass.new-participant"></a>new_participant</code></em> ()</span></p></td>
 <td>Creates a new <a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a> of the type required for
-this conference
-</td>
+this conference</td>
 </tr>
 </tbody>
 </table></div>
@@ -126,6 +123,6 @@ this conference
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.15</div>
+          Generated by GTK-Doc V1.17</div>
 </body>
 </html>

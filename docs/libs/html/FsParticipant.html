@@ -8,7 +8,7 @@
 <link rel="up" href="ch02.html" title="Farsight Core Library">
 <link rel="prev" href="ch02.html" title="Farsight Core Library">
 <link rel="next" href="farsight2-libs-fs-session.html" title="FsSession">
-<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.17 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -32,7 +32,7 @@
                   <a href="#FsParticipant.signals" class="shortcut">Signals</a>
 </td></tr>
 </table>
-<div class="refentry" title="FsParticipant">
+<div class="refentry">
 <a name="FsParticipant"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
@@ -41,37 +41,37 @@
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
-<div class="refsynopsisdiv" title="Synopsis">
+<div class="refsynopsisdiv">
 <a name="FsParticipant.synopsis"></a><h2>Synopsis</h2>
 <pre class="synopsis">
 #include &lt;gst/farsight/fs-conference-iface.h&gt;
 
                     <a class="link" href="FsParticipant.html#FsParticipant-struct" title="FsParticipant">FsParticipant</a>;
-                    <a class="link" href="FsParticipant.html#FsParticipantClass" title="FsParticipantClass">FsParticipantClass</a>;
+struct              <a class="link" href="FsParticipant.html#FsParticipantClass" title="struct FsParticipantClass">FsParticipantClass</a>;
 #define             <a class="link" href="FsParticipant.html#FS-PARTICIPANT-DATA-LOCK:CAPS" title="FS_PARTICIPANT_DATA_LOCK()">FS_PARTICIPANT_DATA_LOCK</a>            (participant)
 #define             <a class="link" href="FsParticipant.html#FS-PARTICIPANT-DATA-UNLOCK:CAPS" title="FS_PARTICIPANT_DATA_UNLOCK()">FS_PARTICIPANT_DATA_UNLOCK</a>          (participant)
 </pre>
 </div>
-<div class="refsect1" title="Object Hierarchy">
+<div class="refsect1">
 <a name="FsParticipant.object-hierarchy"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
   <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
    +----FsParticipant
 </pre>
 </div>
-<div class="refsect1" title="Properties">
+<div class="refsect1">
 <a name="FsParticipant.properties"></a><h2>Properties</h2>
 <pre class="synopsis">
   "<a class="link" href="FsParticipant.html#FsParticipant--cname" title='The "cname" property'>cname</a>"                    <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write / Construct
 </pre>
 </div>
-<div class="refsect1" title="Signals">
+<div class="refsect1">
 <a name="FsParticipant.signals"></a><h2>Signals</h2>
 <pre class="synopsis">
-  "<a class="link" href="FsParticipant.html#FsParticipant-error" title='The "error" signal'>error</a>"                                          : Run Last
+  "<a class="link" href="FsParticipant.html#FsParticipant-error" title='The "error" signal'>error</a>"                                          : <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS"><code class="literal">Run Last</code></a>
 </pre>
 </div>
-<div class="refsect1" title="Description">
+<div class="refsect1">
 <a name="FsParticipant.description"></a><h2>Description</h2>
 <p>
 This object is the base implementation of a Farsight Participant. It needs to be
@@ -80,9 +80,9 @@ participant represents any source of media in a conference. This could be a
 human-participant or an automaton.
 </p>
 </div>
-<div class="refsect1" title="Details">
+<div class="refsect1">
 <a name="FsParticipant.details"></a><h2>Details</h2>
-<div class="refsect2" title="FsParticipant">
+<div class="refsect2">
 <a name="FsParticipant-struct"></a><h3>FsParticipant</h3>
 <pre class="programlisting">typedef struct _FsParticipant FsParticipant;</pre>
 <p>
@@ -90,13 +90,13 @@ All members are private (access them using the properties)
 </p>
 </div>
 <hr>
-<div class="refsect2" title="FsParticipantClass">
-<a name="FsParticipantClass"></a><h3>FsParticipantClass</h3>
-<pre class="programlisting">typedef struct {
+<div class="refsect2">
+<a name="FsParticipantClass"></a><h3>struct FsParticipantClass</h3>
+<pre class="programlisting">struct FsParticipantClass {
   GObjectClass parent_class;
 
   /* virtual functions */
-} FsParticipantClass;
+};
 </pre>
 <p>
 The FsParticipant class has no virtual methods to implement,
@@ -106,13 +106,12 @@ but you may want to override the properties or attach more date to it
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObjectClass"><span class="type">GObjectClass</span></a> <em class="structfield"><code><a name="FsParticipantClass.parent-class"></a>parent_class</code></em>;</span></p></td>
-<td>Our parent
-</td>
+<td>Our parent</td>
 </tr></tbody>
 </table></div>
 </div>
 <hr>
-<div class="refsect2" title="FS_PARTICIPANT_DATA_LOCK()">
+<div class="refsect2">
 <a name="FS-PARTICIPANT-DATA-LOCK:CAPS"></a><h3>FS_PARTICIPANT_DATA_LOCK()</h3>
 <pre class="programlisting">#define             FS_PARTICIPANT_DATA_LOCK(participant)</pre>
 <p>
@@ -129,7 +128,7 @@ Locks the participant for data set with <a href="http://library.gnome.org/devel/
 </table></div>
 </div>
 <hr>
-<div class="refsect2" title="FS_PARTICIPANT_DATA_UNLOCK()">
+<div class="refsect2">
 <a name="FS-PARTICIPANT-DATA-UNLOCK:CAPS"></a><h3>FS_PARTICIPANT_DATA_UNLOCK()</h3>
 <pre class="programlisting">#define             FS_PARTICIPANT_DATA_UNLOCK(participant)</pre>
 <p>
@@ -146,9 +145,9 @@ Unlocks the participant for data set with <a href="http://library.gnome.org/deve
 </table></div>
 </div>
 </div>
-<div class="refsect1" title="Property Details">
+<div class="refsect1">
 <a name="FsParticipant.property-details"></a><h2>Property Details</h2>
-<div class="refsect2" title='The "cname" property'>
+<div class="refsect2">
 <a name="FsParticipant--cname"></a><h3>The <code class="literal">"cname"</code> property</h3>
 <pre class="programlisting">  "cname"                    <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write / Construct</pre>
 <p>
@@ -158,16 +157,16 @@ User must free the string after getting it.
 <p>Default value: NULL</p>
 </div>
 </div>
-<div class="refsect1" title="Signal Details">
+<div class="refsect1">
 <a name="FsParticipant.signal-details"></a><h2>Signal Details</h2>
-<div class="refsect2" title='The "error" signal'>
+<div class="refsect2">
 <a name="FsParticipant-error"></a><h3>The <code class="literal">"error"</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a> *self,
                                                         <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a>       *object,
                                                         <a class="link" href="FsConference.html#FsError" title="enum FsError"><span class="type">FsError</span></a>        errorno,
                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>         *error_msg,
                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>         *dbg_msg,
-                                                        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>       user_data)      : Run Last</pre>
+                                                        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>       user_data)      : <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS"><code class="literal">Run Last</code></a></pre>
 <p>
 This signal is emitted in any error condition
 </p>
@@ -177,28 +176,23 @@ This signal is emitted in any error condition
 <tr>
 <td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
 <td>
-<a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a> that emitted the signal
-</td>
+<a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a> that emitted the signal</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
-<td>The <span class="type">Gobject</span> that emitted the signal
-</td>
+<td>The <span class="type">Gobject</span> that emitted the signal</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>errorno</code></em> :</span></p></td>
-<td>The number of the error
-</td>
+<td>The number of the error</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error_msg</code></em> :</span></p></td>
-<td>Error message to be displayed to user
-</td>
+<td>Error message to be displayed to user</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>dbg_msg</code></em> :</span></p></td>
-<td>Debugging error message
-</td>
+<td>Debugging error message</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -211,6 +205,6 @@ This signal is emitted in any error condition
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.15</div>
+          Generated by GTK-Doc V1.17</div>
 </body>
 </html>

@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="Farsight2 Reference Manual">
 <link rel="up" href="ch07.html" title="Farsight Plugins Infrastructure">
 <link rel="prev" href="ch07.html" title="Farsight Plugins Infrastructure">
-<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.17 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -25,7 +25,7 @@
                   <a href="#farsight2-libs-FsPlugin.description" class="shortcut">Description</a>
 </td></tr>
 </table>
-<div class="refentry" title="FsPlugin">
+<div class="refentry">
 <a name="farsight2-libs-FsPlugin"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
@@ -34,12 +34,12 @@
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
-<div class="refsynopsisdiv" title="Synopsis">
+<div class="refsynopsisdiv">
 <a name="farsight2-libs-FsPlugin.synopsis"></a><h2>Synopsis</h2>
 <pre class="synopsis">
 #include &lt;gst/farsight/fs-plugin.h&gt;
 
-                    <a class="link" href="farsight2-libs-FsPlugin.html#FsPlugin" title="FsPlugin">FsPlugin</a>;
+struct              <a class="link" href="farsight2-libs-FsPlugin.html#FsPlugin" title="struct FsPlugin">FsPlugin</a>;
 <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           <a class="link" href="farsight2-libs-FsPlugin.html#fs-plugin-create-valist" title="fs_plugin_create_valist ()">fs_plugin_create_valist</a>             (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *type_suffix</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>,
@@ -54,20 +54,20 @@
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **            <a class="link" href="farsight2-libs-FsPlugin.html#fs-plugin-list-available" title="fs_plugin_list_available ()">fs_plugin_list_available</a>            (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *type_suffix</code></em>);
 </pre>
 </div>
-<div class="refsect1" title="Description">
+<div class="refsect1">
 <a name="farsight2-libs-FsPlugin.description"></a><h2>Description</h2>
 <p>
 This class is a generic class to load GType plugins based on their name.
 With this simple class, you can only have one type per plugin.
 </p>
 </div>
-<div class="refsect1" title="Details">
+<div class="refsect1">
 <a name="farsight2-libs-FsPlugin.details"></a><h2>Details</h2>
-<div class="refsect2" title="FsPlugin">
-<a name="FsPlugin"></a><h3>FsPlugin</h3>
-<pre class="programlisting">typedef struct {
+<div class="refsect2">
+<a name="FsPlugin"></a><h3>struct FsPlugin</h3>
+<pre class="programlisting">struct FsPlugin {
   GTypeModule parent;
-} FsPlugin;
+};
 </pre>
 <p>
 This structure represents a plugin, it is opaque.
@@ -76,13 +76,12 @@ This structure represents a plugin, it is opaque.
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><a href="http://library.gnome.org/devel/gobject/unstable/GTypeModule.html"><span class="type">GTypeModule</span></a> <em class="structfield"><code><a name="FsPlugin.parent"></a>parent</code></em>;</span></p></td>
-<td>the parent object
-</td>
+<td>the parent object</td>
 </tr></tbody>
 </table></div>
 </div>
 <hr>
-<div class="refsect2" title="fs_plugin_create_valist ()">
+<div class="refsect2">
 <a name="fs-plugin-create-valist"></a><h3>fs_plugin_create_valist ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           fs_plugin_create_valist             (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *type_suffix</code></em>,
@@ -98,40 +97,34 @@ the requested type
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
-<td>The name of the plugin to load
-</td>
+<td>The name of the plugin to load</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>type_suffix</code></em> :</span></p></td>
-<td>The type of plugin to load (normally "transmitter")
-</td>
+<td>The type of plugin to load (normally "transmitter")</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td>location of a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or NULL if no error occured
-</td>
+<td>location of a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or NULL if no error occured</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>first_property_name</code></em> :</span></p></td>
 <td>The name of the first property to be set on the
-  object
-</td>
+object</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>var_args</code></em> :</span></p></td>
-<td>The rest of the arguments
-</td>
+<td>The rest of the arguments</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> The object created (or NULL if there is an error)
-</td>
+<td>The object created (or NULL if there is an error)</td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <hr>
-<div class="refsect2" title="fs_plugin_create ()">
+<div class="refsect2">
 <a name="fs-plugin-create"></a><h3>fs_plugin_create ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           fs_plugin_create                    (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *type_suffix</code></em>,
@@ -147,40 +140,34 @@ the requested type
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
-<td>The name of the plugin to load
-</td>
+<td>The name of the plugin to load</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>type_suffix</code></em> :</span></p></td>
-<td>The type of plugin to load (normally "transmitter")
-</td>
+<td>The type of plugin to load (normally "transmitter")</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td>location of a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or NULL if no error occured
-</td>
+<td>location of a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or NULL if no error occured</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>first_property_name</code></em> :</span></p></td>
 <td>The name of the first property to be set on the
-  object
-</td>
+object</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
-<td>The NULL-terminated list of properties to set on the transmitter
-</td>
+<td>The NULL-terminated list of properties to set on the transmitter</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> The object created (or NULL if there is an error)
-</td>
+<td>The object created (or NULL if there is an error)</td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <hr>
-<div class="refsect2" title="FS_INIT_PLUGIN()">
+<div class="refsect2">
 <a name="FS-INIT-PLUGIN:CAPS"></a><h3>FS_INIT_PLUGIN()</h3>
 <pre class="programlisting">#define             FS_INIT_PLUGIN(type_register_func)</pre>
 <p>
@@ -191,13 +178,12 @@ in any farsight plugin.
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>type_register_func</code></em> :</span></p></td>
-<td>A function that register a <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> and returns it
-</td>
+<td>A function that register a <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> and returns it</td>
 </tr></tbody>
 </table></div>
 </div>
 <hr>
-<div class="refsect2" title="fs_plugin_list_available ()">
+<div class="refsect2">
 <a name="fs-plugin-list-available"></a><h3>fs_plugin_list_available ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **            fs_plugin_list_available            (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *type_suffix</code></em>);</pre>
 <p>
@@ -208,14 +194,12 @@ Gets the list of all available plugins of a certain type
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>type_suffix</code></em> :</span></p></td>
-<td>Get list of plugins with this type suffix
-</td>
+<td>Get list of plugins with this type suffix</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> a newly allocated NULL terminated array of strings or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if no
-strings were found. It should be freed with <a href="http://library.gnome.org/devel/glib/unstable/glib-String-Utility-Functions.html#g-strfreev"><code class="function">g_strfreev()</code></a>.
-</td>
+<td>a newly allocated NULL terminated array of strings or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if no
+strings were found. It should be freed with <a href="http://library.gnome.org/devel/glib/unstable/glib-String-Utility-Functions.html#g-strfreev"><code class="function">g_strfreev()</code></a>.</td>
 </tr>
 </tbody>
 </table></div>
@@ -224,6 +208,6 @@ strings were found. It should be freed with <a href="http://library.gnome.org/de
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.15</div>
+          Generated by GTK-Doc V1.17</div>
 </body>
 </html>

@@ -36,7 +36,7 @@
     </sub>
   </chapters>
   <functions>
-    <keyword type="" name="The &quot;farsight-error&quot; message" link="FsConference.html#id415196"/>
+    <keyword type="" name="The &quot;farsight-error&quot; message" link="FsConference.html#id379177"/>
     <keyword type="struct" name="FsConference" link="FsConference.html#FsConference-struct"/>
     <keyword type="function" name="fs_conference_new_session ()" link="FsConference.html#fs-conference-new-session"/>
     <keyword type="function" name="fs_conference_new_participant ()" link="FsConference.html#fs-conference-new-participant"/>
@@ -44,17 +44,17 @@
     <keyword type="enum" name="enum FsError" link="FsConference.html#FsError"/>
     <keyword type="macro" name="FS_ERROR_IS_FATAL()" link="FsConference.html#FS-ERROR-IS-FATAL:CAPS"/>
     <keyword type="struct" name="FsParticipant" link="FsParticipant.html#FsParticipant-struct"/>
-    <keyword type="struct" name="FsParticipantClass" link="FsParticipant.html#FsParticipantClass"/>
+    <keyword type="struct" name="struct FsParticipantClass" link="FsParticipant.html#FsParticipantClass"/>
     <keyword type="macro" name="FS_PARTICIPANT_DATA_LOCK()" link="FsParticipant.html#FS-PARTICIPANT-DATA-LOCK:CAPS"/>
     <keyword type="macro" name="FS_PARTICIPANT_DATA_UNLOCK()" link="FsParticipant.html#FS-PARTICIPANT-DATA-UNLOCK:CAPS"/>
     <keyword type="property" name="The &quot;cname&quot; property" link="FsParticipant.html#FsParticipant--cname"/>
     <keyword type="signal" name="The &quot;error&quot; signal" link="FsParticipant.html#FsParticipant-error"/>
-    <keyword type="" name="The &quot;farsight-send-codec-changed&quot;&#10;  message" link="farsight2-libs-fs-session.html#id493898"/>
-    <keyword type="" name="The &quot;farsight-codecs-changed&quot;&#10; message" link="farsight2-libs-fs-session.html#id493958"/>
+    <keyword type="" name="The &quot;farsight-send-codec-changed&quot;&#10;  message" link="farsight2-libs-fs-session.html#id458182"/>
+    <keyword type="" name="The &quot;farsight-codecs-changed&quot;&#10; message" link="farsight2-libs-fs-session.html#id458242"/>
     <keyword type="enum" name="enum FsDTMFEvent" link="farsight2-libs-fs-session.html#FsDTMFEvent"/>
     <keyword type="enum" name="enum FsDTMFMethod" link="farsight2-libs-fs-session.html#FsDTMFMethod"/>
     <keyword type="struct" name="FsSession" link="farsight2-libs-fs-session.html#FsSession-struct"/>
-    <keyword type="struct" name="FsSessionClass" link="farsight2-libs-fs-session.html#FsSessionClass"/>
+    <keyword type="struct" name="struct FsSessionClass" link="farsight2-libs-fs-session.html#FsSessionClass"/>
     <keyword type="function" name="fs_session_new_stream ()" link="farsight2-libs-fs-session.html#fs-session-new-stream"/>
     <keyword type="function" name="fs_session_start_telephony_event ()" link="farsight2-libs-fs-session.html#fs-session-start-telephony-event"/>
     <keyword type="function" name="fs_session_stop_telephony_event ()" link="farsight2-libs-fs-session.html#fs-session-stop-telephony-event"/>
@@ -62,6 +62,7 @@
     <keyword type="function" name="fs_session_set_codec_preferences ()" link="farsight2-libs-fs-session.html#fs-session-set-codec-preferences"/>
     <keyword type="function" name="fs_session_list_transmitters ()" link="farsight2-libs-fs-session.html#fs-session-list-transmitters"/>
     <keyword type="function" name="fs_session_get_stream_transmitter_type ()" link="farsight2-libs-fs-session.html#fs-session-get-stream-transmitter-type"/>
+    <keyword type="function" name="fs_session_codecs_need_resend ()" link="farsight2-libs-fs-session.html#fs-session-codecs-need-resend"/>
     <keyword type="function" name="fs_session_emit_error ()" link="farsight2-libs-fs-session.html#fs-session-emit-error"/>
     <keyword type="property" name="The &quot;codec-preferences&quot; property" link="farsight2-libs-fs-session.html#FsSession--codec-preferences"/>
     <keyword type="property" name="The &quot;codecs&quot; property" link="farsight2-libs-fs-session.html#FsSession--codecs"/>
@@ -73,13 +74,13 @@
     <keyword type="property" name="The &quot;sink-pad&quot; property" link="farsight2-libs-fs-session.html#FsSession--sink-pad"/>
     <keyword type="property" name="The &quot;tos&quot; property" link="farsight2-libs-fs-session.html#FsSession--tos"/>
     <keyword type="signal" name="The &quot;error&quot; signal" link="farsight2-libs-fs-session.html#FsSession-error"/>
-    <keyword type="" name="The &quot;farsight-new-local-candidate&quot; message" link="FsStream.html#id498750"/>
-    <keyword type="" name="The &quot;farsight-local-candidates-prepared&quot; message" link="FsStream.html#id498786"/>
-    <keyword type="" name="The &quot;farsight-new-active-candidate-pair&quot; message" link="FsStream.html#id498816"/>
-    <keyword type="" name="The &quot;farsight-recv-codecs-changed&quot; message" link="FsStream.html#id498860"/>
-    <keyword type="" name="The &quot;farsight-component-state-changed&quot; message" link="FsStream.html#id498924"/>
+    <keyword type="" name="The &quot;farsight-new-local-candidate&quot; message" link="FsStream.html#id460075"/>
+    <keyword type="" name="The &quot;farsight-local-candidates-prepared&quot; message" link="FsStream.html#id460111"/>
+    <keyword type="" name="The &quot;farsight-new-active-candidate-pair&quot; message" link="FsStream.html#id460141"/>
+    <keyword type="" name="The &quot;farsight-recv-codecs-changed&quot; message" link="FsStream.html#id460185"/>
+    <keyword type="" name="The &quot;farsight-component-state-changed&quot; message" link="FsStream.html#id460249"/>
     <keyword type="struct" name="FsStream" link="FsStream.html#FsStream-struct"/>
-    <keyword type="struct" name="FsStreamClass" link="FsStream.html#FsStreamClass"/>
+    <keyword type="struct" name="struct FsStreamClass" link="FsStream.html#FsStreamClass"/>
     <keyword type="enum" name="enum FsStreamDirection" link="FsStream.html#FsStreamDirection"/>
     <keyword type="enum" name="enum FsStreamState" link="FsStream.html#FsStreamState"/>
     <keyword type="function" name="fs_stream_set_remote_candidates ()" link="FsStream.html#fs-stream-set-remote-candidates"/>
@@ -97,7 +98,7 @@
     <keyword type="property" name="The &quot;session&quot; property" link="FsStream.html#FsStream--session"/>
     <keyword type="signal" name="The &quot;error&quot; signal" link="FsStream.html#FsStream-error"/>
     <keyword type="signal" name="The &quot;src-pad-added&quot; signal" link="FsStream.html#FsStream-src-pad-added"/>
-    <keyword type="struct" name="FsCandidate" link="farsight2-libs-FsCandidate.html#FsCandidate"/>
+    <keyword type="struct" name="struct FsCandidate" link="farsight2-libs-FsCandidate.html#FsCandidate"/>
     <keyword type="enum" name="enum FsCandidateType" link="farsight2-libs-FsCandidate.html#FsCandidateType"/>
     <keyword type="enum" name="enum FsNetworkProtocol" link="farsight2-libs-FsCandidate.html#FsNetworkProtocol"/>
     <keyword type="enum" name="enum FsComponentType" link="farsight2-libs-FsCandidate.html#FsComponentType"/>
@@ -106,10 +107,10 @@
     <keyword type="function" name="fs_candidate_copy ()" link="farsight2-libs-FsCandidate.html#fs-candidate-copy"/>
     <keyword type="function" name="fs_candidate_list_destroy ()" link="farsight2-libs-FsCandidate.html#fs-candidate-list-destroy"/>
     <keyword type="function" name="fs_candidate_list_copy ()" link="farsight2-libs-FsCandidate.html#fs-candidate-list-copy"/>
-    <keyword type="struct" name="FsCodec" link="farsight2-libs-FsCodec.html#FsCodec"/>
+    <keyword type="struct" name="struct FsCodec" link="farsight2-libs-FsCodec.html#FsCodec"/>
     <keyword type="enum" name="enum FsMediaType" link="farsight2-libs-FsCodec.html#FsMediaType"/>
-    <keyword type="struct" name="FsCodecParameter" link="farsight2-libs-FsCodec.html#FsCodecParameter"/>
-    <keyword type="struct" name="FsFeedbackParameter" link="farsight2-libs-FsCodec.html#FsFeedbackParameter"/>
+    <keyword type="struct" name="struct FsCodecParameter" link="farsight2-libs-FsCodec.html#FsCodecParameter"/>
+    <keyword type="struct" name="struct FsFeedbackParameter" link="farsight2-libs-FsCodec.html#FsFeedbackParameter"/>
     <keyword type="macro" name="FS_CODEC_ID_ANY" link="farsight2-libs-FsCodec.html#FS-CODEC-ID-ANY:CAPS"/>
     <keyword type="macro" name="FS_CODEC_ID_DISABLE" link="farsight2-libs-FsCodec.html#FS-CODEC-ID-DISABLE:CAPS"/>
     <keyword type="function" name="fs_codec_new ()" link="farsight2-libs-FsCodec.html#fs-codec-new"/>
@@ -140,7 +141,7 @@
     <keyword type="function" name="fs_rtp_header_extension_list_from_keyfile ()" link="farsight2-libs-RTP-Specific-types.html#fs-rtp-header-extension-list-from-keyfile"/>
     <keyword type="macro" name="FS_RTP_HEADER_EXTENSION_FORMAT" link="farsight2-libs-RTP-Specific-types.html#FS-RTP-HEADER-EXTENSION-FORMAT:CAPS"/>
     <keyword type="macro" name="FS_RTP_HEADER_EXTENSION_ARGS()" link="farsight2-libs-RTP-Specific-types.html#FS-RTP-HEADER-EXTENSION-ARGS:CAPS"/>
-    <keyword type="struct" name="FsElementAddedNotifier" link="FsElementAddedNotifier.html#FsElementAddedNotifier-struct"/>
+    <keyword type="struct" name="struct FsElementAddedNotifier" link="FsElementAddedNotifier.html#FsElementAddedNotifier-struct"/>
     <keyword type="function" name="fs_element_added_notifier_new ()" link="FsElementAddedNotifier.html#fs-element-added-notifier-new"/>
     <keyword type="function" name="fs_element_added_notifier_add ()" link="FsElementAddedNotifier.html#fs-element-added-notifier-add"/>
     <keyword type="function" name="fs_element_added_notifier_remove ()" link="FsElementAddedNotifier.html#fs-element-added-notifier-remove"/>
@@ -150,24 +151,14 @@
     <keyword type="function" name="fs_interfaces_get_ip_for_interface ()" link="farsight2-libs-Network-interfaces-discovery.html#fs-interfaces-get-ip-for-interface"/>
     <keyword type="function" name="fs_interfaces_get_local_interfaces ()" link="farsight2-libs-Network-interfaces-discovery.html#fs-interfaces-get-local-interfaces"/>
     <keyword type="function" name="fs_interfaces_get_local_ips ()" link="farsight2-libs-Network-interfaces-discovery.html#fs-interfaces-get-local-ips"/>
-    <keyword type="struct" name="FsRtpHeaderExtension" link="farsight2-libs-Utility-functions.html#FsRtpHeaderExtension"/>
-    <keyword type="function" name="fs_rtp_header_extension_new ()" link="farsight2-libs-Utility-functions.html#fs-rtp-header-extension-new"/>
-    <keyword type="function" name="fs_rtp_header_extension_copy ()" link="farsight2-libs-Utility-functions.html#fs-rtp-header-extension-copy"/>
-    <keyword type="function" name="fs_rtp_header_extension_destroy ()" link="farsight2-libs-Utility-functions.html#fs-rtp-header-extension-destroy"/>
-    <keyword type="function" name="fs_rtp_header_extension_are_equal ()" link="farsight2-libs-Utility-functions.html#fs-rtp-header-extension-are-equal"/>
-    <keyword type="function" name="fs_rtp_header_extension_list_copy ()" link="farsight2-libs-Utility-functions.html#fs-rtp-header-extension-list-copy"/>
-    <keyword type="function" name="fs_rtp_header_extension_list_destroy ()" link="farsight2-libs-Utility-functions.html#fs-rtp-header-extension-list-destroy"/>
-    <keyword type="function" name="fs_rtp_header_extension_list_from_keyfile ()" link="farsight2-libs-Utility-functions.html#fs-rtp-header-extension-list-from-keyfile"/>
-    <keyword type="macro" name="FS_RTP_HEADER_EXTENSION_FORMAT" link="farsight2-libs-Utility-functions.html#FS-RTP-HEADER-EXTENSION-FORMAT:CAPS"/>
-    <keyword type="macro" name="FS_RTP_HEADER_EXTENSION_ARGS()" link="farsight2-libs-Utility-functions.html#FS-RTP-HEADER-EXTENSION-ARGS:CAPS"/>
     <keyword type="function" name="fs_utils_set_bitrate ()" link="farsight2-libs-Utility-functions.html#fs-utils-set-bitrate"/>
     <keyword type="function" name="fs_utils_get_default_codec_preferences ()" link="farsight2-libs-Utility-functions.html#fs-utils-get-default-codec-preferences"/>
     <keyword type="function" name="fs_utils_get_default_element_properties ()" link="farsight2-libs-Utility-functions.html#fs-utils-get-default-element-properties"/>
     <keyword type="function" name="fs_utils_get_default_rtp_header_extension_preferences ()" link="farsight2-libs-Utility-functions.html#fs-utils-get-default-rtp-header-extension-preferences"/>
-    <keyword type="struct" name="FsBaseConference" link="FsBaseConference.html#FsBaseConference-struct"/>
-    <keyword type="struct" name="FsBaseConferenceClass" link="FsBaseConference.html#FsBaseConferenceClass"/>
+    <keyword type="struct" name="struct FsBaseConference" link="FsBaseConference.html#FsBaseConference-struct"/>
+    <keyword type="struct" name="struct FsBaseConferenceClass" link="FsBaseConference.html#FsBaseConferenceClass"/>
     <keyword type="struct" name="FsTransmitter" link="FsTransmitter.html#FsTransmitter-struct"/>
-    <keyword type="struct" name="FsTransmitterClass" link="FsTransmitter.html#FsTransmitterClass"/>
+    <keyword type="struct" name="struct FsTransmitterClass" link="FsTransmitter.html#FsTransmitterClass"/>
     <keyword type="function" name="fs_transmitter_new ()" link="FsTransmitter.html#fs-transmitter-new"/>
     <keyword type="function" name="fs_transmitter_new_stream_transmitter ()" link="FsTransmitter.html#fs-transmitter-new-stream-transmitter"/>
     <keyword type="function" name="fs_transmitter_get_stream_transmitter_type ()" link="FsTransmitter.html#fs-transmitter-get-stream-transmitter-type"/>
@@ -181,7 +172,7 @@
     <keyword type="signal" name="The &quot;error&quot; signal" link="FsTransmitter.html#FsTransmitter-error"/>
     <keyword type="signal" name="The &quot;get-recvonly-filter&quot; signal" link="FsTransmitter.html#FsTransmitter-get-recvonly-filter"/>
     <keyword type="struct" name="FsStreamTransmitter" link="FsStreamTransmitter.html#FsStreamTransmitter-struct"/>
-    <keyword type="struct" name="FsStreamTransmitterClass" link="FsStreamTransmitter.html#FsStreamTransmitterClass"/>
+    <keyword type="struct" name="struct FsStreamTransmitterClass" link="FsStreamTransmitter.html#FsStreamTransmitterClass"/>
     <keyword type="function" name="fs_stream_transmitter_set_remote_candidates ()" link="FsStreamTransmitter.html#fs-stream-transmitter-set-remote-candidates"/>
     <keyword type="function" name="fs_stream_transmitter_gather_local_candidates ()" link="FsStreamTransmitter.html#fs-stream-transmitter-gather-local-candidates"/>
     <keyword type="function" name="fs_stream_transmitter_force_remote_candidates ()" link="FsStreamTransmitter.html#fs-stream-transmitter-force-remote-candidates"/>
@@ -196,7 +187,7 @@
     <keyword type="signal" name="The &quot;new-active-candidate-pair&quot; signal" link="FsStreamTransmitter.html#FsStreamTransmitter-new-active-candidate-pair"/>
     <keyword type="signal" name="The &quot;new-local-candidate&quot; signal" link="FsStreamTransmitter.html#FsStreamTransmitter-new-local-candidate"/>
     <keyword type="signal" name="The &quot;state-changed&quot; signal" link="FsStreamTransmitter.html#FsStreamTransmitter-state-changed"/>
-    <keyword type="struct" name="FsPlugin" link="farsight2-libs-FsPlugin.html#FsPlugin"/>
+    <keyword type="struct" name="struct FsPlugin" link="farsight2-libs-FsPlugin.html#FsPlugin"/>
     <keyword type="function" name="fs_plugin_create_valist ()" link="farsight2-libs-FsPlugin.html#fs-plugin-create-valist"/>
     <keyword type="function" name="fs_plugin_create ()" link="farsight2-libs-FsPlugin.html#fs-plugin-create"/>
     <keyword type="macro" name="FS_INIT_PLUGIN()" link="farsight2-libs-FsPlugin.html#FS-INIT-PLUGIN:CAPS"/>

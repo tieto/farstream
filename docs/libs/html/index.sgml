@@ -62,6 +62,7 @@
 <ANCHOR id="fs-session-set-codec-preferences" href="farsight2-libs-0.10/farsight2-libs-fs-session.html#fs-session-set-codec-preferences">
 <ANCHOR id="fs-session-list-transmitters" href="farsight2-libs-0.10/farsight2-libs-fs-session.html#fs-session-list-transmitters">
 <ANCHOR id="fs-session-get-stream-transmitter-type" href="farsight2-libs-0.10/farsight2-libs-fs-session.html#fs-session-get-stream-transmitter-type">
+<ANCHOR id="fs-session-codecs-need-resend" href="farsight2-libs-0.10/farsight2-libs-fs-session.html#fs-session-codecs-need-resend">
 <ANCHOR id="fs-session-emit-error" href="farsight2-libs-0.10/farsight2-libs-fs-session.html#fs-session-emit-error">
 <ANCHOR id="farsight2-libs-fs-session.property-details" href="farsight2-libs-0.10/farsight2-libs-fs-session.html#farsight2-libs-fs-session.property-details">
 <ANCHOR id="FsSession--codec-preferences" href="farsight2-libs-0.10/farsight2-libs-fs-session.html#FsSession--codec-preferences">
@@ -206,16 +207,6 @@
 <ANCHOR id="farsight2-libs-Utility-functions.synopsis" href="farsight2-libs-0.10/farsight2-libs-Utility-functions.html#farsight2-libs-Utility-functions.synopsis">
 <ANCHOR id="farsight2-libs-Utility-functions.description" href="farsight2-libs-0.10/farsight2-libs-Utility-functions.html#farsight2-libs-Utility-functions.description">
 <ANCHOR id="farsight2-libs-Utility-functions.details" href="farsight2-libs-0.10/farsight2-libs-Utility-functions.html#farsight2-libs-Utility-functions.details">
-<ANCHOR id="FsRtpHeaderExtension" href="farsight2-libs-0.10/farsight2-libs-Utility-functions.html#FsRtpHeaderExtension">
-<ANCHOR id="fs-rtp-header-extension-new" href="farsight2-libs-0.10/farsight2-libs-Utility-functions.html#fs-rtp-header-extension-new">
-<ANCHOR id="fs-rtp-header-extension-copy" href="farsight2-libs-0.10/farsight2-libs-Utility-functions.html#fs-rtp-header-extension-copy">
-<ANCHOR id="fs-rtp-header-extension-destroy" href="farsight2-libs-0.10/farsight2-libs-Utility-functions.html#fs-rtp-header-extension-destroy">
-<ANCHOR id="fs-rtp-header-extension-are-equal" href="farsight2-libs-0.10/farsight2-libs-Utility-functions.html#fs-rtp-header-extension-are-equal">
-<ANCHOR id="fs-rtp-header-extension-list-copy" href="farsight2-libs-0.10/farsight2-libs-Utility-functions.html#fs-rtp-header-extension-list-copy">
-<ANCHOR id="fs-rtp-header-extension-list-destroy" href="farsight2-libs-0.10/farsight2-libs-Utility-functions.html#fs-rtp-header-extension-list-destroy">
-<ANCHOR id="fs-rtp-header-extension-list-from-keyfile" href="farsight2-libs-0.10/farsight2-libs-Utility-functions.html#fs-rtp-header-extension-list-from-keyfile">
-<ANCHOR id="FS-RTP-HEADER-EXTENSION-FORMAT:CAPS" href="farsight2-libs-0.10/farsight2-libs-Utility-functions.html#FS-RTP-HEADER-EXTENSION-FORMAT:CAPS">
-<ANCHOR id="FS-RTP-HEADER-EXTENSION-ARGS:CAPS" href="farsight2-libs-0.10/farsight2-libs-Utility-functions.html#FS-RTP-HEADER-EXTENSION-ARGS:CAPS">
 <ANCHOR id="fs-utils-set-bitrate" href="farsight2-libs-0.10/farsight2-libs-Utility-functions.html#fs-utils-set-bitrate">
 <ANCHOR id="fs-utils-get-default-codec-preferences" href="farsight2-libs-0.10/farsight2-libs-Utility-functions.html#fs-utils-get-default-codec-preferences">
 <ANCHOR id="fs-utils-get-default-element-properties" href="farsight2-libs-0.10/farsight2-libs-Utility-functions.html#fs-utils-get-default-element-properties">

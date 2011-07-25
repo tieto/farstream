@@ -1,3 +1,98 @@
+commit aaad8b0733b76982883dc4bcfae9457b200ac8e7
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Jun 10 16:02:26 2011 -0400
+
+    Version 0.0.29
+
+commit 8f86199aae8350159752fc82d5eaa9c1cb6bb0fa
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Jun 10 15:35:18 2011 -0400
+
+    tests: Release lock while calling set_remote_cands, src_pad_added could be called from it
+
+commit d095818623d41e884dbfd6a77b655253b2716813
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Jun 10 14:52:58 2011 -0400
+
+    rtpcodecspecific: Document the meaning of the various codec parameter flags
+
+commit 70f57dd69d418bd33e84eb5c2f373e1740d5a272
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Jun 1 17:38:13 2011 +0100
+
+    tests: Add test for fs_session_codecs_need_resend
+
+commit 8f3955590a169b68e178ae320168a3ab61e64d3f
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Jun 1 16:48:44 2011 +0100
+
+    session: Add new function to know if one needs to re-send the codecs
+    
+    Add a new vfunc so that the users of the plugin can know if the change in
+    codec is big enough that the codecs would need to be reliably resent to the
+    other side.
+
+commit 9a186c1ab8e9d7b564b1127aac9e254864962787
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue May 31 21:24:30 2011 +0100
+
+    rtpcodecspecific: Check if config params have changed and need to be re-sent
+    
+    Check if matching codecs have different config parameters, and return the list
+    of codecs that need to be resent or NULL otherwise.
+    We do that by matching the codecs one by one
+    with a fuzzy SDP Offer/Answer match and then when we find matchs, we check
+    if any of the config params are either different or only available in the new
+    or the old one.
+
+commit 668c68292feb400b27ecea32a91f1ad9e0bf9d88
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Jun 1 13:20:04 2011 +0100
+
+    Make gtk-doc more happy for the libs
+
+commit b615afaa276060ef6b460c5bb32f46a6e8131190
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Jun 1 13:14:10 2011 +0100
+
+    make gtk-doc happier
+
+commit 1465bec584585c62cc85083f6b672776c7bdd80d
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 27 11:09:24 2011 +0300
+
+    rtpconference: Add missing stdio.h/stdlib.h includes
+
+commit 1b80532b449ddfc04042ce4357c7c5aa035efdfa
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu May 19 17:06:35 2011 -0400
+
+    Fix -Wunused-but-set from GCC 4.6
+
+commit c62997391b432b31c8f695607c1545864ff93da6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu May 12 17:24:13 2011 -0400
+
+    Use GQueue instead of the g_list_reverse trick
+
+commit 85dd356927accbce903e3980200f64946c14ef62
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed May 11 17:12:50 2011 -0400
+
+    Add Python support for feedback params
+
+commit d8f94d4923cd540e7b55a72315c19934d05301bc
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed May 11 15:15:30 2011 -0400
+
+    docs: Add missing opening tag
+
+commit 783e942060af4b84d3874abed5e72b033670b440
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 10 21:25:04 2011 -0400
+
+    Version 0.0.28.1
+
 commit 76dc68d80b4ddae7bdb4159ebdf94f447457ae70
 Author: Olivier Crête <olivier.crete@collabora.co.uk>
 Date:   Tue May 10 16:50:41 2011 -0400
