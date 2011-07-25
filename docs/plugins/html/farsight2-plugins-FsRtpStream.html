@@ -8,7 +8,7 @@
 <link rel="up" href="ch01.html" title="RTP Plugin">
 <link rel="prev" href="farsight2-plugins-FsRtpSession.html" title="FsRtpSession">
 <link rel="next" href="ch02.html" title="Raw Plugin">
-<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.17 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -28,56 +28,53 @@
                   <a href="#farsight2-plugins-FsRtpStream.properties" class="shortcut">Properties</a>
 </td></tr>
 </table>
-<div class="refentry" title="FsRtpStream">
+<div class="refentry">
 <a name="farsight2-plugins-FsRtpStream"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="farsight2-plugins-FsRtpStream.top_of_page"></a>FsRtpStream</span></h2>
-<p>FsRtpStream — A RTP stream in a <a class="link" href="farsight2-plugins-FsRtpSession.html#FsRtpSession" title="FsRtpSession"><span class="type">FsRtpSession</span></a> in a <a class="link" href="farsight2-plugins-FsRtpConference.html#FsRtpConference" title="FsRtpConference"><span class="type">FsRtpConference</span></a></p>
+<p>FsRtpStream — A RTP stream in a <a class="link" href="farsight2-plugins-FsRtpSession.html#FsRtpSession" title="FsRtpSession"><span class="type">FsRtpSession</span></a> in a <a class="link" href="farsight2-plugins-FsRtpConference.html#FsRtpConference" title="struct FsRtpConference"><span class="type">FsRtpConference</span></a></p>
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
-<div class="refsynopsisdiv" title="Synopsis">
+<div class="refsynopsisdiv">
 <a name="farsight2-plugins-FsRtpStream.synopsis"></a><h2>Synopsis</h2>
 <pre class="synopsis">                    <a class="link" href="farsight2-plugins-FsRtpStream.html#FsRtpStream" title="FsRtpStream">FsRtpStream</a>;
 </pre>
 </div>
-<div class="refsect1" title="Properties">
+<div class="refsect1">
 <a name="farsight2-plugins-FsRtpStream.properties"></a><h2>Properties</h2>
 <pre class="synopsis">
-  "<a class="link" href="farsight2-plugins-FsRtpStream.html#FsRtpStream--stream-transmitter" title='The "stream-transmitter" property'>stream-transmitter</a>"       <a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/FsStreamTransmitter.html"><span class="type">FsStreamTransmitter</span></a>*  : Write / Construct Only
+  "<a class="link" href="farsight2-plugins-FsRtpStream.html#FsRtpStream--stream-transmitter" title='The "stream-transmitter" property'>stream-transmitter</a>"       <a href="http://farsight.freedesktop.org/apidoc/farsight2/FsStreamTransmitter.html"><span class="type">FsStreamTransmitter</span></a>*  : Write / Construct Only
   "<a class="link" href="farsight2-plugins-FsRtpStream.html#FsRtpStream--rtp-header-extensions" title='The "rtp-header-extensions" property'>rtp-header-extensions</a>"    <span class="type">FsRtpHeaderExtensionGList</span>*  : Read / Write
 </pre>
 </div>
-<div class="refsect1" title="Description">
+<div class="refsect1">
 <a name="farsight2-plugins-FsRtpStream.description"></a><h2>Description</h2>
 <p>
 This is the conjunction of a <a class="link" href="farsight2-plugins-FsRtpParticipant.html#FsRtpParticipant" title="FsRtpParticipant"><span class="type">FsRtpParticipant</span></a> and a <a class="link" href="farsight2-plugins-FsRtpSession.html#FsRtpSession" title="FsRtpSession"><span class="type">FsRtpSession</span></a>,
-it is created by calling <a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/farsight2-libs-fs-session.html#fs-session-new-stream"><code class="function">fs_session_new_stream()</code></a> on a
+it is created by calling <a href="http://farsight.freedesktop.org/apidoc/farsight2/farsight2-libs-fs-session.html#fs-session-new-stream"><code class="function">fs_session_new_stream()</code></a> on a
 <a class="link" href="farsight2-plugins-FsRtpSession.html#FsRtpSession" title="FsRtpSession"><span class="type">FsRtpSession</span></a>.
 </p>
 </div>
-<div class="refsect1" title="Details">
+<div class="refsect1">
 <a name="farsight2-plugins-FsRtpStream.details"></a><h2>Details</h2>
-<div class="refsect2" title="FsRtpStream">
+<div class="refsect2">
 <a name="FsRtpStream"></a><h3>FsRtpStream</h3>
-<pre class="programlisting">typedef struct {
-  FsStream parent;
-} FsRtpStream;
-</pre>
+<pre class="programlisting">typedef struct _FsRtpStream FsRtpStream;</pre>
 </div>
 </div>
-<div class="refsect1" title="Property Details">
+<div class="refsect1">
 <a name="farsight2-plugins-FsRtpStream.property-details"></a><h2>Property Details</h2>
-<div class="refsect2" title='The "stream-transmitter" property'>
+<div class="refsect2">
 <a name="FsRtpStream--stream-transmitter"></a><h3>The <code class="literal">"stream-transmitter"</code> property</h3>
-<pre class="programlisting">  "stream-transmitter"       <a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/FsStreamTransmitter.html"><span class="type">FsStreamTransmitter</span></a>*  : Write / Construct Only</pre>
+<pre class="programlisting">  "stream-transmitter"       <a href="http://farsight.freedesktop.org/apidoc/farsight2/FsStreamTransmitter.html"><span class="type">FsStreamTransmitter</span></a>*  : Write / Construct Only</pre>
 <p>
-The <a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/FsStreamTransmitter.html"><span class="type">FsStreamTransmitter</span></a> for this stream.
+The <a href="http://farsight.freedesktop.org/apidoc/farsight2/FsStreamTransmitter.html"><span class="type">FsStreamTransmitter</span></a> for this stream.
 </p>
 </div>
 <hr>
-<div class="refsect2" title='The "rtp-header-extensions" property'>
+<div class="refsect2">
 <a name="FsRtpStream--rtp-header-extensions"></a><h3>The <code class="literal">"rtp-header-extensions"</code> property</h3>
 <pre class="programlisting">  "rtp-header-extensions"    <span class="type">FsRtpHeaderExtensionGList</span>*  : Read / Write</pre>
 <p>GList of RTP Header extensions that the participant for this stream would like to use.</p>
@@ -86,6 +83,6 @@ The <a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/FsStreamTransmitter.htm
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.15</div>
+          Generated by GTK-Doc V1.17</div>
 </body>
 </html>

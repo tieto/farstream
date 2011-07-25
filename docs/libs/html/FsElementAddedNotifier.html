@@ -8,7 +8,7 @@
 <link rel="up" href="ch04.html" title="Farsight Utility Functions and Objects">
 <link rel="prev" href="ch04.html" title="Farsight Utility Functions and Objects">
 <link rel="next" href="farsight2-libs-Network-interfaces-discovery.html" title="Network interfaces discovery">
-<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.17 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -30,7 +30,7 @@
                   <a href="#FsElementAddedNotifier.signals" class="shortcut">Signals</a>
 </td></tr>
 </table>
-<div class="refentry" title="FsElementAddedNotifier">
+<div class="refentry">
 <a name="FsElementAddedNotifier"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
@@ -39,12 +39,12 @@
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
-<div class="refsynopsisdiv" title="Synopsis">
+<div class="refsynopsisdiv">
 <a name="FsElementAddedNotifier.synopsis"></a><h2>Synopsis</h2>
 <pre class="synopsis">
 #include &lt;gst/farsight/fs-element-added-notifier.h&gt;
 
-                    <a class="link" href="FsElementAddedNotifier.html#FsElementAddedNotifier-struct" title="FsElementAddedNotifier">FsElementAddedNotifier</a>;
+struct              <a class="link" href="FsElementAddedNotifier.html#FsElementAddedNotifier-struct" title="struct FsElementAddedNotifier">FsElementAddedNotifier</a>;
 <a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="returnvalue">FsElementAddedNotifier</span></a> * <a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-new" title="fs_element_added_notifier_new ()">fs_element_added_notifier_new</a>  (<em class="parameter"><code><span class="type">void</span></code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-add" title="fs_element_added_notifier_add ()">fs_element_added_notifier_add</a>       (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
                                                          <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> *bin</code></em>);
@@ -59,20 +59,20 @@
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);
 </pre>
 </div>
-<div class="refsect1" title="Object Hierarchy">
+<div class="refsect1">
 <a name="FsElementAddedNotifier.object-hierarchy"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
   <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
    +----FsElementAddedNotifier
 </pre>
 </div>
-<div class="refsect1" title="Signals">
+<div class="refsect1">
 <a name="FsElementAddedNotifier.signals"></a><h2>Signals</h2>
 <pre class="synopsis">
-  "<a class="link" href="FsElementAddedNotifier.html#FsElementAddedNotifier-element-added" title='The "element-added" signal'>element-added</a>"                                  : Run Last
+  "<a class="link" href="FsElementAddedNotifier.html#FsElementAddedNotifier-element-added" title='The "element-added" signal'>element-added</a>"                                  : <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS"><code class="literal">Run Last</code></a>
 </pre>
 </div>
-<div class="refsect1" title="Description">
+<div class="refsect1">
 <a name="FsElementAddedNotifier.description"></a><h2>Description</h2>
 <p>
 This object can be attach to any <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> and will emit a the
@@ -82,21 +82,17 @@ its sub-bins. There is also a utility method to have it used to
 set the properties of elements based on a GKeyfile.
 </p>
 </div>
-<div class="refsect1" title="Details">
+<div class="refsect1">
 <a name="FsElementAddedNotifier.details"></a><h2>Details</h2>
-<div class="refsect2" title="FsElementAddedNotifier">
-<a name="FsElementAddedNotifier-struct"></a><h3>FsElementAddedNotifier</h3>
-<pre class="programlisting">typedef struct _FsElementAddedNotifier FsElementAddedNotifier;</pre>
+<div class="refsect2">
+<a name="FsElementAddedNotifier-struct"></a><h3>struct FsElementAddedNotifier</h3>
+<pre class="programlisting">struct FsElementAddedNotifier;</pre>
 <p>
 All members are private
 </p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody></tbody>
-</table></div>
 </div>
 <hr>
-<div class="refsect2" title="fs_element_added_notifier_new ()">
+<div class="refsect2">
 <a name="fs-element-added-notifier-new"></a><h3>fs_element_added_notifier_new ()</h3>
 <pre class="programlisting"><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="returnvalue">FsElementAddedNotifier</span></a> * fs_element_added_notifier_new  (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <p>
@@ -106,13 +102,13 @@ Creates a new <a class="link" href="FsElementAddedNotifier.html" title="FsElemen
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the newly-created <a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a>
+<td>the newly-created <a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a>
 </td>
 </tr></tbody>
 </table></div>
 </div>
 <hr>
-<div class="refsect2" title="fs_element_added_notifier_add ()">
+<div class="refsect2">
 <a name="fs-element-added-notifier-add"></a><h3>fs_element_added_notifier_add ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                fs_element_added_notifier_add       (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
                                                          <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> *bin</code></em>);</pre>
@@ -131,14 +127,13 @@ future.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bin</code></em> :</span></p></td>
-<td>A <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> to watch to added elements
-</td>
+<td>A <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> to watch to added elements</td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <hr>
-<div class="refsect2" title="fs_element_added_notifier_remove ()">
+<div class="refsect2">
 <a name="fs-element-added-notifier-remove"></a><h3>fs_element_added_notifier_remove ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            fs_element_added_notifier_remove    (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
                                                          <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> *bin</code></em>);</pre>
@@ -155,19 +150,18 @@ Stop watching the passed bin and its subbins.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bin</code></em> :</span></p></td>
-<td>A <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> to stop watching
-</td>
+<td>A <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> to stop watching</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> was being watched, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise
-</td>
+<td>
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> was being watched, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <hr>
-<div class="refsect2" title="fs_element_added_notifier_set_properties_from_keyfile ()">
+<div class="refsect2">
 <a name="fs-element-added-notifier-set-properties-from-keyfile"></a><h3>fs_element_added_notifier_set_properties_from_keyfile ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                fs_element_added_notifier_set_properties_from_keyfile
                                                         (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
@@ -195,7 +189,7 @@ It will take ownership of the GKeyFile structure.
 </table></div>
 </div>
 <hr>
-<div class="refsect2" title="fs_element_added_notifier_set_properties_from_file ()">
+<div class="refsect2">
 <a name="fs-element-added-notifier-set-properties-from-file"></a><h3>fs_element_added_notifier_set_properties_from_file ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            fs_element_added_notifier_set_properties_from_file
                                                         (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
@@ -215,31 +209,29 @@ the name of the file to load instead of the <a href="http://library.gnome.org/de
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
-<td>The name of the keyfile to use
-</td>
+<td>The name of the keyfile to use</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td>location of a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if no error occured
-</td>
+<td>location of a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if no error occured</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the file was successfully loaded, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise
-</td>
+<td>
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the file was successfully loaded, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</td>
 </tr>
 </tbody>
 </table></div>
 </div>
 </div>
-<div class="refsect1" title="Signal Details">
+<div class="refsect1">
 <a name="FsElementAddedNotifier.signal-details"></a><h2>Signal Details</h2>
-<div class="refsect2" title='The "element-added" signal'>
+<div class="refsect2">
 <a name="FsElementAddedNotifier-element-added"></a><h3>The <code class="literal">"element-added"</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *self,
                                                         <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a>                 *bin,
                                                         <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a>             *element,
-                                                        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                user_data)      : Run Last</pre>
+                                                        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                user_data)      : <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS"><code class="literal">Run Last</code></a></pre>
 <p>
 This signal is emitted when an element is added to a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> that was added
 to this object or one of its sub-bins.
@@ -253,18 +245,15 @@ The bin may be <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NU
 <tr>
 <td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
 <td>
-<a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> that emitted the signal
-</td>
+<a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> that emitted the signal</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bin</code></em> :</span></p></td>
-<td>The <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> to which this object was added
-</td>
+<td>The <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> to which this object was added</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
-<td>The <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> that was added
-</td>
+<td>The <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> that was added</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -277,6 +266,6 @@ The bin may be <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NU
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.15</div>
+          Generated by GTK-Doc V1.17</div>
 </body>
 </html>

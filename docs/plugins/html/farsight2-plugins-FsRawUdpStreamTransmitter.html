@@ -8,7 +8,7 @@
 <link rel="up" href="pt02.html" title="Part II. Transmitters">
 <link rel="prev" href="pt02.html" title="Part II. Transmitters">
 <link rel="next" href="farsight2-plugins-FsMulticastStreamTransmitter.html" title="FsMulticastStreamTransmitter">
-<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.17 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -26,7 +26,7 @@
                   <a href="#farsight2-plugins-FsRawUdpStreamTransmitter.description" class="shortcut">Description</a>
 </td></tr>
 </table>
-<div class="refentry" title="FsRawUdpStreamTransmitter">
+<div class="refentry">
 <a name="farsight2-plugins-FsRawUdpStreamTransmitter"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
@@ -35,19 +35,19 @@
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
-<div class="refsynopsisdiv" title="Synopsis">
+<div class="refsynopsisdiv">
 <a name="farsight2-plugins-FsRawUdpStreamTransmitter.synopsis"></a><h2>Synopsis</h2>
 <pre class="synopsis">                    <a class="link" href="farsight2-plugins-FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter" title="FsRawUdpStreamTransmitter">FsRawUdpStreamTransmitter</a>;
 </pre>
 </div>
-<div class="refsect1" title="Description">
+<div class="refsect1">
 <a name="farsight2-plugins-FsRawUdpStreamTransmitter.description"></a><h2>Description</h2>
 <p>
 This transmitter sends and receives unicast UDP packets.
 </p>
 <p>
 It will detect its own address using a STUN request if the
-<a href="/usr/share/gtk-doc/html/farsight2-plugins-0.10/farsight2-plugins-FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--stun-ip"><span class="type">"stun-ip"</span></a> and <a href="/usr/share/gtk-doc/html/farsight2-plugins-0.10/farsight2-plugins-FsRawUdpStreamTransmitter.html#FsRawUdpStreamTransmitter--stun-port"><span class="type">"stun-port"</span></a>
+<span class="type">"stun-ip"</span> and <span class="type">"stun-port"</span>
 properties are set. If the STUN request does not get a reply
 or no STUN is requested. It will return the IP address of all the local
 network interfaces, listing link-local addresses after other addresses
@@ -56,7 +56,7 @@ and the loopback interface last.
 <p>
 You can configure the address and port it will listen on by setting the
 "preferred-local-candidates" property. This property will contain a <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a>
-of <a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a>. These <a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> must be for <a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/farsight2-libs-FsCandidate.html#FS-NETWORK-PROTOCOL-UDP:CAPS"><span class="type">FS_NETWORK_PROTOCOL_UDP</span></a>.
+of <a href="http://farsight.freedesktop.org/apidoc/farsight2/farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a>. These <a href="http://farsight.freedesktop.org/apidoc/farsight2/farsight2-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> must be for <a href="http://farsight.freedesktop.org/apidoc/farsight2/farsight2-libs-FsCandidate.html#FS-NETWORK-PROTOCOL-UDP:CAPS"><span class="type">FS_NETWORK_PROTOCOL_UDP</span></a>.
 These port and/or the ip can be set on these candidates to force them,
 and this is per-component. If not all components have a port set, the
 following components will be on the following ports. There is no guarantee
@@ -77,34 +77,27 @@ The default port starts at 7078 for the first component.
 The name of this transmitter is "rawudp".
 </p>
 </div>
-<div class="refsect1" title="Details">
+<div class="refsect1">
 <a name="farsight2-plugins-FsRawUdpStreamTransmitter.details"></a><h2>Details</h2>
-<div class="refsect2" title="FsRawUdpStreamTransmitter">
+<div class="refsect2">
 <a name="FsRawUdpStreamTransmitter"></a><h3>FsRawUdpStreamTransmitter</h3>
-<pre class="programlisting">typedef struct {
-  FsStreamTransmitter parent;
-} FsRawUdpStreamTransmitter;
-</pre>
+<pre class="programlisting">typedef struct _FsRawUdpStreamTransmitter FsRawUdpStreamTransmitter;</pre>
 <p>
 All members are private, access them using methods and properties
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
-<tbody><tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/farsight2-libs-0.10/FsStreamTransmitter.html"><span class="type">FsStreamTransmitter</span></a> <em class="structfield"><code><a name="FsRawUdpStreamTransmitter.parent"></a>parent</code></em>;</span></p></td>
-<td>Parent object
-</td>
-</tr></tbody>
+<tbody></tbody>
 </table></div>
 </div>
 </div>
-<div class="refsect1" title="See Also">
+<div class="refsect1">
 <a name="farsight2-plugins-FsRawUdpStreamTransmitter.see-also"></a><h2>See Also</h2>
 <a class="link" href="farsight2-plugins-FsMulticastStreamTransmitter.html#FsMulticastStreamTransmitter" title="FsMulticastStreamTransmitter"><span class="type">FsMulticastStreamTransmitter</span></a>
 </div>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.15</div>
+          Generated by GTK-Doc V1.17</div>
 </body>
 </html>
