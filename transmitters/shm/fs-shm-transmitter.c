@@ -109,6 +109,7 @@ static GObjectClass *parent_class = NULL;
 
 enum {
   BIN_SIGNAL_READY,
+  BIN_SIGNAL_DISCONNECTED,
   BIN_LAST_SIGNAL
 };
 
@@ -130,21 +131,43 @@ static void fs_shm_bin_init (FsShmBin *self)
 {
 }
 
+static GstElement *
+fs_shm_bin_new (void)
+{
+  return g_object_new (shm_bin_type, NULL);
+}
+
 static void
 fs_shm_bin_handle_message (GstBin *bin, GstMessage *message)
 {
   GstState old, new, pending;
+  GError *gerror;
+  gchar *msg;
 
-  if (GST_MESSAGE_TYPE (message) != GST_MESSAGE_STATE_CHANGED)
-    goto forward;
+  switch (GST_MESSAGE_TYPE (message))
+  {
+    case GST_MESSAGE_STATE_CHANGED:
+      gst_message_parse_state_changed (message, &old, &new, &pending);
 
-  gst_message_parse_state_changed (message, &old, &new, &pending);
+      if (old == GST_STATE_PAUSED && new == GST_STATE_PLAYING)
+        g_signal_emit (bin, bin_signals[BIN_SIGNAL_READY], 0,
+            GST_MESSAGE_SRC (message));
+      break;
+    case GST_MESSAGE_ERROR:
+      gst_message_parse_error (message, &gerror, &msg);
 
-  if (old == GST_STATE_PAUSED && new == GST_STATE_PLAYING)
-    g_signal_emit (bin, bin_signals[BIN_SIGNAL_READY], 0,
-        GST_MESSAGE_SRC (message));
-
- forward:
+      if (g_error_matches (gerror, GST_RESOURCE_ERROR,
+              GST_RESOURCE_ERROR_READ))
+      {
+        g_signal_emit (bin, bin_signals[BIN_SIGNAL_DISCONNECTED], 0,
+            GST_MESSAGE_SRC (message));
+        gst_message_unref (message);
+        return;
+      }
+      break;
+    default:
+      break;
+  }
 
   GST_BIN_CLASS (shm_bin_parent_class)->handle_message (bin, message);
 }
@@ -157,6 +180,11 @@ static void fs_shm_bin_class_init (FsShmBinClass *klass)
 
   bin_signals[BIN_SIGNAL_READY] =
     g_signal_new ("ready", G_TYPE_FROM_CLASS (klass),
+        G_SIGNAL_RUN_LAST, 0, NULL, NULL,
+        g_cclosure_marshal_VOID__OBJECT, G_TYPE_NONE, 1, GST_TYPE_ELEMENT);
+
+  bin_signals[BIN_SIGNAL_DISCONNECTED] =
+    g_signal_new ("disconnected", G_TYPE_FROM_CLASS (klass),
         G_SIGNAL_RUN_LAST, 0, NULL, NULL,
         g_cclosure_marshal_VOID__OBJECT, G_TYPE_NONE, 1, GST_TYPE_ELEMENT);
 
@@ -215,8 +243,6 @@ fs_shm_transmitter_register_type (FsPlugin *module)
 
   shm_bin_type = g_type_module_register_type (G_TYPE_MODULE (module),
     GST_TYPE_BIN, "FsShmBin", &bin_info, 0);
-
-  gst_element_register (NULL, "fsshmbin", GST_RANK_NONE, shm_bin_type);
 
   return type;
 }
@@ -280,7 +306,7 @@ fs_shm_transmitter_constructed (GObject *object)
 
   /* First we need the src elemnet */
 
-  self->priv->gst_src = gst_bin_new (NULL);
+  self->priv->gst_src = fs_shm_bin_new ();
 
   if (!self->priv->gst_src) {
     trans->construction_error = g_error_new (FS_ERROR,
@@ -294,7 +320,7 @@ fs_shm_transmitter_constructed (GObject *object)
 
   /* Second, we do the sink element */
 
-  self->priv->gst_sink = gst_element_factory_make ("fsshmbin", NULL);
+  self->priv->gst_sink = fs_shm_bin_new ();
 
   if (!self->priv->gst_sink) {
     trans->construction_error = g_error_new (FS_ERROR,
@@ -376,6 +402,11 @@ fs_shm_transmitter_constructed (GObject *object)
       return;
     }
 
+    g_object_set (fakesink,
+        "async", FALSE,
+        "sync" , FALSE,
+        NULL);
+
     if (!gst_bin_add (GST_BIN (self->priv->gst_sink), fakesink))
     {
       gst_object_unref (fakesink);
@@ -384,11 +415,6 @@ fs_shm_transmitter_constructed (GObject *object)
           "Could not add the fakesink element to the transmitter sink bin");
       return;
     }
-
-    g_object_set (fakesink,
-        "async", FALSE,
-        "sync" , FALSE,
-        NULL);
 
     pad = gst_element_get_request_pad (self->priv->tees[c], "src%d");
     pad2 = gst_element_get_static_pad (fakesink, "sink");
@@ -526,6 +552,7 @@ struct _ShmSrc {
   GstPad *funnelpad;
 
   got_buffer got_buffer_func;
+  connection disconnected_func;
   gpointer cb_data;
   gulong buffer_probe;
 };
@@ -539,11 +566,23 @@ src_buffer_probe_cb (GstPad *pad, GstBuffer *buffer, ShmSrc *shm)
   return TRUE;
 }
 
+
+static void
+disconnected_cb (GstBin *bin, GstElement *elem, ShmSrc *shm)
+{
+  if (elem != shm->src)
+    return;
+
+  shm->disconnected_func (shm->component, 0, shm->cb_data);
+}
+
+
 ShmSrc *
 fs_shm_transmitter_get_shm_src (FsShmTransmitter *self,
     guint component,
     const gchar *path,
     got_buffer got_buffer_func,
+    connection disconnected_func,
     gpointer cb_data,
     GError **error)
 {
@@ -553,6 +592,7 @@ fs_shm_transmitter_get_shm_src (FsShmTransmitter *self,
 
   shm->component = component;
   shm->got_buffer_func = got_buffer_func;
+  shm->disconnected_func = disconnected_func;
   shm->cb_data = cb_data;
 
   shm->path = g_strdup (path);
@@ -570,6 +610,10 @@ fs_shm_transmitter_get_shm_src (FsShmTransmitter *self,
       "do-timestamp", TRUE,
       "is-live", TRUE,
       NULL);
+
+  if (shm->disconnected_func)
+    g_signal_connect (self->priv->gst_src, "disconnected",
+        G_CALLBACK (disconnected_cb), shm);
 
   if (!gst_bin_add (GST_BIN (self->priv->gst_src), elem))
   {
@@ -659,7 +703,7 @@ struct _ShmSink {
   GstPad *teepad;
 
   ready ready_func;
-  connected connected_func;
+  connection connected_func;
   gpointer cb_data;
 };
 
@@ -689,7 +733,7 @@ fs_shm_transmitter_get_shm_sink (FsShmTransmitter *self,
     guint component,
     const gchar *path,
     ready ready_func,
-    connected connected_func,
+    connection connected_func,
     gpointer cb_data,
     GError **error)
 {
@@ -869,4 +913,11 @@ fs_shm_transmitter_sink_set_sending (FsShmTransmitter *self, ShmSink *shm,
     g_object_set (shm->recvonly_filter, "drop", !sending, NULL);
   else if (g_object_class_find_property (klass, "sending"))
     g_object_set (shm->recvonly_filter, "sending", sending, NULL);
+
+  if (sending)
+    gst_element_send_event (shm->sink,
+        gst_event_new_custom (GST_EVENT_CUSTOM_UPSTREAM,
+            gst_structure_new ("GstForceKeyUnit",
+              "all-headers", G_TYPE_BOOLEAN, TRUE,
+              NULL)));
 }

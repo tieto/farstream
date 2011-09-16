@@ -262,6 +262,7 @@ static void _substream_no_rtcp_timedout_cb (FsRtpSubStream *substream,
     FsRtpSession *session);
 static GstElement *_substream_get_codec_bin (FsRtpSubStream *substream,
     FsRtpStream *stream, FsCodec *current_codec, FsCodec **new_codec,
+    guint current_builder_hash, guint *new_builder_hash,
     GError **error, FsRtpSession *session);
 
 static gboolean _stream_new_remote_codecs (FsRtpStream *stream,
@@ -901,6 +902,11 @@ fs_rtp_session_get_property (GObject *object,
     case PROP_TOS:
       FS_RTP_SESSION_LOCK (self);
       g_value_set_uint (value, self->priv->tos);
+      FS_RTP_SESSION_UNLOCK (self);
+      break;
+    case PROP_SEND_BITRATE:
+      FS_RTP_SESSION_LOCK (self);
+      g_value_set_uint (value, self->priv->send_bitrate);
       FS_RTP_SESSION_UNLOCK (self);
       break;
     case PROP_RTP_HEADER_EXTENSIONS:
@@ -1544,17 +1550,24 @@ _stream_sending_changed_locked (FsRtpStream *stream, gboolean sending,
   else
     session->priv->streams_sending--;
 
+  if (fs_rtp_session_has_disposed_enter (session, NULL))
+    return;
+
   if (session->priv->streams_sending && session->priv->send_codecbin)
     g_object_set (session->priv->media_sink_valve, "drop", FALSE, NULL);
   else
     g_object_set (session->priv->media_sink_valve, "drop", TRUE, NULL);
 
+  fs_rtp_session_has_disposed_exit (session);
 }
 
 static void
 _stream_ssrc_added_cb (FsRtpStream *stream, guint32 ssrc, gpointer user_data)
 {
   FsRtpSession *self = user_data;
+
+  if (fs_rtp_session_has_disposed_enter (self, NULL))
+    return;
 
   FS_RTP_SESSION_LOCK (self);
   g_hash_table_insert (self->priv->ssrc_streams, GUINT_TO_POINTER (ssrc),
@@ -1564,6 +1577,8 @@ _stream_ssrc_added_cb (FsRtpStream *stream, guint32 ssrc, gpointer user_data)
   FS_RTP_SESSION_UNLOCK (self);
 
   fs_rtp_session_associate_free_substreams (self, stream, ssrc);
+
+  fs_rtp_session_has_disposed_exit (self);
 }
 
 
@@ -1656,6 +1671,13 @@ fs_rtp_session_new_stream (FsSession *session,
   if (new_stream)
   {
     FS_RTP_SESSION_LOCK (self);
+    if (direction & FS_DIRECTION_SEND)
+    {
+      self->priv->streams_sending++;
+      if (self->priv->send_codecbin)
+        g_object_set (self->priv->media_sink_valve, "drop", FALSE, NULL);
+    }
+
     self->priv->streams = g_list_append (self->priv->streams, new_stream);
     self->priv->streams_cookie++;
     FS_RTP_SESSION_UNLOCK (self);
@@ -1689,15 +1711,69 @@ fs_rtp_session_start_telephony_event (FsSession *session, guint8 event,
                                       guint8 volume, FsDTMFMethod method)
 {
   FsRtpSession *self = FS_RTP_SESSION (session);
+  GstElement *rtpmuxer = NULL;
+  GstPad *pad;
   gboolean ret = FALSE;
+  gchar *method_str;
+  gint method_int;
 
   if (fs_rtp_session_has_disposed_enter (self, NULL))
     return FALSE;
 
+  switch (method)
+  {
+    case FS_DTMF_METHOD_AUTO:
+      method_str = "default";
+      method_int = 1;
+      break;
+    case FS_DTMF_METHOD_RTP_RFC4733:
+      method_str="RFC4733";
+      method_int = 1;
+      break;
+    case FS_DTMF_METHOD_IN_BAND:
+      method_str="sound";
+      method_int = 2;
+      break;
+    default:
+      GST_WARNING ("Invalid telephony event method %d", method);
+      goto out;
+  }
+
   FS_RTP_SESSION_LOCK (self);
-  ret = fs_rtp_special_sources_start_telephony_event (
-      self->priv->extra_sources, event, volume, method);
+  g_assert (self->priv->rtpmuxer);
+  rtpmuxer = gst_object_ref (self->priv->rtpmuxer);
   FS_RTP_SESSION_UNLOCK (self);
+
+  GST_DEBUG ("sending telephony event %d using method=%s",
+      event, method_str);
+
+  pad = gst_element_get_static_pad (rtpmuxer, "src");
+
+  ret = gst_pad_send_event (pad,
+      gst_event_new_custom (GST_EVENT_CUSTOM_UPSTREAM,
+          gst_structure_new ("dtmf-event",
+              "number", G_TYPE_INT, event,
+              "volume", G_TYPE_INT, volume,
+              "start", G_TYPE_BOOLEAN, TRUE,
+              "type", G_TYPE_INT, 1,
+              "method", G_TYPE_INT, method_int,
+              NULL)));
+
+  if (!ret && method == FS_DTMF_METHOD_AUTO)
+    ret = gst_pad_send_event (pad,
+        gst_event_new_custom (GST_EVENT_CUSTOM_UPSTREAM,
+            gst_structure_new ("dtmf-event",
+                "number", G_TYPE_INT, event,
+                "volume", G_TYPE_INT, volume,
+                "start", G_TYPE_BOOLEAN, TRUE,
+                "type", G_TYPE_INT, 1,
+                "method", G_TYPE_INT, 2,
+                NULL)));
+
+  gst_object_unref (pad);
+  gst_object_unref (rtpmuxer);
+
+  out:
 
   fs_rtp_session_has_disposed_exit (self);
   return ret;
@@ -1721,16 +1797,44 @@ static gboolean
 fs_rtp_session_stop_telephony_event (FsSession *session, FsDTMFMethod method)
 {
   FsRtpSession *self = FS_RTP_SESSION (session);
+  GstElement *rtpmuxer = NULL;
+  GstPad *pad;
   gboolean ret = FALSE;
 
   if (fs_rtp_session_has_disposed_enter (self, NULL))
     return FALSE;
 
+  switch (method)
+  {
+    case FS_DTMF_METHOD_AUTO:
+    case FS_DTMF_METHOD_RTP_RFC4733:
+    case FS_DTMF_METHOD_IN_BAND:
+      break;
+    default:
+      GST_WARNING ("Invalid telephony event method %d", method);
+      goto out;
+  }
+
   FS_RTP_SESSION_LOCK (self);
-  ret = fs_rtp_special_sources_stop_telephony_event (
-      self->priv->extra_sources, method);
+  g_assert (self->priv->rtpmuxer);
+  rtpmuxer = gst_object_ref (self->priv->rtpmuxer);
   FS_RTP_SESSION_UNLOCK (self);
 
+  GST_DEBUG ("stopping telephony event");
+
+  pad = gst_element_get_static_pad (rtpmuxer, "src");
+
+  ret = gst_pad_send_event (pad,
+      gst_event_new_custom (GST_EVENT_CUSTOM_UPSTREAM,
+          gst_structure_new ("dtmf-event",
+              "start", G_TYPE_BOOLEAN, FALSE,
+              "type", G_TYPE_INT, 1,
+              NULL)));
+
+  gst_object_unref (pad);
+  gst_object_unref (rtpmuxer);
+
+out:
   fs_rtp_session_has_disposed_exit (self);
   return ret;
 }
@@ -2802,7 +2906,8 @@ validate_src_pads (gpointer item, GValue *ret, gpointer user_data)
 
 static GstElement *
 _create_codec_bin (const CodecAssociation *ca, const FsCodec *codec,
-    const gchar *name, gboolean is_send, GList *codecs, GError **error)
+    const gchar *name, gboolean is_send, GList *codecs,
+    guint current_builder_hash, guint *new_builder_hash, GError **error)
 {
   GstElement *codec_bin = NULL;
   gchar *direction_str = (is_send == TRUE) ? "send" : "receive";
@@ -2817,6 +2922,23 @@ _create_codec_bin (const CodecAssociation *ca, const FsCodec *codec,
   {
     GError *tmperror = NULL;
     guint src_pad_count = 0, sink_pad_count = 0;
+
+    /* Return nothing if the builder hash is the same, it would just return
+     * the same thing
+     */
+    if (new_builder_hash)
+    {
+      *new_builder_hash = g_str_hash (profile);
+      if (*new_builder_hash == current_builder_hash)
+      {
+        GST_DEBUG ("profile builder hash is the same for "FS_CODEC_FORMAT,
+            FS_CODEC_ARGS (ca->codec));
+        return NULL;
+      }
+      GST_DEBUG ("profile builder hash is different (new: %u != old: %u)"
+          " for " FS_CODEC_FORMAT,
+          *new_builder_hash, current_builder_hash, FS_CODEC_ARGS (ca->codec));
+    }
 
     codec_bin = parse_bin_from_description_all_linked (profile,
         &src_pad_count, &sink_pad_count, &tmperror);
@@ -2866,6 +2988,23 @@ _create_codec_bin (const CodecAssociation *ca, const FsCodec *codec,
   }
 
  try_factory:
+
+  if (new_builder_hash)
+  {
+    /* If its the same blueprint, it will be the same result,
+     * so return NULL without an error.
+     */
+    *new_builder_hash = g_direct_hash (ca->blueprint);
+    if (ca->blueprint && current_builder_hash == *new_builder_hash)
+    {
+      GST_DEBUG ("blueprint builder hash is the same for "FS_CODEC_FORMAT,
+          FS_CODEC_ARGS (ca->codec));
+      return NULL;
+    }
+    GST_DEBUG ("blueprint builder hash is different (new: %u != old: %u)"
+        " for " FS_CODEC_FORMAT,
+        *new_builder_hash, current_builder_hash, FS_CODEC_ARGS (ca->codec));
+  }
 
   return create_codec_bin_from_blueprint (codec, ca->blueprint, name,
       is_send, error);
@@ -3317,7 +3456,8 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
   name = g_strdup_printf ("send_%d_%d", session->id, ca->send_codec->id);
   codecs = codec_associations_to_send_codecs (
       session->priv->codec_associations);
-  codecbin = _create_codec_bin (ca, ca->send_codec, name, TRUE, codecs, error);
+  codecbin = _create_codec_bin (ca, ca->send_codec, name, TRUE, codecs,
+      0, NULL, error);
   g_free (name);
 
   sendcaps = fs_codec_to_gst_caps (ca->send_codec);
@@ -3648,6 +3788,7 @@ fs_rtp_session_verify_send_codec_bin (FsRtpSession *self)
 static GstElement *
 _substream_get_codec_bin (FsRtpSubStream *substream,
     FsRtpStream *stream, FsCodec *current_codec, FsCodec **new_codec,
+    guint current_builder_hash, guint *new_builder_hash,
     GError **error, FsRtpSession *session)
 {
   GstElement *codecbin = NULL;
@@ -3661,20 +3802,20 @@ _substream_get_codec_bin (FsRtpSubStream *substream,
 
   ca = fs_rtp_session_get_recv_codec_locked (session, substream->pt, stream,
       new_codec, error);
-
   if (!ca)
     goto out;
 
-  if (fs_codec_are_equal (*new_codec, current_codec))
-  {
-    g_clear_error (error);
-    goto out;
-  }
-
   name = g_strdup_printf ("recv_%d_%u_%d", session->id, substream->ssrc,
       substream->pt);
-  codecbin = _create_codec_bin (ca, *new_codec, name, FALSE, NULL, error);
+  codecbin = _create_codec_bin (ca, *new_codec, name, FALSE, NULL,
+      current_builder_hash, new_builder_hash, error);
   g_free (name);
+
+  if (!codecbin)
+  {
+    fs_codec_destroy (*new_codec);
+    *new_codec = NULL;
+  }
 
  out:
 
@@ -4111,7 +4252,8 @@ fs_rtp_session_get_codec_params_unlock (FsRtpSession *session,
   session->priv->discovery_codec = NULL;
 
   tmp = g_strdup_printf ("discover_%d_%d", session->id, ca->send_codec->id);
-  codecbin = _create_codec_bin (ca, ca->send_codec, tmp, TRUE, NULL, error);
+  codecbin = _create_codec_bin (ca, ca->send_codec, tmp, TRUE, NULL,
+      0, NULL, error);
   g_free (tmp);
 
   FS_RTP_SESSION_UNLOCK (session);

@@ -1,3 +1,225 @@
+commit 6dd0882eeb0bd2da42028abe1d90edcb34f67023
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Sep 14 15:28:30 2011 -0400
+
+    Version 0.0.30
+
+commit 24d7f7e8555a47fc5058e77c502a4bc7e31a8e93
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Sep 15 14:06:38 2011 -0400
+
+    tests: Make rawconf shm test work reliably
+
+commit 2e0b1a5c46aa222a71f300ed8f12c1e78cbdb13b
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Jul 14 22:15:19 2011 -0400
+
+    shmstreamtrans: Transform bus errors into state changes
+
+commit 0f65cfc532bf4a225b50d092b7d1b9357f6087d8
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Jul 14 20:46:16 2011 -0400
+
+    shm: Capture read errors and transform them into a signal
+
+commit 99fce828b314565223bb8325b38b759adba15292
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Jul 14 20:43:57 2011 -0400
+
+    shm: Emit a signal on a SHM disconnection error message
+
+commit b4430215672b8e1b62f4eee3b6ff6a8e6f9d1d6f
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Sep 14 11:41:37 2011 -0400
+
+    rtpsubstream: Drop newsegment events
+    
+    New segment events can cause the sink to think that there is segment
+    accumulation going on and be really confused. We only operate in running time
+    so just drop them. GStreamer 0.11 has the correct fix for that problem.
+
+commit 47d921efdd6b24283253d672af6537a33b2e6fa7
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Sep 14 15:01:34 2011 -0400
+
+    tests: Test for unless changes in decoders
+
+commit 758e13c65b6f6f220ecc9eba3db0d56c90de37ef
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Sep 14 15:06:13 2011 -0400
+
+    tests: Make inband config data test actually work
+
+commit f89a253187961e11f86a760ac273fec347558182
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Sep 13 20:04:02 2011 -0400
+
+    rtpsubstream: Only replace the recv codec bin if it has really changed
+    
+    Only replace the receive codecbin if the new one would be produced by a
+    different blueprint of profile. This should reduce the number of unncessary
+    constructions/destruction when extra parameters arrive. In that case, only
+    the new setcaps will be called.
+
+commit f02721ee169d895716edec25d06971c652dbb30c
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Sep 13 19:31:37 2011 -0400
+
+    rtpsubstream: Do setcaps in have-data callback
+    
+    Also, drop buffers if setcaps fails, even if the buffers have
+    old caps.
+
+commit 8a826f852a82452719b0f26b4ee92a1f577c883a
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Sep 13 18:56:23 2011 -0400
+
+    rtpsubstream: Remove useless capsfilter
+
+commit de97aa97f7b36a5258c204cbea822bc3f8994bdc
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Sep 8 17:41:09 2011 -0400
+
+    rtp-discover-codecs: Add spanplc after the decoder is available
+
+commit 110e64a58db8ed23f6bb3fdfdebc275c12ea64a6
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Sep 8 17:40:38 2011 -0400
+
+    test: print the receive pipeline correctly
+
+commit fac564f9aa5284d05fb1080117e8990e3cfaf849
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Jul 26 00:03:41 2011 +0200
+
+    nice: allow port 0 for stun server
+
+commit 965acccdded30e37e120b6bee429d9f1a88e6222
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Jul 26 00:03:30 2011 +0200
+
+    rawudp: Allow port 0 for stun server
+
+commit a682e69d3c71bcae6e2c5ce774dfea237e978df4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 15 17:25:52 2011 -0400
+
+    rtp: Send dtmf through rtpmux
+    
+    Send the DTMF events through rtpmux
+
+commit 6c29f98e438786c5fb7c271c36fcf6cde27937b6
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Jul 26 00:53:28 2011 +0200
+
+    rawudp: Test for candidate with port 0
+
+commit f0a31c7bd67b0d73e00de4eb03532fd1736f1213
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Jul 26 00:42:46 2011 +0200
+
+    nice: Test for candidate with port 0
+
+commit 1fc54c6671140d3f4a25c5cd25fe42acaa6f15ad
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Jul 26 00:02:47 2011 +0200
+
+    transmitters: Allow port 0 in remote candidates
+
+commit 4e93a66d3521023196dce643c7ffece0349338cf
+Author: Vincent Penquerc'h <vincent.penquerch@collabora.co.uk>
+Date:   Thu Jul 21 13:54:56 2011 +0300
+
+    Add #include <stdio.h> and <stdlib.h> where appropriate
+    
+    Needed for rename, sscanf, atoi, snprintf
+    
+    This fixes building on the new Meego.
+
+commit 49d3ec270a88e9ecacd46557e95c7be2766aa1f5
+Author: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Date:   Thu Jul 21 19:34:26 2011 +0100
+
+    When we start sending, request a KeyUnit so the stream starts at a valid point
+
+commit 44a13a2449b91ec9cc1c9a269926fb41d3154c45
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 13 21:42:24 2011 -0400
+
+    rtpsession: Protect callbacks from the stream against session dispose
+    
+    Session dispose can be called manually, the callbacks from the streams
+    should be protected against it.
+
+commit a1c911f1949b60b048e700ea76bd55047e95fda4
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Jul 14 20:49:20 2011 -0400
+
+    shm: Don't register the internal bin
+
+commit 0d7121f470cab2298e93fc101977ecd1b1fa98b8
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 27 11:39:38 2011 +0300
+
+    tests: Factor out identity bit of keyfile tests
+    
+    The keyfile tests have identical bits, put it in a common function
+
+commit c875a6c57ba00e5815a65b91db5b02e1a3ce41b4
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 27 11:28:23 2011 +0300
+
+    elementaddednotifier: Allow using the object's name as the group in keyfiles
+    
+    Previously, only the factory name was matched against, now we can set
+    properties that will be set only on one instance
+
+commit 5052b6ab7c4ebb4e6f20a360c316dc77ffa2ef4e
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Jul 12 21:38:02 2011 -0400
+
+    tests: Allow for longer timeout for sending DTMF
+
+commit 768ee96f5d80132f26b7217e885631ecf97865e7
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Jun 15 16:33:45 2011 -0400
+
+    Set the sinks async=sync=FALSE before adding them to their parent bins
+
+commit 90977a2080eef430c3f1a8d1abe591b872ba62dc
+Merge: 59b0d19 e47536f
+Author: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Date:   Mon Jun 13 18:16:51 2011 +0100
+
+    Merge remote-tracking branch 'vincent/leak'
+
+commit e47536fe12e1861dbb7a166c57d68d9b22732f6c
+Author: Vincent Penquerc'h <vincent.penquerch@collabora.co.uk>
+Date:   Mon Jun 13 20:04:20 2011 +0300
+
+    Remove element from the bin when it fails to link or change state
+
+commit bd78ccf83d0a50672a4d2942d248756137ba5e36
+Author: Vincent Penquerc'h <vincent.penquerch@collabora.co.uk>
+Date:   Mon Jun 13 20:02:53 2011 +0300
+
+    Fix gst-sink leak
+    
+    The element returned via a property has a ref that the caller
+    is supposed to unref.
+
+commit 59b0d19d30b5e3a7489d1b5cac34cb88b45f4fe9
+Author: Youness Alaoui <youness.alaoui@collabora.co.uk>
+Date:   Fri Jun 10 19:44:49 2011 -0400
+
+    rtpsession: send-bitrate property is also readable
+
+commit 9ef8ca06fb965cdccb930e676ce0d35d7a799e77
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Jun 10 16:16:59 2011 -0400
+
+    Version 0.0.29.1
+
 commit aaad8b0733b76982883dc4bcfae9457b200ac8e7
 Author: Olivier Crête <olivier.crete@collabora.com>
 Date:   Fri Jun 10 16:02:26 2011 -0400
