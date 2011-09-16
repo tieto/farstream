@@ -269,7 +269,7 @@ fs_rawudp_stream_transmitter_class_init (FsRawUdpStreamTransmitterClass *klass)
       g_param_spec_uint ("stun-port",
           "The port of the STUN server",
           "The IPv4 UDP port of the STUN server as a ",
-          1, 65535, 3478,
+          0, 65535, 3478,
           G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_property (gobject_class,
@@ -546,8 +546,7 @@ fs_rawudp_stream_transmitter_build (FsRawUdpStreamTransmitter *self,
 
 #ifdef HAVE_GUPNP
   if (self->priv->upnp_mapping ||
-      (self->priv->upnp_discovery &&
-          (!self->priv->stun_ip || !self->priv->stun_port)))
+      (self->priv->upnp_discovery && !self->priv->stun_ip))
     self->priv->upnp_igd = gupnp_simple_igd_thread_new ();
 #endif
 
@@ -737,10 +736,10 @@ fs_rawudp_stream_transmitter_set_remote_candidates (
       return FALSE;
     }
 
-    if (!candidate->ip || !candidate->port)
+    if (!candidate->ip)
     {
       g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
-          "The candidate passed does not contain a valid ip or port");
+          "The candidate passed does not contain a valid ip");
       return FALSE;
     }
 

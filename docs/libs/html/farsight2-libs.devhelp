@@ -36,7 +36,7 @@
     </sub>
   </chapters>
   <functions>
-    <function name="The &quot;farsight-error&quot; message" link="FsConference.html#id379177"/>
+    <function name="The &quot;farsight-error&quot; message" link="FsConference.html#id336749"/>
     <function name="FsConference" link="FsConference.html#FsConference-struct"/>
     <function name="fs_conference_new_session ()" link="FsConference.html#fs-conference-new-session"/>
     <function name="fs_conference_new_participant ()" link="FsConference.html#fs-conference-new-participant"/>
@@ -49,8 +49,8 @@
     <function name="FS_PARTICIPANT_DATA_UNLOCK()" link="FsParticipant.html#FS-PARTICIPANT-DATA-UNLOCK:CAPS"/>
     <function name="The &quot;cname&quot; property" link="FsParticipant.html#FsParticipant--cname"/>
     <function name="The &quot;error&quot; signal" link="FsParticipant.html#FsParticipant-error"/>
-    <function name="The &quot;farsight-send-codec-changed&quot;&#10;  message" link="farsight2-libs-fs-session.html#id458182"/>
-    <function name="The &quot;farsight-codecs-changed&quot;&#10; message" link="farsight2-libs-fs-session.html#id458242"/>
+    <function name="The &quot;farsight-send-codec-changed&quot;&#10;  message" link="farsight2-libs-fs-session.html#id415754"/>
+    <function name="The &quot;farsight-codecs-changed&quot;&#10; message" link="farsight2-libs-fs-session.html#id415814"/>
     <function name="enum FsDTMFEvent" link="farsight2-libs-fs-session.html#FsDTMFEvent"/>
     <function name="enum FsDTMFMethod" link="farsight2-libs-fs-session.html#FsDTMFMethod"/>
     <function name="FsSession" link="farsight2-libs-fs-session.html#FsSession-struct"/>
@@ -74,11 +74,11 @@
     <function name="The &quot;sink-pad&quot; property" link="farsight2-libs-fs-session.html#FsSession--sink-pad"/>
     <function name="The &quot;tos&quot; property" link="farsight2-libs-fs-session.html#FsSession--tos"/>
     <function name="The &quot;error&quot; signal" link="farsight2-libs-fs-session.html#FsSession-error"/>
-    <function name="The &quot;farsight-new-local-candidate&quot; message" link="FsStream.html#id460075"/>
-    <function name="The &quot;farsight-local-candidates-prepared&quot; message" link="FsStream.html#id460111"/>
-    <function name="The &quot;farsight-new-active-candidate-pair&quot; message" link="FsStream.html#id460141"/>
-    <function name="The &quot;farsight-recv-codecs-changed&quot; message" link="FsStream.html#id460185"/>
-    <function name="The &quot;farsight-component-state-changed&quot; message" link="FsStream.html#id460249"/>
+    <function name="The &quot;farsight-new-local-candidate&quot; message" link="FsStream.html#id417647"/>
+    <function name="The &quot;farsight-local-candidates-prepared&quot; message" link="FsStream.html#id417683"/>
+    <function name="The &quot;farsight-new-active-candidate-pair&quot; message" link="FsStream.html#id417713"/>
+    <function name="The &quot;farsight-recv-codecs-changed&quot; message" link="FsStream.html#id417757"/>
+    <function name="The &quot;farsight-component-state-changed&quot; message" link="FsStream.html#id417821"/>
     <function name="FsStream" link="FsStream.html#FsStream-struct"/>
     <function name="struct FsStreamClass" link="FsStream.html#FsStreamClass"/>
     <function name="enum FsStreamDirection" link="FsStream.html#FsStreamDirection"/>

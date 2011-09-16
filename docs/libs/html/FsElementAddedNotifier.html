@@ -167,10 +167,12 @@ Stop watching the passed bin and its subbins.
                                                         (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Key-value-file-parser.html#GKeyFile"><span class="type">GKeyFile</span></a> *keyfile</code></em>);</pre>
 <p>
-Using a <a href="http://library.gnome.org/devel/glib/unstable/glib-Key-value-file-parser.html#GKeyFile"><span class="type">GKeyFile</span></a> where the groups are the element's type and the key=value
-are the property and its value, this function will set the properties
-on the elements added to this object after this function has been called.
-It will take ownership of the GKeyFile structure.
+Using a <a href="http://library.gnome.org/devel/glib/unstable/glib-Key-value-file-parser.html#GKeyFile"><span class="type">GKeyFile</span></a> where the groups are the element's type or name
+and the key=value are the property and its value, this function
+will set the properties on the elements added to this object after
+this function has been called.  It will take ownership of the
+GKeyFile structure. It will first try the group as the element type, if that
+does not match, it will check its name.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">

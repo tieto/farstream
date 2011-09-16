@@ -36,8 +36,8 @@
     </sub>
   </chapters>
   <functions>
-    <function name="Element Information" link="farsight2-plugins-FsRtpConference.html#id450027"/>
-    <function name="Element Pads" link="farsight2-plugins-FsRtpConference.html#id400414"/>
+    <function name="Element Information" link="farsight2-plugins-FsRtpConference.html#id367049"/>
+    <function name="Element Pads" link="farsight2-plugins-FsRtpConference.html#id317436"/>
     <function name="struct FsRtpConference" link="farsight2-plugins-FsRtpConference.html#FsRtpConference"/>
     <function name="The &quot;sdes-cname&quot; property" link="farsight2-plugins-FsRtpConference.html#FsRtpConference--sdes-cname"/>
     <function name="The &quot;sdes-email&quot; property" link="farsight2-plugins-FsRtpConference.html#FsRtpConference--sdes-email"/>
@@ -49,7 +49,7 @@
     <function name="The &quot;sdes&quot; property" link="farsight2-plugins-FsRtpConference.html#FsRtpConference--sdes"/>
     <function name="FsRtpParticipant" link="farsight2-plugins-FsRtpParticipant.html#FsRtpParticipant"/>
     <function name="The &quot;cname&quot; property" link="farsight2-plugins-FsRtpParticipant.html#FsRtpParticipant--cname"/>
-    <function name="Codec profiles" link="farsight2-plugins-FsRtpSession.html#id468100"/>
+    <function name="Codec profiles" link="farsight2-plugins-FsRtpSession.html#id385122"/>
     <function name="FsRtpSession" link="farsight2-plugins-FsRtpSession.html#FsRtpSession"/>
     <function name="The &quot;no-rtcp-timeout&quot; property" link="farsight2-plugins-FsRtpSession.html#FsRtpSession--no-rtcp-timeout"/>
     <function name="The &quot;ssrc&quot; property" link="farsight2-plugins-FsRtpSession.html#FsRtpSession--ssrc"/>
@@ -59,17 +59,17 @@
     <function name="FsRtpStream" link="farsight2-plugins-FsRtpStream.html#FsRtpStream"/>
     <function name="The &quot;stream-transmitter&quot; property" link="farsight2-plugins-FsRtpStream.html#FsRtpStream--stream-transmitter"/>
     <function name="The &quot;rtp-header-extensions&quot; property" link="farsight2-plugins-FsRtpStream.html#FsRtpStream--rtp-header-extensions"/>
-    <function name="Element Information" link="farsight2-plugins-FsRawConference.html#id449659"/>
-    <function name="Element Pads" link="farsight2-plugins-FsRawConference.html#id452639"/>
+    <function name="Element Information" link="farsight2-plugins-FsRawConference.html#id366681"/>
+    <function name="Element Pads" link="farsight2-plugins-FsRawConference.html#id369661"/>
     <function name="struct FsRawConference" link="farsight2-plugins-FsRawConference.html#FsRawConference"/>
     <function name="FsRawParticipant" link="farsight2-plugins-FsRawParticipant.html#FsRawParticipant"/>
     <function name="FsRawSession" link="farsight2-plugins-FsRawSession.html#FsRawSession"/>
     <function name="FsRawStream" link="farsight2-plugins-FsRawStream.html#FsRawStream"/>
-    <function name="Element Information" link="farsight2-plugins-FsMsnCamSendConference.html#id452581"/>
-    <function name="Element Pads" link="farsight2-plugins-FsMsnCamSendConference.html#id467890"/>
+    <function name="Element Information" link="farsight2-plugins-FsMsnCamSendConference.html#id369603"/>
+    <function name="Element Pads" link="farsight2-plugins-FsMsnCamSendConference.html#id384912"/>
     <function name="struct FsMsnCamSendConference" link="farsight2-plugins-FsMsnCamSendConference.html#FsMsnCamSendConference"/>
-    <function name="Element Information" link="farsight2-plugins-FsMsnCamCamRecvConference.html#id464418"/>
-    <function name="Element Pads" link="farsight2-plugins-FsMsnCamCamRecvConference.html#id479649"/>
+    <function name="Element Information" link="farsight2-plugins-FsMsnCamCamRecvConference.html#id381440"/>
+    <function name="Element Pads" link="farsight2-plugins-FsMsnCamCamRecvConference.html#id396671"/>
     <function name="struct FsMsnCamRecvConference" link="farsight2-plugins-FsMsnCamCamRecvConference.html#FsMsnCamRecvConference"/>
     <function name="struct FsMsnConference" link="farsight2-plugins-FsMsnConference.html#FsMsnConference"/>
     <function name="FsMsnParticipant" link="farsight2-plugins-FsMsnParticipant.html#FsMsnParticipant"/>
@@ -79,11 +79,11 @@
     <function name="FsMulticastStreamTransmitter" link="farsight2-plugins-FsMulticastStreamTransmitter.html#FsMulticastStreamTransmitter"/>
     <function name="FsNiceStreamTransmitter" link="farsight2-plugins-FsNiceStreamTransmitter.html#FsNiceStreamTransmitter"/>
     <function name="FsShmStreamTransmitter" link="farsight2-plugins-FsShmStreamTransmitter.html#FsShmStreamTransmitter"/>
-    <function name="Element Information" link="farsight2-plugins-FsFunnel.html#id475751"/>
-    <function name="Element Pads" link="farsight2-plugins-FsFunnel.html#id472285"/>
+    <function name="Element Information" link="farsight2-plugins-FsFunnel.html#id392773"/>
+    <function name="Element Pads" link="farsight2-plugins-FsFunnel.html#id389307"/>
     <function name="struct FsFunnel" link="farsight2-plugins-FsFunnel.html#FsFunnel"/>
-    <function name="Element Information" link="farsight2-plugins-GstVideoanyrate.html#id443457"/>
-    <function name="Element Pads" link="farsight2-plugins-GstVideoanyrate.html#id471519"/>
+    <function name="Element Information" link="farsight2-plugins-GstVideoanyrate.html#id360478"/>
+    <function name="Element Pads" link="farsight2-plugins-GstVideoanyrate.html#id388541"/>
     <function name="struct GstVideoanyrate" link="farsight2-plugins-GstVideoanyrate.html#GstVideoanyrate"/>
   </functions>
 </book>
