@@ -35,10 +35,15 @@ id=-1
 ################
 
 [video/H264]
+#feedback:tfrc=
+feedback:nack/pli=
 
 [video/H263]
+feedback:nack/pli=
 
 [video/THEORA]
+#feedback:tfrc=
+feedback:nack/pli=
 
 [video/JPEG]
 
@@ -54,3 +59,6 @@ id=-1
 [video/H263-2000]
 id=-1
 
+#[rtp-hdrext:video:0]
+#id=3
+#uri=urn:ietf:params:rtp-hdrext:rtt-sendts

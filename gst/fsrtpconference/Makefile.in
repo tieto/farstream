@@ -108,7 +108,9 @@ am_libfsrtpconference_convenience_la_OBJECTS = fs-rtp-conference.lo \
 	fs-rtp-substream.lo fs-rtp-discover-codecs.lo \
 	fs-rtp-codec-cache.lo fs-rtp-codec-negotiation.lo \
 	fs-rtp-codec-specific.lo fs-rtp-special-source.lo \
-	fs-rtp-dtmf-event-source.lo fs-rtp-dtmf-sound-source.lo
+	fs-rtp-dtmf-event-source.lo fs-rtp-dtmf-sound-source.lo \
+	fs-rtp-bitrate-adapter.lo fs-rtp-keyunit-manager.lo \
+	fs-rtp-tfrc.lo fs-rtp-packet-modder.lo tfrc.lo
 nodist_libfsrtpconference_convenience_la_OBJECTS = fs-rtp-marshal.lo
 libfsrtpconference_convenience_la_OBJECTS =  \
 	$(am_libfsrtpconference_convenience_la_OBJECTS) \
@@ -391,7 +393,12 @@ libfsrtpconference_convenience_la_SOURCES = \
 	fs-rtp-codec-specific.c \
 	fs-rtp-special-source.c \
 	fs-rtp-dtmf-event-source.c \
-	fs-rtp-dtmf-sound-source.c
+	fs-rtp-dtmf-sound-source.c \
+	fs-rtp-bitrate-adapter.c \
+	fs-rtp-keyunit-manager.c \
+	fs-rtp-tfrc.c \
+	fs-rtp-packet-modder.c \
+	tfrc.c
 
 nodist_libfsrtpconference_convenience_la_SOURCES = \
 	fs-rtp-marshal.c \
@@ -411,7 +418,12 @@ noinst_HEADERS = \
 	fs-rtp-codec-specific.h \
 	fs-rtp-special-source.h \
 	fs-rtp-dtmf-event-source.h \
-	fs-rtp-dtmf-sound-source.h
+	fs-rtp-dtmf-sound-source.h \
+	fs-rtp-bitrate-adapter.h \
+	fs-rtp-keyunit-manager.h \
+	fs-rtp-tfrc.h \
+	fs-rtp-packet-modder.h \
+	tfrc.h
 
 CLEANFILES = $(BUILT_SOURCES) fs-rtp-marshal.list
 AM_CFLAGS = \
@@ -535,6 +547,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fs-rtp-bitrate-adapter.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fs-rtp-codec-cache.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fs-rtp-codec-negotiation.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fs-rtp-codec-specific.Plo@am__quote@
@@ -544,12 +557,16 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fs-rtp-discover-codecs.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fs-rtp-dtmf-event-source.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fs-rtp-dtmf-sound-source.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fs-rtp-keyunit-manager.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fs-rtp-marshal.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fs-rtp-packet-modder.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fs-rtp-participant.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fs-rtp-session.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fs-rtp-special-source.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fs-rtp-stream.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fs-rtp-substream.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fs-rtp-tfrc.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tfrc.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
