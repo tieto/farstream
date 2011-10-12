@@ -153,11 +153,12 @@ rtp_conference_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(rtp_conference_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o \
 	$@
 rtp_recvcodecs_SOURCES = rtp/recvcodecs.c
-rtp_recvcodecs_OBJECTS = recvcodecs.$(OBJEXT)
-rtp_recvcodecs_LDADD = $(LDADD)
-rtp_recvcodecs_DEPENDENCIES =  \
-	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-0.10.la \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+rtp_recvcodecs_OBJECTS = rtp_recvcodecs-recvcodecs.$(OBJEXT)
+rtp_recvcodecs_DEPENDENCIES = $(am__DEPENDENCIES_2)
+rtp_recvcodecs_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(rtp_recvcodecs_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o \
+	$@
 am_rtp_sendcodecs_OBJECTS = rtp_sendcodecs-generic.$(OBJEXT) \
 	rtp_sendcodecs-sendcodecs.$(OBJEXT)
 rtp_sendcodecs_OBJECTS = $(am_rtp_sendcodecs_OBJECTS)
@@ -597,6 +598,8 @@ rtp_sendcodecs_SOURCES = \
 	rtp/generic.h \
 	rtp/sendcodecs.c
 
+rtp_recvcodecs_CFLAGS = $(AM_CFLAGS)
+rtp_recvcodecs_LDADD = $(LDADD) -lgstrtp-0.10
 msn_conference_CFLAGS = $(AM_CFLAGS)
 msn_conference_SOURCES = \
 	msn/conference.c
@@ -696,7 +699,7 @@ rtp/conference$(EXEEXT): $(rtp_conference_OBJECTS) $(rtp_conference_DEPENDENCIES
 	$(AM_V_CCLD)$(rtp_conference_LINK) $(rtp_conference_OBJECTS) $(rtp_conference_LDADD) $(LIBS)
 rtp/recvcodecs$(EXEEXT): $(rtp_recvcodecs_OBJECTS) $(rtp_recvcodecs_DEPENDENCIES) rtp/$(am__dirstamp)
 	@rm -f rtp/recvcodecs$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(rtp_recvcodecs_OBJECTS) $(rtp_recvcodecs_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(rtp_recvcodecs_LINK) $(rtp_recvcodecs_OBJECTS) $(rtp_recvcodecs_LDADD) $(LIBS)
 rtp/sendcodecs$(EXEEXT): $(rtp_sendcodecs_OBJECTS) $(rtp_sendcodecs_DEPENDENCIES) rtp/$(am__dirstamp)
 	@rm -f rtp/sendcodecs$(EXEEXT)
 	$(AM_V_CCLD)$(rtp_sendcodecs_LINK) $(rtp_sendcodecs_OBJECTS) $(rtp_sendcodecs_LDADD) $(LIBS)
@@ -735,12 +738,12 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/msn_conference-conference.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/raw_conference-conference.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/raw_conference-testutils.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/recvcodecs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rtp_codecs-codecs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rtp_codecs-generic.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rtp_conference-conference.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rtp_conference-generic.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rtp_conference-testutils.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rtp_recvcodecs-recvcodecs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rtp_sendcodecs-generic.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rtp_sendcodecs-sendcodecs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testutils.Po@am__quote@
@@ -977,21 +980,21 @@ rtp_conference-conference.obj: rtp/conference.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(rtp_conference_CFLAGS) $(CFLAGS) -c -o rtp_conference-conference.obj `if test -f 'rtp/conference.c'; then $(CYGPATH_W) 'rtp/conference.c'; else $(CYGPATH_W) '$(srcdir)/rtp/conference.c'; fi`
 
-recvcodecs.o: rtp/recvcodecs.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT recvcodecs.o -MD -MP -MF $(DEPDIR)/recvcodecs.Tpo -c -o recvcodecs.o `test -f 'rtp/recvcodecs.c' || echo '$(srcdir)/'`rtp/recvcodecs.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/recvcodecs.Tpo $(DEPDIR)/recvcodecs.Po
+rtp_recvcodecs-recvcodecs.o: rtp/recvcodecs.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(rtp_recvcodecs_CFLAGS) $(CFLAGS) -MT rtp_recvcodecs-recvcodecs.o -MD -MP -MF $(DEPDIR)/rtp_recvcodecs-recvcodecs.Tpo -c -o rtp_recvcodecs-recvcodecs.o `test -f 'rtp/recvcodecs.c' || echo '$(srcdir)/'`rtp/recvcodecs.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/rtp_recvcodecs-recvcodecs.Tpo $(DEPDIR)/rtp_recvcodecs-recvcodecs.Po
 @am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='rtp/recvcodecs.c' object='recvcodecs.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='rtp/recvcodecs.c' object='rtp_recvcodecs-recvcodecs.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o recvcodecs.o `test -f 'rtp/recvcodecs.c' || echo '$(srcdir)/'`rtp/recvcodecs.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(rtp_recvcodecs_CFLAGS) $(CFLAGS) -c -o rtp_recvcodecs-recvcodecs.o `test -f 'rtp/recvcodecs.c' || echo '$(srcdir)/'`rtp/recvcodecs.c
 
-recvcodecs.obj: rtp/recvcodecs.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT recvcodecs.obj -MD -MP -MF $(DEPDIR)/recvcodecs.Tpo -c -o recvcodecs.obj `if test -f 'rtp/recvcodecs.c'; then $(CYGPATH_W) 'rtp/recvcodecs.c'; else $(CYGPATH_W) '$(srcdir)/rtp/recvcodecs.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/recvcodecs.Tpo $(DEPDIR)/recvcodecs.Po
+rtp_recvcodecs-recvcodecs.obj: rtp/recvcodecs.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(rtp_recvcodecs_CFLAGS) $(CFLAGS) -MT rtp_recvcodecs-recvcodecs.obj -MD -MP -MF $(DEPDIR)/rtp_recvcodecs-recvcodecs.Tpo -c -o rtp_recvcodecs-recvcodecs.obj `if test -f 'rtp/recvcodecs.c'; then $(CYGPATH_W) 'rtp/recvcodecs.c'; else $(CYGPATH_W) '$(srcdir)/rtp/recvcodecs.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/rtp_recvcodecs-recvcodecs.Tpo $(DEPDIR)/rtp_recvcodecs-recvcodecs.Po
 @am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='rtp/recvcodecs.c' object='recvcodecs.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='rtp/recvcodecs.c' object='rtp_recvcodecs-recvcodecs.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o recvcodecs.obj `if test -f 'rtp/recvcodecs.c'; then $(CYGPATH_W) 'rtp/recvcodecs.c'; else $(CYGPATH_W) '$(srcdir)/rtp/recvcodecs.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(rtp_recvcodecs_CFLAGS) $(CFLAGS) -c -o rtp_recvcodecs-recvcodecs.obj `if test -f 'rtp/recvcodecs.c'; then $(CYGPATH_W) 'rtp/recvcodecs.c'; else $(CYGPATH_W) '$(srcdir)/rtp/recvcodecs.c'; fi`
 
 rtp_sendcodecs-generic.o: rtp/generic.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(rtp_sendcodecs_CFLAGS) $(CFLAGS) -MT rtp_sendcodecs-generic.o -MD -MP -MF $(DEPDIR)/rtp_sendcodecs-generic.Tpo -c -o rtp_sendcodecs-generic.o `test -f 'rtp/generic.c' || echo '$(srcdir)/'`rtp/generic.c

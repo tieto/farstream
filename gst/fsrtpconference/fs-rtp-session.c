@@ -69,6 +69,7 @@
 #include "gst/farsight/fs-utils.h"
 #include <gst/farsight/fs-rtp.h>
 
+#include "fs-rtp-bitrate-adapter.h"
 #include "fs-rtp-stream.h"
 #include "fs-rtp-participant.h"
 #include "fs-rtp-discover-codecs.h"
@@ -76,6 +77,7 @@
 #include "fs-rtp-substream.h"
 #include "fs-rtp-special-source.h"
 #include "fs-rtp-codec-specific.h"
+#include "fs-rtp-tfrc.h"
 
 #define GST_CAT_DEFAULT fsrtpconference_debug
 
@@ -121,6 +123,7 @@ struct _FsRtpSessionPrivate
    */
 
   GstElement *media_sink_valve;
+  GstElement *send_bitrate_adapter;
   GstElement *send_tee;
   GstElement *send_capsfilter;
   GstElement *transmitter_rtp_tee;
@@ -206,8 +209,12 @@ struct _FsRtpSessionPrivate
   /* IP Type of Service, protext by session mutex */
   guint tos;
 
-  /* Protected by sessioin mutex */
+  /* Protected by session mutex */
   guint send_bitrate;
+
+  /* Set at construction time, can not change */
+  FsRtpTfrc *rtp_tfrc;
+  FsRtpKeyunitManager *keyunit_manager;
 
   /* Can only be used while using the lock */
   GStaticRWLock disposed_lock;
@@ -261,7 +268,7 @@ static GType fs_rtp_session_get_stream_transmitter_type (FsSession *session,
 static void _substream_no_rtcp_timedout_cb (FsRtpSubStream *substream,
     FsRtpSession *session);
 static GstElement *_substream_get_codec_bin (FsRtpSubStream *substream,
-    FsRtpStream *stream, FsCodec *current_codec, FsCodec **new_codec,
+    FsRtpStream *stream, FsCodec **new_codec,
     guint current_builder_hash, guint *new_builder_hash,
     GError **error, FsRtpSession *session);
 
@@ -540,6 +547,10 @@ fs_rtp_session_real_dispose (FsRtpSession *self)
     g_object_unref (self->priv->rtpbin_internal_session);
   self->priv->rtpbin_internal_session = NULL;
 
+  if (self->priv->keyunit_manager)
+    g_object_unref (self->priv->keyunit_manager);
+  self->priv->keyunit_manager = NULL;
+
   /* Lets stop all of the elements sink to source */
 
   /* First the send pipeline */
@@ -554,6 +565,14 @@ fs_rtp_session_real_dispose (FsRtpSession *self)
     gst_pad_set_active (self->priv->rtpbin_send_rtcp_src, FALSE);
   if (self->priv->rtpbin_send_rtp_sink)
     gst_pad_set_active (self->priv->rtpbin_send_rtp_sink, FALSE);
+
+  if (self->priv->rtp_tfrc)
+  {
+    fs_rtp_tfrc_destroy (self->priv->rtp_tfrc);
+    g_object_unref (self->priv->rtp_tfrc);
+  }
+  self->priv->rtp_tfrc = NULL;
+
 
   FS_RTP_SESSION_LOCK (self);
   fs_rtp_session_stop_codec_param_gathering_unlock (self);
@@ -620,8 +639,9 @@ fs_rtp_session_real_dispose (FsRtpSession *self)
   }
 
   stop_and_remove (conferencebin, &self->priv->send_codecbin, FALSE);
-  stop_and_remove (conferencebin, &self->priv->send_tee, TRUE);
   stop_and_remove (conferencebin, &self->priv->media_sink_valve, TRUE);
+  stop_and_remove (conferencebin, &self->priv->send_tee, TRUE);
+  stop_and_remove (conferencebin, &self->priv->send_bitrate_adapter, FALSE);
 
   if (self->priv->media_sink_pad)
     gst_pad_set_active (self->priv->media_sink_pad, FALSE);
@@ -1001,6 +1021,28 @@ _rtpbin_internal_session_notify_internal_ssrc (GObject *internal_session,
 }
 
 static void
+_rtp_tfrc_bitrate_changed (GObject *rtp_tfrc, GParamSpec *pspec,
+    FsRtpSession *self)
+{
+  guint bitrate;
+
+  g_object_get (rtp_tfrc, "bitrate", &bitrate, NULL);
+  g_debug ("setting bitrate to: %u", bitrate);
+  fs_rtp_session_set_send_bitrate (self, bitrate);
+}
+
+static void
+_rtp_bitrate_adapter_renegotiate (GstElement *bitrate_adapter,
+    FsRtpSession *self)
+{
+  gst_element_post_message (GST_ELEMENT (self->priv->conference),
+      gst_message_new_element (GST_OBJECT (self->priv->conference),
+          gst_structure_new ("farsight-renegotiate",
+              "session", FS_TYPE_SESSION, self,
+              NULL)));
+}
+
+static void
 fs_rtp_session_constructed (GObject *object)
 {
   FsRtpSession *self = FS_RTP_SESSION_CAST (object);
@@ -1062,8 +1104,40 @@ fs_rtp_session_constructed (GObject *object)
 
   self->priv->send_tee = gst_object_ref (tee);
 
+  if (self->priv->media_type == FS_MEDIA_TYPE_VIDEO)
+  {
+    GstElement *bitrate_adapter = fs_rtp_bitrate_adapter_new ();
 
-  tee_sink_pad = gst_element_get_static_pad (tee, "sink");
+    g_signal_connect_object (bitrate_adapter, "renegotiate",
+        G_CALLBACK (_rtp_bitrate_adapter_renegotiate), self, 0);
+
+    if (!gst_bin_add (GST_BIN (self->priv->conference), bitrate_adapter))
+    {
+      self->priv->construction_error = g_error_new (FS_ERROR,
+          FS_ERROR_CONSTRUCTION,
+          "Could not add the bitrate adapter to the FsRtpConference");
+      gst_object_unref (bitrate_adapter);
+      return;
+    }
+
+    if (!gst_element_link (bitrate_adapter, tee))
+    {
+      self->priv->construction_error = g_error_new (FS_ERROR,
+          FS_ERROR_CONSTRUCTION, "Could not link bitrate adapter to tee");
+      gst_object_unref (bitrate_adapter);
+      return;
+    }
+
+    gst_element_set_state (bitrate_adapter, GST_STATE_PLAYING);
+
+    self->priv->send_bitrate_adapter = bitrate_adapter;
+
+    tee_sink_pad = gst_element_get_static_pad (bitrate_adapter, "sink");
+  }
+  else
+  {
+    tee_sink_pad = gst_element_get_static_pad (tee, "sink");
+  }
 
   tmp = g_strdup_printf ("sink_%u", self->id);
   self->priv->media_sink_pad = gst_ghost_pad_new (tmp, tee_sink_pad);
@@ -1199,7 +1273,6 @@ fs_rtp_session_constructed (GObject *object)
 
   gst_element_set_state (funnel, GST_STATE_PLAYING);
 
-
   /* Now create the transmitter RTCP funnel */
 
   tmp = g_strdup_printf ("recv_rtcp_funnel_%u", self->id);
@@ -1251,6 +1324,9 @@ fs_rtp_session_constructed (GObject *object)
   gst_object_unref (funnel_src_pad);
 
   gst_element_set_state (funnel, GST_STATE_PLAYING);
+
+
+  /* Lets get the internal RTP session */
 
   g_signal_emit_by_name (self->priv->conference->gstrtpbin,
       "get-internal-session", self->id, &self->priv->rtpbin_internal_session);
@@ -1325,6 +1401,17 @@ fs_rtp_session_constructed (GObject *object)
 
   gst_element_set_state (muxer, GST_STATE_PLAYING);
 
+
+  if (self->priv->media_type == FS_MEDIA_TYPE_VIDEO)
+  {
+    self->priv->rtp_tfrc = fs_rtp_tfrc_new (self);
+
+    g_signal_connect_object (self->priv->rtp_tfrc, "notify::bitrate",
+        G_CALLBACK (_rtp_tfrc_bitrate_changed), self, 0);
+  }
+
+  self->priv->keyunit_manager = fs_rtp_keyunit_manager_new (
+    self->priv->rtpbin_internal_session);
 
   /* Now create the transmitter RTP tee */
 
@@ -1476,6 +1563,23 @@ fs_rtp_session_constructed (GObject *object)
     G_OBJECT_CLASS (fs_rtp_session_parent_class)->constructed(object);
 }
 
+#define GET_MEMBER(Type, name)                          \
+  Type *                                                \
+  fs_rtp_session_get_##name (FsRtpSession *self)        \
+  {                                                     \
+    Type *tmp = self->priv->name;                       \
+                                                        \
+    if (tmp)                                            \
+      gst_object_ref (tmp);                             \
+    return tmp;                                         \
+  }
+GET_MEMBER (FsRtpConference, conference)
+GET_MEMBER (GstPad, rtpbin_recv_rtp_sink)
+GET_MEMBER (GstPad, rtpbin_recv_rtcp_sink)
+GET_MEMBER (GObject, rtpbin_internal_session)
+GET_MEMBER (GstElement, rtpmuxer)
+#undef GET_MEMBER
+
 static void
 _stream_known_source_packet_received (FsRtpStream *stream, guint component,
     GstBuffer *buffer, gpointer user_data)
@@ -1557,6 +1661,11 @@ _stream_sending_changed_locked (FsRtpStream *stream, gboolean sending,
     g_object_set (session->priv->media_sink_valve, "drop", FALSE, NULL);
   else
     g_object_set (session->priv->media_sink_valve, "drop", TRUE, NULL);
+
+  if (session->priv->rtp_tfrc)
+    g_object_set (session->priv->rtp_tfrc, "sending",
+        session->priv->streams_sending, NULL);
+
 
   fs_rtp_session_has_disposed_exit (session);
 }
@@ -2523,6 +2632,9 @@ fs_rtp_session_negotiate_codecs_locked (FsRtpSession *session,
     fs_rtp_special_sources_negotiation_filter (
         new_negotiated_codec_associations);
 
+  fs_rtp_tfrc_filter_codecs (&new_negotiated_codec_associations,
+      &new_hdrexts);
+
   if (session->priv->codec_associations)
     *is_new = ! codec_associations_list_are_equal (
       session->priv->codec_associations, new_negotiated_codec_associations);
@@ -2579,6 +2691,11 @@ fs_rtp_session_update_codecs (FsRtpSession *session,
     FS_RTP_SESSION_UNLOCK (session);
     return FALSE;
   }
+
+  if (session->priv->rtp_tfrc)
+    fs_rtp_tfrc_codecs_updated (session->priv->rtp_tfrc,
+        session->priv->codec_associations,
+        session->priv->hdrext_negotiated);
 
   fs_rtp_session_distribute_recv_codecs_locked (session, stream, remote_codecs);
 
@@ -3462,6 +3579,15 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
 
   sendcaps = fs_codec_to_gst_caps (ca->send_codec);
 
+  if (session->priv->rtp_tfrc &&
+      fs_rtp_tfrc_is_enabled (session->priv->rtp_tfrc, ca->codec->id))
+  {
+    guint bitrate;
+
+    g_object_get (session->priv->rtp_tfrc, "bitrate", &bitrate, NULL);
+    session->priv->send_bitrate = bitrate;
+  }
+
   if (codecbin)
     codecbin_set_bitrate (codecbin, session->priv->send_bitrate);
 
@@ -3489,6 +3615,9 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
     gst_caps_unref (sendcaps);
     return NULL;
   }
+
+  fs_rtp_keyunit_manager_codecbin_changed (session->priv->keyunit_manager,
+      codecbin, send_codec_copy);
 
   if (!gst_element_link_pads (session->priv->media_sink_valve, "src",
           codecbin, "sink"))
@@ -3787,7 +3916,7 @@ fs_rtp_session_verify_send_codec_bin (FsRtpSession *self)
 
 static GstElement *
 _substream_get_codec_bin (FsRtpSubStream *substream,
-    FsRtpStream *stream, FsCodec *current_codec, FsCodec **new_codec,
+    FsRtpStream *stream, FsCodec **new_codec,
     guint current_builder_hash, guint *new_builder_hash,
     GError **error, FsRtpSession *session)
 {
@@ -3810,12 +3939,6 @@ _substream_get_codec_bin (FsRtpSubStream *substream,
   codecbin = _create_codec_bin (ca, *new_codec, name, FALSE, NULL,
       current_builder_hash, new_builder_hash, error);
   g_free (name);
-
-  if (!codecbin)
-  {
-    fs_codec_destroy (*new_codec);
-    *new_codec = NULL;
-  }
 
  out:
 
@@ -4685,6 +4808,8 @@ codecbin_set_bitrate (GstElement *codecbin, guint bitrate)
   if (bitrate == 0)
     return FALSE;
 
+  GST_DEBUG ("Setting bitrate to %u bits/sec", bitrate);
+
   data.bitrate = bitrate;
   data.ret = FALSE;
 
@@ -4705,6 +4830,9 @@ fs_rtp_session_set_send_bitrate (FsRtpSession *self, guint bitrate)
 
   if (self->priv->send_codecbin)
     codecbin_set_bitrate (self->priv->send_codecbin, bitrate);
+
+  if (self->priv->send_bitrate_adapter)
+    g_object_set (self->priv->send_bitrate_adapter, "bitrate", bitrate, NULL);
 
   FS_RTP_SESSION_UNLOCK (self);
 }

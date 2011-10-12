@@ -1,3 +1,1428 @@
+commit 68056b822543998b4943ea2648845b8fb62e579f
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Oct 10 15:59:44 2011 -0400
+
+    Version 0.0.31
+
+commit f7441b7b8d24cf310a06d385f1242cbc47257bf8
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Oct 10 12:09:00 2011 -0400
+
+    rtpkeyunitmanager: Make sure the variable is initialised before using it
+    
+    Bug reported by Sjoerd's compiler
+
+commit 6fd0f858a666097ccad7bcdbfa15c3b6b4ad5109
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Oct 10 12:10:26 2011 -0400
+
+    tests: Check for passing the config data through the remote codecs
+
+commit 17884a6c9aa1847441821f0958e978d39f7c6ccb
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Sun Oct 9 17:30:09 2011 -0400
+
+    rtpsubstream: Restore the capsfilter for the recv caps
+
+commit 802862f9dc0cc8dfde51e647c0625a6c289e27c7
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Sun Oct 2 22:00:59 2011 -0400
+
+    rtp: Disable TFRC from default config
+
+commit bd43fb41e48b131dc21f88bb456d05a3931a9284
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Sun Oct 2 21:55:51 2011 -0400
+
+    rtpkeyunitmanager: Hardcode FIR type in there as it's not in libgstrtp yet
+
+commit 0ce4e886950c7d56ed40aa939a521abd7c7a1540
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Sep 30 17:46:15 2011 -0400
+
+    rtptfrc: Deal correctly with the other side resetting its algo
+    
+    So it works fine if the other side stop and restarts sending.
+
+commit 4fcf2d71a65fde17b5c1bf4e044b63e28a4bb619
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 30 03:25:23 2011 +0300
+
+    bitrateadapter: We don't hold a ref
+
+commit 829928c7854754b173136f5617d298d09ff9bdc0
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Sep 29 18:50:23 2011 -0400
+
+    rtpbitrateadapter: Make sure the async clock callback not called when in the wrong state
+
+commit 4b31587e7fe714ff5e197ae730f6c05002b5521d
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Sep 29 20:28:49 2011 -0400
+
+    rtptfrc: Clear byterate limiter when one stops sending
+
+commit e7cdc578e781d7da57b1dbe8c6ce5375173b44cc
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Sep 28 17:50:02 2011 -0400
+
+    rtptfrc: Invert the API, reduce the footprint inside FsRtpSession
+
+commit 529b9b62ca72baf24260930663e2fd0e3c61e7d6
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Sep 28 14:56:38 2011 -0400
+
+    rtptfrc: Dynamically add and remove the packet modder
+
+commit a799325d87830947e62a1c43dd22ceb8488693a3
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Sep 26 19:01:01 2011 -0400
+
+    rtptfrc: Reset tfrc algo when we stop sending
+
+commit 6abf465c7227b679c074afb2d4befe794fb71d25
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Sep 13 16:07:48 2011 -0400
+
+    rtptfrc: Print warning when filtering out TFRC
+
+commit 0cfd3c8a5fb2038a96908bb7d6d12361cbf94741
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Sep 13 16:07:18 2011 -0400
+
+    rtpbitrateadapter: Remove g_debug
+
+commit c11f3aa0470ae9727bb6f4f752748355c4c33e57
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Sep 13 16:06:54 2011 -0400
+
+    rtpbitrateadapter: Allow lower framerates if higher ones not available
+    
+    If the higher framerates are not available, allow the lower ones
+
+commit 62fd2e5df73d323d7d920968e6d238b0a823b17c
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Sep 13 16:06:10 2011 -0400
+
+    rtptfrc: Use the right URN for rtt-sendts
+
+commit 5a5a309d21e37ac1f8c36993638102591aee98ba
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Sep 8 21:32:21 2011 -0400
+
+    rtpkeyunitmanager: Add object to disable automated keyframes when they're not needed
+
+commit 8cc3956dfe71f9a44209912cd64262f946f7c64b
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Aug 29 20:01:38 2011 -0400
+
+    rtpbitrateadapter: Let template caps through
+    
+    Let template caps through so someone else can use a different algo to pick the resolution
+    and framerate.
+
+commit a669c2a7de33f0da40707504089af9c2e1f3174c
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Aug 26 12:12:58 2011 -0400
+
+    rtpbitrateadapter: Emit message from the fs-rtp-session
+
+commit 095475e2eb9b703de4736d851860f167ad625ba0
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Aug 26 12:12:34 2011 -0400
+
+    rtpbitrateadapter: Add _new function
+
+commit c576f3e07d1d85085a1a16ac0954cf2728d3b34f
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Aug 25 22:29:13 2011 -0400
+
+    rtpbitrateadapter: Name variable more accurately
+
+commit 245081f2dc8fbd168ed89f5e6113a12959239d4b
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Aug 25 22:14:50 2011 -0400
+
+    rtpsession: Integrate bitrate adapter
+    
+    Attach the bitrate adapter
+
+commit 2dade46d6236ac39751b2ecdf26b0301de721ad2
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Aug 23 16:52:01 2011 -0400
+
+    rtpbitrateadapter: Make resolution adaptation more sanely
+    
+    Adapt to mean-stddev bitrate, hoping that this is a good long
+    term value
+
+commit 76946b6ba9474a3536757dda9514ca6cf4d63aa2
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Jul 28 14:23:07 2011 +0100
+
+    rtp-bitrate-adapter: 20 sounds like a good number
+
+commit 336ac9e99bf4a9fc58bfdf659706157f7e5a80a2
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Jul 28 12:14:40 2011 +0100
+
+    rtpbitrateadapter: Make updates always at least 30 secs appart
+
+commit 99dad90959932c47a14d151e5ed62bdb0e537ef0
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Jul 27 16:18:05 2011 +0100
+
+    rtp-bitrate-adapter: Remove unused rtp caps
+
+commit f138ad007fdec708807020c3a817430bfc280571
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Jul 27 18:57:50 2011 +0100
+
+    rtp-bitrate-adapter: Simplify the algorithm
+    
+    Only allow some fixed resolutions and then bracket them by bitrate
+
+commit 02ee31d7917dab248928d1ea173ad721a56cb347
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Jul 27 18:56:19 2011 +0100
+
+    rtp-bitrate-adapter: Replace buffer-alloc with property notification
+    
+    The source probably has to be restarted, so give an indication to the application
+
+commit 08cfb22915ca286bf89c528d0061337901e9506e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed May 4 18:11:08 2011 -0400
+
+    rtpbitrateadapter: Wait until the end of the interval to force a change
+    
+    Don't force a change before the end of the interval
+
+commit 559a85e00a7648736d7c6a99c66cbf7b6b30ea19
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 3 15:12:56 2011 -0400
+
+    rtpbitrateadapter: Add element to adapt resolution/framerate based on the bitrate
+    
+    New element that will generate a caps change if required
+
+commit b59f3ceb78007613bcaa97bc589ce30d65713b62
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 26 17:05:21 2011 -0400
+
+    rtptfrc: Move parameterless initialization to _init
+
+commit e9e2f5b37a73b8113aa37aab7476ef026bd50a74
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Jun 22 16:06:30 2011 -0400
+
+    tfrc: Turn on inst_rate by default
+
+commit 5628addcf92446342d65f3a85cdf9aec735c539d
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Jun 22 16:05:28 2011 -0400
+
+    tfrc: Update inst_rate on no-feedback too
+
+commit d83f037cda8583ef4ae41737dc851d9af6b4591f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Jun 16 02:46:44 2011 +0300
+
+    rtptfrc: Centralise bitrate update
+
+commit 60c42af6acd76dad8a43a24c1a3fc7c3f5e18628
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Jun 13 20:20:54 2011 -0400
+
+    tfrc: header size is a constant, treat it as such
+
+commit 11120f09b8adeae2f977f0be0dcd4f828fe9d3be
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Jun 13 20:19:36 2011 -0400
+
+    tfrc: Start at 20kB/s instead of the default 1.5kB/s
+
+commit 32ef8661beddbb77fbb885333d9f830221411553
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Jun 13 14:57:26 2011 -0400
+
+    tfrc: Only use inst rate once it has been set
+
+commit 8e9a92e86ff811d3c0e7d13688f4f5e042ebc004
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Jun 8 18:38:26 2011 -0400
+
+    rtptfrc: Make sure the time variable is initialized before using it
+
+commit 99000fb1accee361d7b897bfa8763938b5dcd7d4
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Jun 8 14:28:34 2011 -0400
+
+    tfrc: Make sure the feedback packets are not supressed by mistake
+
+commit 5f2252f30feaee936b957afa6e019f48609a2041
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Jun 7 14:34:02 2011 -0400
+
+    tfrc: Don't start the feedback timer before the sender RTT is received
+
+commit e3eb402a7311e49fbe3fea093043613d02060c2f
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Jun 6 18:24:54 2011 -0400
+
+    tfrc: t_mbi is a constant so capitalize
+
+commit 491818a636a09d4e361a299191fde12f8125f759
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Jun 6 15:05:57 2011 -0400
+
+    tfrc: Wait at least 20ms before declaring a feedback packet as lost
+
+commit 311104492ccbe0c86a5a7a1bd2c9972293c71087
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Jun 6 15:05:06 2011 -0400
+
+    tfrc: Switch over to using usecs instead of msecs
+
+commit e7997447a7726f0b5fecfdaf951b855154ad8312
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Jun 3 18:17:03 2011 +0100
+
+    int64 in tfrc
+
+commit 1db256e6be79b199141e9831db23ec496118a7d9
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Jun 3 17:43:28 2011 +0100
+
+    tfrc: Use gst_util_uint64_scale_round when it is useful for added safety
+
+commit 0b775c19015d4e1fe15652d45d3999c2ea208c5e
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Jun 3 17:05:35 2011 +0100
+
+    tfrc: Replace 1000 with a define
+
+commit 3162db28947078dc8a5c49b92a09ebee6a2de47a
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Jun 2 18:23:40 2011 +0100
+
+    rtptfrc: Make the on-the-wire timestamps be usecs
+
+commit 66f1ccbf7c3abb89625b3a07bd1b91349f360af5
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Jun 2 18:15:30 2011 +0100
+
+    tfrc: Use guint64 everywhere to refer to timestamps
+
+commit fd293eda533722a79be2d31b774c9c1518e0adb7
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Jun 2 18:03:44 2011 +0100
+
+    rtptfrc: Use guint64 for all timestamps
+
+commit 319ccdcff14cfd9bbe1c562e6c6db1b6857b6f38
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Jun 2 17:54:25 2011 +0100
+
+    rtptfrc: Deal with ts cycles for the sender side
+
+commit 55daf846ab30a8ff6d057395f951d7a38855fe17
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Jun 2 13:58:40 2011 +0100
+
+    rtptfrc: Handle ts rollovers for incoming RTP packets
+
+commit eaae463a9773521699f6f6d0dd4149a44ec1f1a0
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue May 24 17:53:53 2011 +0300
+
+    tfrc: Print recover rate when halving the rate
+
+commit 5580981d0d7d2197f301ef56633c8b5c535bb1e7
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue May 24 17:37:39 2011 +0300
+
+    rtptfrc: Ignore timeouts that are called after their ID has been removed
+
+commit 103f349765ab52612ec7200333804b3676e7539b
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue May 24 17:14:17 2011 +0300
+
+    tfrc: Recompute initial rate when RTT changes
+    
+    The initial rate is really a function, not the actual initial rate,
+    so recompute it every time. The RTT might change during a call, so the rate
+    used as the recover rate should use the updated RTT.
+
+commit bac20153465fd898ffb47f80b935e4ca44e091a2
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue May 24 17:50:39 2011 +0300
+
+    rtptfrc: Add debug message on sending RTP
+
+commit c4db37c1aa1e27ac866e6b3863c8b096b81a2534
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon May 23 20:29:57 2011 +0300
+
+    rtptfrc: Use GST_*_OBJECT logging macros
+
+commit 71ac7b25d46ae0f5458a9aea129d47742607f23a
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon May 23 14:12:55 2011 +0300
+
+    rtptfrc: Time in async clock feedback is requested time
+    
+    The time in the async clock feedback is the time the event was requested for,
+    not the time when it was delivered, so let's read the time from the clock again.
+
+commit 99d5ff3881bb979b4d813f5c28bcac223259ae98
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon May 23 14:09:11 2011 +0300
+
+    rtptfrc: Don't ignore reports with 0 RTT
+    
+    A RTT is 0 is valid, it just means its less than 1 ms, like on a loopback
+    device
+
+commit 606954d9610a9e7256f1e3b007cc5d752c99fecc
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 20 21:10:38 2011 -0400
+
+    tfrc: Correct debug message, p is not required
+
+commit f7e4bafe2b3c73418c6fef8ec62d0480d54137d5
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 20 21:05:50 2011 -0400
+
+    rtptfrc: Add source to hashtable when its ssrc is found
+
+commit 09dcfa6a68db36f7c0ae7553902f62879193ab55
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 20 19:20:55 2011 -0400
+
+    rtptfrc: Remove unused get
+
+commit 48188ecbc99f70e4ced43ba029e1f0c97915e74e
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 20 19:20:40 2011 -0400
+
+    rtptfrc: Mae sure the last src is set on validation if possible
+    
+    If a source is validated before getting any rtcp message from it, then make it
+    the last_src
+
+commit 2faff4a788d45efa50be8510fb0a743c9fa27684
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 20 18:44:14 2011 -0400
+
+    rtptfrc: Remove duplicated on-ssrc-validated hook
+
+commit ac610ac59521e5fc309178bc062a1a04117b8ef6
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 20 18:06:09 2011 -0400
+
+    rtpsession: Only add tfrc once
+    
+    Add tfrc once, and only to video for now
+
+commit 87e7fd221a723ee6a90b69b5a7886bc54d5ee014
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 20 17:52:54 2011 -0400
+
+    tfrc: Rename on_fb to fb in debug to avoid confusion with no_fb
+
+commit 49ac37140fc68c66ea46d535ac37f9490083befa
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 20 17:30:37 2011 -0400
+
+    tfrc: Don't halve rate if no packet has been sent
+    
+    This is the second case for RFC 5348 4.4 1
+
+commit 0cd5347bc9931cdb360063f1dcdfb45b464bb692
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 20 17:29:33 2011 -0400
+
+    tfrc: Don't let averaged rtt fall down to 0 even if its lower than 1ms
+
+commit 8f8265d39d3864d75fca1d1c21ab450d6ed2ad56
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 20 13:30:24 2011 -0400
+
+    rtptfrc: Only reset the feedback timer when feedback is sent
+    
+    Wait until the feedback is sent to set the new feedback timer, the time of
+    the next feedback message is only computed when the next one is ready anyway.
+
+commit 6e8c87f94d9c0d298a6d8d85c6233f19d4211336
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 20 13:21:37 2011 -0400
+
+    rtptfrc: Hold lock while modifying object members
+
+commit 0e6ccbd48a26d5f6288f1f85a95a015b9e8c295f
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu May 19 17:10:44 2011 -0400
+
+    tfrc: Fix -Wunused-but-set warnigns from GCC 4.6
+
+commit cbadf0d0c4ab5e09039da470667c4abee2030bd7
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue May 17 17:54:18 2011 -0400
+
+    tfrc: Put %p of structs in debug
+
+commit fd47b72b355e7e8a805d6de568795112a96e61d8
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue May 17 17:09:53 2011 -0400
+
+    rtp: Put nack/pli and tfrc in the default codec where appropriate
+
+commit 089367412cdda0f4bb121d2dc0fd655e0cbb5ef3
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue May 17 17:09:14 2011 -0400
+
+    rtptfrc: Ignore sender timer if the source's sender is gone
+
+commit 0561312154da7f6e5a9a1ce418de3b88fc3dd826
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue May 17 17:08:40 2011 -0400
+
+    rtptfrc: Don't leak clock ids
+
+commit 0bfb497bfa1f32310e81fc31501da16c0c8787d4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon May 9 14:13:23 2011 -0400
+
+    rtptfrc: Disable syncing without a valid timestamp
+
+commit 72d9fcbee6369d5d81ce6a35579f83ea0a6e6cb6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon May 9 14:11:40 2011 -0400
+
+    rtppacketmodder: Reduce some debug messages to LOG level
+
+commit 2846c431f146f163d7d51e620b2c150087def716
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 21 16:08:11 2011 -0400
+
+    rtpsession: Don't set bitrate from tfrc before getting the codecs
+    
+    Only set the bitrate from tfrc once the codecs have been set
+
+commit 624fe60999db909f082795a0a8a5d1f9a034ecd8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 21 15:53:51 2011 -0400
+
+    rtpsession: Don't leak rtp_tfrc
+    
+    Don't leak rtp_tfrc on dispose
+
+commit d7b30527ea1a0f4791d6bc1480ab2781d3bed59d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 21 15:51:59 2011 -0400
+
+    rtptfrc: No instance is required for the filter function
+    
+    Filtering codecs doesn't require a FsRtpTfrc instance, so don't depend
+    on one
+
+commit ac639f6ea761fa147d61735496035010e2e0548c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 20 20:06:23 2011 -0400
+
+    tfrc: Estimate segment size to compute the initial loss interval
+    
+    Estimate the segment size to compute the initial loss interval to try to
+    reduce the amount of the jitter at the start of the connection
+
+commit f79821d257f813240f900c62c762f3a131289124
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 20 19:20:40 2011 -0400
+
+    tfrc: Use computed average of the segment size at the sender
+
+commit 761f4ac5c9b398c79930e0766aab8ad82c7c5e0c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 20 17:44:12 2011 -0400
+
+    rtptfrc: Print changes to the sending rate
+
+commit f7c1a65a830ee1c4d8d5b1f9b813e00a53edbcff
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 20 17:42:38 2011 -0400
+
+    tfrc: Add sender-side debug prints
+
+commit 3e363a98dcae442269e6ea7d70116330b25e0957
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 20 17:40:53 2011 -0400
+
+    tfrc: Produce separate debug for sender and receiver
+
+commit 9d03ab1071e68d3699948d44aa023100db9c5965
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 20 16:50:00 2011 -0400
+
+    tfrc: Compute the first loss interval correctly
+    
+    Follow RFC 5348 section 6.3.1 to compute the first loss interval
+    from the interval that would have been required to produce the observed rate
+
+commit db369c1dd7596c072dd7cfc6e5eabcf103820732
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Apr 20 13:44:30 2011 -0400
+
+    rtptfrc: Work around slighly misordered packets
+    
+    Need to make it more reliable in the case of timestamp or seqnum jumps
+
+commit d84189f6f7ee702b31dec21437a9f33cfccbbb73
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 19 18:56:10 2011 -0400
+
+    tfrc: Correct comment on TCP throughput equation
+
+commit ec9e01708e07e1f374b71d67836afa17b9cc40c1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 19 18:55:08 2011 -0400
+
+    tfrc: Reformat TCP througput equation
+
+commit a929687ff3ebd8ec945e7e01cb92bb5036e12c6d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Apr 19 17:17:44 2011 -0400
+
+    rtptfrc: The bitrate its in bits/sec, not bytes
+
+commit 2900e3669f0bec502596fe80e88ec5f6646c3079
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 18 17:15:39 2011 -0400
+
+    tfrc: Remove dangerous loop and replace with a direct computation
+    
+    If there is less than one packet received in a RTT, then just jump to the next
+    packet to compute the next loss interval.
+
+commit 01a993a9f921b677b64eb6372f72128504d32a55
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 8 19:31:48 2011 -0400
+
+    tfrc: Remove max_index < 1 assert
+
+commit fbdf83284ec339f86b48bcba19bdbd9b79c853a8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 8 18:03:07 2011 -0400
+
+    rtptfrc: Split packet modification and synchronization
+
+commit e3506a7f31343bfe10a143398a3b2c32cbc3ac11
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 8 17:56:37 2011 -0400
+
+    packetmodder: Use do/while for do/while
+
+commit 237d7a0bb88b71b637fa324553b67bc276788a76
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 8 17:55:56 2011 -0400
+
+    packetmodder: Sync on ts, not on buffer
+
+commit 305049bf9d2370e8d9065d55de041a06cb9bc366
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 8 17:53:30 2011 -0400
+
+    rtptfrc: Remove BufferList support
+    
+    Let's try to learn to walk before we can run
+
+commit f302ddbf87aee9ee3b584ea1735f677f8dcc479f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 8 14:52:42 2011 -0400
+
+    packetmodder: Factor out clock sync
+
+commit 50688ff3170dcf5ce1b6802ec576f4489e468b15
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 7 19:06:29 2011 -0400
+
+    tfrc: Verify data limitedness through throttling mecanics
+
+commit 425667e528f1615fc6578d45e54b2b6bb5d5c59c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 7 18:49:28 2011 -0400
+
+    rtptfrc: Delay packets to strictly enforce sending rate
+
+commit 31c3d5d13acbb53e8ad584830e5f714fddcd93b5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 7 16:43:42 2011 -0400
+
+    rtptfrc: Remove implemented TODO
+
+commit 4047b09502bb4b9f8ab9e973da7f9046bd9a2afc
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 7 15:25:05 2011 -0400
+
+    packetmodder: Sync buffers to the clock
+
+commit 8b1b112bfc1dfe5f3970961923c4e94799a23329
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 7 15:11:09 2011 -0400
+
+    packetmodder: Always merge groups
+
+commit 3a7b38163e831709e5e65566b4c45f306eb09cdb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Apr 7 14:53:01 2011 -0400
+
+    packetmodder: Don't push on error and return it correctly
+
+commit 0e5b20b77dc5d3546ee1dc1f0ea5222cb64fd2bf
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 4 21:02:56 2011 -0400
+
+    tfrc: Simplify adding to history
+
+commit 2be984d331cd3f33b598cde7c51d2600c778efd5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 4 19:57:49 2011 -0400
+
+    rtptfrc: Ignore any feedback packets that are older than the newest one received
+    
+    This should help make the RTT evaluation better
+
+commit 63dd709f4117debb932b945caccea6bebb6cc4c8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 4 19:46:34 2011 -0400
+
+    rtptfrc: Use averaged rtt to compute the data-limitedness
+
+commit 6f2df7b86c5ed134acb0d07dc44ecf9f5f9d6435
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 4 18:36:34 2011 -0400
+
+    tfrc: Put memmove args in right order
+
+commit dc8afb0a133abfef074106b2086864703ef4d44a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 4 18:21:42 2011 -0400
+
+    tfrc: Pass parameters in the right order..
+
+commit 34952c6e0406ff195d368dd3d29734e172b44580
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 4 17:16:59 2011 -0400
+
+    tfrc: Make sure multiplication doesn't overflow
+
+commit d327807d1f3ab85a7b6dec364893e85555adff7f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Apr 4 15:39:17 2011 -0400
+
+    tfrc: Don't send more than one feedback msg for milli-second
+
+commit c5e9f084eda80f8fe9ed1b6a89de3948b35e054f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 1 20:03:32 2011 -0400
+
+    rtptfrc: Don't try to access tracked source before fetching it
+
+commit 9441e312e7c38ec5a8802489160ab5b4c6875ee0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 1 17:46:48 2011 -0400
+
+    tfrc: Make sure we don't exceed G_MAXUINT
+
+commit 8ebddda90a3af157c4ee4f92585366894f931002
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 1 17:45:12 2011 -0400
+
+    tfrc: Simplify getting max recv rate
+
+commit 887bcd5c9baffa870c3253048ffb4ee85d620d41
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Apr 1 17:11:53 2011 -0400
+
+    rtptfrc: Make sure bitrate doesn't roll over G_MAXUINT
+
+commit 379efade84388e0a7686bc3e9c52ebe5d48d3341
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 30 20:30:44 2011 -0400
+
+    rtptfrc: Only send requested feedback
+
+commit 0ff0d3a8d2b017b77970ea8c91ef1ab8a2623ea2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 30 20:19:04 2011 -0400
+
+    tfrc: Use R_(m-1) instead of R_m for x_recv computation
+
+commit a8aa29c1f956fae5d599ba1fe98cc13c6c77ce5d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 30 20:02:18 2011 -0400
+
+    tfrc: Compute x_recv and p as the last possible moment
+
+commit 98da8cfd36dc7edcd702b5589d8040eca348b554
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 30 19:03:04 2011 -0400
+
+    rtptfrc: Track initial source more directly
+
+commit 2a18366132e9b1497b05988d5f6c30f7b83ce414
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 30 18:37:29 2011 -0400
+
+    rtptfrc: Fix first rtt detection
+
+commit d068041c4b243ba59dd7cb3442745c675cb61135
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 30 18:37:14 2011 -0400
+
+    tfrc: Sync max rtt handling
+
+commit ed4e043547719a34ed7c619429d55d578e11eb6b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 30 18:11:02 2011 -0400
+
+    rtptfrc: Verify sender pointer before using it
+
+commit 063504feb8f8e053085ccb817039885de35c7a7d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 30 17:51:40 2011 -0400
+
+    rtptfrc: Start timer when creating sender src on first sent packet
+
+commit b4ba7ff6584d0d03808e99e5911a1900a427dc5e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 30 17:48:50 2011 -0400
+
+    rtptfrc: Created tracked source as first as the first packet is sent
+
+commit 89a7b9e85c20d4939d498679939babeb243297da
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 30 17:48:31 2011 -0400
+
+    rtptfrc: Factor out TrackedSource allocation
+
+commit b7d53ff611d821b1056e02317111cf495e8d8d86
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 30 17:47:14 2011 -0400
+
+    rtptfrc: Rename free function
+
+commit 78d40c279bd22d41b8d2b084d4ed35bf2c7f9afe
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 30 17:36:13 2011 -0400
+
+    rtptfrc: Remove unused variable
+
+commit 369a34222db9ad5b6725af9dd6e0ec3e71d43617
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 30 17:03:36 2011 -0400
+
+    rtptfrc: Tell all tracked sources about sent packets
+
+commit 9bbe1bdef7cffe0a254559c4168a5dcb2421f698
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 30 15:55:42 2011 -0400
+
+    tfrc: Send initial rate if TfrcSender not initialised
+
+commit c2ca73e3f1ee9df67309ba647b8cbdc08ced49ba
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 30 15:40:57 2011 -0400
+
+    tfrc: Use RTO to set nofeedback timeout
+
+commit 710a339651e6f3b0d3902e341559528add908090
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 30 15:32:24 2011 -0400
+
+    tfrc: Keep track of sending packets
+
+commit 1fab89561bb579c4492e00f0eec56b3a335f14a2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Mar 30 15:20:35 2011 -0400
+
+    rtptfrc: Add some G_LIKELY
+
+commit d669712bcf6d6e81ecabfe342dbfd8725eb106b6
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Mar 28 17:30:46 2011 -0400
+
+    rtp: Set tfrc rate from start if enabled
+
+commit f3946c186204bed23f8a3156be25d85d5b4b2a34
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Mar 28 17:30:27 2011 -0400
+
+    rtptfrc: Lock codec negotiation
+
+commit 25f38e115a25584abfdffb392561ce14a1ddbc16
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Mar 28 16:35:06 2011 -0400
+
+    tfrc: Smooth out sender RTT at the receiver too
+
+commit 3d5b1d5502b13708a70eaba0ed40af83c190c4f1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Mar 25 16:39:57 2011 -0400
+
+    tfrc: Don't emit seqnums outside of the seqnum interval
+
+commit 48f5dce4841fb0c6eb2a0c14ca8b68ec5c07b02b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Mar 25 16:38:03 2011 -0400
+
+    tfrc: Add a bit more debug info
+
+commit 29d739b0eb553ab290aeb32e22a89e66ba934d20
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Mar 24 17:03:57 2011 -0400
+
+    rtptfrc: Send averaged RTT as sender's estimate
+
+commit b294cd3af2fdb5b243408b554f544389a5d8fcc7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Mar 24 15:42:02 2011 -0400
+
+    tfrc: Remove artificial bitrate limitation
+
+commit 3df89593f60540c824b8ba3c7977e2c36c8dc160
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Mar 21 17:53:20 2011 -0400
+
+    rtptfrc: Correctly send max_delay as a guint64 to "send-rtcp" action signal
+
+commit 11bdb4c7e6a261211726354973272afda526aee4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Mar 1 21:04:02 2011 -0500
+
+    rtptfrc: Fix leak
+
+commit 53abb8407ef88b9a83a979eeaf8b66f3960ac112
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 3 15:12:31 2011 -0500
+
+    rtptfrc: Keep list of codecs that do TFRC
+
+commit 0a9ed8aa73c19de4f53babca31da770483ff1bfc
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 3 15:56:07 2011 -0500
+
+    rtptfrc: Only send TFRC feedback if hdrext was seen and negotiated
+    
+    When getting a RTP packet, ignore it if it isn't a type for which TFRC
+    feedback was negotiated.
+
+commit 464ab51e47e350616ecd9eda85e91c8b5917e3ba
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Feb 18 17:47:38 2011 -0500
+
+    rtpsession: Print debug message when setting bitrate
+
+commit 93289c67af7d79bcaf79b7923543a463e22c9cce
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 2 17:17:48 2011 -0500
+
+    rtptfrc: Use the hdrext id that has been negotiated
+
+commit bd07039094eca57182d71314c0d32bfbc32c4b44
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 2 17:16:57 2011 -0500
+
+    rtptfrc: Negotiate the TFRC hdrext and rtcp-fb parameters
+    
+    Add a new negotiation filter for TFRC
+
+commit cd1a0831ef6d326db90380d20e4d57ea1887d555
+Author: Olivier Crete <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 19 17:16:10 2010 +0100
+
+    tfrc: Fix loss event rate computation algo again
+    
+    Fix some more bugs in the loss event rate computation, also
+    add some optional debugging code to find future problems.
+
+commit dba378765d06da5503e43271937bb27f7feb0570
+Author: Olivier Crete <olivier.crete@collabora.co.uk>
+Date:   Tue Oct 19 17:10:54 2010 +0100
+
+    tfrc: Add method to use the instantaneous rate to reduce oscillations
+    
+    This is suggested for slow links by RFC 5348 section 4.5
+
+commit 4bea2b47a388e17bc33741163361ed79420c389a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Oct 1 17:59:19 2010 -0400
+
+    tfrc: Correct computation of the Average loss rate
+
+commit efded9e57eb6262c5b253162f3ef7c79aac5e67e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Oct 1 17:44:01 2010 -0400
+
+    rtpsession: Print the bitrate as unsigned
+
+commit 0794a03f983724343824f7f59264e5d6ca3981c8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Oct 1 17:43:38 2010 -0400
+
+    tfrc: Put a a ceiling on the sending rate
+
+commit 43610eb5dc708e8d0c8adad11595e07ca969ebec
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 27 20:07:57 2010 -0400
+
+    tfrc: Make data-limited checker work
+
+commit 29b7d3882a53dc5acf68e4c61ef60ec6475f7b88
+Author: Olivier Crete <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 27 23:43:10 2010 +0100
+
+    tfrc: Keep a minimal history in time
+    
+    Keep a minimum of 10 RTTs of packet history, it may be a bit too much
+    but it works better if we have lots of packets lost one by one.
+
+commit 3a137c0230e869660f4b895b19b4972522c29c15
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 27 16:21:48 2010 -0400
+
+    tfrc: Re-do the algorithm to find loss intervals
+
+commit d31d9e688e3fc64caaec815878f72bac2fcb052c
+Author: Olivier Crete <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 24 01:37:14 2010 +0100
+
+    tfrc: Document another case
+
+commit 0854a8b31a5efce57b76b0871aceb0d9c218e16b
+Author: Olivier Crete <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 24 01:36:23 2010 +0100
+
+    tfrc: Fix loss event rate computation
+
+commit 6af55efa666148cafcaface86f424bc80604dd3e
+Author: Olivier Crete <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 24 01:33:04 2010 +0100
+
+    tfrc: Initialise lost_count to 0
+
+commit 571b930d68b233ec7e6901ba3833c77430bdf539
+Author: Olivier Crete <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 24 01:32:11 2010 +0100
+
+    tfrc: Improve identation
+
+commit 19e519a51df42015dc1b5f7a26cc9fc54a653167
+Author: Olivier Crete <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 24 01:28:03 2010 +0100
+
+    tfrc: Manipulate the loss event rate as a double
+    
+    The loss event rate is between 0 and 1, so manipulate it as a double instead
+    of a guint.
+
+commit 48b5197fc3cd065e1aeab133c1f38bd3623f63d4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Sep 21 17:43:21 2010 -0400
+
+    rtptfrc: Prevent computer RTT from being 0
+
+commit 75381cf6e3fe2a6ac17b701379e03d03e082d2d7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Sep 20 19:40:06 2010 -0400
+
+    rtptfrc: Transform send rate from bytes to bits
+
+commit 5eb01b9272dc8e77f93f93a493250a2674bd7bdf
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 17 16:27:09 2010 -0400
+
+    rtpsession: Print the bitrate as it is being set
+
+commit fece6e17f053214bbeb41cfa00bc08022f39296e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Sep 17 16:23:13 2010 -0400
+
+    rtpsession: Only use TFRC for Video for now
+
+commit 05e6b820e4bd8dfcb650e8a3a8db0136f9d453c7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 15 17:25:58 2010 -0400
+
+    rtpsession: Propagate TFRC decided bitrate
+
+commit 0fec959dfc682d68365bc687e578aaed42b45568
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 15 16:13:02 2010 -0400
+
+    rtptfrc: Export the desired bitrate
+
+commit e9e9a8faa7e1a0a31781c549b04a3fb7165e26d3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 2 21:24:27 2010 -0400
+
+    rtptfrc: Make disposal of timer thread safe
+
+commit 3c7d1d704c9b52031d75870d0c4a3cdec0a99761
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 2 19:55:23 2010 -0400
+
+    tfrc: rate is in bits/s
+
+commit 3f994622b6a4b90b9afba353679bed322bb0d72c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 2 18:33:20 2010 -0400
+
+    tfrc: Ignore if rtt==0
+
+commit 1f50ff51ab24130ebebe6ce04e749a1fa5fae6ee
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 2 17:29:17 2010 -0400
+
+    rtptfrc: Chain up dispose and lock it
+
+commit b28867922130cd67e446ab8219787f19fa7af718
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 2 17:27:12 2010 -0400
+
+    rtptfrc: Stop timers before unreffing rtpsource
+
+commit 0d735588ecc97e64cf420c097104950ca53d4219
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 2 17:21:55 2010 -0400
+
+    rtptfrc: Remove unfinite loop in sender timer
+
+commit a1d501ef09ccd9bc977a21e463fa868096e84446
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 2 17:07:53 2010 -0400
+
+    rtptfrc: Detect if it was data limited
+
+commit d761afff98c281416e0ed0091716dbf6923330f7
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Sep 2 16:28:48 2010 -0400
+
+    tfrc: Implement algorithm to find out if a period was data limited
+    
+    Implement the algorithm proposed in RFC 5248 section 8.2.1 to
+    find out if a whole period was data limited or not.
+
+commit cd52003115be86ec7d6c9839b255040ef6204597
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 1 18:58:16 2010 -0400
+
+    rtptfrc: Add log message on RTP packet
+
+commit 50e238a24cd465e77b8616e81fd15a5b399a5be1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 1 18:57:55 2010 -0400
+
+    tfrc: Compute receive rate in bytes/s not per ms
+
+commit a20cc1eda77616249bb094ab22c7f154e6ae24b2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 1 18:57:25 2010 -0400
+
+    rtptfrc: Only call feedback update once on timer expiry
+
+commit 661a5a11d7654870df448523027ffab7a4647b65
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 1 18:11:08 2010 -0400
+
+    rtptfrc: Remove extra line
+
+commit dd8098b9ced9f89628b283a7fc618e8f91e92516
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 1 18:11:01 2010 -0400
+
+    tfrc: indentation fix
+
+commit d2dd64fa6dcccc2ad2b14e3ecae998ad6b5d5c06
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 1 17:14:06 2010 -0400
+
+    tfrc: Try to give a reasonable value if the rate==0
+
+commit aa339af2497d964727eef6a0ceae3fc15d453a9c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 1 17:13:31 2010 -0400
+
+    rtptfrc: Improve RTT debug message
+
+commit a96e572fa86bfc7bd209f6f1512e9d67bfaa5091
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Sep 1 17:11:42 2010 -0400
+
+    rtptfrc: Initialise expiry variable
+    
+    Initilise the expiry stack variable, otherwise the initial value is random and
+    could be the same
+
+commit e794ccc7eee8aef6444f48af25cd1db55324fa8f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 31 19:30:23 2010 -0400
+
+    rtptfrc: Ignore impossibly high RTT
+
+commit b5d625eb9f8bb7032a695ebbb3e411ba37a63902
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 31 19:10:39 2010 -0400
+
+    rtptfrc: Stop receiver feedback timer when freeing sources
+
+commit 1e415ad2301455998b99f0ddccbde68e7eeb3670
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 31 17:32:44 2010 -0400
+
+    rtptfrc: Store last source
+
+commit 1aa9c670ebd6dcf2666123c35fcd5b8dc4ee455f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 31 17:10:12 2010 -0400
+
+    rtptfrc: Prevent infinite loops in feedback timer
+
+commit 5faacbd6c2a32684a6324060a6cb345cde287d9c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 31 17:09:39 2010 -0400
+
+    rtptfrc: Set the RTCP FB packet type
+
+commit b23c6045bcc24608f11562c44b7fd0127565c255
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 31 16:58:20 2010 -0400
+
+    rtptfrc: Read RTT correctly
+
+commit 9f3a93123ee7070696e0f8e56c236fa3a56ede7f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 31 15:31:31 2010 -0400
+
+    rtptfrc: Wait until RTT is received to start feedback timer
+
+commit f185f182ef9a5142634f823248b454127dac833d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 31 15:28:15 2010 -0400
+
+    tfrc: Send TFRC report on every buffer until RTT is received
+
+commit 4c08461f01d52a728ac05e5a30ea3d374b6625da
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Aug 30 19:14:16 2010 -0400
+
+    add some more debug
+
+commit f90e1e7a41c00c1de734b7ef8f261c693ad705a4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 27 22:05:50 2010 -0400
+
+    rtptfrc: Add debug message when sending report
+
+commit 239dadd6ac942ea09aefe3e0f1ef97f5ad10b5d4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 27 21:56:46 2010 -0400
+
+    rtptfrc: Use the right property name for the RTPSession ssrc
+
+commit 7fa817c82c987f88adda25a832e5128158eb0095
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 27 21:48:40 2010 -0400
+
+    tfrc: Initialize reset time with start time
+
+commit c16bca26e8a4b2fb14ff2c608fe00d801afb554b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 27 20:33:20 2010 -0400
+
+    rtptfrc: Add TFRC header before getting a valid RTT
+
+commit c26183a4f9ad1b962c46ca17e5ea5fd3a864e5a1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 27 20:32:58 2010 -0400
+
+    rtppackermodder: Remove extra unref
+
+commit a1df5444af03bbfc8e339e0ee4fe56107f2644fe
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 27 16:59:54 2010 -0400
+
+    rtptfrc: Add debug prints for rate
+
+commit 873e04ba6de4a9e440cd3d74ed683ff6067369d5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 27 16:42:51 2010 -0400
+
+    rtptfrc: Request RTCP packets when required
+
+commit 95b9faaec0d2887a63c5601cf1b59e1eb439d8be
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 27 13:55:32 2010 -0400
+
+    rtpsession: Hook up FsRtpTfrc
+
+commit c87292df93f544b36ce6c3759af013cd9e0788dc
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 27 13:54:02 2010 -0400
+
+    tests: Simplify building the codec discovery test program
+
+commit abb1157080923a99f3c8fde5b07816732333c9c8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Fri Aug 27 13:36:43 2010 -0400
+
+    rtptfrc: Hardcode extension type and id
+
+commit 6a2298d5fe913fd2aa726d4c72881c6c019015be
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Aug 26 18:18:00 2010 -0400
+
+    rtptfrc: Remove unsued finalize
+
+commit 9941a6f04ad19477ad112a9f73bef69202bb76cd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Aug 26 18:08:50 2010 -0400
+
+    rtptfrc: Simplify code a bit
+
+commit 0c0a0a9c72551f37538e7e4bbf7c5a66da1e3004
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Aug 26 15:39:31 2010 -0400
+
+    rtptfrc: Add feedback timer
+
+commit e3c4edf631c59690642b3c6ef53c7514dbcf0d7d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Aug 26 13:23:44 2010 -0400
+
+    rtptfrc: Hook up receive side packets
+
+commit 8523d66506067a47092626a7741a23ab835cfa5d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Aug 26 13:22:29 2010 -0400
+
+    tfrc: Export receive and loss event rates
+
+commit 080b69351e61363b9e2e2bdaf751ba6dedabd88d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Aug 25 15:22:45 2010 -0400
+
+    rtptfrc: Parse the TFRC header on incoming RTP packets
+
+commit ec27e98596f988145a470f3072ca0725eb57b1c0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 24 19:54:38 2010 -0400
+
+    rtptfrc: Use sender ssrc to track trackedsources
+    
+    To use the sender ssrc, we need to create the tracked sources dynamically
+    when a feedback message is received.
+
+commit e128be40da0151492f7a55914156de6d678c992d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 24 19:34:47 2010 -0400
+
+    rtptfrc: Move rtt to trackedsource, keep trace of last active src
+
+commit 6148a25ed869119b68de7aa5dc4e2c0b88344415
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 24 19:12:40 2010 -0400
+
+    rtptfrc: Store rtt
+
+commit 47d3eb996ff5a553356d4d35f5980d0751506e94
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 24 16:51:56 2010 -0400
+
+    rtpsession: Use send_filter if it is present
+
+commit 4e66786588c8e3f993fa2dd5c64741181df968c2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 24 14:40:54 2010 -0400
+
+    rtp: Add element to modify RTP headers
+
+commit 60591a54f45b24e61dca51baf36635a5d6478616
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Aug 18 16:31:26 2010 -0400
+
+    rtptfrc: Implement the no feedback timer
+
+commit a823b86a90fd8adceb130b94d08bf14207229512
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 17 17:56:53 2010 -0400
+
+    rtptfrc: Push RTCP tfrc feedback into the TfrcSender
+
+commit f20ed12ae7485be232812c87b587bdee49c3754b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 17 17:56:01 2010 -0400
+
+    rtptfrc: Track sources so TFRC can be applied to them
+
+commit d5e91ddea7565472af2c47b33863a51574c84e3a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 17 17:53:56 2010 -0400
+
+    rtptfrc: Add function to get time in milliseconds
+
+commit 00e3d7f03773e4e4957a36b312901efc9285dc8d
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 17 17:52:20 2010 -0400
+
+    rtptfrc: Add debug category
+
+commit 2db3695f7d6863d45e8382a1df40e069ec133c2a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 17 17:51:27 2010 -0400
+
+    rtptfrc: Remove private, put everything in object structure
+
+commit 80166ec68ef25f71d3614ad02000196205aab7f9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Aug 5 17:17:20 2010 +0200
+
+    rtptfrc: Hook up to various signals
+
+commit 0aed65a96cb525566109903a507f0737432ad6ae
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Aug 3 13:22:24 2010 +0200
+
+    rtp: Add empty tfrc object
+
+commit 39c0f1bfcd4c0a89492fd901226662296b8e2b26
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Aug 2 19:13:25 2010 +0200
+
+    rtp: Add tfrc implementation
+
+commit c8365c5b1930f31d182330a2d6dc7ebab1be4a4d
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Sep 22 17:23:13 2011 -0400
+
+    rtp-codec-nego: Correctly keep the discovered properties on renegotiation
+    
+    First correctly keep the various properties in the send_codec, then
+    correctly compare the send codec of the new and old codec association and if
+    they are the same, then keep discovered properties.
+
+commit 8744912ebb44e38189e8bbb3fc80160ff3badd47
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Sep 22 18:44:10 2011 -0400
+
+    tests: Add some extra tests for changing codec params
+
+commit 9d4a8fb9432d12324e99ec68b677dd3da920b422
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Sep 15 14:22:04 2011 -0400
+
+    Version 0.0.30.1
+
 commit 6dd0882eeb0bd2da42028abe1d90edcb34f67023
 Author: Olivier Crête <olivier.crete@collabora.com>
 Date:   Wed Sep 14 15:28:30 2011 -0400
