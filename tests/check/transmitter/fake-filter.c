@@ -1,7 +1,7 @@
 /*
  * Farstream Voice+Video library
  *
- *  Copyright 2008 Collabora Ltd,
+ *  Copyright 2008-2012 Collabora Ltd,
  *  Copyright 2008 Nokia Corporation
  *   @author: Olivier Crete <olivier.crete@collabora.co.uk>
  *
@@ -32,14 +32,6 @@
 GST_DEBUG_CATEGORY (fake_filter_debug);
 #define GST_CAT_DEFAULT (fake_filter_debug)
 
-/* elementfactory information */
-static const GstElementDetails fs_fake_filter_details =
-GST_ELEMENT_DETAILS (
-  "Fake Filter element",
-  "Filter",
-  "This element ignores the sending property",
-  "Olivier Crete <olivier.crete@collabora.co.uk>");
-
 
 static GstStaticPadTemplate sinktemplate = GST_STATIC_PAD_TEMPLATE ("sink",
     GST_PAD_SINK,
@@ -51,19 +43,6 @@ static GstStaticPadTemplate srctemplate = GST_STATIC_PAD_TEMPLATE ("src",
     GST_PAD_ALWAYS,
     GST_STATIC_CAPS_ANY);
 
-/* signals and args */
-enum
-{
-  /* FILL ME */
-  LAST_SIGNAL
-};
-
-enum
-{
-  PROP_0,
-  PROP_SENDING
-};
-
 static void fs_fake_filter_get_property (GObject *object,
     guint prop_id,
     GValue *value,
@@ -73,38 +52,41 @@ static void fs_fake_filter_set_property (GObject *object,
     const GValue *value,
     GParamSpec *pspec);
 
-static void
-_do_init (GType type)
+/* signals and args */
+
+enum
 {
-  GST_DEBUG_CATEGORY_INIT
-    (fake_filter_debug, "fsfakefilter", 0, "fsfakefilter");
-}
+  PROP_0,
+  PROP_SENDING
+};
 
-GST_BOILERPLATE_FULL (FsFakeFilter, fs_fake_filter, GstBaseTransform,
-    GST_TYPE_BASE_TRANSFORM, _do_init);
+G_DEFINE_TYPE (FsFakeFilter, fs_fake_filter, GST_TYPE_BASE_TRANSFORM);
 
-static void
-fs_fake_filter_base_init (gpointer klass)
-{
-  GstElementClass *element_class = GST_ELEMENT_CLASS (klass);
-
-  gst_element_class_add_pad_template (element_class,
-      gst_static_pad_template_get (&srctemplate));
-  gst_element_class_add_pad_template (element_class,
-      gst_static_pad_template_get (&sinktemplate));
-
-  gst_element_class_set_details (element_class, &fs_fake_filter_details);
-}
 
 static void
 fs_fake_filter_class_init (FsFakeFilterClass *klass)
 {
   GObjectClass *gobject_class;
+  GstElementClass *gstelement_class = GST_ELEMENT_CLASS (klass);
 
   gobject_class = (GObjectClass *) klass;
 
-  gobject_class->set_property = GST_DEBUG_FUNCPTR (fs_fake_filter_set_property);
-  gobject_class->get_property = GST_DEBUG_FUNCPTR (fs_fake_filter_get_property);
+  GST_DEBUG_CATEGORY_INIT
+    (fake_filter_debug, "fsfakefilter", 0, "fsfakefilter");
+
+  gobject_class->set_property = fs_fake_filter_set_property;
+  gobject_class->get_property = fs_fake_filter_get_property;
+
+  gst_element_class_add_pad_template (gstelement_class,
+      gst_static_pad_template_get (&srctemplate));
+  gst_element_class_add_pad_template (gstelement_class,
+      gst_static_pad_template_get (&sinktemplate));
+
+  gst_element_class_set_metadata (gstelement_class,
+      "Fake Filter element",
+      "Filter",
+      "This element ignores the sending property",
+      "Olivier Crete <olivier.crete@collabora.com>");
 
   g_object_class_install_property (gobject_class,
       PROP_SENDING,
@@ -116,8 +98,7 @@ fs_fake_filter_class_init (FsFakeFilterClass *klass)
 }
 
 static void
-fs_fake_filter_init (FsFakeFilter *fakefilter,
-    FsFakeFilterClass *klass)
+fs_fake_filter_init (FsFakeFilter *fakefilter)
 {
 }
 

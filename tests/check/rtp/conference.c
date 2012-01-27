@@ -22,6 +22,8 @@
 # include <config.h>
 #endif
 
+#include <stdio.h>
+
 #include <gst/check/gstcheck.h>
 #include <farstream/fs-conference.h>
 #include <farstream/fs-stream-transmitter.h>
@@ -248,11 +250,6 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
           const gchar *error;
 
           ts_fail_unless (
-              gst_implements_interface_check (GST_MESSAGE_SRC (message),
-                  FS_TYPE_CONFERENCE),
-              "Received farstream-error from non-farstream element");
-
-          ts_fail_unless (
               gst_structure_has_field_typed (s, "src-object", G_TYPE_OBJECT),
               "farstream-error structure has no src-object field");
           ts_fail_unless (
@@ -273,11 +270,6 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
           FsStream *stream;
           FsCandidate *candidate;
           const GValue *value;
-
-          ts_fail_unless (
-              gst_implements_interface_check (GST_MESSAGE_SRC (message),
-                  FS_TYPE_CONFERENCE),
-              "Received farstream-error from non-farstream element");
 
           ts_fail_unless (
               gst_structure_has_field_typed (s, "stream", FS_TYPE_STREAM),
@@ -303,11 +295,6 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
           FsStream *stream;
           FsCandidate *local_candidate, *remote_candidate;
           const GValue *value;
-
-          ts_fail_unless (
-              gst_implements_interface_check (GST_MESSAGE_SRC (message),
-                  FS_TYPE_CONFERENCE),
-              "Received farstream-error from non-farstream element");
 
           ts_fail_unless (
               gst_structure_has_field_typed (s, "stream", FS_TYPE_STREAM),
@@ -344,12 +331,6 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
           const GValue *value;
 
           ts_fail_unless (
-              gst_implements_interface_check (GST_MESSAGE_SRC (message),
-                  FS_TYPE_CONFERENCE),
-              "Received farstream-current-send-codec-change from non-farstream"
-              " element");
-
-          ts_fail_unless (
               gst_structure_has_field_typed (s, "session", FS_TYPE_SESSION),
               "farstream-current-send-codec-changed structure"
               " has no session field");
@@ -374,12 +355,6 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
         {
           FsStream *stream;
           const GValue *value;
-
-          ts_fail_unless (
-              gst_implements_interface_check (GST_MESSAGE_SRC (message),
-                  FS_TYPE_CONFERENCE),
-              "Received farstream-local-candidates-prepared from non-farstream"
-              " element");
 
           ts_fail_unless (
               gst_structure_has_field_typed (s, "stream", FS_TYPE_STREAM),

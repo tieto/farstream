@@ -1,7 +1,7 @@
 /*
  * Farstream Voice+Video library
  *
- *  Copyright 2008 Collabora Ltd,
+ *  Copyright 2008-2012 Collabora Ltd,
  *  Copyright 2008 Nokia Corporation
  *   @author: Olivier Crete <olivier.crete@collabora.co.uk>
  *
@@ -43,15 +43,6 @@
 GST_DEBUG_CATEGORY (rtcp_filter_debug);
 #define GST_CAT_DEFAULT (rtcp_filter_debug)
 
-/* elementfactory information */
-static const GstElementDetails fs_rtcp_filter_details =
-GST_ELEMENT_DETAILS (
-  "RTCP Filter element",
-  "Filter",
-  "This element removes unneeded parts of rtcp buffers",
-  "Olivier Crete <olivier.crete@collabora.co.uk>");
-
-
 static GstStaticPadTemplate sinktemplate = GST_STATIC_PAD_TEMPLATE ("sink",
     GST_PAD_SINK,
     GST_PAD_ALWAYS,
@@ -87,40 +78,34 @@ static void fs_rtcp_filter_set_property (GObject *object,
 static GstFlowReturn
 fs_rtcp_filter_transform_ip (GstBaseTransform *transform, GstBuffer *buf);
 
-static void
-_do_init (GType type)
-{
-  GST_DEBUG_CATEGORY_INIT
-    (rtcp_filter_debug, "fsrtcpfilter", 0, "fsrtcpfilter");
-}
-
-GST_BOILERPLATE_FULL (FsRtcpFilter, fs_rtcp_filter, GstBaseTransform,
-    GST_TYPE_BASE_TRANSFORM, _do_init);
-
-static void
-fs_rtcp_filter_base_init (gpointer klass)
-{
-  GstElementClass *element_class = GST_ELEMENT_CLASS (klass);
-
-  gst_element_class_add_pad_template (element_class,
-      gst_static_pad_template_get (&srctemplate));
-  gst_element_class_add_pad_template (element_class,
-      gst_static_pad_template_get (&sinktemplate));
-
-  gst_element_class_set_details (element_class, &fs_rtcp_filter_details);
-}
+G_DEFINE_TYPE (FsRtcpFilter, fs_rtcp_filter, GST_TYPE_BASE_TRANSFORM);
 
 static void
 fs_rtcp_filter_class_init (FsRtcpFilterClass *klass)
 {
   GObjectClass *gobject_class;
+  GstElementClass *gstelement_class = GST_ELEMENT_CLASS (klass);
   GstBaseTransformClass *gstbasetransform_class;
 
   gobject_class = (GObjectClass *) klass;
   gstbasetransform_class = (GstBaseTransformClass *) klass;
 
-  gobject_class->set_property = GST_DEBUG_FUNCPTR (fs_rtcp_filter_set_property);
-  gobject_class->get_property = GST_DEBUG_FUNCPTR (fs_rtcp_filter_get_property);
+  GST_DEBUG_CATEGORY_INIT
+    (rtcp_filter_debug, "fsrtcpfilter", 0, "fsrtcpfilter");
+
+  gst_element_class_add_pad_template (gstelement_class,
+      gst_static_pad_template_get (&srctemplate));
+  gst_element_class_add_pad_template (gstelement_class,
+      gst_static_pad_template_get (&sinktemplate));
+
+  gst_element_class_set_metadata (gstelement_class,
+      "RTCP Filter element",
+      "Filter",
+      "This element removes unneeded parts of rtcp buffers",
+      "Olivier Crete <olivier.crete@collabora.com>");
+
+  gobject_class->set_property = fs_rtcp_filter_set_property;
+  gobject_class->get_property = fs_rtcp_filter_get_property;
 
   gstbasetransform_class->transform_ip = fs_rtcp_filter_transform_ip;
 
@@ -134,8 +119,7 @@ fs_rtcp_filter_class_init (FsRtcpFilterClass *klass)
 }
 
 static void
-fs_rtcp_filter_init (FsRtcpFilter *rtcpfilter,
-    FsRtcpFilterClass *klass)
+fs_rtcp_filter_init (FsRtcpFilter *rtcpfilter)
 {
   rtcpfilter->sending = FALSE;
 }
@@ -196,10 +180,12 @@ fs_rtcp_filter_transform_ip (GstBaseTransform *transform, GstBuffer *buf)
 
   if (!filter->sending)
   {
+    GstRTCPBuffer rtcpbuffer = GST_RTCP_BUFFER_INIT;
     GstRTCPPacket packet;
-    gboolean modified = FALSE;
 
-    if (gst_rtcp_buffer_get_first_packet (buf, &packet))
+    gst_rtcp_buffer_map (buf, GST_MAP_READWRITE, &rtcpbuffer);
+
+    if (gst_rtcp_buffer_get_first_packet (&rtcpbuffer, &packet))
     {
       for (;;)
       {
@@ -207,7 +193,6 @@ fs_rtcp_filter_transform_ip (GstBaseTransform *transform, GstBuffer *buf)
         {
           GstRTCPPacket nextpacket = packet;
 
-          modified = TRUE;
           if (gst_rtcp_packet_move_to_next (&nextpacket) &&
               gst_rtcp_packet_get_type (&nextpacket) == GST_RTCP_TYPE_RR)
           {
@@ -216,19 +201,20 @@ fs_rtcp_filter_transform_ip (GstBaseTransform *transform, GstBuffer *buf)
           }
           else
           {
-            guchar *data = GST_BUFFER_DATA (buf) + packet.offset;
+            guchar *data = rtcpbuffer.map.data + packet.offset;
 
             /* If there is no RR, lets add an empty one */
             data[0] = (GST_RTCP_VERSION << 6);
             data[1] = GST_RTCP_TYPE_RR;
             data[2] = 0;
             data[3] = 1;
-            memmove (GST_BUFFER_DATA (buf) + packet.offset + 8,
-                GST_BUFFER_DATA (buf) + nextpacket.offset,
-                GST_BUFFER_SIZE (buf) - nextpacket.offset);
-            GST_BUFFER_SIZE (buf) -= nextpacket.offset - packet.offset - 8;
+            memmove (rtcpbuffer.map.data + packet.offset + 8,
+                rtcpbuffer.map.data + nextpacket.offset,
+                rtcpbuffer.map.size - nextpacket.offset);
 
-            if (!gst_rtcp_buffer_get_first_packet (buf, &packet))
+            rtcpbuffer.map.size -= nextpacket.offset - packet.offset - 8 ;
+
+            if (!gst_rtcp_buffer_get_first_packet (&rtcpbuffer, &packet))
               break;
           }
 
@@ -240,9 +226,7 @@ fs_rtcp_filter_transform_ip (GstBaseTransform *transform, GstBuffer *buf)
         }
       }
     }
-
-    if (modified)
-      gst_rtcp_buffer_end (buf);
+    gst_rtcp_buffer_unmap (&rtcpbuffer);
   }
 
   GST_OBJECT_UNLOCK (filter);

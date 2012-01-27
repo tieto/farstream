@@ -2,15 +2,10 @@ DISTCHECK_CONFIGURE_FLAGS=--enable-gtk-doc --enable-introspection
 
 SUBDIRS_EXT =
 
-if WANT_PYTHON
-PYTHON_SUBDIR = python
-endif
-
 SUBDIRS = 			\
 	farstream 		\
 	gst $(SUBDIRS_EXT)	\
 	transmitters		\
-	$(PYTHON_SUBDIR)	\
 	tests 			\
 	docs			\
 	common			\
@@ -23,7 +18,6 @@ DIST_SUBDIRS = 			\
 	farstream		\
 	gst $(SUBDIRS_EXT)	\
 	transmitters		\
-	python			\
 	tests 			\
 	docs			\
 	common			\

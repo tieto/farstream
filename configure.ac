@@ -44,7 +44,7 @@ AC_DEFINE_UNQUOTED(FS_MAJORMINOR, "$FS_MAJORMINOR",
 AC_DEFINE_UNQUOTED(FS_MAJOR_MINOR, "$FS_MAJORMINOR",
   [Farstream major_minor version])
 
-GST_MAJORMINOR=0.10
+GST_MAJORMINOR=0.11
 AC_SUBST(GST_MAJORMINOR)
 AC_DEFINE_UNQUOTED(GST_MAJORMINOR, "$GST_MAJORMINOR",
   [GStreamer major.minor version])
@@ -66,8 +66,8 @@ dnl AS_LIBTOOL_TAGS
 AM_PROG_LIBTOOL
 
 dnl *** required versions of GStreamer stuff ***
-GST_REQ=0.10.33
-GSTPB_REQ=0.10.33
+GST_REQ=0.11.1
+GSTPB_REQ=0.11.1
 
 dnl *** autotools stuff ****
 
@@ -114,7 +114,6 @@ FS_PLUGINS_ALL=" \
 	fsrawconference \
 	fsrtpconference \
 	fsmsnconference \
-	fsfunnel \
 	fsrtcpfilter \
  	fsvideoanyrate
 	"
@@ -202,7 +201,6 @@ GOBJECT_INTROSPECTION_CHECK([0.10.1])
 
 dnl check for documentation tools
 GTK_DOC_CHECK([1.8])
-AM_PATH_PYTHON([2.4])
 LT_AC_PROG_SED
 AG_GST_PLUGIN_DOCS([1.8],[2.1])
 AC_SUBST(SED)
@@ -305,7 +303,7 @@ fi
 AC_SUBST(PROFILE_CFLAGS)
 
 dnl every flag in FS_OPTION_CFLAGS can be overridden at make time
-FS_OPTION_CFLAGS="\$(WARNING_CFLAGS) \$(ERROR_CFLAGS) \$(DEBUG_CFLAGS) \$(PROFILE_CFLAGS) \$(GCOV_CFLAGS) \$(OPT_CFLAGS)"
+FS_OPTION_CFLAGS="-DGST_USE_UNSTABLE_API \$(WARNING_CFLAGS) \$(ERROR_CFLAGS) \$(DEBUG_CFLAGS) \$(PROFILE_CFLAGS) \$(GCOV_CFLAGS) \$(OPT_CFLAGS) -Wno-error=deprecated-declarations "
 AC_SUBST(FS_OPTION_CFLAGS)
 
 dnl our libraries need to be versioned correctly
@@ -314,7 +312,7 @@ AC_SUBST(FS_LT_LDFLAGS)
 dnl FS_INTERNAL_CFLAGS
 dnl prefer internal headers to already installed ones
 dnl also add builddir include for enumtypes and marshal
-FS_INTERNAL_CFLAGS="-I\$(top_srcdir) -I\$(top_builddir)"
+FS_INTERNAL_CFLAGS="-I\$(top_srcdir) -I\$(top_builddir) -DGST_USE_UNSTABLE_API"
 AC_SUBST(FS_INTERNAL_CFLAGS)
 
 dnl FIXME: do we want to rename to GST_ALL_* ?
@@ -347,26 +345,6 @@ dnl whatevertarget_LIBS and -L flags here affect the rest of the linking
 GST_PLUGIN_LDFLAGS="-module -avoid-version -export-symbols-regex '^[_]*gst_plugin_desc\$\$' $FS_ALL_LDFLAGS"
 AC_SUBST(GST_PLUGIN_LDFLAGS)
 
-
-AC_ARG_ENABLE([python],
-	AC_HELP_STRING([--disable-python], [Disable Python bindings]),
-	[case "${enableval}" in
-	    yes) WANT_PYTHON=yes ;;
-	    no)  WANT_PYTHON=no ;;
-	    *) AC_MSG_ERROR(bad value ${enableval} for --enable-python) ;;
-        esac],
-	WANT_PYTHON=yes)
-if test "x$WANT_PYTHON" = "xyes"; then
-   AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR(could not find Python headers)])
-   PKG_CHECK_MODULES(PYFARSTREAM, [ pygobject-2.0 >= 2.12.0
-				   gst-python-0.10 >= 0.10.10] )
-   PKG_CHECK_MODULES(PYCODEGEN, [ pygobject-2.0 >= 2.16.0 ],
-     PYCODEGEN=pygobject-codegen-2.0,
-       AC_MSG_ERROR([You need pygobject 2.16+ for the codegen]))
-fi
-AC_SUBST(PYCODEGEN)
-AM_CONDITIONAL(WANT_PYTHON, test "x$WANT_PYTHON" = "xyes")
-
 AC_ARG_ENABLE([gupnp],
 	AC_HELP_STRING([--disable-gupnp], [Disable GUPnP IGD support]),
 	[case "${enableval}" in
@@ -378,12 +356,16 @@ AC_ARG_ENABLE([gupnp],
 
 HAVE_GUPNP=no
 if test "x$WANT_GUPNP" != "xno"; then
-   PKG_CHECK_MODULES(GUPNP, [ gupnp-igd-1.0 ],
+   PKG_CHECK_MODULES(GUPNP, [ gupnp-igd-1.0 >= 0.2 ],
     [ HAVE_GUPNP=yes ],
     [ HAVE_GUPNP=no ])
 fi
 if test "x$WANT_GUPNP" = "xyes" && test "x$HAVE_GUPNP" = "xno"; then
    AC_ERROR([Requested GUPnP IGD, but it is not available])
+fi
+
+if test "x$HAVE_GUPNP" = "xyes"; then
+   AC_DEFINE(HAVE_GUPNP,,[Have the GUPnP IGD library])
 fi
 
 dnl *** output files ***
@@ -398,7 +380,6 @@ gst/Makefile
 gst/fsrawconference/Makefile
 gst/fsrtpconference/Makefile
 gst/fsmsnconference/Makefile
-gst/fsfunnel/Makefile
 gst/fsrtcpfilter/Makefile
 gst/fsvideoanyrate/Makefile
 farstream/Makefile
@@ -420,7 +401,6 @@ docs/Makefile
 docs/libs/Makefile
 docs/plugins/Makefile
 docs/version.entities
-python/Makefile
 m4/Makefile
 dnl docs/plugins/Makefile
 )

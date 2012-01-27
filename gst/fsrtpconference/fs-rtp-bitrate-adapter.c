@@ -79,14 +79,6 @@ enum
   PROP_CAPS,
 };
 
-enum
-{
-  SIGNAL_RENEGOTIATE,
-  LAST_SIGNAL
-};
-
-static guint signals[LAST_SIGNAL] = { 0 };
-
 #define PROP_INTERVAL_DEFAULT (10 * GST_SECOND)
 
 static void fs_rtp_bitrate_adapter_finalize (GObject *object);
@@ -100,21 +92,30 @@ static void fs_rtp_bitrate_adapter_set_property (GObject *object,
     GParamSpec *pspec);
 
 
-GST_BOILERPLATE (FsRtpBitrateAdapter, fs_rtp_bitrate_adapter, GstElement,
-    GST_TYPE_ELEMENT);
+G_DEFINE_TYPE (FsRtpBitrateAdapter, fs_rtp_bitrate_adapter, GST_TYPE_ELEMENT);
 
 static GstFlowReturn fs_rtp_bitrate_adapter_chain (GstPad *pad,
-    GstBuffer *buffer);
-static GstCaps *fs_rtp_bitrate_adapter_getcaps (GstPad *pad);
+    GstObject *parent, GstBuffer *buffer);
+static gboolean fs_rtp_bitrate_adapter_query (GstPad *pad, GstObject *parent,
+    GstQuery *query);
 
 static GstStateChangeReturn
 fs_rtp_bitrate_adapter_change_state (GstElement *element,
     GstStateChange transition);
 
+static GParamSpec *caps_pspec;
+
 static void
-fs_rtp_bitrate_adapter_base_init (gpointer klass)
+fs_rtp_bitrate_adapter_class_init (FsRtpBitrateAdapterClass *klass)
 {
+  GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
   GstElementClass *gstelement_class = GST_ELEMENT_CLASS (klass);
+
+  gobject_class->get_property = fs_rtp_bitrate_adapter_get_property;
+  gobject_class->set_property = fs_rtp_bitrate_adapter_set_property;
+  gobject_class->finalize = fs_rtp_bitrate_adapter_finalize;
+
+  gstelement_class->change_state = fs_rtp_bitrate_adapter_change_state;
 
   GST_DEBUG_CATEGORY_INIT
       (fs_rtp_bitrate_adapter_debug, "fsrtpbitrateadapter", 0,
@@ -131,30 +132,6 @@ fs_rtp_bitrate_adapter_base_init (gpointer klass)
       gst_static_pad_template_get (&fs_rtp_bitrate_adapter_sink_template));
   gst_element_class_add_pad_template (gstelement_class,
       gst_static_pad_template_get (&fs_rtp_bitrate_adapter_src_template));
-
-  signals[SIGNAL_RENEGOTIATE] = g_signal_new ("renegotiate",
-      G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST,
-      0,
-      NULL,
-      NULL,
-      g_cclosure_marshal_VOID__VOID,
-      G_TYPE_NONE, 0);
-}
-
-static GParamSpec *caps_pspec;
-
-static void
-fs_rtp_bitrate_adapter_class_init (FsRtpBitrateAdapterClass *klass)
-{
-  GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
-  GstElementClass *gstelement_class = GST_ELEMENT_CLASS (klass);
-
-  gobject_class->get_property = fs_rtp_bitrate_adapter_get_property;
-  gobject_class->set_property = fs_rtp_bitrate_adapter_set_property;
-  gobject_class->finalize = fs_rtp_bitrate_adapter_finalize;
-
-  gstelement_class->change_state = fs_rtp_bitrate_adapter_change_state;
 
   g_object_class_install_property (gobject_class,
       PROP_BITRATE,
@@ -205,21 +182,18 @@ bitrate_point_free (struct BitratePoint *bp)
 
 
 static void
-fs_rtp_bitrate_adapter_init (FsRtpBitrateAdapter *self,
-    FsRtpBitrateAdapterClass *klass)
+fs_rtp_bitrate_adapter_init (FsRtpBitrateAdapter *self)
 {
   self->sinkpad = gst_pad_new_from_static_template (
     &fs_rtp_bitrate_adapter_sink_template, "sink");
   gst_pad_set_chain_function (self->sinkpad, fs_rtp_bitrate_adapter_chain);
-  gst_pad_set_setcaps_function (self->sinkpad, gst_pad_proxy_setcaps);
-  gst_pad_set_getcaps_function (self->sinkpad,
-      fs_rtp_bitrate_adapter_getcaps);
+  gst_pad_set_query_function (self->sinkpad, fs_rtp_bitrate_adapter_query);
+  GST_PAD_SET_PROXY_CAPS (self->sinkpad);
   gst_element_add_pad (GST_ELEMENT (self), self->sinkpad);
 
   self->srcpad = gst_pad_new_from_static_template (
     &fs_rtp_bitrate_adapter_src_template, "src");
-  gst_pad_set_getcaps_function (self->srcpad,
-      fs_rtp_bitrate_adapter_getcaps);
+  gst_pad_set_query_function (self->sinkpad, fs_rtp_bitrate_adapter_query);
   gst_element_add_pad (GST_ELEMENT (self), self->srcpad);
 
   g_queue_init (&self->bitrate_history);
@@ -241,7 +215,7 @@ fs_rtp_bitrate_adapter_finalize (GObject *object)
   g_queue_foreach (&self->bitrate_history, (GFunc) bitrate_point_free, NULL);
   g_queue_clear(&self->bitrate_history);
 
-  G_OBJECT_CLASS (parent_class)->finalize (object);
+  G_OBJECT_CLASS (fs_rtp_bitrate_adapter_parent_class)->finalize (object);
 }
 
 struct Resolution {
@@ -432,63 +406,71 @@ fs_rtp_bitrate_adapter_get_suggested_caps (FsRtpBitrateAdapter *self)
   gst_caps_unref (allowed_caps);
   gst_caps_unref (caps);
 
-  gst_pad_fixate_caps (self->srcpad, wanted_caps);
+  gst_caps_fixate (wanted_caps);
 
   return wanted_caps;
 }
 
 
 static GstCaps *
-fs_rtp_bitrate_adapter_getcaps (GstPad *pad)
+fs_rtp_bitrate_adapter_getcaps (FsRtpBitrateAdapter *self, GstPad *pad,
+    GstCaps *filter)
 {
-  FsRtpBitrateAdapter *self = FS_RTP_BITRATE_ADAPTER (
-    gst_pad_get_parent_element (pad));
   GstCaps *caps;
   GstPad *otherpad;
   GstCaps *peer_caps;
-
-  if (!self)
-    return gst_caps_new_empty ();
 
   if (pad == self->srcpad)
     otherpad = self->sinkpad;
   else
     otherpad = self->srcpad;
 
-  peer_caps = gst_pad_peer_get_caps_reffed (otherpad);
+  peer_caps = gst_pad_peer_query_caps (otherpad, filter);
 
   GST_OBJECT_LOCK (self);
-  if (peer_caps)
-  {
-    if (self->caps)
-      caps = gst_caps_intersect_full (self->caps, peer_caps,
-          GST_CAPS_INTERSECT_FIRST);
-    else
-      caps = gst_caps_intersect (peer_caps,
-          gst_pad_get_pad_template_caps (pad));
-
-      gst_caps_unref (peer_caps);
-  }
+  if (self->caps)
+    caps = gst_caps_intersect_full (self->caps, peer_caps,
+        GST_CAPS_INTERSECT_FIRST);
   else
-  {
-    if (self->caps)
-      caps = gst_caps_intersect (self->caps,
-          gst_pad_get_pad_template_caps (pad));
-    else
-      caps = gst_caps_copy (gst_pad_get_pad_template_caps (pad));
-  }
+    caps = gst_caps_intersect (peer_caps,
+        gst_pad_get_pad_template_caps (pad));
+  gst_caps_unref (peer_caps);
   GST_OBJECT_UNLOCK (self);
-
-  gst_object_unref (self);
 
   return caps;
 }
 
-static GstFlowReturn
-fs_rtp_bitrate_adapter_chain (GstPad *pad, GstBuffer *buffer)
+static gboolean
+fs_rtp_bitrate_adapter_query (GstPad *pad, GstObject *parent, GstQuery *query)
 {
-  FsRtpBitrateAdapter *self =  FS_RTP_BITRATE_ADAPTER (
-    gst_pad_get_parent_element (pad));
+  FsRtpBitrateAdapter *self = FS_RTP_BITRATE_ADAPTER (parent);
+  gboolean res;
+
+  switch (GST_QUERY_TYPE (query)) {
+    case GST_QUERY_CAPS:
+    {
+      GstCaps *caps, *filter;
+
+      gst_query_parse_caps (query, &filter);
+      caps = fs_rtp_bitrate_adapter_getcaps (self, pad, filter);
+      gst_query_set_caps_result (query, caps);
+      gst_caps_unref (caps);
+      res = TRUE;
+      break;
+    }
+    default:
+      res = gst_pad_query_default (pad, parent, query);
+      break;
+  }
+
+  return res;
+}
+
+static GstFlowReturn
+fs_rtp_bitrate_adapter_chain (GstPad *pad, GstObject *parent,
+    GstBuffer *buffer)
+{
+  FsRtpBitrateAdapter *self = FS_RTP_BITRATE_ADAPTER (parent);
   GstFlowReturn ret;
 
   if (!self)
@@ -496,7 +478,6 @@ fs_rtp_bitrate_adapter_chain (GstPad *pad, GstBuffer *buffer)
 
   ret = gst_pad_push (self->srcpad, buffer);
 
-  gst_object_unref (self);
   return ret;
 }
 
@@ -537,7 +518,7 @@ fs_rtp_bitrate_adapter_updated_unlock (FsRtpBitrateAdapter *self)
 {
   GstCaps *wanted_caps;
   guint bitrate;
-  GstCaps *negotiated_caps;
+  GstCaps *current_caps;
 
   bitrate = fs_rtp_bitrate_adapter_get_bitrate_locked (self);
   if (self->caps)
@@ -553,20 +534,21 @@ fs_rtp_bitrate_adapter_updated_unlock (FsRtpBitrateAdapter *self)
   self->caps = caps_from_bitrate (bitrate);
   GST_OBJECT_UNLOCK (self);
 
-  negotiated_caps = gst_pad_get_negotiated_caps (self->sinkpad);
-  if (!negotiated_caps)
+  current_caps = gst_pad_get_current_caps (self->sinkpad);
+  if (!current_caps)
     return;
 
   wanted_caps = fs_rtp_bitrate_adapter_get_suggested_caps (self);
 
   GST_DEBUG ("wanted: %s", gst_caps_to_string (wanted_caps));
-  GST_DEBUG ("current: %s", gst_caps_to_string (negotiated_caps));
+  GST_DEBUG ("current: %s", gst_caps_to_string (current_caps));
 
-  if (!gst_caps_is_equal_fixed (negotiated_caps, wanted_caps))
-    g_signal_emit (self, signals[SIGNAL_RENEGOTIATE], 0);
+  if (!gst_caps_is_equal_fixed (current_caps, wanted_caps))
+    gst_pad_push_event (self->sinkpad,
+        gst_event_new_reconfigure ());
 
   gst_caps_unref (wanted_caps);
-  gst_caps_unref (negotiated_caps);
+  gst_caps_unref (current_caps);
 }
 
 static void
@@ -726,8 +708,8 @@ fs_rtp_bitrate_adapter_change_state (GstElement *element,
   }
 
   if ((result =
-          GST_ELEMENT_CLASS (parent_class)->change_state (element,
-              transition)) == GST_STATE_CHANGE_FAILURE)
+          GST_ELEMENT_CLASS (fs_rtp_bitrate_adapter_parent_class)->change_state
+          (element, transition)) == GST_STATE_CHANGE_FAILURE)
     goto failure;
 
   return result;

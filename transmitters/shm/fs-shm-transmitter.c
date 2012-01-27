@@ -346,12 +346,12 @@ fs_shm_transmitter_constructed (GObject *object)
 
     /* Lets create the RTP source funnel */
 
-    self->priv->funnels[c] = gst_element_factory_make ("fsfunnel", NULL);
+    self->priv->funnels[c] = gst_element_factory_make ("funnel", NULL);
 
     if (!self->priv->funnels[c]) {
       trans->construction_error = g_error_new (FS_ERROR,
         FS_ERROR_CONSTRUCTION,
-        "Could not make the fsfunnel element");
+        "Could not make the funnel element");
       return;
     }
 
@@ -359,11 +359,11 @@ fs_shm_transmitter_constructed (GObject *object)
         self->priv->funnels[c])) {
       trans->construction_error = g_error_new (FS_ERROR,
         FS_ERROR_CONSTRUCTION,
-        "Could not add the fsfunnel element to the transmitter src bin");
+        "Could not add the funnel element to the transmitter src bin");
     }
 
     pad = gst_element_get_static_pad (self->priv->funnels[c], "src");
-    padname = g_strdup_printf ("src%d", c);
+    padname = g_strdup_printf ("src_%u", c);
     ghostpad = gst_ghost_pad_new (padname, pad);
     g_free (padname);
     gst_object_unref (pad);
@@ -391,7 +391,7 @@ fs_shm_transmitter_constructed (GObject *object)
     }
 
     pad = gst_element_get_static_pad (self->priv->tees[c], "sink");
-    padname = g_strdup_printf ("sink%d", c);
+    padname = g_strdup_printf ("sink_%u", c);
     ghostpad = gst_ghost_pad_new (padname, pad);
     g_free (padname);
     gst_object_unref (pad);
@@ -422,7 +422,7 @@ fs_shm_transmitter_constructed (GObject *object)
       return;
     }
 
-    pad = gst_element_get_request_pad (self->priv->tees[c], "src%d");
+    pad = gst_element_get_request_pad (self->priv->tees[c], "src_%u");
     pad2 = gst_element_get_static_pad (fakesink, "sink");
 
     ret = gst_pad_link (pad, pad2);
@@ -570,9 +570,12 @@ struct _ShmSrc {
 };
 
 
-static gboolean
-src_buffer_probe_cb (GstPad *pad, GstBuffer *buffer, ShmSrc *shm)
+static GstPadProbeReturn
+src_buffer_probe_cb (GstPad *pad, GstPadProbeInfo *info, gpointer user_data)
 {
+  ShmSrc *shm = user_data;
+  GstBuffer *buffer = GST_PAD_PROBE_INFO_BUFFER (info);
+
   shm->got_buffer_func (buffer, shm->component, shm->cb_data);
 
   return TRUE;
@@ -638,7 +641,7 @@ fs_shm_transmitter_get_shm_src (FsShmTransmitter *self,
   shm->src = elem;
 
   shm->funnelpad = gst_element_get_request_pad (self->priv->funnels[component],
-      "sink%d");
+      "sink_%u");
 
   if (!shm->funnelpad)
   {
@@ -659,8 +662,9 @@ fs_shm_transmitter_get_shm_src (FsShmTransmitter *self,
   gst_object_unref (pad);
 
   if (got_buffer_func)
-    shm->buffer_probe = gst_pad_add_buffer_probe (shm->funnelpad,
-        G_CALLBACK (src_buffer_probe_cb), shm);
+    shm->buffer_probe = gst_pad_add_probe (shm->funnelpad,
+        GST_PAD_PROBE_TYPE_BUFFER,
+        src_buffer_probe_cb, shm, NULL);
 
   if (!gst_element_sync_state_with_parent (shm->src))
   {
@@ -688,7 +692,7 @@ fs_shm_transmitter_check_shm_src (FsShmTransmitter *self, ShmSrc *shm,
     return TRUE;
 
   if (shm->buffer_probe)
-    gst_pad_remove_buffer_probe (shm->funnelpad, shm->buffer_probe);
+    gst_pad_remove_probe (shm->funnelpad, shm->buffer_probe);
   shm->buffer_probe = 0;
 
   if (shm->src)
@@ -845,7 +849,7 @@ fs_shm_transmitter_get_shm_sink (FsShmTransmitter *self,
   }
 
   shm->teepad = gst_element_get_request_pad (self->priv->tees[component],
-      "src%d");
+      "src_%u");
 
   if (!shm->teepad)
   {

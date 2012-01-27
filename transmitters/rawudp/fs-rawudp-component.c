@@ -39,7 +39,7 @@
 
 #include <farstream/fs-conference.h>
 
-#include <gst/netbuffer/gstnetbuffer.h>
+#include <gst/net/gstnetaddressmeta.h>
 
 #ifdef HAVE_GUPNP
 #include <libgupnp-igd/gupnp-simple-igd-thread.h>
@@ -143,7 +143,7 @@ struct _FsRawUdpComponentPrivate
   UdpPort *udpport;
 
   FsCandidate *remote_candidate;
-  GstNetAddress remote_address;
+  GSocketAddress *remote_address;
 
   FsCandidate *local_active_candidate;
   FsCandidate *local_forced_candidate;
@@ -216,16 +216,15 @@ static void
 fs_rawudp_component_emit_candidate (FsRawUdpComponent *self,
     FsCandidate *candidate);
 
-static gboolean
-stun_recv_cb (GstPad *pad, GstBuffer *buffer,
-    gpointer user_data);
+static GstPadProbeReturn
+stun_recv_cb (GstPad *pad, GstPadProbeInfo *info, gpointer user_data);
 static gpointer
 stun_timeout_func (gpointer user_data);
-static gboolean
-buffer_recv_cb (GstPad *pad, GstBuffer *buffer, gpointer user_data);
+static GstPadProbeReturn
+buffer_recv_cb (GstPad *pad, GstPadProbeInfo *info, gpointer user_data);
 
 static void
-remote_is_unique_cb (gboolean unique, const GstNetAddress *address,
+remote_is_unique_cb (gboolean unique, GSocketAddress *address,
     gpointer user_data);
 
 static gboolean
@@ -260,8 +259,6 @@ fs_rawudp_component_register_type (FsPlugin *module)
   };
 
   /* Required because the GST type registration is not thread safe */
-
-  g_type_class_ref (GST_TYPE_NETBUFFER);
 
   type = g_type_module_register_type (G_TYPE_MODULE (module),
       G_TYPE_OBJECT, "FsRawUdpComponent", &info, 0);
@@ -572,8 +569,7 @@ fs_rawudp_constructed (GObject *object)
   if (self->priv->associate_on_source)
     self->priv->buffer_recv_id =
       fs_rawudp_transmitter_udpport_connect_recv (
-          self->priv->udpport,
-          G_CALLBACK (buffer_recv_cb), self);
+          self->priv->udpport, buffer_recv_cb, self);
 
   GST_CALL_PARENT (G_OBJECT_CLASS, constructed, (object));
 }
@@ -610,6 +606,8 @@ fs_rawudp_component_dispose (GObject *object)
   ts = self->priv->transmitter;
   self->priv->transmitter = NULL;
   FS_RAWUDP_COMPONENT_UNLOCK (self);
+
+  g_clear_object (&self->priv->remote_address);
 
   g_object_unref (ts);
 
@@ -670,7 +668,7 @@ fs_rawudp_component_stop (FsRawUdpComponent *self)
 
 
       fs_rawudp_transmitter_udpport_remove_known_address (udpport,
-          &self->priv->remote_address, remote_is_unique_cb, self);
+          self->priv->remote_address, remote_is_unique_cb, self);
     }
 
     FS_RAWUDP_COMPONENT_UNLOCK (self);
@@ -912,14 +910,14 @@ fs_rawudp_component_new (
 }
 
 static void
-remote_is_unique_cb (gboolean unique, const GstNetAddress *address,
+remote_is_unique_cb (gboolean unique, GSocketAddress *address,
     gpointer user_data)
 {
   FsRawUdpComponent *self = FS_RAWUDP_COMPONENT (user_data);
 
   FS_RAWUDP_COMPONENT_LOCK (self);
 
-  if (!gst_netaddress_equal (address, &self->priv->remote_address))
+  if (!fs_g_inet_socket_address_equal (address, self->priv->remote_address))
   {
     GST_ERROR ("Got callback for an address that is not ours");
     goto out;
@@ -942,6 +940,7 @@ fs_rawudp_component_set_remote_candidate (FsRawUdpComponent *self,
   struct addrinfo hints = {0};
   struct addrinfo *res = NULL;
   int rv;
+  GInetAddress *addr;
 
   if (candidate->component_id != self->priv->component)
   {
@@ -973,30 +972,36 @@ fs_rawudp_component_set_remote_candidate (FsRawUdpComponent *self,
 
   if (self->priv->remote_candidate)
     fs_rawudp_transmitter_udpport_remove_known_address (self->priv->udpport,
-        &self->priv->remote_address, remote_is_unique_cb, self);
+        self->priv->remote_address, remote_is_unique_cb, self);
 
   old_candidate = self->priv->remote_candidate;
   self->priv->remote_candidate = fs_candidate_copy (candidate);
   sending = self->priv->sending;
 
+  g_clear_object (&self->priv->remote_address);
+
   switch (res->ai_family)
   {
     case AF_INET:
-      gst_netaddress_set_ip4_address (&self->priv->remote_address,
-          ((struct sockaddr_in *)res->ai_addr)->sin_addr.s_addr,
-          g_htons(candidate->port));
+      addr = g_inet_address_new_from_bytes (
+        (guint8*) &(((struct sockaddr_in *)res->ai_addr)->sin_addr.s_addr),
+        G_SOCKET_FAMILY_IPV4);
       break;
     case AF_INET6:
-      gst_netaddress_set_ip6_address (&self->priv->remote_address,
-          ((struct sockaddr_in6 *)res->ai_addr)->sin6_addr.s6_addr,
-          g_htons(candidate->port));
+      addr = g_inet_address_new_from_bytes (
+        (guint8*) &(((struct sockaddr_in6 *)res->ai_addr)->sin6_addr.s6_addr),
+        G_SOCKET_FAMILY_IPV6);
       break;
   }
 
 
+  self->priv->remote_address = g_inet_socket_address_new (addr,
+      candidate->port);
+  g_object_unref (addr);
+
   self->priv->remote_is_unique =
     fs_rawudp_transmitter_udpport_add_known_address (self->priv->udpport,
-        &self->priv->remote_address, remote_is_unique_cb, self);
+        self->priv->remote_address, remote_is_unique_cb, self);
 
   FS_RAWUDP_COMPONENT_UNLOCK (self);
 
@@ -1308,8 +1313,7 @@ fs_rawudp_component_start_stun (FsRawUdpComponent *self, GError **error)
   FS_RAWUDP_COMPONENT_LOCK (self);
   self->priv->stun_recv_id =
     fs_rawudp_transmitter_udpport_connect_recv (
-        self->priv->udpport,
-        G_CALLBACK (stun_recv_cb), self);
+      self->priv->udpport, stun_recv_cb, self);
 
 
   nice_address_init (&niceaddr);
@@ -1376,11 +1380,11 @@ fs_rawudp_component_stop_stun_locked (FsRawUdpComponent *self)
 
 
 
-static gboolean
-stun_recv_cb (GstPad *pad, GstBuffer *buffer,
-    gpointer user_data)
+static GstPadProbeReturn
+stun_recv_cb (GstPad *pad, GstPadProbeInfo *info, gpointer user_data)
 {
   FsRawUdpComponent *self = FS_RAWUDP_COMPONENT (user_data);
+  GstBuffer *buffer = GST_PAD_PROBE_INFO_BUFFER (info);
   FsCandidate *candidate = NULL;
   StunMessage msg;
   StunValidationStatus stunv;
@@ -1391,26 +1395,30 @@ stun_recv_cb (GstPad *pad, GstBuffer *buffer,
   socklen_t alt_addr_len = sizeof(alt_addr);
   gchar addr_str[NI_MAXHOST];
   NiceAddress niceaddr;
+  GstMapInfo map;
 
-  if (GST_BUFFER_SIZE (buffer) < 4)
+  gst_buffer_map (buffer, &map, GST_MAP_READ);
+
+  if (gst_buffer_get_size (buffer) < 4)
     /* Packet is too small to be STUN */
-    return TRUE;
+    goto passthrough;
 
-  if (GST_BUFFER_DATA (buffer)[0] >> 6)
+  if (map.data[0] >> 6)
     /* Non stun packet */
-    return TRUE;
+    goto passthrough;
 
 
   g_assert (fs_rawudp_transmitter_udpport_is_pad (self->priv->udpport, pad));
 
   FS_RAWUDP_COMPONENT_LOCK(self);
   stunv = stun_agent_validate (&self->priv->stun_agent, &msg,
-      GST_BUFFER_DATA (buffer), GST_BUFFER_SIZE (buffer), NULL, NULL);
+      map.data, map.size, NULL, NULL);
   FS_RAWUDP_COMPONENT_UNLOCK(self);
 
   /* not a valid stun message */
   if (stunv != STUN_VALIDATION_SUCCESS)
-    return TRUE;
+    goto passthrough;
+
 
   stunr = stun_usage_bind_process (&msg,
       (struct sockaddr *) &addr, &addr_len,
@@ -1483,7 +1491,14 @@ stun_recv_cb (GstPad *pad, GstBuffer *buffer,
 
   fs_candidate_destroy (candidate);
 
-  return FALSE;
+  gst_buffer_unmap (buffer, &map);
+
+  return GST_PAD_PROBE_DROP;
+
+passthrough:
+
+  gst_buffer_unmap (buffer, &map);
+  return GST_PAD_PROBE_OK;
 }
 
 static gpointer
@@ -1704,18 +1719,19 @@ fs_rawudp_component_emit_candidate (FsRawUdpComponent *self,
  * This is a has "have-data" signal handler, so we return %TRUE to not
  * drop the buffer
  */
-static gboolean
-buffer_recv_cb (GstPad *pad, GstBuffer *buffer, gpointer user_data)
+static GstPadProbeReturn
+buffer_recv_cb (GstPad *pad, GstPadProbeInfo *info, gpointer user_data)
 {
   FsRawUdpComponent *self = FS_RAWUDP_COMPONENT (user_data);
+  GstBuffer *buffer = GST_PAD_PROBE_INFO_BUFFER (info);
+  GstNetAddressMeta *netmeta = gst_buffer_get_net_address_meta (buffer);
 
-  if (GST_IS_NETBUFFER (buffer))
+  if (netmeta)
   {
-    GstNetBuffer *netbuffer = (GstNetBuffer*) buffer;
-
     FS_RAWUDP_COMPONENT_LOCK (self);
     if (self->priv->remote_is_unique &&
-        gst_netaddress_equal (&self->priv->remote_address, &netbuffer->from))
+        fs_g_inet_socket_address_equal (self->priv->remote_address,
+            netmeta->addr))
     {
       FS_RAWUDP_COMPONENT_UNLOCK (self);
       g_signal_emit (self, signals[KNOWN_SOURCE_PACKET_RECEIVED], 0,
@@ -1728,8 +1744,8 @@ buffer_recv_cb (GstPad *pad, GstBuffer *buffer, gpointer user_data)
   }
   else
   {
-    GST_WARNING ("received buffer thats not a NetBuffer");
+    GST_WARNING ("received buffer that does not contain a GstNetAddressMeta");
   }
 
-  return TRUE;
+  return GST_PAD_PROBE_OK;
 }

@@ -168,11 +168,15 @@ fs_rtp_tfrc_destroy (FsRtpTfrc *self)
 {
   GST_OBJECT_LOCK (self);
 
+  if (self->modder_check_probe_id)
+    gst_pad_remove_probe (self->in_rtp_pad, self->modder_check_probe_id);
+  self->modder_check_probe_id = 0;
+
   if (self->in_rtp_probe_id)
-    g_signal_handler_disconnect (self->in_rtp_pad, self->in_rtp_probe_id);
+    gst_pad_remove_probe (self->in_rtp_pad, self->in_rtp_probe_id);
   self->in_rtp_probe_id = 0;
   if (self->in_rtcp_probe_id)
-    g_signal_handler_disconnect (self->in_rtcp_pad, self->in_rtcp_probe_id);
+    gst_pad_remove_probe (self->in_rtcp_pad, self->in_rtcp_probe_id);
   self->in_rtcp_probe_id = 0;
 
 
@@ -534,7 +538,7 @@ feedback_timer_expired (GstClock *clock, GstClockTime time, GstClockID id,
 
 struct SendingRtcpData {
   FsRtpTfrc *self;
-  GstBuffer *buffer;
+  GstRTCPBuffer rtcpbuffer;
   gboolean ret;
   guint32 ssrc;
   gboolean have_ssrc;
@@ -562,7 +566,8 @@ tfrc_sources_process (gpointer key, gpointer value, gpointer user_data)
   if (!src->send_feedback)
     goto done;
 
-  if (!gst_rtcp_buffer_add_packet (data->buffer, GST_RTCP_TYPE_RTPFB, &packet))
+  if (!gst_rtcp_buffer_add_packet (&data->rtcpbuffer, GST_RTCP_TYPE_RTPFB,
+          &packet))
     goto done;
 
   if (!gst_rtcp_packet_fb_set_fci_length (&packet, 4))
@@ -609,24 +614,30 @@ static gboolean
 rtpsession_sending_rtcp (GObject *rtpsession, GstBuffer *buffer,
     gboolean is_early, FsRtpTfrc *self)
 {
-  struct SendingRtcpData data;
+  struct SendingRtcpData data = {NULL, GST_RTCP_BUFFER_INIT};
+
+  gst_rtcp_buffer_map (buffer, GST_MAP_READWRITE, &data.rtcpbuffer);
 
   data.self = self;
   data.ret = FALSE;
-  data.buffer = buffer;
   data.have_ssrc = FALSE;
+
 
   GST_OBJECT_LOCK (self);
   g_hash_table_foreach (self->tfrc_sources, tfrc_sources_process, &data);
   GST_OBJECT_UNLOCK (self);
 
+  gst_rtcp_buffer_unmap (&data.rtcpbuffer);
+
   /* Return TRUE if something was added */
   return data.ret;
 }
 
-static gboolean
-incoming_rtp_probe (GstPad *pad, GstBuffer *buffer, FsRtpTfrc *self)
+static GstPadProbeReturn
+incoming_rtp_probe (GstPad *pad, GstPadProbeInfo *info, gpointer user_data)
 {
+  FsRtpTfrc *self = FS_RTP_TFRC (user_data);
+  GstBuffer *buffer = GST_PAD_PROBE_INFO_BUFFER (info);
   guint32 ssrc;
   guint8 *data;
   guint size;
@@ -639,32 +650,35 @@ incoming_rtp_probe (GstPad *pad, GstBuffer *buffer, FsRtpTfrc *self)
   guint64 now;
   guint8 pt;
   gint seq_delta;
+  GstRTPBuffer rtpbuffer = GST_RTP_BUFFER_INIT;
 
   if (!gst_rtp_buffer_validate (buffer))
-    return TRUE;
+    return GST_PAD_PROBE_OK;
 
   GST_OBJECT_LOCK (self);
+
 
   if (!self->fsrtpsession)
     goto out_no_header;
 
-  ssrc = gst_rtp_buffer_get_ssrc (buffer);
-
-  pt = gst_rtp_buffer_get_payload_type (buffer);
+  gst_rtp_buffer_map (buffer, GST_MAP_READ, &rtpbuffer);
+  ssrc = gst_rtp_buffer_get_ssrc (&rtpbuffer);
+  pt = gst_rtp_buffer_get_payload_type (&rtpbuffer);
+  seq = gst_rtp_buffer_get_seq (&rtpbuffer);
 
   if (pt > 128 || !self->pts[pt])
-    goto out_no_header;
+    goto out_no_header_unmap;
 
   if (self->extension_type == EXTENSION_NONE)
-    goto out_no_header;
+    goto out_no_header_unmap;
   else if (self->extension_type == EXTENSION_ONE_BYTE)
-    got_header = gst_rtp_buffer_get_extension_onebyte_header (buffer,
+    got_header = gst_rtp_buffer_get_extension_onebyte_header (&rtpbuffer,
         self->extension_id, 0, (gpointer *) &data, &size);
   else if (self->extension_type == EXTENSION_TWO_BYTES)
-    got_header = gst_rtp_buffer_get_extension_twobytes_header (buffer,
+    got_header = gst_rtp_buffer_get_extension_twobytes_header (&rtpbuffer,
         NULL, self->extension_id, 0, (gpointer *) &data, &size);
 
-  seq = gst_rtp_buffer_get_seq (buffer);
+  gst_rtp_buffer_unmap (&rtpbuffer);
 
   src = fs_rtp_tfrc_get_remote_ssrc_locked (self, ssrc, NULL);
 
@@ -723,7 +737,7 @@ incoming_rtp_probe (GstPad *pad, GstBuffer *buffer, FsRtpTfrc *self)
   ts += src->ts_cycles;
 
   send_rtcp = tfrc_receiver_got_packet (src->receiver, ts, now, seq, rtt,
-      GST_BUFFER_SIZE (buffer));
+      rtpbuffer.map.size);
 
   GST_LOG_OBJECT (self, "Got RTP packet");
 
@@ -746,7 +760,11 @@ out:
     GST_OBJECT_UNLOCK (self);
   }
 
-  return TRUE;
+  return GST_PAD_PROBE_OK;
+
+out_no_header_unmap:
+
+  gst_rtp_buffer_unmap (&rtpbuffer);
 
 out_no_header:
   if (src)
@@ -844,16 +862,21 @@ tracked_src_add_sender (struct TrackedSource *src, guint64 now,
   src->send_ts_base = now;
 }
 
-static gboolean
-incoming_rtcp_probe (GstPad *pad, GstBuffer *buffer, FsRtpTfrc *self)
+static GstPadProbeReturn
+incoming_rtcp_probe (GstPad *pad, GstPadProbeInfo *info, gpointer user_data)
 {
+  FsRtpTfrc *self = FS_RTP_TFRC (user_data);
+  GstBuffer *buffer = GST_PAD_PROBE_INFO_BUFFER (info);
+  GstRTCPBuffer rtcpbuffer = GST_RTCP_BUFFER_INIT;
   GstRTCPPacket packet;
   gboolean notify = FALSE;
 
   if (!gst_rtcp_buffer_validate (buffer))
-    goto out;
+    return GST_PAD_PROBE_OK;
 
-  if (!gst_rtcp_buffer_get_first_packet (buffer, &packet))
+  gst_rtcp_buffer_map (buffer, GST_MAP_READ, &rtcpbuffer);
+
+  if (!gst_rtcp_buffer_get_first_packet (&rtcpbuffer, &packet))
     goto out;
 
   do {
@@ -868,7 +891,7 @@ incoming_rtcp_probe (GstPad *pad, GstBuffer *buffer, FsRtpTfrc *self)
       guint32 delay;
       guint32 x_recv;
       gdouble loss_event_rate;
-      guint8 *buf = GST_BUFFER_DATA (packet.buffer) + packet.offset;
+      guint8 *buf = rtcpbuffer.map.data + packet.offset;
       struct TrackedSource *src;
       guint64 now;
       guint64 rtt;
@@ -982,7 +1005,10 @@ incoming_rtcp_probe (GstPad *pad, GstBuffer *buffer, FsRtpTfrc *self)
     g_object_notify (G_OBJECT (self), "bitrate");
 
 out:
-  return TRUE;
+
+  gst_rtcp_buffer_unmap (&rtcpbuffer);
+
+  return GST_PAD_PROBE_OK;
 }
 
 static GstClockTime
@@ -1015,7 +1041,7 @@ fs_rtp_tfrc_get_sync_time (FsRtpPacketModder *modder,
     bytes_for_one_rtt = 0;
   }
 
-  size = GST_BUFFER_SIZE (buffer) + 10;
+  size = gst_buffer_get_size (buffer) + 10;
 
   if (GST_BUFFER_TIMESTAMP_IS_VALID (buffer))
   {
@@ -1067,8 +1093,13 @@ fs_rtp_tfrc_outgoing_packets (FsRtpPacketModder *modder,
   FsRtpTfrc *self = FS_RTP_TFRC (user_data);
   gchar data[7];
   guint64 now;
+  GstBuffer *headerbuf;
+  GstBuffer *databuf;
   GstBuffer *newbuf;
   gboolean is_data_limited;
+  gsize header_size;
+  gsize new_header_size;
+  GstRTPBuffer rtpbuffer = GST_RTP_BUFFER_INIT;
 
   if (!GST_CLOCK_TIME_IS_VALID (buffer_ts))
     return buffer;
@@ -1101,39 +1132,48 @@ fs_rtp_tfrc_outgoing_packets (FsRtpPacketModder *modder,
       ONE_32BIT_CYCLE)
     self->last_src->send_ts_cycles += ONE_32BIT_CYCLE;
 
-  is_data_limited = (GST_BUFFER_TIMESTAMP (buffer) == buffer_ts);
+  is_data_limited = (GST_BUFFER_PTS (buffer) == buffer_ts);
 
-  newbuf = gst_buffer_new_and_alloc (GST_BUFFER_SIZE (buffer) + 16);
-  gst_buffer_copy_metadata (newbuf, buffer, GST_BUFFER_COPY_ALL);
+  gst_rtp_buffer_map (buffer, GST_MAP_READ, &rtpbuffer);
+  header_size = gst_rtp_buffer_get_header_len (&rtpbuffer);
+  gst_rtp_buffer_unmap (&rtpbuffer);
 
-  memcpy (GST_BUFFER_DATA (newbuf), GST_BUFFER_DATA (buffer),
-      gst_rtp_buffer_get_header_len (buffer));
+  headerbuf = gst_buffer_copy_region (buffer, GST_BUFFER_COPY_METADATA, 0,
+      header_size);
+  headerbuf = gst_buffer_make_writable (headerbuf);
+  gst_buffer_set_size (headerbuf, header_size + 16);
+
+  gst_rtp_buffer_map (headerbuf, GST_MAP_READWRITE, &rtpbuffer);
 
   if (self->extension_type == EXTENSION_ONE_BYTE)
   {
-    if (!gst_rtp_buffer_add_extension_onebyte_header (newbuf,
+    if (!gst_rtp_buffer_add_extension_onebyte_header (&rtpbuffer,
             self->extension_id, data, 7))
       GST_WARNING_OBJECT (self,
-          "Could not add extension to RTP header buf %p", newbuf);
+          "Could not add extension to RTP header buf %p", headerbuf);
   }
   else if (self->extension_type == EXTENSION_TWO_BYTES)
   {
-    if (!gst_rtp_buffer_add_extension_twobytes_header (newbuf, 0,
+    if (!gst_rtp_buffer_add_extension_twobytes_header (&rtpbuffer, 0,
             self->extension_id, data, 7))
       GST_WARNING_OBJECT (self,
-          "Could not add extension to RTP header in list %p", newbuf);
+          "Could not add extension to RTP header in list %p", headerbuf);
   }
 
   /* FIXME:
    * This will break if any padding is applied
    */
+  new_header_size = gst_rtp_buffer_get_header_len (&rtpbuffer);
 
-  GST_BUFFER_SIZE (newbuf) = gst_rtp_buffer_get_header_len (newbuf) +
-    gst_rtp_buffer_get_payload_len (buffer);
+  gst_rtp_buffer_unmap (&rtpbuffer);
 
-  memcpy (gst_rtp_buffer_get_payload (newbuf),
-      gst_rtp_buffer_get_payload (buffer),
-      gst_rtp_buffer_get_payload_len (buffer));
+  databuf = gst_buffer_copy_region (buffer, GST_BUFFER_COPY_ALL, header_size,
+      gst_buffer_get_size (buffer) - header_size);
+
+  newbuf = gst_buffer_span (headerbuf, new_header_size, databuf,
+      gst_buffer_get_size (buffer) + new_header_size - header_size);
+  gst_buffer_unref (headerbuf);
+  gst_buffer_unref (databuf);
 
 
   GST_LOG_OBJECT (self, "Sending RTP");
@@ -1152,7 +1192,7 @@ fs_rtp_tfrc_outgoing_packets (FsRtpPacketModder *modder,
       {
         if (!is_data_limited)
           tfrc_is_data_limited_not_limited_now (src->idl, now);
-        tfrc_sender_sending_packet (src->sender, GST_BUFFER_SIZE (newbuf));
+        tfrc_sender_sending_packet (src->sender, gst_buffer_get_size (newbuf));
       }
     }
   }
@@ -1161,7 +1201,7 @@ fs_rtp_tfrc_outgoing_packets (FsRtpPacketModder *modder,
     if (!is_data_limited)
       tfrc_is_data_limited_not_limited_now (self->initial_src->idl, now);
     tfrc_sender_sending_packet (self->initial_src->sender,
-        GST_BUFFER_SIZE (newbuf));
+        gst_buffer_get_size (newbuf));
   }
 
 
@@ -1172,19 +1212,15 @@ fs_rtp_tfrc_outgoing_packets (FsRtpPacketModder *modder,
   return newbuf;
 }
 
-static void
-pad_block_do_nothing (GstPad *pad, gboolean blocked, gpointer user_data)
-{
-}
-
-static void
-send_rtp_pad_blocked (GstPad *pad, gboolean blocked, gpointer user_data)
+static GstPadProbeReturn
+send_rtp_pad_blocked (GstPad *pad, GstPadProbeInfo *info, gpointer user_data)
 {
   FsRtpTfrc *self = user_data;
   gboolean need_modder;
   GstPad *peer = NULL;
 
   GST_OBJECT_LOCK (self);
+  self->modder_check_probe_id = 0;
   need_modder = self->extension_type != EXTENSION_NONE;
 
   if (!self->fsrtpsession || !!self->packet_modder == need_modder)
@@ -1269,8 +1305,7 @@ out:
   gst_object_unref (peer);
   GST_OBJECT_UNLOCK (self);
 
-  gst_pad_set_blocked_async (pad, FALSE, pad_block_do_nothing, NULL);
-  return;
+  return GST_PAD_PROBE_REMOVE;
 
 linking_failed:
   gst_bin_remove (self->parent_bin, self->packet_modder);
@@ -1291,8 +1326,14 @@ fs_rtp_tfrc_check_modder_locked (FsRtpTfrc *self)
   if (!!self->packet_modder == need_modder)
     return;
 
-  gst_pad_set_blocked_async_full (self->out_rtp_pad, TRUE, send_rtp_pad_blocked,
-      g_object_ref (self), (GDestroyNotify) g_object_unref);
+  if (self->modder_check_probe_id != 0)
+    return;
+
+  self->modder_check_probe_id =
+      gst_pad_add_probe (self->out_rtp_pad,
+          GST_PAD_PROBE_TYPE_BLOCK_DOWNSTREAM,
+          send_rtp_pad_blocked,
+          g_object_ref (self), (GDestroyNotify) g_object_unref);
 }
 
 
@@ -1318,10 +1359,10 @@ fs_rtp_tfrc_new (FsRtpSession *fsrtpsession)
   self->out_rtp_pad = gst_element_get_static_pad (rtpmuxer, "src");
   gst_object_unref (rtpmuxer);
 
-  self->in_rtp_probe_id = gst_pad_add_buffer_probe (self->in_rtp_pad,
-      G_CALLBACK (incoming_rtp_probe), self);
-  self->in_rtcp_probe_id = gst_pad_add_buffer_probe (self->in_rtcp_pad,
-      G_CALLBACK (incoming_rtcp_probe), self);
+  self->in_rtp_probe_id = gst_pad_add_probe (self->in_rtp_pad,
+      GST_PAD_PROBE_TYPE_BUFFER, incoming_rtp_probe, self, NULL);
+  self->in_rtcp_probe_id = gst_pad_add_probe (self->in_rtcp_pad,
+      GST_PAD_PROBE_TYPE_BUFFER, incoming_rtcp_probe, self, NULL);
 
 
   self->on_ssrc_validated_id = g_signal_connect_object (self->rtpsession,

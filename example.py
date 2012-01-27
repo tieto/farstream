@@ -40,7 +40,7 @@ def _src_pad_added (stream, pad, codec, pipeline):
     global funnel
     print "src pad %s added for stream %s %s" % (pad.get_name(), stream.get_property("participant").get_property("cname"), codec.to_string())
     if not funnel:
-        funnel = gst.element_factory_make("fsfunnel")
+        funnel = gst.element_factory_make("funnel")
         videosink = gst.element_factory_make ("xvimagesink")
         pipeline.add(funnel)
         pipeline.add(videosink)

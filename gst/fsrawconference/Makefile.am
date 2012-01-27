@@ -47,16 +47,12 @@ EXTRA_DIST = $(preferences_DATA)
 if ENABLE_GTK_DOC
 noinst_LTLIBRARIES += libfsrawconference_doc.la
 
+nodist_libfsrawconference_doc_la_CFLAGS = -DBUILD_GTK_DOC
+
 nodist_libfsrawconference_doc_la_SOURCES = \
-	fs-raw-conference-plugin.doc.c \
 	$(libfsrawconference_la_SOURCES)
 
 libfsrawconference_doc_la_LIBADD = $(libfsrawconference_la_LIBADD)
-
-%.doc.c: %.c
-	$(AM_V_GEN)sed -e 's:GST_PLUGIN_DEFINE:GST_PLUGIN_DEFINE_STATIC:' 	$< > $@
-
-BUILT_SOURCES = fs-raw-conference-plugin.doc.c
 
 CLEANFILES = $(BUILT_SOURCES)
 

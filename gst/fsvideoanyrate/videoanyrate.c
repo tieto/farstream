@@ -1,7 +1,7 @@
 /*
  * Farstream Voice+Video library
  *
- *  Copyright 2007 Collabora Ltd, 
+ *  Copyright 2007-2012 Collabora Ltd, 
  *  Copyright 2007 Nokia Corporation
  *   @author: Olivier Crete <olivier.crete@collabora.co.uk>
  *
@@ -41,15 +41,6 @@
 GST_DEBUG_CATEGORY (videoanyrate_debug);
 #define GST_CAT_DEFAULT (videoanyrate_debug)
 
-/* elementfactory information */
-static const GstElementDetails gst_videoanyrate_details =
-GST_ELEMENT_DETAILS (
-  "Videoanyrate element",
-  "Filter",
-  "This element removes the framerate from caps",
-  "Olivier Crete <olivier.crete@collabora.co.uk>");
-
-
 static GstStaticPadTemplate sinktemplate = GST_STATIC_PAD_TEMPLATE ("sink",
     GST_PAD_SINK,
     GST_PAD_ALWAYS,
@@ -76,41 +67,39 @@ enum
 static GstCaps *
 gst_videoanyrate_transform_caps (GstBaseTransform *trans,
     GstPadDirection direction,
-    GstCaps *caps);
+    GstCaps *caps,
+    GstCaps *filter);
 static void
 gst_videoanyrate_fixate_caps (GstBaseTransform * base,
     GstPadDirection direction, GstCaps * caps, GstCaps * othercaps);
 
 
+G_DEFINE_TYPE (GstVideoanyrate, gst_videoanyrate, GST_TYPE_BASE_TRANSFORM);
+
+
 static void
-_do_init (GType type)
+gst_videoanyrate_class_init (GstVideoanyrateClass *klass)
 {
+  GstElementClass *element_class;
+  GstBaseTransformClass *gstbasetransform_class;
+
+  element_class = GST_ELEMENT_CLASS (klass);
+  gstbasetransform_class = GST_BASE_TRANSFORM_CLASS (klass);
+
+
   GST_DEBUG_CATEGORY_INIT
     (videoanyrate_debug, "fsvideoanyrate", 0, "fsvideoanyrate");
-}
-
-GST_BOILERPLATE_FULL (GstVideoanyrate, gst_videoanyrate, GstBaseTransform,
-    GST_TYPE_BASE_TRANSFORM, _do_init);
-
-static void
-gst_videoanyrate_base_init (gpointer klass)
-{
-  GstElementClass *element_class = GST_ELEMENT_CLASS (klass);
 
   gst_element_class_add_pad_template (element_class,
       gst_static_pad_template_get (&srctemplate));
   gst_element_class_add_pad_template (element_class,
       gst_static_pad_template_get (&sinktemplate));
 
-  gst_element_class_set_details (element_class, &gst_videoanyrate_details);
-}
-
-static void
-gst_videoanyrate_class_init (GstVideoanyrateClass *klass)
-{
-  GstBaseTransformClass *gstbasetransform_class;
-
-  gstbasetransform_class = (GstBaseTransformClass *) klass;
+  gst_element_class_set_metadata (element_class,
+      "Videoanyrate element",
+      "Filter",
+      "This element removes the framerate from caps",
+      "Olivier Crete <olivier.crete@collabora.com>");
 
   gstbasetransform_class->transform_caps =
     GST_DEBUG_FUNCPTR(gst_videoanyrate_transform_caps);
@@ -119,28 +108,34 @@ gst_videoanyrate_class_init (GstVideoanyrateClass *klass)
 }
 
 static void
-gst_videoanyrate_init (GstVideoanyrate *videoanyrate,
-    GstVideoanyrateClass *klass)
+gst_videoanyrate_init (GstVideoanyrate *videoanyrate)
 {
 }
 
 static GstCaps *
 gst_videoanyrate_transform_caps (GstBaseTransform *trans,
     GstPadDirection direction,
-    GstCaps *caps)
+    GstCaps *caps,
+    GstCaps *filter)
 {
   GstCaps *mycaps = gst_caps_copy (caps);
-  GstStructure *s;
+  guint i;
 
   if (gst_caps_get_size (mycaps) == 0)
     return mycaps;
 
   GST_DEBUG_OBJECT (trans, "Transforming caps");
 
-  s = gst_caps_get_structure (mycaps, 0);
+  for (i = 0; i < gst_caps_get_size (mycaps); i++)
+  {
+    GstStructure *s;
 
-  gst_structure_set (s,
-      "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, G_MAXINT, 1, NULL);
+    s = gst_caps_get_structure (mycaps, i);
+
+    if (gst_structure_has_field (s, "framerate"))
+      gst_structure_set (s,
+          "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, G_MAXINT, 1, NULL);
+  }
 
   return mycaps;
 }

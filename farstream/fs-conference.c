@@ -62,9 +62,7 @@ GST_DEBUG_CATEGORY (fs_conference_debug);
 #define GST_CAT_DEFAULT fs_conference_debug
 
 
-GST_BOILERPLATE (
-  FsConference, fs_conference,
-  GstBin, GST_TYPE_BIN)
+G_DEFINE_ABSTRACT_TYPE (FsConference, fs_conference,GST_TYPE_BIN)
 
 
 GQuark
@@ -81,22 +79,15 @@ _fs_conference_init_debug (void)
 }
 
 static void
-fs_conference_base_init (gpointer g_class)
+fs_conference_class_init (FsConferenceClass * klass)
 {
   _fs_conference_init_debug ();
 }
 
-
-
 static void
-fs_conference_class_init (FsConferenceClass * klass)
+fs_conference_init (FsConference *conf)
 {
-}
-
-static void
-fs_conference_init (FsConference *conf, FsConferenceClass *bclass)
-{
-  GST_DEBUG ("fs_conference_init");
+  GST_DEBUG_OBJECT (conf, "fs_conference_init");
 }
 
 

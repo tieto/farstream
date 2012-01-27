@@ -70,9 +70,7 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
       {
         const GstStructure *s = gst_message_get_structure (message);
 
-        if (gst_implements_interface_check (GST_MESSAGE_SRC (message),
-                FS_TYPE_CONFERENCE) &&
-            gst_structure_has_name (s, "farstream-error"))
+        if (gst_structure_has_name (s, "farstream-error"))
         {
           const GValue *value;
           FsError errorno;
@@ -81,9 +79,8 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
           GEnumValue *enumvalue = NULL;
 
           ts_fail_unless (
-              gst_implements_interface_check (GST_MESSAGE_SRC (message),
-                  FS_TYPE_CONFERENCE),
-              "Received farstream-error from non-farstream element");
+            FS_IS_CONFERENCE (GST_MESSAGE_SRC (message)),
+            "Received farstream-error from non-farstream element");
 
           ts_fail_unless (
               gst_structure_has_field_typed (s, "src-object", G_TYPE_OBJECT),
@@ -176,7 +173,8 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
 }
 
 static GstElement *
-build_recv_pipeline (GCallback havedata_handler, gpointer data, gint *port)
+build_recv_pipeline (GstPadProbeCallback buffer_handler, gpointer data,
+    gint *port)
 {
   GstElement *pipeline;
   GstElement *src;
@@ -200,7 +198,8 @@ build_recv_pipeline (GCallback havedata_handler, gpointer data, gint *port)
 
   pad = gst_element_get_static_pad (sink, "sink");
 
-  gst_pad_add_buffer_probe (pad, havedata_handler, data);
+  gst_pad_add_probe (pad, GST_PAD_PROBE_TYPE_BUFFER, buffer_handler, data,
+      NULL);
 
   gst_object_ref (pad);
 
@@ -332,23 +331,25 @@ one_way (GstElement *recv_pipeline, gint port)
 }
 
 
-static void
-send_dmtf_havedata_handler (GstPad *pad, GstBuffer *buf, gpointer user_data)
+static GstPadProbeReturn
+send_dmtf_buffer_handler (GstPad *pad, GstPadProbeInfo *info,
+    gpointer user_data)
 {
+  GstRTPBuffer rtpbuf = GST_RTP_BUFFER_INIT;
+  GstBuffer *buf = GST_PAD_PROBE_INFO_BUFFER (info);
   gchar *data;
 
   ts_fail_unless (gst_rtp_buffer_validate (buf), "Buffer is not valid rtp");
 
-  if (gst_rtp_buffer_get_payload_type (buf) != dtmf_id)
-    return;
+  gst_rtp_buffer_map (buf, GST_MAP_READ, &rtpbuf);
+  if (gst_rtp_buffer_get_payload_type (&rtpbuf) != dtmf_id)
+    goto out;
 
-  data = gst_rtp_buffer_get_payload (buf);
+  data = gst_rtp_buffer_get_payload (&rtpbuf);
 
+  /* Check if still on previous digit */
   if (data[0] < digit)
-  {
-    /* Still on previous digit */
-    return;
-  }
+    goto out;
 
   GST_LOG ("Got digit %d", data[0]);
 
@@ -356,6 +357,10 @@ send_dmtf_havedata_handler (GstPad *pad, GstBuffer *buf, gpointer user_data)
       " (sending %d, should be %d", data[0], digit);
 
   received = TRUE;
+
+out:
+  gst_rtp_buffer_unmap (&rtpbuf);
+  return GST_PAD_PROBE_OK;
 }
 
 
@@ -423,7 +428,7 @@ GST_START_TEST (test_senddtmf_event)
 {
   gint port;
   GstElement *recv_pipeline = build_recv_pipeline (
-      G_CALLBACK (send_dmtf_havedata_handler), NULL, &port);
+      send_dmtf_buffer_handler, NULL, &port);
 
   g_timeout_add (350, start_stop_sending_dtmf, NULL);
   one_way (recv_pipeline, port);
@@ -501,7 +506,7 @@ GST_START_TEST (test_senddtmf_change_auto)
 {
   gint port;
   GstElement *recv_pipeline = build_recv_pipeline (
-      G_CALLBACK (send_dmtf_havedata_handler), NULL, &port);
+      send_dmtf_buffer_handler, NULL, &port);
 
   change_codec = TRUE;
   g_timeout_add (350, start_stop_sending_dtmf, NULL);
@@ -511,15 +516,20 @@ GST_END_TEST;
 
 gboolean checked = FALSE;
 
-static void
-change_ssrc_handler (GstPad *pad, GstBuffer *buf, gpointer user_data)
+static GstPadProbeReturn
+change_ssrc_buffer_handler (GstPad *pad, GstPadProbeInfo *info,
+    gpointer user_data)
 {
+  GstBuffer *buf = GST_PAD_PROBE_INFO_BUFFER (info);
   guint sess_ssrc;
   guint buf_ssrc;
+  GstRTPBuffer rtpbuf = GST_RTP_BUFFER_INIT;
 
   ts_fail_unless (gst_rtp_buffer_validate (buf));
 
-  buf_ssrc = gst_rtp_buffer_get_ssrc (buf);
+  gst_rtp_buffer_map (buf, GST_MAP_READ, &rtpbuf);
+  buf_ssrc = gst_rtp_buffer_get_ssrc (&rtpbuf);
+  gst_rtp_buffer_unmap (&rtpbuf);
 
   g_object_get (dat->session, "ssrc", &sess_ssrc, NULL);
 
@@ -546,13 +556,15 @@ change_ssrc_handler (GstPad *pad, GstBuffer *buf, gpointer user_data)
     if (sess_ssrc != 12345)
       g_object_set (dat->session, "ssrc", 12345, NULL);
   }
+
+  return GST_PAD_PROBE_OK;
 }
 
 GST_START_TEST (test_change_ssrc)
 {
   gint port;
   GstElement *recv_pipeline = build_recv_pipeline (
-      G_CALLBACK (change_ssrc_handler), NULL, &port);
+      change_ssrc_buffer_handler, NULL, &port);
 
   checked = FALSE;
   one_way (recv_pipeline, port);

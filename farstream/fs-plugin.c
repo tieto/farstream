@@ -315,6 +315,8 @@ fs_plugin_list_available (const gchar *type_suffix)
   GError *error = NULL;
   gchar *tmp1, *tmp2, *tmp3;
 
+  _fs_conference_init_debug ();
+
   g_static_mutex_lock (&mutex);
 
   fs_plugin_search_path_init ();

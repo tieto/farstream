@@ -88,11 +88,8 @@ struct _FsMsnConferencePrivate
   FsMsnSession *session;
 };
 
-static void fs_msn_conference_do_init (GType type);
-
-
-GST_BOILERPLATE_FULL (FsMsnConference, fs_msn_conference, FsConference,
-    FS_TYPE_CONFERENCE, fs_msn_conference_do_init);
+G_DEFINE_ABSTRACT_TYPE (FsMsnConference, fs_msn_conference,
+    FS_TYPE_CONFERENCE);
 
 static FsSession *fs_msn_conference_new_session (FsConference *conf,
     FsMediaType media_type,
@@ -105,13 +102,6 @@ static void _remove_session (gpointer user_data,
     GObject *where_the_object_was);
 static void _remove_participant (gpointer user_data,
     GObject *where_the_object_was);
-
-static void
-fs_msn_conference_do_init (GType type)
-{
-  GST_DEBUG_CATEGORY_INIT (fsmsnconference_debug, "fsmsnconference", 0,
-                           "Farstream MSN Conference Element");
-}
 
 static void
 fs_msn_conference_dispose (GObject * object)
@@ -136,16 +126,25 @@ fs_msn_conference_dispose (GObject * object)
 
   g_clear_error (&self->missing_element_error);
 
-  G_OBJECT_CLASS (parent_class)->dispose (object);
+  G_OBJECT_CLASS (fs_msn_conference_parent_class)->dispose (object);
 }
 
 static void
 fs_msn_conference_class_init (FsMsnConferenceClass * klass)
 {
   GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+  GstElementClass *gstelement_class = GST_ELEMENT_CLASS (klass);
   FsConferenceClass *baseconf_class = FS_CONFERENCE_CLASS (klass);
 
   g_type_class_add_private (klass, sizeof (FsMsnConferencePrivate));
+
+  GST_DEBUG_CATEGORY_INIT (fsmsnconference_debug, "fsmsnconference", 0,
+                           "Farstream MSN Conference Element");
+
+  gst_element_class_add_pad_template (gstelement_class,
+      gst_static_pad_template_get (&fs_msn_conference_sink_template));
+  gst_element_class_add_pad_template (gstelement_class,
+      gst_static_pad_template_get (&fs_msn_conference_src_template));
 
   baseconf_class->new_session =
     GST_DEBUG_FUNCPTR (fs_msn_conference_new_session);
@@ -155,20 +154,9 @@ fs_msn_conference_class_init (FsMsnConferenceClass * klass)
   gobject_class->dispose = GST_DEBUG_FUNCPTR (fs_msn_conference_dispose);
 }
 
-static void
-fs_msn_conference_base_init (gpointer g_class)
-{
-  GstElementClass *gstelement_class = GST_ELEMENT_CLASS (g_class);
-
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&fs_msn_conference_sink_template));
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&fs_msn_conference_src_template));
-}
 
 static void
-fs_msn_conference_init (FsMsnConference *conf,
-                        FsMsnConferenceClass *bclass)
+fs_msn_conference_init (FsMsnConference *conf)
 {
   GST_DEBUG_OBJECT (conf, "fs_msn_conference_init");
 
@@ -295,7 +283,16 @@ static gboolean plugin_init (GstPlugin * plugin)
         GST_RANK_NONE, FS_TYPE_MSN_CAM_RECV_CONFERENCE);
 }
 
+
+
+#ifdef BUILD_GTK_DOC
+void
+fs_msn_plugin_init_real (void)
+{
+  gst_plugin_register_static (
+#else
 GST_PLUGIN_DEFINE (
+#endif
   GST_VERSION_MAJOR,
   GST_VERSION_MINOR,
   "fsmsnconference",
@@ -305,4 +302,10 @@ GST_PLUGIN_DEFINE (
   "LGPL",
   "Farstream",
   "http://farstream.freedesktop.org/"
+#ifdef BUILD_GTK_DOC
+  );
+}
+#else
 )
+#endif
+

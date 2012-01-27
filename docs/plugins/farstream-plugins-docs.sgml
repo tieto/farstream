@@ -54,7 +54,6 @@
 
   <part>
     <title>Utility elements</title>
-    <xi:include href="xml/element-fsfunnel.xml"/>
     <xi:include href="xml/element-fsvideoanyrate.xml"/>
   </part>
 </book>

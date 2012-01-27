@@ -83,15 +83,12 @@ EXTRA_DIST = $(preferences_DATA)
 if ENABLE_GTK_DOC
 noinst_LTLIBRARIES += libfsrtpconference_doc.la
 
+nodist_libfsrtpconference_doc_la_CFLAGS = -DBUILD_GTK_DOC
+
 nodist_libfsrtpconference_doc_la_SOURCES = \
-	fs-rtp-conference-plugin.doc.c  \
-	$(nodist_libfsrtpconference_la_SOURCES)
+	$(libfsrtpconference_la_SOURCES)
 libfsrtpconference_doc_la_LIBADD = $(libfsrtpconference_la_LIBADD)
 
-%.doc.c: %.c
-	$(AM_V_GEN)sed -e 's:GST_PLUGIN_DEFINE:GST_PLUGIN_DEFINE_STATIC:' $< > $@
-
-BUILT_SOURCES += fs-rtp-conference-plugin.doc.c
 endif
 
 # Build the build sources

@@ -639,7 +639,7 @@ parse_codec_cap_list (GList *list, FsMediaType media_type)
             codec_blueprint->send_pipeline_factory,
             g_list_append (NULL, tmpfact));
       }
-      tmpfact = gst_element_factory_find ("ffmpegcolorspace");
+      tmpfact = gst_element_factory_find ("videoconvert");
       if (tmpfact)
       {
         codec_blueprint->send_pipeline_factory = g_list_append (
@@ -1286,7 +1286,7 @@ get_plugins_filtered_from_caps (FilterFunc filter,
   GList *list = NULL;
   GstCaps *matched_caps = NULL;
 
-  result = gst_registry_get_feature_list (gst_registry_get_default (),
+  result = gst_registry_get_feature_list (gst_registry_get (),
           GST_TYPE_ELEMENT_FACTORY);
 
   result = g_list_sort (result, (GCompareFunc) compare_ranks);

@@ -147,6 +147,7 @@ struct _FsStreamPrivate
 
 G_DEFINE_ABSTRACT_TYPE(FsStream, fs_stream, GST_TYPE_OBJECT);
 
+static void fs_stream_constructed (GObject *obj);
 static void fs_stream_get_property (GObject *object,
                                     guint prop_id,
                                     GValue *value,
@@ -156,6 +157,8 @@ static void fs_stream_set_property (GObject *object,
                                     const GValue *value,
                                     GParamSpec *pspec);
 static void fs_stream_finalize (GObject *obj);
+
+static void fs_stream_pad_removed (FsStream *stream, GstPad *pad);
 
 static guint signals[LAST_SIGNAL] = { 0 };
 
@@ -172,6 +175,8 @@ fs_stream_class_init (FsStreamClass *klass)
   gobject_class->set_property = fs_stream_set_property;
   gobject_class->get_property = fs_stream_get_property;
   gobject_class->finalize = fs_stream_finalize;
+  gobject_class->constructed = fs_stream_constructed;
+
 
   /**
    * FsStream:remote-codecs:
@@ -333,6 +338,22 @@ fs_stream_init (FsStream *self)
   /* member init */
   self->priv = FS_STREAM_GET_PRIVATE (self);
   self->priv->mutex = g_mutex_new ();
+}
+
+static void
+fs_stream_constructed (GObject *obj)
+{
+  FsStream *stream = FS_STREAM (obj);
+  FsSession *session;
+  FsConference *conference;
+
+  g_object_get (stream, "session", &session, NULL);
+  g_object_get (session, "conference", &conference, NULL);
+
+  g_signal_connect_object (conference, "pad-removed",
+      G_CALLBACK (fs_stream_pad_removed), obj, G_CONNECT_SWAPPED);
+  g_object_unref (session);
+  g_object_unref (conference);
 }
 
 static void
@@ -529,12 +550,10 @@ fs_stream_emit_error (FsStream *stream,
 
 
 static void
-src_pad_parent_unset (GstObject *srcpad, GstObject *parent, gpointer user_data)
+fs_stream_pad_removed (FsStream *stream, GstPad *pad)
 {
-  FsStream *stream = FS_STREAM (user_data);
-
   FS_STREAM_LOCK (stream);
-  stream->priv->src_pads = g_list_remove (stream->priv->src_pads, srcpad);
+  stream->priv->src_pads = g_list_remove (stream->priv->src_pads, pad);
   stream->priv->src_pads_cookie++;
   FS_STREAM_UNLOCK (stream);
 }
@@ -558,19 +577,9 @@ fs_stream_emit_src_pad_added (FsStream *stream,
   g_assert (!g_list_find (stream->priv->src_pads, pad));
   stream->priv->src_pads = g_list_append (stream->priv->src_pads, pad);
   stream->priv->src_pads_cookie++;
-  g_signal_connect_object (pad, "parent-unset",
-      G_CALLBACK (src_pad_parent_unset), stream, 0);
   FS_STREAM_UNLOCK (stream);
 
   g_signal_emit (stream, signals[SRC_PAD_ADDED], 0, pad, codec);
-}
-
-static GstIteratorItem
-src_pad_iterator_item_func (GstIterator*iter, gpointer item)
-{
-  gst_object_ref (item);
-
-  return GST_ITERATOR_ITEM_PASS;
 }
 
 /**
@@ -589,7 +598,7 @@ fs_stream_iterate_src_pads (FsStream *stream)
 {
   return gst_iterator_new_list (GST_TYPE_PAD, stream->priv->mutex,
       &stream->priv->src_pads_cookie, &stream->priv->src_pads,
-      g_object_ref (stream), src_pad_iterator_item_func, g_object_unref);
+      g_object_ref (stream), NULL);
 }
 
 

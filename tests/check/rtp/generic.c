@@ -211,11 +211,9 @@ setup_fakesrc (struct SimpleTestConference *dat)
 }
 
 static gboolean
-pad_count_fold (gpointer pad, GValue *val, gpointer user_data)
+pad_count_fold (const GValue *item, GValue *val, gpointer user_data)
 {
   g_value_set_uint (val, g_value_get_uint (val) + 1);
-
-  gst_object_unref (pad);
 
   return TRUE;
 }

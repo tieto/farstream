@@ -48,16 +48,16 @@ check_PROGRAMS = \
 	transmitter/rawudp \
 	transmitter/multicast \
 	transmitter/nice \
-	transmitter/shm \
 	raw/conference \
+	elements/rtcpfilter \
 	rtp/codecs \
 	rtp/sendcodecs \
 	rtp/conference \
 	rtp/recvcodecs \
 	msn/conference \
-	utils/binadded \
-	elements/rtcpfilter \
-	elements/funnel
+	utils/binadded
+noinst_PROGRAMS	= transmitter/shm 
+
 
 AM_CFLAGS = \
 	$(CFLAGS) \
@@ -172,6 +172,3 @@ utils_binadded_SOURCES = \
 elements_rtcpfilter_CFLAGS = $(AM_CFLAGS)
 elements_rtcpfilter_SOURCES = elements/rtcpfilter.c
 elements_rtcpfilter_LDADD = $(LDADD) -lgstrtp-@GST_MAJORMINOR@
-
-elements_funnel_CFLAGS = $(AM_CFLAGS)
-elements_funnel_SOURCES = elements/funnel.c
