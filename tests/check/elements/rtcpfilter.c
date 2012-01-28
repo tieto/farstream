@@ -120,8 +120,8 @@ GST_START_TEST (test_rtcpfilter)
 
 
 
-  gst_check_element_push_buffer_list ("fsrtcpfilter", in_buffers, out_buffers,
-      GST_FLOW_OK);
+  gst_check_element_push_buffer_list ("fsrtcpfilter", in_buffers, caps,
+      out_buffers, caps, GST_FLOW_OK);
 
   gst_caps_unref (caps);
 }
