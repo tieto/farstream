@@ -51,6 +51,9 @@ find_multicast_capable_address (void)
     if ((ifa->ifa_flags & IFF_MULTICAST) == 0)
       continue;
 
+    if ((ifa->ifa_flags & IFF_RUNNING) == 0)
+      continue;
+
     if (ifa->ifa_addr == NULL || ifa->ifa_addr->sa_family != AF_INET)
       continue;
 
