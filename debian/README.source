@@ -23,15 +23,15 @@ branch contains versions targeted for lenny, etc.
 
 Here's how to build it:
 
-    git clone git://git.debian.org/git/pkg-telepathy/farsight2.git
-    cd farsight2
+    git clone git://git.debian.org/git/pkg-telepathy/farstream.git
+    cd farstream
     git checkout debian
     git-buildpackage -us -uc
 
 or for testing/stable branches like debian-lenny:
 
-    git clone git://git.debian.org/git/pkg-telepathy/farsight2.git
-    cd farsight2
+    git clone git://git.debian.org/git/pkg-telepathy/farstream.git
+    cd farstream
     git checkout debian-lenny
     git-buildpackage -us -uc --git-debian-branch=debian-lenny
 
@@ -39,7 +39,7 @@ The branch 'upstream' is a copy of the contents of upstream tarballs. To import
 upstream tarballs use:
 
     git checkout debian
-    git-import-orig ~/farsight2-0.x.tar.gz
+    git-import-orig ~/farstream-0.x.tar.gz
 
 The branch 'debian-patches' is 'upstream' plus any patches needed for Debian.
 It should be rebased on 'upstream' after each upstream release:
@@ -51,7 +51,7 @@ The preferred way of adding patches is to cherry pick from an upstream
 repository:
 
     git remote add collabora \
-        git+ssh://git.collabora.co.uk/git/farsight2.git
+        git+ssh://git.collabora.co.uk/git/farstream.git
     git fetch
     git checkout debian-patches
     git cherry-pick xxxxxxxxxxxxxx

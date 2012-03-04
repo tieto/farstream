@@ -1,4 +1,0 @@
-debian/tmp/usr/include/gstreamer-0.10/gst/farsight
-debian/tmp/usr/lib/libgstfarsight-0.10.so
-debian/tmp/usr/lib/libgstfarsight-0.10.a
-debian/tmp/usr/lib/pkgconfig/farsight2-0.10.pc

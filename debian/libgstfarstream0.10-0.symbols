@@ -1,4 +1,4 @@
-libgstfarsight-0.10.so.0 libgstfarsight0.10-0 #MINVER#
+libgstfarstream-0.10.so.0 libgstfarstream0.10-0 #MINVER#
   fs_base_conference_debug@Base 0.0.1
   fs_base_conference_error@Base 0.0.1
   fs_base_conference_get_type@Base 0.0.1

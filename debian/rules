@@ -10,7 +10,7 @@ DEB_CONFIGURE_EXTRA_FLAGS = --enable-python --enable-gupnp
 # Testsuit has a race-condition, so disable it for now
 #DEB_MAKE_CHECK_TARGET = check
 
-DEB_DH_MAKESHLIBS_ARGS_libgstfarsight0.10-0 := -X/usr/lib/gstreamer-0.10 -X/usr/lib/farsight2-0.0
+DEB_DH_MAKESHLIBS_ARGS_libgstfarstream0.10-0 := -X/usr/lib/gstreamer-0.10 -X/usr/lib/farsight2-0.0
 
 # List any files which are not installed
 include /usr/share/cdbs/1/rules/utils.mk
