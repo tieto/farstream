@@ -1,11 +1,11 @@
 /*
- * Farsight2 - Farsight RTP Session
+ * Farstream - Farstream RTP Session
  *
  * Copyright 2007 Collabora Ltd.
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
  * Copyright 2007 Nokia Corp.
  *
- * fs-rtp-session.h - A Farsight RTP Session gobject
+ * fs-rtp-session.h - A Farstream RTP Session gobject
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,7 +27,7 @@
 
 #include <gst/gst.h>
 
-#include <gst/farsight/fs-session.h>
+#include <farstream/fs-session.h>
 
 #include "fs-rtp-conference.h"
 
@@ -126,6 +126,9 @@ void fs_rtp_session_bye_ssrc (FsRtpSession *session,
 
 void fs_rtp_session_ssrc_validated (FsRtpSession *session,
     guint32 ssrc);
+
+gboolean fs_rtp_session_handle_dtmf_event_message (FsRtpSession *session,
+    GstMessage *message);
 
 /* Those two functions are for the EXCLUSIVE use of the other users
  * of the rtp session lock */

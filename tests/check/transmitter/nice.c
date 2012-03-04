@@ -1,4 +1,4 @@
-/* Farsight 2 unit tests for FsRawUdpTransmitter
+/* Farstream unit tests for FsRawUdpTransmitter
  *
  * Copyright (C) 2007 Collabora, Nokia
  * @author: Olivier Crete <olivier.crete@collabora.co.uk>
@@ -23,8 +23,8 @@
 #endif
 
 #include <gst/check/gstcheck.h>
-#include <gst/farsight/fs-transmitter.h>
-#include <gst/farsight/fs-conference-iface.h>
+#include <farstream/fs-transmitter.h>
+#include <farstream/fs-conference.h>
 
 #include <unistd.h>
 
@@ -145,7 +145,7 @@ set_the_candidates (gpointer user_data)
   }
   else
   {
-    ret = fs_stream_transmitter_set_remote_candidates (st, candidates, &error);
+    ret = fs_stream_transmitter_add_remote_candidates (st, candidates, &error);
   }
 
   if (error)
@@ -846,7 +846,7 @@ GST_START_TEST (test_nicetransmitter_invalid_arguments)
   cand->username = g_strdup ("a1");
   cand->password = g_strdup ("a1");
   list = g_list_prepend (NULL, cand);
-  ts_fail_unless (fs_stream_transmitter_set_remote_candidates (st, list,
+  ts_fail_unless (fs_stream_transmitter_add_remote_candidates (st, list,
           &error));
   ts_fail_unless (error == NULL);
   fs_candidate_list_destroy (list);

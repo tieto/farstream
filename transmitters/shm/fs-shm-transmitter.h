@@ -1,11 +1,11 @@
 /*
- * Farsight2 - Farsight Shared Memory Transmitter
+ * Farstream - Farstream Shared Memory Transmitter
  *
  * Copyright 2007-2008 Collabora Ltd.
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
  * Copyright 2007-2008 Nokia Corp.
  *
- * fs-shm-transmitter.h - A Farsight Shared Memory transmitter
+ * fs-shm-transmitter.h - A Farstream Shared Memory transmitter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,7 +25,7 @@
 #ifndef __FS_SHM_TRANSMITTER_H__
 #define __FS_SHM_TRANSMITTER_H__
 
-#include <gst/farsight/fs-transmitter.h>
+#include <farstream/fs-transmitter.h>
 
 #include <gst/gst.h>
 
@@ -106,6 +106,7 @@ gboolean fs_shm_transmitter_check_shm_src (FsShmTransmitter *self,
 ShmSink *fs_shm_transmitter_get_shm_sink (FsShmTransmitter *self,
     guint component,
     const gchar *path,
+    guint64 buffer_time,
     ready ready_func,
     connection connected_fubnc,
     gpointer cb_data,

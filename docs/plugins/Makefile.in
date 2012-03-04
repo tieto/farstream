@@ -17,7 +17,7 @@
 
 # This is an include file specifically tuned for building documentation
 # for GStreamer plug-ins
-# It has been further specialized to farsight2 plugins stuff
+# It has been further specialized to farstream plugins stuff
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -58,9 +58,10 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gtk-doc.m4 \
 	$(top_srcdir)/common/m4/pkg.m4 \
 	$(top_srcdir)/m4/as-check-python-headers.m4 \
-	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/ltoptions.m4 \
-	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
-	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/introspection.m4 $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -95,6 +96,7 @@ CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
@@ -105,26 +107,27 @@ ERROR_CFLAGS = @ERROR_CFLAGS@
 EXEEXT = @EXEEXT@
 FFLAGS = @FFLAGS@
 FGREP = @FGREP@
-FS2_AGE = @FS2_AGE@
-FS2_ALL_LDFLAGS = @FS2_ALL_LDFLAGS@
-FS2_CFLAGS = @FS2_CFLAGS@
-FS2_CURRENT = @FS2_CURRENT@
-FS2_INTERNAL_CFLAGS = @FS2_INTERNAL_CFLAGS@
-FS2_LIBS = @FS2_LIBS@
-FS2_LIBVERSION = @FS2_LIBVERSION@
-FS2_LIB_LDFLAGS = @FS2_LIB_LDFLAGS@
-FS2_LICENSE = @FS2_LICENSE@
-FS2_LT_LDFLAGS = @FS2_LT_LDFLAGS@
-FS2_MAJORMINOR = @FS2_MAJORMINOR@
-FS2_OPTION_CFLAGS = @FS2_OPTION_CFLAGS@
-FS2_PLUGINS_ALL = @FS2_PLUGINS_ALL@
-FS2_PLUGINS_SELECTED = @FS2_PLUGINS_SELECTED@
-FS2_PLUGIN_LDFLAGS = @FS2_PLUGIN_LDFLAGS@
-FS2_PLUGIN_PATH = @FS2_PLUGIN_PATH@
-FS2_PREFIX = @FS2_PREFIX@
-FS2_REVISION = @FS2_REVISION@
-FS2_TRANSMITTER_PLUGINS_ALL = @FS2_TRANSMITTER_PLUGINS_ALL@
-FS2_TRANSMITTER_PLUGINS_SELECTED = @FS2_TRANSMITTER_PLUGINS_SELECTED@
+FS_AGE = @FS_AGE@
+FS_ALL_LDFLAGS = @FS_ALL_LDFLAGS@
+FS_CFLAGS = @FS_CFLAGS@
+FS_CURRENT = @FS_CURRENT@
+FS_INTERNAL_CFLAGS = @FS_INTERNAL_CFLAGS@
+FS_LIBS = @FS_LIBS@
+FS_LIBVERSION = @FS_LIBVERSION@
+FS_LIB_LDFLAGS = @FS_LIB_LDFLAGS@
+FS_LICENSE = @FS_LICENSE@
+FS_LT_LDFLAGS = @FS_LT_LDFLAGS@
+FS_MAJORMINOR = @FS_MAJORMINOR@
+FS_MAJOR_MINOR = @FS_MAJOR_MINOR@
+FS_OPTION_CFLAGS = @FS_OPTION_CFLAGS@
+FS_PLUGINS_ALL = @FS_PLUGINS_ALL@
+FS_PLUGINS_SELECTED = @FS_PLUGINS_SELECTED@
+FS_PLUGIN_LDFLAGS = @FS_PLUGIN_LDFLAGS@
+FS_PLUGIN_PATH = $(top_builddir)/transmitters/rawudp/.libs:$(top_builddir)/transmitters/multicast/.libs:$(top_builddir)/transmitters/nice/.libs:$(top_builddir)/transmitters/shm/.libs
+FS_PREFIX = @FS_PREFIX@
+FS_REVISION = @FS_REVISION@
+FS_TRANSMITTER_PLUGINS_ALL = @FS_TRANSMITTER_PLUGINS_ALL@
+FS_TRANSMITTER_PLUGINS_SELECTED = @FS_TRANSMITTER_PLUGINS_SELECTED@
 GCOV = @GCOV@
 GCOV_CFLAGS = @GCOV_CFLAGS@
 GCOV_LIBS = @GCOV_LIBS@
@@ -164,6 +167,14 @@ INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+INTROSPECTION_CFLAGS = @INTROSPECTION_CFLAGS@
+INTROSPECTION_COMPILER = @INTROSPECTION_COMPILER@
+INTROSPECTION_GENERATE = @INTROSPECTION_GENERATE@
+INTROSPECTION_GIRDIR = @INTROSPECTION_GIRDIR@
+INTROSPECTION_LIBS = @INTROSPECTION_LIBS@
+INTROSPECTION_MAKEFILE = @INTROSPECTION_MAKEFILE@
+INTROSPECTION_SCANNER = @INTROSPECTION_SCANNER@
+INTROSPECTION_TYPELIBDIR = @INTROSPECTION_TYPELIBDIR@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
@@ -173,6 +184,7 @@ LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
+MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
 NICE_CFLAGS = @NICE_CFLAGS@
 NICE_LIBS = @NICE_LIBS@
@@ -201,8 +213,8 @@ PROFILE_CFLAGS = @PROFILE_CFLAGS@
 PYCODEGEN = @PYCODEGEN@
 PYCODEGEN_CFLAGS = @PYCODEGEN_CFLAGS@
 PYCODEGEN_LIBS = @PYCODEGEN_LIBS@
-PYFARSIGHT_CFLAGS = @PYFARSIGHT_CFLAGS@
-PYFARSIGHT_LIBS = @PYFARSIGHT_LIBS@
+PYFARSTREAM_CFLAGS = @PYFARSTREAM_CFLAGS@
+PYFARSTREAM_LIBS = @PYFARSTREAM_LIBS@
 PYTHON = @PYTHON@
 PYTHON_EXEC_PREFIX = @PYTHON_EXEC_PREFIX@
 PYTHON_INCLUDES = @PYTHON_INCLUDES@
@@ -223,6 +235,7 @@ abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
+ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
 am__include = @am__include@
@@ -279,7 +292,7 @@ GST_DOC_SCANOBJ = $(top_srcdir)/common/gstdoc-scangobj
 
 # The name of the module, e.g. 'glib'.
 #DOC_MODULE=gst-plugins-libs-@GST_MAJORMINOR@
-MODULE = farsight2
+MODULE = farstream
 DOC_MODULE = $(MODULE)-plugins
 
 # generated basefiles
@@ -336,8 +349,8 @@ SCANOBJ_DEPS = \
 	$(top_builddir)/gst/fsrtpconference/libfsrtpconference_doc.la \
 	$(top_builddir)/gst/fsmsnconference/libfsmsnconference_doc.la \
 	$(top_builddir)/gst/fsrawconference/libfsrawconference_doc.la \
-	$(top_builddir)/gst/funnel/libfsfunnel.la \
-	$(top_builddir)/gst/videoanyrate/libfsvideoanyrate.la 
+	$(top_builddir)/gst/fsfunnel/libfsfunnel.la \
+	$(top_builddir)/gst/fsvideoanyrate/libfsvideoanyrate.la 
 
 
 # Header files to ignore when scanning.
@@ -352,8 +365,8 @@ IGNORE_CFILES =
 # but I'm not sure about that - it might be this Just Works given that
 # the registry won't have the element
 EXTRA_HFILES = \
-	$(top_srcdir)/gst/funnel/fs-funnel.h \
-	$(top_srcdir)/gst/videoanyrate/videoanyrate.h \
+	$(top_srcdir)/gst/fsfunnel/fs-funnel.h \
+	$(top_srcdir)/gst/fsvideoanyrate/videoanyrate.h \
 	$(top_srcdir)/gst/fsrtpconference/fs-rtp-conference.h \
 	$(top_srcdir)/gst/fsrtpconference/fs-rtp-session.h \
 	$(top_srcdir)/gst/fsrtpconference/fs-rtp-stream.h \
@@ -386,13 +399,13 @@ content_files =
 
 # Other files to distribute.
 extra_files = \
-	farsight2-transmitters.types.in \
+	farstream-transmitters.types.in \
 	gtkdoc-scangobj-transmitters
 
 
 # FC3 seems to need -scan.c to be part of CLEANFILES for distcheck
 # no idea why FC4 can do without
-CLEANFILES = farsight2-transmitters.types $(SCANOBJ_FILES_O) \
+CLEANFILES = farstream-transmitters.types $(SCANOBJ_FILES_O) \
 	$(DOC_MODULE)-scan.c $(REPORT_FILES) $(DOC_STAMPS) \
 	inspect-registry.xml
 
@@ -400,7 +413,7 @@ CLEANFILES = farsight2-transmitters.types $(SCANOBJ_FILES_O) \
 # contains GtkObjects/GObjects and you want to document signals and properties.
 GTKDOC_CFLAGS = $(GST_BASE_CFLAGS) -I$(top_builddir) -I$(top_builddir)/gst-libs
 GTKDOC_LIBS = \
-	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-0.10.la \
+	$(top_builddir)/farstream/libfarstream-@FS_MAJORMINOR@.la \
 	$(top_builddir)/gst/fsrtpconference/libfsrtpconference_doc.la \
 	$(top_builddir)/gst/fsrawconference/libfsrawconference_doc.la \
 	$(top_builddir)/gst/fsmsnconference/libfsmsnconference_doc.la \
@@ -413,7 +426,6 @@ GTKDOC_LD = $(LIBTOOL) --tag=CC --mode=link $(CC)
 # and uncomment this line.
 #DOC_OVERRIDES = $(DOC_MODULE)-overrides.txt
 DOC_OVERRIDES = 
-FS_PLUGIN_PATH = $(top_builddir)/transmitters/rawudp/.libs:$(top_builddir)/transmitters/multicast/.libs:$(top_builddir)/transmitters/nice/.libs:$(top_builddir)/transmitters/shm/.libs
 
 # We set GPATH here; this gives us semantics for GNU make
 # which are more like other make's VPATH, when it comes to
@@ -423,7 +435,7 @@ FS_PLUGIN_PATH = $(top_builddir)/transmitters/rawudp/.libs:$(top_builddir)/trans
 GPATH = $(srcdir)
 
 # thomas: make docs parallel installable
-TARGET_DIR = $(HTML_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@
+TARGET_DIR = $(HTML_DIR)/$(DOC_MODULE)-@FS_MAJORMINOR@
 MAINTAINER_DOC_STAMPS = \
 	scanobj-build.stamp		\
 	scanobj-trans-build.stamp
@@ -686,9 +698,9 @@ uninstall-am: uninstall-local
 	uninstall uninstall-am uninstall-local
 
 
-farsight2-transmitters.types: farsight2-transmitters.types.in Makefile
+farstream-transmitters.types: farstream-transmitters.types.in Makefile
 	cat $< > $@
-	for i in "$(FS2_TRANSMITTER_PLUGINS_SELECTED)"; do \
+	for i in "$(FS_TRANSMITTER_PLUGINS_SELECTED)"; do \
 		echo "${i}" >> $@ ;\
 	done
 
@@ -827,7 +839,7 @@ update:
 @ENABLE_GTK_DOC_TRUE@	cp ../version.entities html
 @ENABLE_GTK_DOC_TRUE@	cd html && gtkdoc-mkhtml $(DOC_MODULE) $(DOC_MAIN_SGML_FILE)
 @ENABLE_GTK_DOC_TRUE@	mv html/index.sgml html/index.sgml.bak
-@ENABLE_GTK_DOC_TRUE@	$(SED) "s/ href=\"$(DOC_MODULE)\// href=\"$(DOC_MODULE)-@GST_MAJORMINOR@\//g" html/index.sgml.bak >html/index.sgml
+@ENABLE_GTK_DOC_TRUE@	$(SED) "s/ href=\"$(DOC_MODULE)\// href=\"$(DOC_MODULE)-@FS_MAJORMINOR@\//g" html/index.sgml.bak >html/index.sgml
 @ENABLE_GTK_DOC_TRUE@	rm -f html/index.sgml.bak
 @ENABLE_GTK_DOC_TRUE@	rm -f html/$(DOC_MAIN_SGML_FILE)
 @ENABLE_GTK_DOC_TRUE@	rm -rf html/xml
@@ -875,10 +887,10 @@ install-data-local:
 	  fi; \
 	  echo '-- Installing $(srcdir)/html/$(DOC_MODULE).devhelp' ; \
 	  $(INSTALL_DATA) $(srcdir)/html/$(DOC_MODULE).devhelp \
-	    $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@.devhelp; \
+	    $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@FS_MAJORMINOR@.devhelp; \
 	  if test -e $(srcdir)/html/$(DOC_MODULE).devhelp2; then \
 	            $(INSTALL_DATA) $(srcdir)/html/$(DOC_MODULE).devhelp2 \
-	            $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_MAJORMINOR@.devhelp2; \
+	            $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@FS_MAJORMINOR@.devhelp2; \
 	  fi; \
 	  (which gtkdoc-rebase >/dev/null && \
 	    gtkdoc-rebase --relative --dest-dir=$(DESTDIR) --html-dir=$(DESTDIR)$(TARGET_DIR)) || true ; \
@@ -922,7 +934,7 @@ scanobj-trans-update:
 # We have a scanobj-build.stamp just to prevent both from running at the same
 # time as they use temp files with the same name
 
-scanobj-trans-build.stamp: $(SCANOBJ_DEPS) $(basefiles) scanobj-build.stamp farsight2-transmitters.types
+scanobj-trans-build.stamp: $(SCANOBJ_DEPS) $(basefiles) scanobj-build.stamp farstream-transmitters.types
 	@echo '*** Scanning Transmitters ***'
 	if test x"$(srcdir)" = x. ; then				\
 	    GST_PLUGIN_PATH=$(top_builddir)/gst:$(top_builddir)/ext	\
@@ -933,7 +945,7 @@ scanobj-trans-build.stamp: $(SCANOBJ_DEPS) $(basefiles) scanobj-build.stamp fars
 	    LDFLAGS="$(GTKDOC_LIBS) $(LDFLAGS)"				\
 	    $(srcdir)/gtkdoc-scangobj-transmitters			\
 		 --type-init-func="gst_init(NULL,NULL)"			\
-		 --types=farsight2-transmitters.types			\
+		 --types=farstream-transmitters.types			\
 		 --module=$(DOC_MODULE) &&				\
 		$(PYTHON)						\
 		$(top_srcdir)/common/scangobj-merge.py $(DOC_MODULE);	\

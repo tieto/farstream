@@ -1,4 +1,4 @@
-/* Farsigh2 generic unit tests for conferences
+/* Farstream generic unit tests for conferences
  *
  * Copyright (C) 2007 Collabora, Nokia
  * @author: Olivier Crete <olivier.crete@collabora.co.uk>
@@ -26,20 +26,20 @@
 #include "generic.h"
 
 #include <gst/check/gstcheck.h>
-#include <gst/farsight/fs-conference-iface.h>
+#include <farstream/fs-conference.h>
 
 
 static GstBusSyncReply
 default_sync_handler (GstBus *bus, GstMessage *message, gpointer data)
 {
   struct SimpleTestConference *dat = data;
-  gboolean ready;
+  guint tos;
 
-  /* Get the codecs-ready property which takes the session lock to make sure
-   * it is not held across signal emissions
+  /* Get the tos property which takes the session lock to
+     make sure it is not held across signal emissions
    */
   if (dat->session)
-    g_object_get (dat->session, "codecs-ready", &ready, NULL);
+    g_object_get (dat->session, "tos", &tos, NULL);
 
   return GST_BUS_PASS;
 }
@@ -55,6 +55,7 @@ setup_simple_conference_full (
   GError *error = NULL;
   guint tos;
   GstBus *bus;
+  GstStructure *s;
 
   dat->id = id;
   dat->cname = g_strdup (cname);
@@ -72,7 +73,10 @@ setup_simple_conference_full (
   fail_unless (gst_bin_add (GST_BIN (dat->pipeline), dat->conference),
       "Could not add conference to the pipeline");
 
-  g_object_set (dat->conference, "sdes-cname", cname, NULL);
+  g_object_get (dat->conference, "sdes", &s, NULL);
+  gst_structure_set (s, "cname", G_TYPE_STRING, cname, NULL);
+  g_object_set (dat->conference, "sdes", s, NULL);
+  gst_structure_free (s);
 
   dat->session = fs_conference_new_session (FS_CONFERENCE (dat->conference),
       mediatype, &error);
@@ -117,18 +121,23 @@ simple_conference_add_stream (
   st->target = target;
 
   st->participant = fs_conference_new_participant (
-      FS_CONFERENCE (dat->conference), NULL, &error);
+      FS_CONFERENCE (dat->conference), &error);
   if (error)
     fail ("Error while creating new participant (%d): %s",
         error->code, error->message);
   fail_if (st->participant == NULL, "Could not make participant, but no GError!");
 
   st->stream = fs_session_new_stream (dat->session, st->participant,
-      FS_DIRECTION_BOTH, transmitter, st_param_count, st_params, &error);
+      FS_DIRECTION_BOTH, &error);
   if (error)
     fail ("Error while creating new stream (%d): %s",
         error->code, error->message);
   fail_if (st->stream == NULL, "Could not make stream, but no GError!");
+
+  fail_unless (fs_stream_set_transmitter (st->stream, transmitter, st_params,
+          st_param_count, &error));
+  fail_unless (error == NULL);
+
 
   g_object_set_data (G_OBJECT (st->stream), "SimpleTestStream", st);
 
@@ -142,7 +151,10 @@ void
 cleanup_simple_stream (struct SimpleTestStream *st)
 {
   if (st->stream)
+  {
+    fs_stream_destroy (st->stream);
     g_object_unref (st->stream);
+  }
   g_object_unref (st->participant);
   g_free (st);
 }
@@ -155,7 +167,10 @@ cleanup_simple_conference (struct SimpleTestConference *dat)
   g_list_free (dat->streams);
 
   if (dat->session)
+  {
+    fs_session_destroy (dat->session);
     g_object_unref (dat->session);
+  }
   gst_object_unref (dat->pipeline);
   g_free (dat->cname);
   g_free (dat);
@@ -208,7 +223,7 @@ pad_count_fold (gpointer pad, GValue *val, gpointer user_data)
 guint
 count_stream_pads (FsStream *stream)
 {
-  GstIterator *iter = fs_stream_get_src_pads_iterator (stream);
+  GstIterator *iter = fs_stream_iterate_src_pads (stream);
   guint count = 0;
 
   fail_if (iter == NULL);

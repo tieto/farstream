@@ -1,11 +1,11 @@
 /*
- * Farsight2 - Farsight Shared Memory Stream Transmitter
+ * Farstream - Farstream Shared Memory Stream Transmitter
  *
  * Copyright 2009 Collabora Ltd.
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
  * Copyright 2009 Nokia Corp.
  *
- * fs-shm-stream-transmitter.c - A Farsight Shared memory stream transmitter
+ * fs-shm-stream-transmitter.c - A Farstream Shared memory stream transmitter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -48,7 +48,7 @@
  * with the path of the socket in the "ip" field of the #FsCandidate. This
  * #FsCandidate can be given to the #FsStreamTransmitter in two ways, either
  * by setting the #FsStreamTransmitter:preferred-local-candidates property
- * or by calling the fs_stream_transmitter_set_remote_candidates() function.
+ * or by calling the fs_stream_transmitter_force_remote_candidates() function.
  * There can be only one single send socket per stream. When the send socket
  * is ready to be connected to, #FsStreamTransmitter::new-local-candidate signal
  * will be emitted.
@@ -56,7 +56,7 @@
  * To connect the receive side to the other application, one must create a
  * #FsCandidate with the path of the sender's socket in the "username" field.
  * If the receiver can not connect to the sender,
- * the fs_stream_transmitter_set_remote_candidates() call will fail.
+ * the fs_stream_transmitter_force_remote_candidates() call will fail.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -66,8 +66,8 @@
 #include "fs-shm-stream-transmitter.h"
 #include "fs-shm-transmitter.h"
 
-#include <gst/farsight/fs-candidate.h>
-#include <gst/farsight/fs-conference-iface.h>
+#include <farstream/fs-candidate.h>
+#include <farstream/fs-conference.h>
 
 #include <gst/gst.h>
 
@@ -98,6 +98,7 @@ enum
   PROP_SENDING,
   PROP_PREFERRED_LOCAL_CANDIDATES,
   PROP_CREATE_LOCAL_CANDIDATES,
+  PROP_BUFFER_TIME,
 };
 
 struct _FsShmStreamTransmitterPrivate
@@ -127,6 +128,8 @@ struct _FsShmStreamTransmitterPrivate
 
   ShmSrc **shm_src;
   ShmSink **shm_sink;
+
+  guint64 buffer_time;
 };
 
 #define FS_SHM_STREAM_TRANSMITTER_GET_PRIVATE(o)  \
@@ -152,7 +155,7 @@ static void fs_shm_stream_transmitter_set_property (GObject *object,
                                                 const GValue *value,
                                                 GParamSpec *pspec);
 
-static gboolean fs_shm_stream_transmitter_set_remote_candidates (
+static gboolean fs_shm_stream_transmitter_force_remote_candidates (
     FsStreamTransmitter *streamtransmitter, GList *candidates,
     GError **error);
 static gboolean fs_shm_stream_transmitter_gather_local_candidates (
@@ -209,8 +212,8 @@ fs_shm_stream_transmitter_class_init (FsShmStreamTransmitterClass *klass)
   gobject_class->set_property = fs_shm_stream_transmitter_set_property;
   gobject_class->get_property = fs_shm_stream_transmitter_get_property;
 
-  streamtransmitterclass->set_remote_candidates =
-    fs_shm_stream_transmitter_set_remote_candidates;
+  streamtransmitterclass->force_remote_candidates =
+    fs_shm_stream_transmitter_force_remote_candidates;
   streamtransmitterclass->gather_local_candidates =
     fs_shm_stream_transmitter_gather_local_candidates;
 
@@ -227,6 +230,12 @@ fs_shm_stream_transmitter_class_init (FsShmStreamTransmitterClass *klass)
     PROP_CREATE_LOCAL_CANDIDATES,
     pspec);
 
+  pspec = g_param_spec_uint64 ("buffer-time",
+    "BufferTime",
+    "Maximum Size of the outgoing buffer in nanoseconds",
+    0, G_MAXUINT64, 20 * GST_MSECOND,
+    G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
+  g_object_class_install_property (gobject_class, PROP_BUFFER_TIME, pspec);
 
   gobject_class->dispose = fs_shm_stream_transmitter_dispose;
   gobject_class->finalize = fs_shm_stream_transmitter_finalize;
@@ -309,6 +318,9 @@ fs_shm_stream_transmitter_get_property (GObject *object,
     case PROP_CREATE_LOCAL_CANDIDATES:
       g_value_set_boolean (value, self->priv->create_local_candidates);
       break;
+    case PROP_BUFFER_TIME:
+      g_value_set_uint64 (value, self->priv->buffer_time);
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -343,6 +355,9 @@ fs_shm_stream_transmitter_set_property (GObject *object,
       break;
     case PROP_CREATE_LOCAL_CANDIDATES:
       self->priv->create_local_candidates = g_value_get_boolean (value);
+      break;
+    case PROP_BUFFER_TIME:
+      self->priv->buffer_time = g_value_get_uint64 (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -414,7 +429,8 @@ fs_shm_stream_transmitter_add_sink (FsShmStreamTransmitter *self,
 
   self->priv->shm_sink[candidate->component_id] =
     fs_shm_transmitter_get_shm_sink (self->priv->transmitter,
-        candidate->component_id, candidate->ip, ready_cb, connected_cb,
+        candidate->component_id, candidate->ip, self->priv->buffer_time,
+        ready_cb, connected_cb,
         self, error);
 
   if (self->priv->shm_sink[candidate->component_id] == NULL)
@@ -437,7 +453,7 @@ disconnected_cb (guint component, gint id, gpointer data)
 }
 
 static gboolean
-fs_shm_stream_transmitter_add_remote_candidate (
+fs_shm_stream_transmitter_force_remote_candidate (
     FsShmStreamTransmitter *self, FsCandidate *candidate,
     GError **error)
 {
@@ -473,11 +489,11 @@ fs_shm_stream_transmitter_add_remote_candidate (
 }
 
 /**
- * fs_shm_stream_transmitter_set_remote_candidates
+ * fs_shm_stream_transmitter_force_remote_candidates
  */
 
 static gboolean
-fs_shm_stream_transmitter_set_remote_candidates (
+fs_shm_stream_transmitter_force_remote_candidates (
     FsStreamTransmitter *streamtransmitter, GList *candidates,
     GError **error)
 {
@@ -508,7 +524,7 @@ fs_shm_stream_transmitter_set_remote_candidates (
   }
 
   for (item = candidates; item; item = g_list_next (item))
-    if (!fs_shm_stream_transmitter_add_remote_candidate (self,
+    if (!fs_shm_stream_transmitter_force_remote_candidate (self,
             item->data, error))
       return FALSE;
 
@@ -558,7 +574,7 @@ fs_shm_stream_transmitter_gather_local_candidates (
     gchar *socket_dir;
 
     socket_dir = g_build_filename (g_get_tmp_dir (),
-      "farsight-shm-XXXXXX", NULL);
+      "farstream-shm-XXXXXX", NULL);
 
     if (mkdtemp (socket_dir) == NULL)
       return FALSE;
@@ -571,7 +587,8 @@ fs_shm_stream_transmitter_gather_local_candidates (
 
       self->priv->shm_sink[c] =
         fs_shm_transmitter_get_shm_sink (self->priv->transmitter,
-          c, path, ready_cb, connected_cb, self, error);
+          c, path, self->priv->buffer_time,
+          ready_cb, connected_cb, self, error);
       g_free (path);
 
       if (self->priv->shm_sink[c] == NULL)

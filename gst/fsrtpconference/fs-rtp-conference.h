@@ -1,11 +1,11 @@
 /*
- * Farsight2 - Farsight RTP Conference Implementation
+ * Farstream - Farstream RTP Conference Implementation
  *
  * Copyright 2007 Collabora Ltd.
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
  * Copyright 2007 Nokia Corp.
  *
- * gstfsrtpconference.h - RTP implementation for Farsight Conference Gstreamer
+ * gstfsrtpconference.h - RTP implementation for Farstream Conference Gstreamer
  *                        Elements
  *
  * This library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 #ifndef __FS_RTP_CONFERENCE_H__
 #define __FS_RTP_CONFERENCE_H__
 
-#include <gst/farsight/fs-base-conference.h>
+#include <farstream/fs-conference.h>
 
 G_BEGIN_DECLS
 
@@ -52,7 +52,7 @@ typedef struct _FsRtpConferencePrivate FsRtpConferencePrivate;
 
 struct _FsRtpConference
 {
-  FsBaseConference parent;
+  FsConference parent;
 
   /*< private >*/
   FsRtpConferencePrivate *priv;
@@ -63,7 +63,7 @@ struct _FsRtpConference
 
 struct _FsRtpConferenceClass
 {
-  FsBaseConferenceClass parent_class;
+  FsConferenceClass parent_class;
 };
 
 GType fs_rtp_conference_get_type (void);
@@ -76,8 +76,6 @@ GST_DEBUG_CATEGORY_EXTERN (fsrtpconference_nego);
 
 GstCaps *fs_codec_to_gst_caps (const FsCodec *codec);
 GstCaps *fs_codec_to_gst_caps_with_ptime (const FsCodec *codec);
-
-GList *codecs_copy_with_new_ptime (GList *codecs);
 
 gboolean fs_rtp_conference_is_internal_thread (FsRtpConference *self);
 

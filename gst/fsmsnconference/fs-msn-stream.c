@@ -1,5 +1,5 @@
 /*
- * Farsight2 - Farsight MSN Stream
+ * Farstream - Farstream MSN Stream
  *
  * Copyright 2008 Richard Spiers <richard.spiers@gmail.com>
  * Copyright 2007 Nokia Corp.
@@ -7,7 +7,7 @@
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
  *  @author: Youness Alaoui <youness.alaoui@collabora.co.uk>
  *
- * fs-msn-stream.c - A Farsight MSN Stream gobject
+ * fs-msn-stream.c - A Farstream MSN Stream gobject
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -94,8 +94,6 @@ struct _FsMsnStreamPrivate
   GstPad *src_pad;
   FsMsnConnection *connection;
 
-  GError *construction_error;
-
   guint session_id;
   guint initial_port;
 
@@ -123,9 +121,14 @@ static void fs_msn_stream_set_property (GObject *object,
                                         const GValue *value,
                                         GParamSpec *pspec);
 
-static void fs_msn_stream_constructed (GObject *object);
+static gboolean
+fs_msn_stream_set_transmitter (FsStream *stream,
+    const gchar *transmitter,
+    GParameter *stream_transmitter_parameters,
+    guint stream_transmitter_n_parameters,
+    GError **error);
 
-static gboolean fs_msn_stream_set_remote_candidates (FsStream *stream,
+static gboolean fs_msn_stream_add_remote_candidates (FsStream *stream,
     GList *candidates,
     GError **error);
 
@@ -157,12 +160,11 @@ fs_msn_stream_class_init (FsMsnStreamClass *klass)
 
   gobject_class->set_property = fs_msn_stream_set_property;
   gobject_class->get_property = fs_msn_stream_get_property;
-  gobject_class->constructed = fs_msn_stream_constructed;
   gobject_class->dispose = fs_msn_stream_dispose;
   gobject_class->finalize = fs_msn_stream_finalize;
 
-  stream_class->set_remote_candidates = fs_msn_stream_set_remote_candidates;
-
+  stream_class->add_remote_candidates = fs_msn_stream_add_remote_candidates;
+  stream_class->set_transmitter = fs_msn_stream_set_transmitter;
 
   g_type_class_add_private (klass, sizeof (FsMsnStreamPrivate));
 
@@ -454,44 +456,6 @@ fs_msn_stream_set_property (GObject *object,
 }
 
 static void
-fs_msn_stream_constructed (GObject *object)
-{
-  FsMsnStream *self = FS_MSN_STREAM_CAST (object);
-  gboolean producer;
-
-  if (self->priv->conference->max_direction == FS_DIRECTION_RECV)
-    producer = FALSE;
-  else if (self->priv->conference->max_direction == FS_DIRECTION_SEND)
-    producer = TRUE;
-  else
-    g_assert_not_reached ();
-
-  self->priv->connection = fs_msn_connection_new (self->priv->session_id,
-      producer, self->priv->initial_port);
-
-  g_signal_connect (self->priv->connection,
-      "new-local-candidate",
-      G_CALLBACK (_new_local_candidate), self);
-  g_signal_connect (self->priv->connection,
-      "local-candidates-prepared",
-      G_CALLBACK (_local_candidates_prepared), self);
-  g_signal_connect (self->priv->connection,
-      "connected",
-      G_CALLBACK (_connected), self);
-  g_signal_connect (self->priv->connection,
-      "connection-failed",
-      G_CALLBACK (_connection_failed), self);
-
-  if (!fs_msn_connection_gather_local_candidates (self->priv->connection,
-          &self->priv->construction_error))
-    return;
-
-  if (G_OBJECT_CLASS (fs_msn_stream_parent_class)->constructed)
-    G_OBJECT_CLASS (fs_msn_stream_parent_class)->constructed (object);
-}
-
-
-static void
 _local_candidates_prepared (FsMsnConnection *connection,
     gpointer user_data)
 {
@@ -503,7 +467,7 @@ _local_candidates_prepared (FsMsnConnection *connection,
 
   gst_element_post_message (GST_ELEMENT (conference),
       gst_message_new_element (GST_OBJECT (conference),
-          gst_structure_new ("farsight-local-candidates-prepared",
+          gst_structure_new ("farstream-local-candidates-prepared",
               "stream", FS_TYPE_STREAM, self,
               NULL)));
 
@@ -524,7 +488,7 @@ _new_local_candidate (
 
   gst_element_post_message (GST_ELEMENT (conference),
       gst_message_new_element (GST_OBJECT (conference),
-          gst_structure_new ("farsight-new-local-candidate",
+          gst_structure_new ("farstream-new-local-candidate",
               "stream", FS_TYPE_STREAM, self,
               "candidate", FS_TYPE_CANDIDATE, candidate,
               NULL)));
@@ -556,7 +520,7 @@ _connected (
 
   gst_element_post_message (GST_ELEMENT (conference),
       gst_message_new_element (GST_OBJECT (conference),
-          gst_structure_new ("farsight-component-state-changed",
+          gst_structure_new ("farstream-component-state-changed",
               "stream", FS_TYPE_STREAM, self,
               "component", G_TYPE_UINT, 1,
               "state", FS_TYPE_STREAM_STATE, FS_STREAM_STATE_READY,
@@ -573,8 +537,9 @@ _connected (
 
   if (!codecbin)
   {
+    g_prefix_error (&error, "Error creating codecbin: ");
     fs_stream_emit_error (FS_STREAM (self), FS_ERROR_CONSTRUCTION,
-        "Could not build codecbin", error->message);
+        error->message);
     g_clear_error (&error);
     goto error;
   }
@@ -597,7 +562,6 @@ _connected (
   if (!fdelem)
   {
     fs_stream_emit_error (FS_STREAM (self), FS_ERROR_CONSTRUCTION,
-        "Could not get fd element",
         "Could not get fd element");
     goto error;
   }
@@ -609,7 +573,7 @@ _connected (
   if (fd != checkfd)
   {
     fs_stream_emit_error (FS_STREAM (self), FS_ERROR_INTERNAL,
-        "Could not set file descriptor", "Could not set fd");
+        "Could not set file descriptor");
     goto error;
   }
 
@@ -622,7 +586,6 @@ _connected (
   if (!pad)
   {
     fs_stream_emit_error (FS_STREAM (self), FS_ERROR_CONSTRUCTION,
-        "Could not get codecbin pad",
         "Could not get codecbin pad");
     goto error;
   }
@@ -631,7 +594,6 @@ _connected (
   {
     gst_object_unref (pad);
     fs_stream_emit_error (FS_STREAM (self), FS_ERROR_CONSTRUCTION,
-        "Could not add codecbin to the conference",
         "Could not add codecbin to the conference");
     goto error;
   }
@@ -657,7 +619,6 @@ _connected (
     if (!gst_element_add_pad (GST_ELEMENT (conference), src_pad))
     {
       fs_stream_emit_error (FS_STREAM (self), FS_ERROR_CONSTRUCTION,
-          "Could not add src_1_1_1 pad",
           "Could not add src_1_1_1 pad");
       gst_object_unref (src_pad);
       goto error;
@@ -668,7 +629,6 @@ _connected (
     if (!recv_valve)
     {
        fs_stream_emit_error (FS_STREAM (self), FS_ERROR_CONSTRUCTION,
-           "Could not get recv_valve",
            "Could not get recv_valve");
        gst_object_unref (src_pad);
        goto error;
@@ -701,7 +661,6 @@ _connected (
     if (!send_valve)
     {
       fs_stream_emit_error (FS_STREAM (self), FS_ERROR_DISPOSED,
-          "Session was disposed",
           "Session was disposed");
       goto error;
     }
@@ -712,7 +671,6 @@ _connected (
     {
       gst_object_unref (pad);
       fs_stream_emit_error (FS_STREAM (self), FS_ERROR_CONSTRUCTION,
-          "Could not get valve sink pad",
           "Could not get valve sink pad");
       goto error;
     }
@@ -722,7 +680,6 @@ _connected (
       gst_object_unref (valvepad);
       gst_object_unref (pad);
       fs_stream_emit_error (FS_STREAM (self), FS_ERROR_CONSTRUCTION,
-          "Could not link valve to codec bin",
           "Could not link valve to codec bin");
       goto error;
     }
@@ -733,7 +690,6 @@ _connected (
   if (!gst_element_sync_state_with_parent (codecbin))
   {
     fs_stream_emit_error (FS_STREAM (self), FS_ERROR_CONSTRUCTION,
-        "Could not start codec bin",
         "Could not start codec bin");
     goto error;
   }
@@ -773,24 +729,23 @@ _connection_failed (FsMsnConnection *connection, FsMsnStream *self)
 
   gst_element_post_message (GST_ELEMENT (conference),
       gst_message_new_element (GST_OBJECT (conference),
-          gst_structure_new ("farsight-component-state-changed",
+          gst_structure_new ("farstream-component-state-changed",
               "stream", FS_TYPE_STREAM, self,
               "component", G_TYPE_UINT, 1,
               "state", FS_TYPE_STREAM_STATE, FS_STREAM_STATE_FAILED,
               NULL)));
 
   fs_stream_emit_error (FS_STREAM (self), FS_ERROR_CONNECTION_FAILED,
-      "Could not establish streaming connection",
       "Could not establish streaming connection");
 
   gst_object_unref (conference);
 }
 
 /**
- * fs_msn_stream_set_remote_candidate:
+ * fs_msn_stream_add_remote_candidate:
  */
 static gboolean
-fs_msn_stream_set_remote_candidates (FsStream *stream, GList *candidates,
+fs_msn_stream_add_remote_candidates (FsStream *stream, GList *candidates,
                                      GError **error)
 {
   FsMsnStream *self = FS_MSN_STREAM (stream);
@@ -808,14 +763,14 @@ fs_msn_stream_set_remote_candidates (FsStream *stream, GList *candidates,
 
   if (conn)
   {
-    ret = fs_msn_connection_set_remote_candidates (conn, candidates, error);
+    ret = fs_msn_connection_add_remote_candidates (conn, candidates, error);
     g_object_unref (conn);
   }
 
   if (ret)
     gst_element_post_message (GST_ELEMENT (conference),
         gst_message_new_element (GST_OBJECT (conference),
-            gst_structure_new ("farsight-component-state-changed",
+            gst_structure_new ("farstream-component-state-changed",
                 "stream", FS_TYPE_STREAM, self,
                 "component", G_TYPE_UINT, 1,
                 "state", FS_TYPE_STREAM_STATE, FS_STREAM_STATE_CONNECTING,
@@ -843,51 +798,16 @@ FsMsnStream *
 fs_msn_stream_new (FsMsnSession *session,
     FsMsnParticipant *participant,
     FsStreamDirection direction,
-    FsMsnConference *conference,
-    guint n_parameters,
-    GParameter *parameters,
-    GError **error)
+    FsMsnConference *conference)
 {
   FsMsnStream *self;
-  GParameter *params;
 
-  params = g_new0 (GParameter, n_parameters + 4);
-
-  params[0].name = "session";
-  g_value_init (&params[0].value, FS_TYPE_SESSION);
-  g_value_set_object (&params[0].value, session);
-
-  params[1].name = "participant";
-  g_value_init (&params[1].value, FS_TYPE_PARTICIPANT);
-  g_value_set_object (&params[1].value, participant);
-
-  params[2].name = "direction";
-  g_value_init (&params[2].value, FS_TYPE_STREAM_DIRECTION);
-  g_value_set_flags (&params[2].value, direction);
-
-  params[3].name = "conference";
-  g_value_init (&params[3].value, FS_TYPE_MSN_CONFERENCE);
-  g_value_set_object (&params[3].value, conference);
-
-  if (n_parameters)
-    memcpy (params+4, parameters, n_parameters * sizeof(GParameter));
-
-  self = g_object_newv (FS_TYPE_MSN_STREAM, n_parameters + 4, params);
-
-  g_free (params);
-
-  if (!self)
-  {
-    *error = g_error_new (FS_ERROR, FS_ERROR_CONSTRUCTION,
-        "Could not create object");
-    return NULL;
-  }
-  else if (self->priv->construction_error)
-  {
-    g_propagate_error (error, self->priv->construction_error);
-    g_object_unref (self);
-    return NULL;
-  }
+  self = g_object_new (FS_TYPE_MSN_STREAM,
+      "session", session,
+      "participant", participant,
+      "direction", direction,
+      "conference", conference,
+      NULL);
 
   return self;
 }
@@ -910,3 +830,75 @@ fs_msn_stream_set_tos_locked (FsMsnStream *self, gint tos)
 #endif
 }
 
+
+static gboolean
+fs_msn_stream_set_transmitter (FsStream *stream,
+    const gchar *transmitter,
+    GParameter *stream_transmitter_parameters,
+    guint stream_transmitter_n_parameters,
+    GError **error)
+{
+  FsMsnStream *self = FS_MSN_STREAM (stream);
+  FsMsnConference *conference = fs_msn_stream_get_conference (self, error);
+  gboolean producer;
+  guint i;
+
+  if (!conference)
+    return FALSE;
+
+  for (i = 0; i < stream_transmitter_n_parameters; i++)
+  {
+    if (!g_ascii_strcasecmp (stream_transmitter_parameters[i].name,
+            "session-id"))
+    {
+      if (g_value_get_uint (&stream_transmitter_parameters[i].value) >= 1025 &&
+          g_value_get_uint (&stream_transmitter_parameters[i].value) < 65536)
+        self->priv->session_id =
+            g_value_get_uint (&stream_transmitter_parameters[i].value);
+    }
+    else if (!g_ascii_strcasecmp (stream_transmitter_parameters[i].name,
+            "initial-port"))
+    {
+      if (g_value_get_uint (&stream_transmitter_parameters[i].value) < 10000)
+        self->priv->initial_port =
+            g_value_get_uint (&stream_transmitter_parameters[i].value);
+    }
+  }
+
+  if (self->priv->conference->max_direction == FS_DIRECTION_RECV)
+    producer = FALSE;
+  else if (self->priv->conference->max_direction == FS_DIRECTION_SEND)
+    producer = TRUE;
+  else
+    g_assert_not_reached ();
+
+
+  self->priv->connection = fs_msn_connection_new (self->priv->session_id,
+      producer, self->priv->initial_port);
+
+  g_signal_connect (self->priv->connection,
+      "new-local-candidate",
+      G_CALLBACK (_new_local_candidate), self);
+  g_signal_connect (self->priv->connection,
+      "local-candidates-prepared",
+      G_CALLBACK (_local_candidates_prepared), self);
+  g_signal_connect (self->priv->connection,
+      "connected",
+      G_CALLBACK (_connected), self);
+  g_signal_connect (self->priv->connection,
+      "connection-failed",
+      G_CALLBACK (_connection_failed), self);
+
+  if (!fs_msn_connection_gather_local_candidates (self->priv->connection,
+          error))
+  {
+    g_object_unref (self->priv->connection);
+    self->priv->connection = NULL;
+    g_object_unref (conference);
+    return FALSE;
+  }
+
+  g_object_unref (conference);
+
+  return TRUE;
+}

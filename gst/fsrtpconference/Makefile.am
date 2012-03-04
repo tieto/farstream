@@ -51,8 +51,8 @@ noinst_HEADERS = \
 CLEANFILES = $(BUILT_SOURCES) fs-rtp-marshal.list
 
 AM_CFLAGS = \
-	$(FS2_INTERNAL_CFLAGS) \
-	$(FS2_CFLAGS) \
+	$(FS_INTERNAL_CFLAGS) \
+	$(FS_CFLAGS) \
 	$(GST_PLUGINS_BASE_CFLAGS) \
 	$(GST_CFLAGS)
 
@@ -62,15 +62,16 @@ libfsrtpconference_la_SOURCES = fs-rtp-conference-plugin.c
 
 libfsrtpconference_la_LIBADD = \
 	libfsrtpconference-convenience.la \
-	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-0.10.la \
-	$(FS2_LIBS) \
+	$(top_builddir)/farstream/libfarstream-@FS_MAJORMINOR@.la \
+	$(FS_LIBS) \
 	$(GST_PLUGINS_BASE_LIBS) \
 	$(GST_LIBS) \
-	-lgstrtp-@GST_MAJORMINOR@
+	-lgstrtp-@GST_MAJORMINOR@ \
+	-lm
 
 libfsrtpconference_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
 
-preferencesdir = $(datadir)/$(PACKAGE_TARNAME)/$(FS2_MAJORMINOR)/fsrtpconference
+preferencesdir = $(datadir)/$(PACKAGE_TARNAME)/$(FS_MAJORMINOR)/fsrtpconference
 preferences_DATA = \
 	default-codec-preferences \
 	default-element-properties

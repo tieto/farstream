@@ -1,4 +1,4 @@
-/* Farsight 2 unit tests for FsRtpConference
+/* Farstream unit tests for FsRtpConference
  *
  * Copyright (C) 2007 Collabora, Nokia
  * @author: Olivier Crete <olivier.crete@collabora.co.uk>
@@ -23,8 +23,8 @@
 #endif
 
 #include <gst/check/gstcheck.h>
-#include <gst/farsight/fs-conference-iface.h>
-#include <gst/farsight/fs-stream-transmitter.h>
+#include <farstream/fs-conference.h>
+#include <farstream/fs-stream-transmitter.h>
 
 #include "check-threadsafe.h"
 
@@ -73,13 +73,16 @@ GST_START_TEST (test_rtpconference_new)
   FsSession *sess = NULL;
   FsParticipant *part = NULL;
   FsStreamDirection dir;
+  GstStructure *s;
 
   dat = setup_simple_conference (1, "fsrtpconference", "bob@127.0.0.1");
   st = simple_conference_add_stream (dat, dat, "rawudp", 0, NULL);
 
-  g_object_get (dat->conference, "sdes-cname", &str, NULL);
-  ts_fail_unless (!strcmp (str, "bob@127.0.0.1"), "Conference CNAME is wrong");
-  g_free (str);
+  g_object_get (dat->conference, "sdes", &s, NULL);
+  ts_fail_unless (gst_structure_get_string (s, "cname") &&
+      !strcmp (gst_structure_get_string (s, "cname"),
+          "bob@127.0.0.1"), "Conference CNAME is wrong");
+  gst_structure_free (s);
 
   g_object_get (st->participant, "cname", &str, NULL);
   ts_fail_unless (str == NULL);
@@ -177,7 +180,14 @@ _new_local_candidate (FsStream *stream, FsCandidate *candidate)
   }
 
   candidates = g_list_prepend (NULL, candidate);
-  ret = fs_stream_set_remote_candidates (other_st->stream, candidates, &error);
+  ret = fs_stream_add_remote_candidates (other_st->stream, candidates, &error);
+  if (ret == FALSE && error &&
+      error->domain == FS_ERROR && error->code == FS_ERROR_NOT_IMPLEMENTED)
+  {
+    g_clear_error (&error);
+    ret = fs_stream_force_remote_candidates (other_st->stream, candidates,
+        &error);
+  }
   g_list_free (candidates);
 
   if (error)
@@ -231,38 +241,34 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
       {
         const GstStructure *s = gst_message_get_structure (message);
         ts_fail_if (s==NULL, "NULL structure in element message");
-        if (gst_structure_has_name (s, "farsight-error"))
+        if (gst_structure_has_name (s, "farstream-error"))
         {
           const GValue *value;
           FsError errorno;
-          const gchar *error, *debug;
+          const gchar *error;
 
           ts_fail_unless (
               gst_implements_interface_check (GST_MESSAGE_SRC (message),
                   FS_TYPE_CONFERENCE),
-              "Received farsight-error from non-farsight element");
+              "Received farstream-error from non-farstream element");
 
           ts_fail_unless (
               gst_structure_has_field_typed (s, "src-object", G_TYPE_OBJECT),
-              "farsight-error structure has no src-object field");
+              "farstream-error structure has no src-object field");
           ts_fail_unless (
               gst_structure_has_field_typed (s, "error-no", FS_TYPE_ERROR),
-              "farsight-error structure has no src-object field");
+              "farstream-error structure has no src-object field");
           ts_fail_unless (
               gst_structure_has_field_typed (s, "error-msg", G_TYPE_STRING),
-              "farsight-error structure has no src-object field");
-          ts_fail_unless (
-              gst_structure_has_field_typed (s, "debug-msg", G_TYPE_STRING),
-              "farsight-error structure has no src-object field");
+              "farstream-error structure has no src-object field");
 
           value = gst_structure_get_value (s, "error-no");
           errorno = g_value_get_enum (value);
           error = gst_structure_get_string (s, "error-msg");
-          debug = gst_structure_get_string (s, "debug-msg");
 
-          ts_fail ("Error on BUS (%d) %s .. %s", errorno, error, debug);
+          ts_fail ("Error on BUS (%d) %s", errorno, error);
         }
-        else if (gst_structure_has_name (s, "farsight-new-local-candidate"))
+        else if (gst_structure_has_name (s, "farstream-new-local-candidate"))
         {
           FsStream *stream;
           FsCandidate *candidate;
@@ -271,14 +277,14 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
           ts_fail_unless (
               gst_implements_interface_check (GST_MESSAGE_SRC (message),
                   FS_TYPE_CONFERENCE),
-              "Received farsight-error from non-farsight element");
+              "Received farstream-error from non-farstream element");
 
           ts_fail_unless (
               gst_structure_has_field_typed (s, "stream", FS_TYPE_STREAM),
-              "farsight-new-local-candidate structure has no stream field");
+              "farstream-new-local-candidate structure has no stream field");
           ts_fail_unless (
               gst_structure_has_field_typed (s, "candidate", FS_TYPE_CANDIDATE),
-              "farsight-new-local-candidate structure has no candidate field");
+              "farstream-new-local-candidate structure has no candidate field");
 
           value = gst_structure_get_value (s, "stream");
           stream = g_value_get_object (value);
@@ -292,7 +298,7 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
           _new_local_candidate (stream, candidate);
         }
         else if (gst_structure_has_name (s,
-                "farsight-new-active-candidate-pair"))
+                "farstream-new-active-candidate-pair"))
         {
           FsStream *stream;
           FsCandidate *local_candidate, *remote_candidate;
@@ -301,21 +307,21 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
           ts_fail_unless (
               gst_implements_interface_check (GST_MESSAGE_SRC (message),
                   FS_TYPE_CONFERENCE),
-              "Received farsight-error from non-farsight element");
+              "Received farstream-error from non-farstream element");
 
           ts_fail_unless (
               gst_structure_has_field_typed (s, "stream", FS_TYPE_STREAM),
-              "farsight-new-active-candidate-pair structure"
+              "farstream-new-active-candidate-pair structure"
               " has no stream field");
           ts_fail_unless (
               gst_structure_has_field_typed (s, "local-candidate",
                   FS_TYPE_CANDIDATE),
-              "farsight-new-active-candidate-pair structure"
+              "farstream-new-active-candidate-pair structure"
               " has no local-candidate field");
           ts_fail_unless (
               gst_structure_has_field_typed (s, "remote-candidate",
                   FS_TYPE_CANDIDATE),
-              "farsight-new-active-candidate-pair structure"
+              "farstream-new-active-candidate-pair structure"
               " has no remote-candidate field");
 
           value = gst_structure_get_value (s, "stream");
@@ -331,7 +337,7 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
               stream, local_candidate, remote_candidate);
         }
         else if (gst_structure_has_name (s,
-                "farsight-current-send-codec-changed"))
+                "farstream-current-send-codec-changed"))
         {
           FsSession *session;
           FsCodec *codec;
@@ -340,12 +346,12 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
           ts_fail_unless (
               gst_implements_interface_check (GST_MESSAGE_SRC (message),
                   FS_TYPE_CONFERENCE),
-              "Received farsight-current-send-codec-change from non-farsight"
+              "Received farstream-current-send-codec-change from non-farstream"
               " element");
 
           ts_fail_unless (
               gst_structure_has_field_typed (s, "session", FS_TYPE_SESSION),
-              "farsight-current-send-codec-changed structure"
+              "farstream-current-send-codec-changed structure"
               " has no session field");
           ts_fail_unless (
               gst_structure_has_field_typed (s, "codec",
@@ -364,7 +370,7 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
           _current_send_codec_changed (session, codec);
         }
         else if (gst_structure_has_name (s,
-                "farsight-local-candidates-prepared"))
+                "farstream-local-candidates-prepared"))
         {
           FsStream *stream;
           const GValue *value;
@@ -372,12 +378,12 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
           ts_fail_unless (
               gst_implements_interface_check (GST_MESSAGE_SRC (message),
                   FS_TYPE_CONFERENCE),
-              "Received farsight-local-candidates-prepared from non-farsight"
+              "Received farstream-local-candidates-prepared from non-farstream"
               " element");
 
           ts_fail_unless (
               gst_structure_has_field_typed (s, "stream", FS_TYPE_STREAM),
-              "farsight-local-candidates-prepared structure"
+              "farstream-local-candidates-prepared structure"
               " has no stream field");
 
           value = gst_structure_get_value (s, "stream");
@@ -925,15 +931,15 @@ GST_START_TEST (test_rtpconference_errors)
   dat = setup_simple_conference (1, "fsrtpconference", "bob@127.0.0.1");
 
   participant = fs_conference_new_participant (FS_CONFERENCE (dat->conference),
-      "bob2@127.0.0.1",
       NULL);
   ts_fail_if (participant == NULL, "Could not create participant");
 
   stream = fs_session_new_stream (dat->session, participant, FS_DIRECTION_NONE,
-      "invalid-transmitter-name", 0, NULL, &error);
+      &error);
+  ts_fail_unless (stream != NULL);
 
-  ts_fail_unless (stream == NULL, "A stream was created with an invalid"
-      " transmitter name");
+  fail_unless (fs_stream_set_transmitter (stream, "invalid-transmitter-name",
+          NULL, 0, &error) == FALSE);
   ts_fail_if (error == NULL, "Error was not set");
   ts_fail_unless (error->domain == FS_ERROR &&
       error->code == FS_ERROR_CONSTRUCTION,
@@ -1116,7 +1122,7 @@ _simple_profile_init (struct SimpleTestStream *st, guint confid, guint streamid)
   gboolean ret;
 
   codec = fs_codec_new (0, "PCMU", FS_MEDIA_TYPE_AUDIO, 8000);
-  fs_codec_add_optional_parameter (codec, "farsight-send-profile",
+  fs_codec_add_optional_parameter (codec, "farstream-send-profile",
       "audioconvert ! audioresample ! audioconvert ! mulawenc ! rtppcmupay");
   prefs = g_list_append (NULL, codec);
 
@@ -1198,7 +1204,7 @@ _double_profile_init (struct SimpleTestStream *st, guint confid, guint streamid)
   st->handoff_handler = G_CALLBACK (_double_codec_handoff_handler);
 
   codec = fs_codec_new (0, "PCMU", FS_MEDIA_TYPE_AUDIO, 8000);
-  fs_codec_add_optional_parameter (codec, "farsight-send-profile",
+  fs_codec_add_optional_parameter (codec, "farstream-send-profile",
       "tee name=t "
       "t. ! audioconvert ! audioresample ! audioconvert ! mulawenc ! rtppcmupay "
       "t. ! audioconvert ! audioresample ! audioconvert ! alawenc ! rtppcmapay");
@@ -1233,16 +1239,15 @@ GST_START_TEST (test_rtpconference_dispose)
   session = fs_conference_new_session (conf, FS_MEDIA_TYPE_AUDIO, &error);
   fail_if (session == NULL || error != NULL);
 
-  part = fs_conference_new_participant (conf, "name@1.2.3.4", &error);
+  part = fs_conference_new_participant (conf, &error);
   fail_if (part == NULL || error != NULL);
 
-  stream = fs_session_new_stream (session, part, FS_DIRECTION_BOTH, "rawudp",
-      0, NULL, &error);
+  stream = fs_session_new_stream (session, part, FS_DIRECTION_BOTH, &error);
   fail_if (stream == NULL || error != NULL);
 
   g_object_run_dispose (G_OBJECT (stream));
 
-  fail_if (fs_stream_set_remote_candidates (stream, NULL, &error));
+  fail_if (fs_stream_add_remote_candidates (stream, NULL, &error));
   fail_unless (error->domain == FS_ERROR && error->code == FS_ERROR_DISPOSED);
   g_clear_error (&error);
 
@@ -1254,15 +1259,15 @@ GST_START_TEST (test_rtpconference_dispose)
   fail_unless (error->domain == FS_ERROR && error->code == FS_ERROR_DISPOSED);
   g_clear_error (&error);
 
+  fs_stream_destroy (stream);
   g_object_unref (stream);
 
-  stream = fs_session_new_stream (session, part, FS_DIRECTION_BOTH, "rawudp",
-      0, NULL, &error);
+  stream = fs_session_new_stream (session, part, FS_DIRECTION_BOTH, &error);
   fail_if (stream == NULL || error != NULL);
 
   g_object_run_dispose (G_OBJECT (stream));
 
-  fail_if (fs_stream_set_remote_candidates (stream, NULL, &error));
+  fail_if (fs_stream_add_remote_candidates (stream, NULL, &error));
   fail_unless (error->domain == FS_ERROR && error->code == FS_ERROR_DISPOSED);
   g_clear_error (&error);
 
@@ -1276,9 +1281,8 @@ GST_START_TEST (test_rtpconference_dispose)
 
   g_object_run_dispose (G_OBJECT (session));
 
-  fail_if (fs_session_start_telephony_event (session, 1, 2,
-          FS_DTMF_METHOD_AUTO));
-  fail_if (fs_session_stop_telephony_event (session, FS_DTMF_METHOD_AUTO));
+  fail_if (fs_session_start_telephony_event (session, 1, 2));
+  fail_if (fs_session_stop_telephony_event (session));
 
   fail_if (fs_session_set_send_codec (session, NULL, &error));
   fail_unless (error->domain == FS_ERROR && error->code == FS_ERROR_DISPOSED);
@@ -1288,6 +1292,7 @@ GST_START_TEST (test_rtpconference_dispose)
   fail_unless (error->domain == FS_ERROR && error->code == FS_ERROR_DISPOSED);
   g_clear_error (&error);
 
+  fs_session_destroy (session);
   g_object_unref (session);
   g_object_unref (part);
   g_object_unref (stream);
@@ -1314,7 +1319,7 @@ multicast_init (struct SimpleTestStream *st, guint confid, guint streamid)
   candidates = g_list_prepend (candidates, cand);
 
 
-  ts_fail_unless (fs_stream_set_remote_candidates (st->stream, candidates,
+  ts_fail_unless (fs_stream_force_remote_candidates (st->stream, candidates,
           &error), "Error %s", error ? error->message : "No GError");
 
   fs_candidate_list_destroy (candidates);
@@ -1400,10 +1405,7 @@ static void unref_session_on_src_pad_added (FsStream *stream,
 {
   TEST_LOCK ();
 
-  g_object_unref (st->dat->session);
-  st->dat->session = NULL;
-  g_object_unref (st->stream);
-  st->stream = NULL;
+  ASSERT_CRITICAL (fs_session_destroy (st->dat->session));
 
   TEST_UNLOCK ();
 
@@ -1422,6 +1424,8 @@ GST_START_TEST (test_rtpconference_unref_session_in_pad_added)
   nway_test (2, NULL, unref_session_init, "rawudp", 0, NULL);
 }
 GST_END_TEST;
+
+#if 0
 
 static const gchar *signal_name;
 
@@ -1454,8 +1458,7 @@ unref_stream_sync_handler (GstBus *bus, GstMessage *message,
     struct SimpleTestStream *st = item->data;
     if (st->stream == stream)
     {
-      g_object_unref (stream);
-      st->stream = NULL;
+      ASSERT_CRITICAL (fs_stream_destroy (stream));
       gst_message_unref (message);
       g_main_loop_quit (loop);
       TEST_UNLOCK ();
@@ -1480,35 +1483,32 @@ static void unref_stream_init (struct SimpleTestConference *dat, guint confid)
 
 GST_START_TEST (test_rtpconference_unref_stream_in_nice_thread_prepared)
 {
-  signal_name = "farsight-local-candidates-prepared";
+  signal_name = "farstream-local-candidates-prepared";
   nway_test (2, unref_stream_init, NULL, "nice", 0, NULL);
 }
 GST_END_TEST;
 
 GST_START_TEST (test_rtpconference_unref_stream_in_nice_thread_new_active)
 {
-  signal_name = "farsight-new-active-candidate-pair";
+  signal_name = "farstream-new-active-candidate-pair";
   nway_test (2, unref_stream_init, NULL, "nice", 0, NULL);
 }
 GST_END_TEST;
 
 GST_START_TEST (test_rtpconference_unref_stream_in_nice_thread_state_changed)
 {
-  signal_name = "farsight-component-state-changed";
+  signal_name = "farstream-component-state-changed";
   nway_test (2, unref_stream_init, NULL, "nice", 0, NULL);
 }
 GST_END_TEST;
+
+#endif
 
 static Suite *
 fsrtpconference_suite (void)
 {
   Suite *s = suite_create ("fsrtpconference");
   TCase *tc_chain;
-  GLogLevelFlags fatal_mask;
-
-  fatal_mask = g_log_set_always_fatal (G_LOG_FATAL_MASK);
-  fatal_mask |= G_LOG_LEVEL_WARNING | G_LOG_LEVEL_CRITICAL;
-  g_log_set_always_fatal (fatal_mask);
 
   tc_chain = tcase_create ("fsrtpconference_base");
   tcase_add_test (tc_chain, test_rtpconference_new);
@@ -1587,6 +1587,8 @@ fsrtpconference_suite (void)
   tcase_add_test (tc_chain, test_rtpconference_unref_session_in_pad_added);
   suite_add_tcase (s, tc_chain);
 
+#if 0
+
   tc_chain = tcase_create (
       "fsrtpconference_unref_stream_in_nice_thread_prepared");
   tcase_add_test (tc_chain,
@@ -1604,6 +1606,8 @@ fsrtpconference_suite (void)
   tcase_add_test (tc_chain,
       test_rtpconference_unref_stream_in_nice_thread_state_changed);
   suite_add_tcase (s, tc_chain);
+
+#endif
 
   return s;
 }

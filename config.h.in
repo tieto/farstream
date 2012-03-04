@@ -3,14 +3,17 @@
 /* Define if building universal (internal helper macro) */
 #undef AC_APPLE_UNIVERSAL_BUILD
 
-/* Farsight2 license */
-#undef FS2_LICENSE
+/* Farstream license */
+#undef FS_LICENSE
 
-/* Farsight2 major.minor version */
-#undef FS2_MAJORMINOR
+/* Farstream major.minor version */
+#undef FS_MAJORMINOR
+
+/* Farstream major_minor version */
+#undef FS_MAJOR_MINOR
 
 /* The path were plugins are installed and search by default */
-#undef FS2_PLUGIN_PATH
+#undef FS_PLUGIN_PATH
 
 /* Defined if gcov is enabled to force a rebuild due to config.h changing */
 #undef GST_GCOV_ENABLED

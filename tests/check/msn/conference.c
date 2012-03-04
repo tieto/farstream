@@ -1,4 +1,4 @@
-/* Farsight 2 unit tests for FsMsnConference
+/* Farstream unit tests for FsMsnConference
  *
  * Copyright (C) 2009 Collabora
  * @author: Olivier Crete <olivier.crete@collabora.co.uk>
@@ -23,7 +23,7 @@
 #endif
 
 #include <gst/check/gstcheck.h>
-#include <gst/farsight/fs-conference-iface.h>
+#include <farstream/fs-conference.h>
 
 #include "check-threadsafe.h"
 
@@ -59,38 +59,34 @@ bus_watch (GstBus *bus, GstMessage *message, gpointer user_data)
       {
         const GstStructure *s = gst_message_get_structure (message);
         ts_fail_if (s==NULL, "NULL structure in element message");
-        if (gst_structure_has_name (s, "farsight-error"))
+        if (gst_structure_has_name (s, "farstream-error"))
         {
           const GValue *value;
           FsError errorno;
-          const gchar *error, *debug;
+          const gchar *error;
 
           ts_fail_unless (
               gst_implements_interface_check (GST_MESSAGE_SRC (message),
                   FS_TYPE_CONFERENCE),
-              "Received farsight-error from non-farsight element");
+              "Received farstream-error from non-farstream element");
 
           ts_fail_unless (
               gst_structure_has_field_typed (s, "src-object", G_TYPE_OBJECT),
-              "farsight-error structure has no src-object field");
+              "farstream-error structure has no src-object field");
           ts_fail_unless (
               gst_structure_has_field_typed (s, "error-no", FS_TYPE_ERROR),
-              "farsight-error structure has no src-object field");
+              "farstream-error structure has no src-object field");
           ts_fail_unless (
               gst_structure_has_field_typed (s, "error-msg", G_TYPE_STRING),
-              "farsight-error structure has no src-object field");
-          ts_fail_unless (
-              gst_structure_has_field_typed (s, "debug-msg", G_TYPE_STRING),
-              "farsight-error structure has no src-object field");
+              "farstream-error structure has no src-object field");
 
           value = gst_structure_get_value (s, "error-no");
           errorno = g_value_get_enum (value);
           error = gst_structure_get_string (s, "error-msg");
-          debug = gst_structure_get_string (s, "debug-msg");
 
-          ts_fail ("Error on BUS (%d) %s .. %s", errorno, error, debug);
+          ts_fail ("Error on BUS (%d) %s", errorno, error);
         }
-        else if (gst_structure_has_name (s, "farsight-new-local-candidate"))
+        else if (gst_structure_has_name (s, "farstream-new-local-candidate"))
         {
           FsStream *stream;
           FsCandidate *candidate;
@@ -99,14 +95,14 @@ bus_watch (GstBus *bus, GstMessage *message, gpointer user_data)
           ts_fail_unless (
               gst_implements_interface_check (GST_MESSAGE_SRC (message),
                   FS_TYPE_CONFERENCE),
-              "Received farsight-error from non-farsight element");
+              "Received farstream-error from non-farstream element");
 
           ts_fail_unless (
               gst_structure_has_field_typed (s, "stream", FS_TYPE_STREAM),
-              "farsight-new-local-candidate structure has no stream field");
+              "farstream-new-local-candidate structure has no stream field");
           ts_fail_unless (
               gst_structure_has_field_typed (s, "candidate", FS_TYPE_CANDIDATE),
-              "farsight-new-local-candidate structure has no candidate field");
+              "farstream-new-local-candidate structure has no candidate field");
 
           value = gst_structure_get_value (s, "stream");
           stream = g_value_get_object (value);
@@ -121,13 +117,13 @@ bus_watch (GstBus *bus, GstMessage *message, gpointer user_data)
           {
             GError *error = NULL;
             GList *list = g_list_append (NULL, candidate);
-            gboolean set_remote_candidates_res;
+            gboolean add_remote_candidates_res;
 
             g_debug ("Setting candidate: %s %d",
                 candidate->ip, candidate->port);
-            set_remote_candidates_res = fs_stream_set_remote_candidates (
+            add_remote_candidates_res = fs_stream_add_remote_candidates (
                 dat->target->stream, list, &error);
-            ts_fail_unless (set_remote_candidates_res,
+            ts_fail_unless (add_remote_candidates_res,
                 "Could not set remote candidate: %s",
                 error ? error->message : "No GError");
             ts_fail_unless (error == NULL);
@@ -234,7 +230,7 @@ setup_conference (FsStreamDirection dir, struct SimpleMsnConference *target)
   ts_fail_unless (gst_bin_add (GST_BIN (dat->pipeline),
           GST_ELEMENT (dat->conf)));
 
-  dat->part = fs_conference_new_participant (dat->conf, "", &error);
+  dat->part = fs_conference_new_participant (dat->conf, &error);
   ts_fail_unless (error == NULL, "Error: %s", error ? error->message: "");
   ts_fail_unless (dat->part != NULL);
 
@@ -279,10 +275,13 @@ setup_conference (FsStreamDirection dir, struct SimpleMsnConference *target)
     g_value_set_uint (&param.value, session_id);
   }
 
-  dat->stream = fs_session_new_stream (dat->session, dat->part, dir, NULL,
-      n_params, &param, &error);
+  dat->stream = fs_session_new_stream (dat->session, dat->part, dir, &error);
   ts_fail_unless (dat->stream != NULL);
   ts_fail_unless (error == NULL);
+
+  fail_unless (fs_stream_set_transmitter (dat->stream, NULL, &param, n_params,
+          &error));
+  fail_unless (error == NULL);
 
   g_signal_connect (dat->stream, "src-pad-added",
       G_CALLBACK (stream_src_pad_added), dat);
@@ -299,6 +298,7 @@ free_conference (struct SimpleMsnConference *dat)
   ts_fail_if (gst_element_set_state (dat->pipeline, GST_STATE_NULL) ==
       GST_STATE_CHANGE_FAILURE);
 
+  fs_session_destroy (dat->session);
   gst_object_unref (dat->stream);
   gst_object_unref (dat->session);
   gst_object_unref (dat->part);
@@ -366,7 +366,7 @@ GST_START_TEST (test_msnconference_error)
   GError *error = NULL;
 
   ts_fail_unless (
-      fs_conference_new_participant (dat->conf, "", &error) == NULL);
+      fs_conference_new_participant (dat->conf, &error) == NULL);
   ts_fail_unless (error->domain == FS_ERROR &&
       error->code == FS_ERROR_ALREADY_EXISTS);
   g_clear_error (&error);
@@ -381,10 +381,14 @@ GST_START_TEST (test_msnconference_error)
 
   ts_fail_unless (
       fs_session_new_stream (dat->session, dat->part, FS_DIRECTION_SEND,
-          NULL, 0, NULL, &error) == NULL);
+          &error) == NULL);
   ts_fail_unless (error->domain == FS_ERROR &&
       error->code == FS_ERROR_ALREADY_EXISTS);
   g_clear_error (&error);
+
+  fail_unless (fs_stream_set_transmitter (dat->stream, NULL, NULL, 0,
+          &error));
+  fail_unless (error == NULL);
 
 
   free_conference (dat);

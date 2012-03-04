@@ -1,10 +1,10 @@
 /*
- * Farsight2 - Farsight MSN Participant
+ * Farstream - Farstream MSN Participant
  *
  *  @author: Richard Spiers <richard.spiers@gmail.com>
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
  *
- * fs-msn-participant.h - A Farsight MSN Participant gobject
+ * fs-msn-participant.h - A Farstream MSN Participant gobject
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,7 +24,7 @@
 #ifndef __FS_MSN_PARTICIPANT_H__
 #define __FS_MSN_PARTICIPANT_H__
 
-#include <gst/farsight/fs-participant.h>
+#include <farstream/fs-participant.h>
 
 G_BEGIN_DECLS
 
@@ -71,7 +71,7 @@ struct _FsMsnParticipant
 
 GType fs_msn_participant_get_type (void);
 
-FsMsnParticipant *fs_msn_participant_new (const gchar *cname);
+FsMsnParticipant *fs_msn_participant_new (void);
 
 G_END_DECLS
 

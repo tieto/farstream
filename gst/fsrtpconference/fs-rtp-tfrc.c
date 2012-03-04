@@ -1,11 +1,11 @@
 /*
- * Farsight2 - Farsight RTP TFRC support
+ * Farstream - Farstream RTP TFRC support
  *
  * Copyright 2010 Collabora Ltd.
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
  * Copyright 2010 Nokia Corp.
  *
- * fs-rtp-tfrc.c - Rate control for Farsight RTP sessions
+ * fs-rtp-tfrc.c - Rate control for Farstream RTP sessions
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -31,7 +31,7 @@
 #include <string.h>
 
 #include "fs-rtp-packet-modder.h"
-#include "gst/farsight/fs-rtp.h"
+#include "farstream/fs-rtp.h"
 #include "fs-rtp-codec-negotiation.h"
 
 #include <gst/rtp/gstrtpbuffer.h>
@@ -146,7 +146,7 @@ fs_rtp_tfrc_init (FsRtpTfrc *self)
 {
   GST_DEBUG_CATEGORY_INIT (fsrtpconference_tfrc,
       "fsrtpconference_tfrc", 0,
-      "Farsight RTP Conference Element Rate Control logic");
+      "Farstream RTP Conference Element Rate Control logic");
 
   /* member init */
 
@@ -1206,7 +1206,6 @@ send_rtp_pad_blocked (GstPad *pad, gboolean blocked, gpointer user_data)
     {
       fs_session_emit_error (FS_SESSION (self->fsrtpsession),
           FS_ERROR_CONSTRUCTION,
-          "Could not add tfrc packet modder",
           "Could not add tfrc packet modder to the pipeline");
       goto adding_failed;
     }
@@ -1221,7 +1220,6 @@ send_rtp_pad_blocked (GstPad *pad, gboolean blocked, gpointer user_data)
     {
       fs_session_emit_error (FS_SESSION (self->fsrtpsession),
           FS_ERROR_CONSTRUCTION,
-          "Could not link tfrc packet modder",
           "Could not link tfrc packet modder to rtp muxer");
       goto linking_failed;
     }
@@ -1233,7 +1231,6 @@ send_rtp_pad_blocked (GstPad *pad, gboolean blocked, gpointer user_data)
     {
       fs_session_emit_error (FS_SESSION (self->fsrtpsession),
           FS_ERROR_CONSTRUCTION,
-          "Could not link tfrc packet modder",
           "Could not link tfrc packet modder to the rtpbin");
       goto linking_failed;
     }
@@ -1243,7 +1240,6 @@ send_rtp_pad_blocked (GstPad *pad, gboolean blocked, gpointer user_data)
     {
       fs_session_emit_error (FS_SESSION (self->fsrtpsession),
           FS_ERROR_CONSTRUCTION,
-          "Could not start tfrc packet modder",
           "Could not set the TFRC packet modder to playing");
       goto linking_failed;
     }
@@ -1266,7 +1262,6 @@ send_rtp_pad_blocked (GstPad *pad, gboolean blocked, gpointer user_data)
     if (GST_PAD_LINK_FAILED (linkret))
       fs_session_emit_error (FS_SESSION (self->fsrtpsession),
           FS_ERROR_CONSTRUCTION,
-          "Could not re-link after removing tfrc packet modder",
           "Could not re-link after removing tfrc packet modder");
   }
 
@@ -1386,7 +1381,7 @@ fs_rtp_tfrc_filter_codecs (GList **codec_associations,
     CodecAssociation *ca = item->data;
     GList *item2;
 
-    for (item2 = ca->codec->ABI.ABI.feedback_params; item2;)
+    for (item2 = ca->codec->feedback_params; item2;)
     {
       GList *next2 = item2->next;
       FsFeedbackParameter *p = item2->data;

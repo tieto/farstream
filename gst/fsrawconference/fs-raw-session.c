@@ -1,5 +1,5 @@
 /*
- * Farsight2 - Farsight Raw Session
+ * Farstream - Farstream Raw Session
  *
  * Copyright 2008 Richard Spiers <richard.spiers@gmail.com>
  * Copyright 2007 Nokia Corp.
@@ -8,7 +8,7 @@
  *  @author: Youness Alaoui <youness.alaoui@collabora.co.uk>
  *  @author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
  *
- * fs-raw-session.c - A Farsight Raw Session gobject
+ * fs-raw-session.c - A Farstream Raw Session gobject
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -46,7 +46,7 @@
 #include <string.h>
 
 #include <gst/gst.h>
-#include <gst/farsight/fs-transmitter.h>
+#include <farstream/fs-transmitter.h>
 
 #include "fs-raw-stream.h"
 #include "fs-raw-participant.h"
@@ -70,7 +70,6 @@ enum
   PROP_CODECS,
   PROP_CODECS_WITHOUT_CONFIG,
   PROP_CURRENT_SEND_CODEC,
-  PROP_CODECS_READY,
   PROP_CONFERENCE,
   PROP_TOS
 };
@@ -90,7 +89,7 @@ struct _FsRawSessionPrivate
   GstElement *send_capsfilter;
   GList *codecs;
   FsCodec *send_codec;
-  gboolean transmitter_linked;
+  gboolean transmitter_sink_added;
 
   GstElement *send_tee;
   GstPad *send_tee_pad;
@@ -164,9 +163,6 @@ static void fs_raw_session_constructed (GObject *object);
 static FsStream *fs_raw_session_new_stream (FsSession *session,
     FsParticipant *participant,
     FsStreamDirection direction,
-    const gchar *transmitter,
-    guint n_parameters,
-    GParameter *parameters,
     GError **error);
 
 static gchar **fs_raw_session_list_transmitters (FsSession *session);
@@ -220,17 +216,9 @@ fs_raw_session_class_init (FsRawSessionClass *klass)
   g_object_class_override_property (gobject_class,
       PROP_CURRENT_SEND_CODEC, "current-send-codec");
   g_object_class_override_property (gobject_class,
-      PROP_CODECS_READY, "codecs-ready");
-  g_object_class_override_property (gobject_class,
       PROP_TOS, "tos");
-
-  g_object_class_install_property (gobject_class,
-      PROP_CONFERENCE,
-      g_param_spec_object ("conference",
-          "The Conference this stream refers to",
-          "This is a convience pointer for the Conference",
-          FS_TYPE_RAW_CONFERENCE,
-          G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+  g_object_class_override_property (gobject_class,
+      PROP_CONFERENCE, "conference");
 
   gobject_class->dispose = fs_raw_session_dispose;
   gobject_class->finalize = fs_raw_session_finalize;
@@ -281,7 +269,6 @@ fs_raw_session_dispose (GObject *object)
   GstElement *send_tee = NULL;
   GstElement *fakesink = NULL;
   GstPad *send_tee_pad = NULL;
-  gulong handler_id = 0;
   FsTransmitter *transmitter = NULL;
   GstPad *media_sink_pad = NULL;
 
@@ -326,10 +313,9 @@ fs_raw_session_dispose (GObject *object)
 
   if (self->priv->stream)
   {
-    if (handler_id > 0 && self->priv->stream)
-      g_signal_handler_disconnect (self->priv->stream, handler_id);
-
-    fs_raw_session_remove_stream(self, FS_STREAM (self->priv->stream));
+    FsStream *stream = FS_STREAM (self->priv->stream);
+    fs_raw_session_remove_stream(self, stream);
+    fs_stream_destroy (stream);
   }
 
   GST_OBJECT_LOCK (conference);
@@ -450,9 +436,6 @@ fs_raw_session_get_property (GObject *object,
       break;
     case PROP_SINK_PAD:
       g_value_set_object (value, self->priv->media_sink_pad);
-      break;
-    case PROP_CODECS_READY:
-      g_value_set_boolean (value, TRUE);
       break;
     case PROP_CODEC_PREFERENCES:
       /* There are no preferences, so return NULL */
@@ -906,7 +889,7 @@ _stream_remote_codecs_changed (FsRawStream *stream, GParamSpec *pspec,
     g_object_notify (G_OBJECT (self), "current-send-codec");
     gst_element_post_message (GST_ELEMENT (self->priv->conference),
         gst_message_new_element (GST_OBJECT (self->priv->conference),
-            gst_structure_new ("farsight-send-codec-changed",
+            gst_structure_new ("farstream-send-codec-changed",
                 "session", FS_TYPE_SESSION, self,
                 "codec", FS_TYPE_CODEC, codec,
                 "secondary-codecs", FS_TYPE_CODEC_LIST, NULL,
@@ -920,12 +903,10 @@ _stream_remote_codecs_changed (FsRawStream *stream, GParamSpec *pspec,
 
 error:
   if (error != NULL)
-    fs_session_emit_error (FS_SESSION (self), error->code, error->message,
-          "Unable to change transform bin");
+    fs_session_emit_error (FS_SESSION (self), error->code, error->message);
   else
     fs_session_emit_error (FS_SESSION (self), FS_ERROR_INTERNAL,
-          "Unable to change transform bin",
-          "Unknown error");
+        "Unable to change transform bin");
 
   if (conference != NULL)
     gst_object_unref (conference);
@@ -1073,8 +1054,7 @@ fs_raw_session_update_direction (FsRawSession *self,
 
   if (!conference)
   {
-    fs_session_emit_error (FS_SESSION (self), error->code, error->message,
-        "Unable to add transmitter sink");
+    fs_session_emit_error (FS_SESSION (self), error->code, error->message);
     g_clear_error (&error);
     return;
   }
@@ -1088,8 +1068,9 @@ fs_raw_session_update_direction (FsRawSession *self,
     goto out;
   }
 
-  if (direction & FS_DIRECTION_SEND && !self->priv->transmitter_linked)
-  {
+  if (self->priv->transmitter &&
+      !self->priv->transmitter_sink_added &&
+      direction & FS_DIRECTION_SEND)  {
     GstElement *transmitter_sink;
 
     GST_OBJECT_UNLOCK (conference);
@@ -1098,16 +1079,14 @@ fs_raw_session_update_direction (FsRawSession *self,
     if (!transmitter_sink)
     {
       fs_session_emit_error (FS_SESSION (self), FS_ERROR_CONSTRUCTION,
-          "Unable to get the sink element from the FsTransmitter",
-          "Unable to add transmitter sink");
+          "Unable to get the sink element from the FsTransmitter");
       goto out;
     }
 
     if (!_add_transmitter_sink (self, transmitter_sink, &error))
     {
       gst_object_unref (transmitter_sink);
-      fs_session_emit_error (FS_SESSION (self), error->code, error->message,
-          "Unable to add transmitter sink");
+      fs_session_emit_error (FS_SESSION (self), error->code, error->message);
       g_clear_error (&error);
       goto out;
     }
@@ -1115,7 +1094,7 @@ fs_raw_session_update_direction (FsRawSession *self,
     gst_object_unref (transmitter_sink);
 
     GST_OBJECT_LOCK (conference);
-    self->priv->transmitter_linked = TRUE;
+    self->priv->transmitter_sink_added = TRUE;
   }
 
   if (self->priv->recv_valve)
@@ -1158,15 +1137,11 @@ static FsStream *
 fs_raw_session_new_stream (FsSession *session,
     FsParticipant *participant,
     FsStreamDirection direction,
-    const gchar *transmitter,
-    guint n_parameters,
-    GParameter *parameters,
     GError **error)
 {
   FsRawSession *self = FS_RAW_SESSION (session);
   FsStream *new_stream = NULL;
   FsRawConference *conference;
-  FsStreamTransmitter *stream_transmitter = NULL;
 
   if (!FS_IS_RAW_PARTICIPANT (participant))
   {
@@ -1184,30 +1159,23 @@ fs_raw_session_new_stream (FsSession *session,
     goto already_have_stream;
   GST_OBJECT_UNLOCK (conference);
 
-  stream_transmitter = _stream_get_stream_transmitter (NULL,
-      transmitter, participant, parameters, n_parameters, error, self);
-  if (!stream_transmitter)
-    goto error;
-
   new_stream = FS_STREAM_CAST (fs_raw_stream_new (self,
           FS_RAW_PARTICIPANT (participant),
-          direction, conference, stream_transmitter,
-          _stream_get_stream_transmitter, self, error));
+          direction, conference,
+          _stream_get_stream_transmitter, self));
 
-  if (new_stream)
-  {
-    g_signal_connect_object (new_stream, "notify::remote-codecs",
-        G_CALLBACK (_stream_remote_codecs_changed), self, 0);
+  GST_OBJECT_LOCK (conference);
+  if (self->priv->stream)
+    goto already_have_stream;
 
-    GST_OBJECT_LOCK (conference);
-    if (self->priv->stream)
-    {
-      goto already_have_stream;
-    }
-    self->priv->stream = (FsRawStream *) new_stream;
 
-    GST_OBJECT_UNLOCK (conference);
-  }
+  self->priv->stream = (FsRawStream *) new_stream;
+
+  GST_OBJECT_UNLOCK (conference);
+
+  g_signal_connect_object (new_stream, "notify::remote-codecs",
+      G_CALLBACK (_stream_remote_codecs_changed), self, 0);
+
 
 done:
   gst_object_unref (conference);
@@ -1217,16 +1185,6 @@ already_have_stream:
   GST_OBJECT_UNLOCK (conference);
   g_set_error (error, FS_ERROR, FS_ERROR_ALREADY_EXISTS,
       "There already is a stream in this session");
-  goto error;
-
-error:
-  fs_raw_session_remove_stream (self, NULL);
-
-  if (stream_transmitter)
-  {
-    fs_stream_transmitter_stop (stream_transmitter);
-    g_object_unref (stream_transmitter);
-  }
   goto done;
 }
 

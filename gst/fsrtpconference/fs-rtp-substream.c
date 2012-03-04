@@ -1,11 +1,11 @@
 /*
- * Farsight2 - Farsight RTP Sub Stream
+ * Farstream - Farstream RTP Sub Stream
  *
  * Copyright 2007-2009 Collabora Ltd.
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
  * Copyright 2007-2009 Nokia Corp.
  *
- * fs-rtp-substream.c - A Farsight RTP Substream gobject
+ * fs-rtp-substream.c - A Farstream RTP Substream gobject
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,8 +29,8 @@
 
 #include "fs-rtp-substream.h"
 
-#include <gst/farsight/fs-stream.h>
-#include <gst/farsight/fs-session.h>
+#include <farstream/fs-stream.h>
+#include <farstream/fs-session.h>
 
 #include "fs-rtp-stream.h"
 #include "fs-rtp-marshal.h"
@@ -1385,19 +1385,17 @@ _rtpbin_pad_blocked_callback (GstPad *pad, gboolean blocked, gpointer user_data)
   return;
 
  error:
-  {
-    gchar *str = g_strdup_printf ("Could not add the new recv codec bin for"
-        " ssrc %u and payload type %d to the state NULL", substream->ssrc,
-        substream->pt);
 
-    if (substream->priv->stream)
-      fs_stream_emit_error (FS_STREAM (substream->priv->stream),
-          FS_ERROR_CONSTRUCTION, str, error->message);
-    else
-      fs_session_emit_error (FS_SESSION (substream->priv->session),
-          FS_ERROR_CONSTRUCTION, str, error->message);
-    g_free (str);
-  }
+  g_prefix_error (&error, "Could not add the new recv codec bin for"
+      " ssrc %u and payload type %d to the state NULL", substream->ssrc,
+      substream->pt);
+
+  if (substream->priv->stream)
+    fs_stream_emit_error (FS_STREAM (substream->priv->stream),
+        FS_ERROR_CONSTRUCTION, error->message);
+  else
+    fs_session_emit_error (FS_SESSION (substream->priv->session),
+        FS_ERROR_CONSTRUCTION, error->message);
 
   goto out;
 }

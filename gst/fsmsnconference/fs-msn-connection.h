@@ -1,5 +1,5 @@
 /*
- * Farsight2 - Farsight MSN Stream
+ * Farstream - Farstream MSN Stream
  *
  * Copyright 2008 Richard Spiers <richard.spiers@gmail.com>
  * Copyright 2007 Nokia Corp.
@@ -88,7 +88,7 @@ FsMsnConnection *fs_msn_connection_new (guint session_id, gboolean producer,
 gboolean fs_msn_connection_gather_local_candidates (FsMsnConnection *connection,
                                                     GError **error);
 
-gboolean fs_msn_connection_set_remote_candidates (FsMsnConnection *connection,
+gboolean fs_msn_connection_add_remote_candidates (FsMsnConnection *connection,
     GList *candidates, GError **error);
 
 

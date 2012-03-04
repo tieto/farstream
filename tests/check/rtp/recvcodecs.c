@@ -1,4 +1,4 @@
-/* Farsight 2 unit tests for FsRtpConference
+/* Farstream unit tests for FsRtpConference
  *
  * Copyright (C) 2007 Collabora, Nokia
  * @author: Olivier Crete <olivier.crete@collabora.co.uk>
@@ -25,8 +25,8 @@
 #include <gst/check/gstcheck.h>
 #include <gst/rtp/gstrtpbuffer.h>
 
-#include <gst/farsight/fs-conference-iface.h>
-#include <gst/farsight/fs-element-added-notifier.h>
+#include <farstream/fs-conference.h>
+#include <farstream/fs-element-added-notifier.h>
 
 #include "check-threadsafe.h"
 
@@ -209,25 +209,29 @@ GST_START_TEST (test_rtprecv_inband_config_data)
   if (!item)
   {
     GST_INFO ("Skipping %s because THEORA is not detected", G_STRFUNC);
+    fs_session_destroy (session);
     g_object_unref (session);
     gst_object_unref (fspipeline);
     return;
   }
 
   participant = fs_conference_new_participant (
-      FS_CONFERENCE (conference), "blob@blob.com", &error);
+      FS_CONFERENCE (conference), &error);
   if (error)
     ts_fail ("Error while creating new participant (%d): %s",
         error->code, error->message);
   ts_fail_if (participant == NULL,
       "Could not make participant, but no GError!");
 
-  stream = fs_session_new_stream (session, participant,
-      FS_DIRECTION_RECV, "rawudp", 0, NULL, &error);
+  stream = fs_session_new_stream (session, participant, FS_DIRECTION_RECV,
+      &error);
   if (error)
     ts_fail ("Error while creating new stream (%d): %s",
         error->code, error->message);
   ts_fail_if (stream == NULL, "Could not make stream, but no GError!");
+
+  fail_unless (fs_stream_set_transmitter (stream, "rawudp", NULL, 0, &error));
+  fail_unless (error == NULL);
 
   g_signal_connect (stream, "src-pad-added",
       G_CALLBACK (src_pad_added_cb), fspipeline);
@@ -262,16 +266,16 @@ GST_START_TEST (test_rtprecv_inband_config_data)
     fail_unless (msg != NULL);
     s = gst_message_get_structure (msg);
 
-    fail_if (gst_structure_has_name (s, "farsight-local-candidates-prepared"));
+    fail_if (gst_structure_has_name (s, "farstream-local-candidates-prepared"));
 
-    if (gst_structure_has_name (s, "farsight-new-local-candidate"))
+    if (gst_structure_has_name (s, "farstream-new-local-candidate"))
     {
       const GValue *value;
       FsCandidate *candidate;
 
       ts_fail_unless (
           gst_structure_has_field_typed (s, "candidate", FS_TYPE_CANDIDATE),
-          "farsight-new-local-candidate structure has no candidate field");
+          "farstream-new-local-candidate structure has no candidate field");
 
       value = gst_structure_get_value (s, "candidate");
       candidate = g_value_get_boxed (value);

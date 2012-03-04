@@ -3,18 +3,18 @@
 HEADERS=" \
     fs-codec.h \
     fs-candidate.h \
-    fs-conference-iface.h \
+    fs-conference.h \
     fs-session.h \
     fs-participant.h \
     fs-stream.h \
     fs-rtp.h \
     fs-element-added-notifier.h \
-    fs-enum-types.h"
+    fs-enumtypes.h"
 
-srcdir=../gst-libs/gst/farsight/
+srcdir=../farstream/
 
-output=pyfarsight.defs
-filter=pyfarsight-filter.defs
+output=pyfarstream.defs
+filter=pyfarstream-filter.defs
 
 cat ${filter} > ${output}
 

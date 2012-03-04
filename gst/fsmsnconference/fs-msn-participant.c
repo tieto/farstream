@@ -1,10 +1,10 @@
 /*
- * Farsight2 - Farsight MSN Participant
+ * Farstream - Farstream MSN Participant
  *
  *  @author: Richard Spiers <richard.spiers@gmail.com>
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
  *
- * fs-msn-participant.c - A MSN Farsight Participant gobject
+ * fs-msn-participant.c - A MSN Farstream Participant gobject
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -58,7 +58,7 @@ fs_msn_participant_init (FsMsnParticipant *self)
 {
 }
 
-FsMsnParticipant *fs_msn_participant_new (const gchar *cname)
+FsMsnParticipant *fs_msn_participant_new (void)
 {
-  return g_object_new (FS_TYPE_MSN_PARTICIPANT, "cname", cname, NULL);
+  return g_object_new (FS_TYPE_MSN_PARTICIPANT, NULL);
 }

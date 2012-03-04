@@ -2,24 +2,24 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Farsight2 Reference Manual</title>
+<title>Farstream Reference Manual</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
-<link rel="home" href="index.html" title="Farsight2 Reference Manual">
+<link rel="home" href="index.html" title="Farstream Reference Manual">
 <link rel="next" href="pt01.html" title="Part I. User-oriented classes, interfaces and functions">
-<meta name="generator" content="GTK-Doc V1.17 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <div class="book">
 <div class="titlepage">
 <div>
-<div><table class="navigation" id="top" width="100%" cellpadding="2" cellspacing="0"><tr><th valign="middle"><p class="title">Farsight2 Reference Manual</p></th></tr></table></div>
+<div><table class="navigation" id="top" width="100%" cellpadding="2" cellspacing="0"><tr><th valign="middle"><p class="title">Farstream Reference Manual</p></th></tr></table></div>
 <div><p class="releaseinfo">
-      for version 0.0.30.1.
+      for version 0.1.1.
       The latest version of this documentation can be found on-line at
-      <a class="ulink" href="http://farsight.freedesktop.org/apidoc/farsight2/" target="_top">http://farsight.freedesktop.org/apidoc/farsight2/</a>.
+      <a class="ulink" href="http://farstream.freedesktop.org/apidoc/farstream/" target="_top">http://farstream.freedesktop.org/apidoc/farstream/</a>.
       The bases classes are implemented by multiple plugins described in
-      the <a class="ulink" href="http://farsight.freedesktop.org/apidoc/farsight2-plugins/" target="_top">Farsight2 Plugins Manual</a>.
+      the <a class="ulink" href="http://farstream.freedesktop.org/apidoc/farstream-plugins/" target="_top">Farstream Plugins Manual</a>.
     </p></div>
 </div>
 <hr>
@@ -27,52 +27,44 @@
 <div class="toc"><dl>
 <dt><span class="part"><a href="pt01.html">I. User-oriented classes, interfaces and functions</a></span></dt>
 <dd><dl>
-<dt><span class="chapter"><a href="ch01.html">Farsight GStreamer Interfaces</a></span></dt>
-<dd><dl><dt>
-<span class="refentrytitle"><a href="FsConference.html">FsConference</a></span><span class="refpurpose"> — Interface for farsight conference elements</span>
-</dt></dl></dd>
-<dt><span class="chapter"><a href="ch02.html">Farsight Core Library</a></span></dt>
+<dt><span class="chapter"><a href="ch01.html">Farstream Core Library</a></span></dt>
 <dd><dl>
+<dt>
+<span class="refentrytitle"><a href="FsConference.html">FsConference</a></span><span class="refpurpose"> — Interface for farstream conference elements</span>
+</dt>
 <dt>
 <span class="refentrytitle"><a href="FsParticipant.html">FsParticipant</a></span><span class="refpurpose"> — A participant in a conference</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="farsight2-libs-fs-session.html">FsSession</a></span><span class="refpurpose"> — A session in a conference</span>
+<span class="refentrytitle"><a href="FsSession.html">FsSession</a></span><span class="refpurpose"> — A session in a conference</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="FsStream.html">FsStream</a></span><span class="refpurpose"> — A stream in a session in a conference</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="farsight2-libs-FsCandidate.html">FsCandidate</a></span><span class="refpurpose"> — Structure describing a transport candidate.</span>
+<span class="refentrytitle"><a href="farstream-libs-FsCandidate.html">FsCandidate</a></span><span class="refpurpose"> — Structure describing a transport candidate.</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="farsight2-libs-FsCodec.html">FsCodec</a></span><span class="refpurpose"> — Structure representing a media codec</span>
+<span class="refentrytitle"><a href="farstream-libs-FsCodec.html">FsCodec</a></span><span class="refpurpose"> — Structure representing a media codec</span>
 </dt>
 </dl></dd>
-<dt><span class="chapter"><a href="ch03.html">Protocol Specific types</a></span></dt>
+<dt><span class="chapter"><a href="ch02.html">Protocol Specific types</a></span></dt>
 <dd><dl><dt>
-<span class="refentrytitle"><a href="farsight2-libs-RTP-Specific-types.html">RTP Specific types</a></span><span class="refpurpose"></span>
+<span class="refentrytitle"><a href="farstream-libs-RTP-Specific-types.html">RTP Specific types</a></span><span class="refpurpose"></span>
 </dt></dl></dd>
-<dt><span class="chapter"><a href="ch04.html">Farsight Utility Functions and Objects</a></span></dt>
+<dt><span class="chapter"><a href="ch03.html">Farstream Utility Functions and Objects</a></span></dt>
 <dd><dl>
 <dt>
 <span class="refentrytitle"><a href="FsElementAddedNotifier.html">FsElementAddedNotifier</a></span><span class="refpurpose"> — Recursive element addition notifier</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="farsight2-libs-Network-interfaces-discovery.html">Network interfaces discovery</a></span><span class="refpurpose"> — Utility functions to discover local network interfaces</span>
-</dt>
-<dt>
-<span class="refentrytitle"><a href="farsight2-libs-Utility-functions.html">Utility functions</a></span><span class="refpurpose"> — Miscellaneous useful functions</span>
+<span class="refentrytitle"><a href="farstream-libs-Utility-functions.html">Utility functions</a></span><span class="refpurpose"> — Miscellaneous useful functions</span>
 </dt>
 </dl></dd>
 </dl></dd>
-<dt><span class="part"><a href="pt02.html">II. Classes used to implement Farsight plugins</a></span></dt>
+<dt><span class="part"><a href="pt02.html">II. Classes used to implement Farstream plugins</a></span></dt>
 <dd><dl>
-<dt><span class="chapter"><a href="ch05.html">Farsight Classes Base Implementations</a></span></dt>
-<dd><dl><dt>
-<span class="refentrytitle"><a href="FsBaseConference.html">FsBaseConference</a></span><span class="refpurpose"> — Base class for Farsight Conference Gstreamer Elements</span>
-</dt></dl></dd>
-<dt><span class="chapter"><a href="ch06.html">Farsight Transmitter Classes</a></span></dt>
+<dt><span class="chapter"><a href="ch04.html">Farstream Transmitter Classes</a></span></dt>
 <dd><dl>
 <dt>
 <span class="refentrytitle"><a href="FsTransmitter.html">FsTransmitter</a></span><span class="refpurpose"> — A transmitter object linked to a session</span>
@@ -82,15 +74,15 @@
   information to a transmitter.</span>
 </dt>
 </dl></dd>
-<dt><span class="chapter"><a href="ch07.html">Farsight Plugins Infrastructure</a></span></dt>
+<dt><span class="chapter"><a href="ch05.html">Farstream Plugins Infrastructure</a></span></dt>
 <dd><dl><dt>
-<span class="refentrytitle"><a href="farsight2-libs-FsPlugin.html">FsPlugin</a></span><span class="refpurpose"> — A class for defining Farsight plugins</span>
+<span class="refentrytitle"><a href="farstream-libs-FsPlugin.html">FsPlugin</a></span><span class="refpurpose"> — A class for defining Farstream plugins</span>
 </dt></dl></dd>
 </dl></dd>
 </dl></div>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.17</div>
+          Generated by GTK-Doc V1.18</div>
 </body>
 </html>

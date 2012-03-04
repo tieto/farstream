@@ -1,11 +1,11 @@
 /*
- * Farsight2 - Farsight RTP Stream
+ * Farstream - Farstream RTP Stream
  *
  * Copyright 2007 Collabora Ltd.
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
  * Copyright 2007 Nokia Corp.
  *
- * fs-rtp-stream.h - A Farsight RTP Stream
+ * fs-rtp-stream.h - A Farstream RTP Stream
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,8 +25,8 @@
 #ifndef __FS_RTP_STREAM_H__
 #define __FS_RTP_STREAM_H__
 
-#include <gst/farsight/fs-stream.h>
-#include <gst/farsight/fs-stream-transmitter.h>
+#include <farstream/fs-stream.h>
+#include <farstream/fs-stream-transmitter.h>
 
 #include "fs-rtp-participant.h"
 #include "fs-rtp-session.h"
@@ -97,17 +97,21 @@ typedef void (*stream_sending_changed_locked_cb) (FsRtpStream *stream,
     gboolean sending, gpointer user_data);
 typedef void (*stream_ssrc_added_cb) (FsRtpStream *stream, guint32 ssrc,
     gpointer user_data);
+typedef FsStreamTransmitter* (*stream_get_new_stream_transmitter_cb) (
+  FsRtpStream *stream,  FsParticipant *participant,
+  const gchar *transmitter_name, GParameter *parameters, guint n_parameters,
+  GError **error, gpointer user_data);
+
 
 FsRtpStream *fs_rtp_stream_new (FsRtpSession *session,
     FsRtpParticipant *participant,
     FsStreamDirection direction,
-    FsStreamTransmitter *stream_transmitter,
     stream_new_remote_codecs_cb new_remote_codecs_cb,
     stream_known_source_packet_receive_cb known_source_packet_received_cb,
     stream_sending_changed_locked_cb sending_changed_locked_cb,
     stream_ssrc_added_cb ssrc_added_cb,
-    gpointer user_data_for_cb,
-    GError **error);
+    stream_get_new_stream_transmitter_cb get_new_stream_transmitter_cb,
+    gpointer user_data_for_cb);
 
 gboolean fs_rtp_stream_add_substream_unlock (FsRtpStream *stream,
     FsRtpSubStream *substream,
