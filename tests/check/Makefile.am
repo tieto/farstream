@@ -10,10 +10,10 @@ TESTS_ENVIRONMENT = \
 	CK_DEFAULT_TIMEOUT=120					\
 	STATE_IGNORE_ELEMENTS="$(STATE_IGNORE_ELEMENTS)"	\
 	$(REGISTRY_ENVIRONMENT)					\
-	GST_PLUGIN_LOADING_WHITELIST=gstreamer:gst-plugins-base:gst-plugins-good:libnice:valve:siren:autoconvert:rtpmux:dtmf:mimic:shm:farsight2@$(top_builddir)/gst \
+	GST_PLUGIN_LOADING_WHITELIST=gstreamer:gst-plugins-base:gst-plugins-good:libnice:valve:siren:autoconvert:rtpmux:dtmf:mimic:shm:farstream@$(top_builddir)/gst \
 	GST_PLUGIN_PATH=$(top_builddir)/gst:${GST_PLUGIN_PATH}	\
 	FS_PLUGIN_PATH=$(top_builddir)/transmitters/rawudp/.libs:$(top_builddir)/transmitters/multicast/.libs:$(top_builddir)/transmitters/nice/.libs:$(top_builddir)/transmitters/shm/.libs \
-	LD_LIBRARY_PATH=$(top_builddir)/gst-libs/gst/farsight/.libs:${LD_LIBRARY_PATH} \
+	LD_LIBRARY_PATH=$(top_builddir)/farstream/.libs:${LD_LIBRARY_PATH} \
 	UPNP_XML_PATH=$(srcdir)/upnp \
 	SRCDIR=$(srcdir) \
 	XDG_CACHE_HOME=$(builddir)/cache
@@ -61,13 +61,13 @@ check_PROGRAMS = \
 
 AM_CFLAGS = \
 	$(CFLAGS) \
-	$(FS2_INTERNAL_CFLAGS) \
-	$(FS2_CFLAGS) \
+	$(FS_INTERNAL_CFLAGS) \
+	$(FS_CFLAGS) \
 	$(GST_CHECK_CFLAGS) \
 	$(GST_CFLAGS)
 
 LDADD = \
-	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-0.10.la \
+	$(top_builddir)/farstream/libfarstream-@FS_MAJORMINOR@.la \
 	$(GST_CHECK_LIBS) \
 	$(GST_LIBS)
 
@@ -105,7 +105,7 @@ transmitter_multicast_SOURCES = \
 	transmitter/fake-filter.h \
 	transmitter/multicast.c
 
-transmitter_nice_CFLAGS = $(FS2_INTERNAL_CFLAGS) $(CFLAGS) $(AM_CFLAGS)
+transmitter_nice_CFLAGS = $(FS_INTERNAL_CFLAGS) $(CFLAGS) $(AM_CFLAGS)
 transmitter_nice_SOURCES = \
 	check-threadsafe.h  \
 	transmitter/generic.c \
@@ -148,14 +148,14 @@ rtp_codecs_SOURCES = \
 	rtp/codecs.c
 
 rtp_sendcodecs_CFLAGS = $(AM_CFLAGS)
-rtp_sendcodecs_LDADD = $(LDADD) -lgstrtp-0.10
+rtp_sendcodecs_LDADD = $(LDADD) -lgstrtp-@GST_MAJORMINOR@
 rtp_sendcodecs_SOURCES = \
 	rtp/generic.c \
 	rtp/generic.h \
 	rtp/sendcodecs.c
 
 rtp_recvcodecs_CFLAGS = $(AM_CFLAGS)
-rtp_recvcodecs_LDADD = $(LDADD) -lgstrtp-0.10
+rtp_recvcodecs_LDADD = $(LDADD) -lgstrtp-@GST_MAJORMINOR@
 
 msn_conference_CFLAGS = $(AM_CFLAGS)
 msn_conference_SOURCES = \
@@ -169,7 +169,7 @@ utils_binadded_SOURCES = \
 
 elements_rtcpfilter_CFLAGS = $(AM_CFLAGS)
 elements_rtcpfilter_SOURCES = elements/rtcpfilter.c
-elements_rtcpfilter_LDADD = $(LDADD) -lgstrtp-0.10
+elements_rtcpfilter_LDADD = $(LDADD) -lgstrtp-@GST_MAJORMINOR@
 
 elements_funnel_CFLAGS = $(AM_CFLAGS)
 elements_funnel_SOURCES = elements/funnel.c

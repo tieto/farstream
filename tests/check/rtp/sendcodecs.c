@@ -1,4 +1,4 @@
-/* Farsight 2 unit tests for FsRtpConference
+/* Farstream unit tests for FsRtpConference
  *
  * Copyright (C) 2007 Collabora, Nokia
  * @author: Olivier Crete <olivier.crete@collabora.co.uk>
@@ -25,20 +25,20 @@
 #include <gst/check/gstcheck.h>
 #include <gst/rtp/gstrtpbuffer.h>
 
-#include <gst/farsight/fs-conference-iface.h>
+#include <farstream/fs-conference.h>
 
 #include "check-threadsafe.h"
 #include "generic.h"
 
 GMainLoop *loop = NULL;
 
-FsDTMFMethod method = FS_DTMF_METHOD_AUTO;
 guint dtmf_id = 0;
 gint digit = 0;
 gboolean sending = FALSE;
 gboolean received = FALSE;
 gboolean ready_to_send = FALSE;
 gboolean change_codec = FALSE;
+gboolean filter_telephone_event = FALSE;
 
 struct SimpleTestConference *dat = NULL;
 FsStream *stream = NULL;
@@ -72,46 +72,41 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
 
         if (gst_implements_interface_check (GST_MESSAGE_SRC (message),
                 FS_TYPE_CONFERENCE) &&
-            gst_structure_has_name (s, "farsight-error"))
+            gst_structure_has_name (s, "farstream-error"))
         {
           const GValue *value;
           FsError errorno;
-          const gchar *error, *debug;
+          const gchar *error;
           GEnumClass *enumclass = NULL;
           GEnumValue *enumvalue = NULL;
 
           ts_fail_unless (
               gst_implements_interface_check (GST_MESSAGE_SRC (message),
                   FS_TYPE_CONFERENCE),
-              "Received farsight-error from non-farsight element");
+              "Received farstream-error from non-farstream element");
 
           ts_fail_unless (
               gst_structure_has_field_typed (s, "src-object", G_TYPE_OBJECT),
-              "farsight-error structure has no src-object field");
+              "farstream-error structure has no src-object field");
           ts_fail_unless (
               gst_structure_has_field_typed (s, "error-no", FS_TYPE_ERROR),
-              "farsight-error structure has no src-object field");
+              "farstream-error structure has no src-object field");
           ts_fail_unless (
               gst_structure_has_field_typed (s, "error-msg", G_TYPE_STRING),
-              "farsight-error structure has no src-object field");
-          ts_fail_unless (
-              gst_structure_has_field_typed (s, "debug-msg", G_TYPE_STRING),
-              "farsight-error structure has no src-object field");
+              "farstream-error structure has no src-object field");
 
           value = gst_structure_get_value (s, "error-no");
           errorno = g_value_get_enum (value);
           error = gst_structure_get_string (s, "error-msg");
-          debug = gst_structure_get_string (s, "debug-msg");
-
 
           enumclass = g_type_class_ref (FS_TYPE_ERROR);
           enumvalue = g_enum_get_value (enumclass, errorno);
-          ts_fail ("Error on BUS %s (%d, %s) %s .. %s",
+          ts_fail ("Error on BUS %s (%d, %s) %s",
               enumvalue->value_name, errorno, enumvalue->value_nick,
-              error, debug);
+              error);
           g_type_class_unref (enumclass);
         }
-        else if (gst_structure_has_name (s, "farsight-send-codec-changed"))
+        else if (gst_structure_has_name (s, "farstream-send-codec-changed"))
         {
           FsCodec *codec = NULL;
           GList *secondary_codec_list = NULL;
@@ -123,21 +118,24 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
                   NULL));
 
           ts_fail_unless (codec != NULL);
-          ts_fail_unless (secondary_codec_list != NULL);
-
-          for (item = secondary_codec_list; item; item = item->next)
+          if (!filter_telephone_event)
           {
-            FsCodec *codec = item->data;
+            ts_fail_unless (secondary_codec_list != NULL);
 
-            if (codec->clock_rate == 8000 &&
-                !g_strcasecmp ("telephone-event", codec->encoding_name))
+            for (item = secondary_codec_list; item; item = item->next)
             {
-              ts_fail_unless (codec->id == dtmf_id);
-              ready_to_send = TRUE;
-            }
-          }
+              FsCodec *codec = item->data;
 
-          fail_unless (ready_to_send == TRUE);
+              if (codec->clock_rate == 8000 &&
+                  !g_strcasecmp ("telephone-event", codec->encoding_name))
+              {
+                ts_fail_unless (codec->id == dtmf_id);
+                ready_to_send = TRUE;
+              }
+            }
+
+            fail_unless (ready_to_send == TRUE);
+          }
 
           fs_codec_list_destroy (secondary_codec_list);
           fs_codec_destroy (codec);
@@ -223,7 +221,7 @@ set_codecs (struct SimpleTestConference *dat, FsStream *stream)
   GError *error = NULL;
   FsCodec *dtmf_codec = NULL;
 
-  g_object_get (dat->session, "codecs", &codecs, NULL);
+  g_object_get (dat->session, "codecs-without-config", &codecs, NULL);
 
   ts_fail_if (codecs == NULL, "Could not get the local codecs");
 
@@ -240,7 +238,8 @@ set_codecs (struct SimpleTestConference *dat, FsStream *stream)
       ts_fail_unless (dtmf_codec == NULL,
           "More than one copy of telephone-event");
       dtmf_codec = codec;
-      filtered_codecs = g_list_append (filtered_codecs, codec);
+      if (!filter_telephone_event)
+        filtered_codecs = g_list_append (filtered_codecs, codec);
     }
   }
 
@@ -277,7 +276,7 @@ one_way (GstElement *recv_pipeline, gint port)
   digit = 0;
   sending = FALSE;
   received = FALSE;
-  ready_to_send = FALSE;
+  ready_to_send = filter_telephone_event;
 
   loop = g_main_loop_new (NULL, FALSE);
 
@@ -290,7 +289,7 @@ one_way (GstElement *recv_pipeline, gint port)
   g_idle_add (_start_pipeline, dat);
 
   participant = fs_conference_new_participant (
-      FS_CONFERENCE (dat->conference), "blob@blob.com", &error);
+      FS_CONFERENCE (dat->conference), &error);
   if (error)
     ts_fail ("Error while creating new participant (%d): %s",
         error->code, error->message);
@@ -298,18 +297,22 @@ one_way (GstElement *recv_pipeline, gint port)
       "Could not make participant, but no GError!");
 
   stream = fs_session_new_stream (dat->session, participant,
-      FS_DIRECTION_SEND, "rawudp", 0, NULL, &error);
+      FS_DIRECTION_SEND, &error);
   if (error)
     ts_fail ("Error while creating new stream (%d): %s",
         error->code, error->message);
   ts_fail_if (stream == NULL, "Could not make stream, but no GError!");
+
+  fail_unless (fs_stream_set_transmitter (stream, "rawudp", NULL, 0, &error));
+  fail_unless (error == NULL);
 
   GST_DEBUG ("port is %d", port);
 
   candidates = g_list_prepend (NULL,
       fs_candidate_new ("1", FS_COMPONENT_RTP, FS_CANDIDATE_TYPE_HOST,
           FS_NETWORK_PROTOCOL_UDP, "127.0.0.1", port));
-  ts_fail_unless (fs_stream_set_remote_candidates (stream, candidates, &error),
+  ts_fail_unless (fs_stream_force_remote_candidates (stream, candidates,
+          &error),
       "Could not set remote candidate");
   fs_candidate_list_destroy (candidates);
 
@@ -377,7 +380,7 @@ start_stop_sending_dtmf (gpointer data)
 
   if (sending)
   {
-    ts_fail_unless (fs_session_stop_telephony_event (dat->session, method),
+    ts_fail_unless (fs_session_stop_telephony_event (dat->session),
         "Could not stop telephony event");
     sending = FALSE;
   }
@@ -408,7 +411,7 @@ start_stop_sending_dtmf (gpointer data)
 
     received = FALSE;
     ts_fail_unless (fs_session_start_telephony_event (dat->session,
-            digit, digit, method),
+            digit, digit),
         "Could not start telephony event");
     sending = TRUE;
   }
@@ -422,20 +425,6 @@ GST_START_TEST (test_senddtmf_event)
   GstElement *recv_pipeline = build_recv_pipeline (
       G_CALLBACK (send_dmtf_havedata_handler), NULL, &port);
 
-  method = FS_DTMF_METHOD_RTP_RFC4733;
-  g_timeout_add (350, start_stop_sending_dtmf, NULL);
-  one_way (recv_pipeline, port);
-}
-GST_END_TEST;
-
-
-GST_START_TEST (test_senddtmf_auto)
-{
-  gint port;
-  GstElement *recv_pipeline = build_recv_pipeline (
-      G_CALLBACK (send_dmtf_havedata_handler), NULL, &port);
-
-  method = FS_DTMF_METHOD_AUTO;
   g_timeout_add (350, start_stop_sending_dtmf, NULL);
   one_way (recv_pipeline, port);
 }
@@ -500,9 +489,10 @@ GST_START_TEST (test_senddtmf_sound)
   gint port = 0;
   GstElement *recv_pipeline = build_dtmf_sound_recv_pipeline (&port);
 
-  method = FS_DTMF_METHOD_IN_BAND;
   g_timeout_add (350, start_stop_sending_dtmf, NULL);
+  filter_telephone_event = TRUE;
   one_way (recv_pipeline, port);
+  filter_telephone_event = FALSE;
 }
 GST_END_TEST;
 
@@ -513,7 +503,6 @@ GST_START_TEST (test_senddtmf_change_auto)
   GstElement *recv_pipeline = build_recv_pipeline (
       G_CALLBACK (send_dmtf_havedata_handler), NULL, &port);
 
-  method = FS_DTMF_METHOD_AUTO;
   change_codec = TRUE;
   g_timeout_add (350, start_stop_sending_dtmf, NULL);
   one_way (recv_pipeline, port);
@@ -585,10 +574,6 @@ fsrtpsendcodecs_suite (void)
 
   tc_chain = tcase_create ("fsrtpsenddtmf_event");
   tcase_add_test (tc_chain, test_senddtmf_event);
-  suite_add_tcase (s, tc_chain);
-
-  tc_chain = tcase_create ("fsrtpsenddtmf_auto");
-  tcase_add_test (tc_chain, test_senddtmf_auto);
   suite_add_tcase (s, tc_chain);
 
   tc_chain = tcase_create ("fsrtpsenddtmf_sound");

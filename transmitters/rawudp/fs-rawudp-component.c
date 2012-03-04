@@ -1,11 +1,11 @@
 /*
- * Farsight2 - Farsight RAW UDP with STUN Component Transmitter
+ * Farstream - Farstream RAW UDP with STUN Component Transmitter
  *
  * Copyright 2008 Collabora Ltd.
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
  * Copyright 2008 Nokia Corp.
  *
- * fs-rawudp-transmitter.c - A Farsight UDP transmitter with STUN
+ * fs-rawudp-transmitter.c - A Farstream UDP transmitter with STUN
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -35,9 +35,9 @@
 #include <stun/stunagent.h>
 #include <stun/usages/timer.h>
 #include <nice/address.h>
+#include <nice/interfaces.h>
 
-#include <gst/farsight/fs-conference-iface.h>
-#include <gst/farsight/fs-interfaces.h>
+#include <farstream/fs-conference.h>
 
 #include <gst/netbuffer/gstnetbuffer.h>
 
@@ -209,8 +209,7 @@ fs_rawudp_component_emit_local_candidates (FsRawUdpComponent *self,
 static void
 fs_rawudp_component_emit_error (FsRawUdpComponent *self,
     gint error_no,
-    gchar *error_msg,
-    gchar *debug_msg);
+    gchar *error_msg);
 static void
 fs_rawudp_component_maybe_new_active_candidate_pair (FsRawUdpComponent *self);
 static void
@@ -490,8 +489,7 @@ fs_rawudp_component_class_init (FsRawUdpComponentClass *klass)
    * FsRawUdpComponent::error:
    * @self: #FsStreamTransmitter that emitted the signal
    * @errorno: The number of the error
-   * @error_msg: Error message to be displayed to user
-   * @debug_msg: Debugging error message
+   * @error_msg: Error message
    *
    * This signal is emitted in any error condition
    *
@@ -502,8 +500,8 @@ fs_rawudp_component_class_init (FsRawUdpComponentClass *klass)
       0,
       NULL,
       NULL,
-      _fs_rawudp_marshal_VOID__ENUM_STRING_STRING,
-      G_TYPE_NONE, 3, FS_TYPE_ERROR, G_TYPE_STRING, G_TYPE_STRING);
+      _fs_rawudp_marshal_VOID__ENUM_STRING,
+      G_TYPE_NONE, 2, FS_TYPE_ERROR, G_TYPE_STRING);
 
 
   g_type_class_add_private (klass, sizeof (FsRawUdpComponentPrivate));
@@ -1070,10 +1068,10 @@ fs_rawudp_component_maybe_emit_local_candidates (FsRawUdpComponent *self)
   {
     if (error->domain == FS_ERROR)
       fs_rawudp_component_emit_error (self, error->code,
-          error->message, error->message);
+          error->message);
     else
       fs_rawudp_component_emit_error (self, FS_ERROR_INTERNAL,
-          "Error emitting local candidates", NULL);
+          "Error emitting local candidates");
   }
   g_clear_error (&error);
 
@@ -1157,6 +1155,31 @@ fs_rawudp_component_stop_upnp_discovery_locked (FsRawUdpComponent *self)
 
 #endif
 
+static GList *
+filter_ips (GList *ips, gboolean ipv4, gboolean ipv6)
+{
+  GList *item;
+
+  if (ipv4 && ipv6)
+    return ips;
+
+  for (item = ips; item;)
+  {
+    gchar *ip = item->data;
+    GList *next = item->next;
+
+    if ((ipv4 && !strchr (ip, '.')) ||
+        (ipv6 && !strchr (ip, ':')))
+    {
+      g_free (ip);
+      ips = g_list_delete_link (ips, item);
+    }
+    item = next;
+  }
+
+  return ips;
+}
+
 gboolean
 fs_rawudp_component_gather_local_candidates (FsRawUdpComponent *self,
     GError **error)
@@ -1185,7 +1208,8 @@ fs_rawudp_component_gather_local_candidates (FsRawUdpComponent *self,
 
     port = fs_rawudp_transmitter_udpport_get_port (self->priv->udpport);
 
-    ips = fs_interfaces_get_local_ips (FALSE);
+    ips = nice_interfaces_get_local_ips (FALSE);
+    ips = filter_ips (ips, TRUE, FALSE);
 
     if (ips)
     {
@@ -1205,7 +1229,7 @@ fs_rawudp_component_gather_local_candidates (FsRawUdpComponent *self,
 
       gupnp_simple_igd_add_port (GUPNP_SIMPLE_IGD (self->priv->upnp_igd),
           "UDP", port, ip, port, self->priv->upnp_mapping_timeout,
-          "Farsight Raw UDP transmitter " PACKAGE_VERSION);
+          "Farstream Raw UDP transmitter " PACKAGE_VERSION);
 
 
       if (self->priv->upnp_discovery)
@@ -1481,7 +1505,7 @@ stun_timeout_func (gpointer user_data)
   if (sysclock == NULL)
   {
     fs_rawudp_component_emit_error (self, FS_ERROR_INTERNAL,
-        "Could not obtain gst system clock", NULL);
+        "Could not obtain gst system clock");
     FS_RAWUDP_COMPONENT_LOCK(self);
     goto interrupt;
   }
@@ -1505,8 +1529,7 @@ stun_timeout_func (gpointer user_data)
         !fs_rawudp_component_send_stun_locked (self, &error))
     {
       FS_RAWUDP_COMPONENT_UNLOCK(self);
-      fs_rawudp_component_emit_error (self, error->code, "Could not send stun",
-          error->message);
+      fs_rawudp_component_emit_error (self, error->code, error->message);
       g_clear_error (&error);
       FS_RAWUDP_COMPONENT_LOCK (self);
       fs_rawudp_component_stop_stun_locked (self);
@@ -1567,11 +1590,9 @@ stun_timeout_func (gpointer user_data)
 static void
 fs_rawudp_component_emit_error (FsRawUdpComponent *self,
     gint error_no,
-    gchar *error_msg,
-    gchar *debug_msg)
+    gchar *error_msg)
 {
-  g_signal_emit (self, signals[ERROR_SIGNAL], 0, error_no, error_msg,
-      debug_msg);
+  g_signal_emit (self, signals[ERROR_SIGNAL], 0, error_no, error_msg);
 }
 
 
@@ -1626,7 +1647,8 @@ fs_rawudp_component_emit_local_candidates (FsRawUdpComponent *self,
 
   port = fs_rawudp_transmitter_udpport_get_port (self->priv->udpport);
 
-  ips = fs_interfaces_get_local_ips (TRUE);
+  ips = nice_interfaces_get_local_ips (TRUE);
+  ips = filter_ips (ips, TRUE, FALSE);
 
   for (current = g_list_first (ips);
        current;

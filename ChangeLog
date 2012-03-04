@@ -1,3 +1,714 @@
+commit 8028c159500f909d745b33327e71ba5b53b5a56e
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Feb 20 16:49:51 2012 -0500
+
+    Fix python examples
+
+commit 04a8f33daab5c304e87fbd3c8559e8218a42fcdc
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Feb 20 16:49:33 2012 -0500
+
+    Fix python bindings
+
+commit d5d0c925638a55c8b1f72a3472e5176862b5cd3a
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Feb 20 13:22:23 2012 -0500
+
+    Update defs
+
+commit b355218252fc5a5cf7d7ef954e91e3225ad354b0
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Feb 20 13:22:15 2012 -0500
+
+    Add override for fs_stream_set_transmitter
+
+commit 2ff161461abfefe2370d70c22ed86126d9225531
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Feb 20 13:06:09 2012 -0500
+
+    python: Use force for force
+
+commit a78b7d31ce00e718105d8193e52a973116040332
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Feb 15 15:56:40 2012 -0500
+
+    Rename fs2-gui-user-frame.ui to fs-..
+
+commit c70cf5ce02be0e4fe9c6104ac87a7ef66a9790b5
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Feb 10 13:20:18 2012 +0100
+
+    rtpsession: Wait until stream is destroyed to flush transmitters
+
+commit f478640df6dffcd5d2d3bde604631fb389198103
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Feb 10 13:19:31 2012 +0100
+
+    session: Remove extra ; where it doesn't belong
+
+commit 4ffcc64264342c3fd285b9ff7a97903c106b94e3
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Feb 10 12:20:37 2012 +0100
+
+    Require new gst-plugins-bad, it's needed for  DTMF to work correctly
+
+commit ddb7df30af670e5e3570d6a699adde215b211d5e
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Jan 10 15:41:24 2012 -0500
+
+    Update GIR annotations
+
+commit 906a08210dade0582c2654e26bdcb9e117cdd298
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Jan 10 15:33:16 2012 -0500
+
+    Add stream message parsers to the doc
+
+commit a606a0518e89185946013f948fedbeb5a0c1076e
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Jan 10 15:33:00 2012 -0500
+
+    Move the FsSession's conference property to the base class
+
+commit eb3505fac61c06913ecf1920cb6b4fb7e20eb474
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Jan 9 17:10:13 2012 -0500
+
+    rtpsession: Set boolean property to exactly "1" if true
+    
+    It seems boolean properties don't accept values > 1
+
+commit 052ae546e9a8afaf7f4bea751194e9c39d9fd46e
+Author: Jonathon Jongsma <jonathon.jongsma@collabora.co.uk>
+Date:   Tue Dec 20 14:13:56 2011 -0600
+
+    Fix fs_stream_parse_component_state_changed()
+    
+    Check for the right message name and parse the state as an enum, rather than a
+    uint.
+
+commit e58a6d7e4fdb3da7b8d5e66cf464da796b1c9200
+Author: Jonathon Jongsma <jonathon.jongsma@collabora.co.uk>
+Date:   Thu Dec 15 16:24:54 2011 -0600
+
+    Improve error message for missing stream transmitter
+
+commit 7a8dd5ef57afc9dd279366b6c07a38c30493f927
+Author: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Date:   Tue Nov 8 11:48:25 2011 +0000
+
+    shm-stream-transmitter: Add property to control the buffer-time
+    
+    Allow the transmitter to buffer how much can be maximally queued in the
+    shmsink before blocking. Default to 20 miliseconds.
+    
+    For audio network packets tend to be around 20ms is size, so 20ms is a
+    suitable size for audio.
+    
+    For video, 20 miliseconds is less then one frame at 30 fps, so with 20ms
+    as default at most one video frame will be queued up in the shm sink.
+
+commit ec877c7a4df94e5ba419ff3c706481a2223c29b8
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Nov 8 17:00:19 2011 -0500
+
+    Add parsing functions for all GstMessages
+
+commit daa31cd16df26a73b4d7b99d46c704322afbf2ea
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Nov 7 19:58:45 2011 -0500
+
+    session: Put the messages argument into a real table
+
+commit d5118475a8837f856ef41cfe69386b4fdbcc524b
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Nov 7 19:04:20 2011 -0500
+
+    session: Add functions to parse the custom GstMessages
+
+commit d5936d72aad50ee811a92f719e4cc046ad9fc424
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Nov 7 18:52:43 2011 -0500
+
+    session: Make the volume into a guchar
+
+commit e53ef7872372b7da4331f755f5a53c7bc0f6a051
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Nov 7 17:55:09 2011 -0500
+
+    session: Document the farsight-telephony-event-started/stopped messages
+    
+    Also use the specific registered types where appropriate
+
+commit bd4a007703028127d00988cfd55e7d0c9469633b
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Nov 7 17:26:21 2011 -0500
+
+    rtpsession: Document the dtmf messages a bit more
+
+commit df0a22311427638db1036448722b45c5ca7b5284
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Nov 7 15:53:28 2011 -0500
+
+    Remove non-existing fs_add_constants
+
+commit 3b55ff5184c192c36e4228e1116c5e25688db7e2
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Nov 4 18:17:32 2011 -0400
+
+    stream: Clarify the origin of the transmitter parameters
+
+commit e61c563d342fcfc50cca9ff051c59d99a1b9c762
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Sat Oct 29 22:48:44 2011 +0200
+
+    rtpsession: Queue events inside instead of letting the sources do it
+    
+    Also, make it possible to iterate the sessions without holding the object lock
+    
+    Also, we track when the sources are done processing an event so that
+    we can minimize the number of dropped events if we change the source.
+
+commit e08de8e6518bdf28917e258d95fa5d891e968328
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Sat Oct 29 20:46:49 2011 +0200
+
+    rtpspecialsources: Keep ref to the sources until it is gone
+
+commit fb64d45034c76c7e8e336440296f6f84bd7b87c3
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Sat Oct 29 19:30:42 2011 +0200
+
+    fssession: Remove the "method" from the telephone_event methods
+    
+    Now, it will always try event then fall back on sound. If one wants to
+    ensure that only sound is sent, one must remove the events from the remote
+    codecs.
+
+commit 195ac9201b2f04a22f7ecc099781d0f83d422d8c
+Author: Arun Raghavan <arun.raghavan@collabora.co.uk>
+Date:   Tue Nov 1 13:58:42 2011 +0530
+
+    rtp: Set proper latency values on pulsesink/pulsesrc
+    
+    This sets a 50ms buffer-time on pulsesink and pulsesrc and a 25ms
+    latency-time on pulsesink, which should decrease the overall latency of
+    the audio pipeline (the current value being used is the default
+    buffer-time of 200ms).
+
+commit 103fccc1ce2fa9bf82b9e3a5138d0e633e0d2d96
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Sat Oct 29 19:18:41 2011 +0200
+
+    Update python defs file
+
+commit 097c4f31da296b486434ba8381911978817571f5
+Author: Danielle Madeley <danielle.madeley@collabora.com>
+Date:   Mon Oct 17 04:52:17 2011 +0200
+
+    Use 0_1 in name of some variables for the introspection automake
+
+commit 1d683055112a737f0246e2504f6b68e6efadceb7
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Oct 17 04:26:45 2011 +0200
+
+    autogen.sh: Include our m4 before the common one
+    
+    This way we get the newer introspection.m4
+
+commit bd64cf328044d52bf696f1e48609d13148f00967
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Oct 11 18:52:20 2011 -0400
+
+    Use our own version name, not gstreamer's
+
+commit 452ae1fb846f2fead11f1160320fe159291abf52
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Oct 11 18:39:26 2011 -0400
+
+    Aim the pkgconfig file at the right place
+
+commit a8c245a7734659664be39981e227b9c017292959
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Oct 11 16:35:09 2011 -0400
+
+    Update docs
+
+commit 3bad0f31069406428f496b2d4ad1199fd75b94bb
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Oct 11 16:12:44 2011 -0400
+
+    Rename plugins directories to match plugin names
+
+commit 52a59229d200a8d74d66e02126c290434d3157d8
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Oct 11 16:08:49 2011 -0400
+
+    Move the lib out of gst-libs
+
+commit 7098f40db04b6a32c311b802a2c12f0f450ee7b7
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Oct 11 15:55:45 2011 -0400
+
+    Rename libgstfarstream into libfarstream
+
+commit e33572c56e93ad1a0f644047f30fc23ab5e01372
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Oct 11 14:55:29 2011 -0400
+
+    Rename Farsight 2 to Farstream
+
+commit 449a53f65146448d70f761cc1257171702c83db4
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon May 16 16:45:03 2011 -0400
+
+    tests: Disable GstMessage from nice thread tests
+    
+    FsRtpConference doesn't track the threads created by the
+    Nice Transmitter as its not created by a GstTask and it does
+    not emit a StreamStatus message, so we have to be careful.
+
+commit 133c8c8f2296ec68ab62a5eb0e39741fd146b05b
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon May 16 16:44:03 2011 -0400
+
+    tests: Check g_critical if unreffed from wrong thread
+
+commit f9ca612650ee69c616eecc92b4d6f6371dec33b1
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 13 21:56:57 2011 -0400
+
+    rawstream: Remove nasty dispose in other thread trick
+
+commit e186668c0afe71ca232cda7f7ef5ac57e1c54d53
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 13 21:54:24 2011 -0400
+
+    rtpsession: Remove nasty dispose in other thread trick
+
+commit 0c76c4b94a4effc6e14439e0e3abf863567cf78a
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon May 16 12:16:45 2011 -0400
+
+    tests: Destroy session/stream instead of unreffing it in raw tests
+
+commit f2bb626523363316dc3451472130d38b0dc8d30d
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon May 16 12:15:51 2011 -0400
+
+    test: Check for state change failure
+
+commit fb7fa764c3d5abeb0760b106397efbdb898c92a9
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon May 16 12:15:13 2011 -0400
+
+    raw: Don't make all test fails on critical
+
+commit c51fa775f003b5b9fcc8df1ce7fc833691a693b6
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 13 21:44:40 2011 -0400
+
+    python: Remove .dispose() methods, they've been replaced by .destroy()
+
+commit 23ce62d4af95759e0c56885edf2423d7214f14da
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 13 21:42:28 2011 -0400
+
+    tests: Call fs_session/stream_destroy in the tests
+
+commit c54795623db610a99362d030c926467019ae447d
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 13 21:42:24 2011 -0400
+
+    rtpsession: Protect callbacks from the stream against session dipose
+    
+    Session dispose can be called manually, the callbacks from the streams
+    should be protected against it.
+
+commit 365cd55a62deddbffd98ce114b027ada2b364846
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 13 21:15:18 2011 -0400
+
+    rawsession: destroy stream on dispose
+
+commit 3bdf7667759e5c4716040a236b0eaa4987feac27
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 13 21:12:46 2011 -0400
+
+    rawsession: Remove unused code
+
+commit 240c86ca4472ab83ace61d00c89a544ebd04d95e
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 13 21:11:53 2011 -0400
+
+    msnsession: Destroy stream on dispose()
+
+commit d04e03aa89f266e1f8f44eab8db6fd2aefb8d571
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 13 21:09:50 2011 -0400
+
+    rtpsession: Destroy stream on dispose()
+
+commit 643096fc4444d5e54bbba6247f481796dcf08615
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 13 20:08:29 2011 -0400
+
+    session: add _destroy() method
+    
+    This will remove all references to other objects and remove
+    it from the conference and _destroy() all of its child streams.
+
+commit 9bf185861238db37c973a1dfe497888eb5ea7598
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 13 19:48:42 2011 -0400
+
+    stream: add _destroy() method
+    
+    This will remove all references to other objects and remove
+    it from the session.
+
+commit 4f5d87bc48fd2d595427b2deda307db3fd66215e
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 13 17:35:17 2011 -0400
+
+    conference: Remove BaseConference
+    
+    Merge the FsConference interface and FsBaseConference
+    
+    All the plugins will use the base class
+
+commit 942c16ae7de74774e9d3466b82a60d9bf109d2cc
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu May 12 16:14:25 2011 -0400
+
+    stream: Rename fs_stream_get_src_pads_iterator to fs_stream_iterate_src_pads
+    
+    This is for consistency with other Gst elements
+
+commit d7057e4088d6b03628fb1c574bd4e8c2a4fdaad1
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu May 12 16:10:02 2011 -0400
+
+    fs-conference: Rename file from fs-conference-iface.[ch] to fs-conference.[ch]
+
+commit 43050cc249532c66d957980259b2b57816db3269
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu May 12 15:58:46 2011 -0400
+
+    codec: Remove ABI/padding from FsCodec
+
+commit abfbf593d6c6834280d0d5dd6266eb51a903070f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 10 16:55:11 2011 +0000
+
+    Rename fs-enum-types.h to fs-enumtypes.h
+
+commit 0d96bce3ebbb625bf570394729556b8d2324ab75
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 10 16:40:05 2011 +0000
+
+    interfaces: Remove fs-interfaces
+    
+    Use nice-interfaces instead
+
+commit ee625ac37479928550ce9f4d47a003388ed47b0f
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 10 16:34:17 2011 +0000
+
+    msnconnection: Use nice interfaces
+
+commit 1eb6d734e100cbacd7dddefaf0ea03be59f9400a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 10 16:08:18 2011 +0000
+
+    rawudp: Use nice-interfaces instead of fs-interfaces
+
+commit ba8b7d2818e7a78de47d40cc3aa4594458bb0193
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 9 11:25:04 2011 +0000
+
+    session: Remove transmitter creation from fs_session_new_stream()
+
+commit 49f40c71c2073c94c8f824e3bd1d7594211dc2e9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 8 18:33:43 2011 +0000
+
+    msnstream: Port to use only set_transmitter
+    
+    also ported the tests
+
+commit 9f8848ea4ed24b7aa66d509be5507b02dfa28dd8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 8 18:16:22 2011 +0000
+
+    tests: Use set_transmitter for raw tests
+
+commit 4aa321820f8c6b99d034c8ec5c7b391e4fe04b4e
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 8 18:00:04 2011 +0000
+
+    tests: Use set_transmitter for rtp tests
+
+commit 0c8d9f6f03f908b1c9579ffc1f677baf5bed09db
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 8 17:41:26 2011 +0000
+
+    tests: Remove unused header
+
+commit 2589b0aec011871f942d89a74e41360a05d41aa5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 8 17:33:39 2011 +0000
+
+    msnstream: Implement set_transmitter()
+
+commit 3b462a9d63fc0dfbfe7eb91d962c4771236e1bc5
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue Feb 8 17:04:56 2011 +0000
+
+    rawstream: Implement set_transmitter()
+
+commit 49839f32d48adef791c5280c6bd6c236030f17de
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 7 18:56:17 2011 +0000
+
+    rtpstream: Implement set_transmitter()
+
+commit b1524b5456537db80ffe60f970926ad1c447a058
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 7 18:29:48 2011 +0000
+
+    stream: Add set_transmitter() method
+
+commit 71decc1a43524d7a32e1b75a2bf256a7dba3a33a
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 7 17:45:04 2011 +0100
+
+    stream: Remove set_remote_candidates() with add_remote_candidates()
+
+commit f8af52d65a721585e4b9125a92e1b1f65448f8dd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 7 17:30:02 2011 +0100
+
+    streamtrans: Replace set_remote_candidates() with add_remote_candidates()
+
+commit 4d3b2521dcaf27f5fd5682a45a723b495c98b4bd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 7 16:24:45 2011 +0100
+
+    session: Remove "codecs-ready"
+    
+    Now "codecs" is NULL until the codecs are ready
+
+commit 8b0c48cfc07464dc993ccca4c6635430c2bf3272
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 7 15:40:13 2011 +0100
+
+    shm: Use force_remote_candidates instead of set_remote_candidates
+
+commit 8f1682fdb15dda2aa0081cee0e05461a1ec5cdb9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 7 15:39:42 2011 +0100
+
+    rawstream: Implement force_remote_candidates
+
+commit 252ce36964bf77858590e3f3a56d43b74718ff2b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Feb 7 13:13:00 2011 +0100
+
+    rawconference: Remove cname parameter from new_participant()
+
+commit 9ba53f18d80976f12d4e4ca63d1b54cb0fdc7cae
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Mon Nov 22 18:12:02 2010 -0500
+
+    session: Replace FS_DTMF_METHOD_IN_BAND with FS_DTMF_METHOD_SOUND
+
+commit c63836b5b6b662b80ef6bea2d5365cea313fe42c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed May 5 13:17:31 2010 -0400
+
+    rtpconference: Pass the SDES GstStructure as-is
+
+commit 631cad73bf08ae9c5b828d315f09ba659a835bb8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed May 5 13:19:42 2010 -0400
+
+    gui: Remove usage of sdes-cname property
+
+commit e1e9025c2aa3a9effc2f9fb17ff92eb2903b6bb9
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Tue May 4 20:29:23 2010 -0400
+
+    codec: Remove special ptime/maxptime
+
+commit 56654e9555d741bbf4327f17b8c4e972de6b40b2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Jul 25 20:54:34 2009 -0400
+
+    multicast: Use force_remote_candidates, not set
+
+commit 6fe8daabcf8ba6fff6e7926330c6c4d64327a88c
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Jul 25 20:36:47 2009 -0400
+
+    rawudp: Use force_remote_candidates, not set
+
+commit 1e79915c6e26e57aafc91766c2fdeb9d08fe6d24
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Jul 25 20:01:11 2009 -0400
+
+    session: Remove debug-msg from error signal
+
+commit 93491d1e99f3362023800094717b74ce546920dd
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Jul 25 19:50:05 2009 -0400
+
+    stream: Remove debug-msg from error signal
+
+commit cee1670b7a34e9de31bedbe5b7e4b7172b3225e2
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Jul 25 19:39:47 2009 -0400
+
+    transmitter: Remove debug-msg from error signal
+
+commit af9c99feca26c3ca44dc321006ef4cc748100d44
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Jul 25 19:32:29 2009 -0400
+
+    streamtransmitter: Remove debugmsg from error signal
+
+commit 720630513361d7f4ce7fe4e4108a96d6d5914fd3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Jul 25 19:24:34 2009 -0400
+
+    rawudp component: Remove error debug msg
+
+commit a0b8044350a2030402a220555003f24964309d2b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Jul 25 19:19:42 2009 -0400
+
+    examples: Remove debug-msg
+
+commit 6632c4111ce4e03585b18620a14464242ed78467
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Jul 25 19:18:24 2009 -0400
+
+    tests: Remove debug-msg
+
+commit e90b7f50ab103d8769eb0e0c3653bcffa67ffbd4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Jul 25 20:02:35 2009 -0400
+
+    conference: Remove debug-msg from documentation
+
+commit d41576225f9c6b31568be6453365d34b3dcc1077
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Jul 25 19:03:27 2009 -0400
+
+    streamtransmitter: Derive from GstObject
+
+commit 6fd405efd6ecc1425e4eda9728b397e9a1e6f1de
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Jul 25 19:02:59 2009 -0400
+
+    transmitter: Derive from GstObject
+
+commit cf9e24032510df0bea3e43fd49a62d88ebb79ba3
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Jul 25 19:02:32 2009 -0400
+
+    stream: Derive from GstObject
+
+commit c7b41d372cbc875f9748d202d1359c6e17f9f303
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Jul 25 19:01:54 2009 -0400
+
+    session: Derive from GstObject
+
+commit b82a0f9bc0a6f8d19a153650e3bf1af60935a902
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Jul 25 19:01:03 2009 -0400
+
+    participant: Derive from GstObject
+
+commit bebda696501be2868113f06d979a10b35acb5754
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Jul 25 18:56:42 2009 -0400
+
+    participant: Remove unused error signal
+
+commit 6c479966098c96dce8b715cd8fa3f375d67fbb15
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Jul 25 17:57:39 2009 -0400
+
+    participant: Move the cname property to the RTP subclass
+
+commit b1357f194fefaf3b2b119585383a386fff8be0a0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Jul 25 18:52:03 2009 -0400
+
+    conference: Remove cname parameter from new_participant()
+
+commit 29a7936ba2a08dc4b4f40daae41d40c2fc601b29
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Jul 25 17:48:51 2009 -0400
+
+    Remove unknown cname error
+
+commit 0ad38341d101fbf7942e8bf9b08703acb7fdf6e4
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Sat Jul 25 17:48:27 2009 -0400
+
+    Restore full padding
+
+commit 3ebc62d310bf31db6931ccfe1a1d5ea11588c0e0
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 9 18:02:18 2011 +0000
+
+    Build introspection data
+
+commit 09b6afa0ade08c64c201a2ee8d458f493a027720
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 9 18:05:54 2011 +0000
+
+    Add introspection annotations
+
+commit 67d47857389ed45fbba4e7789f6ba92051dda2bb
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Thu Feb 10 17:20:26 2011 +0000
+
+    elementaddednotifier: Add defaults function
+
+commit 73851cc96165c5df80c0379e3688cc6eff96cfe0
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Oct 11 15:20:16 2011 -0400
+
+    codec: Make FsFeedbackParameter into a Boxed type
+
+commit e536c5e0b57f8f0becb5566a2d12bbf8d6f5c2f8
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 9 18:06:52 2011 +0000
+
+    codec: Make FsCodecParameter into a Boxed type
+
+commit f0f07f51f14a91d9dda04ef86cae221f154df55b
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 9 18:06:37 2011 +0000
+
+    Put enums in introspection friendly format
+
+commit b468d0864a2c105a0026a8db5364156f041f64bc
+Author: Olivier Crête <olivier.crete@collabora.co.uk>
+Date:   Wed Feb 9 14:29:25 2011 +0000
+
+    lib: hide the _fs_base_conference_init_debug symbol
+
+commit 54f2bdf02ba3b47c83ca411d4a31f08bcbe2ff14
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Oct 10 16:24:42 2011 -0400
+
+    Version 0.0.31.1
+
 commit 68056b822543998b4943ea2648845b8fb62e579f
 Author: Olivier Crête <olivier.crete@collabora.com>
 Date:   Mon Oct 10 15:59:44 2011 -0400

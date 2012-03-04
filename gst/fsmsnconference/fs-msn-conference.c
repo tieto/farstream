@@ -1,12 +1,12 @@
 /*
- * Farsight2 - Farsight MSN Conference Implementation
+ * Farstream - Farstream MSN Conference Implementation
  *
  * Copyright 2008 Richard Spiers <richard.spiers@gmail.com>
  * Copyright 2007 Nokia Corp.
  * Copyright 2007-2009 Collabora Ltd.
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
  *
- * fs-msn-conference.c - MSN implementation for Farsight Conference Gstreamer
+ * fs-msn-conference.c - MSN implementation for Farstream Conference Gstreamer
  *                       Elements
  *
  * This library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 
 /**
  * SECTION:fs-msn-conference
- * @short_description: Farsight MSN Conference Gstreamer Elements Base class
+ * @short_description: Farstream MSN Conference Gstreamer Elements Base class
  *
  * This element implements the unidirection webcam feature found in various
  * version of MSN Messenger (tm) and Windows Live Messenger (tm).
@@ -91,15 +91,14 @@ struct _FsMsnConferencePrivate
 static void fs_msn_conference_do_init (GType type);
 
 
-GST_BOILERPLATE_FULL (FsMsnConference, fs_msn_conference, FsBaseConference,
-    FS_TYPE_BASE_CONFERENCE, fs_msn_conference_do_init);
+GST_BOILERPLATE_FULL (FsMsnConference, fs_msn_conference, FsConference,
+    FS_TYPE_CONFERENCE, fs_msn_conference_do_init);
 
-static FsSession *fs_msn_conference_new_session (FsBaseConference *conf,
+static FsSession *fs_msn_conference_new_session (FsConference *conf,
     FsMediaType media_type,
     GError **error);
 
-static FsParticipant *fs_msn_conference_new_participant (FsBaseConference *conf,
-    const gchar *cname,
+static FsParticipant *fs_msn_conference_new_participant (FsConference *conf,
     GError **error);
 
 static void _remove_session (gpointer user_data,
@@ -111,7 +110,7 @@ static void
 fs_msn_conference_do_init (GType type)
 {
   GST_DEBUG_CATEGORY_INIT (fsmsnconference_debug, "fsmsnconference", 0,
-                           "Farsight MSN Conference Element");
+                           "Farstream MSN Conference Element");
 }
 
 static void
@@ -144,7 +143,7 @@ static void
 fs_msn_conference_class_init (FsMsnConferenceClass * klass)
 {
   GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
-  FsBaseConferenceClass *baseconf_class = FS_BASE_CONFERENCE_CLASS (klass);
+  FsConferenceClass *baseconf_class = FS_CONFERENCE_CLASS (klass);
 
   g_type_class_add_private (klass, sizeof (FsMsnConferencePrivate));
 
@@ -202,7 +201,7 @@ _remove_participant (gpointer user_data,
 
 
 static FsSession *
-fs_msn_conference_new_session (FsBaseConference *conf,
+fs_msn_conference_new_session (FsConference *conf,
                                FsMediaType media_type,
                                GError **error)
 {
@@ -249,8 +248,7 @@ fs_msn_conference_new_session (FsBaseConference *conf,
 
 
 static FsParticipant *
-fs_msn_conference_new_participant (FsBaseConference *conf,
-                                   const gchar *cname,
+fs_msn_conference_new_participant (FsConference *conf,
                                    GError **error)
 {
   FsMsnConference *self = FS_MSN_CONFERENCE (conf);
@@ -274,7 +272,7 @@ fs_msn_conference_new_participant (FsBaseConference *conf,
 
   GST_OBJECT_UNLOCK (self);
 
-  new_participant = fs_msn_participant_new (cname);
+  new_participant = fs_msn_participant_new ();
 
   if (new_participant)
   {
@@ -301,10 +299,10 @@ GST_PLUGIN_DEFINE (
   GST_VERSION_MAJOR,
   GST_VERSION_MINOR,
   "fsmsnconference",
-  "Farsight MSN Conference plugin",
+  "Farstream MSN Conference plugin",
   plugin_init,
   VERSION,
   "LGPL",
-  "Farsight",
-  "http://farsight.freedesktop.org/"
+  "Farstream",
+  "http://farstream.freedesktop.org/"
 )

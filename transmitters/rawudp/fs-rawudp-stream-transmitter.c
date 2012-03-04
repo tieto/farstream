@@ -1,11 +1,11 @@
 /*
- * Farsight2 - Farsight RAW UDP with STUN Stream Transmitter
+ * Farstream - Farstream RAW UDP with STUN Stream Transmitter
  *
  * Copyright 2007-2008 Collabora Ltd.
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
  * Copyright 2007-2008x Nokia Corp.
  *
- * fs-rawudp-transmitter.c - A Farsight UDPs stream transmitter with STUN
+ * fs-rawudp-transmitter.c - A Farstream UDPs stream transmitter with STUN
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -66,8 +66,8 @@
 
 #include "fs-rawudp-component.h"
 
-#include <gst/farsight/fs-candidate.h>
-#include <gst/farsight/fs-conference-iface.h>
+#include <farstream/fs-candidate.h>
+#include <farstream/fs-conference.h>
 
 #ifdef HAVE_GUPNP
 #include <libgupnp-igd/gupnp-simple-igd-thread.h>
@@ -168,7 +168,7 @@ static void fs_rawudp_stream_transmitter_set_property (GObject *object,
 static void
 fs_rawudp_stream_transmitter_stop (FsStreamTransmitter *streamtransmitter);
 
-static gboolean fs_rawudp_stream_transmitter_set_remote_candidates (
+static gboolean fs_rawudp_stream_transmitter_force_remote_candidates (
     FsStreamTransmitter *streamtransmitter,
     GList *candidates,
     GError **error);
@@ -193,7 +193,7 @@ _component_new_active_candidate_pair (FsRawUdpComponent *component,
     FsCandidate *local, FsCandidate *remote, gpointer user_data);
 static void
 _component_error (FsRawUdpComponent *component,
-    FsError error_no, gchar *error_msg, gchar *debug_msg, gpointer user_data);
+    FsError error_no, gchar *error_msg, gpointer user_data);
 static void
 _component_known_source_packet_received (FsRawUdpComponent *component,
     guint component_id, GstBuffer *buffer, gpointer user_data);
@@ -244,8 +244,8 @@ fs_rawudp_stream_transmitter_class_init (FsRawUdpStreamTransmitterClass *klass)
   gobject_class->set_property = fs_rawudp_stream_transmitter_set_property;
   gobject_class->get_property = fs_rawudp_stream_transmitter_get_property;
 
-  streamtransmitterclass->set_remote_candidates =
-    fs_rawudp_stream_transmitter_set_remote_candidates;
+  streamtransmitterclass->force_remote_candidates =
+    fs_rawudp_stream_transmitter_force_remote_candidates;
   streamtransmitterclass->gather_local_candidates =
     fs_rawudp_stream_transmitter_gather_local_candidates;
   streamtransmitterclass->stop = fs_rawudp_stream_transmitter_stop;
@@ -711,12 +711,8 @@ fs_rawudp_stream_transmitter_stop (FsStreamTransmitter *streamtransmitter)
 }
 
 
-/**
- * fs_rawudp_stream_transmitter_set_remote_candidates
- */
-
 static gboolean
-fs_rawudp_stream_transmitter_set_remote_candidates (
+fs_rawudp_stream_transmitter_force_remote_candidates (
     FsStreamTransmitter *streamtransmitter, GList *candidates,
     GError **error)
 {
@@ -891,12 +887,12 @@ _component_new_active_candidate_pair (FsRawUdpComponent *component,
 
 static void
 _component_error (FsRawUdpComponent *component,
-    FsError error_no, gchar *error_msg, gchar *debug_msg, gpointer user_data)
+    FsError error_no, gchar *error_msg, gpointer user_data)
 {
   FsRawUdpStreamTransmitter *self = FS_RAWUDP_STREAM_TRANSMITTER (user_data);
 
   fs_stream_transmitter_emit_error (FS_STREAM_TRANSMITTER (self), error_no,
-      error_msg, debug_msg);
+      error_msg);
 }
 
 static void

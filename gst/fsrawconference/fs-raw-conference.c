@@ -1,5 +1,5 @@
 /*
- * Farsight2 - Farsight Raw Conference Implementation
+ * Farstream - Farstream Raw Conference Implementation
  *
  * Copyright 2008 Richard Spiers <richard.spiers@gmail.com>
  * Copyright 2007 Nokia Corp.
@@ -7,7 +7,7 @@
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
  *  @author: Mike Ruprecht <mike.ruprecht@collabora.co.uk>
  *
- * fs-raw-conference.c - Raw implementation for Farsight Conference Gstreamer
+ * fs-raw-conference.c - Raw implementation for Farstream Conference Gstreamer
  *                       Elements
  *
  * This library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 
 /**
  * SECTION:element-fsrawconference
- * @short_description: Farsight Raw Conference Gstreamer Elements Base class
+ * @short_description: Farstream Raw Conference Gstreamer Elements Base class
  *
  * This element implements a raw content stream over which any Gstreamer
  * content may travel.
@@ -92,15 +92,14 @@ struct _FsRawConferencePrivate
 static void fs_raw_conference_do_init (GType type);
 
 
-GST_BOILERPLATE_FULL (FsRawConference, fs_raw_conference, FsBaseConference,
-    FS_TYPE_BASE_CONFERENCE, fs_raw_conference_do_init);
+GST_BOILERPLATE_FULL (FsRawConference, fs_raw_conference, FsConference,
+    FS_TYPE_CONFERENCE, fs_raw_conference_do_init);
 
-static FsSession *fs_raw_conference_new_session (FsBaseConference *conf,
+static FsSession *fs_raw_conference_new_session (FsConference *conf,
     FsMediaType media_type,
     GError **error);
 
-static FsParticipant *fs_raw_conference_new_participant (FsBaseConference *conf,
-    const gchar *cname,
+static FsParticipant *fs_raw_conference_new_participant (FsConference *conf,
     GError **error);
 
 static void _remove_session (gpointer user_data,
@@ -118,7 +117,7 @@ static void
 fs_raw_conference_do_init (GType type)
 {
   GST_DEBUG_CATEGORY_INIT (fsrawconference_debug, "fsrawconference", 0,
-                           "Farsight Raw Conference Element");
+                           "Farstream Raw Conference Element");
 }
 
 static void
@@ -156,7 +155,7 @@ static void
 fs_raw_conference_class_init (FsRawConferenceClass * klass)
 {
   GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
-  FsBaseConferenceClass *baseconf_class = FS_BASE_CONFERENCE_CLASS (klass);
+  FsConferenceClass *baseconf_class = FS_CONFERENCE_CLASS (klass);
   GstBinClass *gstbin_class = GST_BIN_CLASS (klass);
 
   g_type_class_add_private (klass, sizeof (FsRawConferencePrivate));
@@ -255,7 +254,7 @@ _remove_participant (gpointer user_data,
 }
 
 static FsSession *
-fs_raw_conference_new_session (FsBaseConference *conf,
+fs_raw_conference_new_session (FsConference *conf,
                                FsMediaType media_type,
                                GError **error)
 {
@@ -285,8 +284,7 @@ fs_raw_conference_new_session (FsBaseConference *conf,
 
 
 static FsParticipant *
-fs_raw_conference_new_participant (FsBaseConference *conf,
-                                   const gchar *cname,
+fs_raw_conference_new_participant (FsConference *conf,
                                    GError **error)
 {
   FsRawConference *self = FS_RAW_CONFERENCE (conf);

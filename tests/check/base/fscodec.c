@@ -1,4 +1,4 @@
-/* Farsigh2 unit tests for FsCodec
+/* Farstream unit tests for FsCodec
  *
  * Copyright (C) 2007 Collabora, Nokia
  * @author: Olivier Crete <olivier.crete@collabora.co.uk>
@@ -23,8 +23,8 @@
 #endif
 
 #include <gst/check/gstcheck.h>
-#include "gst/farsight/fs-codec.h"
-#include "gst/farsight/fs-rtp.h"
+#include "farstream/fs-codec.h"
+#include "farstream/fs-rtp.h"
 
 #include "testutils.h"
 
@@ -100,9 +100,6 @@ init_codec_with_three_params (void)
   fs_codec_add_feedback_parameter (codec, "aa2", "bb2", "cc2");
   fs_codec_add_feedback_parameter (codec, "aa3", "bb3", "cc3");
 
-  codec->ABI.ABI.ptime = 12;
-  codec->ABI.ABI.maxptime = 12;
-
   return codec;
 }
 
@@ -172,14 +169,14 @@ GST_START_TEST (test_fscodec_are_equal_feedback_params)
       "Identical codecs (with params) not recognized");
 
   fs_codec_remove_feedback_parameter (codec1,
-      g_list_first (codec1->ABI.ABI.feedback_params));
+      g_list_first (codec1->feedback_params));
   fs_codec_add_feedback_parameter (codec1, "aa1", "bb1", "cc1");
 
   fail_unless (fs_codec_are_equal (codec1, codec2) == TRUE,
       "Identical codecs (with params in different order 1) not recognized");
 
   fs_codec_remove_feedback_parameter (codec1,
-      g_list_first (codec1->ABI.ABI.feedback_params));
+      g_list_first (codec1->feedback_params));
   fs_codec_add_feedback_parameter (codec1, "aa2", "bb2", "cc2");
 
   fail_unless (fs_codec_are_equal (codec1, codec2) == TRUE,
@@ -190,7 +187,7 @@ GST_START_TEST (test_fscodec_are_equal_feedback_params)
   codec1 = init_codec_with_three_params ();
 
   fs_codec_remove_feedback_parameter (codec1,
-      g_list_first (codec1->ABI.ABI.feedback_params));
+      g_list_first (codec1->feedback_params));
 
   fail_unless (fs_codec_are_equal (codec1, codec2) == FALSE,
       "Did not detect removal of first parameter of first codec");
@@ -201,7 +198,7 @@ GST_START_TEST (test_fscodec_are_equal_feedback_params)
 
   codec1 = init_codec_with_three_params ();
   fs_codec_remove_feedback_parameter (codec1,
-      g_list_last (codec1->ABI.ABI.feedback_params));
+      g_list_last (codec1->feedback_params));
 
   fail_unless (fs_codec_are_equal (codec1, codec2) == FALSE,
       "Did not detect removal of last parameter of first codec");
@@ -285,8 +282,6 @@ GST_START_TEST (test_fscodec_keyfile)
 
   codec = fs_codec_new (123, "TEST2", FS_MEDIA_TYPE_VIDEO, 8002);
   codec->channels = 6;
-  codec->ABI.ABI.maxptime = 12;
-  codec->ABI.ABI.ptime = 13;
   fs_codec_add_optional_parameter (codec, "test5", "test6");
   comparison = g_list_append (comparison, codec);
 

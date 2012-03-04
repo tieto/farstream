@@ -1,11 +1,11 @@
 /*
- * Farsight2 - Farsight Multicast UDP Stream Transmitter
+ * Farstream - Farstream Multicast UDP Stream Transmitter
  *
  * Copyright 2007 Collabora Ltd.
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
  * Copyright 2007 Nokia Corp.
  *
- * fs-multicast-stream-transmitter.c - A Farsight Multiast UDP stream transmitter
+ * fs-multicast-stream-transmitter.c - A Farstream Multiast UDP stream transmitter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -60,8 +60,8 @@
 #include "fs-multicast-stream-transmitter.h"
 #include "fs-multicast-transmitter.h"
 
-#include <gst/farsight/fs-candidate.h>
-#include <gst/farsight/fs-conference-iface.h>
+#include <farstream/fs-candidate.h>
+#include <farstream/fs-conference.h>
 
 #include <gst/gst.h>
 
@@ -149,7 +149,7 @@ static void fs_multicast_stream_transmitter_set_property (GObject *object,
                                                 const GValue *value,
                                                 GParamSpec *pspec);
 
-static gboolean fs_multicast_stream_transmitter_set_remote_candidates (
+static gboolean fs_multicast_stream_transmitter_force_remote_candidates (
     FsStreamTransmitter *streamtransmitter, GList *candidates,
     GError **error);
 
@@ -198,8 +198,8 @@ fs_multicast_stream_transmitter_class_init (FsMulticastStreamTransmitterClass *k
   gobject_class->set_property = fs_multicast_stream_transmitter_set_property;
   gobject_class->get_property = fs_multicast_stream_transmitter_get_property;
 
-  streamtransmitterclass->set_remote_candidates =
-    fs_multicast_stream_transmitter_set_remote_candidates;
+  streamtransmitterclass->force_remote_candidates =
+    fs_multicast_stream_transmitter_force_remote_candidates;
 
   g_object_class_override_property (gobject_class, PROP_SENDING, "sending");
   g_object_class_override_property (gobject_class,
@@ -522,12 +522,8 @@ fs_multicast_stream_transmitter_add_remote_candidate (
   return TRUE;
 }
 
-/**
- * fs_multicast_stream_transmitter_set_remote_candidates
- */
-
 static gboolean
-fs_multicast_stream_transmitter_set_remote_candidates (
+fs_multicast_stream_transmitter_force_remote_candidates (
     FsStreamTransmitter *streamtransmitter, GList *candidates,
     GError **error)
 {

@@ -1,4 +1,4 @@
-/* Farsigh2 generic unit tests for transmitters
+/* Farstream generic unit tests for transmitters
  *
  * Copyright (C) 2007 Collabora, Nokia
  * @author: Olivier Crete <olivier.crete@collabora.co.uk>
@@ -23,8 +23,8 @@
 #endif
 
 #include <gst/check/gstcheck.h>
-#include <gst/farsight/fs-transmitter.h>
-#include <gst/farsight/fs-stream-transmitter.h>
+#include <farstream/fs-transmitter.h>
+#include <farstream/fs-stream-transmitter.h>
 
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -34,18 +34,18 @@
 
 static void
 _transmitter_error (FsTransmitter *transmitter, gint errorno, gchar *error_msg,
-  gchar *debug_msg, gpointer user_data)
+    gpointer user_data)
 {
   ts_fail ("Transmitter(%x) error(%d) msg:%s debug:%s", transmitter, errorno,
-    error_msg, debug_msg);
+    error_msg);
 }
 
 void
 stream_transmitter_error (FsStreamTransmitter *streamtransmitter,
-  gint errorno, gchar *error_msg, gchar *debug_msg, gpointer user_data)
+  gint errorno, gchar *error_msg, gpointer user_data)
 {
-  ts_fail ("StreamTransmitter(%x) error(%d) msg:%s debug:%s", streamtransmitter,
-    errorno, error_msg, debug_msg);
+  ts_fail ("StreamTransmitter(%x) error(%d) msg:%s", streamtransmitter,
+    errorno, error_msg);
 }
 
 void

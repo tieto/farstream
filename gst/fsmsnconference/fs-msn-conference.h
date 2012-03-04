@@ -1,12 +1,12 @@
 /*
- * Farsight2 - Farsight MSN Conference Implementation
+ * Farstream - Farstream MSN Conference Implementation
  *
  * Copyright 2008 Richard Spiers <richard.spiers@gmail.com>
  * Copyright 2007 Nokia Corp.
  * Copyright 2007 Collabora Ltd.
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
  *
- * gstfsmsnconference.h - MSN implementation for Farsight Conference Gstreamer
+ * gstfsmsnconference.h - MSN implementation for Farstream Conference Gstreamer
  *                        Elements
  *
  * This library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 #ifndef __FS_MSN_CONFERENCE_H__
 #define __FS_MSN_CONFERENCE_H__
 
-#include <gst/farsight/fs-base-conference.h>
+#include <farstream/fs-conference.h>
 
 G_BEGIN_DECLS
 
@@ -52,7 +52,7 @@ typedef struct _FsMsnConferencePrivate FsMsnConferencePrivate;
 
 struct _FsMsnConference
 {
-  FsBaseConference parent;
+  FsConference parent;
   FsMsnConferencePrivate *priv;
 
   FsStreamDirection max_direction;
@@ -62,7 +62,7 @@ struct _FsMsnConference
 
 struct _FsMsnConferenceClass
 {
-  FsBaseConferenceClass parent_class;
+  FsConferenceClass parent_class;
 };
 
 GType fs_msn_conference_get_type (void);

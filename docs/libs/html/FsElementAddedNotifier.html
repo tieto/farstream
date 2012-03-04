@@ -4,21 +4,21 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>FsElementAddedNotifier</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
-<link rel="home" href="index.html" title="Farsight2 Reference Manual">
-<link rel="up" href="ch04.html" title="Farsight Utility Functions and Objects">
-<link rel="prev" href="ch04.html" title="Farsight Utility Functions and Objects">
-<link rel="next" href="farsight2-libs-Network-interfaces-discovery.html" title="Network interfaces discovery">
-<meta name="generator" content="GTK-Doc V1.17 (XML mode)">
+<link rel="home" href="index.html" title="Farstream Reference Manual">
+<link rel="up" href="ch03.html" title="Farstream Utility Functions and Objects">
+<link rel="prev" href="ch03.html" title="Farstream Utility Functions and Objects">
+<link rel="next" href="farstream-libs-Utility-functions.html" title="Utility functions">
+<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
 <tr valign="middle">
-<td><a accesskey="p" href="ch04.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
-<td><a accesskey="u" href="ch04.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="ch03.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch03.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">Farsight2 Reference Manual</th>
-<td><a accesskey="n" href="farsight2-libs-Network-interfaces-discovery.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<th width="100%" align="center">Farstream Reference Manual</th>
+<td><a accesskey="n" href="farstream-libs-Utility-functions.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
 <a href="#FsElementAddedNotifier.synopsis" class="shortcut">Top</a>
@@ -42,7 +42,7 @@
 <div class="refsynopsisdiv">
 <a name="FsElementAddedNotifier.synopsis"></a><h2>Synopsis</h2>
 <pre class="synopsis">
-#include &lt;gst/farsight/fs-element-added-notifier.h&gt;
+#include &lt;farstream/fs-element-added-notifier.h&gt;
 
 struct              <a class="link" href="FsElementAddedNotifier.html#FsElementAddedNotifier-struct" title="struct FsElementAddedNotifier">FsElementAddedNotifier</a>;
 <a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="returnvalue">FsElementAddedNotifier</span></a> * <a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-new" title="fs_element_added_notifier_new ()">fs_element_added_notifier_new</a>  (<em class="parameter"><code><span class="type">void</span></code></em>);
@@ -57,6 +57,9 @@ struct              <a class="link" href="FsElementAddedNotifier.html#FsElementA
                                                         (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-set-default-properties" title="fs_element_added_notifier_set_default_properties ()">fs_element_added_notifier_set_default_properties</a>
+                                                        (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
+                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);
 </pre>
 </div>
 <div class="refsect1">
@@ -225,6 +228,36 @@ the name of the file to load instead of the <a href="http://library.gnome.org/de
 </tbody>
 </table></div>
 </div>
+<hr>
+<div class="refsect2">
+<a name="fs-element-added-notifier-set-default-properties"></a><h3>fs_element_added_notifier_set_default_properties ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                fs_element_added_notifier_set_default_properties
+                                                        (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
+                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);</pre>
+<p>
+Same as first calling <a class="link" href="farstream-libs-Utility-functions.html#fs-utils-get-default-element-properties" title="fs_utils_get_default_element_properties ()"><code class="function">fs_utils_get_default_element_properties()</code></a> and using
+the result with
+<a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-set-properties-from-keyfile" title="fs_element_added_notifier_set_properties_from_keyfile ()"><code class="function">fs_element_added_notifier_set_properties_from_keyfile()</code></a> .
+</p>
+<p>
+This is binding friendly (since GKeyFile doesn't have a boxed type).
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>notifier</code></em> :</span></p></td>
+<td>a <a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
+<td>Element for which to set the default codec
+preferences</td>
+</tr>
+</tbody>
+</table></div>
+</div>
 </div>
 <div class="refsect1">
 <a name="FsElementAddedNotifier.signal-details"></a><h2>Signal Details</h2>
@@ -268,6 +301,6 @@ The bin may be <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NU
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.17</div>
+          Generated by GTK-Doc V1.18</div>
 </body>
 </html>

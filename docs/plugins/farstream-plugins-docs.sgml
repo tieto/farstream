@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+               "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY % version-entities SYSTEM "version.entities">
+%version-entities;
+]>
+<book id="index" xmlns:xi="http://www.w3.org/2003/XInclude">
+  <bookinfo>
+    <title>Farstream Plugins Manual</title>
+    <releaseinfo>
+      for version &FS_VERSION;.
+      The latest version of this documentation can be found on-line at
+      <ulink role="online-location" url="http://farstream.freedesktop.org/apidoc/farstream-plugins/">http://farstream.freedesktop.org/apidoc/farstream-plugins/</ulink>.
+      These plugins are to be used with the base classes and other utility
+      objects and functions described in the
+      <ulink url="http://farstream.freedesktop.org/apidoc/farstream/">Farstream Reference Manual</ulink>.
+    </releaseinfo>
+  </bookinfo>
+
+  <part>
+    <title>Plugins implementing FsConference</title>
+    <chapter>
+      <title>RTP Plugin</title>
+      <xi:include href="xml/element-fsrtpconference.xml"/>
+      <xi:include href="xml/fs-rtp-participant.xml"/>
+      <xi:include href="xml/fs-rtp-session.xml"/>
+      <xi:include href="xml/fs-rtp-stream.xml"/>
+    </chapter>
+    <chapter>
+      <title>Raw Plugin</title>
+      <xi:include href="xml/element-fsrawconference.xml"/>
+      <xi:include href="xml/fs-raw-participant.xml"/>
+      <xi:include href="xml/fs-raw-session.xml"/>
+      <xi:include href="xml/fs-raw-stream.xml"/>
+    </chapter>
+    <chapter>
+      <title>MSN Webcam plugin</title>
+      <xi:include href="xml/element-fsmsncamsendconference.xml"/>
+      <xi:include href="xml/element-fsmsncamrecvconference.xml"/>
+      <xi:include href="xml/fs-msn-conference.xml"/>
+      <xi:include href="xml/fs-msn-participant.xml"/>
+      <xi:include href="xml/fs-msn-session.xml"/>
+      <xi:include href="xml/fs-msn-stream.xml"/>
+    </chapter>
+  </part>
+
+  <part>
+    <title>Transmitters</title>
+    <xi:include href="xml/fs-rawudp-stream-transmitter.xml"/>
+    <xi:include href="xml/fs-multicast-stream-transmitter.xml"/>
+    <xi:include href="xml/fs-nice-stream-transmitter.xml"/>
+    <xi:include href="xml/fs-shm-stream-transmitter.xml"/>
+  </part>
+
+  <part>
+    <title>Utility elements</title>
+    <xi:include href="xml/element-fsfunnel.xml"/>
+    <xi:include href="xml/element-fsvideoanyrate.xml"/>
+  </part>
+</book>

@@ -1,4 +1,4 @@
-/* Farsight 2 unit tests for FsMulticastTransmitter
+/* Farstream unit tests for FsMulticastTransmitter
  *
  * Copyright (C) 2007 Collabora, Nokia
  * @author: Olivier Crete <olivier.crete@collabora.co.uk>
@@ -23,8 +23,8 @@
 #endif
 
 #include <gst/check/gstcheck.h>
-#include <gst/farsight/fs-transmitter.h>
-#include <gst/farsight/fs-conference-iface.h>
+#include <farstream/fs-transmitter.h>
+#include <farstream/fs-conference.h>
 
 #include "check-threadsafe.h"
 #include "generic.h"
@@ -199,7 +199,7 @@ run_multicast_transmitter_test (gint n_parameters, GParameter *params,
 
   candidates = g_list_prepend (candidates, tmpcand);
 
-  if (!fs_stream_transmitter_set_remote_candidates (st, candidates, &error))
+  if (!fs_stream_transmitter_force_remote_candidates (st, candidates, &error))
     ts_fail ("Error setting the remote candidates: %p %s", error,
         error ? error->message : "NO ERROR SET");
   ts_fail_unless (error == NULL, "Error is not null after successful candidate"

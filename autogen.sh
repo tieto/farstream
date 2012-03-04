@@ -2,8 +2,8 @@
 # Run this to generate all the initial makefiles, etc.
 
 DIE=0
-package=farsight2
-srcfile=gst-libs/gst/farsight/fs-candidate.c
+package=farstream
+srcfile=farstream/fs-candidate.c
 
 # Make sure we have common
 if test ! -f common/gst-autogen.sh;
@@ -22,7 +22,7 @@ then
 fi
 . common/gst-autogen.sh
 
-CONFIGURE_DEF_OPT='--enable-gtk-doc'
+CONFIGURE_DEF_OPT='--enable-gtk-doc --enable-introspection'
 
 autogen_options $@
 
@@ -58,7 +58,7 @@ toplevel_check $srcfile
 
 # aclocal
 if test -f acinclude.m4; then rm acinclude.m4; fi
-tool_run "$aclocal" "-I common/m4 -I m4 $ACLOCAL_FLAGS"
+tool_run "$aclocal" "-I m4 -I common/m4 $ACLOCAL_FLAGS"
 
 tool_run "$libtoolize" "--copy --force"
 tool_run "$autoheader"

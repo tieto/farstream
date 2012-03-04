@@ -1,11 +1,11 @@
 /*
- * Farsight2 - Farsight RTP Session
+ * Farstream - Farstream RTP Session
  *
  * Copyright 2007 Collabora Ltd.
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
  * Copyright 2007 Nokia Corp.
  *
- * fs-rtp-session.c - A Farsight RTP Session gobject
+ * fs-rtp-session.c - A Farstream RTP Session gobject
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -38,8 +38,8 @@
  * entirely new codecs using this method.
  *
  * To create a profile for a codec, add it to the codec-preferences with
- * special optional parameters called "farsight-send-profile" and
- * "farsight-recv-profile", these should contain gst-launch style descriptions
+ * special optional parameters called "farstream-send-profile" and
+ * "farstream-recv-profile", these should contain gst-launch style descriptions
  * of the encoding or decoding bin.
  *
  * As a special case, encoding profiles can have more than one unconnected
@@ -65,9 +65,9 @@
 #include <gst/rtp/gstrtpbuffer.h>
 #include <gst/rtp/gstrtcpbuffer.h>
 
-#include <gst/farsight/fs-transmitter.h>
-#include "gst/farsight/fs-utils.h"
-#include <gst/farsight/fs-rtp.h>
+#include <farstream/fs-transmitter.h>
+#include "farstream/fs-utils.h"
+#include <farstream/fs-rtp.h>
 
 #include "fs-rtp-bitrate-adapter.h"
 #include "fs-rtp-stream.h"
@@ -91,6 +91,7 @@ enum
 enum
 {
   PROP_0,
+  PROP_CONFERENCE,
   PROP_MEDIA_TYPE,
   PROP_ID,
   PROP_SINK_PAD,
@@ -98,8 +99,6 @@ enum
   PROP_CODECS,
   PROP_CODECS_WITHOUT_CONFIG,
   PROP_CURRENT_SEND_CODEC,
-  PROP_CODECS_READY,
-  PROP_CONFERENCE,
   PROP_NO_RTCP_TIMEOUT,
   PROP_SSRC,
   PROP_TOS,
@@ -194,6 +193,9 @@ struct _FsRtpSessionPrivate
   /* Protected by the session mutex */
   gint no_rtcp_timeout;
 
+  GQueue telephony_events;
+  GstObject *running_telephony_src;
+  gboolean telephony_event_running;
   GList *extra_sources;
 
   /* This is a ht of ssrc->streams
@@ -243,16 +245,11 @@ static void fs_rtp_session_constructed (GObject *object);
 static FsStream *fs_rtp_session_new_stream (FsSession *session,
     FsParticipant *participant,
     FsStreamDirection direction,
-    const gchar *transmitter,
-    guint n_parameters,
-    GParameter *parameters,
     GError **error);
 static gboolean fs_rtp_session_start_telephony_event (FsSession *session,
     guint8 event,
-    guint8 volume,
-    FsDTMFMethod method);
-static gboolean fs_rtp_session_stop_telephony_event (FsSession *session,
-    FsDTMFMethod method);
+    guint8 volume);
+static gboolean fs_rtp_session_stop_telephony_event (FsSession *session);
 static gboolean fs_rtp_session_set_send_codec (FsSession *session,
     FsCodec *send_codec,
     GError **error);
@@ -275,14 +272,14 @@ static GstElement *_substream_get_codec_bin (FsRtpSubStream *substream,
 static gboolean _stream_new_remote_codecs (FsRtpStream *stream,
     GList *codecs, GError **error, gpointer user_data);
 
-
-static FsStreamTransmitter *fs_rtp_session_get_new_stream_transmitter (
-    FsRtpSession *self,
-    const gchar *transmitter_name,
-    FsParticipant *participant,
-    guint n_parameters,
-    GParameter *parameters,
-    GError **error);
+static FsStreamTransmitter* _stream_get_new_stream_transmitter (
+  FsRtpStream *stream,
+  FsParticipant *participant,
+  const gchar *transmitter_name,
+  GParameter *parameters,
+  guint n_parameters,
+  GError **error,
+  gpointer user_data);
 
 static GList *fs_rtp_session_get_codecs_need_resend (FsSession *session,
     GList *old_codecs, GList *new_codecs);
@@ -351,6 +348,8 @@ fs_rtp_session_class_init (FsRtpSessionClass *klass)
   session_class->codecs_need_resend = fs_rtp_session_get_codecs_need_resend;
 
   g_object_class_override_property (gobject_class,
+    PROP_CONFERENCE, "conference");
+  g_object_class_override_property (gobject_class,
     PROP_MEDIA_TYPE, "media-type");
   g_object_class_override_property (gobject_class,
     PROP_ID, "id");
@@ -365,17 +364,7 @@ fs_rtp_session_class_init (FsRtpSessionClass *klass)
   g_object_class_override_property (gobject_class,
     PROP_CURRENT_SEND_CODEC, "current-send-codec");
   g_object_class_override_property (gobject_class,
-    PROP_CODECS_READY, "codecs-ready");
-  g_object_class_override_property (gobject_class,
     PROP_TOS, "tos");
-
-  g_object_class_install_property (gobject_class,
-    PROP_CONFERENCE,
-    g_param_spec_object ("conference",
-      "The Conference this stream refers to",
-      "This is a convience pointer for the Conference",
-      FS_TYPE_RTP_CONFERENCE,
-      G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_property (gobject_class,
       PROP_NO_RTCP_TIMEOUT,
@@ -452,9 +441,11 @@ fs_rtp_session_init (FsRtpSession *self)
   self->priv->ssrc_streams = g_hash_table_new (g_direct_hash, g_direct_equal);
   self->priv->ssrc_streams_manual = g_hash_table_new (g_direct_hash,
       g_direct_equal);
+
+  g_queue_init (&self->priv->telephony_events);
 }
 
-static gboolean
+static void
 _remove_transmitter (gpointer key, gpointer value, gpointer user_data)
 {
   FsRtpSession *self = FS_RTP_SESSION (user_data);
@@ -473,8 +464,6 @@ _remove_transmitter (gpointer key, gpointer value, gpointer user_data)
 
   gst_object_unref (src);
   gst_object_unref (sink);
-
-  return TRUE;
 }
 
 static void
@@ -519,18 +508,24 @@ stop_and_remove (GstBin *conf, GstElement **element, gboolean unref)
 }
 
 
-static gpointer
-trigger_dispose (gpointer data)
-{
-  g_object_unref (data);
-  return NULL;
-}
-
 static void
-fs_rtp_session_real_dispose (FsRtpSession *self)
+fs_rtp_session_dispose (GObject *obj)
 {
+  FsRtpSession *self = FS_RTP_SESSION (obj);
   GList *item = NULL;
   GstBin *conferencebin = NULL;
+
+  if (fs_rtp_session_has_disposed_enter (self, NULL))
+    return;
+
+  if (fs_rtp_conference_is_internal_thread (self->priv->conference))
+  {
+    g_critical ("You MUST call fs_session_destroy() from your main thread, "
+        "this FsSession may now be leaked");
+    fs_rtp_session_has_disposed_exit (self);
+    return;
+  }
+  fs_rtp_session_has_disposed_exit (self);
 
   g_static_rw_lock_writer_lock (&self->priv->disposed_lock);
   if (self->priv->disposed)
@@ -666,6 +661,9 @@ fs_rtp_session_real_dispose (FsRtpSession *self)
   self->priv->extra_sources =
     fs_rtp_special_sources_destroy (self->priv->extra_sources);
 
+  if (self->priv->running_telephony_src)
+    gst_object_unref (self->priv->running_telephony_src);
+
   /* Now they should all be stopped, we can remove them in peace */
 
 
@@ -716,11 +714,8 @@ fs_rtp_session_real_dispose (FsRtpSession *self)
 
   if (self->priv->transmitters)
   {
-    g_hash_table_foreach_remove (self->priv->transmitters, _remove_transmitter,
+    g_hash_table_foreach (self->priv->transmitters, _remove_transmitter,
       self);
-
-    g_hash_table_destroy (self->priv->transmitters);
-    self->priv->transmitters = NULL;
   }
 
   if (self->priv->free_substreams)
@@ -740,37 +735,23 @@ fs_rtp_session_real_dispose (FsRtpSession *self)
   for (item = g_list_first (self->priv->streams);
        item;
        item = g_list_next (item))
+  {
     g_object_weak_unref (G_OBJECT (item->data), _remove_stream, self);
+    fs_stream_destroy (item->data);
+  }
   g_list_free (self->priv->streams);
   self->priv->streams = NULL;
   self->priv->streams_cookie++;
   g_hash_table_remove_all (self->priv->ssrc_streams);
   g_hash_table_remove_all (self->priv->ssrc_streams_manual);
 
-
-  G_OBJECT_CLASS (fs_rtp_session_parent_class)->dispose (G_OBJECT (self));
-}
-
-static void
-fs_rtp_session_dispose (GObject *object)
-{
-  FsRtpSession *self = FS_RTP_SESSION (object);
-
-  if (fs_rtp_session_has_disposed_enter (self, NULL))
-    return;
-
-  if (fs_rtp_conference_is_internal_thread (self->priv->conference))
+  if (self->priv->transmitters)
   {
-    g_object_ref (self);
-    if (!g_thread_create (trigger_dispose, self, FALSE, NULL))
-      g_error ("Could not create dispose thread");
-    fs_rtp_session_has_disposed_exit (self);
+    g_hash_table_destroy (self->priv->transmitters);
+    self->priv->transmitters = NULL;
   }
-  else
-  {
-    fs_rtp_session_has_disposed_exit (self);
-    fs_rtp_session_real_dispose (self);
-  }
+
+  G_OBJECT_CLASS (fs_rtp_session_parent_class)->dispose (obj);
 }
 
 static void
@@ -801,13 +782,14 @@ fs_rtp_session_finalize (GObject *object)
 
   if (self->priv->ssrc_streams)
     g_hash_table_destroy (self->priv->ssrc_streams);
-
   if (self->priv->ssrc_streams_manual)
     g_hash_table_destroy (self->priv->ssrc_streams_manual);
 
   g_mutex_free (self->priv->send_pad_blocked_mutex);
   g_mutex_free (self->priv->discovery_pad_blocked_mutex);
 
+  g_queue_foreach (&self->priv->telephony_events, (GFunc) gst_event_unref,
+      NULL);
 
   g_static_rw_lock_free (&self->priv->disposed_lock);
 
@@ -867,9 +849,19 @@ fs_rtp_session_get_property (GObject *object,
     case PROP_CODECS:
       {
         GList *codecs = NULL;
+        GList *item = NULL;
         FS_RTP_SESSION_LOCK (self);
-        codecs = codec_associations_to_codecs (self->priv->codec_associations,
-            TRUE);
+        for (item = g_list_first (self->priv->codec_associations);
+             item;
+             item = g_list_next (item))
+        {
+          CodecAssociation *ca = item->data;
+          if (!ca->disable && ca->need_config)
+            break;
+        }
+        if (item == NULL)
+          codecs = codec_associations_to_codecs (self->priv->codec_associations,
+              TRUE);
         FS_RTP_SESSION_UNLOCK (self);
         g_value_take_boxed (value, codecs);
       }
@@ -882,24 +874,6 @@ fs_rtp_session_get_property (GObject *object,
             FALSE);
         FS_RTP_SESSION_UNLOCK (self);
         g_value_take_boxed (value, codecs);
-      }
-      break;
-    case PROP_CODECS_READY:
-      {
-        GList *item = NULL;
-
-        FS_RTP_SESSION_LOCK (self);
-        for (item = g_list_first (self->priv->codec_associations);
-             item;
-             item = g_list_next (item))
-        {
-          CodecAssociation *ca = item->data;
-          if (!ca->disable && ca->need_config)
-            break;
-        }
-        FS_RTP_SESSION_UNLOCK (self);
-
-        g_value_set_boolean (value, item == NULL);
       }
       break;
     case PROP_CONFERENCE:
@@ -1037,7 +1011,7 @@ _rtp_bitrate_adapter_renegotiate (GstElement *bitrate_adapter,
 {
   gst_element_post_message (GST_ELEMENT (self->priv->conference),
       gst_message_new_element (GST_OBJECT (self->priv->conference),
-          gst_structure_new ("farsight-renegotiate",
+          gst_structure_new ("farstream-renegotiate",
               "session", FS_TYPE_SESSION, self,
               NULL)));
 }
@@ -1664,8 +1638,7 @@ _stream_sending_changed_locked (FsRtpStream *stream, gboolean sending,
 
   if (session->priv->rtp_tfrc)
     g_object_set (session->priv->rtp_tfrc, "sending",
-        session->priv->streams_sending, NULL);
-
+        (session->priv->streams_sending > 0), NULL);
 
   fs_rtp_session_has_disposed_exit (session);
 }
@@ -1720,13 +1693,14 @@ _remove_stream (gpointer user_data,
   fs_rtp_session_has_disposed_exit (self);
 }
 
+
+
 /**
  * fs_rtp_session_new_stream:
  * @session: an #FsRtpSession
  * @participant: #FsParticipant of a participant for the new stream
  * @direction: #FsStreamDirection describing the direction of the new stream that will
  * be created for this participant
- * @transmitter: Name of the type of transmitter to use for this session
  * @error: location of a #GError, or NULL if no error occured
  *
  * This function creates a stream for the given participant into the active session.
@@ -1738,15 +1712,11 @@ static FsStream *
 fs_rtp_session_new_stream (FsSession *session,
     FsParticipant *participant,
     FsStreamDirection direction,
-    const gchar *transmitter,
-    guint n_parameters,
-    GParameter *parameters,
     GError **error)
 {
   FsRtpSession *self = FS_RTP_SESSION (session);
   FsRtpParticipant *rtpparticipant = NULL;
   FsStream *new_stream = NULL;
-  FsStreamTransmitter *st;
 
   if (!FS_IS_RTP_PARTICIPANT (participant))
   {
@@ -1760,22 +1730,13 @@ fs_rtp_session_new_stream (FsSession *session,
 
   rtpparticipant = FS_RTP_PARTICIPANT (participant);
 
-  st = fs_rtp_session_get_new_stream_transmitter (self, transmitter,
-      participant, n_parameters, parameters, error);
-
-  if (!st)
-  {
-    fs_rtp_session_has_disposed_exit (self);
-    return NULL;
-  }
-
   new_stream = FS_STREAM_CAST (fs_rtp_stream_new (self, rtpparticipant,
-          direction, st, _stream_new_remote_codecs,
+          direction, _stream_new_remote_codecs,
           _stream_known_source_packet_received,
           _stream_sending_changed_locked,
           _stream_ssrc_added_cb,
-          self, error));
-
+          _stream_get_new_stream_transmitter,
+          self));
 
   if (new_stream)
   {
@@ -1790,11 +1751,109 @@ fs_rtp_session_new_stream (FsSession *session,
     self->priv->streams = g_list_append (self->priv->streams, new_stream);
     self->priv->streams_cookie++;
     FS_RTP_SESSION_UNLOCK (self);
-
-    g_object_weak_ref (G_OBJECT (new_stream), _remove_stream, self);
   }
+
+  g_object_weak_ref (G_OBJECT (new_stream), _remove_stream, self);
+
   fs_rtp_session_has_disposed_exit (self);
+
   return new_stream;
+}
+
+static GstEvent *
+fs_rtp_session_set_next_telephony_method (FsRtpSession *self,
+    gint method)
+{
+  GstEvent *event;
+  GstStructure *s;
+  gboolean start;
+
+  FS_RTP_SESSION_LOCK (self);
+
+  event = g_queue_peek_tail (&self->priv->telephony_events);
+
+  if (gst_structure_get_boolean (gst_event_get_structure (event),
+          "start", &start) && !start)
+    goto out;
+
+  g_queue_pop_tail (&self->priv->telephony_events);
+  event = GST_EVENT (gst_mini_object_make_writable (GST_MINI_OBJECT (event)));
+  s = (GstStructure *) gst_event_get_structure (event);
+  gst_structure_set (s, "method", G_TYPE_INT, method, NULL);
+  g_queue_push_tail (&self->priv->telephony_events, event);
+
+out:
+
+  gst_event_ref (event);
+  self->priv->telephony_event_running = TRUE;
+  FS_RTP_SESSION_UNLOCK (self);
+
+  return event;
+}
+
+static void
+fs_rtp_session_try_sending_dtmf_event (FsRtpSession *self)
+{
+  GstElement *rtpmuxer = NULL;
+  GstPad *pad;
+  gboolean ret = FALSE;
+  GstEvent *event;
+
+  FS_RTP_SESSION_LOCK (self);
+  if (self->priv->telephony_event_running ||
+      g_queue_get_length (&self->priv->telephony_events) == 0)
+  {
+    FS_RTP_SESSION_UNLOCK (self);
+    return;
+  }
+
+
+  g_assert (self->priv->rtpmuxer);
+  rtpmuxer = gst_object_ref (self->priv->rtpmuxer);
+  FS_RTP_SESSION_UNLOCK (self);
+
+  pad = gst_element_get_static_pad (rtpmuxer, "src");
+
+  event = fs_rtp_session_set_next_telephony_method (self, 1);
+  ret = gst_pad_send_event (pad, event);
+  if (!ret)
+  {
+    event = fs_rtp_session_set_next_telephony_method (self, 2);
+    ret = gst_pad_send_event (pad, event);
+  }
+
+  if (!ret)
+  {
+    FS_RTP_SESSION_LOCK (self);
+    self->priv->telephony_event_running = FALSE;
+    FS_RTP_SESSION_UNLOCK (self);
+  }
+
+  gst_object_unref (pad);
+  gst_object_unref (rtpmuxer);
+}
+
+static gboolean
+fs_rtp_session_check_telephony_event_queue_start_locked (FsRtpSession *self,
+    gboolean desired_start)
+{
+  GstEvent *event = g_queue_peek_head (&self->priv->telephony_events);
+
+  if (event)
+  {
+    const GstStructure *s = gst_event_get_structure (event);
+    gboolean start;
+
+    if (gst_structure_get_boolean (s, "start", &start) &&
+        start != desired_start)
+    {
+      GST_WARNING ("Tried to start an event while another is playing");
+      return FALSE;
+    }
+
+  }
+
+  return TRUE;
 }
 
 /**
@@ -1804,94 +1863,58 @@ fs_rtp_session_new_stream (FsSession *session,
  * http://www.iana.org/assignments/audio-telephone-event-registry
  * @volume: The volume in dBm0 without the negative sign. Should be between
  * 0 and 36. Higher values mean lower volume
- * @method: The method used to send the event
  *
  * This function will start sending a telephony event (such as a DTMF
  * tone) on the #FsRtpSession. You have to call the function
  * #fs_rtp_session_stop_telephony_event () to stop it.
- * This function will use any available method, if you want to use a specific
- * method only, use #fs_rtp_session_start_telephony_event_full ()
  *
  * Returns: %TRUE if sucessful, it can return %FALSE if the #FsStream
  * does not support this telephony event.
  */
 static gboolean
 fs_rtp_session_start_telephony_event (FsSession *session, guint8 event,
-                                      guint8 volume, FsDTMFMethod method)
+                                      guint8 volume)
 {
   FsRtpSession *self = FS_RTP_SESSION (session);
-  GstElement *rtpmuxer = NULL;
-  GstPad *pad;
   gboolean ret = FALSE;
-  gchar *method_str;
-  gint method_int;
 
   if (fs_rtp_session_has_disposed_enter (self, NULL))
     return FALSE;
 
-  switch (method)
+  FS_RTP_SESSION_LOCK (self);
+
+  if (!fs_rtp_session_check_telephony_event_queue_start_locked (self, FALSE))
   {
-    case FS_DTMF_METHOD_AUTO:
-      method_str = "default";
-      method_int = 1;
-      break;
-    case FS_DTMF_METHOD_RTP_RFC4733:
-      method_str="RFC4733";
-      method_int = 1;
-      break;
-    case FS_DTMF_METHOD_IN_BAND:
-      method_str="sound";
-      method_int = 2;
-      break;
-    default:
-      GST_WARNING ("Invalid telephony event method %d", method);
-      goto out;
+    GST_WARNING ("Tried to start an event without stopping the previous one");
+    goto out;
   }
 
-  FS_RTP_SESSION_LOCK (self);
-  g_assert (self->priv->rtpmuxer);
-  rtpmuxer = gst_object_ref (self->priv->rtpmuxer);
-  FS_RTP_SESSION_UNLOCK (self);
+  GST_DEBUG ("sending telephony event %d", event);
 
-  GST_DEBUG ("sending telephony event %d using method=%s",
-      event, method_str);
-
-  pad = gst_element_get_static_pad (rtpmuxer, "src");
-
-  ret = gst_pad_send_event (pad,
+  g_queue_push_head (&self->priv->telephony_events,
       gst_event_new_custom (GST_EVENT_CUSTOM_UPSTREAM,
           gst_structure_new ("dtmf-event",
               "number", G_TYPE_INT, event,
               "volume", G_TYPE_INT, volume,
               "start", G_TYPE_BOOLEAN, TRUE,
               "type", G_TYPE_INT, 1,
-              "method", G_TYPE_INT, method_int,
               NULL)));
+  ret = TRUE;
 
-  if (!ret && method == FS_DTMF_METHOD_AUTO)
-    ret = gst_pad_send_event (pad,
-        gst_event_new_custom (GST_EVENT_CUSTOM_UPSTREAM,
-            gst_structure_new ("dtmf-event",
-                "number", G_TYPE_INT, event,
-                "volume", G_TYPE_INT, volume,
-                "start", G_TYPE_BOOLEAN, TRUE,
-                "type", G_TYPE_INT, 1,
-                "method", G_TYPE_INT, 2,
-                NULL)));
+out:
+  FS_RTP_SESSION_UNLOCK (self);
 
-  gst_object_unref (pad);
-  gst_object_unref (rtpmuxer);
-
-  out:
+  if (ret)
+    fs_rtp_session_try_sending_dtmf_event (self);
 
   fs_rtp_session_has_disposed_exit (self);
   return ret;
 }
 
+
 /**
  * fs_rtp_session_stop_telephony_event:
  * @session: an #FsRtpSession
- * @method: The method used to send the event
  *
  * This function will stop sending a telephony event started by
  * #fs_rtp_session_start_telephony_event (). If the event was being sent
@@ -1903,47 +1926,40 @@ fs_rtp_session_start_telephony_event (FsSession *session, guint8 event,
  * does not support telephony events or if no telephony event is being sent
  */
 static gboolean
-fs_rtp_session_stop_telephony_event (FsSession *session, FsDTMFMethod method)
+fs_rtp_session_stop_telephony_event (FsSession *session)
 {
   FsRtpSession *self = FS_RTP_SESSION (session);
-  GstElement *rtpmuxer = NULL;
-  GstPad *pad;
   gboolean ret = FALSE;
 
   if (fs_rtp_session_has_disposed_enter (self, NULL))
     return FALSE;
 
-  switch (method)
-  {
-    case FS_DTMF_METHOD_AUTO:
-    case FS_DTMF_METHOD_RTP_RFC4733:
-    case FS_DTMF_METHOD_IN_BAND:
-      break;
-    default:
-      GST_WARNING ("Invalid telephony event method %d", method);
-      goto out;
-  }
 
   FS_RTP_SESSION_LOCK (self);
-  g_assert (self->priv->rtpmuxer);
-  rtpmuxer = gst_object_ref (self->priv->rtpmuxer);
-  FS_RTP_SESSION_UNLOCK (self);
+
+  if (!fs_rtp_session_check_telephony_event_queue_start_locked (self, TRUE))
+  {
+    GST_WARNING ("Tried to stop a telephony event without starting one first");
+    goto out;
+  }
 
   GST_DEBUG ("stopping telephony event");
 
-  pad = gst_element_get_static_pad (rtpmuxer, "src");
-
-  ret = gst_pad_send_event (pad,
+  g_queue_push_head (&self->priv->telephony_events,
       gst_event_new_custom (GST_EVENT_CUSTOM_UPSTREAM,
           gst_structure_new ("dtmf-event",
               "start", G_TYPE_BOOLEAN, FALSE,
               "type", G_TYPE_INT, 1,
               NULL)));
 
-  gst_object_unref (pad);
-  gst_object_unref (rtpmuxer);
+  ret = TRUE;
 
 out:
+  FS_RTP_SESSION_UNLOCK (self);
+
+  if (ret)
+    fs_rtp_session_try_sending_dtmf_event (self);
+
   fs_rtp_session_has_disposed_exit (self);
   return ret;
 }
@@ -2012,7 +2028,7 @@ fs_rtp_session_set_codec_preferences (FsSession *session,
   if (fs_rtp_session_has_disposed_enter (self, error))
     return FALSE;
 
-  new_codec_prefs = codecs_copy_with_new_ptime (codec_preferences);
+  new_codec_prefs = fs_codec_list_copy (codec_preferences);
 
   new_codec_prefs =
     validate_codecs_configuration (
@@ -2162,12 +2178,11 @@ _transmitter_error (
     FsStreamTransmitter *stream_transmitter,
     gint errorno,
     gchar *error_msg,
-    gchar *debug_msg,
     gpointer user_data)
 {
   FsSession *session = FS_SESSION (user_data);
 
-  fs_session_emit_error (session, errorno, error_msg, debug_msg);
+  fs_session_emit_error (session, errorno, error_msg);
 }
 
 static GstElement *
@@ -2319,37 +2334,37 @@ fs_rtp_session_get_transmitter (FsRtpSession *self,
   return NULL;
 }
 
-/**
- * fs_rtp_session_get_new_stream_transmitter:
- * @self: a #FsRtpSession
- * @transmitter_name: The name of the transmitter to create a stream for
- * @participant: The #FsRtpParticipant for this stream
- * @n_parameters: the number of parameters
- * @parameters: a table of n_parameters #GParameter structs
- *
- * This function will create a new #FsStreamTransmitter, possibly creating
- * and inserting into the pipeline its parent #FsTransmitter
- *
- * Returns: a newly allocated #FsStreamTransmitter
- */
 
 static FsStreamTransmitter *
-fs_rtp_session_get_new_stream_transmitter (FsRtpSession *self,
-  const gchar *transmitter_name, FsParticipant *participant, guint n_parameters,
-  GParameter *parameters, GError **error)
+_stream_get_new_stream_transmitter (FsRtpStream *stream,
+    FsParticipant *participant,
+    const gchar *transmitter_name,
+    GParameter *parameters,
+    guint n_parameters,
+    GError **error,
+    gpointer user_data)
 {
   FsTransmitter *transmitter;
   FsStreamTransmitter *st = NULL;
+  FsRtpSession *self = user_data;
+
+  if (fs_rtp_session_has_disposed_enter (self, error))
+    return NULL;
 
   transmitter = fs_rtp_session_get_transmitter (self, transmitter_name, error);
 
   if (!transmitter)
+  {
+    fs_rtp_session_has_disposed_exit (self);
     return NULL;
+  }
 
   st = fs_transmitter_new_stream_transmitter (transmitter, participant,
       n_parameters, parameters, error);
 
   g_object_unref (transmitter);
+
+  fs_rtp_session_has_disposed_exit (self);
 
   return st;
 }
@@ -2721,7 +2736,7 @@ fs_rtp_session_update_codecs (FsRtpSession *session,
 
     gst_element_post_message (GST_ELEMENT (session->priv->conference),
         gst_message_new_element (GST_OBJECT (session->priv->conference),
-            gst_structure_new ("farsight-codecs-changed",
+            gst_structure_new ("farstream-codecs-changed",
                 "session", FS_TYPE_SESSION, session,
                 NULL)));
   }
@@ -2755,7 +2770,7 @@ _substream_error (FsRtpSubStream *substream,
 {
   FsSession *session = FS_SESSION (user_data);
 
-  fs_session_emit_error (session, errorno, error_msg, debug_msg);
+  fs_session_emit_error (session, errorno, error_msg);
 }
 
 static void
@@ -2769,7 +2784,7 @@ fs_rtp_session_update_minimum_rtcp_interval (FsRtpSession *self,
 
   if (self->priv->current_send_codec)
     min_interval = MIN (min_interval,
-        self->priv->current_send_codec->ABI.ABI.minimum_reporting_interval);
+        self->priv->current_send_codec->minimum_reporting_interval);
 
   for (item = self->priv->free_substreams; item; item = item->next)
   {
@@ -2780,7 +2795,7 @@ fs_rtp_session_update_minimum_rtcp_interval (FsRtpSession *self,
 
     if (substream->codec)
       min_interval = MIN (min_interval,
-          substream->codec->ABI.ABI.minimum_reporting_interval);
+          substream->codec->minimum_reporting_interval);
   }
 
   for (item2 = self->priv->streams; item2; item2 = item2->next)
@@ -2796,7 +2811,7 @@ fs_rtp_session_update_minimum_rtcp_interval (FsRtpSession *self,
 
       if (substream->codec)
         min_interval = MIN (min_interval,
-            substream->codec->ABI.ABI.minimum_reporting_interval);
+            substream->codec->minimum_reporting_interval);
     }
   }
 
@@ -2882,14 +2897,10 @@ fs_rtp_session_new_recv_pad (FsRtpSession *session, GstPad *new_pad,
 
   if (substream == NULL)
   {
-    if (error && error->domain == FS_ERROR)
-      fs_session_emit_error (FS_SESSION (session), error->code,
-        "Could not create a substream for the new pad", error->message);
-    else
-      fs_session_emit_error (FS_SESSION (session), FS_ERROR_CONSTRUCTION,
-        "Could not create a substream for the new pad",
-        "No error details returned");
-
+    g_prefix_error (&error, "Could not create a substream for the new pad: ");
+    fs_session_emit_error (FS_SESSION (session),
+        error ? error->code : FS_ERROR_CONSTRUCTION,
+        error ? error->message : "No error details returned");
     g_clear_error (&error);
     fs_rtp_session_has_disposed_exit (session);
     return;
@@ -2959,9 +2970,12 @@ fs_rtp_session_new_recv_pad (FsRtpSession *session, GstPad *new_pad,
   if (stream)
   {
     if (!fs_rtp_stream_add_substream_unlock (stream, substream, &error))
+    {
+      g_prefix_error (&error,
+          "Could not add the output ghostpad to the new substream: ");
       fs_session_emit_error (FS_SESSION (session), error->code,
-          "Could not add the output ghostpad to the new substream",
           error->message);
+    }
 
     g_clear_error (&error);
   }
@@ -3456,6 +3470,21 @@ link_other_pads (gpointer item, GValue *ret, gpointer user_data)
   return FALSE;
 }
 
+static void
+special_source_stopped (FsRtpSpecialSource *source, gpointer data)
+{
+  FsRtpSession *self = FS_RTP_SESSION (data);
+
+  if (fs_rtp_session_has_disposed_enter (self, NULL))
+    return;
+
+  fs_rtp_special_sources_remove_finish (&self->priv->extra_sources,
+      FS_RTP_SESSION_GET_LOCK (self),
+      source);
+
+  fs_rtp_session_has_disposed_exit (self);
+}
+
 /*
  * @codec: The currently selected codec for sending (but not the send_codec)
  */
@@ -3487,8 +3516,7 @@ fs_rtp_session_remove_send_codec_bin (FsRtpSession *self,
           " succeed");
       if (error_emit)
         fs_session_emit_error (FS_SESSION (self), FS_ERROR_INTERNAL,
-            "Could not stop the codec bin",
-            "Setting the codec bin to NULL did not succeed" );
+            "Setting the codec bin to NULL did not succeed");
       return FALSE;
     }
 
@@ -3532,7 +3560,8 @@ fs_rtp_session_remove_send_codec_bin (FsRtpSession *self,
         &self->priv->extra_sources,
         &self->priv->codec_associations,
         FS_RTP_SESSION_GET_LOCK (self),
-        codec);
+        codec,
+        special_source_stopped, self);
 
   return TRUE;
 }
@@ -3773,8 +3802,8 @@ _send_src_pad_blocked_callback (GstPad *pad, gboolean blocked,
 
   if (!ca)
   {
-    fs_session_emit_error (FS_SESSION (self), error->code,
-        "Could not select a new send codec", error->message);
+    g_prefix_error (&error, "Could not select a new send codec: ");
+    fs_session_emit_error (FS_SESSION (self), error->code, error->message);
     goto done_locked;
   }
 
@@ -3795,7 +3824,8 @@ _send_src_pad_blocked_callback (GstPad *pad, gboolean blocked,
         &self->priv->extra_sources,
         &self->priv->codec_associations,
         FS_RTP_SESSION_GET_LOCK (self),
-        codec_copy);
+        codec_copy,
+        special_source_stopped, self);
     goto skip_main_codec;
   }
 
@@ -3815,8 +3845,9 @@ _send_src_pad_blocked_callback (GstPad *pad, gboolean blocked,
 
   if (!ca)
   {
+    g_prefix_error (&error, "Could not select a new send codec: ");
     fs_session_emit_error (FS_SESSION (self), error->code,
-        "Could not select a new send codec", error->message);
+        error->message);
     goto done_locked;
   }
 
@@ -3828,8 +3859,9 @@ _send_src_pad_blocked_callback (GstPad *pad, gboolean blocked,
   if (!fs_rtp_session_add_send_codec_bin_unlock (self, ca, &other_codecs,
           &error))
   {
+    g_prefix_error (&error, "Could not build a new send codec bin: ");
     fs_session_emit_error (FS_SESSION (self), error->code,
-        "Could not build a new send codec bin", error->message);
+        error->message);
   }
 
   changed = TRUE;
@@ -3859,13 +3891,15 @@ _send_src_pad_blocked_callback (GstPad *pad, gboolean blocked,
     g_object_notify (G_OBJECT (self), "current-send-codec");
     gst_element_post_message (GST_ELEMENT (self->priv->conference),
         gst_message_new_element (GST_OBJECT (self->priv->conference),
-            gst_structure_new ("farsight-send-codec-changed",
+            gst_structure_new ("farstream-send-codec-changed",
                 "session", FS_TYPE_SESSION, self,
                 "codec", FS_TYPE_CODEC, codec_copy,
                 "secondary-codecs", FS_TYPE_CODEC_LIST, secondary_codecs,
                 NULL)));
 
     fs_codec_list_destroy (secondary_codecs);
+
+    fs_rtp_session_try_sending_dtmf_event (self);
   }
 
  done:
@@ -3999,8 +4033,9 @@ fs_rtp_session_associate_free_substreams (FsRtpSession *session,
     {
       GST_ERROR ("Could not associate a substream with its stream : %s",
           error->message);
+      g_prefix_error (&error,
+          "Could not associate a substream with its stream: ");
       fs_session_emit_error (FS_SESSION (session), error->code,
-          "Could not associate a substream with its stream",
           error->message);
     }
     g_clear_error (&error);
@@ -4119,10 +4154,13 @@ _substream_no_rtcp_timedout_cb (FsRtpSubStream *substream,
   first_stream = g_list_first (session->priv->streams)->data;
   g_object_ref (first_stream);
   if (!fs_rtp_stream_add_substream_unlock (first_stream, substream, &error))
+  {
+    g_prefix_error (&error,
+        "Could not link the substream to a stream: ");
     fs_session_emit_error (FS_SESSION (session),
         error ? error->code : FS_ERROR_INTERNAL,
-        "Could not link the substream to a stream",
         error ? error->message : "No error message");
+  }
   g_clear_error (&error);
   g_object_unref (first_stream);
 
@@ -4252,7 +4290,7 @@ _send_caps_changed (GstPad *pad, GParamSpec *pspec, FsRtpSession *session)
     goto out;
 
   /*
-   * Emit farsight-codecs-changed if the sending thread finds the config
+   * Emit farstream-codecs-changed if the sending thread finds the config
    * for the last codec that needed it
    */
   if (gather_caps_parameters (ca, caps))
@@ -4270,11 +4308,10 @@ _send_caps_changed (GstPad *pad, GParamSpec *pspec, FsRtpSession *session)
     if (!item)
     {
       FS_RTP_SESSION_UNLOCK (session);
-      g_object_notify (G_OBJECT (session), "codecs-ready");
       g_object_notify (G_OBJECT (session), "codecs");
       gst_element_post_message (GST_ELEMENT (session->priv->conference),
           gst_message_new_element (GST_OBJECT (session->priv->conference),
-              gst_structure_new ("farsight-codecs-changed",
+              gst_structure_new ("farstream-codecs-changed",
                   "session", FS_TYPE_SESSION, session,
                   NULL)));
 
@@ -4610,10 +4647,10 @@ _discovery_pad_blocked_callback (GstPad *pad, gboolean blocked,
   {
     fs_rtp_session_stop_codec_param_gathering_unlock (session);
 
-    g_object_notify (G_OBJECT (session), "codecs-ready");
+    g_object_notify (G_OBJECT (session), "codecs");
     gst_element_post_message (GST_ELEMENT (session->priv->conference),
         gst_message_new_element (GST_OBJECT (session->priv->conference),
-            gst_structure_new ("farsight-codecs-changed",
+            gst_structure_new ("farstream-codecs-changed",
                 "session", FS_TYPE_SESSION, session,
                 NULL)));
 
@@ -4627,8 +4664,9 @@ _discovery_pad_blocked_callback (GstPad *pad, gboolean blocked,
   {
     FS_RTP_SESSION_LOCK (session);
     fs_rtp_session_stop_codec_param_gathering_unlock (session);
+    g_prefix_error (&error,
+        "Error while discovering codec data, discovery cancelled: ");
     fs_session_emit_error (FS_SESSION (session), error->code,
-        "Error while discovering codec data, discovery cancelled",
         error->message);
   }
 
@@ -4845,4 +4883,165 @@ fs_rtp_session_get_codecs_need_resend (FsSession *session,
   g_return_val_if_fail (FS_IS_RTP_SESSION (session), FALSE);
 
   return codecs_list_has_codec_config_changed (old_codecs, new_codecs);
+}
+
+/*
+ * TODO: This is horribly too complicated.
+ * What is need is a real async API on dtmfsrc and rtpdtmfsrc
+ */
+
+gboolean
+fs_rtp_session_handle_dtmf_event_message (FsRtpSession *self,
+    GstMessage *message)
+{
+  GstEvent *event;
+  const GstStructure *ms;
+  const GstStructure *es;
+  gboolean m_start, e_start;
+  gint m_method, e_method;
+  gint m_number = -1, e_number = -1;
+  gint m_volume;
+  gboolean matching;
+  GstMessage *post_message = NULL;
+
+  FS_RTP_SESSION_LOCK (self);
+  if (g_queue_get_length (&self->priv->telephony_events) == 0 ||
+      !fs_rtp_special_sources_claim_message_locked (
+        self->priv->extra_sources, message))
+  {
+    FS_RTP_SESSION_UNLOCK (self);
+    return FALSE;
+  }
+
+  event = g_queue_peek_tail (&self->priv->telephony_events);
+
+  ms = gst_message_get_structure (message);
+  es = gst_event_get_structure (event);
+
+  if (!gst_structure_get_boolean (ms, "start", &m_start))
+    goto invalid;
+  gst_structure_get_boolean (es, "start", &e_start);
+
+  if (m_start)
+  {
+    if (!gst_structure_get_int (ms, "method", &m_method))
+      goto invalid;
+    gst_structure_get_int (es, "method", &e_method);
+
+
+    if (!gst_structure_get_int (ms, "number", &m_number))
+      goto invalid;
+    gst_structure_get_int (es, "number", &e_number);
+
+    if (!gst_structure_get_int (ms, "volume", &m_volume))
+      goto invalid;
+  }
+
+  matching = ((!m_start && !e_start) ||
+      (m_start == e_start && m_method == e_method && m_number == e_number));
+
+  if (gst_structure_has_name (ms, "dtmf-event-processed"))
+  {
+    if (matching)
+    {
+      if (m_start)
+      {
+        if (self->priv->running_telephony_src)
+        {
+          GST_WARNING ("Got a second start from %s",
+              self->priv->running_telephony_src == GST_MESSAGE_SRC (message) ?
+              "the same source" : "a different source");
+          gst_object_unref (self->priv->running_telephony_src);
+        }
+        self->priv->running_telephony_src = gst_object_ref (
+          GST_MESSAGE_SRC (message));
+      }
+      else /* is a stop */
+      {
+        if (self->priv->running_telephony_src)
+        {
+          if (self->priv->running_telephony_src == GST_MESSAGE_SRC (message))
+          {
+            gst_object_unref (self->priv->running_telephony_src);
+            self->priv->running_telephony_src = NULL;
+          }
+          else
+          {
+            GST_DEBUG ("Received stop event from another source, ignoring");
+            return TRUE;
+          }
+        }
+      }
+
+      g_queue_pop_tail (&self->priv->telephony_events);
+      gst_event_unref (event);
+      self->priv->telephony_event_running = FALSE;
+      GST_DEBUG ("Got processed telepathy event %s for %d",
+          m_start ? "start" : "stop", m_number);
+
+      if (m_start)
+        post_message = gst_message_new_element (
+          GST_OBJECT (self->priv->conference),
+          gst_structure_new ("farstream-telephony-event-started",
+              "session", FS_TYPE_SESSION, self,
+              "method", FS_TYPE_DTMF_METHOD, m_method,
+              "event", FS_TYPE_DTMF_EVENT, m_number,
+              "volume", G_TYPE_UCHAR, m_volume,
+              NULL));
+      else
+        post_message = gst_message_new_element (
+          GST_OBJECT (self->priv->conference),
+          gst_structure_new ("farstream-telephony-event-stopped",
+              "session", FS_TYPE_SESSION, self,
+              "method", FS_TYPE_DTMF_METHOD, m_method,
+              NULL));
+    }
+    else
+    {
+      GST_WARNING ("Got dtmf-event-processed message that does not match the"
+          " currently running event, ignoring");
+    }
+  }
+  else if (gst_structure_has_name (ms, "dtmf-event-dropped"))
+  {
+    if (m_start == FALSE && e_start == FALSE)
+    {
+      if (self->priv->running_telephony_src == GST_MESSAGE_SRC (message))
+      {
+        gst_object_unref (self->priv->running_telephony_src);
+        self->priv->running_telephony_src = NULL;
+      }
+      g_queue_pop_tail (&self->priv->telephony_events);
+      gst_event_unref (event);
+      self->priv->telephony_event_running = FALSE;
+      post_message = gst_message_new_element (
+        GST_OBJECT (self->priv->conference),
+        gst_structure_new ("farstream-telephony-event-stopped",
+              "session", FS_TYPE_SESSION, self,
+              "type", G_TYPE_INT, 1,
+              "method", G_TYPE_INT, m_method,
+              NULL));
+    }
+    else if (matching)
+    {
+      self->priv->telephony_event_running = FALSE;
+    }
+    else
+    {
+      GST_WARNING ("Got dtmf-event-dropped message that does not match the"
+          " currently running event");
+    }
+  }
+
+invalid:
+
+  FS_RTP_SESSION_UNLOCK (self);
+
+  if (post_message)
+    gst_element_post_message (GST_ELEMENT (self->priv->conference),
+        post_message);
+
+  fs_rtp_session_try_sending_dtmf_event (self);
+
+  return TRUE;
 }

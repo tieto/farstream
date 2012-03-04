@@ -1,11 +1,11 @@
 /*
- * Farsight2 - Farsight RTP Special Source
+ * Farstream - Farstream RTP Special Source
  *
  * Copyright 2007 Collabora Ltd.
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
  * Copyright 2007 Nokia Corp.
  *
- * fs-rtp-special-source.h - A Farsight RTP Special Source gobject
+ * fs-rtp-special-source.h - A Farstream RTP Special Source gobject
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,7 +28,7 @@
 
 #include <gst/gst.h>
 
-#include <gst/farsight/fs-session.h>
+#include <farstream/fs-session.h>
 
 G_BEGIN_DECLS
 
@@ -109,12 +109,24 @@ struct _FsRtpSpecialSource
 
 GType fs_rtp_special_source_get_type (void);
 
+typedef void (*fs_rtp_special_source_stopped_callback) (
+  FsRtpSpecialSource *self,
+  gpointer data);
+
 gboolean
 fs_rtp_special_sources_remove (
     GList **current_extra_sources,
     GList **negotiated_codec_associations,
     GMutex *mutex,
-    FsCodec *selected_codec);
+    FsCodec *selected_codec,
+    fs_rtp_special_source_stopped_callback stopped_callback,
+    gpointer stopped_data);
+
+
+void
+fs_rtp_special_sources_remove_finish (GList **extra_sources,
+    GMutex *mutex,
+    FsRtpSpecialSource *source);
 
 gboolean
 fs_rtp_special_sources_create (
@@ -131,22 +143,16 @@ fs_rtp_special_sources_destroy (GList *current_extra_sources);
 GList *
 fs_rtp_special_sources_add_blueprints (GList *blueprints);
 
-gboolean
-fs_rtp_special_sources_start_telephony_event (GList *current_extra_sources,
-      guint8 event,
-      guint8 volume,
-      FsDTMFMethod method);
-
-gboolean
-fs_rtp_special_sources_stop_telephony_event (GList *current_extra_sources,
-    FsDTMFMethod method);
-
 GList *
 fs_rtp_special_sources_negotiation_filter (GList *codec_associations);
 
 GList *
 fs_rtp_special_sources_get_codecs_locked (GList *special_sources,
     GList *codec_associations, FsCodec *main_codec);
+
+gboolean
+fs_rtp_special_sources_claim_message_locked (GList *special_sources,
+    GstMessage *message);
 
 G_END_DECLS
 

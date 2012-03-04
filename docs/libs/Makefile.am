@@ -5,7 +5,7 @@
 
 # The name of the module, e.g. 'glib'.
 #DOC_MODULE=gst-plugins-libs-@GST_MAJORMINOR@
-DOC_MODULE=farsight2-libs
+DOC_MODULE=farstream-libs
 
 # generated basefiles
 basefiles = \
@@ -19,8 +19,8 @@ DOC_MAIN_SGML_FILE=$(DOC_MODULE)-docs.sgml
 # The directory containing the source code. Relative to $(top_srcdir).
 # gtk-doc will search all .c & .h files beneath here for inline comments
 # documenting functions and macros.
-DOC_SOURCE_DIR=$(top_srcdir)/gst-libs/gst
-DOC_BUILD_DIR=$(top_builddir)/gst-libs/gst
+DOC_SOURCE_DIR=$(top_srcdir)/farstream
+DOC_BUILD_DIR=$(top_builddir)/farstream
 
 # Extra options to supply to gtkdoc-scan.
 SCAN_OPTIONS=
@@ -38,18 +38,18 @@ FIXXREF_OPTIONS=--extra-dir=$(GLIB_PREFIX)/share/gtk-doc/html \
 	--extra-dir=$(GST_PREFIX)/share/gtk-doc/html
 
 # Used for dependencies.
-HFILE_GLOB=$(DOC_SOURCE_DIR)/*/*.h
-CFILE_GLOB=$(DOC_SOURCE_DIR)/*/*.c
+HFILE_GLOB=$(DOC_SOURCE_DIR)/*.h
+CFILE_GLOB=$(DOC_SOURCE_DIR)/*.c
 
 # this is a wingo addition
 # thomasvs: another nice wingo addition would be an explanation on why
 # this is useful ;)
 
 SCANOBJ_DEPS = \
-	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-@GST_MAJORMINOR@.la
+	$(top_builddir)/farstream/libfarstream-@FS_MAJORMINOR@.la
 
 # Header files to ignore when scanning.
-IGNORE_HFILES = fs-marshal.h fs-enum-types.h fs-private.h
+IGNORE_HFILES = fs-marshal.h fs-enumtypes.h fs-private.h
 
 # Images to copy into HTML directory.
 HTML_IMAGES =
@@ -62,9 +62,9 @@ extra_files =
 
 # CFLAGS and LDFLAGS for compiling scan program. Only needed if your app/lib
 # contains GtkObjects/GObjects and you want to document signals and properties.
-GTKDOC_CFLAGS = $(FS2_INTERNAL_CFLAGS) $(GST_PLUGINS_BASE_CFLAGS) $(GST_BASE_CFLAGS)
+GTKDOC_CFLAGS = $(FS_INTERNAL_CFLAGS) $(GST_PLUGINS_BASE_CFLAGS) $(GST_BASE_CFLAGS)
 GTKDOC_LIBS = -static \
-	$(top_builddir)/gst-libs/gst/farsight/libgstfarsight-0.10.la \
+	$(top_builddir)/farstream/libfarstream-@FS_MAJORMINOR@.la \
 	$(GST_BASE_LIBS) \
 	$(GCOV_LIBS)
 

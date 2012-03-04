@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY % version-entities SYSTEM "version.entities">
+%version-entities;
+]>
+<book id="index" xmlns:xi="http://www.w3.org/2003/XInclude">
+  <bookinfo>
+    <title>Farstream Reference Manual</title>
+    <releaseinfo>
+      for version &FS_VERSION;.
+      The latest version of this documentation can be found on-line at
+      <ulink role="online-location" url="http://farstream.freedesktop.org/apidoc/farstream/">http://farstream.freedesktop.org/apidoc/farstream/</ulink>.
+      The bases classes are implemented by multiple plugins described in
+      the <ulink url="http://farstream.freedesktop.org/apidoc/farstream-plugins/">Farstream Plugins Manual</ulink>.
+    </releaseinfo>
+  </bookinfo>
+
+  <part>
+    <title>User-oriented classes, interfaces and functions</title>
+    <chapter>
+      <title>Farstream Core Library</title>
+      <xi:include href="xml/fs-conference.xml"/>
+      <xi:include href="xml/fs-participant.xml"/>
+      <xi:include href="xml/fs-session.xml"/>
+      <xi:include href="xml/fs-stream.xml"/>
+      <xi:include href="xml/fs-candidate.xml"/>
+      <xi:include href="xml/fs-codec.xml"/>
+    </chapter>
+    <chapter>
+      <title>Protocol Specific types</title>
+      <xi:include href="xml/fs-rtp.xml"/>
+    </chapter>
+    <chapter>
+      <title>Farstream Utility Functions and Objects</title>
+      <xi:include href="xml/fs-element-added-notifier.xml"/>
+      <xi:include href="xml/fs-utils.xml"/>
+    </chapter>
+  </part>
+  <part>
+    <title>Classes used to implement Farstream plugins</title>
+    <chapter>
+      <title>Farstream Transmitter Classes</title> 
+      <xi:include href="xml/fs-transmitter.xml"/>
+      <xi:include href="xml/fs-stream-transmitter.xml"/>
+    </chapter>
+    <chapter>
+      <title>Farstream Plugins Infrastructure</title>
+      <xi:include href="xml/fs-plugin.xml"/>
+    </chapter>
+  </part>
+</book>

@@ -1,4 +1,4 @@
-/* Farsight 2 ad-hoc test for simple calls.
+/* Farstream ad-hoc test for simple calls.
  *
  * Copyright (C) 2008 Collabora, Nokia
  * @author: Olivier Crete <olivier.crete@collabora.co.uk>
@@ -21,7 +21,7 @@
 /*
  * WARNING:
  *
- * Do not use this as an example of a proper use of farsight, it assumes that
+ * Do not use this as an example of a proper use of farstream, it assumes that
  * both ends have the EXACT same list of codec installed in the EXACT same order
  */
 
@@ -34,7 +34,7 @@
 #include <gio/gunixinputstream.h>
 #include <gst/gst.h>
 
-#include <gst/farsight/fs-conference-iface.h>
+#include <farstream/fs-conference.h>
 
 #define DEFAULT_AUDIOSRC       "audiotestsrc is-live=1 ! audio/x-raw-int, rate=8000 ! identity"
 #define DEFAULT_AUDIOSINK      "alsasink sync=false async=false"
@@ -135,6 +135,11 @@ add_audio_session (GstElement *pipeline, FsConference *conf, guint id,
   gst_object_unref (pad2);
   gst_object_unref (pad);
 
+  ses->stream = fs_session_new_stream (ses->session, part, FS_DIRECTION_BOTH,
+      &error);
+  print_error (error);
+  g_assert (ses->stream);
+
   cand = fs_candidate_new ("", FS_COMPONENT_RTP,
       FS_CANDIDATE_TYPE_HOST, FS_NETWORK_PROTOCOL_UDP, send_socket, 0);
   cands = g_list_prepend (NULL, cand);
@@ -143,11 +148,8 @@ add_audio_session (GstElement *pipeline, FsConference *conf, guint id,
   g_value_init (&param.value, FS_TYPE_CANDIDATE_LIST);
   g_value_take_boxed (&param.value, cands);
 
-  ses->stream = fs_session_new_stream (ses->session, part, FS_DIRECTION_BOTH,
-      "shm", 1, &param, &error);
+  res = fs_stream_set_transmitter (ses->stream, "shm", &param, 1, &error);
   print_error (error);
-  g_assert (ses->stream);
-
   g_value_unset (&param.value);
 
   g_signal_connect (ses->stream, "src-pad-added",
@@ -163,7 +165,7 @@ add_audio_session (GstElement *pipeline, FsConference *conf, guint id,
   fs_codec_list_destroy (codecs);
 
 
-  g_object_get (ses->session, "codecs", &codecs, NULL);
+  g_object_get (ses->session, "codecs-without-config", &codecs, NULL);
   res = fs_stream_set_remote_codecs (ses->stream, codecs, &error);
   print_error (error);
   g_assert (res);
@@ -199,7 +201,7 @@ async_bus_cb (GstBus *bus, GstMessage *message, gpointer user_data)
       {
         const GstStructure *s = gst_message_get_structure (message);
 
-        if (gst_structure_has_name (s, "farsight-error"))
+        if (gst_structure_has_name (s, "farstream-error"))
         {
           gint error;
           const gchar *error_msg = gst_structure_get_string (s, "error-msg");
@@ -209,13 +211,13 @@ async_bus_cb (GstBus *bus, GstMessage *message, gpointer user_data)
                   &error));
 
           if (FS_ERROR_IS_FATAL (error))
-            g_error ("Farsight fatal error: %d %s %s", error, error_msg,
+            g_error ("Farstream fatal error: %d %s %s", error, error_msg,
                 debug_msg);
           else
-            g_warning ("Farsight non-fatal error: %d %s %s", error, error_msg,
+            g_warning ("Farstream non-fatal error: %d %s %s", error, error_msg,
                 debug_msg);
         }
-        else if (gst_structure_has_name (s, "farsight-new-local-candidate"))
+        else if (gst_structure_has_name (s, "farstream-new-local-candidate"))
         {
           const GValue *val = gst_structure_get_value (s, "candidate");
           FsCandidate *cand = NULL;
@@ -227,11 +229,11 @@ async_bus_cb (GstBus *bus, GstMessage *message, gpointer user_data)
           g_print ("You can press ENTER on the other side\n");
         }
         else if (gst_structure_has_name (s,
-                "farsight-local-candidates-prepared"))
+                "farstream-local-candidates-prepared"))
         {
           g_print ("Local candidates prepared\n");
         }
-        else if (gst_structure_has_name (s, "farsight-recv-codecs-changed"))
+        else if (gst_structure_has_name (s, "farstream-recv-codecs-changed"))
         {
           const GValue *val = gst_structure_get_value (s, "codecs");
           GList *codecs = NULL;
@@ -248,7 +250,7 @@ async_bus_cb (GstBus *bus, GstMessage *message, gpointer user_data)
             g_free (tmp);
           }
         }
-        else if (gst_structure_has_name (s, "farsight-send-codec-changed"))
+        else if (gst_structure_has_name (s, "farstream-send-codec-changed"))
         {
           const GValue *val = gst_structure_get_value (s, "codec");
           FsCodec *codec = NULL;
@@ -291,7 +293,7 @@ skipped_cb (GObject *istream, GAsyncResult *result, gpointer user_data)
   cand->username = g_strdup (ses->recv_socket);
   cands = g_list_prepend (NULL, cand);
 
-  res = fs_stream_set_remote_candidates (ses->stream, cands, &error);
+  res = fs_stream_force_remote_candidates (ses->stream, cands, &error);
   print_error (error);
   g_assert (res);
 
@@ -340,8 +342,7 @@ int main (int argc, char **argv)
   conf = gst_element_factory_make ("fsrtpconference", NULL);
   g_assert (conf);
 
-  part = fs_conference_new_participant (FS_CONFERENCE (conf), "test@ignore",
-      &error);
+  part = fs_conference_new_participant (FS_CONFERENCE (conf), &error);
   print_error (error);
   g_assert (part);
 

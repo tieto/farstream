@@ -1,5 +1,5 @@
 /*
- * Farsight2 - Farsight MSN Session
+ * Farstream - Farstream MSN Session
  *
  * Copyright 2008 Richard Spiers <richard.spiers@gmail.com>
  * Copyright 2007 Nokia Corp.
@@ -7,7 +7,7 @@
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
  *  @author: Youness Alaoui <youness.alaoui@collabora.co.uk>
  *
- * fs-msn-session.c - A Farsight Msn Session gobject
+ * fs-msn-session.c - A Farstream Msn Session gobject
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -74,7 +74,6 @@ enum
   PROP_CODECS,
   PROP_CODECS_WITHOUT_CONFIG,
   PROP_CURRENT_SEND_CODEC,
-  PROP_CODECS_READY,
   PROP_CONFERENCE,
   PROP_TOS
 };
@@ -119,9 +118,6 @@ static void fs_msn_session_constructed (GObject *object);
 static FsStream *fs_msn_session_new_stream (FsSession *session,
     FsParticipant *participant,
     FsStreamDirection direction,
-    const gchar *transmitter,
-    guint n_parameters,
-    GParameter *parameters,
     GError **error);
 
 static GType
@@ -164,17 +160,9 @@ fs_msn_session_class_init (FsMsnSessionClass *klass)
   g_object_class_override_property (gobject_class,
     PROP_CURRENT_SEND_CODEC, "current-send-codec");
   g_object_class_override_property (gobject_class,
-    PROP_CODECS_READY, "codecs-ready");
-  g_object_class_override_property (gobject_class,
     PROP_TOS, "tos");
-
-  g_object_class_install_property (gobject_class,
-      PROP_CONFERENCE,
-      g_param_spec_object ("conference",
-          "The Conference this stream refers to",
-          "This is a convience pointer for the Conference",
-          FS_TYPE_MSN_CONFERENCE,
-          G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+  g_object_class_override_property (gobject_class,
+    PROP_CONFERENCE, "conference");
 
   gobject_class->dispose = fs_msn_session_dispose;
   gobject_class->finalize = fs_msn_session_finalize;
@@ -228,6 +216,13 @@ fs_msn_session_dispose (GObject *object)
 
   if (!conference)
     goto out;
+
+  if (self->priv->stream)
+  {
+    g_object_weak_unref (G_OBJECT (self->priv->stream), _remove_stream, self);
+    fs_stream_destroy (FS_STREAM (self->priv->stream));
+    self->priv->stream = NULL;
+  }
 
   conferencebin = GST_BIN (conference);
 
@@ -297,9 +292,6 @@ fs_msn_session_get_property (GObject *object,
       break;
     case PROP_SINK_PAD:
       g_value_set_object (value, self->priv->media_sink_pad);
-      break;
-    case PROP_CODECS_READY:
-      g_value_set_boolean (value, TRUE);
       break;
     case PROP_CODEC_PREFERENCES:
       /* There are no preferences, so return NULL */
@@ -464,9 +456,6 @@ static FsStream *
 fs_msn_session_new_stream (FsSession *session,
                            FsParticipant *participant,
                            FsStreamDirection direction,
-                           const gchar *transmitter,
-                           guint n_parameters,
-                           GParameter *parameters,
                            GError **error)
 {
   FsMsnSession *self = FS_MSN_SESSION (session);
@@ -493,23 +482,20 @@ fs_msn_session_new_stream (FsSession *session,
   msnparticipant = FS_MSN_PARTICIPANT (participant);
 
   new_stream = FS_STREAM_CAST (fs_msn_stream_new (self, msnparticipant,
-          direction, conference, n_parameters, parameters, error));
+          direction, conference));
 
-  if (new_stream)
+  GST_OBJECT_LOCK (conference);
+  if (self->priv->stream)
   {
-    GST_OBJECT_LOCK (conference);
-    if (self->priv->stream)
-    {
-      g_object_unref (new_stream);
-      goto already_have_stream;
-    }
-    self->priv->stream = (FsMsnStream *) new_stream;
-    g_object_weak_ref (G_OBJECT (new_stream), _remove_stream, self);
-
-    if (self->priv->tos)
-      fs_msn_stream_set_tos_locked (self->priv->stream, self->priv->tos);
-    GST_OBJECT_UNLOCK (conference);
+    g_object_unref (new_stream);
+    goto already_have_stream;
   }
+  self->priv->stream = (FsMsnStream *) new_stream;
+  g_object_weak_ref (G_OBJECT (new_stream), _remove_stream, self);
+
+  fs_msn_stream_set_tos_locked (self->priv->stream, self->priv->tos);
+  GST_OBJECT_UNLOCK (conference);
+
   gst_object_unref (conference);
 
 

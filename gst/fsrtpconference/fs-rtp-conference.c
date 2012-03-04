@@ -1,11 +1,11 @@
 /*
- * Farsight2 - Farsight RTP Conference Implementation
+ * Farstream - Farstream RTP Conference Implementation
  *
  * Copyright 2007 Collabora Ltd.
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
  * Copyright 2007 Nokia Corp.
  *
- * fs-rtp-conference.c - RTP implementation for Farsight Conference Gstreamer
+ * fs-rtp-conference.c - RTP implementation for Farstream Conference Gstreamer
  *                       Elements
  *
  * This library is free software; you can redistribute it and/or
@@ -25,13 +25,13 @@
 
 /**
  * SECTION:element-fsrtpconference
- * @short_description: Farsight RTP Conference Gstreamer Elements
+ * @short_description: Farstream RTP Conference Gstreamer Elements
  *
  * This is the core gstreamer element for a RTP conference. It must be added
  * to your pipeline before anything else is done. Then you create the session,
  * participants and streams according to the #FsConference interface.
  *
- * The various sdes-* properties allow you to set the content of the SDES packet
+ * The various sdes property allow you to set the content of the SDES packet
  * in the sent RTCP reports.
  */
 
@@ -65,22 +65,15 @@ enum
 enum
 {
   PROP_0,
-  PROP_SDES_CNAME,
-  PROP_SDES_NAME,
-  PROP_SDES_EMAIL,
-  PROP_SDES_PHONE,
-  PROP_SDES_LOCATION,
-  PROP_SDES_TOOL,
-  PROP_SDES_NOTE,
-
+  PROP_SDES,
 };
 
 
 static const GstElementDetails fs_rtp_conference_details =
 GST_ELEMENT_DETAILS (
-  "Farsight RTP Conference",
+  "Farstream RTP Conference",
   "Generic/Bin/RTP",
-  "A Farsight RTP Conference",
+  "A Farstream RTP Conference",
   "Olivier Crete <olivier.crete@collabora.co.uk>");
 
 
@@ -106,6 +99,7 @@ struct _FsRtpConferencePrivate
 
   /* Protected by GST_OBJECT_LOCK */
   GList *sessions;
+  guint sessions_cookie;
   guint max_session_id;
 
   GList *participants;
@@ -117,8 +111,8 @@ struct _FsRtpConferencePrivate
 static void fs_rtp_conference_do_init (GType type);
 
 
-GST_BOILERPLATE_FULL (FsRtpConference, fs_rtp_conference, FsBaseConference,
-                      FS_TYPE_BASE_CONFERENCE, fs_rtp_conference_do_init);
+GST_BOILERPLATE_FULL (FsRtpConference, fs_rtp_conference, FsConference,
+                      FS_TYPE_CONFERENCE, fs_rtp_conference_do_init);
 
 static void fs_rtp_conference_get_property (GObject *object,
     guint prop_id,
@@ -130,11 +124,10 @@ static void fs_rtp_conference_set_property (GObject *object,
     GParamSpec *pspec);
 
 static void fs_rtp_conference_finalize (GObject *object);
-static FsSession *fs_rtp_conference_new_session (FsBaseConference *conf,
+static FsSession *fs_rtp_conference_new_session (FsConference *conf,
                                                  FsMediaType media_type,
                                                  GError **error);
-static FsParticipant *fs_rtp_conference_new_participant (FsBaseConference *conf,
-    const gchar *cname,
+static FsParticipant *fs_rtp_conference_new_participant (FsConference *conf,
     GError **error);
 
 static FsRtpSession *fs_rtp_conference_get_session_by_id_locked (
@@ -179,11 +172,11 @@ static void
 fs_rtp_conference_do_init (GType type)
 {
   GST_DEBUG_CATEGORY_INIT (fsrtpconference_debug, "fsrtpconference", 0,
-      "Farsight RTP Conference Element");
+      "Farstream RTP Conference Element");
   GST_DEBUG_CATEGORY_INIT (fsrtpconference_disco, "fsrtpconference_disco",
-      0, "Farsight RTP Codec Discovery");
+      0, "Farstream RTP Codec Discovery");
   GST_DEBUG_CATEGORY_INIT (fsrtpconference_nego, "fsrtpconference_nego",
-      0, "Farsight RTP Codec Negotiation");
+      0, "Farstream RTP Codec Negotiation");
 }
 
 static void
@@ -206,6 +199,7 @@ fs_rtp_conference_dispose (GObject * object)
     g_object_weak_unref (G_OBJECT (item->data), _remove_session, self);
   g_list_free (self->priv->sessions);
   self->priv->sessions = NULL;
+  self->priv->sessions_cookie++;
 
   for (item = g_list_first (self->priv->participants);
        item;
@@ -238,7 +232,7 @@ fs_rtp_conference_class_init (FsRtpConferenceClass * klass)
 {
   GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
   GstElementClass *gstelement_class = GST_ELEMENT_CLASS (klass);
-  FsBaseConferenceClass *baseconf_class = FS_BASE_CONFERENCE_CLASS (klass);
+  FsConferenceClass *baseconf_class = FS_CONFERENCE_CLASS (klass);
   GstBinClass *gstbin_class = GST_BIN_CLASS (klass);
 
   g_type_class_add_private (klass, sizeof (FsRtpConferencePrivate));
@@ -261,40 +255,10 @@ fs_rtp_conference_class_init (FsRtpConferenceClass * klass)
   gobject_class->get_property =
     GST_DEBUG_FUNCPTR (fs_rtp_conference_get_property);
 
-  g_object_class_install_property (gobject_class, PROP_SDES_CNAME,
-      g_param_spec_string ("sdes-cname", "Canonical name",
-          "The CNAME for the RTP sessions",
-          NULL, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
-
-  g_object_class_install_property (gobject_class, PROP_SDES_NAME,
-      g_param_spec_string ("sdes-name", "SDES NAME",
-          "The NAME to put in SDES messages of this session",
-          NULL, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
-
-  g_object_class_install_property (gobject_class, PROP_SDES_EMAIL,
-      g_param_spec_string ("sdes-email", "SDES EMAIL",
-          "The EMAIL to put in SDES messages of this session",
-          NULL, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
-
-  g_object_class_install_property (gobject_class, PROP_SDES_PHONE,
-      g_param_spec_string ("sdes-phone", "SDES PHONE",
-          "The PHONE to put in SDES messages of this session",
-          NULL, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
-
-  g_object_class_install_property (gobject_class, PROP_SDES_LOCATION,
-      g_param_spec_string ("sdes-location", "SDES LOCATION",
-          "The LOCATION to put in SDES messages of this session",
-          NULL, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
-
-  g_object_class_install_property (gobject_class, PROP_SDES_TOOL,
-      g_param_spec_string ("sdes-tool", "SDES TOOL",
-          "The TOOL to put in SDES messages of this session",
-          NULL, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
-
-  g_object_class_install_property (gobject_class, PROP_SDES_NOTE,
-      g_param_spec_string ("sdes-note", "SDES NOTE",
-          "The NOTE to put in SDES messages of this session",
-          NULL, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+  g_object_class_install_property (gobject_class, PROP_SDES,
+      g_param_spec_boxed ("sdes", "SDES Items for this conference",
+          "SDES items to use for sessions in this conference",
+          GST_TYPE_STRUCTURE, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 }
 
 static void
@@ -357,18 +321,6 @@ fs_rtp_conference_init (FsRtpConference *conf,
 }
 
 static void
-rtpbin_get_sdes (FsRtpConference *self, const gchar *prop, GValue *val)
-{
-  GstStructure *s;
-  const GValue *sval;
-  g_object_get (self->gstrtpbin, "sdes", &s, NULL);
-  sval = gst_structure_get_value (s, prop);
-  if (sval)
-    g_value_copy (gst_structure_get_value (s, prop), val);
-  gst_structure_free (s);
-}
-
-static void
 fs_rtp_conference_get_property (GObject *object,
     guint prop_id,
     GValue *value,
@@ -381,41 +333,13 @@ fs_rtp_conference_get_property (GObject *object,
 
   switch (prop_id)
   {
-    case PROP_SDES_CNAME:
-      rtpbin_get_sdes (self, "cname", value);
-      break;
-    case PROP_SDES_NAME:
-      rtpbin_get_sdes (self, "name", value);
-      break;
-    case PROP_SDES_EMAIL:
-      rtpbin_get_sdes (self, "email", value);
-      break;
-    case PROP_SDES_PHONE:
-      rtpbin_get_sdes (self, "phone", value);
-      break;
-    case PROP_SDES_LOCATION:
-      rtpbin_get_sdes (self, "location", value);
-      break;
-    case PROP_SDES_TOOL:
-      rtpbin_get_sdes (self, "tool", value);
-      break;
-    case PROP_SDES_NOTE:
-      rtpbin_get_sdes (self, "note", value);
+    case PROP_SDES:
+      g_object_get_property (G_OBJECT (self->gstrtpbin), "sdes", value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
   }
-}
-
-static void
-rtpbin_set_sdes (FsRtpConference *self, const gchar *prop, const GValue *val)
-{
-  GstStructure *s;
-  g_object_get (self->gstrtpbin, "sdes", &s, NULL);
-  gst_structure_set_value (s, prop, val);
-  g_object_set (self->gstrtpbin, "sdes", s, NULL);
-  gst_structure_free (s);
 }
 
 static void
@@ -431,26 +355,8 @@ fs_rtp_conference_set_property (GObject *object,
 
   switch (prop_id)
   {
-    case PROP_SDES_CNAME:
-      rtpbin_set_sdes (self, "cname", value);
-      break;
-    case PROP_SDES_NAME:
-      rtpbin_set_sdes (self, "name", value);
-      break;
-    case PROP_SDES_EMAIL:
-      rtpbin_set_sdes (self, "email", value);
-      break;
-    case PROP_SDES_PHONE:
-      rtpbin_set_sdes (self, "phone", value);
-      break;
-    case PROP_SDES_LOCATION:
-      rtpbin_set_sdes (self, "location", value);
-      break;
-    case PROP_SDES_TOOL:
-      rtpbin_set_sdes (self, "tool", value);
-      break;
-    case PROP_SDES_NOTE:
-      rtpbin_set_sdes (self, "note", value);
+    case PROP_SDES:
+      g_object_set_property (G_OBJECT (self->gstrtpbin), "sdes", value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -594,6 +500,7 @@ _remove_session (gpointer user_data,
   GST_OBJECT_LOCK (self);
   self->priv->sessions =
     g_list_remove_all (self->priv->sessions, where_the_object_was);
+  self->priv->sessions_cookie++;
   GST_OBJECT_UNLOCK (self);
 }
 
@@ -611,7 +518,7 @@ _remove_participant (gpointer user_data,
 
 
 static FsSession *
-fs_rtp_conference_new_session (FsBaseConference *conf,
+fs_rtp_conference_new_session (FsConference *conf,
                                FsMediaType media_type,
                                GError **error)
 {
@@ -641,6 +548,7 @@ fs_rtp_conference_new_session (FsBaseConference *conf,
 
   GST_OBJECT_LOCK (self);
   self->priv->sessions = g_list_append (self->priv->sessions, new_session);
+  self->priv->sessions_cookie++;
   GST_OBJECT_UNLOCK (self);
 
   g_object_weak_ref (G_OBJECT (new_session), _remove_session, self);
@@ -650,13 +558,11 @@ fs_rtp_conference_new_session (FsBaseConference *conf,
 
 
 static FsParticipant *
-fs_rtp_conference_new_participant (FsBaseConference *conf,
-    const gchar *cname,
+fs_rtp_conference_new_participant (FsConference *conf,
     GError **error)
 {
   FsRtpConference *self = FS_RTP_CONFERENCE (conf);
   FsParticipant *new_participant = NULL;
-  GList *item = NULL;
 
   if (!self->gstrtpbin)
   {
@@ -665,34 +571,7 @@ fs_rtp_conference_new_participant (FsBaseConference *conf,
     return NULL;
   }
 
-  if (cname)
-  {
-    GST_OBJECT_LOCK (self);
-    for (item = g_list_first (self->priv->participants);
-         item;
-         item = g_list_next (item))
-    {
-      gchar *lcname;
-
-      g_object_get (item->data, "cname", &lcname, NULL);
-      if (lcname && !strcmp (lcname, cname))
-      {
-        g_free (lcname);
-        break;
-      }
-      g_free (lcname);
-    }
-    GST_OBJECT_UNLOCK (self);
-
-    if (item)
-    {
-      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
-          "There is already a participant with this cname");
-      return NULL;
-    }
-  }
-
-  new_participant = FS_PARTICIPANT_CAST (fs_rtp_participant_new (cname));
+  new_participant = FS_PARTICIPANT_CAST (fs_rtp_participant_new ());
 
 
   GST_OBJECT_LOCK (self);
@@ -759,6 +638,32 @@ fs_rtp_conference_handle_message (
               session_id, ssrc, cname);
         }
       }
+      else if (gst_structure_has_name (s, "dtmf-event-processed") ||
+          gst_structure_has_name (s, "dtmf-event-dropped"))
+      {
+        GList *item;
+        guint cookie;
+
+
+        GST_OBJECT_LOCK (self);
+      restart:
+        cookie = self->priv->sessions_cookie;
+        for (item = self->priv->sessions; item; item = item->next)
+        {
+          GST_OBJECT_UNLOCK (self);
+          if (fs_rtp_session_handle_dtmf_event_message (item->data, message))
+          {
+            gst_message_unref (message);
+            message = NULL;
+            goto out;
+          }
+          GST_OBJECT_LOCK (self);
+          if (cookie != self->priv->sessions_cookie)
+            goto restart;
+        }
+        GST_OBJECT_UNLOCK (self);
+
+      }
     }
     break;
     case GST_MESSAGE_STREAM_STATUS:
@@ -802,7 +707,8 @@ fs_rtp_conference_handle_message (
 
  out:
   /* forward all messages to the parent */
-  GST_BIN_CLASS (parent_class)->handle_message (bin, message);
+  if (message)
+    GST_BIN_CLASS (parent_class)->handle_message (bin, message);
 }
 
 static GstStateChangeReturn
@@ -903,7 +809,7 @@ fs_codec_to_gst_caps (const FsCodec *codec)
     g_free (lower_name);
   }
 
-  for (item = codec->ABI.ABI.feedback_params;
+  for (item = codec->feedback_params;
        item;
        item = g_list_next (item))
   {
@@ -969,37 +875,4 @@ fs_rtp_conference_is_internal_thread (FsRtpConference *self)
   GST_OBJECT_UNLOCK (self);
 
   return ret;
-}
-
-GList *
-codecs_copy_with_new_ptime (GList *codecs)
-{
-  GList *copy = fs_codec_list_copy (codecs);
-  GList *item;
-
-  for (item = copy; item ; item = g_list_next (item))
-  {
-    FsCodec *codec = item->data;
-
-    if (codec->ABI.ABI.ptime &&
-        !fs_codec_get_optional_parameter (codec, "ptime", NULL))
-    {
-      gchar *tmp = g_strdup_printf ("%u", codec->ABI.ABI.ptime);
-      fs_codec_add_optional_parameter (codec, "ptime", tmp);
-      g_free (tmp);
-    }
-
-    if (codec->ABI.ABI.maxptime &&
-        !fs_codec_get_optional_parameter (codec, "maxptime", NULL))
-    {
-      gchar *tmp = g_strdup_printf ("%u", codec->ABI.ABI.maxptime);
-      fs_codec_add_optional_parameter (codec, "maxptime", tmp);
-      g_free (tmp);
-    }
-
-    codec->ABI.ABI.ptime = 0;
-    codec->ABI.ABI.maxptime = 0;
-  }
-
-  return copy;
 }

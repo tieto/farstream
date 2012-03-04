@@ -1,4 +1,4 @@
-DISTCHECK_CONFIGURE_FLAGS=--enable-gtk-doc
+DISTCHECK_CONFIGURE_FLAGS=--enable-gtk-doc --enable-introspection
 
 SUBDIRS_EXT =
 
@@ -7,7 +7,7 @@ PYTHON_SUBDIR = python
 endif
 
 SUBDIRS = 			\
-	gst-libs 		\
+	farstream 		\
 	gst $(SUBDIRS_EXT)	\
 	transmitters		\
 	$(PYTHON_SUBDIR)	\
@@ -20,7 +20,7 @@ SUBDIRS = 			\
 #	pkgconfig
 
 DIST_SUBDIRS = 			\
-	gst-libs		\
+	farstream		\
 	gst $(SUBDIRS_EXT)	\
 	transmitters		\
 	python			\
@@ -49,10 +49,10 @@ check-torture:
 	true
 endif
 
-pcverfiles = farsight2-@GST_MAJORMINOR@.pc
-pcinfiles = farsight2.pc.in
+pcverfiles = farstream-@FS_MAJORMINOR@.pc
+pcinfiles = farstream.pc.in
 
-%-@GST_MAJORMINOR@.pc: %.pc
+%-@FS_MAJORMINOR@.pc: %.pc
 	cp $< $@
 
 pkgconfigdir = $(libdir)/pkgconfig
