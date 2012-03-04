@@ -1,0 +1,4 @@
+debian/tmp/usr/include/farstream-0.1
+debian/tmp/usr/lib/libfarstream-0.1.so
+debian/tmp/usr/lib/libfarstream-0.1.a
+debian/tmp/usr/lib/pkgconfig/farstream-0.1.pc

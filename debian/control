@@ -23,7 +23,7 @@ Vcs-Browser: http://git.debian.org/?p=pkg-telepathy/farstream.git
 Homepage: http://farstream.freedesktop.org
 X-Python-Version: >= 2.4
 
-Package: libgstfarstream0.10-0
+Package: libfarstream-0.1-0
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
          gstreamer0.10-plugins-base (>= 0.10.33),
@@ -37,12 +37,12 @@ Description: Audio/Video communications framework: core library
  protocols, on the other side it offers an API for clients to use those
  plugins.
  .
- This package provides the core Farstream 2 library.
+ This package provides the core Farstream library.
 
-Package: libgstfarstream0.10-dev
+Package: libfarstream-0.1-dev
 Section: libdevel
 Architecture: any
-Depends: ${misc:Depends}, libgstfarstream0.10-0 (= ${binary:Version}), libgstreamer0.10-dev
+Depends: ${misc:Depends}, libfarstream-0.1-0 (= ${binary:Version}), libgstreamer0.10-dev
 Description: Audio/Video communications framework: development files
  The Farstream project is an effort to create a framework to deal with all
  known audio/video conferencing protocols. On one side it offers a generic
@@ -50,9 +50,9 @@ Description: Audio/Video communications framework: development files
  protocols, on the other side it offers an API for clients to use those
  plugins.
  .
- This package provides development files for Farstream 2.
+ This package provides development files for Farstream.
 
-Package: libgstfarstream0.10-doc
+Package: libfarstream-0.1-doc
 Section: doc
 Architecture: all
 Depends: ${misc:Depends}
@@ -63,13 +63,13 @@ Description: Audio/Video communications framework: documentation
  protocols, on the other side it offers an API for clients to use those
  plugins.
  .
- This package provides documentation for Farstream 2.
+ This package provides documentation for Farstream.
 
-Package: libgstfarstream0.10-dbg
+Package: libfarstream-0.1-dbg
 Section: debug
 Priority: extra
 Architecture: any
-Depends: ${misc:Depends}, libgstfarstream0.10-0 (= ${binary:Version}), libgstreamer0.10-dev
+Depends: ${misc:Depends}, libfarstream-0.1-0 (= ${binary:Version}), libgstreamer0.10-dev
 Description: Audio/Video communications framework: debugging symbols
  The Farstream project is an effort to create a framework to deal with all
  known audio/video conferencing protocols. On one side it offers a generic
@@ -77,7 +77,7 @@ Description: Audio/Video communications framework: debugging symbols
  protocols, on the other side it offers an API for clients to use those
  plugins.
  .
- This package provides debugging symbols for Farstream 2.
+ This package provides debugging symbols for Farstream.
 
 Package: python-farstream
 Section: python
@@ -91,4 +91,4 @@ Description: Audio/Video communications framework: Python bindings
  protocols, on the other side it offers an API for clients to use those
  plugins.
  .
- This package provides Python bindings for Farstream 2.
+ This package provides Python bindings for Farstream.

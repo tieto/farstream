@@ -1,4 +1,0 @@
-debian/tmp/usr/lib/libgstfarstream-0.10.so.*
-debian/tmp/usr/lib/gstreamer-0.10/*.so
-debian/tmp/usr/lib/farstream-0.0/*.so
-debian/tmp/usr/share/farstream/0.0/
