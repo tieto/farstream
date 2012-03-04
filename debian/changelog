@@ -1,8 +1,9 @@
 farstream (0.1.1-1) UNRELEASED; urgency=low
 
-  * 
+  * Initial upload of farstream
+  * Packaging changed from farsight2 to farstream
 
- -- Sjoerd Simons <sjoerd@debian.org>  Sun, 04 Mar 2012 17:05:11 +0100
+ -- Sjoerd Simons <sjoerd@debian.org>  Sun, 04 Mar 2012 21:53:09 +0100
 
 farsight2 (0.0.31-1) unstable; urgency=low
 
