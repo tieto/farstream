@@ -25,6 +25,7 @@ X-Python-Version: >= 2.4
 
 Package: libfarstream-0.1-0
 Architecture: any
+Conflicts: libgstfarsight0.10-0
 Depends: ${shlibs:Depends}, ${misc:Depends},
          gstreamer0.10-plugins-base (>= 0.10.33),
          gstreamer0.10-plugins-good (>= 0.10.29),
