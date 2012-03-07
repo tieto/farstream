@@ -2,30 +2,31 @@ Source: farstream
 Priority: optional
 Section: libs
 Maintainer: Debian Telepathy maintainers <pkg-telepathy-maintainers@lists.alioth.debian.org>
-Uploaders: Dafydd Harries <daf@debian.org>,
-           Simon McVittie <smcv@debian.org>,
+Uploaders: Simon McVittie <smcv@debian.org>,
            Sjoerd Simons <sjoerd@debian.org>,
            Laurent Bigonville <bigon@debian.org>,
            Jonny Lamb <jonny@debian.org>
-Build-Depends: debhelper (>= 7),
-               cdbs (>= 0.4.90~),
-               libglib2.0-dev (>= 2.16),
+Build-Depends: debhelper (>= 8.0.0),
+               autotools-dev,
+               python-gst0.10-dev,
                libgstreamer0.10-dev (>= 0.10.33),
                libgstreamer-plugins-base0.10-dev (>= 0.10.33),
                python-all-dev (>= 2.6.6-3~),
-               python-gobject-dev (>= 2.16),
+               gobject-introspection,
+               libgirepository1.0-dev,
                python-gst0.10-dev,
                libnice-dev (>= 0.1.0),
                libgupnp-igd-1.0-dev
-Standards-Version: 3.9.1
+Standards-Version: 3.9.2
 Vcs-Git: git://git.debian.org/git/pkg-telepathy/farstream.git
 Vcs-Browser: http://git.debian.org/?p=pkg-telepathy/farstream.git
-Homepage: http://farstream.freedesktop.org
-X-Python-Version: >= 2.4
+Homepage: http://www.freedesktop.org/software/farstream/releases/farstream/
+X-Python-Version: >= 2.7
 
 Package: libfarstream-0.1-0
 Architecture: any
 Conflicts: libgstfarsight0.10-0
+Replaces: libgstfarsight0.10-0
 Depends: ${shlibs:Depends}, ${misc:Depends},
          gstreamer0.10-plugins-base (>= 0.10.33),
          gstreamer0.10-plugins-good (>= 0.10.29),
@@ -43,7 +44,8 @@ Description: Audio/Video communications framework: core library
 Package: libfarstream-0.1-dev
 Section: libdevel
 Architecture: any
-Depends: ${misc:Depends}, libfarstream-0.1-0 (= ${binary:Version}), libgstreamer0.10-dev
+Depends: ${shlibs:Depends}, ${misc:Depends},
+         libfarstream-0.1-0 (= ${binary:Version}), libgstreamer0.10-dev
 Description: Audio/Video communications framework: development files
  The Farstream project is an effort to create a framework to deal with all
  known audio/video conferencing protocols. On one side it offers a generic
@@ -79,6 +81,21 @@ Description: Audio/Video communications framework: debugging symbols
  plugins.
  .
  This package provides debugging symbols for Farstream.
+
+Package: gir1.2-farstream-0.1
+Architecture: any
+Depends: ${gir:Depends},
+         ${misc:Depends}
+Section: introspection
+Description: Audio/Video communications framework: GObject-Introspection
+ The Farstream project is an effort to create a framework to deal with all
+ known audio/video conferencing protocols. On one side it offers a generic
+ API that makes it possible to write plugins for different streaming
+ protocols, on the other side it offers an API for clients to use those
+ plugins.
+ .
+ It can be used by packages using the GIRepository format to generate dynamic
+ bindings.
 
 Package: python-farstream
 Section: python

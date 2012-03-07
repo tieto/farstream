@@ -1,2 +1,2 @@
 version=3
-http://www.freedesktop.org/software/farstream/releases/farstream/farstream\-(.*)\.tar\.gz
+http://freedesktop.org/software/farstream/releases/farstream farstream-(.*)\.tar\.gz

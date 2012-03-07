@@ -1,19 +1,26 @@
 #!/usr/bin/make -f
+# -*- makefile -*-
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
 
-DEB_BUILDDIR := debian/build
+override_dh_install:
+	find debian/tmp/usr/lib/ -name *.la -exec rm {} \;
+	find debian/tmp/usr/lib/farstream-0.1 -name *.a -exec rm {} \;
+	find debian/tmp/usr/lib/gstreamer-0.10  -name *.a -exec rm {} \;
+	find debian/tmp/usr/lib/python2.7/dist-packages/ -name *.a -exec rm {} \;
+	dh_install --list-missing
 
-include /usr/share/cdbs/1/rules/debhelper.mk
-include /usr/share/cdbs/1/class/python-autotools.mk
+override_dh_shlibdeps:
+	dh_shlibdeps
+	dh_girepository
 
-DEB_CONFIGURE_EXTRA_FLAGS = --enable-python --enable-gupnp
+override_dh_makeshlibs:
+	dh_makeshlibs -plibfarstream-0.1-0 -X/usr/lib/gstreamer-0.10 -X/usr/lib/farstream-0.1
 
-# Testsuit has a race-condition, so disable it for now
-#DEB_MAKE_CHECK_TARGET = check
+override_dh_auto_test:
+override_dh_auto_configure:
+	dh_auto_configure -- --enable-gtk-doc=no
 
-DEB_DH_MAKESHLIBS_ARGS_libgstfarstream0.10-0 := -X/usr/lib/gstreamer-0.10 -X/usr/lib/farsight2-0.0
+%:
+	dh $@ --with python2
 
-# List any files which are not installed
-include /usr/share/cdbs/1/rules/utils.mk
-common-binary-post-install-arch:: list-missing
-
-include $(CURDIR)/debian/update-patches.mk

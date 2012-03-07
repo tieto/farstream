@@ -1,30 +1,31 @@
-This package was debianized by Sjoerd Simons <sjoerd@debian.org> on
-Sat, 08 Mar 2008 18:55:33 +0100
+Format: http://dep.debian.net/deps/dep5
+Upstream-Name: farstream
+Source: http://www.freedesktop.org/software/farstream/releases/farstream/
 
-It was downloaded from: http://farsight.freedesktop.org/releases/farsight2/
+Files: *
+Copyright: 2005-2008 Collabora Ltd.
+           2005-2008 Nokia Corp.
+           2006 Youness Alaoui <kakaroto@kakaroto.homelinux.net>
+            2005 INdT
+License: LGPL-2.1
+ On Debian systems, the complete text of the GNU Lesser General Public
+ License can be found in /usr/share/common-licenses/LGPL.
 
-Farsight2 is copyright:
-
- Copyright 2005-2008 Collabora Ltd.
- Copyright 2005-2008 Nokia Corp.
- Copyright 2006 Youness Alaoui <kakaroto@kakaroto.homelinux.net>
- Copyright 2005 INdT
-
-License:
-
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2.1 of the License, or (at your option) any later version.
-
- This library is distributed in the hope that it will be useful,
+Files: debian/*
+Copyright: 2012 Ken VanDine <ken.vandine@canonical.com>
+License: GPL-2+
+ This package is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This package is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
-
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free Software
- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
-
-On Debian systems, the complete text of the GNU Lesser General Public
-License can be found in /usr/share/common-licenses/LGPL.
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>
+ .
+ On Debian systems, the complete text of the GNU General
+ Public License version 2 can be found in "/usr/share/common-licenses/GPL-2".
