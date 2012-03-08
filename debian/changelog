@@ -1,11 +1,11 @@
-farstream (0.1.1-1) UNRELEASED; urgency=low
+farstream (0.1.1-1) unstable; urgency=low
 
   * Initial upload of farstream
   * Packaging changed from farsight2 to farstream
   * Sync from preliminary Ubuntu packaging (thanks to Ken VanDine)
   * Update for multi-arch
 
- -- Sjoerd Simons <sjoerd@debian.org>  Thu, 08 Mar 2012 11:24:29 +0100
+ -- Sjoerd Simons <sjoerd@debian.org>  Thu, 08 Mar 2012 11:25:49 +0100
 
 farsight2 (0.0.31-1) unstable; urgency=low
 
