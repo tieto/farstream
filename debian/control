@@ -6,7 +6,7 @@ Uploaders: Simon McVittie <smcv@debian.org>,
            Sjoerd Simons <sjoerd@debian.org>,
            Laurent Bigonville <bigon@debian.org>,
            Jonny Lamb <jonny@debian.org>
-Build-Depends: debhelper (>= 8.0.0),
+Build-Depends: debhelper (>= 9),
                autotools-dev,
                python-gst0.10-dev,
                libgstreamer0.10-dev (>= 0.10.33),
@@ -17,7 +17,7 @@ Build-Depends: debhelper (>= 8.0.0),
                python-gst0.10-dev,
                libnice-dev (>= 0.1.0),
                libgupnp-igd-1.0-dev
-Standards-Version: 3.9.2
+Standards-Version: 3.9.3
 Vcs-Git: git://git.debian.org/git/pkg-telepathy/farstream.git
 Vcs-Browser: http://git.debian.org/?p=pkg-telepathy/farstream.git
 Homepage: http://www.freedesktop.org/software/farstream/releases/farstream/
@@ -27,6 +27,8 @@ Package: libfarstream-0.1-0
 Architecture: any
 Conflicts: libgstfarsight0.10-0
 Replaces: libgstfarsight0.10-0
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends},
          gstreamer0.10-plugins-base (>= 0.10.33),
          gstreamer0.10-plugins-good (>= 0.10.29),
@@ -45,7 +47,8 @@ Package: libfarstream-0.1-dev
 Section: libdevel
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
-         libfarstream-0.1-0 (= ${binary:Version}), libgstreamer0.10-dev
+         libfarstream-0.1-0 (= ${binary:Version}), libgstreamer0.10-dev,
+         gir1.2-farstream-0.1
 Description: Audio/Video communications framework: development files
  The Farstream project is an effort to create a framework to deal with all
  known audio/video conferencing protocols. On one side it offers a generic
@@ -72,6 +75,7 @@ Package: libfarstream-0.1-dbg
 Section: debug
 Priority: extra
 Architecture: any
+Multi-Arch: same
 Depends: ${misc:Depends}, libfarstream-0.1-0 (= ${binary:Version}), libgstreamer0.10-dev
 Description: Audio/Video communications framework: debugging symbols
  The Farstream project is an effort to create a framework to deal with all
@@ -84,6 +88,7 @@ Description: Audio/Video communications framework: debugging symbols
 
 Package: gir1.2-farstream-0.1
 Architecture: any
+Multi-Arch: same
 Depends: ${gir:Depends},
          ${misc:Depends}
 Section: introspection

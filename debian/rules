@@ -3,11 +3,14 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+
 override_dh_install:
 	find debian/tmp/usr/lib/ -name *.la -exec rm {} \;
-	find debian/tmp/usr/lib/farstream-0.1 -name *.a -exec rm {} \;
-	find debian/tmp/usr/lib/gstreamer-0.10  -name *.a -exec rm {} \;
-	find debian/tmp/usr/lib/python2.7/dist-packages/ -name *.a -exec rm {} \;
+	find debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/farstream-0.1 -name *.a -exec rm {} \;
+	find debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer-0.10  -name *.a -exec rm {} \;
+	find debian/tmp/usr/lib/python2.7/dist-packages/ \
+		-name *.a -exec rm {} \;
 	dh_install --list-missing
 
 override_dh_shlibdeps:
@@ -15,7 +18,9 @@ override_dh_shlibdeps:
 	dh_girepository
 
 override_dh_makeshlibs:
-	dh_makeshlibs -plibfarstream-0.1-0 -X/usr/lib/gstreamer-0.10 -X/usr/lib/farstream-0.1
+	dh_makeshlibs -plibfarstream-0.1-0 \
+		-X/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer-0.10 \
+		-X/usr/lib/$(DEB_HOST_MULTIARCH)/farstream-0.1
 
 override_dh_auto_test:
 override_dh_auto_configure:
