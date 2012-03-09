@@ -320,7 +320,7 @@ _bin_added_from_keyfile (FsElementAddedNotifier *notifier, GstBin *bin,
 /**
  * fs_element_added_notifier_set_properties_from_keyfile:
  * @notifier: a #FsElementAddedNotifier
- * @keyfile: a #GKeyFile
+ * @keyfile: (transfer full): a #GKeyFile
  *
  * Using a #GKeyFile where the groups are the element's type or name
  * and the key=value are the property and its value, this function
