@@ -1,11 +1,11 @@
-farstream (0.1.2-1) UNRELEASED; urgency=low
+farstream (0.1.2-1) unstable; urgency=low
 
   * New upstream release
     - Bump libglib2.0-dev build-dependency to 2.30
   * debian/gir1.2-farstream-0.1.install: .typelib file must not be installed
     in the multiarch path, gobject-introspection is not supporting that
 
- -- Laurent Bigonville <bigon@debian.org>  Sun, 08 Apr 2012 01:14:59 +0200
+ -- Laurent Bigonville <bigon@debian.org>  Sun, 08 Apr 2012 01:23:11 +0200
 
 farstream (0.1.1-1) unstable; urgency=low
 
