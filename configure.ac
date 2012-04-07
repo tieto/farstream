@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, cvs and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for cvs/prerelease
-AC_INIT(Farstream, 0.1.1,
+AC_INIT(Farstream, 0.1.2,
     https://bugs.freedesktop.org/enter_bug.cgi?product=Farstream,
     farstream)
 
@@ -56,7 +56,7 @@ dnl - interfaces added/removed/changed -> increment CURRENT, REVISION = 0
 dnl - interfaces added -> increment AGE
 dnl - interfaces removed -> AGE = 0
 dnl sets FS_LT_LDFLAGS
-AS_LIBTOOL(FS, 0, 0, 0)
+AS_LIBTOOL(FS, 0, 1, 0)
 
 dnl FIXME: this macro doesn't actually work;
 dnl the generated libtool script has no support for the listed tags.
@@ -245,7 +245,10 @@ dnl *** checks for library functions ***
 dnl *** checks for dependency libraries ***
 
 dnl GLib is required
-AG_GST_GLIB_CHECK([2.26])
+AG_GST_GLIB_CHECK([2.30])
+AC_DEFINE(GLIB_VERSION_MIN_REQUIRED, GLIB_VERSION_2_30, [Ignore post 2.30 deprecations])
+AC_DEFINE(GLIB_VERSION_MAX_REQUIRED, GLIB_VERSION_2_30, [Prevent post 2.30 APIs])
+
 
 PKG_CHECK_MODULES(GIO_UNIX, gio-unix-2.0 >= 2.16)
 AC_SUBST(GIO_UNIX_CFLAGS)
@@ -381,14 +384,6 @@ if test "x$WANT_GUPNP" != "xno"; then
 fi
 if test "x$WANT_GUPNP" = "xyes" && test "x$HAVE_GUPNP" = "xno"; then
    AC_ERROR([Requested GUPnP IGD, but it is not available])
-fi
-
-if test "x$HAVE_GUPNP" = "xyes"; then
-   AC_DEFINE(HAVE_GUPNP,,[Have the GUPnP IGD library])
-
-   PKG_CHECK_MODULES(GUPNP_013, gupnp-1.0 >= 0.13,
-	 [AC_DEFINE([HAVE_GUPNP_013], [1], [Have GUPnP 0.13 or higher])],
-	 [true])
 fi
 
 dnl *** output files ***

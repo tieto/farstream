@@ -1,13 +1,13 @@
 <plugin>
   <name>fsrtcpfilter</name>
   <description>RtcpFilter</description>
-  <filename>../../gst/rtcpfilter/.libs/libfsrtcpfilter.so</filename>
+  <filename>../../gst/fsrtcpfilter/.libs/libfsrtcpfilter.so</filename>
   <basename>libfsrtcpfilter.so</basename>
-  <version>0.0.21.1</version>
+  <version>0.1.2</version>
   <license>LGPL</license>
-  <source>farsight2</source>
-  <package>Farsight</package>
-  <origin>http://farsight.sf.net</origin>
+  <source>farstream</source>
+  <package>Farstream</package>
+  <origin>http://farstream.sf.net</origin>
   <elements>
     <element>
       <name>fsrtcpfilter</name>

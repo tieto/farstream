@@ -1,13 +1,13 @@
 <plugin>
   <name>fsvideoanyrate</name>
   <description>Videoanyrate</description>
-  <filename>../../gst/videoanyrate/.libs/libfsvideoanyrate.so</filename>
+  <filename>../../gst/fsvideoanyrate/.libs/libfsvideoanyrate.so</filename>
   <basename>libfsvideoanyrate.so</basename>
-  <version>0.0.21.1</version>
+  <version>0.1.2</version>
   <license>LGPL</license>
-  <source>farsight2</source>
-  <package>Farsight</package>
-  <origin>http://farsight.sf.net</origin>
+  <source>farstream</source>
+  <package>Farstream</package>
+  <origin>http://farstream.sf.net</origin>
   <elements>
     <element>
       <name>fsvideoanyrate</name>

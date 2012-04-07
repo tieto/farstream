@@ -8,7 +8,7 @@
 <link rel="up" href="ch01.html" title="Farstream Core Library">
 <link rel="prev" href="FsParticipant.html" title="FsParticipant">
 <link rel="next" href="FsStream.html" title="FsStream">
-<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.18.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -137,9 +137,9 @@ This will communicate asynchronous events to the user through <a href="http://gs
 of type <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GST-MESSAGE-ELEMENT:CAPS"><span class="type">GST_MESSAGE_ELEMENT</span></a> sent over the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBus.html"><span class="type">GstBus</span></a>.
 </p>
 <div class="refsect2">
-<a name="id377194"></a><h3>The "<code class="literal">farstream-send-codec-changed</code>"
+<a name="id421225"></a><h3>The "<code class="literal">farstream-send-codec-changed</code>"
   message</h3>
-<table id="id377205">
+<table id="id421236">
 <tr>
   <td><code class="code">"session"</code></td>
   <td><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></td>
@@ -164,9 +164,9 @@ This message is sent on the bus when the value of the
 </div>
 <hr>
 <div class="refsect2">
-<a name="id377306"></a><h3>The "<code class="literal">farstream-codecs-changed</code>"
+<a name="id421337"></a><h3>The "<code class="literal">farstream-codecs-changed</code>"
  message</h3>
-<table id="id377317"><tr>
+<table id="id421348"><tr>
   <td><code class="code">"session"</code></td>
   <td><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></td>
   <td>The session that emits the message</td>
@@ -181,9 +181,9 @@ transmitted reliably, one should fetch <a class="link" href="FsSession.html#FsSe
 </div>
 <hr>
 <div class="refsect2">
-<a name="id377375"></a><h3>The "<code class="literal">farstream-telephony-event-started</code>"
+<a name="id421406"></a><h3>The "<code class="literal">farstream-telephony-event-started</code>"
  message</h3>
-<table id="id377386">
+<table id="id421417">
 <tr>
   <td><code class="code">"session"</code></td>
   <td><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></td>
@@ -213,9 +213,9 @@ telephony event has started.
 </div>
 <hr>
 <div class="refsect2">
-<a name="id377482"></a><h3>The "<code class="literal">farstream-telephony-event-stopped</code>"
+<a name="id421513"></a><h3>The "<code class="literal">farstream-telephony-event-stopped</code>"
  message</h3>
-<table id="id377493">
+<table id="id421524">
 <tr>
   <td><code class="code">"session"</code></td>
   <td><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></td>
@@ -749,6 +749,9 @@ the <em class="parameter"><code>session</code></em> parameters.
                                                          <em class="parameter"><code><a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> **codec</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> **secondary_codecs</code></em>);</pre>
 <p>
+Returns a <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> of the message if not <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</p>
+<p>
 Parses a "farstream-send-codec-changed" message and checks if it matches
 the <em class="parameter"><code>session</code></em> parameters.
 </p>
@@ -771,7 +774,7 @@ the <em class="parameter"><code>session</code></em> parameters.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>secondary_codecs</code></em> :</span></p></td>
-<td>Returns a <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> of the message if not <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec]</span>
+<td>. <span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec]</span>
 </td>
 </tr>
 <tr>
@@ -1055,6 +1058,6 @@ thread. Applications should listen to the GstBus for errors.
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18</div>
+          Generated by GTK-Doc V1.18.1</div>
 </body>
 </html>
