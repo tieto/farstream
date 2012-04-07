@@ -1,8 +1,9 @@
 farstream (0.1.2-1) UNRELEASED; urgency=low
 
   * New upstream release
+    - Bump libglib2.0-dev build-dependency to 2.30
 
- -- Laurent Bigonville <bigon@debian.org>  Sun, 08 Apr 2012 00:38:18 +0200
+ -- Laurent Bigonville <bigon@debian.org>  Sun, 08 Apr 2012 00:42:29 +0200
 
 farstream (0.1.1-1) unstable; urgency=low
 
