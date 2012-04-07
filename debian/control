@@ -89,7 +89,6 @@ Description: Audio/Video communications framework: debugging symbols
 
 Package: gir1.2-farstream-0.1
 Architecture: any
-Multi-Arch: same
 Depends: ${gir:Depends},
          ${misc:Depends}
 Section: introspection
