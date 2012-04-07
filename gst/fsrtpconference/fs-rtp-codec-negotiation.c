@@ -541,6 +541,7 @@ create_local_codec_associations (
       ca->codec = fs_codec_copy (codec_pref);
       ca->reserved = TRUE;
       codec_associations = g_list_append (codec_associations, ca);
+      GST_DEBUG ("Add reserved payload type %d", codec_pref->id);
       continue;
     }
 
@@ -775,6 +776,12 @@ create_local_codec_associations (
     }
 
     ca->send_codec = codec_copy_filtered (ca->codec, FS_PARAM_TYPE_CONFIG);
+
+    {
+      gchar *tmp = fs_codec_to_string (ca->codec);
+      GST_LOG ("Added discovered codec %s from blueprint", tmp);
+      g_free (tmp);
+    }
 
     codec_associations = list_insert_local_ca (codec_associations, ca);
   }
@@ -1393,17 +1400,24 @@ lookup_codec_association_by_codec_for_sending (GList *codec_associations,
     FsCodec *codec)
 {
   GList *item;
+  CodecAssociation *res = NULL;
+  FsCodec *tmpcodec = codec_copy_filtered (codec, FS_PARAM_TYPE_CONFIG);
 
   for (item = codec_associations; item; item = g_list_next (item))
   {
     CodecAssociation *ca = item->data;
 
     if (codec_association_is_valid_for_sending (ca, FALSE) &&
-        fs_codec_are_equal (ca->codec, codec))
-      return ca;
+        fs_codec_are_equal (ca->send_codec, tmpcodec))
+    {
+      res = ca;
+      break;
+    }
   }
 
-  return NULL;
+  fs_codec_destroy (tmpcodec);
+
+  return res;
 }
 
 FsRtpHeaderExtension *

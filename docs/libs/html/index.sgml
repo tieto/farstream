@@ -224,6 +224,7 @@
 <ANCHOR id="fs-transmitter-list-available" href="farstream-libs-0.10/FsTransmitter.html#fs-transmitter-list-available">
 <ANCHOR id="FsTransmitter.property-details" href="farstream-libs-0.10/FsTransmitter.html#FsTransmitter.property-details">
 <ANCHOR id="FsTransmitter--components" href="farstream-libs-0.10/FsTransmitter.html#FsTransmitter--components">
+<ANCHOR id="FsTransmitter--do-timestamp" href="farstream-libs-0.10/FsTransmitter.html#FsTransmitter--do-timestamp">
 <ANCHOR id="FsTransmitter--gst-sink" href="farstream-libs-0.10/FsTransmitter.html#FsTransmitter--gst-sink">
 <ANCHOR id="FsTransmitter--gst-src" href="farstream-libs-0.10/FsTransmitter.html#FsTransmitter--gst-src">
 <ANCHOR id="FsTransmitter--tos" href="farstream-libs-0.10/FsTransmitter.html#FsTransmitter--tos">

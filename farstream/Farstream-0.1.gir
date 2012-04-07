@@ -3245,6 +3245,11 @@ error</doc>
         <doc xml:whitespace="preserve">The number of components to create</doc>
         <type name="guint"/>
       </property>
+      <property name="do-timestamp" writable="1" transfer-ownership="none">
+        <doc xml:whitespace="preserve">Apply current stream time to buffers or provide buffers without
+timestamps. Must be set before creating a stream transmitter.</doc>
+        <type name="gboolean"/>
+      </property>
       <property name="gst-sink" transfer-ownership="none">
         <doc xml:whitespace="preserve">A network source #GstElement to be used by the #FsSession
 These element's sink must have async=FALSE

@@ -1,3 +1,135 @@
+commit ee62969e5d28a942384f245f4ffd79ca492af838
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Mar 23 13:18:17 2012 -0400
+
+    Version 0.1.2
+
+commit 3ba750b3a2d4f1205e728db71cf5c9e7edc8d43e
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Mar 23 15:29:06 2012 -0400
+
+    Add empty overrides file as the new gtkdoc creates one and to make distcheck happy
+
+commit 1504e2c7881947b9917c17aa5f3e14d6ec7d5807
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Mar 23 15:29:29 2012 -0400
+
+    Ignore rank==0 from auto discovery
+
+commit 629cc095af3b031dd4661377608f3718b59575ed
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Mar 23 13:44:12 2012 -0400
+
+    tests: Make debug messages into GST_DEBUG
+
+commit 04cc2bbca52b7047e8b7baf6e39fc99646babd42
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Mar 23 13:39:48 2012 -0400
+
+    Update doc generator from common
+
+commit 62d74a0d6a77fe064206ce5c51f4200f54e651d2
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Mar 23 13:07:37 2012 -0400
+
+    Revert "shm-stream-transmitter: Add property to control the buffer-time"
+    
+    This reverts commit 7a8dd5ef57afc9dd279366b6c07a38c30493f927.
+    
+    Because the patch in shmsink was bad and did not deal with timestamps
+    going backwards. We must re-apply this patch once a new upstream GStreamer
+    has been released.
+
+commit c38383444d605650e8f33eeed2e445ef36e129c9
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Mar 21 15:03:56 2012 -0400
+
+    rtpcodecnego: Add more debugs on local codec list creation
+
+commit 7d26b23ce613498f86ddb0723e929c9868ac17de
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Mar 21 15:03:18 2012 -0400
+
+    rtpdiscovercodecs: Remove duplicate codecs
+    
+    Only keep the first codec if there is more than one way to produce
+    the same RTP codec
+
+commit 56d3f36341d9f6a6eeff38db22f7cb25ee46fb7c
+Author: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Date:   Thu Mar 15 12:56:43 2012 -0500
+
+    Set better latency/buffer time for pulse src/sink
+
+commit 028b3ed519b6a1c0b548819a86304f1fef85e341
+Author: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Date:   Thu Mar 15 12:53:46 2012 -0500
+
+    Add default element properties for rawconference
+
+commit 900483fd33efb8e985d0e908e042a3dfc6998af8
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Feb 29 13:30:50 2012 -0500
+
+    example: Call the right function
+
+commit 659f0dffcdee0e48344b03b581f8477847653306
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Feb 29 13:30:38 2012 -0500
+
+    Update glade file
+
+commit 6553314dde640e1ef7a37c4e630156cd027159db
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Feb 29 12:08:43 2012 -0500
+
+    Require GLib 2.30, do not allow APIs added after and ignore later deprecations
+
+commit 10e6385ebccab96ef254f62271b0f19d3d5be3cf
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Feb 28 17:14:49 2012 -0500
+
+    Don't emit element-added signal without a parent
+
+commit d9fa44186200e1cd17d69a1ae5b0dead202f7a58
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Feb 28 17:13:43 2012 -0500
+
+    rtpcodecnego: Ignore config while comparing send codecs
+
+commit d01dc756827235d0caa6f6e067994cf117387708
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Feb 28 17:13:16 2012 -0500
+
+    Remove check for gst <0.13
+
+commit 3e416cad5dcdda95d94770dd2828574f50b04f11
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Feb 22 16:53:26 2012 -0500
+
+    Update common
+
+commit 544e5ef7af95dd8d70bbc122962a04a3f0c9f74a
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Feb 21 20:11:29 2012 -0500
+
+    Add "do-timestamp" property to the transmitters
+    
+    Make it possible for the "raw" plugin to not have the transmitter
+    put timestamps on the buffers.
+
+commit f8b2fbc4dcfe495ca26acb33e875aea56f929dd4
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Feb 20 17:01:30 2012 -0500
+
+    Version 0.1.1.1
+
+commit 104b0bd8e937b762e7c4faeb6831df7847b5b57e
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Feb 20 17:00:59 2012 -0500
+
+    Version 0.1.1
+
 commit 8028c159500f909d745b33327e71ba5b53b5a56e
 Author: Olivier Crête <olivier.crete@collabora.com>
 Date:   Mon Feb 20 16:49:51 2012 -0500

@@ -1,17 +1,17 @@
 <plugin>
   <name>fsfunnel</name>
-  <description>Farsight Funnel plugin</description>
-  <filename>../../gst/funnel/.libs/libfsfunnel.so</filename>
+  <description>Farstream Funnel plugin</description>
+  <filename>../../gst/fsfunnel/.libs/libfsfunnel.so</filename>
   <basename>libfsfunnel.so</basename>
-  <version>0.0.21.1</version>
+  <version>0.1.2</version>
   <license>LGPL</license>
-  <source>farsight2</source>
-  <package>Farsight</package>
-  <origin>http://farsight.freedesktop.org/</origin>
+  <source>farstream</source>
+  <package>Farstream</package>
+  <origin>http://farstream.freedesktop.org/</origin>
   <elements>
     <element>
       <name>fsfunnel</name>
-      <longname>Farsight Funnel pipe fitting</longname>
+      <longname>Farstream Funnel pipe fitting</longname>
       <class>Generic</class>
       <description>N-to-1 pipe fitting</description>
       <author>Olivier Crete &lt;olivier.crete@collabora.co.uk&gt;</author>

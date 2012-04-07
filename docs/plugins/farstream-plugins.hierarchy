@@ -1,20 +1,20 @@
 GObject
   GstObject
-    GstPad
-    GstPadTemplate
-    GstPluginFeature
-      GstElementFactory
-      GstTypeFindFactory
-      GstIndexFactory
+    GstBus
+    GstClock
     GstElement
       GstBin
         GstPipeline
-    GstBus
+    GstPad
+    GstPadTemplate
+    GstPlugin
+    GstPluginFeature
+      GstElementFactory
+      GstIndexFactory
+      GstTypeFindFactory
+    GstRegistry
     GstTask
     GstTaskPool
-    GstClock
-    GstPlugin
-    GstRegistry
   GstSignalObject
 GInterface
   GTypePlugin

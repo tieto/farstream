@@ -15,6 +15,12 @@
 /* The path were plugins are installed and search by default */
 #undef FS_PLUGIN_PATH
 
+/* Prevent post 2.30 APIs */
+#undef GLIB_VERSION_MAX_REQUIRED
+
+/* Ignore post 2.30 deprecations */
+#undef GLIB_VERSION_MIN_REQUIRED
+
 /* Defined if gcov is enabled to force a rebuild due to config.h changing */
 #undef GST_GCOV_ENABLED
 
@@ -80,12 +86,6 @@
 
 /* Define to 1 if you have the `getifaddrs' function. */
 #undef HAVE_GETIFADDRS
-
-/* Have the GUPnP IGD library */
-#undef HAVE_GUPNP
-
-/* Have GUPnP 0.13 or higher */
-#undef HAVE_GUPNP_013
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H

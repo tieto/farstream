@@ -30,7 +30,7 @@
     </sub>
   </chapters>
   <functions>
-    <keyword type="" name="The &quot;farstream-error&quot; message" link="FsConference.html#id336032"/>
+    <keyword type="" name="The &quot;farstream-error&quot; message" link="FsConference.html#id373643"/>
     <keyword type="struct" name="struct FsConference" link="FsConference.html#FsConference-struct"/>
     <keyword type="function" name="fs_conference_new_session ()" link="FsConference.html#fs-conference-new-session"/>
     <keyword type="function" name="fs_conference_new_participant ()" link="FsConference.html#fs-conference-new-participant"/>
@@ -42,10 +42,10 @@
     <keyword type="struct" name="struct FsParticipantClass" link="FsParticipant.html#FsParticipantClass"/>
     <keyword type="macro" name="FS_PARTICIPANT_DATA_LOCK()" link="FsParticipant.html#FS-PARTICIPANT-DATA-LOCK:CAPS"/>
     <keyword type="macro" name="FS_PARTICIPANT_DATA_UNLOCK()" link="FsParticipant.html#FS-PARTICIPANT-DATA-UNLOCK:CAPS"/>
-    <keyword type="" name="The &quot;farstream-send-codec-changed&quot;&#10;  message" link="FsSession.html#id377194"/>
-    <keyword type="" name="The &quot;farstream-codecs-changed&quot;&#10; message" link="FsSession.html#id377306"/>
-    <keyword type="" name="The &quot;farstream-telephony-event-started&quot;&#10; message" link="FsSession.html#id377375"/>
-    <keyword type="" name="The &quot;farstream-telephony-event-stopped&quot;&#10; message" link="FsSession.html#id377482"/>
+    <keyword type="" name="The &quot;farstream-send-codec-changed&quot;&#10;  message" link="FsSession.html#id421225"/>
+    <keyword type="" name="The &quot;farstream-codecs-changed&quot;&#10; message" link="FsSession.html#id421337"/>
+    <keyword type="" name="The &quot;farstream-telephony-event-started&quot;&#10; message" link="FsSession.html#id421406"/>
+    <keyword type="" name="The &quot;farstream-telephony-event-stopped&quot;&#10; message" link="FsSession.html#id421513"/>
     <keyword type="struct" name="FsSession" link="FsSession.html#FsSession-struct"/>
     <keyword type="struct" name="struct FsSessionClass" link="FsSession.html#FsSessionClass"/>
     <keyword type="enum" name="enum FsDTMFEvent" link="FsSession.html#FsDTMFEvent"/>
@@ -74,11 +74,11 @@
     <keyword type="property" name="The &quot;sink-pad&quot; property" link="FsSession.html#FsSession--sink-pad"/>
     <keyword type="property" name="The &quot;tos&quot; property" link="FsSession.html#FsSession--tos"/>
     <keyword type="signal" name="The &quot;error&quot; signal" link="FsSession.html#FsSession-error"/>
-    <keyword type="" name="The &quot;farstream-new-local-candidate&quot; message" link="FsStream.html#id415810"/>
-    <keyword type="" name="The &quot;farstream-local-candidates-prepared&quot; message" link="FsStream.html#id415846"/>
-    <keyword type="" name="The &quot;farstream-new-active-candidate-pair&quot; message" link="FsStream.html#id415876"/>
-    <keyword type="" name="The &quot;farstream-recv-codecs-changed&quot; message" link="FsStream.html#id415920"/>
-    <keyword type="" name="The &quot;farstream-component-state-changed&quot; message" link="FsStream.html#id415984"/>
+    <keyword type="" name="The &quot;farstream-new-local-candidate&quot; message" link="FsStream.html#id453420"/>
+    <keyword type="" name="The &quot;farstream-local-candidates-prepared&quot; message" link="FsStream.html#id453456"/>
+    <keyword type="" name="The &quot;farstream-new-active-candidate-pair&quot; message" link="FsStream.html#id453486"/>
+    <keyword type="" name="The &quot;farstream-recv-codecs-changed&quot; message" link="FsStream.html#id453530"/>
+    <keyword type="" name="The &quot;farstream-component-state-changed&quot; message" link="FsStream.html#id453594"/>
     <keyword type="struct" name="FsStream" link="FsStream.html#FsStream-struct"/>
     <keyword type="struct" name="struct FsStreamClass" link="FsStream.html#FsStreamClass"/>
     <keyword type="enum" name="enum FsStreamDirection" link="FsStream.html#FsStreamDirection"/>
@@ -168,6 +168,7 @@
     <keyword type="function" name="fs_transmitter_get_recvonly_filter ()" link="FsTransmitter.html#fs-transmitter-get-recvonly-filter"/>
     <keyword type="function" name="fs_transmitter_list_available ()" link="FsTransmitter.html#fs-transmitter-list-available"/>
     <keyword type="property" name="The &quot;components&quot; property" link="FsTransmitter.html#FsTransmitter--components"/>
+    <keyword type="property" name="The &quot;do-timestamp&quot; property" link="FsTransmitter.html#FsTransmitter--do-timestamp"/>
     <keyword type="property" name="The &quot;gst-sink&quot; property" link="FsTransmitter.html#FsTransmitter--gst-sink"/>
     <keyword type="property" name="The &quot;gst-src&quot; property" link="FsTransmitter.html#FsTransmitter--gst-src"/>
     <keyword type="property" name="The &quot;tos&quot; property" link="FsTransmitter.html#FsTransmitter--tos"/>

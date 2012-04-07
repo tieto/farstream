@@ -21,25 +21,34 @@ AC_DEFUN([ORC_CHECK],
   if test "x$enable_orc" != "xno" ; then
     PKG_CHECK_MODULES(ORC, orc-0.4 >= $ORC_REQ, [
       AC_DEFINE(HAVE_ORC, 1, [Use Orc])
+      HAVE_ORC=yes
       if test "x$ORCC" = "x" ; then
+        AC_MSG_CHECKING(for usable orcc)
         ORCC=`$PKG_CONFIG --variable=orcc orc-0.4`
+        dnl check whether the orcc found by pkg-config can be run from the build environment
+        dnl if this is not the case (e.g. when cross-compiling) fall back to orcc from PATH
+        AS_IF([$ORCC --version 1> /dev/null 2> /dev/null], [], [ORCC=`which orcc`])
+        AC_MSG_RESULT($ORCC)
       fi
       AC_SUBST(ORCC)
       ORCC_FLAGS="--compat $ORC_REQ"
       AC_SUBST(ORCC_FLAGS)
-      HAVE_ORC=yes
+      AS_IF([test "x$ORCC" = "x"], [HAVE_ORCC=no], [HAVE_ORCC=yes])
     ], [
       if test "x$enable_orc" = "xyes" ; then
         AC_MSG_ERROR([--enable-orc specified, but Orc >= $ORC_REQ not found])
       fi
       AC_DEFINE(DISABLE_ORC, 1, [Disable Orc])
       HAVE_ORC=no
+      HAVE_ORCC=no
     ])
   else
     AC_DEFINE(DISABLE_ORC, 1, [Disable Orc])
     HAVE_ORC=no
+    HAVE_ORCC=no
   fi
-  AM_CONDITIONAL(HAVE_ORC, test "x$HAVE_ORC" = "xyes")
+  AM_CONDITIONAL(HAVE_ORC, [test "x$HAVE_ORC" = "xyes"])
+  AM_CONDITIONAL(HAVE_ORCC, [test "x$HAVE_ORCC" = "xyes"])
 
 ]))
 

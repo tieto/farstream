@@ -209,6 +209,7 @@ GCOV_LIBS = @GCOV_LIBS@
 GIO_UNIX_CFLAGS = @GIO_UNIX_CFLAGS@
 GIO_UNIX_LIBS = @GIO_UNIX_LIBS@
 GLIB_CFLAGS = @GLIB_CFLAGS@
+GLIB_EXTRA_CFLAGS = @GLIB_EXTRA_CFLAGS@
 GLIB_LIBS = @GLIB_LIBS@
 GLIB_PREFIX = @GLIB_PREFIX@
 GLIB_REQ = @GLIB_REQ@
@@ -232,8 +233,6 @@ GST_PLUGINS_DIR = @GST_PLUGINS_DIR@
 GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
 GST_TOOLS_DIR = @GST_TOOLS_DIR@
 GTKDOC_CHECK = @GTKDOC_CHECK@
-GUPNP_013_CFLAGS = @GUPNP_013_CFLAGS@
-GUPNP_013_LIBS = @GUPNP_013_LIBS@
 GUPNP_CFLAGS = @GUPNP_CFLAGS@
 GUPNP_LIBS = @GUPNP_LIBS@
 HTML_DIR = @HTML_DIR@
@@ -964,8 +963,9 @@ lcov:
 @GST_GCOV_ENABLED_TRUE@lcov-report:
 @GST_GCOV_ENABLED_TRUE@	mkdir lcov
 @GST_GCOV_ENABLED_TRUE@	lcov --compat-libtool --directory . --capture --output-file lcov/lcov.info
-@GST_GCOV_ENABLED_TRUE@	lcov -l lcov/lcov.info | grep -v "`cd $(top_srcdir) && pwd`" | cut -d: -f1 > lcov/remove
-@GST_GCOV_ENABLED_TRUE@	lcov -l lcov/lcov.info | grep "tests/check/" | cut -d: -f1 >> lcov/remove
+@GST_GCOV_ENABLED_TRUE@	lcov --list-full-path -l lcov/lcov.info | grep -v "`cd $(top_srcdir) && pwd`" | cut -d\| -f1 > lcov/remove
+@GST_GCOV_ENABLED_TRUE@	lcov --list-full-path -l lcov/lcov.info | grep "tests/check/" | cut -d\| -f1 >> lcov/remove
+@GST_GCOV_ENABLED_TRUE@	lcov --list-full-path -l lcov/lcov.info | grep "docs/plugins/" | cut -d\| -f1 >> lcov/remove
 @GST_GCOV_ENABLED_TRUE@	lcov -r lcov/lcov.info `cat lcov/remove` > lcov/lcov.cleaned.info
 @GST_GCOV_ENABLED_TRUE@	rm lcov/remove
 @GST_GCOV_ENABLED_TRUE@	mv lcov/lcov.cleaned.info lcov/lcov.info
