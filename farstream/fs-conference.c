@@ -58,8 +58,8 @@
  */
 
 
-GST_DEBUG_CATEGORY (fs_conference_debug);
-#define GST_CAT_DEFAULT fs_conference_debug
+GST_DEBUG_CATEGORY (_fs_conference_debug);
+#define GST_CAT_DEFAULT _fs_conference_debug
 
 
 G_DEFINE_ABSTRACT_TYPE (FsConference, fs_conference, GST_TYPE_BIN)
@@ -74,7 +74,7 @@ fs_error_quark (void)
 void
 _fs_conference_init_debug (void)
 {
-  GST_DEBUG_CATEGORY_INIT (fs_conference_debug, "fsconference", 0,
+  GST_DEBUG_CATEGORY_INIT (_fs_conference_debug, "fsconference", 0,
       "farstream base conference library");
 }
 

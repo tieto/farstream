@@ -32,7 +32,7 @@ G_BEGIN_DECLS
 
 void _fs_conference_init_debug (void);
 
-GST_DEBUG_CATEGORY_EXTERN (fs_conference_debug);
+GST_DEBUG_CATEGORY_EXTERN (_fs_conference_debug);
 
 G_END_DECLS
 
