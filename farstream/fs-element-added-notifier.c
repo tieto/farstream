@@ -57,6 +57,7 @@ enum
       FsElementAddedNotifierPrivate))
 
 struct _FsElementAddedNotifierPrivate {
+  GPtrArray *bins;
   GList *keyfiles;
 };
 
@@ -108,6 +109,8 @@ static void
 fs_element_added_notifier_init (FsElementAddedNotifier *notifier)
 {
   notifier->priv = FS_ELEMENT_ADDED_NOTIFIER_GET_PRIVATE(notifier);
+
+  notifier->priv->bins = g_ptr_array_new_with_free_func (gst_object_unref);
 }
 
 
@@ -117,6 +120,7 @@ fs_element_added_notifier_finalize (GObject *object)
 {
   FsElementAddedNotifier *self = FS_ELEMENT_ADDED_NOTIFIER (object);
 
+  g_ptr_array_unref (self->priv->bins);
   g_list_foreach (self->priv->keyfiles, (GFunc) g_key_file_free, NULL);
   g_list_free (self->priv->keyfiles);
   self->priv->keyfiles = NULL;
@@ -155,6 +159,7 @@ fs_element_added_notifier_add (FsElementAddedNotifier *notifier,
   g_return_if_fail (bin && GST_IS_BIN (bin));
 
   _element_added_callback (NULL, GST_ELEMENT_CAST (bin), notifier);
+  g_ptr_array_add (notifier->priv->bins, gst_object_ref (bin));
 }
 
 
@@ -225,6 +230,8 @@ fs_element_added_notifier_remove (FsElementAddedNotifier *notifier,
   g_return_val_if_fail (FS_IS_ELEMENT_ADDED_NOTIFIER (notifier), FALSE);
   g_return_val_if_fail (GST_IS_BIN (bin), FALSE);
 
+  g_ptr_array_remove (notifier->priv->bins, bin);
+
   if (g_signal_handler_find (bin,
           G_SIGNAL_MATCH_FUNC | G_SIGNAL_MATCH_DATA,
           0, 0, NULL, /* id, detail, closure */
@@ -247,10 +254,8 @@ fs_element_added_notifier_remove (FsElementAddedNotifier *notifier,
 #endif
 
 static void
-_bin_added_from_keyfile (FsElementAddedNotifier *notifier, GstBin *bin,
-    GstElement *element, gpointer user_data)
+set_properties_from_keyfile (GKeyFile *keyfile, GstElement *element)
 {
-  GKeyFile *keyfile = user_data;
   const gchar *name = NULL;
   gchar *free_name = NULL;
   gchar **keys;
@@ -316,6 +321,26 @@ _bin_added_from_keyfile (FsElementAddedNotifier *notifier, GstBin *bin,
   g_free (free_name);
 }
 
+static void
+_bin_added_from_keyfile (FsElementAddedNotifier *notifier, GstBin *bin,
+    GstElement *element, gpointer user_data)
+{
+  GKeyFile *keyfile = user_data;
+
+  set_properties_from_keyfile (keyfile, element);
+}
+
+static void
+_element_foreach_keyfile (const GValue * item, gpointer user_data)
+{
+  GstElement *element = g_value_get_object (item);
+  GKeyFile *keyfile = user_data;
+
+  set_properties_from_keyfile (keyfile, element);
+
+  gst_object_unref (element);
+}
+
 
 /**
  * fs_element_added_notifier_set_properties_from_keyfile:
@@ -334,8 +359,22 @@ fs_element_added_notifier_set_properties_from_keyfile (
     FsElementAddedNotifier *notifier,
     GKeyFile *keyfile)
 {
+  guint i;
+
   g_return_if_fail (FS_IS_ELEMENT_ADDED_NOTIFIER (notifier));
   g_return_if_fail (keyfile);
+
+  for (i = 0; i < notifier->priv->bins->len; i++)
+  {
+    GstIterator *iter;
+
+    iter = gst_bin_iterate_recurse (
+        g_ptr_array_index (notifier->priv->bins, i));
+    while (gst_iterator_foreach (iter, _element_foreach_keyfile, keyfile) ==
+        GST_ITERATOR_RESYNC)
+      gst_iterator_resync (iter);
+    gst_iterator_free (iter);
+  }
 
   g_signal_connect (notifier, "element-added",
       G_CALLBACK (_bin_added_from_keyfile), keyfile);
