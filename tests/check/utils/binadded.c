@@ -242,13 +242,16 @@ GST_START_TEST (test_bin_keyfile)
 {
   GKeyFile *keyfile = g_key_file_new ();
   FsElementAddedNotifier *notifier = NULL;
+  gulong ret;
 
   g_key_file_set_boolean (keyfile, "identity", "sync", TRUE);
   g_key_file_set_boolean (keyfile, "identity", "invalid-property", TRUE);
 
   notifier = fs_element_added_notifier_new ();
 
-  fs_element_added_notifier_set_properties_from_keyfile (notifier, keyfile);
+  ret = fs_element_added_notifier_set_properties_from_keyfile (notifier,
+      keyfile);
+  fail_if (ret == 0);
 
   test_keyfile (notifier);
 }

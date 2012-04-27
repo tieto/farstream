@@ -351,16 +351,19 @@ _element_foreach_keyfile (const GValue * item, gpointer user_data)
  * this function has been called.  It will take ownership of the
  * GKeyFile structure. It will first try the group as the element type, if that
  * does not match, it will check its name.
+ *
+ * Returns: The id of the signal connection, this can be used to disconnect
+ * this property setter using g_signal_handler_disconnect().
  */
-void
+gulong
 fs_element_added_notifier_set_properties_from_keyfile (
     FsElementAddedNotifier *notifier,
     GKeyFile *keyfile)
 {
   guint i;
 
-  g_return_if_fail (FS_IS_ELEMENT_ADDED_NOTIFIER (notifier));
-  g_return_if_fail (keyfile);
+  g_return_val_if_fail (FS_IS_ELEMENT_ADDED_NOTIFIER (notifier), 0);
+  g_return_val_if_fail (keyfile, 0);
 
   for (i = 0; i < notifier->priv->bins->len; i++)
   {
@@ -374,7 +377,7 @@ fs_element_added_notifier_set_properties_from_keyfile (
     gst_iterator_free (iter);
   }
 
-  g_signal_connect_data (notifier, "element-added",
+  return g_signal_connect_data (notifier, "element-added",
       G_CALLBACK (_bin_added_from_keyfile), keyfile,
       (GClosureNotify) g_key_file_free, 0);
 }
