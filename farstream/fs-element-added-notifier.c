@@ -124,6 +124,8 @@ fs_element_added_notifier_finalize (GObject *object)
   g_list_foreach (self->priv->keyfiles, (GFunc) g_key_file_free, NULL);
   g_list_free (self->priv->keyfiles);
   self->priv->keyfiles = NULL;
+
+  G_OBJECT_CLASS (fs_element_added_notifier_parent_class)->finalize (object);
 }
 
 /**
