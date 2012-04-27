@@ -121,6 +121,9 @@ fs_utils_get_default_element_properties (GstElement *element)
   gchar *filename;
   const gchar *factory_name = factory_name_from_element (element);
 
+  if (factory_name == NULL)
+    return NULL;
+
   filename = g_build_filename (PACKAGE, FS_APIVERSION, factory_name,
       "default-element-properties", NULL);
   file_loaded = g_key_file_load_from_data_dirs (keyfile, filename, NULL,
