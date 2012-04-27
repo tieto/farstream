@@ -58,7 +58,6 @@ enum
 
 struct _FsElementAddedNotifierPrivate {
   GPtrArray *bins;
-  GList *keyfiles;
 };
 
 static void _element_added_callback (GstBin *parent, GstElement *element,
@@ -121,9 +120,6 @@ fs_element_added_notifier_finalize (GObject *object)
   FsElementAddedNotifier *self = FS_ELEMENT_ADDED_NOTIFIER (object);
 
   g_ptr_array_unref (self->priv->bins);
-  g_list_foreach (self->priv->keyfiles, (GFunc) g_key_file_free, NULL);
-  g_list_free (self->priv->keyfiles);
-  self->priv->keyfiles = NULL;
 
   G_OBJECT_CLASS (fs_element_added_notifier_parent_class)->finalize (object);
 }
@@ -378,11 +374,9 @@ fs_element_added_notifier_set_properties_from_keyfile (
     gst_iterator_free (iter);
   }
 
-  g_signal_connect (notifier, "element-added",
-      G_CALLBACK (_bin_added_from_keyfile), keyfile);
-
-  notifier->priv->keyfiles =
-    g_list_prepend (notifier->priv->keyfiles, keyfile);
+  g_signal_connect_data (notifier, "element-added",
+      G_CALLBACK (_bin_added_from_keyfile), keyfile,
+      (GClosureNotify) g_key_file_free, 0);
 }
 
 
