@@ -481,8 +481,11 @@ _element_added_callback (GstBin *parent, GstElement *element,
  * fs_element_added_notifier_set_properties_from_keyfile() .
  *
  * This is binding friendly (since GKeyFile doesn't have a boxed type).
+ *
+ * Returns: The id of the signal connection, this can be used to disconnect
+ * this property setter using g_signal_handler_disconnect().
  */
-void
+gulong
 fs_element_added_notifier_set_default_properties (
     FsElementAddedNotifier *notifier,
     GstElement *element)
@@ -490,7 +493,8 @@ fs_element_added_notifier_set_default_properties (
   GKeyFile *keyfile = fs_utils_get_default_element_properties (element);
 
   if (!keyfile)
-    return;
+    return 0;
 
-  fs_element_added_notifier_set_properties_from_keyfile(notifier, keyfile);
+  return fs_element_added_notifier_set_properties_from_keyfile (notifier,
+      keyfile);
 }

@@ -96,7 +96,7 @@ gboolean fs_element_added_notifier_set_properties_from_file (
     const gchar *filename,
     GError **error);
 
-void fs_element_added_notifier_set_default_properties (
+gulong fs_element_added_notifier_set_default_properties (
     FsElementAddedNotifier *notifier,
     GstElement *element);
 
