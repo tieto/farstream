@@ -47,8 +47,6 @@
  *
  */
 
-/* TODO Make a fs_codec_new() function since there is a _destroy() */
-
 GType
 fs_codec_get_type (void)
 {
