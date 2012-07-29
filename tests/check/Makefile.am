@@ -127,7 +127,7 @@ transmitter_shm_SOURCES = \
 	transmitter/generic.h \
 	transmitter/shm.c
 
-raw_conference_CFLAGS = $(AM_CFLAGS)
+raw_conference_CFLAGS = $(CFLAGS) $(AM_CFLAGS) $(GST_PLUGINS_BASE_CFLAGS)
 raw_conference_SOURCES = \
 	check-threadsafe.h  \
 	testutils.c \
@@ -149,14 +149,14 @@ rtp_codecs_SOURCES = \
 	rtp/generic.h \
 	rtp/codecs.c
 
-rtp_sendcodecs_CFLAGS = $(AM_CFLAGS)
+rtp_sendcodecs_CFLAGS = $(AM_CFLAGS) $(GST_PLUGINS_BASE_CFLAGS)
 rtp_sendcodecs_LDADD = $(LDADD) -lgstrtp-@GST_MAJORMINOR@
 rtp_sendcodecs_SOURCES = \
 	rtp/generic.c \
 	rtp/generic.h \
 	rtp/sendcodecs.c
 
-rtp_recvcodecs_CFLAGS = $(AM_CFLAGS)
+rtp_recvcodecs_CFLAGS = $(AM_CFLAGS) $(GST_PLUGINS_BASE_CFLAGS)
 rtp_recvcodecs_LDADD = $(LDADD) -lgstrtp-@GST_MAJORMINOR@
 
 msn_conference_CFLAGS = $(AM_CFLAGS)
@@ -169,6 +169,6 @@ utils_binadded_SOURCES = \
 	testutils.h \
 	utils/binadded.c
 
-elements_rtcpfilter_CFLAGS = $(AM_CFLAGS)
+elements_rtcpfilter_CFLAGS = $(AM_CFLAGS) $(GST_PLUGINS_BASE_CFLAGS)
 elements_rtcpfilter_SOURCES = elements/rtcpfilter.c
 elements_rtcpfilter_LDADD = $(LDADD) -lgstrtp-@GST_MAJORMINOR@
