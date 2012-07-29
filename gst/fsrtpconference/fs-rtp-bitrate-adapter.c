@@ -406,9 +406,7 @@ fs_rtp_bitrate_adapter_get_suggested_caps (FsRtpBitrateAdapter *self)
   gst_caps_unref (allowed_caps);
   gst_caps_unref (caps);
 
-  gst_caps_fixate (wanted_caps);
-
-  return wanted_caps;
+  return gst_caps_fixate (wanted_caps);
 }
 
 
