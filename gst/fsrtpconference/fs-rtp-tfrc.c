@@ -735,7 +735,7 @@ incoming_rtp_probe (GstPad *pad, GstPadProbeInfo *info, gpointer user_data)
   ts += src->ts_cycles;
 
   send_rtcp = tfrc_receiver_got_packet (src->receiver, ts, now, seq, rtt,
-      rtpbuffer.map.size);
+      gst_rtp_buffer_get_packet_len (&rtpbuffer));
 
   GST_LOG_OBJECT (self, "Got RTP packet");
 
