@@ -1054,12 +1054,12 @@ check_caps_compatibility (GstElementFactory *factory,
   GstStaticPadTemplate *padtemplate;
   GstCaps *padtemplate_caps = NULL;
 
-  if (!factory->numpadtemplates)
+  if (!gst_element_factory_get_num_pad_templates (factory))
   {
     return FALSE;
   }
 
-  pads = factory->staticpadtemplates;
+  pads = gst_element_factory_get_static_pad_templates (factory);
   while (pads)
   {
     padtemplate = (GstStaticPadTemplate *) (pads->data);
