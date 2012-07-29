@@ -130,7 +130,7 @@ setup_simple_conference_full (
 
   bus = gst_pipeline_get_bus (GST_PIPELINE (dat->pipeline));
   fail_if (bus == NULL);
-  gst_bus_set_sync_handler (bus, default_sync_handler, dat);
+  gst_bus_set_sync_handler (bus, default_sync_handler, dat, NULL);
   gst_object_unref (bus);
 
   dat->conference = gst_element_factory_make (conference_elem, NULL);
@@ -1456,8 +1456,8 @@ static void unref_stream_init (struct SimpleTestConference *dat, guint confid)
 {
   GstBus *bus = gst_pipeline_get_bus (GST_PIPELINE (dat->pipeline));
 
-  gst_bus_set_sync_handler (bus, NULL, NULL);
-  gst_bus_set_sync_handler (bus, unref_stream_sync_handler, dat);
+  gst_bus_set_sync_handler (bus, NULL, NULL, NULL);
+  gst_bus_set_sync_handler (bus, unref_stream_sync_handler, dat, NULL);
   gst_object_unref (bus);
 }
 
