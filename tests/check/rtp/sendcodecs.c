@@ -339,9 +339,8 @@ send_dmtf_buffer_handler (GstPad *pad, GstPadProbeInfo *info,
   GstBuffer *buf = GST_PAD_PROBE_INFO_BUFFER (info);
   gchar *data;
 
-  ts_fail_unless (gst_rtp_buffer_validate (buf), "Buffer is not valid rtp");
-
-  gst_rtp_buffer_map (buf, GST_MAP_READ, &rtpbuf);
+  ts_fail_unless (gst_rtp_buffer_map (buf, GST_MAP_READ, &rtpbuf),
+    "Buffer is not valid rtp");
   if (gst_rtp_buffer_get_payload_type (&rtpbuf) != dtmf_id)
     goto out;
 
@@ -525,9 +524,7 @@ change_ssrc_buffer_handler (GstPad *pad, GstPadProbeInfo *info,
   guint buf_ssrc;
   GstRTPBuffer rtpbuf = GST_RTP_BUFFER_INIT;
 
-  ts_fail_unless (gst_rtp_buffer_validate (buf));
-
-  gst_rtp_buffer_map (buf, GST_MAP_READ, &rtpbuf);
+  ts_fail_unless (gst_rtp_buffer_map (buf, GST_MAP_READ, &rtpbuf));
   buf_ssrc = gst_rtp_buffer_get_ssrc (&rtpbuf);
   gst_rtp_buffer_unmap (&rtpbuf);
 
