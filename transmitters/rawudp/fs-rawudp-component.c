@@ -992,6 +992,10 @@ fs_rawudp_component_set_remote_candidate (FsRawUdpComponent *self,
         (guint8*) &(((struct sockaddr_in6 *)res->ai_addr)->sin6_addr.s6_addr),
         G_SOCKET_FAMILY_IPV6);
       break;
+    default:
+      g_set_error (error, FS_ERROR, FS_ERROR_INTERNAL,
+        "Unknown address family");
+      return FALSE;
   }
 
 
