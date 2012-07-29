@@ -34,6 +34,8 @@
 # include <unistd.h>
 #endif
 #include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include <farstream/fs-conference.h>
 
