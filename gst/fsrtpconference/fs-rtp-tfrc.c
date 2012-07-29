@@ -1092,7 +1092,6 @@ fs_rtp_tfrc_outgoing_packets (FsRtpPacketModder *modder,
   gchar data[7];
   guint64 now;
   GstBuffer *headerbuf;
-  GstBuffer *databuf;
   GstBuffer *newbuf;
   gboolean is_data_limited;
   gsize header_size;
@@ -1136,7 +1135,7 @@ fs_rtp_tfrc_outgoing_packets (FsRtpPacketModder *modder,
   header_size = gst_rtp_buffer_get_header_len (&rtpbuffer);
   gst_rtp_buffer_unmap (&rtpbuffer);
 
-  headerbuf = gst_buffer_copy_region (buffer, GST_BUFFER_COPY_METADATA, 0,
+  headerbuf = gst_buffer_copy_region (buffer, GST_BUFFER_COPY_ALL, 0,
       header_size);
   headerbuf = gst_buffer_make_writable (headerbuf);
   gst_buffer_set_size (headerbuf, header_size + 16);
@@ -1164,15 +1163,11 @@ fs_rtp_tfrc_outgoing_packets (FsRtpPacketModder *modder,
   new_header_size = gst_rtp_buffer_get_header_len (&rtpbuffer);
 
   gst_rtp_buffer_unmap (&rtpbuffer);
+  gst_buffer_set_size (headerbuf, new_header_size);
 
-  databuf = gst_buffer_copy_region (buffer, GST_BUFFER_COPY_ALL, header_size,
-      gst_buffer_get_size (buffer) - header_size);
-
-  newbuf = gst_buffer_span (headerbuf, new_header_size, databuf,
-      gst_buffer_get_size (buffer) + new_header_size - header_size);
-  gst_buffer_unref (headerbuf);
-  gst_buffer_unref (databuf);
-
+  /* append_region eats a ref */
+  gst_buffer_ref (buffer);
+  newbuf = gst_buffer_append_region (headerbuf, buffer, header_size, -1);
 
   GST_LOG_OBJECT (self, "Sending RTP");
 
