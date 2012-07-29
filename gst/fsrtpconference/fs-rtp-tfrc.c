@@ -474,7 +474,7 @@ fs_rtp_tfrc_set_receiver_timer_locked (FsRtpTfrc *self,
   src->receiver_id = gst_clock_new_single_shot_id (self->systemclock,
       expiry * GST_USECOND);
 
-  cret = gst_clock_id_wait_async_full (src->receiver_id, feedback_timer_expired,
+  cret = gst_clock_id_wait_async (src->receiver_id, feedback_timer_expired,
       build_timer_data (self, src->ssrc), free_timer_data);
   if (cret != GST_CLOCK_OK)
     GST_ERROR_OBJECT (self,
@@ -843,7 +843,7 @@ fs_rtp_tfrc_update_sender_timer_locked (FsRtpTfrc *self,
   src->sender_id = gst_clock_new_single_shot_id (self->systemclock,
       expiry * GST_USECOND);
 
-  cret = gst_clock_id_wait_async_full (src->sender_id,
+  cret = gst_clock_id_wait_async (src->sender_id,
       no_feedback_timer_expired, build_timer_data (self, src->ssrc),
       free_timer_data);
   if (cret != GST_CLOCK_OK)

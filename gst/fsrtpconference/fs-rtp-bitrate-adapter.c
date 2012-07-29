@@ -614,7 +614,7 @@ fs_rtp_bitrate_adapter_add_bitrate_locked (FsRtpBitrateAdapter *self,
   {
     self->clockid = gst_clock_new_single_shot_id (self->system_clock,
         now + self->interval);
-    gst_clock_id_wait_async_full (self->clockid,
+    gst_clock_id_wait_async (self->clockid,
         clock_callback, gst_object_ref (self), gst_object_unref);
   }
 
