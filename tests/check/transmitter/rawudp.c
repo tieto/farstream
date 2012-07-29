@@ -73,7 +73,7 @@ GST_START_TEST (test_rawudptransmitter_new)
   gboolean found_it = FALSE;
 
   transmitters = fs_transmitter_list_available ();
-  for (i=0; transmitters[i]; i++)
+  for (i=0; transmitters != NULL && transmitters[i]; i++)
   {
     if (!strcmp ("rawudp", transmitters[i]))
     {
