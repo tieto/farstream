@@ -1546,11 +1546,10 @@ _stream_known_source_packet_received (FsRtpStream *stream, guint component,
 
   if (component == 1)
   {
-    if (gst_rtp_buffer_validate (buffer))
-    {
       GstRTPBuffer rtpbuffer = GST_RTP_BUFFER_INIT;
 
-      gst_rtp_buffer_map (buffer, GST_MAP_READ, &rtpbuffer);
+    if (gst_rtp_buffer_map (buffer, GST_MAP_READ, &rtpbuffer))
+    {
       ssrc = gst_rtp_buffer_get_ssrc (&rtpbuffer);
       gst_rtp_buffer_unmap (&rtpbuffer);
 
@@ -1560,13 +1559,10 @@ _stream_known_source_packet_received (FsRtpStream *stream, guint component,
   else if (component == 2)
   {
     GstRTCPPacket rtcppacket;
+    GstRTCPBuffer rtcpbuffer = GST_RTCP_BUFFER_INIT;
 
-    if (gst_rtcp_buffer_validate (buffer))
+    if (!gst_rtcp_buffer_map (buffer, GST_MAP_READ, &rtcpbuffer))
     {
-      GstRTCPBuffer rtcpbuffer = GST_RTCP_BUFFER_INIT;
-
-      gst_rtcp_buffer_map (buffer, GST_MAP_READ, &rtcpbuffer);
-
       if (gst_rtcp_buffer_get_first_packet (&rtcpbuffer, &rtcppacket))
       {
         do {

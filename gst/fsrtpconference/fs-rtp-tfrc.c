@@ -652,16 +652,14 @@ incoming_rtp_probe (GstPad *pad, GstPadProbeInfo *info, gpointer user_data)
   gint seq_delta;
   GstRTPBuffer rtpbuffer = GST_RTP_BUFFER_INIT;
 
-  if (!gst_rtp_buffer_validate (buffer))
+  if (!gst_rtp_buffer_map (buffer, GST_MAP_READ, &rtpbuffer))
     return GST_PAD_PROBE_OK;
 
   GST_OBJECT_LOCK (self);
 
-
   if (!self->fsrtpsession)
-    goto out_no_header;
+    goto out_no_header_unmap;
 
-  gst_rtp_buffer_map (buffer, GST_MAP_READ, &rtpbuffer);
   ssrc = gst_rtp_buffer_get_ssrc (&rtpbuffer);
   pt = gst_rtp_buffer_get_payload_type (&rtpbuffer);
   seq = gst_rtp_buffer_get_seq (&rtpbuffer);
