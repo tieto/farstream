@@ -210,7 +210,7 @@ async_bus_cb (GstBus *bus, GstMessage *message, gpointer user_data)
                   &error));
 
           if (FS_ERROR_IS_FATAL (error))
-            g_error ("Farstream fatal error: %d %s", error, error_msg)
+            g_error ("Farstream fatal error: %d %s", error, error_msg);
           else
             g_warning ("Farstream non-fatal error: %d %s", error, error_msg);
         }
