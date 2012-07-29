@@ -69,7 +69,7 @@ gst_videoanyrate_transform_caps (GstBaseTransform *trans,
     GstPadDirection direction,
     GstCaps *caps,
     GstCaps *filter);
-static void
+static GstCaps *
 gst_videoanyrate_fixate_caps (GstBaseTransform * base,
     GstPadDirection direction, GstCaps * caps, GstCaps * othercaps);
 
@@ -140,7 +140,7 @@ gst_videoanyrate_transform_caps (GstBaseTransform *trans,
   return mycaps;
 }
 
-static void
+static GstCaps *
 gst_videoanyrate_fixate_caps (GstBaseTransform * base,
     GstPadDirection direction, GstCaps * caps, GstCaps * othercaps)
 {
@@ -148,7 +148,9 @@ gst_videoanyrate_fixate_caps (GstBaseTransform * base,
 
   const GValue *from_fr, *to_fr;
 
-  g_return_if_fail (gst_caps_is_fixed (caps));
+  g_return_val_if_fail (gst_caps_is_fixed (caps), othercaps);
+
+  othercaps = gst_caps_make_writable (othercaps);
 
   GST_DEBUG_OBJECT (base, "trying to fixate othercaps %" GST_PTR_FORMAT
       " based on caps %" GST_PTR_FORMAT, othercaps, caps);
@@ -164,7 +166,7 @@ gst_videoanyrate_fixate_caps (GstBaseTransform * base,
     gint from_fr_n, from_fr_d;
 
     /* from_fr should be fixed */
-    g_return_if_fail (gst_value_is_fixed (from_fr));
+    g_return_val_if_fail (gst_value_is_fixed (from_fr), othercaps);
 
     from_fr_n = gst_value_get_fraction_numerator (from_fr);
     from_fr_d = gst_value_get_fraction_denominator (from_fr);
@@ -174,7 +176,10 @@ gst_videoanyrate_fixate_caps (GstBaseTransform * base,
     gst_structure_fixate_field_nearest_fraction (outs, "framerate",
         from_fr_n, from_fr_d);
   }
+
+  return gst_caps_fixate (othercaps);
 }
+
 gboolean
 gst_videoanyrate_plugin_init (GstPlugin *plugin)
 {
