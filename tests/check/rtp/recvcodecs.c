@@ -256,7 +256,7 @@ GST_START_TEST (test_rtprecv_inband_config_data)
 
   pipeline = gst_parse_launch (
       "videotestsrc is-live=1 name=src num-buffers="G_STRINGIFY (BUFFER_COUNT) " !"
-      " video/x-raw-yuv, framerate=(fraction)30/1 ! theoraenc !"
+      " video/x-raw, framerate=(fraction)30/1 ! theoraenc !"
       " rtptheorapay name=pay config-interval=0 name=pay !"
       " application/x-rtp, payload=96, ssrc=(uint)12345678 !"
       " udpsink host=127.0.0.1 name=sink", NULL);
