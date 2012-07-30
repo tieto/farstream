@@ -28,6 +28,7 @@
 #endif
 
 #include "fs-rtp-bitrate-adapter.h"
+#include <gst/video/video.h>
 
 #include <math.h>
 
@@ -41,36 +42,13 @@ static GstStaticPadTemplate fs_rtp_bitrate_adapter_sink_template =
     GST_STATIC_PAD_TEMPLATE ("sink",
         GST_PAD_SINK,
         GST_PAD_ALWAYS,
-        GST_STATIC_CAPS ("video/x-raw-yuv,"
-            "width = (int) [ 1, max ],"
-            "height =  (int) [ 1, max ],"
-            "framerate = (fraction) [ 1/max, max ];"
-            "video/x-raw-rgb,"
-            "width = (int) [ 1, max ],"
-            "height =  (int) [ 1, max ],"
-            "framerate = (fraction) [ 1/max, max ];"
-            "video/x-raw-gray,"
-            "width = (int) [ 1, max ],"
-            "height =  (int) [ 1, max ],"
-            "framerate = (fraction) [ 1/max, max ]"));
+        GST_STATIC_CAPS (GST_VIDEO_CAPS_MAKE (GST_VIDEO_FORMATS_ALL)));
 
 static GstStaticPadTemplate fs_rtp_bitrate_adapter_src_template =
     GST_STATIC_PAD_TEMPLATE ("src",
         GST_PAD_SRC,
         GST_PAD_ALWAYS,
-        GST_STATIC_CAPS ("video/x-raw-yuv,"
-            "width = (int) [ 1, max ],"
-            "height =  (int) [ 1, max ],"
-            "framerate = (fraction) [ 1/max, max ];"
-            "video/x-raw-rgb,"
-            "width = (int) [ 1, max ],"
-            "height =  (int) [ 1, max ],"
-            "framerate = (fraction) [ 1/max, max ];"
-            "video/x-raw-gray,"
-            "width = (int) [ 1, max ],"
-            "height =  (int) [ 1, max ],"
-            "framerate = (fraction) [ 1/max, max ]"));
-
+        GST_STATIC_CAPS (GST_VIDEO_CAPS_MAKE (GST_VIDEO_FORMATS_ALL)));
 enum
 {
   PROP_0,
@@ -277,11 +255,7 @@ add_one_resolution_inner (GstCaps *caps, GstCaps *caps_gray,
     guint min_framerate, guint max_framerate, guint width, guint height,
     guint par_n, guint par_d)
 {
-  video_caps_add (caps, "video/x-raw-yuv", min_framerate, max_framerate,
-      width, height, par_n, par_d);
-  video_caps_add (caps, "video/x-raw-rgb", min_framerate, max_framerate,
-      width, height, par_n, par_d);
-  video_caps_add (caps_gray, "video/x-raw-gray", min_framerate, max_framerate,
+  video_caps_add (caps, "video/x-raw", min_framerate, max_framerate,
       width, height, par_n, par_d);
 }
 
