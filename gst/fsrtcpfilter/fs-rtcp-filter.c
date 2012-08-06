@@ -243,7 +243,7 @@ fs_rtcp_filter_plugin_init (GstPlugin *plugin)
 
 GST_PLUGIN_DEFINE (GST_VERSION_MAJOR,
     GST_VERSION_MINOR,
-    "fsrtcpfilter",
+    fsrtcpfilter,
     "RtcpFilter",
     fs_rtcp_filter_plugin_init, VERSION, "LGPL", "Farstream",
     "http://farstream.sf.net")

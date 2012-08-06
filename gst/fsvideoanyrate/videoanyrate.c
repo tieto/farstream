@@ -189,7 +189,7 @@ gst_videoanyrate_plugin_init (GstPlugin *plugin)
 
 GST_PLUGIN_DEFINE (GST_VERSION_MAJOR,
     GST_VERSION_MINOR,
-    "fsvideoanyrate",
+    fsvideoanyrate,
     "Videoanyrate",
     gst_videoanyrate_plugin_init, VERSION, "LGPL", "Farstream",
     "http://farstream.sf.net")

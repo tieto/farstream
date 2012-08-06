@@ -47,7 +47,7 @@ GST_PLUGIN_DEFINE (
 #endif
   GST_VERSION_MAJOR,
   GST_VERSION_MINOR,
-  "fsrtpconference",
+  fsrtpconference,
   "Farstream RTP Conference plugin",
   plugin_init,
   VERSION,

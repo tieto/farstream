@@ -295,7 +295,7 @@ GST_PLUGIN_DEFINE (
 #endif
   GST_VERSION_MAJOR,
   GST_VERSION_MINOR,
-  "fsmsnconference",
+  fsmsnconference,
   "Farstream MSN Conference plugin",
   plugin_init,
   VERSION,

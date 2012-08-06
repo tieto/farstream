@@ -48,7 +48,7 @@ GST_PLUGIN_DEFINE (
 #endif
   GST_VERSION_MAJOR,
   GST_VERSION_MINOR,
-  "fsrawconference",
+  fsrawconference,
   "Farstream Raw Conference plugin",
   plugin_init,
   VERSION,
