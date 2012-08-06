@@ -545,7 +545,6 @@ fs_stream_emit_error (FsStream *stream,
     gint error_no,
     const gchar *error_msg)
 {
-  G_BREAKPOINT ();
   g_signal_emit (stream, signals[ERROR_SIGNAL], 0, error_no, error_msg);
 }
 

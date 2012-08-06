@@ -654,7 +654,6 @@ fs_session_emit_error (FsSession *session,
     gint error_no,
     const gchar *error_msg)
 {
-  G_BREAKPOINT ();
   g_signal_emit (session, signals[ERROR_SIGNAL], 0, session, error_no,
       error_msg);
 }
