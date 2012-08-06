@@ -192,4 +192,4 @@ GST_PLUGIN_DEFINE (GST_VERSION_MAJOR,
     fsvideoanyrate,
     "Videoanyrate",
     gst_videoanyrate_plugin_init, VERSION, "LGPL", "Farstream",
-    "http://farstream.sf.net")
+    "http://www.freedesktop.org/wiki/Software/Farstream")

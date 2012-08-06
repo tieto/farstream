@@ -246,4 +246,4 @@ GST_PLUGIN_DEFINE (GST_VERSION_MAJOR,
     fsrtcpfilter,
     "RtcpFilter",
     fs_rtcp_filter_plugin_init, VERSION, "LGPL", "Farstream",
-    "http://farstream.sf.net")
+    "http://www.freedesktop.org/wiki/Software/Farstream")

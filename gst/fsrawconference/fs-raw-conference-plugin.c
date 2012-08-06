@@ -54,7 +54,7 @@ GST_PLUGIN_DEFINE (
   VERSION,
   "LGPL",
   "Farstream",
-  "http://farstream.freedesktop.org/"
+  "http://www.freedesktop.org/wiki/Software/Farstream"
 #ifdef BUILD_GTK_DOC
   );
 }

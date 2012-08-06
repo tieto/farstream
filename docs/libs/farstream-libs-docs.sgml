@@ -10,7 +10,7 @@
     <releaseinfo>
       for version &FS_VERSION;.
       The latest version of this documentation can be found on-line at
-      <ulink role="online-location" url="http://farstream.freedesktop.org/apidoc/farstream/">http://farstream.freedesktop.org/apidoc/farstream/</ulink>.
+      <ulink role="online-location" url="http://www.freedesktop.org/software/farstream/apidoc/farstream/">http://www.freedesktop.org/software/farstream/apidoc/farstream/</ulink>.
       The bases classes are implemented by multiple plugins described in
       the <ulink url="http://farstream.freedesktop.org/apidoc/farstream-plugins/">Farstream Plugins Manual</ulink>.
     </releaseinfo>
