@@ -17,4 +17,4 @@ LDADD = \
 	$(GST_CHECK_LIBS) \
 	$(GST_PLUGINS_BASE_LIBS) \
 	$(GST_LIBS) \
-	-lgstrtp-@GST_MAJORMINOR@
+	-lgstrtp-@GST_API_VERSION@

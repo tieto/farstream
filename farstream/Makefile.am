@@ -100,7 +100,7 @@ Farstream_@FS_MAJOR_MINOR@_gir_NAMESPACE = Farstream
 Farstream_@FS_MAJOR_MINOR@_gir_VERSION = @FS_MAJORMINOR@
 Farstream_@FS_MAJOR_MINOR@_gir_LIBS = libfarstream-@FS_MAJORMINOR@.la
 Farstream_@FS_MAJOR_MINOR@_gir_FILES = $(introspection_sources)
-Farstream_@FS_MAJOR_MINOR@_gir_INCLUDES = GObject-2.0 Gst-@GST_MAJORMINOR@
+Farstream_@FS_MAJOR_MINOR@_gir_INCLUDES = GObject-2.0 Gst-@GST_API_VERSION@
 Farstream_@FS_MAJOR_MINOR@_gir_CFLAGS = $(FS_INTERNAL_CFLAGS)
 Farstream_@FS_MAJOR_MINOR@_gir_SCANNERFLAGS = --identifier-prefix=fs_ --identifier-prefix=Fs
 

@@ -58,6 +58,9 @@
 
 #include <gst/gst.h>
 
+#include <gst/base/gstbasesrc.h>
+
+
 #include "fs-msn-connection.h"
 
 
@@ -555,9 +558,14 @@ _connected (
   }
 
   if (self->priv->conference->max_direction == FS_DIRECTION_RECV)
+  {
     fdelem = gst_bin_get_by_name (GST_BIN (codecbin), "fdsrc");
+    gst_base_src_set_format (GST_BASE_SRC (fdelem), GST_FORMAT_TIME);
+  }
   else
+  {
     fdelem = gst_bin_get_by_name (GST_BIN (codecbin), "fdsink");
+  }
 
   if (!fdelem)
   {

@@ -4,7 +4,7 @@
 # DOCS_ARE_INCOMPLETE_PLEASE_FIXME=yespleasedo
 
 # The name of the module, e.g. 'glib'.
-#DOC_MODULE=gst-plugins-libs-@GST_MAJORMINOR@
+#DOC_MODULE=gst-plugins-libs-@GST_API_VERSION@
 DOC_MODULE=farstream-libs
 
 # generated basefiles

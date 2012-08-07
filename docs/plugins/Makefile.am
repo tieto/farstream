@@ -3,7 +3,7 @@ GST_DOC_SCANOBJ = $(top_srcdir)/common/gstdoc-scangobj
 ## Process this file with automake to produce Makefile.in
 
 # The name of the module, e.g. 'glib'.
-#DOC_MODULE=gst-plugins-libs-@GST_MAJORMINOR@
+#DOC_MODULE=gst-plugins-libs-@GST_API_VERSION@
 MODULE=farstream
 DOC_MODULE=$(MODULE)-plugins
 
@@ -18,11 +18,11 @@ DOC_MODULE=$(MODULE)-plugins
 #	BUILDDIR=`pwd` && \
 #	cd $(srcdir)/tmpl && \
 #	ln -sf gstreamer-libs-unused.sgml \
-#		$$BUILDDIR/tmpl/gstreamer-libs-@GST_MAJORMINOR@-unused.sgml
+#		$$BUILDDIR/tmpl/gstreamer-libs-@GST_API_VERSION@-unused.sgml
 #	touch unused-build.stamp
 
-# these rules are added to create parallel docs using GST_MAJORMINOR
-#$(basefiles): gstreamer-libs-@GST_MAJORMINOR@%: gstreamer-libs%
+# these rules are added to create parallel docs using GST_API_VERSION
+#$(basefiles): gstreamer-libs-@GST_API_VERSION@%: gstreamer-libs%
 #	cp $< $@
 
 #CLEANFILES = $(basefiles)

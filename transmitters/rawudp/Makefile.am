@@ -31,7 +31,7 @@ librawudp_transmitter_la_LIBADD = \
 	$(NICE_LIBS) \
 	$(GUPNP_LIBS) \
 	$(GIO_LIBS) \
-	-lgstnet-@GST_MAJORMINOR@
+	-lgstnet-@GST_API_VERSION@
 
 noinst_HEADERS = \
 	fs-rawudp-transmitter.h \

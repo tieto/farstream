@@ -6,7 +6,7 @@ pluginsdir=@libdir@/farstream-@FS_MAJORMINOR@
 
 Name: Farstream
 Description: Farstream base classes and utilities
-Requires: gstreamer-@GST_MAJORMINOR@ gstreamer-base-@GST_MAJORMINOR@
+Requires: gstreamer-@GST_API_VERSION@ gstreamer-base-@GST_API_VERSION@
 Version: @VERSION@
 Libs: -L${libdir} -lfarstream-@FS_MAJORMINOR@
 Cflags: -I${includedir}

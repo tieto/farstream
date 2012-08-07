@@ -66,7 +66,7 @@ libfsrtpconference_la_LIBADD = \
 	$(FS_LIBS) \
 	$(GST_PLUGINS_BASE_LIBS) \
 	$(GST_LIBS) \
-	-lgstrtp-@GST_MAJORMINOR@ \
+	-lgstrtp-@GST_API_VERSION@ \
 	-lm
 
 libfsrtpconference_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)

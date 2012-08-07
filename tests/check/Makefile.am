@@ -150,14 +150,14 @@ rtp_codecs_SOURCES = \
 	rtp/codecs.c
 
 rtp_sendcodecs_CFLAGS = $(AM_CFLAGS) $(GST_PLUGINS_BASE_CFLAGS)
-rtp_sendcodecs_LDADD = $(LDADD) -lgstrtp-@GST_MAJORMINOR@
+rtp_sendcodecs_LDADD = $(LDADD) -lgstrtp-@GST_API_VERSION@
 rtp_sendcodecs_SOURCES = \
 	rtp/generic.c \
 	rtp/generic.h \
 	rtp/sendcodecs.c
 
 rtp_recvcodecs_CFLAGS = $(AM_CFLAGS) $(GST_PLUGINS_BASE_CFLAGS)
-rtp_recvcodecs_LDADD = $(LDADD) -lgstrtp-@GST_MAJORMINOR@
+rtp_recvcodecs_LDADD = $(LDADD) -lgstrtp-@GST_API_VERSION@
 
 msn_conference_CFLAGS = $(AM_CFLAGS)
 msn_conference_SOURCES = \
@@ -171,4 +171,4 @@ utils_binadded_SOURCES = \
 
 elements_rtcpfilter_CFLAGS = $(AM_CFLAGS) $(GST_PLUGINS_BASE_CFLAGS)
 elements_rtcpfilter_SOURCES = elements/rtcpfilter.c
-elements_rtcpfilter_LDADD = $(LDADD) -lgstrtp-@GST_MAJORMINOR@
+elements_rtcpfilter_LDADD = $(LDADD) -lgstrtp-@GST_API_VERSION@

@@ -68,9 +68,9 @@ static gboolean codecs_cache_valid (gchar *cache_path) {
   registry_xml_path = g_strdup (g_getenv ("GST_REGISTRY"));
   if (registry_xml_path == NULL) {
     registry_bin_path = g_build_filename (g_get_home_dir (),
-        ".gstreamer-" GST_MAJORMINOR, "registry." HOST_CPU ".bin", NULL);
+        ".gstreamer-" GST_API_VERSION, "registry." HOST_CPU ".bin", NULL);
     registry_xml_path = g_build_filename (g_get_home_dir (),
-        ".gstreamer-" GST_MAJORMINOR, "registry." HOST_CPU ".xml", NULL);
+        ".gstreamer-" GST_API_VERSION, "registry." HOST_CPU ".xml", NULL);
   } else {
     registry_bin_path = g_strdup (registry_xml_path);
   }
