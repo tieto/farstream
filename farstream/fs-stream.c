@@ -608,8 +608,7 @@ fs_stream_iterate_src_pads (FsStream *stream)
  * @transmitter: Name of the type of transmitter to use for this stream
  * @stream_transmitter_n_parameters: Number of parametrs passed to the stream
  *  transmitter
- * @stream_transmitter_parameters:
- *   (array length=stream_transmitter_n_parameters) (allow-none):
+ * @stream_transmitter_parameters: (array length=stream_transmitter_n_parameters) (allow-none):
  *   an array of n_parameters #GParameter struct that will be passed
  *   to the newly-create #FsStreamTransmitter
  * @error: location of a #GError, or %NULL if no error occured

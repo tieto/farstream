@@ -376,7 +376,7 @@ fs_session_class_init (FsSessionClass *klass)
         G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
   /**
-   * FsSession:tos
+   * FsSession:tos:
    *
    * Sets the IP ToS field (and if possible the IPv6 TCLASS field
    */

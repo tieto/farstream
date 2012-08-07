@@ -101,7 +101,7 @@ fs_utils_get_default_codec_preferences (GstElement *element)
 }
 
 /**
- * fs_utils_get_default_element_properties: (skip):
+ * fs_utils_get_default_element_properties: (skip)
  * @element: Element for which to fetch default element properties
  *
  * This function produces a #GKeyFile that can be fed to
@@ -229,7 +229,7 @@ load_default_rtp_hdrext_preferences_from_path (const gchar *element_name,
 }
 
 /**
- * fs_utils_get_default_rtp_header_extension_preferences
+ * fs_utils_get_default_rtp_header_extension_preferences:
  * @element: Element for which to fetch default RTP Header Extension preferences
  * @media_type: The #FsMediaType for which to get default RTP Header Extension
  *  preferences

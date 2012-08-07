@@ -114,7 +114,7 @@ fs_conference_error (GObject *signal_src,
 }
 
 /**
- * fs_conference_new_session
+ * fs_conference_new_session:
  * @conference: #FsConference interface of a #GstElement
  * @media_type: #FsMediaType of the new session
  * @error: location of a #GError, or %NULL if no error occured
@@ -151,7 +151,7 @@ fs_conference_new_session (FsConference *conf,
 }
 
 /**
- * fs_conference_new_participant
+ * fs_conference_new_participant:
  * @conference: #FsConference interface of a #GstElement
  * @error: location of a #GError, or %NULL if no error occured
  *

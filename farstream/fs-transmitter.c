@@ -199,7 +199,7 @@ fs_transmitter_class_init (FsTransmitterClass *klass)
       G_TYPE_NONE, 2, FS_TYPE_ERROR, G_TYPE_STRING);
 
   /**
-   * FsTransmitter::get-recvonly-filter
+   * FsTransmitter::get-recvonly-filter:
    * @self: #FsTransmitter that emitted the signal
    * @component: The component that the filter will be used for
    *
