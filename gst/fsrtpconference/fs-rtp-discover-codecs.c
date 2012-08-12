@@ -915,8 +915,7 @@ codec_cap_list_intersect (GList *list1, GList *list2)
         if (item) {
           GList *tmplist;
 
-          item->caps = gst_caps_merge (item->caps,
-              gst_caps_ref (intersection));
+          item->caps = gst_caps_merge (item->caps, intersection);
 
           for (tmplist = g_list_first (codec_cap2->element_list1->data);
                tmplist;
@@ -932,7 +931,7 @@ codec_cap_list_intersect (GList *list1, GList *list2)
         } else {
 
           item = g_slice_new0 (CodecCap);
-          item->caps = gst_caps_ref (intersection);
+          item->caps = intersection;
 
           if (rtp_caps1 && rtp_caps2)
           {
@@ -962,15 +961,14 @@ codec_cap_list_intersect (GList *list1, GList *list2)
 
           intersection_list = g_list_append (intersection_list, item);
           if (rtp_intersection) {
-            gst_caps_unref (intersection);
             break;
           }
         }
       } else {
         if (rtp_intersection)
           gst_caps_unref (rtp_intersection);
+        gst_caps_unref (intersection);
       }
-      gst_caps_unref (intersection);
     }
   }
 
@@ -1216,18 +1214,14 @@ create_codec_cap_list (GstElementFactory *factory,
       }
       else
       {
-        GstCaps *newcaps;
-
         entry->element_list1->data =
           g_list_append (entry->element_list1->data, factory);
         gst_object_ref (factory);
 
         if (rtp_caps) {
           if (entry->rtp_caps) {
-            GstCaps *new_rtp_caps;
-            gst_caps_ref (rtp_caps);
-            new_rtp_caps = gst_caps_merge (rtp_caps, entry->rtp_caps);
-            entry->rtp_caps = new_rtp_caps;
+            entry->rtp_caps = gst_caps_merge (gst_caps_copy (rtp_caps),
+              entry->rtp_caps);
           } else {
             entry->rtp_caps = gst_caps_ref (rtp_caps);
             /* This shouldn't happen, its we're looking at rtp elements
@@ -1235,10 +1229,7 @@ create_codec_cap_list (GstElementFactory *factory,
             g_assert_not_reached ();
           }
         }
-
-        newcaps = gst_caps_merge (cur_caps, entry->caps);
-        entry->caps = newcaps;
-
+        entry->caps = gst_caps_merge (cur_caps, entry->caps);
       }
     }
   done:
