@@ -96,6 +96,7 @@ introspection_sources = \
 	$(libfarstreaminclude_HEADERS)
 
 INTROSPECTION_GIRS = Farstream-@FS_MAJORMINOR@.gir
+Farstream-@FS_MAJORMINOR@.gir: libfarstream-@FS_MAJORMINOR@.la
 Farstream_@FS_MAJOR_MINOR@_gir_NAMESPACE = Farstream
 Farstream_@FS_MAJOR_MINOR@_gir_VERSION = @FS_MAJORMINOR@
 Farstream_@FS_MAJOR_MINOR@_gir_LIBS = libfarstream-@FS_MAJORMINOR@.la
