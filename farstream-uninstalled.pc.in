@@ -1,0 +1,14 @@
+prefix=
+exec_prefix=
+abs_top_srcdir=@abs_top_srcdir@
+abs_top_builddir=@abs_top_builddir@
+
+includedir=@includedir@/farstream-@FS_APIVERSION@
+pluginsdir=@libdir@/farstream-@FS_APIVERSION@
+
+Name: Farstream
+Description: Farstream base classes and utilities
+Requires: gstreamer-@GST_MAJORMINOR@ gstreamer-base-@GST_MAJORMINOR@
+Version: @VERSION@
+Libs: ${abs_top_builddir}/farstream/libfarstream-@FS_APIVERSION@.la
+Cflags: -I${abs_top_srcdir} -I${abs_top_builddir}

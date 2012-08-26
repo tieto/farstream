@@ -372,6 +372,7 @@ dnl *** output files ***
 AC_CONFIG_FILES(
 Makefile
 farstream.pc
+farstream-uninstalled.pc
 common/Makefile
 common/m4/Makefile
 common-modified/Makefile

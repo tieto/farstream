@@ -43,14 +43,21 @@ check-torture:
 	true
 endif
 
-pcverfiles = farstream-@FS_APIVERSION@.pc
-pcinfiles = farstream.pc.in
+pcverfiles = farstream-@FS_APIVERSION@.pc \
+             farstream-@FS_APIVERSION@-uninstalled.pc
+pcinfiles = farstream.pc.in \
+            farstream-uninstalled.pc.in
 
 %-@FS_APIVERSION@.pc: %.pc
 	cp $< $@
 
+%-@FS_APIVERSION@-uninstalled.pc: %-uninstalled.pc
+	cp $< $@
+
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = $(pcverfiles)
+pkgconfig_DATA = farstream-@FS_APIVERSION@.pc
+
+noinst_DATA = farstream-@FS_APIVERSION@-uninstalled.pc
 
 CLEANFILES = $(pcverfiles)
 
