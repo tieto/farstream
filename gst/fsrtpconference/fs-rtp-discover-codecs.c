@@ -913,11 +913,10 @@ codec_cap_list_intersect (GList *list1, GList *list2)
           (rtp_intersection == NULL || !gst_caps_is_empty (rtp_intersection)))
       {
         if (item) {
-          GstCaps *new_caps = gst_caps_merge (item->caps, intersection);
           GList *tmplist;
 
-          gst_caps_unref (item->caps);
-          item->caps = new_caps;
+          item->caps = gst_caps_merge (item->caps,
+              gst_caps_ref (intersection));
 
           for (tmplist = g_list_first (codec_cap2->element_list1->data);
                tmplist;
@@ -1226,8 +1225,8 @@ create_codec_cap_list (GstElementFactory *factory,
         if (rtp_caps) {
           if (entry->rtp_caps) {
             GstCaps *new_rtp_caps;
+            gst_caps_ref (rtp_caps);
             new_rtp_caps = gst_caps_merge (rtp_caps, entry->rtp_caps);
-            gst_caps_unref (entry->rtp_caps);
             entry->rtp_caps = new_rtp_caps;
           } else {
             entry->rtp_caps = gst_caps_ref (rtp_caps);
@@ -1238,8 +1237,6 @@ create_codec_cap_list (GstElementFactory *factory,
         }
 
         newcaps = gst_caps_merge (cur_caps, entry->caps);
-        gst_caps_unref (entry->caps);
-        gst_caps_unref (cur_caps);
         entry->caps = newcaps;
 
       }
