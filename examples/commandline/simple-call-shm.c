@@ -36,7 +36,7 @@
 
 #include <farstream/fs-conference.h>
 
-#define DEFAULT_AUDIOSRC       "audiotestsrc is-live=1 ! audio/x-raw-int, rate=8000 ! identity"
+#define DEFAULT_AUDIOSRC       "audiotestsrc is-live=1 ! audio/x-raw, rate=8000 ! identity"
 #define DEFAULT_AUDIOSINK      "alsasink sync=false async=false"
 
 typedef struct _TestSession
