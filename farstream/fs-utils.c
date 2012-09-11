@@ -42,7 +42,7 @@ load_default_codec_preferences_from_path (const gchar *element_name,
   GList *codec_prefs = NULL;
   gchar *filename;
 
-  filename = g_build_filename (path, PACKAGE, FS_MAJORMINOR, element_name,
+  filename = g_build_filename (path, PACKAGE, FS_APIVERSION, element_name,
       "default-codec-preferences", NULL);
   codec_prefs = fs_codec_list_from_keyfile (filename, NULL);
   g_free (filename);
@@ -121,7 +121,7 @@ fs_utils_get_default_element_properties (GstElement *element)
   gchar *filename;
   const gchar *factory_name = factory_name_from_element (element);
 
-  filename = g_build_filename (PACKAGE, FS_MAJORMINOR, factory_name,
+  filename = g_build_filename (PACKAGE, FS_APIVERSION, factory_name,
       "default-element-properties", NULL);
   file_loaded = g_key_file_load_from_data_dirs (keyfile, filename, NULL,
       G_KEY_FILE_NONE, NULL);
@@ -219,7 +219,7 @@ load_default_rtp_hdrext_preferences_from_path (const gchar *element_name,
   GList *rtp_hdrext_prefs = NULL;
   gchar *filename;
 
-  filename = g_build_filename (path, PACKAGE, FS_MAJORMINOR, element_name,
+  filename = g_build_filename (path, PACKAGE, FS_APIVERSION, element_name,
       "default-codec-preferences", NULL);
   rtp_hdrext_prefs = fs_rtp_header_extension_list_from_keyfile (filename,
       media_type, NULL);

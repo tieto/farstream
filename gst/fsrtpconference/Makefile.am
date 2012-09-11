@@ -62,7 +62,7 @@ libfsrtpconference_la_SOURCES = fs-rtp-conference-plugin.c
 
 libfsrtpconference_la_LIBADD = \
 	libfsrtpconference-convenience.la \
-	$(top_builddir)/farstream/libfarstream-@FS_MAJORMINOR@.la \
+	$(top_builddir)/farstream/libfarstream-@FS_APIVERSION@.la \
 	$(FS_LIBS) \
 	$(GST_PLUGINS_BASE_LIBS) \
 	$(GST_LIBS) \
@@ -71,7 +71,7 @@ libfsrtpconference_la_LIBADD = \
 
 libfsrtpconference_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
 
-preferencesdir = $(datadir)/$(PACKAGE_TARNAME)/$(FS_MAJORMINOR)/fsrtpconference
+preferencesdir = $(datadir)/$(PACKAGE_TARNAME)/$(FS_APIVERSION)/fsrtpconference
 preferences_DATA = \
 	default-codec-preferences \
 	default-element-properties

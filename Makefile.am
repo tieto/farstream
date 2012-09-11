@@ -43,10 +43,10 @@ check-torture:
 	true
 endif
 
-pcverfiles = farstream-@FS_MAJORMINOR@.pc
+pcverfiles = farstream-@FS_APIVERSION@.pc
 pcinfiles = farstream.pc.in
 
-%-@FS_MAJORMINOR@.pc: %.pc
+%-@FS_APIVERSION@.pc: %.pc
 	cp $< $@
 
 pkgconfigdir = $(libdir)/pkgconfig

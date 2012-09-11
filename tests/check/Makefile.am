@@ -67,7 +67,7 @@ AM_CFLAGS = \
 	$(GST_CFLAGS)
 
 LDADD = \
-	$(top_builddir)/farstream/libfarstream-@FS_MAJORMINOR@.la \
+	$(top_builddir)/farstream/libfarstream-@FS_APIVERSION@.la \
 	$(GST_CHECK_LIBS) \
 	$(GST_LIBS)
 

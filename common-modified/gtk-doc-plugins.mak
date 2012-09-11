@@ -26,7 +26,7 @@ update:
 GPATH = $(srcdir)
 
 # thomas: make docs parallel installable
-TARGET_DIR=$(HTML_DIR)/$(DOC_MODULE)-@FS_MAJORMINOR@
+TARGET_DIR=$(HTML_DIR)/$(DOC_MODULE)-@FS_APIVERSION@
 
 MAINTAINER_DOC_STAMPS =			\
 	scanobj-build.stamp		\

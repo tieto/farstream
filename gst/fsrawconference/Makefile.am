@@ -31,12 +31,12 @@ libfsrawconference_la_SOURCES = fs-raw-conference-plugin.c
 libfsrawconference_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
 libfsrawconference_la_LIBADD = \
 	libfsrawconference-convenience.la \
-	$(top_builddir)/farstream/libfarstream-@FS_MAJORMINOR@.la \
+	$(top_builddir)/farstream/libfarstream-@FS_APIVERSION@.la \
 	$(FS_LIBS) \
 	$(GST_BASE_LIBS) \
 	$(GST_LIBS)
 
-preferencesdir = $(datadir)/$(PACKAGE_TARNAME)/$(FS_MAJORMINOR)/fsrawconference
+preferencesdir = $(datadir)/$(PACKAGE_TARNAME)/$(FS_APIVERSION)/fsrawconference
 preferences_DATA = \
 	default-element-properties
 

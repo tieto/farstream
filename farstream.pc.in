@@ -1,13 +1,13 @@
 prefix=@prefix@
 exec_prefix=@exec_prefix@
 libdir=@libdir@
-includedir=@includedir@/farstream-@FS_MAJORMINOR@
-pluginsdir=@libdir@/farstream-@FS_MAJORMINOR@
+includedir=@includedir@/farstream-@FS_APIVERSION@
+pluginsdir=@libdir@/farstream-@FS_APIVERSION@
 
 Name: Farstream
 Description: Farstream base classes and utilities
 Requires: gstreamer-@GST_API_VERSION@ gstreamer-base-@GST_API_VERSION@
 Version: @VERSION@
-Libs: -L${libdir} -lfarstream-@FS_MAJORMINOR@
+Libs: -L${libdir} -lfarstream-@FS_APIVERSION@
 Cflags: -I${includedir}
 
