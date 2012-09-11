@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, cvs and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for cvs/prerelease
-AC_INIT(Farstream, 0.1.2.1,
+AC_INIT(Farstream, 0.1.90.1,
     https://bugs.freedesktop.org/enter_bug.cgi?product=Farstream,
     farstream)
 
@@ -35,8 +35,10 @@ m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])],
    AC_SUBST(AM_DEFAULT_VERBOSITY)])
 
 dnl our libraries and install dirs use major.minor as a version
-FS_MAJORMINOR=$PACKAGE_VERSION_MAJOR.$PACKAGE_VERSION_MINOR
-FS_MAJOR_MINOR=$PACKAGE_VERSION_MAJOR\_$PACKAGE_VERSION_MINOR
+#FS_MAJORMINOR=$PACKAGE_VERSION_MAJOR.$PACKAGE_VERSION_MINOR
+#FS_MAJOR_MINOR=$PACKAGE_VERSION_MAJOR\_$PACKAGE_VERSION_MINOR
+FS_MAJORMINOR=0.2
+FS_MAJOR_MINOR=0_2
 AC_SUBST(FS_MAJORMINOR)
 AC_SUBST(FS_MAJOR_MINOR)
 AC_DEFINE_UNQUOTED(FS_MAJORMINOR, "$FS_MAJORMINOR",
@@ -56,7 +58,7 @@ dnl - interfaces added/removed/changed -> increment CURRENT, REVISION = 0
 dnl - interfaces added -> increment AGE
 dnl - interfaces removed -> AGE = 0
 dnl sets FS_LT_LDFLAGS
-AS_LIBTOOL(FS, 0, 1, 0)
+AS_LIBTOOL(FS, 1, 0, 0)
 
 dnl FIXME: this macro doesn't actually work;
 dnl the generated libtool script has no support for the listed tags.
