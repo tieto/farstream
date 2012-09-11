@@ -137,6 +137,13 @@ gst_videoanyrate_transform_caps (GstBaseTransform *trans,
           "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, G_MAXINT, 1, NULL);
   }
 
+  if (filter)
+  {
+    GstCaps *intersected = gst_caps_intersect (mycaps, filter);
+    gst_caps_unref (mycaps);
+    mycaps = intersected;
+  }
+
   return mycaps;
 }
 
