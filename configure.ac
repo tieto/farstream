@@ -18,7 +18,7 @@ dnl define PACKAGE_VERSION_* variables
 AS_VERSION
 
 dnl check if this is a release version
-AS_NANO(FS_CVS="no", FS_CVS="yes")
+AS_NANO(FS_GIT="no", FS_GIT="yes")
 
 dnl can autoconf find the source ?
 AC_CONFIG_SRCDIR([farstream/fs-conference.c])
@@ -278,10 +278,10 @@ dnl set location of plugin directory
 AG_GST_SET_PLUGINDIR
 
 dnl define an ERROR_CFLAGS Makefile variable
-AG_GST_SET_ERROR_CFLAGS($FS_CVS)
+AG_GST_SET_ERROR_CFLAGS($FS_GIT)
 
 dnl define correct level for debugging messages
-AG_GST_SET_LEVEL_DEFAULT($FS_CVS)
+AG_GST_SET_LEVEL_DEFAULT($FS_GIT)
 
 AC_CHECK_FUNCS(getifaddrs)
 
