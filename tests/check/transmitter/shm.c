@@ -43,7 +43,7 @@ gboolean src_setup[2] = {FALSE, FALSE};
 guint received_known[2] = {0, 0};
 gboolean associate_on_source = TRUE;
 
-GMutex *mutex;
+GMutex *test_mutex;
 GCond *cond;
 gboolean done = FALSE;
 guint connected_count;
@@ -119,9 +119,9 @@ static void
 _state_changed (FsStreamTransmitter *st, guint component_id,
     FsStreamState state, gpointer user_data)
 {
-  g_mutex_lock (mutex);
+  g_mutex_lock (test_mutex);
   connected_count++;
-  g_mutex_unlock (mutex);
+  g_mutex_unlock (test_mutex);
   g_cond_signal (cond);
 }
 
@@ -157,9 +157,9 @@ _handoff_handler (GstElement *element, GstBuffer *buffer, GstPad *pad,
       ts_fail_unless (received_known[0] == 0 && received_known[1] == 0,
           "Got a known-source-packet-received signal when we shouldn't have");
 
-    g_mutex_lock (mutex);
+    g_mutex_lock (test_mutex);
     done = TRUE;
-    g_mutex_unlock (mutex);
+    g_mutex_unlock (test_mutex);
     g_cond_signal (cond);
   }
 }
@@ -220,7 +220,7 @@ run_shm_transmitter_test (gint flags)
   done = FALSE;
   connected_count = 0;
   cond = g_cond_new ();
-  mutex = g_mutex_new ();
+  test_mutex = g_mutex_new ();
 
   buffer_count[0] = 0;
   buffer_count[1] = 0;
@@ -368,18 +368,18 @@ run_shm_transmitter_test (gint flags)
   ts_fail_unless (ret == TRUE, "No detailed error from add_remote_candidate");
   g_clear_error (&error);
 
-  g_mutex_lock (mutex);
+  g_mutex_lock (test_mutex);
   while (connected_count < 2)
-    g_cond_wait (cond, mutex);
-  g_mutex_unlock (mutex);
+    g_cond_wait (cond, test_mutex);
+  g_mutex_unlock (test_mutex);
 
   setup_fakesrc (trans, pipeline, 1);
   setup_fakesrc (trans, pipeline, 2);
 
-  g_mutex_lock (mutex);
+  g_mutex_lock (test_mutex);
   while (!done)
-    g_cond_wait (cond, mutex);
-  g_mutex_unlock (mutex);
+    g_cond_wait (cond, test_mutex);
+  g_mutex_unlock (test_mutex);
 
   fail_unless (got_prepared[0] == TRUE);
   fail_unless (got_prepared[1] == TRUE);
@@ -399,7 +399,7 @@ run_shm_transmitter_test (gint flags)
   gst_object_unref (pipeline);
 
   g_cond_free (cond);
-  g_mutex_free (mutex);
+  g_mutex_free (test_mutex);
 }
 
 GST_START_TEST (test_shmtransmitter_run_basic)
