@@ -177,7 +177,7 @@ fs_candidate_list_copy (const GList *candidate_list)
  * @port: the UDP/TCP port
  *
  * Allocates a new #FsCandidate, the rest of the fields can be optionally
- * filled manually.
+ * filled manually. See also fs_candidate_new_full()
  *
  * Returns: a newly-allocated #FsCandidate
  */
@@ -199,6 +199,63 @@ fs_candidate_new (
   candidate->proto = proto;
   candidate->ip = g_strdup (ip);
   candidate->port = port;
+
+  return candidate;
+}
+
+/**
+ * fs_candidate_new_full:
+ * @foundation: The foundation of the candidate
+ * @component_id: The component this candidate is for
+ * @ip: The IP address of this component (can be NULL for local candidate to
+ *     mean any address)
+ * @port: the UDP/TCP port
+ * @base_ip: IP of base in dotted format as defined in ICE-19.
+ * @base_port: Port of base as defined in ICE-19.
+ * @proto: The protocol this component is for
+ * @priority: Value between 0 and (2^31 - 1) representing the priority
+ * @type: The type of candidate
+ * @username: Username to use to connect to client if necessary,
+ *            NULL otherwise
+ * @password: Username to use to connect to client if necessary,
+ *            NULL otherwise
+ * @ttl: The TTL used when sending Multicast packet (0 = auto)
+ *
+ * Allocates a new #FsCandidate, filling all the fields. See also
+ * fs_candidate_new()
+ *
+ * Returns: a newly-allocated #FsCandidate
+ */
+
+FsCandidate *
+fs_candidate_new_full (
+  const gchar *foundation,
+  guint component_id,
+  const gchar *ip,
+  guint16 port,
+  const gchar *base_ip,
+  guint16 base_port,
+  FsNetworkProtocol proto,
+  guint32 priority,
+  FsCandidateType type,
+  const gchar *username,
+  const gchar *password,
+  guint ttl)
+{
+  FsCandidate *candidate = g_slice_new (FsCandidate);
+
+  candidate->foundation = g_strdup (foundation);
+  candidate->component_id = component_id;
+  candidate->ip = g_strdup (ip);
+  candidate->port = port;
+  candidate->base_ip = g_strdup (base_ip);
+  candidate->base_port = base_port;
+  candidate->proto = proto;
+  candidate->priority = priority;
+  candidate->type = type;
+  candidate->username = g_strdup (username);
+  candidate->password = g_strdup (password);
+  candidate->ttl = ttl;
 
   return candidate;
 }

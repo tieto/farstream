@@ -111,15 +111,15 @@ struct _FsCandidate
 {
   gchar *foundation;
   guint component_id;
-  const gchar *ip;
+  gchar *ip;
   guint16 port;
-  const gchar *base_ip;
+  gchar *base_ip;
   guint16 base_port;
   FsNetworkProtocol proto;
   guint32 priority;
   FsCandidateType type;
-  const gchar *username;
-  const gchar *password;
+  gchar *username;
+  gchar *password;
   guint ttl;
 };
 
@@ -134,13 +134,28 @@ void fs_candidate_list_destroy (GList *candidate_list);
 
 GList *fs_candidate_list_copy (const GList *candidate_list);
 
-FsCandidate * fs_candidate_new (
+FsCandidate *fs_candidate_new (
     const gchar *foundation,
     guint component_id,
     FsCandidateType type,
     FsNetworkProtocol proto,
     const gchar *ip,
     guint port);
+
+FsCandidate *fs_candidate_new_full (
+  const gchar *foundation,
+  guint component_id,
+  const gchar *ip,
+  guint16 port,
+  const gchar *base_ip,
+  guint16 base_port,
+  FsNetworkProtocol proto,
+  guint32 priority,
+  FsCandidateType type,
+  const gchar *username,
+  const gchar *password,
+  guint ttl);
+
 
 G_END_DECLS
 #endif /* __FS_CANDIDATE_H__ */
