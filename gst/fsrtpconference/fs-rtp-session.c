@@ -137,6 +137,7 @@ struct _FsRtpSessionPrivate
   /* Request pads that are disposed of when the tee is disposed of */
   GstPad *send_tee_media_pad;
   GstPad *send_tee_discovery_pad;
+  GstElement *discovery_valve;
 
   /* We dont keep explicit references to the pads, the Bin does that for us
    * only this element's methods can add/remote it
@@ -566,9 +567,13 @@ fs_rtp_session_dispose (GObject *obj)
   }
   self->priv->rtp_tfrc = NULL;
 
-
   FS_RTP_SESSION_LOCK (self);
   fs_rtp_session_stop_codec_param_gathering_unlock (self);
+
+  if (self->priv->discovery_valve)
+    g_object_set (self->priv->discovery_valve, "drop", TRUE, NULL);
+
+  stop_and_remove (conferencebin, &self->priv->discovery_valve, FALSE);
 
   if (self->priv->send_tee_discovery_pad)
   {
@@ -1130,6 +1135,39 @@ fs_rtp_session_constructed (GObject *object)
     self->priv->construction_error = g_error_new (FS_ERROR,
         FS_ERROR_CONSTRUCTION,
         "Could not create the send tee request src pads");
+  }
+
+  tmp = g_strdup_printf ("valve_discovery_%u", self->id);
+  self->priv->discovery_valve = gst_element_factory_make ("valve", tmp);
+  g_free (tmp);
+  if (!self->priv->discovery_valve)
+  {
+    self->priv->construction_error = g_error_new (FS_ERROR,
+        FS_ERROR_CONSTRUCTION,
+        "Could not create the valve element");
+    return;
+  }
+
+  if (!gst_bin_add (GST_BIN (self->priv->conference),
+          self->priv->discovery_valve))
+  {
+    self->priv->construction_error = g_error_new (FS_ERROR,
+      FS_ERROR_CONSTRUCTION,
+      "Could not add the valve element to the FsRtpConference");
+    gst_object_unref (valve);
+    return;
+  }
+
+  pad = gst_element_get_static_pad (self->priv->discovery_valve, "sink");
+  ret = gst_pad_link (self->priv->send_tee_discovery_pad, pad);
+  gst_object_unref (pad);
+
+  if (GST_PAD_LINK_FAILED (ret))
+  {
+     self->priv->construction_error = g_error_new (FS_ERROR,
+        FS_ERROR_CONSTRUCTION,
+        "Could not link discovery pad to discovery valve");
+    return;
   }
 
   tmp = g_strdup_printf ("valve_send_%u", self->id);
@@ -4390,7 +4428,7 @@ fs_rtp_session_get_codec_params_unlock (FsRtpSession *session,
   fs_codec_destroy (session->priv->discovery_codec);
   session->priv->discovery_codec = NULL;
 
-  tmp = g_strdup_printf ("discover_%u_%u", session->id, ca->send_codec->id);
+  tmp = g_strdup_printf ("discoverAA_%u_%u", session->id, ca->send_codec->id);
   codecbin = _create_codec_bin (ca, ca->send_codec, tmp, TRUE, NULL,
       0, NULL, error);
   g_free (tmp);
@@ -4532,18 +4570,17 @@ fs_rtp_session_get_codec_params_unlock (FsRtpSession *session,
     goto error;
   }
 
-  pad = gst_element_get_static_pad (session->priv->discovery_codecbin, "sink");
-
-  if (GST_PAD_LINK_FAILED (gst_pad_link (session->priv->send_tee_discovery_pad,
-              pad)))
+  if (!gst_element_link (session->priv->discovery_valve,
+          session->priv->discovery_codecbin))
   {
     g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
-        "Could not link the tee and the discovery codecbin");
+        "Could not link the valve and the discovery codecbin");
     gst_object_unref (pad);
     goto error;
   }
 
-  gst_object_unref (pad);
+  g_object_set (session->priv->discovery_valve, "drop", FALSE, NULL);
+
 
   fs_codec_destroy (send_codec);
   session->priv->discovery_codec = discovery_codec;
@@ -4552,6 +4589,7 @@ fs_rtp_session_get_codec_params_unlock (FsRtpSession *session,
 
  error:
 
+  g_object_set (session->priv->discovery_valve, "drop", TRUE, NULL);
   fs_codec_destroy (send_codec);
   fs_codec_destroy (discovery_codec);
 
@@ -4716,7 +4754,10 @@ fs_rtp_session_stop_codec_param_gathering_unlock (FsRtpSession *session)
     session->priv->discovery_codec = NULL;
   }
 
+  g_object_set (session->priv->discovery_valve, "drop", TRUE, NULL);
+
   FS_RTP_SESSION_UNLOCK (session);
+
 
   if (session->priv->discovery_fakesink)
   {
