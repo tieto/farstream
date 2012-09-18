@@ -111,7 +111,7 @@ typedef struct _FsStreamPrivate FsStreamPrivate;
 
 struct _FsStreamClass
 {
-  GstObjectClass parent_class;
+  GObjectClass parent_class;
 
   /*virtual functions */
   gboolean (*add_remote_candidates) (FsStream *stream,
@@ -145,7 +145,7 @@ struct _FsStreamClass
  */
 struct _FsStream
 {
-  GstObject parent;
+  GObject parent;
 
   /*< private >*/
 

@@ -62,7 +62,7 @@ GST_DEBUG_CATEGORY (fs_conference_debug);
 #define GST_CAT_DEFAULT fs_conference_debug
 
 
-G_DEFINE_ABSTRACT_TYPE (FsConference, fs_conference,GST_TYPE_BIN)
+G_DEFINE_ABSTRACT_TYPE (FsConference, fs_conference, GST_TYPE_BIN)
 
 
 GQuark

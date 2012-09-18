@@ -58,7 +58,7 @@ typedef struct _FsParticipantPrivate FsParticipantPrivate;
 
 struct _FsParticipantClass
 {
-  GstObjectClass parent_class;
+  GObjectClass parent_class;
 
   /* virtual functions */
 
@@ -74,7 +74,7 @@ struct _FsParticipantClass
  */
 struct _FsParticipant
 {
-  GstObject parent;
+  GObject parent;
 
   /*< private >*/
 

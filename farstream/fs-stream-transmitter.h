@@ -67,7 +67,7 @@ typedef struct _FsStreamTransmitterPrivate FsStreamTransmitterPrivate;
 
 struct _FsStreamTransmitterClass
 {
-  GstObjectClass parent_class;
+  GObjectClass parent_class;
 
   /*virtual functions */
   gboolean (*add_remote_candidates) (FsStreamTransmitter *streamtransmitter,
@@ -91,7 +91,7 @@ struct _FsStreamTransmitterClass
  */
 struct _FsStreamTransmitter
 {
-  GstObject parent;
+  GObject parent;
 
   /*< private >*/
   FsStreamTransmitterPrivate *priv;
