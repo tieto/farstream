@@ -4220,7 +4220,7 @@ gather_caps_parameters (CodecAssociation *ca, GstCaps *caps)
 {
   GstStructure *s = NULL;
   int i;
-  gboolean old_need_config = FALSE;
+  gboolean new_config = FALSE;
 
   s = gst_caps_get_structure (caps, 0);
 
@@ -4251,6 +4251,7 @@ gather_caps_parameters (CodecAssociation *ca, GstCaps *caps)
               /* replace the value if its different */
               fs_codec_remove_optional_parameter (ca->codec, param);
               fs_codec_add_optional_parameter (ca->codec, name, value);
+              new_config = TRUE;
               break;
             }
           }
@@ -4262,16 +4263,16 @@ gather_caps_parameters (CodecAssociation *ca, GstCaps *caps)
                 ca->codec->id, ca->codec->encoding_name, name, value);
 
             fs_codec_add_optional_parameter (ca->codec, name, value);
+            new_config = TRUE;
           }
         }
       }
     }
   }
 
-  old_need_config = ca->need_config;
   ca->need_config = FALSE;
 
-  return old_need_config;
+  return new_config;
 }
 
 static void
