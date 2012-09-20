@@ -598,7 +598,7 @@ fs_session_set_send_codec (FsSession *session, FsCodec *send_codec,
 /**
  * fs_session_set_codec_preferences:
  * @session: a #FsSession
- * @codec_preferences: (element-type FsCodec): a #GList of #FsCodec with the
+ * @codec_preferences: (element-type FsCodec) (allow-none): a #GList of #FsCodec with the
  *   desired configuration
  * @error: location of a #GError, or %NULL if no error occured
  *
@@ -715,9 +715,9 @@ fs_session_get_stream_transmitter_type (FsSession *session,
 /**
  * fs_session_codecs_need_resend:
  * @session: a #FsSession
- * @old_codecs: (element-type FsCodec) (transfer none):
+ * @old_codecs: (element-type FsCodec) (transfer none) (allow-none):
  *  Codecs previously retrieved from the #FsSession:codecs property
- * @new_codecs: (element-type FsCodec) (transfer none):
+ * @new_codecs: (element-type FsCodec) (transfer none) (allow-none):
  *   Codecs recently retrieved from the #FsSession:codecs property
  *
  * Some codec updates need to be reliably transmitted to the other side
