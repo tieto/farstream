@@ -3692,6 +3692,7 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
   data.all_codecs = codecs;
   data.error = error;
   data.other_codecs = NULL;
+  data.codec = send_codec_copy;
 
   if (gst_iterator_fold (iter, link_main_pad, &link_rv, &data) ==
       GST_ITERATOR_ERROR)
