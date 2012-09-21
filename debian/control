@@ -1,4 +1,4 @@
-Source: farstream
+Source: farstream-0.2
 Priority: optional
 Section: libs
 Maintainer: Debian Telepathy maintainers <pkg-telepathy-maintainers@lists.alioth.debian.org>
