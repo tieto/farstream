@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk+" version="2.16"/>
+  <!-- interface-requires gtk+ 3.0 -->
   <object class="GtkWindow" id="dtmf_window">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -18,6 +18,7 @@
         <child>
           <object class="GtkButton" id="dtmf_pound">
             <property name="label" translatable="yes">#</property>
+            <property name="use_action_appearance">False</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
@@ -36,6 +37,7 @@
         <child>
           <object class="GtkButton" id="dtmf_0">
             <property name="label" translatable="yes">0</property>
+            <property name="use_action_appearance">False</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
@@ -54,6 +56,7 @@
         <child>
           <object class="GtkButton" id="dtmf_star">
             <property name="label" translatable="yes">*</property>
+            <property name="use_action_appearance">False</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
@@ -70,6 +73,7 @@
         <child>
           <object class="GtkButton" id="dtmf_9">
             <property name="label" translatable="yes">9</property>
+            <property name="use_action_appearance">False</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
@@ -88,6 +92,7 @@
         <child>
           <object class="GtkButton" id="dtmf_8">
             <property name="label" translatable="yes">8</property>
+            <property name="use_action_appearance">False</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
@@ -106,6 +111,7 @@
         <child>
           <object class="GtkButton" id="dtmf_7">
             <property name="label" translatable="yes">7</property>
+            <property name="use_action_appearance">False</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
@@ -122,6 +128,7 @@
         <child>
           <object class="GtkButton" id="dtmf_6">
             <property name="label" translatable="yes">6</property>
+            <property name="use_action_appearance">False</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
@@ -140,6 +147,7 @@
         <child>
           <object class="GtkButton" id="dtmf_5">
             <property name="label" translatable="yes">5</property>
+            <property name="use_action_appearance">False</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
@@ -158,6 +166,7 @@
         <child>
           <object class="GtkButton" id="dtmf_4">
             <property name="label" translatable="yes">4</property>
+            <property name="use_action_appearance">False</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
@@ -174,6 +183,7 @@
         <child>
           <object class="GtkButton" id="dtmf_3">
             <property name="label" translatable="yes">3</property>
+            <property name="use_action_appearance">False</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
@@ -190,6 +200,7 @@
         <child>
           <object class="GtkButton" id="dtmf_2">
             <property name="label" translatable="yes">2</property>
+            <property name="use_action_appearance">False</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
@@ -206,6 +217,7 @@
         <child>
           <object class="GtkButton" id="dtmf_1">
             <property name="label" translatable="yes">1</property>
+            <property name="use_action_appearance">False</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>

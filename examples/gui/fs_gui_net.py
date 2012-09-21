@@ -28,23 +28,9 @@ import sys, os, pwd, os.path
 import socket, struct
 import gc
 
-
-try:
-    import pygst
-    pygst.require('0.10')
-        
-    import gst
-except ImportError, e:
-    raise SystemExit("Gst-Python couldn't be found! (%s)" % (e[0]))
-
-try:
-    import farstream
-except:
-    sys.path.append(os.path.join(os.path.dirname(__file__),
-                                 '..', '..', 'python', '.libs'))
-    import farstream
-
-import gobject
+import gi
+gi.require_version('Farstream', '0.2')
+from gi.repository import Farstream, GLib
 
 class FsUIConnect:
     ERROR = 0
@@ -70,10 +56,10 @@ class FsUIConnect:
         self.partid = 1
         self.is_server = True
         sock.setblocking(0)
-        gobject.io_add_watch(self.sock.fileno(), gobject.IO_IN,
+        GLib.io_add_watch(self.sock.fileno(), GLib.IO_IN,
                              self.__data_in)
-        gobject.io_add_watch(self.sock.fileno(),
-                             gobject.IO_ERR | gobject.IO_HUP,
+        GLib.io_add_watch(self.sock.fileno(),
+                             GLib.IO_ERR | GLib.IO_HUP,
                              self.__error)
 
     def __error(self, source, condition):
@@ -167,39 +153,45 @@ class FsUIConnect:
 
 
     def __candidate_to_string(self, candidate):
+        print int(candidate.proto)
         return "|".join((
-            candidate.foundation,
+            candidate.foundation or "",
             str(candidate.component_id),
-            candidate.ip,
+            candidate.ip or "",
             str(candidate.port),
-            candidate.base_ip,
+            candidate.base_ip or "",
             str(candidate.base_port),
             str(int(candidate.proto)),
             str(candidate.priority),
             str(int(candidate.type)),
-            candidate.username,
-            candidate.password))
+            candidate.username or "",
+            candidate.password or ""))
 
     def __candidate_from_string(self, string):
-        candidate = farstream.Candidate()
-        (candidate.foundation,
+        (foundation,
          component_id,
-         candidate.ip,
+         ip,
          port,
-         candidate.base_ip,
+         base_ip,
          base_port,
          proto,
          priority,
-         type,
-         candidate.username,
-         candidate.password) = string.split("|")
-        candidate.component_id = int(component_id)
-        candidate.port = int(port)
-        candidate.base_port = int(base_port)
-        candidate.proto = int(proto)
-        candidate.priority = int(priority)
-        candidate.type = int(type)
-        return candidate
+         type  ,
+         username,
+         password) = string.split("|")
+        return Farstream.Candidate.new_full(
+            foundation,
+            int(component_id),
+            ip,
+            int(port),
+            base_ip,
+            int(base_port),
+            int(proto),
+            int(priority),
+            int(type),
+            username,
+            password,
+            0) # No multicast, ttl=0
 
     def __codecs_to_string(self, codecs):
         codec_strings = []
@@ -211,7 +203,7 @@ class FsUIConnect:
                               str(codec.channels)))
             codec = "".join((start,
                              "|",
-                             ";".join(["=".join(i) for i in codec.optional_params])))
+                             ";".join([i.name + "=" + i.value for i in codec.optional_params])))
             codec_strings.append(codec)
             
         return "\n".join(codec_strings)
@@ -222,12 +214,13 @@ class FsUIConnect:
         for substring in string.split("\n"):
             (start,end) = substring.split("|")
             (id, encoding_name, media_type, clock_rate, channels) = start.split(" ")
-            codec = farstream.Codec(int(id), encoding_name, int(media_type),
+            codec = Farstream.Codec.new(int(id), encoding_name, int(media_type),
                                int(clock_rate))
             codec.channels = int(channels)
             if len(end):
-                codec.optional_params = \
-                  [tuple(x.split("=",1)) for x in end.split(";") if len(x) > 0]
+                for x in end.split(";"):
+                    if len(x) > 0:
+                        codec.add_optional_parameter(*x.split("=",1))
             codecs.append(codec)
         return codecs
 
@@ -253,9 +246,9 @@ class FsUIListener:
         self.port = port
         print "Bound to port ", port
         self.sock.setblocking(0)
-        gobject.io_add_watch(self.sock.fileno(), gobject.IO_IN, self.data_in)
-        gobject.io_add_watch(self.sock.fileno(),
-                             gobject.IO_ERR | gobject.IO_HUP,
+        GLib.io_add_watch(self.sock.fileno(), GLib.IO_IN, self.data_in)
+        GLib.io_add_watch(self.sock.fileno(),
+                             GLib.IO_ERR | GLib.IO_HUP,
                              self.error)
         self.sock.listen(3)
 
@@ -374,7 +367,7 @@ if __name__ == "__main__":
             self.pid = pid
             self.id = id
             self.connect = connect
-            candidate = farstream.Candidate()
+            candidate = Farstream.Candidate()
             candidate.component_id = 1
             connect.send_candidate(self.pid, self.id, candidate)
             connect.send_candidates_done(self.pid, self.id)
@@ -385,20 +378,20 @@ if __name__ == "__main__":
         def codecs(self, codecs):
             if self.connect.myid != 1:
                 self.connect.send_codecs(1, self.id,
-                                        [farstream.Codec(self.connect.myid,
+                                        [Farstream.Codec.new(self.connect.myid,
                                                        "codec-name",
-                                                       self.pid,
+                                                       Farstream.MediaType.AUDIO,
                                                        self.id)])
        
         def send_local_codecs(self):
             print "Send local codecs to %s for media %s" % (self.pid, self.id)
             self.connect.send_codecs(self.pid, self.id,
-                                     [farstream.Codec(self.connect.myid,
-                                                     "local_codec",
-                                                     self.pid,
-                                                     self.id)])
+                                     [Farstream.Codec.new(self.connect.myid,
+                                                          "local_codec",
+                                                          Farstream.MediaType.AUDIO,
+                                                          self.id)])
         def get_codecs(self):
-            return [farstream.Codec(self.connect.myid,
+            return [Farstream.Codec(self.connect.myid,
                                    "nego-codecs",
                                    self.pid,
                                    self.id)]
@@ -433,11 +426,10 @@ if __name__ == "__main__":
             print "ERROR"
             sys.exit(1)
         def destroy(self):
-            passs
+            pass
             
 
-    mainloop = gobject.MainLoop()
-    gobject.threads_init()
+    mainloop = GLib.MainLoop()
     if len(sys.argv) > 1:
         client = FsUIClient("127.0.0.1", int(sys.argv[1]),
                             TestParticipant)
