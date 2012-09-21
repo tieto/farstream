@@ -1,18 +1,3 @@
-Patches
-=======
-
-This package occasionally uses cdbs simple-patch-system to store
-modifications to the upstream source, although in most uploads no patches
-are needed.
-
-To get the fully patched source: make -f debian/rules patch
-
-To revert to what's in git: make -f debian/rules unpatch
-
-To add a patch: obtain a diff and put it in debian/patches, or see below
-
-To remove an existing patch: delete it from debian/patches
-
 Packaging using git
 ===================
 

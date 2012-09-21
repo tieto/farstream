@@ -1,4 +1,0 @@
-usr/lib/*/lib*.so.*
-usr/lib/*/farstream-0.1/*.so
-usr/share/farstream/0.1
-usr/lib/*/gstreamer-0.10/*.so
