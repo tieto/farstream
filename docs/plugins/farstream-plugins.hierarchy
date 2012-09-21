@@ -1,21 +1,24 @@
 GObject
-  GstObject
-    GstBus
-    GstClock
-    GstElement
-      GstBin
-        GstPipeline
-    GstPad
-    GstPadTemplate
-    GstPlugin
-    GstPluginFeature
-      GstElementFactory
-      GstIndexFactory
-      GstTypeFindFactory
-    GstRegistry
-    GstTask
-    GstTaskPool
-  GstSignalObject
+  GInitiallyUnowned
+    GstObject
+      GstAllocator
+        GstDefaultAllocator
+      GstBus
+      GstClock
+      GstControlBinding
+      GstControlSource
+      GstElement
+        GstBin
+          GstPipeline
+      GstPad
+      GstPadTemplate
+      GstPlugin
+      GstPluginFeature
+        GstElementFactory
+        GstTypeFindFactory
+      GstRegistry
+      GstTask
+      GstTaskPool
 GInterface
   GTypePlugin
   GstChildProxy

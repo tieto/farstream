@@ -127,18 +127,18 @@ parse_bin_from_description_all_linked (const gchar *bin_description,
 static gint
 find_matching_pad (gconstpointer a, gconstpointer b)
 {
-  GstPad *pad = GST_PAD (a);
+  const GValue *val = a;
+  GstPad *pad = GST_PAD (g_value_get_object (val));
   GstCaps *caps = GST_CAPS (b);
   GstCaps *padcaps = NULL;
   gint ret = 1;
 
-  padcaps = gst_pad_get_caps_reffed (pad);
+  padcaps = gst_pad_query_caps (pad, NULL);
 
   if (gst_caps_can_intersect (caps, padcaps))
     ret = 0;
 
   gst_caps_unref (padcaps);
-  gst_object_unref (pad);
 
   return ret;
 }
@@ -151,8 +151,9 @@ validate_codec_profile (FsCodec *codec,const gchar *bin_description,
   GstElement *bin = NULL;
   guint src_pad_count = 0, sink_pad_count = 0;
   GstCaps *caps;
-  gpointer matching_pad = NULL;
   GstIterator *iter;
+  gboolean has_matching_pad = FALSE;
+  GValue val = {0,};
 
   bin = parse_bin_from_description_all_linked (bin_description,
       &src_pad_count, &sink_pad_count, &error);
@@ -174,10 +175,12 @@ validate_codec_profile (FsCodec *codec,const gchar *bin_description,
   else
     iter = gst_element_iterate_sink_pads (bin);
 
-  matching_pad = gst_iterator_find_custom (iter, find_matching_pad, caps);
+  has_matching_pad = gst_iterator_find_custom (iter, find_matching_pad,
+      &val, caps);
+  g_value_unset (&val);
   gst_iterator_free (iter);
 
-  if (!matching_pad)
+  if (!has_matching_pad)
   {
     GST_WARNING ("Invalid profile (%s), has no %s pad that matches the codec"
         " details", is_send ? "src" : "sink", bin_description);

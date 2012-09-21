@@ -86,7 +86,7 @@ struct _FsParticipant
 };
 
 /**
- * FS_PARTICIPANT_DATA_LOCK
+ * FS_PARTICIPANT_DATA_LOCK:
  * @participant: A #FsParticipant
  *
  * Locks the participant for data set with g_object_set_data() or
@@ -97,7 +97,7 @@ struct _FsParticipant
   g_mutex_lock ((participant)->mutex)
 
 /**
- * FS_PARTICIPANT_DATA_UNLOCK
+ * FS_PARTICIPANT_DATA_UNLOCK:
  * @participant: A #FsParticipant
  *
  * Unlocks the participant for data set with g_object_set_data() or

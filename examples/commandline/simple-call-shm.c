@@ -36,7 +36,7 @@
 
 #include <farstream/fs-conference.h>
 
-#define DEFAULT_AUDIOSRC       "audiotestsrc is-live=1 ! audio/x-raw-int, rate=8000 ! identity"
+#define DEFAULT_AUDIOSRC       "audiotestsrc is-live=1 ! audio/x-raw, rate=8000 ! identity"
 #define DEFAULT_AUDIOSINK      "alsasink sync=false async=false"
 
 typedef struct _TestSession
@@ -205,17 +205,14 @@ async_bus_cb (GstBus *bus, GstMessage *message, gpointer user_data)
         {
           gint error;
           const gchar *error_msg = gst_structure_get_string (s, "error-msg");
-          const gchar *debug_msg = gst_structure_get_string (s, "debug-msg");
 
           g_assert (gst_structure_get_enum (s, "error-no", FS_TYPE_ERROR,
                   &error));
 
           if (FS_ERROR_IS_FATAL (error))
-            g_error ("Farstream fatal error: %d %s %s", error, error_msg,
-                debug_msg);
+            g_error ("Farstream fatal error: %d %s", error, error_msg);
           else
-            g_warning ("Farstream non-fatal error: %d %s %s", error, error_msg,
-                debug_msg);
+            g_warning ("Farstream non-fatal error: %d %s", error, error_msg);
         }
         else if (gst_structure_has_name (s, "farstream-new-local-candidate"))
         {

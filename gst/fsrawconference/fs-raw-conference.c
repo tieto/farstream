@@ -89,11 +89,7 @@ struct _FsRawConferencePrivate
   GPtrArray *threads;
 };
 
-static void fs_raw_conference_do_init (GType type);
-
-
-GST_BOILERPLATE_FULL (FsRawConference, fs_raw_conference, FsConference,
-    FS_TYPE_CONFERENCE, fs_raw_conference_do_init);
+G_DEFINE_TYPE (FsRawConference, fs_raw_conference, FS_TYPE_CONFERENCE);
 
 static FsSession *fs_raw_conference_new_session (FsConference *conf,
     FsMediaType media_type,
@@ -111,14 +107,6 @@ static void _remove_participant (gpointer user_data,
 static void fs_raw_conference_handle_message (
     GstBin * bin,
     GstMessage * message);
-
-
-static void
-fs_raw_conference_do_init (GType type)
-{
-  GST_DEBUG_CATEGORY_INIT (fsrawconference_debug, "fsrawconference", 0,
-                           "Farstream Raw Conference Element");
-}
 
 static void
 fs_raw_conference_dispose (GObject * object)
@@ -138,7 +126,7 @@ fs_raw_conference_dispose (GObject * object)
 
   self->priv->disposed = TRUE;
 
-  G_OBJECT_CLASS (parent_class)->dispose (object);
+  G_OBJECT_CLASS (fs_raw_conference_parent_class)->dispose (object);
 }
 
 static void
@@ -148,17 +136,26 @@ fs_raw_conference_finalize (GObject * object)
 
   g_ptr_array_free (self->priv->threads, TRUE);
 
-  G_OBJECT_CLASS (parent_class)->finalize (object);
+  G_OBJECT_CLASS (fs_raw_conference_parent_class)->finalize (object);
 }
 
 static void
 fs_raw_conference_class_init (FsRawConferenceClass * klass)
 {
   GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+  GstElementClass *gstelement_class = GST_ELEMENT_CLASS (klass);
   FsConferenceClass *baseconf_class = FS_CONFERENCE_CLASS (klass);
   GstBinClass *gstbin_class = GST_BIN_CLASS (klass);
 
   g_type_class_add_private (klass, sizeof (FsRawConferencePrivate));
+
+  GST_DEBUG_CATEGORY_INIT (fsrawconference_debug, "fsrawconference", 0,
+                           "Farstream Raw Conference Element");
+
+  gst_element_class_add_pad_template (gstelement_class,
+      gst_static_pad_template_get (&fs_raw_conference_sink_template));
+  gst_element_class_add_pad_template (gstelement_class,
+      gst_static_pad_template_get (&fs_raw_conference_src_template));
 
   baseconf_class->new_session =
     GST_DEBUG_FUNCPTR (fs_raw_conference_new_session);
@@ -172,20 +169,9 @@ fs_raw_conference_class_init (FsRawConferenceClass * klass)
   gobject_class->dispose = GST_DEBUG_FUNCPTR (fs_raw_conference_dispose);
 }
 
-static void
-fs_raw_conference_base_init (gpointer g_class)
-{
-  GstElementClass *gstelement_class = GST_ELEMENT_CLASS (g_class);
-
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&fs_raw_conference_sink_template));
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&fs_raw_conference_src_template));
-}
 
 static void
-fs_raw_conference_init (FsRawConference *conf,
-                        FsRawConferenceClass *bclass)
+fs_raw_conference_init (FsRawConference *conf)
 {
   GST_DEBUG_OBJECT (conf, "fs_raw_conference_init");
 
@@ -350,7 +336,8 @@ fs_raw_conference_handle_message (
   }
 
   /* forward all messages to the parent */
-  GST_BIN_CLASS (parent_class)->handle_message (bin, message);
+  GST_BIN_CLASS (fs_raw_conference_parent_class)->handle_message (bin,
+      message);
 }
 
 /**

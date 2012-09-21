@@ -10,10 +10,10 @@
     <releaseinfo>
       for version &FS_VERSION;.
       The latest version of this documentation can be found on-line at
-      <ulink role="online-location" url="http://farstream.freedesktop.org/apidoc/farstream-plugins/">http://farstream.freedesktop.org/apidoc/farstream-plugins/</ulink>.
+      <ulink role="online-location" url="http://farstream.freedesktop.org/apidoc/farstream-plugins/">/http://farstream.freedesktop.org/apidoc/farstream-plugins/</ulink>.
       These plugins are to be used with the base classes and other utility
       objects and functions described in the
-      <ulink url="http://farstream.freedesktop.org/apidoc/farstream/">Farstream Reference Manual</ulink>.
+      <ulink url="http://www.freedesktop.org/software/farstream/apidoc/farstream">Farstream Reference Manual</ulink>.
     </releaseinfo>
   </bookinfo>
 
@@ -54,7 +54,6 @@
 
   <part>
     <title>Utility elements</title>
-    <xi:include href="xml/element-fsfunnel.xml"/>
     <xi:include href="xml/element-fsvideoanyrate.xml"/>
   </part>
 </book>

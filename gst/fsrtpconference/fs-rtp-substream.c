@@ -112,8 +112,7 @@ struct _FsRtpSubStreamPrivate {
    * Protected by the session mutex
    */
   gulong blocking_id;
-  /* Pointer to last buffer caps, protected by the session lock */
-  GstCaps *last_buffer_caps;
+  gulong check_caps_id;
 
   /* This is protected by the session lock... the caller takes the lock
    * before updating the property.. yea nasty I know
@@ -158,9 +157,6 @@ static void fs_rtp_sub_stream_get_property (GObject *object, guint prop_id,
   GValue *value, GParamSpec *pspec);
 static void fs_rtp_sub_stream_set_property (GObject *object, guint prop_id,
   const GValue *value, GParamSpec *pspec);
-
-static void
-fs_rtp_sub_stream_add_probe_locked (FsRtpSubStream *substream);
 
 static void
 fs_rtp_sub_stream_emit_error (FsRtpSubStream *substream,
@@ -570,7 +566,7 @@ fs_rtp_sub_stream_constructed (GObject *object)
       self->priv->rtpbin_pad, "unlinked", G_CALLBACK (rtpbin_pad_unlinked),
       self, 0);
 
-  tmp = g_strdup_printf ("output_recv_valve_%d_%d_%d", self->priv->session->id,
+  tmp = g_strdup_printf ("output_recv_valve_%u_%u_%u", self->priv->session->id,
       self->ssrc, self->pt);
   self->priv->output_valve = gst_element_factory_make ("valve", tmp);
   g_free (tmp);
@@ -604,7 +600,7 @@ fs_rtp_sub_stream_constructed (GObject *object)
     return;
   }
 
-  tmp = g_strdup_printf ("recv_capsfilter_%d_%d_%d", self->priv->session->id,
+  tmp = g_strdup_printf ("recv_capsfilter_%u_%u_%u", self->priv->session->id,
       self->ssrc, self->pt);
   self->priv->capsfilter = gst_element_factory_make ("capsfilter", tmp);
   g_free (tmp);
@@ -634,7 +630,7 @@ fs_rtp_sub_stream_constructed (GObject *object)
     return;
   }
 
-  tmp = g_strdup_printf ("input_recv_valve_%d_%d_%d", self->priv->session->id,
+  tmp = g_strdup_printf ("input_recv_valve_%u_%u_%u", self->priv->session->id,
       self->ssrc, self->pt);
   self->priv->input_valve = gst_element_factory_make ("valve", tmp);
   g_free (tmp);
@@ -709,8 +705,6 @@ fs_rtp_sub_stream_dispose (GObject *object)
 {
   FsRtpSubStream *self = FS_RTP_SUB_STREAM (object);
 
-  fs_rtp_sub_stream_stop (self);
-
   fs_rtp_sub_stream_stop_no_rtcp_timeout_thread (self);
 
   if (self->priv->output_ghostpad) {
@@ -747,13 +741,6 @@ fs_rtp_sub_stream_dispose (GObject *object)
     self->priv->input_valve = NULL;
   }
 
-  if (self->priv->blocking_id)
-  {
-    gst_pad_remove_data_probe (self->priv->rtpbin_pad,
-        self->priv->blocking_id);
-    self->priv->blocking_id = 0;
-  }
-
   if (self->priv->rtpbin_pad) {
     gst_object_unref (self->priv->rtpbin_pad);
     self->priv->rtpbin_pad = NULL;
@@ -769,9 +756,6 @@ fs_rtp_sub_stream_finalize (GObject *object)
 
   if (self->codec)
     fs_codec_destroy (self->codec);
-
-  if (self->priv->last_buffer_caps)
-    gst_caps_unref (self->priv->last_buffer_caps);
 
   if (self->priv->mutex)
     g_mutex_free (self->priv->mutex);
@@ -971,13 +955,6 @@ fs_rtp_sub_stream_set_codecbin (FsRtpSubStream *substream,
     goto error;
   }
 
-  /* This is a non-error error
-   * Some codecs require config data to start.. so we should just ignore them
-   */
-  fs_rtp_sub_stream_add_probe_locked (substream);
-
-  GST_DEBUG ("New recv codec accepted");
-
   gst_object_unref (pad);
 
   FS_RTP_SESSION_LOCK (substream->priv->session);
@@ -1037,11 +1014,6 @@ fs_rtp_sub_stream_new (FsRtpConference *conference,
   return substream;
 }
 
-static void
-do_nothing_blocked_callback (GstPad *pad, gboolean blocked, gpointer user_data)
-{
-}
-
 
 /**
  * fs_rtp_sub_stream_stop:
@@ -1063,8 +1035,21 @@ fs_rtp_sub_stream_stop (FsRtpSubStream *substream)
     substream->priv->rtpbin_unlinked_sig = 0;
   }
 
-  gst_pad_set_blocked_async (substream->priv->rtpbin_pad, FALSE,
-      do_nothing_blocked_callback, NULL);
+  FS_RTP_SESSION_LOCK (substream->priv->session);
+  if (substream->priv->blocking_id != 0)
+  {
+    gst_pad_remove_probe (substream->priv->rtpbin_pad,
+        substream->priv->blocking_id);
+    substream->priv->blocking_id = 0;
+  }
+  FS_RTP_SESSION_UNLOCK (substream->priv->session);
+
+  if (substream->priv->check_caps_id != 0)
+  {
+    gst_pad_remove_probe (substream->priv->rtpbin_pad,
+        substream->priv->check_caps_id);
+    substream->priv->check_caps_id = 0;
+  }
 
   if (substream->priv->output_ghostpad)
     gst_pad_set_active (substream->priv->output_ghostpad, FALSE);
@@ -1092,34 +1077,6 @@ fs_rtp_sub_stream_stop (FsRtpSubStream *substream)
     gst_element_set_locked_state (substream->priv->input_valve, TRUE);
     gst_element_set_state (substream->priv->input_valve, GST_STATE_NULL);
   }
-}
-
-static gboolean
-event_probe_drop_newsegment (GstPad *pad, GstEvent *event, gpointer user_data)
-{
-  if (GST_EVENT_TYPE (event) == GST_EVENT_NEWSEGMENT)
-  {
-    gboolean update;
-    GstFormat format;
-    gint64 start;
-    gint64 stop;
-
-    gst_event_parse_new_segment (event, &update, NULL, &format, &start, &stop,
-        NULL);
-
-    /* Drop this one is assumed, so lets drop it to prevent accumulation
-     * If somethign sends something else, lets assume they now
-     * what they are doing
-     */
-    if (!update && format == GST_FORMAT_TIME && start == 0 && stop == -1)
-    {
-      GST_DEBUG ("Dropping newsegment event to prevent accumulation");
-      return FALSE;
-      }
-    GST_INFO ("Letting newsegment event through, be careful what you wish for");
-  }
-
-  return TRUE;
 }
 
 /**
@@ -1157,7 +1114,7 @@ fs_rtp_sub_stream_add_output_ghostpad_unlock (FsRtpSubStream *substream,
 
   substream->priv->adding_output_ghostpad = TRUE;
 
-  padname = g_strdup_printf ("src_%u_%u_%d", substream->priv->session->id,
+  padname = g_strdup_printf ("src_%u_%u_%u", substream->priv->session->id,
       substream->ssrc,
       substream->pt);
 
@@ -1170,7 +1127,7 @@ fs_rtp_sub_stream_add_output_ghostpad_unlock (FsRtpSubStream *substream,
   ghostpad = gst_ghost_pad_new_from_template (padname, valve_srcpad,
       gst_element_class_get_pad_template (
           GST_ELEMENT_GET_CLASS (substream->priv->conference),
-          "src_%d_%d_%d"));
+          "src_%u_%u_%u"));
 
   gst_object_unref (valve_srcpad);
   g_free (padname);
@@ -1178,18 +1135,15 @@ fs_rtp_sub_stream_add_output_ghostpad_unlock (FsRtpSubStream *substream,
   if (!ghostpad)
   {
     g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
-        "Could not build ghostpad src_%u_%u_%d", substream->priv->session->id,
+        "Could not build ghostpad src_%u_%u_%u", substream->priv->session->id,
         substream->ssrc, substream->pt);
     goto error;
   }
 
-  gst_pad_add_event_probe (ghostpad, G_CALLBACK (event_probe_drop_newsegment),
-      NULL);
-
   if (!gst_pad_set_active (ghostpad, TRUE))
   {
     g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
-        "Could not activate the src_%u_%u_%d", substream->priv->session->id,
+        "Could not activate the src_%u_%u_%u", substream->priv->session->id,
         substream->ssrc, substream->pt);
     gst_object_unref (ghostpad);
     goto error;
@@ -1199,7 +1153,7 @@ fs_rtp_sub_stream_add_output_ghostpad_unlock (FsRtpSubStream *substream,
           ghostpad))
   {
     g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
-        "Could add build ghostpad src_%u_%u_%d to the conference",
+        "Could add build ghostpad src_%u_%u_%u to the conference",
         substream->priv->session->id, substream->ssrc, substream->pt);
     gst_object_unref (ghostpad);
     goto error;
@@ -1236,79 +1190,57 @@ fs_rtp_sub_stream_add_output_ghostpad_unlock (FsRtpSubStream *substream,
   return FALSE;
 }
 
-/**
- *_rtpbin_pad_have_data_callback:
- *
- * This is the pad probe callback on the sink pad of the rtpbin.
- * It is used to replace the codec bin when the recv codec has been changed.
- *
- * Its a callback, it returns TRUE to let the data through and FALSE to drop it
- * (See the "have-data" signal documentation of #GstPad).
- */
 
-static gboolean
-_rtpbin_pad_have_data_callback (GstPad *pad, GstMiniObject *miniobj,
-    gpointer user_data)
+static GstPadProbeReturn
+_probe_check_caps (GstPad *pad, GstPadProbeInfo *info, gpointer user_data)
 {
   FsRtpSubStream *self = FS_RTP_SUB_STREAM (user_data);
-  gboolean ret = TRUE;
-  FsRtpSession *session;
+  GstEvent *event;
+  GstPadProbeReturn ret = GST_PAD_PROBE_DROP;
+
+
+  /* drop buffers before we have the right caps */
+  if (!(GST_PAD_PROBE_INFO_TYPE(info) & GST_PAD_PROBE_TYPE_EVENT_DOWNSTREAM))
+    return GST_PAD_PROBE_DROP;
+
+  event = GST_PAD_PROBE_INFO_EVENT (info);
+
+  /* let other events like segments through before the caps we like */
+  if (GST_EVENT_TYPE (event) != GST_EVENT_CAPS)
+    return GST_PAD_PROBE_PASS;
 
   if (fs_rtp_session_has_disposed_enter (self->priv->session, NULL))
-    return FALSE;
+    return GST_PAD_PROBE_REMOVE;
 
   if (fs_rtp_sub_stream_has_stopped_enter (self))
   {
     fs_rtp_session_has_disposed_exit (self->priv->session);
-    return FALSE;
+    return GST_PAD_PROBE_REMOVE;
   }
-
-  g_object_ref (self);
-  session = g_object_ref (self->priv->session);
 
   FS_RTP_SESSION_LOCK (self->priv->session);
 
-  if (!self->priv->codecbin || !self->codec)
+  if (self->priv->codecbin && self->codec)
   {
-    ret = FALSE;
-  }
-  else if (GST_IS_BUFFER (miniobj))
-  {
-    if (self->priv->last_buffer_caps == GST_BUFFER_CAPS (miniobj))
-    {
-      ret = FALSE;
-    }
-    else
-    {
-      ret = gst_pad_set_caps (pad, GST_BUFFER_CAPS (miniobj));
-      self->priv->last_buffer_caps = gst_caps_ref (GST_BUFFER_CAPS (miniobj));
+    GstCaps *caps;
 
-      if (!ret)
-        GST_WARNING ("Caps rejected by codecbin,"
-            " not letting any buffer through");
+    gst_event_parse_caps (event, &caps);
 
-      if (ret && self->priv->blocking_id)
-      {
-        gst_pad_remove_data_probe (pad, self->priv->blocking_id);
-        self->priv->blocking_id = 0;
-      }
-    }
+    if (gst_pad_set_caps (pad, caps))
+      ret = GST_PAD_PROBE_REMOVE;
   }
 
   FS_RTP_SESSION_UNLOCK (self->priv->session);
 
   fs_rtp_sub_stream_has_stopped_exit (self);
-
   fs_rtp_session_has_disposed_exit (self->priv->session);
-
-  g_object_unref (self);
-  g_object_unref (session);
 
   return ret;
 }
 
-static void
-_rtpbin_pad_blocked_callback (GstPad *pad, gboolean blocked, gpointer user_data)
+static GstPadProbeReturn
+_rtpbin_pad_blocked_callback (GstPad *pad, GstPadProbeInfo *info,
+    gpointer user_data)
 {
   FsRtpSubStream *substream = user_data;
   GError *error = NULL;
@@ -1316,18 +1248,22 @@ _rtpbin_pad_blocked_callback (GstPad *pad, gboolean blocked, gpointer user_data)
   guint new_builder_hash = 0;
   FsCodec *codec = NULL;
   FsRtpSession *session;
+  GstCaps *caps = NULL;
+
+  FS_RTP_SESSION_LOCK (substream->priv->session);
+  substream->priv->blocking_id = 0;
+  FS_RTP_SESSION_UNLOCK (substream->priv->session);
+
 
   if (fs_rtp_session_has_disposed_enter (substream->priv->session, NULL))
   {
-    gst_pad_set_blocked_async (pad, FALSE, do_nothing_blocked_callback, NULL);
-    return;
+    return GST_PAD_PROBE_REMOVE;
   }
 
   if (fs_rtp_sub_stream_has_stopped_enter (substream))
   {
-    gst_pad_set_blocked_async (pad, FALSE, do_nothing_blocked_callback, NULL);
     fs_rtp_session_has_disposed_exit (substream->priv->session);
-    return;
+    return GST_PAD_PROBE_REMOVE;
   }
 
   g_object_ref (substream);
@@ -1335,8 +1271,6 @@ _rtpbin_pad_blocked_callback (GstPad *pad, gboolean blocked, gpointer user_data)
 
   GST_DEBUG ("Substream blocked for codec change (session:%d SSRC:%x pt:%d)",
       substream->priv->session->id, substream->ssrc, substream->pt);
-
-  gst_pad_set_blocked_async (pad, FALSE, do_nothing_blocked_callback, NULL);
 
   g_signal_emit (substream, signals[GET_CODEC_BIN], 0,
       substream->priv->stream, &codec,
@@ -1349,7 +1283,6 @@ _rtpbin_pad_blocked_callback (GstPad *pad, gboolean blocked, gpointer user_data)
   if (codec &&
       (!substream->codec || !fs_codec_are_equal (codec, substream->codec)))
   {
-    GstCaps *caps;
     gchar *tmp;
 
     if (substream->codec)
@@ -1361,15 +1294,30 @@ _rtpbin_pad_blocked_callback (GstPad *pad, gboolean blocked, gpointer user_data)
     GST_DEBUG ("Setting caps %s on recv substream", tmp);
     g_free (tmp);
     g_object_set (substream->priv->capsfilter, "caps", caps, NULL);
-
-    fs_rtp_sub_stream_add_probe_locked (substream);
   }
   FS_RTP_SESSION_UNLOCK (substream->priv->session);
 
   if (codecbin)
+  {
     if (!fs_rtp_sub_stream_set_codecbin (substream, codec, codecbin,
             new_builder_hash, &error))
       goto error;
+  }
+
+  if (caps)
+  {
+
+    if (!gst_pad_set_caps (substream->priv->rtpbin_pad, caps))
+    {
+      if (substream->priv->check_caps_id == 0)
+        substream->priv->check_caps_id =
+            gst_pad_add_probe (substream->priv->rtpbin_pad,
+                GST_PAD_PROBE_TYPE_DATA_DOWNSTREAM,
+                _probe_check_caps, g_object_ref (substream), g_object_unref);
+    }
+
+    gst_caps_unref (caps);
+  }
 
  out:
 
@@ -1382,12 +1330,12 @@ _rtpbin_pad_blocked_callback (GstPad *pad, gboolean blocked, gpointer user_data)
   g_object_unref (substream);
   g_object_unref (session);
 
-  return;
+  return GST_PAD_PROBE_REMOVE;
 
  error:
 
   g_prefix_error (&error, "Could not add the new recv codec bin for"
-      " ssrc %u and payload type %d to the state NULL", substream->ssrc,
+      " ssrc %u and payload type %d to the state NULL: ", substream->ssrc,
       substream->pt);
 
   if (substream->priv->stream)
@@ -1398,24 +1346,6 @@ _rtpbin_pad_blocked_callback (GstPad *pad, gboolean blocked, gpointer user_data)
         FS_ERROR_CONSTRUCTION, error->message);
 
   goto out;
-}
-
-static void
-fs_rtp_sub_stream_add_probe_locked (FsRtpSubStream *substream)
-{
-  if (fs_rtp_sub_stream_has_stopped_enter (substream))
-    return;
-
-  if (substream->priv->last_buffer_caps)
-    gst_caps_unref (substream->priv->last_buffer_caps);
-  substream->priv->last_buffer_caps = NULL;
-
-  if (!substream->priv->blocking_id)
-    substream->priv->blocking_id = gst_pad_add_data_probe (
-        substream->priv->rtpbin_pad,
-        G_CALLBACK (_rtpbin_pad_have_data_callback), substream);
-
-  fs_rtp_sub_stream_has_stopped_exit (substream);
 }
 
 /**
@@ -1437,11 +1367,10 @@ fs_rtp_sub_stream_verify_codec_locked (FsRtpSubStream *substream)
   GST_LOG ("Starting codec verification process for substream with"
       " SSRC:%x pt:%d", substream->ssrc, substream->pt);
 
-
-  fs_rtp_sub_stream_add_probe_locked (substream);
-
-  gst_pad_set_blocked_async (substream->priv->rtpbin_pad, TRUE,
-      _rtpbin_pad_blocked_callback, substream);
+  if (!substream->priv->blocking_id)
+    substream->priv->blocking_id = gst_pad_add_probe (
+      substream->priv->rtpbin_pad, GST_PAD_PROBE_TYPE_BLOCK_DOWNSTREAM,
+      _rtpbin_pad_blocked_callback, g_object_ref (substream), g_object_unref);
 
   fs_rtp_sub_stream_has_stopped_exit (substream);
 }

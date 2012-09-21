@@ -9,11 +9,10 @@ and/or use gtk-doc annotations.  -->
   <include name="GLib" version="2.0"/>
   <include name="GModule" version="2.0"/>
   <include name="GObject" version="2.0"/>
-  <include name="Gst" version="0.10"/>
-  <include name="libxml2" version="2.0"/>
+  <include name="Gst" version="1.0"/>
   <namespace name="Farstream"
-             version="0.1"
-             shared-library="libfarstream-0.1.so.0"
+             version="0.2"
+             shared-library="libfarstream-0.2.so.1"
              c:identifier-prefixes="fs_,Fs"
              c:symbol-prefixes="fs_,fs">
     <constant name="CODEC_FORMAT"
@@ -337,8 +336,8 @@ subtype, type and extra_params. One of which must be non-NULL;</doc>
               c:identifier="fs_codec_get_optional_parameter">
         <doc xml:whitespace="preserve">Finds the #FsCodecParameter in the #FsCodec that has the requested name
 and, if not %NULL, the requested value</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">(transfer none) the #FsCodecParameter from the #FsCodec or %NULL</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">the #FsCodecParameter from the #FsCodec or %NULL</doc>
           <type name="CodecParameter" c:type="FsCodecParameter*"/>
         </return-value>
         <parameters>
@@ -362,7 +361,7 @@ NULL param will do nothing.</doc>
         </return-value>
         <parameters>
           <parameter name="item" transfer-ownership="none">
-            <doc xml:whitespace="preserve"> a pointer to the #GList element to remove that contains a #FsFeedbackParameter</doc>
+            <doc xml:whitespace="preserve">a pointer to the #GList element to remove that contains a #FsFeedbackParameter</doc>
             <type name="GLib.List" c:type="GList*">
               <type name="FeedbackParameter"/>
             </type>
@@ -427,7 +426,7 @@ NULL param will do nothing.</doc>
         </return-value>
         <parameters>
           <parameter name="codec_list" transfer-ownership="none">
-            <doc xml:whitespace="preserve"> a GList of #FsCodec to copy</doc>
+            <doc xml:whitespace="preserve">a GList of #FsCodec to copy</doc>
             <type name="GLib.List" c:type="GList*">
               <type name="Codec"/>
             </type>
@@ -474,10 +473,9 @@ another_param=WOW
 wierd_param=42
 feedback:nack/pli=1
 feedback:tfrc=
-]|
-
-The #GList of #FsCodec or %NULL if the keyfile was empty or an error occured.</doc>
+]|</doc>
         <return-value transfer-ownership="full">
+          <doc xml:whitespace="preserve">The #GList of #FsCodec or %NULL if the keyfile was empty or an error occured.</doc>
           <type name="GLib.List" c:type="GList*">
             <type name="Codec"/>
           </type>
@@ -535,6 +533,7 @@ The #GList of #FsCodec or %NULL if the keyfile was empty or an error occured.</d
            c:symbol-prefix="conference"
            c:type="FsConference"
            parent="Gst.Bin"
+           abstract="1"
            glib:type-name="FsConference"
            glib:get-type="fs_conference_get_type"
            glib:type-struct="ConferenceClass">
@@ -543,21 +542,16 @@ The #GList of #FsCodec or %NULL if the keyfile was empty or an error occured.</d
       <virtual-method name="new_participant"
                       invoker="new_participant"
                       throws="1">
-        <doc xml:whitespace="preserve">Create a new Farstream Participant for the type of the given conference.
-
-The #FsParticipant is owned by the user and he must unref it when he is
-done with it.</doc>
+        <doc xml:whitespace="preserve">Create a new Farstream Participant for the type of the given conference.</doc>
         <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">the new #FsParticipant that has been created.</doc>
+          <doc xml:whitespace="preserve">the new #FsParticipant that has been created. The #FsParticipant is owned by the user and he must unref it when he is done with it.</doc>
           <type name="Participant" c:type="FsParticipant*"/>
         </return-value>
       </virtual-method>
       <virtual-method name="new_session" invoker="new_session" throws="1">
-        <doc xml:whitespace="preserve">Create a new Farstream session for the given conference.
-
-The #FsSession must be unref'd by the user when closing the session.</doc>
+        <doc xml:whitespace="preserve">Create a new Farstream session for the given conference.</doc>
         <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">the new #FsSession that has been created.</doc>
+          <doc xml:whitespace="preserve">the new #FsSession that has been created. The #FsSession must be unref'd by the user when closing the session.</doc>
           <type name="Session" c:type="FsSession*"/>
         </return-value>
         <parameters>
@@ -570,23 +564,18 @@ The #FsSession must be unref'd by the user when closing the session.</doc>
       <method name="new_participant"
               c:identifier="fs_conference_new_participant"
               throws="1">
-        <doc xml:whitespace="preserve">Create a new Farstream Participant for the type of the given conference.
-
-The #FsParticipant is owned by the user and he must unref it when he is
-done with it.</doc>
+        <doc xml:whitespace="preserve">Create a new Farstream Participant for the type of the given conference.</doc>
         <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">the new #FsParticipant that has been created.</doc>
+          <doc xml:whitespace="preserve">the new #FsParticipant that has been created. The #FsParticipant is owned by the user and he must unref it when he is done with it.</doc>
           <type name="Participant" c:type="FsParticipant*"/>
         </return-value>
       </method>
       <method name="new_session"
               c:identifier="fs_conference_new_session"
               throws="1">
-        <doc xml:whitespace="preserve">Create a new Farstream session for the given conference.
-
-The #FsSession must be unref'd by the user when closing the session.</doc>
+        <doc xml:whitespace="preserve">Create a new Farstream session for the given conference.</doc>
         <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">the new #FsSession that has been created.</doc>
+          <doc xml:whitespace="preserve">the new #FsSession that has been created. The #FsSession must be unref'd by the user when closing the session.</doc>
           <type name="Session" c:type="FsSession*"/>
         </return-value>
         <parameters>
@@ -615,7 +604,7 @@ The #FsSession must be unref'd by the user when closing the session.</doc>
       <field name="new_session">
         <callback name="new_session" throws="1">
           <return-value transfer-ownership="full">
-            <doc xml:whitespace="preserve">the new #FsSession that has been created.</doc>
+            <doc xml:whitespace="preserve">the new #FsSession that has been created. The #FsSession must be unref'd by the user when closing the session.</doc>
             <type name="Session" c:type="FsSession*"/>
           </return-value>
           <parameters>
@@ -632,7 +621,7 @@ The #FsSession must be unref'd by the user when closing the session.</doc>
       <field name="new_participant">
         <callback name="new_participant" throws="1">
           <return-value transfer-ownership="full">
-            <doc xml:whitespace="preserve">the new #FsParticipant that has been created.</doc>
+            <doc xml:whitespace="preserve">the new #FsParticipant that has been created. The #FsParticipant is owned by the user and he must unref it when he is done with it.</doc>
             <type name="Participant" c:type="FsParticipant*"/>
           </return-value>
           <parameters>
@@ -1089,12 +1078,9 @@ the requested type</doc>
         </parameters>
       </function>
       <function name="list_available" c:identifier="fs_plugin_list_available">
-        <doc xml:whitespace="preserve">Gets the list of all available plugins of a certain type
-
-strings or %NULL if no strings were found.
-It should be freed with g_strfreev().</doc>
+        <doc xml:whitespace="preserve">Gets the list of all available plugins of a certain type</doc>
         <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a newly allocated NULL terminated array of</doc>
+          <doc xml:whitespace="preserve">a newly allocated NULL terminated array of strings or %NULL if no strings were found. It should be freed with g_strfreev().</doc>
           <array c:type="gchar**">
             <type name="utf8"/>
           </array>
@@ -1205,18 +1191,16 @@ It should be freed with g_strfreev().</doc>
                 glib:type-name="FsRtpHeaderExtensionGList"
                 glib:get-type="fs_rtp_header_extension_list_get_type">
       <function name="copy" c:identifier="fs_rtp_header_extension_list_copy">
-        <doc xml:whitespace="preserve">Does a deep copy of a #GList of #FsRtpHeaderExtension
-
-#GList of #FsRtpHeaderExtension</doc>
+        <doc xml:whitespace="preserve">Does a deep copy of a #GList of #FsRtpHeaderExtension</doc>
         <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a new</doc>
+          <doc xml:whitespace="preserve">a new #GList of #FsRtpHeaderExtension</doc>
           <type name="GLib.List" c:type="GList*">
             <type name="RtpHeaderExtension"/>
           </type>
         </return-value>
         <parameters>
           <parameter name="extensions" transfer-ownership="none">
-            <doc xml:whitespace="preserve"> a #GList of #FsRtpHeaderExtension</doc>
+            <doc xml:whitespace="preserve">a #GList of #FsRtpHeaderExtension</doc>
             <type name="GLib.List" c:type="GList*">
               <type name="RtpHeaderExtension"/>
             </type>
@@ -1250,11 +1234,11 @@ The groups have a format "rtp-hdrext:audio:XXX" or
 
 The valid keys are:
 &lt;itemizedlist&gt;
-&lt;listitem&gt;id: a int between in the 1-255 and 4096-4351 ranges&lt;/listitem&gt;
-&lt;listitem&gt;uri: a URI describing the RTP Header Extension&lt;/listitem&gt;
-&lt;listitem&gt;direction (optional): To only send or receive a RTP Header
-Extension, possible values are "send", "receive", "none" or "both".
-Defaults to "both"&lt;/listitem&gt;
+ &lt;listitem&gt;id: a int between in the 1-255 and 4096-4351 ranges&lt;/listitem&gt;
+ &lt;listitem&gt;uri: a URI describing the RTP Header Extension&lt;/listitem&gt;
+ &lt;listitem&gt;direction (optional): To only send or receive a RTP Header
+     Extension, possible values are "send", "receive", "none" or "both".
+     Defaults to "both"&lt;/listitem&gt;
 &lt;/itemizedlist&gt;
 
 Example:
@@ -1267,12 +1251,9 @@ uri=urn:ietf:params:rtp-hdrext:toffset
 id=3
 uri=urn:ietf:params:rtp-hdrext:ntp-64
 direction=receive
-]|
-
-#GList of #FsRtpHeaderExtension that must be freed with
-fs_rtp_header_extension_list_destroy()</doc>
+]|</doc>
         <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a</doc>
+          <doc xml:whitespace="preserve">a #GList of #FsRtpHeaderExtension that must be freed with fs_rtp_header_extension_list_destroy()</doc>
           <type name="GLib.List" c:type="GList*">
             <type name="RtpHeaderExtension"/>
           </type>
@@ -1301,25 +1282,22 @@ fs_rtp_header_extension_list_destroy()</doc>
       <virtual-method name="codecs_need_resend" invoker="codecs_need_resend">
         <doc xml:whitespace="preserve">Some codec updates need to be reliably transmitted to the other side
 because they contain important parameters required to decode the media.
-Other codec updates, caused by user action, don't.
-
-#FsCodec that need to be resent or %NULL if there are none. This
-list must be freed with fs_codec_list_destroy().</doc>
+Other codec updates, caused by user action, don't.</doc>
         <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">A new #GList of</doc>
+          <doc xml:whitespace="preserve">A new #GList of #FsCodec that need to be resent or %NULL if there are none. This list must be freed with fs_codec_list_destroy().</doc>
           <type name="GLib.List" c:type="GList*">
             <type name="Codec"/>
           </type>
         </return-value>
         <parameters>
           <parameter name="old_codecs" transfer-ownership="none">
-            <doc xml:whitespace="preserve"> Codecs previously retrieved from the #FsSession:codecs property</doc>
+            <doc xml:whitespace="preserve">Codecs previously retrieved from the #FsSession:codecs property</doc>
             <type name="GLib.List" c:type="GList*">
               <type name="Codec"/>
             </type>
           </parameter>
           <parameter name="new_codecs" transfer-ownership="none">
-            <doc xml:whitespace="preserve"> Codecs recently retrieved from the #FsSession:codecs property</doc>
+            <doc xml:whitespace="preserve">Codecs recently retrieved from the #FsSession:codecs property</doc>
             <type name="GLib.List" c:type="GList*">
               <type name="Codec"/>
             </type>
@@ -1342,24 +1320,18 @@ to validate/convert the parameters passed to fs_session_new_stream().</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="list_transmitters" invoker="list_transmitters">
-        <doc xml:whitespace="preserve">Get the list of all available transmitters for this session.
-
-named of transmitters or %NULL if no transmitter is needed for this type of
-session. It should be freed with g_strfreev().</doc>
+        <doc xml:whitespace="preserve">Get the list of all available transmitters for this session.</doc>
         <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a newly-allocagted %NULL terminated array of</doc>
+          <doc xml:whitespace="preserve">a newly-allocagted %NULL terminated array of named of transmitters or %NULL if no transmitter is needed for this type of session. It should be freed with g_strfreev().</doc>
           <array c:type="gchar**">
             <type name="utf8"/>
           </array>
         </return-value>
       </virtual-method>
       <virtual-method name="new_stream" invoker="new_stream" throws="1">
-        <doc xml:whitespace="preserve">This function creates a stream for the given participant into the active session.
-
-User must unref the #FsStream when the stream is ended. If an error occured,
-returns NULL.</doc>
+        <doc xml:whitespace="preserve">This function creates a stream for the given participant into the active session.</doc>
         <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">the new #FsStream that has been created.</doc>
+          <doc xml:whitespace="preserve">the new #FsStream that has been created. User must unref the #FsStream when the stream is ended. If an error occured, returns NULL.</doc>
           <type name="Stream" c:type="FsStream*"/>
         </return-value>
         <parameters>
@@ -1429,11 +1401,9 @@ tone) on the #FsSession. You have to call the function
 fs_session_stop_telephony_event() to stop it.
 
 If this function returns %TRUE, a "farstream-telephony-event-started" will
-always be emitted when the event is actually played out.
-
-does not support this telephony event.</doc>
+always be emitted when the event is actually played out.</doc>
         <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">%TRUE if sucessful, it can return %FALSE if the #FsStream</doc>
+          <doc xml:whitespace="preserve">%TRUE if sucessful, it can return %FALSE if the #FsStream does not support this telephony event.</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
@@ -1456,10 +1426,9 @@ duration was a positive and the event is not over, it will cut it
 short.
 
 If this function returns %TRUE, a "farstream-telephony-event-stopped" will
-always be emitted when the event is actually stopped.
-does not support telephony events or if no telephony event is being sent</doc>
+always be emitted when the event is actually stopped.</doc>
         <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">%TRUE if sucessful, it can return %FALSE if the #FsSession</doc>
+          <doc xml:whitespace="preserve">%TRUE if sucessful, it can return %FALSE if the #FsSession does not support telephony events or if no telephony event is being sent</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
       </virtual-method>
@@ -1467,25 +1436,22 @@ does not support telephony events or if no telephony event is being sent</doc>
               c:identifier="fs_session_codecs_need_resend">
         <doc xml:whitespace="preserve">Some codec updates need to be reliably transmitted to the other side
 because they contain important parameters required to decode the media.
-Other codec updates, caused by user action, don't.
-
-#FsCodec that need to be resent or %NULL if there are none. This
-list must be freed with fs_codec_list_destroy().</doc>
+Other codec updates, caused by user action, don't.</doc>
         <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">A new #GList of</doc>
+          <doc xml:whitespace="preserve">A new #GList of #FsCodec that need to be resent or %NULL if there are none. This list must be freed with fs_codec_list_destroy().</doc>
           <type name="GLib.List" c:type="GList*">
             <type name="Codec"/>
           </type>
         </return-value>
         <parameters>
           <parameter name="old_codecs" transfer-ownership="none">
-            <doc xml:whitespace="preserve"> Codecs previously retrieved from the #FsSession:codecs property</doc>
+            <doc xml:whitespace="preserve">Codecs previously retrieved from the #FsSession:codecs property</doc>
             <type name="GLib.List" c:type="GList*">
               <type name="Codec"/>
             </type>
           </parameter>
           <parameter name="new_codecs" transfer-ownership="none">
-            <doc xml:whitespace="preserve"> Codecs recently retrieved from the #FsSession:codecs property</doc>
+            <doc xml:whitespace="preserve">Codecs recently retrieved from the #FsSession:codecs property</doc>
             <type name="GLib.List" c:type="GList*">
               <type name="Codec"/>
             </type>
@@ -1538,12 +1504,9 @@ to validate/convert the parameters passed to fs_session_new_stream().</doc>
       </method>
       <method name="list_transmitters"
               c:identifier="fs_session_list_transmitters">
-        <doc xml:whitespace="preserve">Get the list of all available transmitters for this session.
-
-named of transmitters or %NULL if no transmitter is needed for this type of
-session. It should be freed with g_strfreev().</doc>
+        <doc xml:whitespace="preserve">Get the list of all available transmitters for this session.</doc>
         <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a newly-allocagted %NULL terminated array of</doc>
+          <doc xml:whitespace="preserve">a newly-allocagted %NULL terminated array of named of transmitters or %NULL if no transmitter is needed for this type of session. It should be freed with g_strfreev().</doc>
           <array c:type="gchar**">
             <type name="utf8"/>
           </array>
@@ -1552,12 +1515,9 @@ session. It should be freed with g_strfreev().</doc>
       <method name="new_stream"
               c:identifier="fs_session_new_stream"
               throws="1">
-        <doc xml:whitespace="preserve">This function creates a stream for the given participant into the active session.
-
-User must unref the #FsStream when the stream is ended. If an error occured,
-returns NULL.</doc>
+        <doc xml:whitespace="preserve">This function creates a stream for the given participant into the active session.</doc>
         <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">the new #FsStream that has been created.</doc>
+          <doc xml:whitespace="preserve">the new #FsStream that has been created. User must unref the #FsStream when the stream is ended. If an error occured, returns NULL.</doc>
           <type name="Stream" c:type="FsStream*"/>
         </return-value>
         <parameters>
@@ -1610,7 +1570,7 @@ the @session parameters.</doc>
                      direction="out"
                      caller-allocates="0"
                      transfer-ownership="none">
-            <doc xml:whitespace="preserve"> Returns a #GList of #FsCodec of the message if not %NULL</doc>
+            <doc xml:whitespace="preserve">Returns a #GList of #FsCodec of the message if not %NULL</doc>
             <type name="GLib.List" c:type="GList**">
               <type name="Codec"/>
             </type>
@@ -1731,11 +1691,9 @@ tone) on the #FsSession. You have to call the function
 fs_session_stop_telephony_event() to stop it.
 
 If this function returns %TRUE, a "farstream-telephony-event-started" will
-always be emitted when the event is actually played out.
-
-does not support this telephony event.</doc>
+always be emitted when the event is actually played out.</doc>
         <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">%TRUE if sucessful, it can return %FALSE if the #FsStream</doc>
+          <doc xml:whitespace="preserve">%TRUE if sucessful, it can return %FALSE if the #FsStream does not support this telephony event.</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
@@ -1758,16 +1716,13 @@ duration was a positive and the event is not over, it will cut it
 short.
 
 If this function returns %TRUE, a "farstream-telephony-event-stopped" will
-always be emitted when the event is actually stopped.
-does not support telephony events or if no telephony event is being sent</doc>
+always be emitted when the event is actually stopped.</doc>
         <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">%TRUE if sucessful, it can return %FALSE if the #FsSession</doc>
+          <doc xml:whitespace="preserve">%TRUE if sucessful, it can return %FALSE if the #FsSession does not support telephony events or if no telephony event is being sent</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
       </method>
-      <property name="codec-preferences"
-                introspectable="0"
-                transfer-ownership="full">
+      <property name="codec-preferences" transfer-ownership="full">
         <doc xml:whitespace="preserve">This is the current preferences list for the local codecs. It is
 set by the user to specify the codec options and priorities. The user may
 change its value with fs_session_set_codec_preferences() at any time
@@ -1778,9 +1733,11 @@ The payload type may be a valid dynamic PT (96-127), %FS_CODEC_ID_DISABLE
 or %FS_CODEC_ID_ANY. If the encoding name is "reserve-pt", then the
 payload type of the codec will be "reserved" and not be used by any
 dynamically assigned payload type.</doc>
-        <type name="GLib.List(FsCodec)"/>
+        <type name="GLib.List">
+          <type name="Codec"/>
+        </type>
       </property>
-      <property name="codecs" introspectable="0" transfer-ownership="full">
+      <property name="codecs" transfer-ownership="full">
         <doc xml:whitespace="preserve">This is the list of codecs used for this session. It will include the
 codecs and payload type used to receive media on this session. It will
 also include any configuration parameter that must be transmitted reliably
@@ -1798,11 +1755,11 @@ of this property changes.
 
 It is a #GList of #FsCodec. User must free this codec list using
 fs_codec_list_destroy() when done.</doc>
-        <type name="GLib.List(FsCodec)"/>
+        <type name="GLib.List">
+          <type name="Codec"/>
+        </type>
       </property>
-      <property name="codecs-without-config"
-                introspectable="0"
-                transfer-ownership="full">
+      <property name="codecs-without-config" transfer-ownership="full">
         <doc xml:whitespace="preserve">This is the same list of codecs as #FsSession:codecs without
 the configuration information that describes the data sent. It is suitable
 for configurations where a list of codecs is shared by many senders.
@@ -1819,7 +1776,9 @@ of this property changes.
 
 It is a #GList of #FsCodec. User must free this codec list using
 fs_codec_list_destroy() when done.</doc>
-        <type name="GLib.List(FsCodec)"/>
+        <type name="GLib.List">
+          <type name="Codec"/>
+        </type>
       </property>
       <property name="conference"
                 writable="1"
@@ -1906,7 +1865,7 @@ thread. Applications should listen to the GstBus for errors.</doc>
       <field name="new_stream">
         <callback name="new_stream" throws="1">
           <return-value transfer-ownership="full">
-            <doc xml:whitespace="preserve">the new #FsStream that has been created.</doc>
+            <doc xml:whitespace="preserve">the new #FsStream that has been created. User must unref the #FsStream when the stream is ended. If an error occured, returns NULL.</doc>
             <type name="Stream" c:type="FsStream*"/>
           </return-value>
           <parameters>
@@ -1927,7 +1886,7 @@ thread. Applications should listen to the GstBus for errors.</doc>
       <field name="start_telephony_event">
         <callback name="start_telephony_event">
           <return-value transfer-ownership="none">
-            <doc xml:whitespace="preserve">%TRUE if sucessful, it can return %FALSE if the #FsStream</doc>
+            <doc xml:whitespace="preserve">%TRUE if sucessful, it can return %FALSE if the #FsStream does not support this telephony event.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
@@ -1948,7 +1907,7 @@ thread. Applications should listen to the GstBus for errors.</doc>
       <field name="stop_telephony_event">
         <callback name="stop_telephony_event">
           <return-value transfer-ownership="none">
-            <doc xml:whitespace="preserve">%TRUE if sucessful, it can return %FALSE if the #FsSession</doc>
+            <doc xml:whitespace="preserve">%TRUE if sucessful, it can return %FALSE if the #FsSession does not support telephony events or if no telephony event is being sent</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
@@ -1997,7 +1956,7 @@ thread. Applications should listen to the GstBus for errors.</doc>
       <field name="list_transmitters">
         <callback name="list_transmitters">
           <return-value transfer-ownership="full">
-            <doc xml:whitespace="preserve">a newly-allocagted %NULL terminated array of</doc>
+            <doc xml:whitespace="preserve">a newly-allocagted %NULL terminated array of named of transmitters or %NULL if no transmitter is needed for this type of session. It should be freed with g_strfreev().</doc>
             <array c:type="gchar**">
               <type name="utf8"/>
             </array>
@@ -2029,7 +1988,7 @@ thread. Applications should listen to the GstBus for errors.</doc>
       <field name="codecs_need_resend">
         <callback name="codecs_need_resend">
           <return-value transfer-ownership="full">
-            <doc xml:whitespace="preserve">A new #GList of</doc>
+            <doc xml:whitespace="preserve">A new #GList of #FsCodec that need to be resent or %NULL if there are none. This list must be freed with fs_codec_list_destroy().</doc>
             <type name="GLib.List" c:type="GList*">
               <type name="Codec"/>
             </type>
@@ -2039,13 +1998,13 @@ thread. Applications should listen to the GstBus for errors.</doc>
               <type name="Session" c:type="FsSession*"/>
             </parameter>
             <parameter name="old_codecs" transfer-ownership="none">
-              <doc xml:whitespace="preserve"> Codecs previously retrieved from the #FsSession:codecs property</doc>
+              <doc xml:whitespace="preserve">Codecs previously retrieved from the #FsSession:codecs property</doc>
               <type name="GLib.List" c:type="GList*">
                 <type name="Codec"/>
               </type>
             </parameter>
             <parameter name="new_codecs" transfer-ownership="none">
-              <doc xml:whitespace="preserve"> Codecs recently retrieved from the #FsSession:codecs property</doc>
+              <doc xml:whitespace="preserve">Codecs recently retrieved from the #FsSession:codecs property</doc>
               <type name="GLib.List" c:type="GList*">
                 <type name="Codec"/>
               </type>
@@ -2126,7 +2085,7 @@ one candidate per component.</doc>
         </return-value>
         <parameters>
           <parameter name="remote_candidates" transfer-ownership="none">
-            <doc xml:whitespace="preserve"> a #GList of #FsCandidate to force</doc>
+            <doc xml:whitespace="preserve">a #GList of #FsCandidate to force</doc>
             <type name="GLib.List" c:type="GList*">
               <type name="Candidate"/>
             </type>
@@ -2172,12 +2131,16 @@ selected stream transmitter.</doc>
             <type name="utf8" c:type="gchar*"/>
           </parameter>
           <parameter name="stream_transmitter_parameters"
-                     transfer-ownership="none">
-            <type name="GObject.Parameter" c:type="GParameter*"/>
+                     transfer-ownership="none"
+                     allow-none="1">
+            <doc xml:whitespace="preserve">an array of n_parameters #GParameter struct that will be passed to the newly-create #FsStreamTransmitter</doc>
+            <array length="2" zero-terminated="0" c:type="GParameter*">
+              <type name="GObject.Parameter" c:type="GParameter"/>
+            </array>
           </parameter>
           <parameter name="stream_transmitter_n_parameters"
                      transfer-ownership="none">
-            <doc xml:whitespace="preserve">Number of parametrs passed to the stream transmitter (array length=stream_transmitter_n_parameters) (allow-none): an array of n_parameters #GParameter struct that will be passed to the newly-create #FsStreamTransmitter</doc>
+            <doc xml:whitespace="preserve">Number of parametrs passed to the stream transmitter</doc>
             <type name="guint" c:type="guint"/>
           </parameter>
         </parameters>
@@ -2284,7 +2247,7 @@ one candidate per component.</doc>
         </return-value>
         <parameters>
           <parameter name="remote_candidates" transfer-ownership="none">
-            <doc xml:whitespace="preserve"> a #GList of #FsCandidate to force</doc>
+            <doc xml:whitespace="preserve">a #GList of #FsCandidate to force</doc>
             <type name="GLib.List" c:type="GList*">
               <type name="Candidate"/>
             </type>
@@ -2292,8 +2255,7 @@ one candidate per component.</doc>
         </parameters>
       </method>
       <method name="iterate_src_pads"
-              c:identifier="fs_stream_iterate_src_pads"
-              introspectable="0">
+              c:identifier="fs_stream_iterate_src_pads">
         <doc xml:whitespace="preserve">Creates a #GstIterator that can be used to iterate the src pads of this
 stream. These are the pads that were announced by #FsStream:src-pad-added
 and are still valid.</doc>
@@ -2414,7 +2376,7 @@ the @stream parameters.</doc>
                      direction="out"
                      caller-allocates="0"
                      transfer-ownership="none">
-            <doc xml:whitespace="preserve"> Returns a #GList of #FsCodec of the message if not %NULL</doc>
+            <doc xml:whitespace="preserve">Returns a #GList of #FsCodec of the message if not %NULL</doc>
             <type name="GLib.List" c:type="GList**">
               <type name="Codec"/>
             </type>
@@ -2460,19 +2422,21 @@ selected stream transmitter.</doc>
             <type name="utf8" c:type="gchar*"/>
           </parameter>
           <parameter name="stream_transmitter_parameters"
-                     transfer-ownership="none">
-            <type name="GObject.Parameter" c:type="GParameter*"/>
+                     transfer-ownership="none"
+                     allow-none="1">
+            <doc xml:whitespace="preserve">an array of n_parameters #GParameter struct that will be passed to the newly-create #FsStreamTransmitter</doc>
+            <array length="2" zero-terminated="0" c:type="GParameter*">
+              <type name="GObject.Parameter" c:type="GParameter"/>
+            </array>
           </parameter>
           <parameter name="stream_transmitter_n_parameters"
                      transfer-ownership="none">
-            <doc xml:whitespace="preserve">Number of parametrs passed to the stream transmitter (array length=stream_transmitter_n_parameters) (allow-none): an array of n_parameters #GParameter struct that will be passed to the newly-create #FsStreamTransmitter</doc>
+            <doc xml:whitespace="preserve">Number of parametrs passed to the stream transmitter</doc>
             <type name="guint" c:type="guint"/>
           </parameter>
         </parameters>
       </method>
-      <property name="current-recv-codecs"
-                introspectable="0"
-                transfer-ownership="full">
+      <property name="current-recv-codecs" transfer-ownership="full">
         <doc xml:whitespace="preserve">This is the list of codecs that have been received by this stream.
 The user must free the list if fs_codec_list_destroy().
 The "farstream-recv-codecs-changed" message is send on the #GstBus
@@ -2481,7 +2445,9 @@ It is normally emitted right after #FsStream::src-pad-added
 only if that codec was not previously received in this stream, but it can
 also be emitted if the pad already exists, but the source material that
 will come to it is different.</doc>
-        <type name="GLib.List(FsCodec)"/>
+        <type name="GLib.List">
+          <type name="Codec"/>
+        </type>
       </property>
       <property name="direction"
                 writable="1"
@@ -2492,15 +2458,15 @@ to the fs_session_new_stream() function. It can be changed later if
 required by setting this property.</doc>
         <type name="StreamDirection"/>
       </property>
-      <property name="negotiated-codecs"
-                introspectable="0"
-                transfer-ownership="full">
+      <property name="negotiated-codecs" transfer-ownership="full">
         <doc xml:whitespace="preserve">This is the list of negotiatied codecs, it is the same list as the list
 of #FsCodec from the parent #FsSession, except that the codec config data
 has been replaced with the data from the remote codecs for this stream.
 This is the list of #FsCodec used to receive data from this stream.
 It is a #GList of #FsCodec.</doc>
-        <type name="GLib.List(FsCodec)"/>
+        <type name="GLib.List">
+          <type name="Codec"/>
+        </type>
       </property>
       <property name="participant"
                 writable="1"
@@ -2510,13 +2476,13 @@ It is a #GList of #FsCodec.</doc>
 is read-only construction.</doc>
         <type name="Participant"/>
       </property>
-      <property name="remote-codecs"
-                introspectable="0"
-                transfer-ownership="full">
+      <property name="remote-codecs" transfer-ownership="full">
         <doc xml:whitespace="preserve">This is the list of remote codecs for this stream. They must be set by the
 user as soon as they are known using fs_stream_set_remote_codecs()
 (generally through external signaling). It is a #GList of #FsCodec.</doc>
-        <type name="GLib.List(FsCodec)"/>
+        <type name="GLib.List">
+          <type name="Codec"/>
+        </type>
       </property>
       <property name="session"
                 writable="1"
@@ -2615,7 +2581,7 @@ If you have to negotiate codecs, then you must override set_remote_codecs too</d
               <type name="Stream" c:type="FsStream*"/>
             </parameter>
             <parameter name="remote_candidates" transfer-ownership="none">
-              <doc xml:whitespace="preserve"> a #GList of #FsCandidate to force</doc>
+              <doc xml:whitespace="preserve">a #GList of #FsCandidate to force</doc>
               <type name="GLib.List" c:type="GList*">
                 <type name="Candidate"/>
               </type>
@@ -2673,12 +2639,16 @@ If you have to negotiate codecs, then you must override set_remote_codecs too</d
               <type name="utf8" c:type="gchar*"/>
             </parameter>
             <parameter name="stream_transmitter_parameters"
-                       transfer-ownership="none">
-              <type name="GObject.Parameter" c:type="GParameter*"/>
+                       transfer-ownership="none"
+                       allow-none="1">
+              <doc xml:whitespace="preserve">an array of n_parameters #GParameter struct that will be passed to the newly-create #FsStreamTransmitter</doc>
+              <array length="3" zero-terminated="0" c:type="GParameter*">
+                <type name="GObject.Parameter" c:type="GParameter"/>
+              </array>
             </parameter>
             <parameter name="stream_transmitter_n_parameters"
                        transfer-ownership="none">
-              <doc xml:whitespace="preserve">Number of parametrs passed to the stream transmitter (array length=stream_transmitter_n_parameters) (allow-none): an array of n_parameters #GParameter struct that will be passed to the newly-create #FsStreamTransmitter</doc>
+              <doc xml:whitespace="preserve">Number of parametrs passed to the stream transmitter</doc>
               <type name="guint" c:type="guint"/>
             </parameter>
           </parameters>
@@ -2758,11 +2728,9 @@ An stream using an ICE transmitter would use all of these.</doc>
       <virtual-method name="add_remote_candidates"
                       invoker="add_remote_candidates"
                       throws="1">
-        <doc xml:whitespace="preserve">This function is used to add remote candidates to the transmitter
-
-(and the #GError will be set)</doc>
+        <doc xml:whitespace="preserve">This function is used to add remote candidates to the transmitter</doc>
         <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">TRUE of the candidate could be added, FALSE if it couldnt</doc>
+          <doc xml:whitespace="preserve">TRUE of the candidate could be added, FALSE if it couldnt (and the #GError will be set)</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
@@ -2814,11 +2782,9 @@ the last reference is dropped.</doc>
       <method name="add_remote_candidates"
               c:identifier="fs_stream_transmitter_add_remote_candidates"
               throws="1">
-        <doc xml:whitespace="preserve">This function is used to add remote candidates to the transmitter
-
-(and the #GError will be set)</doc>
+        <doc xml:whitespace="preserve">This function is used to add remote candidates to the transmitter</doc>
         <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">TRUE of the candidate could be added, FALSE if it couldnt</doc>
+          <doc xml:whitespace="preserve">TRUE of the candidate could be added, FALSE if it couldnt (and the #GError will be set)</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
@@ -3015,7 +2981,7 @@ changes</doc>
       <field name="add_remote_candidates">
         <callback name="add_remote_candidates" throws="1">
           <return-value transfer-ownership="none">
-            <doc xml:whitespace="preserve">TRUE of the candidate could be added, FALSE if it couldnt</doc>
+            <doc xml:whitespace="preserve">TRUE of the candidate could be added, FALSE if it couldnt (and the #GError will be set)</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
@@ -3096,11 +3062,9 @@ changes</doc>
       <doc xml:whitespace="preserve">All members are private, access them using methods and properties</doc>
       <constructor name="new" c:identifier="fs_transmitter_new" throws="1">
         <doc xml:whitespace="preserve">This function creates a new transmitter of the requested type.
-It will load the appropriate plugin as required.
-
-(or NULL if there is an error)</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a newly-created #FsTransmitter of the requested type</doc>
+It will load the appropriate plugin as required.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">a newly-created #FsTransmitter of the requested type (or NULL if there is an error)</doc>
           <type name="Transmitter" c:type="FsTransmitter*"/>
         </return-value>
         <parameters>
@@ -3120,12 +3084,9 @@ It will load the appropriate plugin as required.
       </constructor>
       <function name="list_available"
                 c:identifier="fs_transmitter_list_available">
-        <doc xml:whitespace="preserve">Get the list of all available transmitters
-
-list of all available transmitters or %NULL if there are none. It should
-be freed with g_strfreev().</doc>
+        <doc xml:whitespace="preserve">Get the list of all available transmitters</doc>
         <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a newly allocated array of strings containing the</doc>
+          <doc xml:whitespace="preserve">a newly allocated array of strings containing the list of all available transmitters or %NULL if there are none. It should be freed with g_strfreev().</doc>
           <array c:type="char**">
             <type name="utf8"/>
           </array>
@@ -3145,11 +3106,9 @@ that can be passed to the _new_stream_transmitter.</doc>
                       invoker="new_stream_transmitter"
                       throws="1">
         <doc xml:whitespace="preserve">This function will create a new #FsStreamTransmitter element for a
-specific participant for this #FsTransmitter
-
-error</doc>
+specific participant for this #FsTransmitter</doc>
         <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a new #FsStreamTransmitter, or NULL if there is an</doc>
+          <doc xml:whitespace="preserve">a new #FsStreamTransmitter, or NULL if there is an error</doc>
           <type name="StreamTransmitter" c:type="FsStreamTransmitter*"/>
         </return-value>
         <parameters>
@@ -3188,11 +3147,9 @@ only be called by subclasses.</doc>
               c:identifier="fs_transmitter_get_recvonly_filter">
         <doc xml:whitespace="preserve">Get the filter to add on the send pipeline if sending is disabled.
 
-Only for use by subclasses.
-
-%NULL</doc>
+Only for use by subclasses.</doc>
         <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a #GstElement to use as the filter or</doc>
+          <doc xml:whitespace="preserve">a #GstElement to use as the filter or %NULL</doc>
           <type name="Gst.Element" c:type="GstElement*"/>
         </return-value>
         <parameters>
@@ -3216,11 +3173,9 @@ that can be passed to the _new_stream_transmitter.</doc>
               c:identifier="fs_transmitter_new_stream_transmitter"
               throws="1">
         <doc xml:whitespace="preserve">This function will create a new #FsStreamTransmitter element for a
-specific participant for this #FsTransmitter
-
-error</doc>
+specific participant for this #FsTransmitter</doc>
         <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a new #FsStreamTransmitter, or NULL if there is an</doc>
+          <doc xml:whitespace="preserve">a new #FsStreamTransmitter, or NULL if there is an error</doc>
           <type name="StreamTransmitter" c:type="FsStreamTransmitter*"/>
         </return-value>
         <parameters>
@@ -3253,16 +3208,16 @@ timestamps. Must be set before creating a stream transmitter.</doc>
       <property name="gst-sink" transfer-ownership="none">
         <doc xml:whitespace="preserve">A network source #GstElement to be used by the #FsSession
 These element's sink must have async=FALSE
-This element MUST provide a pad named "sink\%d" per component.
-These pads number must start at 1 (the \%d corresponds to the component
+This element MUST provide a pad named "sink_\%u" per component.
+These pads number must start at 1 (the \%u corresponds to the component
 number).
 These pads MUST be static pads.</doc>
         <type name="Gst.Element"/>
       </property>
       <property name="gst-src" transfer-ownership="none">
         <doc xml:whitespace="preserve">A network source #GstElement to be used by the #FsSession
-This element MUST provide a source pad named "src%d" per component.
-These pads number must start at 1 (the %d corresponds to the component
+This element MUST provide a source pad named "src_%u" per component.
+These pads number must start at 1 (the %u corresponds to the component
 number).
 These pads MUST be static pads.</doc>
         <type name="Gst.Element"/>
@@ -3307,11 +3262,9 @@ to use if sending is disabled. If you want to drop all buffers, just
 don't listen to the signal.
 
 This element should have a "sending" property that can be changed with the
-sending state of the stream. It should default to %TRUE.
-
-filter, or %NULL to drop everything</doc>
+sending state of the stream. It should default to %TRUE.</doc>
         <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">the #GstElement to use as the</doc>
+          <doc xml:whitespace="preserve">the #GstElement to use as the filter, or %NULL to drop everything</doc>
           <type name="Gst.Element"/>
         </return-value>
         <parameters>
@@ -3332,7 +3285,7 @@ filter, or %NULL to drop everything</doc>
       <field name="new_stream_transmitter">
         <callback name="new_stream_transmitter" throws="1">
           <return-value transfer-ownership="full">
-            <doc xml:whitespace="preserve">a new #FsStreamTransmitter, or NULL if there is an</doc>
+            <doc xml:whitespace="preserve">a new #FsStreamTransmitter, or NULL if there is an error</doc>
             <type name="StreamTransmitter" c:type="FsStreamTransmitter*"/>
           </return-value>
           <parameters>
@@ -3459,7 +3412,7 @@ filter, or %NULL to drop everything</doc>
       </return-value>
       <parameters>
         <parameter name="codec_list" transfer-ownership="none">
-          <doc xml:whitespace="preserve"> a GList of #FsCodec to copy</doc>
+          <doc xml:whitespace="preserve">a GList of #FsCodec to copy</doc>
           <type name="GLib.List" c:type="GList*">
             <type name="Codec"/>
           </type>
@@ -3508,10 +3461,9 @@ another_param=WOW
 wierd_param=42
 feedback:nack/pli=1
 feedback:tfrc=
-]|
-
-The #GList of #FsCodec or %NULL if the keyfile was empty or an error occured.</doc>
+]|</doc>
       <return-value transfer-ownership="full">
+        <doc xml:whitespace="preserve">The #GList of #FsCodec or %NULL if the keyfile was empty or an error occured.</doc>
         <type name="GLib.List" c:type="GList*">
           <type name="Codec"/>
         </type>
@@ -3580,18 +3532,16 @@ the @object parameters.</doc>
     <function name="rtp_header_extension_list_copy"
               c:identifier="fs_rtp_header_extension_list_copy"
               moved-to="RtpHeaderExtensionGList.copy">
-      <doc xml:whitespace="preserve">Does a deep copy of a #GList of #FsRtpHeaderExtension
-
-#GList of #FsRtpHeaderExtension</doc>
+      <doc xml:whitespace="preserve">Does a deep copy of a #GList of #FsRtpHeaderExtension</doc>
       <return-value transfer-ownership="full">
-        <doc xml:whitespace="preserve">a new</doc>
+        <doc xml:whitespace="preserve">a new #GList of #FsRtpHeaderExtension</doc>
         <type name="GLib.List" c:type="GList*">
           <type name="RtpHeaderExtension"/>
         </type>
       </return-value>
       <parameters>
         <parameter name="extensions" transfer-ownership="none">
-          <doc xml:whitespace="preserve"> a #GList of #FsRtpHeaderExtension</doc>
+          <doc xml:whitespace="preserve">a #GList of #FsRtpHeaderExtension</doc>
           <type name="GLib.List" c:type="GList*">
             <type name="RtpHeaderExtension"/>
           </type>
@@ -3627,11 +3577,11 @@ The groups have a format "rtp-hdrext:audio:XXX" or
 
 The valid keys are:
 &lt;itemizedlist&gt;
-&lt;listitem&gt;id: a int between in the 1-255 and 4096-4351 ranges&lt;/listitem&gt;
-&lt;listitem&gt;uri: a URI describing the RTP Header Extension&lt;/listitem&gt;
-&lt;listitem&gt;direction (optional): To only send or receive a RTP Header
-Extension, possible values are "send", "receive", "none" or "both".
-Defaults to "both"&lt;/listitem&gt;
+ &lt;listitem&gt;id: a int between in the 1-255 and 4096-4351 ranges&lt;/listitem&gt;
+ &lt;listitem&gt;uri: a URI describing the RTP Header Extension&lt;/listitem&gt;
+ &lt;listitem&gt;direction (optional): To only send or receive a RTP Header
+     Extension, possible values are "send", "receive", "none" or "both".
+     Defaults to "both"&lt;/listitem&gt;
 &lt;/itemizedlist&gt;
 
 Example:
@@ -3644,12 +3594,9 @@ uri=urn:ietf:params:rtp-hdrext:toffset
 id=3
 uri=urn:ietf:params:rtp-hdrext:ntp-64
 direction=receive
-]|
-
-#GList of #FsRtpHeaderExtension that must be freed with
-fs_rtp_header_extension_list_destroy()</doc>
+]|</doc>
       <return-value transfer-ownership="full">
-        <doc xml:whitespace="preserve">a</doc>
+        <doc xml:whitespace="preserve">a #GList of #FsRtpHeaderExtension that must be freed with fs_rtp_header_extension_list_destroy()</doc>
         <type name="GLib.List" c:type="GList*">
           <type name="RtpHeaderExtension"/>
         </type>
@@ -3669,11 +3616,9 @@ fs_rtp_header_extension_list_destroy()</doc>
               c:identifier="fs_utils_get_default_codec_preferences">
       <doc xml:whitespace="preserve">These default codec preferences should work with the elements that are
 available in the main GStreamer element repositories.
-They should be suitable for standards based protocols like SIP or XMPP.
-
-The default codec preferences for this plugin.
-This #GList should be freed with fs_codec_list_destroy()</doc>
+They should be suitable for standards based protocols like SIP or XMPP.</doc>
       <return-value transfer-ownership="full">
+        <doc xml:whitespace="preserve">The default codec preferences for this plugin. This #GList should be freed with fs_codec_list_destroy()</doc>
         <type name="GLib.List" c:type="GList*">
           <type name="Codec"/>
         </type>
@@ -3690,12 +3635,9 @@ This #GList should be freed with fs_codec_list_destroy()</doc>
               introspectable="0">
       <doc xml:whitespace="preserve">This function produces a #GKeyFile that can be fed to
 fs_element_added_notifier_set_properties_from_keyfile(). If no
-default properties have been found, it will return %NULL.
-
-properties for this element or %NULL if no properties were found.
-Caller must free the #GKeyFile when he is done.</doc>
-      <return-value>
-        <doc xml:whitespace="preserve">a #GKeyFile containing the default element</doc>
+default properties have been found, it will return %NULL.</doc>
+      <return-value transfer-ownership="full">
+        <doc xml:whitespace="preserve">a #GKeyFile containing the default element properties for this element or %NULL if no properties were found. Caller must free the #GKeyFile when he is done.</doc>
         <type name="GLib.KeyFile" c:type="GKeyFile*"/>
       </return-value>
       <parameters>
@@ -3709,12 +3651,9 @@ Caller must free the #GKeyFile when he is done.</doc>
               c:identifier="fs_utils_get_default_rtp_header_extension_preferences">
       <doc xml:whitespace="preserve">These default rtp header extension preferences should work with the elements
 that are available in the main GStreamer element repositories.
-They should be suitable for standards based protocols like SIP or XMPP.
-
-header extension preferences for this plugin, this #GList should be
-freed with fs_codec_list_destroy()</doc>
+They should be suitable for standards based protocols like SIP or XMPP.</doc>
       <return-value transfer-ownership="full">
-        <doc xml:whitespace="preserve">The default rtp</doc>
+        <doc xml:whitespace="preserve">The default rtp header extension preferences for this plugin, this #GList should be freed with fs_codec_list_destroy()</doc>
         <type name="GLib.List" c:type="GList*">
           <type name="Codec"/>
         </type>

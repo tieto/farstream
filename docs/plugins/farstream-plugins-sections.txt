@@ -1,18 +1,4 @@
 <SECTION>
-<FILE>element-fsfunnel</FILE>
-<TITLE>FsFunnel</TITLE>
-FsFunnel
-<SUBSECTION Standard>
-FsFunnelClass
-FS_FUNNEL
-FS_IS_FUNNEL
-FS_TYPE_FUNNEL
-fs_funnel_get_type
-FS_FUNNEL_CLASS
-FS_IS_FUNNEL_CLASS
-</SECTION>
-
-<SECTION>
 <FILE>element-fsvideoanyrate</FILE>
 <TITLE>GstVideoanyrate</TITLE>
 GstVideoanyrate

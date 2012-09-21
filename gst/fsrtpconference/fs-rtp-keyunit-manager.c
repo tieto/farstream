@@ -121,28 +121,26 @@ static const struct ElementProperty no_keyframe_property[] = {
 };
 
 static void
-disable_keyframes (gpointer data, gpointer user_data)
+disable_keyframes (const GValue *item, gpointer user_data)
 {
-  GstElement *element = data;
+  GstElement *element = g_value_get_object (item);
   GstElementFactory *factory;
   const gchar *factory_name;
   guint i;
 
   factory = gst_element_get_factory (element);
   if (!factory)
-    goto out;
+    return;
 
   factory_name = gst_plugin_feature_get_name (GST_PLUGIN_FEATURE (factory));
   if (!factory_name)
-    goto out;
+    return;
 
   for (i = 0; no_keyframe_property[i].element; i++)
     if (!strcmp (no_keyframe_property[i].element, factory_name))
       g_object_set (element, no_keyframe_property[i].property,
           no_keyframe_property[i].value, NULL);
 
-out:
-  gst_object_unref (element);
 }
 
 static void
@@ -183,9 +181,13 @@ on_feedback_rtcp (GObject *rtpsession, GstRTCPType type, GstRTCPFBType fbtype,
   {
     guint position = 0;
     gboolean our_request = FALSE;
+    GstMapInfo mapinfo;
 
-    for (position = 0; position < GST_BUFFER_SIZE (fci); position += 8) {
-      guint8 *data = GST_BUFFER_DATA (fci) + position;
+    if (!gst_buffer_map (fci, &mapinfo, GST_MAP_READ))
+      return;
+
+    for (position = 0; position < mapinfo.size ; position += 8) {
+      guint8 *data = mapinfo.data + position;
       guint32 ssrc;
 
       ssrc = GST_READ_UINT32_BE (data);
@@ -194,6 +196,7 @@ on_feedback_rtcp (GObject *rtpsession, GstRTCPType type, GstRTCPFBType fbtype,
         our_request = TRUE;
       break;
     }
+    gst_buffer_unmap (fci, &mapinfo);
     if (!our_request)
       return;
   }

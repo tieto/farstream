@@ -1272,8 +1272,8 @@ setup_codec_tests (struct SimpleTestConference **dat,
 
   bus = gst_pipeline_get_bus (GST_PIPELINE ((*dat)->pipeline));
   fail_if (bus == NULL);
-  gst_bus_set_sync_handler (bus, NULL, NULL);
-  gst_bus_set_sync_handler (bus, drop_all_sync_handler, *dat);
+  gst_bus_set_sync_handler (bus, NULL, NULL, NULL);
+  gst_bus_set_sync_handler (bus, drop_all_sync_handler, *dat, NULL);
   gst_object_unref (bus);
 
 }
@@ -2272,8 +2272,8 @@ GST_START_TEST (test_rtpcodecs_nego_hdrext)
 
   bus = gst_pipeline_get_bus (GST_PIPELINE (dat->pipeline));
   fail_if (bus == NULL);
-  gst_bus_set_sync_handler (bus, NULL, NULL);
-  gst_bus_set_sync_handler (bus, drop_all_sync_handler, dat);
+  gst_bus_set_sync_handler (bus, NULL, NULL, NULL);
+  gst_bus_set_sync_handler (bus, drop_all_sync_handler, dat, NULL);
   gst_object_unref (bus);
 
 

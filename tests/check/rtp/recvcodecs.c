@@ -125,12 +125,18 @@ caps_changed (GstPad *pad, GParamSpec *spec, FsStream *stream)
   fs_codec_list_destroy (codecs);
 }
 
-static gboolean
-drop_theora_config (GstPad *pad, GstBuffer *buffer, gpointer user_data)
+static GstPadProbeReturn
+drop_theora_config (GstPad *pad, GstPadProbeInfo *info, gpointer user_data)
 {
-  guint8 *payload = gst_rtp_buffer_get_payload (buffer);
+  GstBuffer *buffer = GST_PAD_PROBE_INFO_BUFFER (info);
+  GstRTPBuffer rtpbuffer = GST_RTP_BUFFER_INIT;
+  guint8 *payload;
   guint32 header;
   guchar TDT;
+
+  gst_rtp_buffer_map (buffer, GST_MAP_READ, &rtpbuffer);
+
+  payload = gst_rtp_buffer_get_payload (&rtpbuffer);
 
   header = GST_READ_UINT32_BE (payload);
   /*
@@ -146,10 +152,12 @@ drop_theora_config (GstPad *pad, GstBuffer *buffer, gpointer user_data)
    */
   TDT = (header & 0x30) >> 4;
 
+  gst_rtp_buffer_unmap (&rtpbuffer);
+
   if (TDT == 1)
-    return FALSE;
+    return GST_PAD_PROBE_DROP;
   else
-    return TRUE;
+    return GST_PAD_PROBE_OK;
 }
 
 GST_START_TEST (test_rtprecv_inband_config_data)
@@ -248,7 +256,7 @@ GST_START_TEST (test_rtprecv_inband_config_data)
 
   pipeline = gst_parse_launch (
       "videotestsrc is-live=1 name=src num-buffers="G_STRINGIFY (BUFFER_COUNT) " !"
-      " video/x-raw-yuv, framerate=(fraction)30/1 ! theoraenc !"
+      " video/x-raw, framerate=(fraction)30/1 ! theoraenc !"
       " rtptheorapay name=pay config-interval=0 name=pay !"
       " application/x-rtp, payload=96, ssrc=(uint)12345678 !"
       " udpsink host=127.0.0.1 name=sink", NULL);
@@ -300,7 +308,8 @@ GST_START_TEST (test_rtprecv_inband_config_data)
   ts_fail_unless (pay != NULL);
   pad = gst_element_get_static_pad (pay, "src");
   ts_fail_unless (pad != NULL);
-  gst_pad_add_buffer_probe (pad, G_CALLBACK (drop_theora_config), NULL);
+  gst_pad_add_probe (pad, GST_PAD_PROBE_TYPE_BUFFER,
+      drop_theora_config, NULL, NULL);
   g_signal_connect (pad, "notify::caps", G_CALLBACK (caps_changed), stream);
   caps_changed (pad, NULL, stream);
   gst_object_unref (pad);

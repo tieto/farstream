@@ -76,6 +76,12 @@ if test "x$NOUSE" = "xyes"; then
 fi
 NOUSE=
 
+dnl *** Check if it is ported or not
+if echo " [$GST_PLUGINS_NONPORTED] " | tr , ' ' | grep -i " [$1] " > /dev/null; then
+  USE_[$1]="no"
+  AC_MSG_WARN(*** $3 not ported)
+fi
+
 dnl *** If it's enabled
 
 if test x$USE_[$1] = xyes; then
@@ -232,10 +238,11 @@ AC_DEFUN([AG_GST_CHECK_GST_DEBUG_DISABLED],
   save_CFLAGS="$CFLAGS"
   CFLAGS="$GST_CFLAGS $CFLAGS"
   AC_COMPILE_IFELSE([
+    AC_LANG_SOURCE([[
       #include <gst/gstconfig.h>
       #ifdef GST_DISABLE_GST_DEBUG
       #error "debugging disabled, make compiler fail"
-      #endif], [ debug_system_enabled=yes], [debug_system_enabled=no])
+      #endif]])], [ debug_system_enabled=yes], [debug_system_enabled=no])
   CFLAGS="$save_CFLAGS"
   AC_LANG_POP([C])
 
@@ -267,6 +274,12 @@ printf "configure: *** Plug-ins without external dependencies that will NOT be b
 	printf '\t'$i'\n'
 	;;
     esac
+  done ) | sort
+printf "\n"
+
+printf "configure: *** Plug-ins that have NOT been ported:\n"
+( for i in $GST_PLUGINS_NONPORTED; do
+	printf '\t'$i'\n'
   done ) | sort
 printf "\n"
 

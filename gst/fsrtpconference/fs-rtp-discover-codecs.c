@@ -639,7 +639,7 @@ parse_codec_cap_list (GList *list, FsMediaType media_type)
             codec_blueprint->send_pipeline_factory,
             g_list_append (NULL, tmpfact));
       }
-      tmpfact = gst_element_factory_find ("ffmpegcolorspace");
+      tmpfact = gst_element_factory_find ("videoconvert");
       if (tmpfact)
       {
         codec_blueprint->send_pipeline_factory = g_list_append (
@@ -913,11 +913,9 @@ codec_cap_list_intersect (GList *list1, GList *list2)
           (rtp_intersection == NULL || !gst_caps_is_empty (rtp_intersection)))
       {
         if (item) {
-          GstCaps *new_caps = gst_caps_union (item->caps, intersection);
           GList *tmplist;
 
-          gst_caps_unref (item->caps);
-          item->caps = new_caps;
+          item->caps = gst_caps_merge (item->caps, intersection);
 
           for (tmplist = g_list_first (codec_cap2->element_list1->data);
                tmplist;
@@ -933,7 +931,7 @@ codec_cap_list_intersect (GList *list1, GList *list2)
         } else {
 
           item = g_slice_new0 (CodecCap);
-          item->caps = gst_caps_ref (intersection);
+          item->caps = intersection;
 
           if (rtp_caps1 && rtp_caps2)
           {
@@ -963,15 +961,14 @@ codec_cap_list_intersect (GList *list1, GList *list2)
 
           intersection_list = g_list_append (intersection_list, item);
           if (rtp_intersection) {
-            gst_caps_unref (intersection);
             break;
           }
         }
       } else {
         if (rtp_intersection)
           gst_caps_unref (rtp_intersection);
+        gst_caps_unref (intersection);
       }
-      gst_caps_unref (intersection);
     }
   }
 
@@ -1054,12 +1051,12 @@ check_caps_compatibility (GstElementFactory *factory,
   GstStaticPadTemplate *padtemplate;
   GstCaps *padtemplate_caps = NULL;
 
-  if (!factory->numpadtemplates)
+  if (!gst_element_factory_get_num_pad_templates (factory))
   {
     return FALSE;
   }
 
-  pads = factory->staticpadtemplates;
+  pads = gst_element_factory_get_static_pad_templates (factory);
   while (pads)
   {
     padtemplate = (GstStaticPadTemplate *) (pads->data);
@@ -1217,18 +1214,14 @@ create_codec_cap_list (GstElementFactory *factory,
       }
       else
       {
-        GstCaps *newcaps;
-
         entry->element_list1->data =
           g_list_append (entry->element_list1->data, factory);
         gst_object_ref (factory);
 
         if (rtp_caps) {
           if (entry->rtp_caps) {
-            GstCaps *new_rtp_caps;
-            new_rtp_caps = gst_caps_union (rtp_caps, entry->rtp_caps);
-            gst_caps_unref (entry->rtp_caps);
-            entry->rtp_caps = new_rtp_caps;
+            entry->rtp_caps = gst_caps_merge (gst_caps_copy (rtp_caps),
+              entry->rtp_caps);
           } else {
             entry->rtp_caps = gst_caps_ref (rtp_caps);
             /* This shouldn't happen, its we're looking at rtp elements
@@ -1236,12 +1229,7 @@ create_codec_cap_list (GstElementFactory *factory,
             g_assert_not_reached ();
           }
         }
-
-        newcaps = gst_caps_union (cur_caps, entry->caps);
-        gst_caps_unref (entry->caps);
-        gst_caps_unref (cur_caps);
-        entry->caps = newcaps;
-
+        entry->caps = gst_caps_merge (cur_caps, entry->caps);
       }
     }
   done:
@@ -1286,7 +1274,7 @@ get_plugins_filtered_from_caps (FilterFunc filter,
   GList *list = NULL;
   GstCaps *matched_caps = NULL;
 
-  result = gst_registry_get_feature_list (gst_registry_get_default (),
+  result = gst_registry_get_feature_list (gst_registry_get (),
           GST_TYPE_ELEMENT_FACTORY);
 
   result = g_list_sort (result, (GCompareFunc) compare_ranks);
@@ -1296,7 +1284,8 @@ get_plugins_filtered_from_caps (FilterFunc filter,
     GstElementFactory *factory = GST_ELEMENT_FACTORY (walk->data);
 
     /* Ignore unranked plugins */
-    if (gst_plugin_feature_get_rank (factory) == GST_RANK_NONE)
+    if (gst_plugin_feature_get_rank (GST_PLUGIN_FEATURE (factory)) ==
+        GST_RANK_NONE)
       continue;
 
     if (!filter (factory))

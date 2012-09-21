@@ -47,8 +47,6 @@
  *
  */
 
-/* TODO Make a fs_codec_new() function since there is a _destroy() */
-
 GType
 fs_codec_get_type (void)
 {
@@ -136,7 +134,7 @@ fs_feedback_parameter_free (FsFeedbackParameter *param)
 }
 
 /**
- * fs_codec_destroy: (skip):
+ * fs_codec_destroy: (skip)
  * @codec: #FsCodec structure to free
  *
  * Deletes a #FsCodec structure and all its data. Is a no-op on %NULL codec
@@ -218,7 +216,7 @@ fs_codec_copy (const FsCodec * codec)
 }
 
 /**
- * fs_codec_list_destroy: (skip): 
+ * fs_codec_list_destroy: (skip)
  * @codec_list: a GList of #FsCodec to delete
  *
  * Deletes a list of #FsCodec structures and the list itself.
@@ -263,7 +261,7 @@ fs_codec_list_copy (const GList *codec_list)
 }
 
 /**
- * fs_codec_list_from_keyfile
+ * fs_codec_list_from_keyfile:
  * @filename: Name of the #GKeyFile to read the codecs parameters from
  * @error: location of a #GError, or NULL if no error occured
  *
@@ -480,7 +478,7 @@ fs_codec_list_from_keyfile (const gchar *filename, GError **error)
 }
 
 /**
- * fs_media_type_to_string
+ * fs_media_type_to_string:
  * @media_type: A media type
  *
  * Gives a user-printable string representing the media type
@@ -501,7 +499,7 @@ fs_media_type_to_string (FsMediaType media_type)
 }
 
 /**
- * fs_codec_to_string
+ * fs_codec_to_string:
  * @codec: A farstream codec
  *
  * Returns a newly-allocated string representing the codec

@@ -3,7 +3,7 @@
   <description>RtcpFilter</description>
   <filename>../../gst/fsrtcpfilter/.libs/libfsrtcpfilter.so</filename>
   <basename>libfsrtcpfilter.so</basename>
-  <version>0.1.2</version>
+  <version>0.1.0.1</version>
   <license>LGPL</license>
   <source>farstream</source>
   <package>Farstream</package>
@@ -14,7 +14,7 @@
       <longname>RTCP Filter element</longname>
       <class>Filter</class>
       <description>This element removes unneeded parts of rtcp buffers</description>
-      <author>Olivier Crete &lt;olivier.crete@collabora.co.uk&gt;</author>
+      <author>Olivier Crete &lt;olivier.crete@collabora.com&gt;</author>
       <pads>
         <caps>
           <name>sink</name>

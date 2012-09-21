@@ -46,56 +46,27 @@
 
 #define GST_CAT_DEFAULT fsmsnconference_debug
 
-/* Signals */
-enum
-{
-  LAST_SIGNAL
-};
 
-/* Properties */
-enum
-{
-  PROP_0
-};
+G_DEFINE_TYPE (FsMsnCamRecvConference, fs_msn_cam_recv_conference,
+    FS_TYPE_MSN_CONFERENCE);
 
-
-static GstElementDetails fs_msn_cam_recv_conference_details =
-{
-  "Farstream MSN Reception Conference",
-  "Generic/Bin/MSN",
-  "A Farstream MSN Reception Conference",
-  "Richard Spiers <richard.spiers@gmail.com>, "
-  "Youness Alaoui <youness.alaoui@collabora.co.uk>, "
-  "Olivier Crete <olivier.crete@collabora.co.uk>"
-};
-
-
-static void fs_msn_cam_recv_conference_do_init (GType type);
-
-GST_BOILERPLATE_FULL (FsMsnCamRecvConference, fs_msn_cam_recv_conference,
-    FsMsnConference, FS_TYPE_MSN_CONFERENCE, fs_msn_cam_recv_conference_do_init);
-
-static void
-fs_msn_cam_recv_conference_do_init (GType type)
-{
-}
 
 static void
 fs_msn_cam_recv_conference_class_init (FsMsnCamRecvConferenceClass * klass)
 {
+  GstElementClass *gstelement_class = GST_ELEMENT_CLASS (klass);
+
+  gst_element_class_set_metadata (gstelement_class,
+      "Farstream MSN Reception Conference",
+      "Generic/Bin/MSN",
+      "A Farstream MSN Reception Conference",
+      "Richard Spiers <richard.spiers@gmail.com>, "
+      "Youness Alaoui <youness.alaoui@collabora.com>, "
+      "Olivier Crete <olivier.crete@collabora.com>");
 }
 
 static void
-fs_msn_cam_recv_conference_base_init (gpointer g_class)
-{
-  GstElementClass *gstelement_class = GST_ELEMENT_CLASS (g_class);
-
-  gst_element_class_set_details (gstelement_class, &fs_msn_cam_recv_conference_details);
-}
-
-static void
-fs_msn_cam_recv_conference_init (FsMsnCamRecvConference *self,
-                        FsMsnCamRecvConferenceClass *bclass)
+fs_msn_cam_recv_conference_init (FsMsnCamRecvConference *self)
 {
   FsMsnConference *conf = FS_MSN_CONFERENCE (self);
   GstElementFactory *fact = NULL;

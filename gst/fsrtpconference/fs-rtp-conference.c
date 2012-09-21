@@ -69,22 +69,14 @@ enum
 };
 
 
-static const GstElementDetails fs_rtp_conference_details =
-GST_ELEMENT_DETAILS (
-  "Farstream RTP Conference",
-  "Generic/Bin/RTP",
-  "A Farstream RTP Conference",
-  "Olivier Crete <olivier.crete@collabora.co.uk>");
-
-
 static GstStaticPadTemplate fs_rtp_conference_sink_template =
-  GST_STATIC_PAD_TEMPLATE ("sink_%d",
+  GST_STATIC_PAD_TEMPLATE ("sink_%u",
                            GST_PAD_SINK,
                            GST_PAD_SOMETIMES,
                            GST_STATIC_CAPS_ANY);
 
 static GstStaticPadTemplate fs_rtp_conference_src_template =
-  GST_STATIC_PAD_TEMPLATE ("src_%d_%d_%d",
+  GST_STATIC_PAD_TEMPLATE ("src_%u_%u_%u",
                            GST_PAD_SRC,
                            GST_PAD_SOMETIMES,
                            GST_STATIC_CAPS_ANY);
@@ -108,11 +100,7 @@ struct _FsRtpConferencePrivate
   GPtrArray *threads;
 };
 
-static void fs_rtp_conference_do_init (GType type);
-
-
-GST_BOILERPLATE_FULL (FsRtpConference, fs_rtp_conference, FsConference,
-                      FS_TYPE_CONFERENCE, fs_rtp_conference_do_init);
+G_DEFINE_TYPE (FsRtpConference, fs_rtp_conference, FS_TYPE_CONFERENCE);
 
 static void fs_rtp_conference_get_property (GObject *object,
     guint prop_id,
@@ -168,16 +156,6 @@ static GstStateChangeReturn fs_rtp_conference_change_state (
     GstStateChange transition);
 
 
-static void
-fs_rtp_conference_do_init (GType type)
-{
-  GST_DEBUG_CATEGORY_INIT (fsrtpconference_debug, "fsrtpconference", 0,
-      "Farstream RTP Conference Element");
-  GST_DEBUG_CATEGORY_INIT (fsrtpconference_disco, "fsrtpconference_disco",
-      0, "Farstream RTP Codec Discovery");
-  GST_DEBUG_CATEGORY_INIT (fsrtpconference_nego, "fsrtpconference_nego",
-      0, "Farstream RTP Codec Negotiation");
-}
 
 static void
 fs_rtp_conference_dispose (GObject * object)
@@ -188,9 +166,9 @@ fs_rtp_conference_dispose (GObject * object)
   if (self->priv->disposed)
     return;
 
-  if (self->gstrtpbin) {
-    gst_object_unref (self->gstrtpbin);
-    self->gstrtpbin = NULL;
+  if (self->rtpbin) {
+    gst_object_unref (self->rtpbin);
+    self->rtpbin = NULL;
   }
 
   for (item = g_list_first (self->priv->sessions);
@@ -210,7 +188,7 @@ fs_rtp_conference_dispose (GObject * object)
 
   self->priv->disposed = TRUE;
 
-  G_OBJECT_CLASS (parent_class)->dispose (object);
+  G_OBJECT_CLASS (fs_rtp_conference_parent_class)->dispose (object);
 }
 
 
@@ -224,7 +202,7 @@ fs_rtp_conference_finalize (GObject * object)
 
   g_ptr_array_free (self->priv->threads, TRUE);
 
-  G_OBJECT_CLASS (parent_class)->finalize (object);
+  G_OBJECT_CLASS (fs_rtp_conference_parent_class)->finalize (object);
 }
 
 static void
@@ -236,6 +214,24 @@ fs_rtp_conference_class_init (FsRtpConferenceClass * klass)
   GstBinClass *gstbin_class = GST_BIN_CLASS (klass);
 
   g_type_class_add_private (klass, sizeof (FsRtpConferencePrivate));
+
+  GST_DEBUG_CATEGORY_INIT (fsrtpconference_debug, "fsrtpconference", 0,
+      "Farstream RTP Conference Element");
+  GST_DEBUG_CATEGORY_INIT (fsrtpconference_disco, "fsrtpconference_disco",
+      0, "Farstream RTP Codec Discovery");
+  GST_DEBUG_CATEGORY_INIT (fsrtpconference_nego, "fsrtpconference_nego",
+      0, "Farstream RTP Codec Negotiation");
+
+  gst_element_class_add_pad_template (gstelement_class,
+            gst_static_pad_template_get (&fs_rtp_conference_sink_template));
+  gst_element_class_add_pad_template (gstelement_class,
+            gst_static_pad_template_get (&fs_rtp_conference_src_template));
+
+  gst_element_class_set_metadata (gstelement_class,
+      "Farstream RTP Conference",
+      "Generic/Bin/RTP",
+      "A Farstream RTP Conference",
+      "Olivier Crete <olivier.crete@collabora.co.uk>");
 
   baseconf_class->new_session =
     GST_DEBUG_FUNCPTR (fs_rtp_conference_new_session);
@@ -262,21 +258,7 @@ fs_rtp_conference_class_init (FsRtpConferenceClass * klass)
 }
 
 static void
-fs_rtp_conference_base_init (gpointer g_class)
-{
-  GstElementClass *gstelement_class = GST_ELEMENT_CLASS (g_class);
-
-  gst_element_class_add_pad_template (gstelement_class,
-            gst_static_pad_template_get (&fs_rtp_conference_sink_template));
-  gst_element_class_add_pad_template (gstelement_class,
-            gst_static_pad_template_get (&fs_rtp_conference_src_template));
-
-  gst_element_class_set_details (gstelement_class, &fs_rtp_conference_details);
-}
-
-static void
-fs_rtp_conference_init (FsRtpConference *conf,
-    FsRtpConferenceClass *bclass)
+fs_rtp_conference_init (FsRtpConference *conf)
 {
   GST_DEBUG_OBJECT (conf, "fs_rtp_conference_init");
 
@@ -287,29 +269,29 @@ fs_rtp_conference_init (FsRtpConference *conf,
 
   conf->priv->threads = g_ptr_array_new ();
 
-  conf->gstrtpbin = gst_element_factory_make ("gstrtpbin", "rtpbin");
+  conf->rtpbin = gst_element_factory_make ("rtpbin", NULL);
 
-  if (!conf->gstrtpbin) {
-    GST_ERROR_OBJECT (conf, "Could not create GstRtpBin element");
+  if (!conf->rtpbin) {
+    GST_ERROR_OBJECT (conf, "Could not create Rtpbin element");
     return;
   }
 
-  if (!gst_bin_add (GST_BIN (conf), conf->gstrtpbin)) {
-    GST_ERROR_OBJECT (conf, "Could not add GstRtpBin element");
-    gst_object_unref (conf->gstrtpbin);
-    conf->gstrtpbin = NULL;
+  if (!gst_bin_add (GST_BIN (conf), conf->rtpbin)) {
+    GST_ERROR_OBJECT (conf, "Could not add Rtpbin element");
+    gst_object_unref (conf->rtpbin);
+    conf->rtpbin = NULL;
     return;
   }
 
-  gst_object_ref (conf->gstrtpbin);
+  gst_object_ref (conf->rtpbin);
 
-  g_signal_connect (conf->gstrtpbin, "request-pt-map",
+  g_signal_connect (conf->rtpbin, "request-pt-map",
                     G_CALLBACK (_rtpbin_request_pt_map), conf);
-  g_signal_connect (conf->gstrtpbin, "pad-added",
+  g_signal_connect (conf->rtpbin, "pad-added",
                     G_CALLBACK (_rtpbin_pad_added), conf);
-  g_signal_connect (conf->gstrtpbin, "on-bye-ssrc",
+  g_signal_connect (conf->rtpbin, "on-bye-ssrc",
                     G_CALLBACK (_rtpbin_on_bye_ssrc), conf);
-  g_signal_connect (conf->gstrtpbin, "on-ssrc-validated",
+  g_signal_connect (conf->rtpbin, "on-ssrc-validated",
                     G_CALLBACK (_rtpbin_on_ssrc_validated), conf);
 
   /* We have to ref the class here because the class initialization
@@ -328,13 +310,13 @@ fs_rtp_conference_get_property (GObject *object,
 {
   FsRtpConference *self = FS_RTP_CONFERENCE (object);
 
-  if (!self->gstrtpbin)
+  if (!self->rtpbin)
     return;
 
   switch (prop_id)
   {
     case PROP_SDES:
-      g_object_get_property (G_OBJECT (self->gstrtpbin), "sdes", value);
+      g_object_get_property (G_OBJECT (self->rtpbin), "sdes", value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -350,13 +332,13 @@ fs_rtp_conference_set_property (GObject *object,
 {
   FsRtpConference *self = FS_RTP_CONFERENCE (object);
 
-  if (!self->gstrtpbin)
+  if (!self->rtpbin)
     return;
 
   switch (prop_id)
   {
     case PROP_SDES:
-      g_object_set_property (G_OBJECT (self->gstrtpbin), "sdes", value);
+      g_object_set_property (G_OBJECT (self->rtpbin), "sdes", value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -378,7 +360,7 @@ _rtpbin_request_pt_map (GstElement *element, guint session_id,
     caps = fs_rtp_session_request_pt_map (session, pt);
     g_object_unref (session);
   } else {
-    GST_WARNING_OBJECT (self,"GstRtpBin %p tried to request the caps for "
+    GST_WARNING_OBJECT (self,"Rtpbin %p tried to request the caps for "
                        " payload type %u for non-existent session %u",
                        element, pt, session_id);
   }
@@ -393,8 +375,8 @@ _rtpbin_pad_added (GstElement *rtpbin, GstPad *new_pad,
   FsRtpConference *self = FS_RTP_CONFERENCE (user_data);
   gchar *name;
 
-  GST_DEBUG_OBJECT (self, "pad %s added %" GST_PTR_FORMAT,
-      GST_PAD_NAME (new_pad), GST_PAD_CAPS (new_pad));
+  GST_DEBUG_OBJECT (self, "pad %s added" GST_PTR_FORMAT,
+      GST_PAD_NAME (new_pad));
 
   name = gst_pad_get_name (new_pad);
 
@@ -526,10 +508,10 @@ fs_rtp_conference_new_session (FsConference *conf,
   FsSession *new_session = NULL;
   guint id;
 
-  if (!self->gstrtpbin)
+  if (!self->rtpbin)
   {
     g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
-        "Could not create GstRtpBin");
+        "Could not create Rtpbin");
     return NULL;
   }
 
@@ -564,10 +546,10 @@ fs_rtp_conference_new_participant (FsConference *conf,
   FsRtpConference *self = FS_RTP_CONFERENCE (conf);
   FsParticipant *new_participant = NULL;
 
-  if (!self->gstrtpbin)
+  if (!self->rtpbin)
   {
     g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
-        "Could not create GstRtpBin");
+        "Could not create Rtpbin");
     return NULL;
   }
 
@@ -591,7 +573,7 @@ fs_rtp_conference_handle_message (
 {
   FsRtpConference *self = FS_RTP_CONFERENCE (bin);
 
-  if (!self->gstrtpbin)
+  if (!self->rtpbin)
     goto out;
 
   switch (GST_MESSAGE_TYPE (message)) {
@@ -633,7 +615,7 @@ fs_rtp_conference_handle_message (
           fs_rtp_session_associate_ssrc_cname (session, ssrc, cname);
           g_object_unref (session);
         } else {
-          GST_WARNING_OBJECT (self,"Our GstRtpBin announced a new association"
+          GST_WARNING_OBJECT (self,"Our RtpBin announced a new association"
               "for non-existent session %u for ssrc: %u and cname %s",
               session_id, ssrc, cname);
         }
@@ -708,7 +690,8 @@ fs_rtp_conference_handle_message (
  out:
   /* forward all messages to the parent */
   if (message)
-    GST_BIN_CLASS (parent_class)->handle_message (bin, message);
+    GST_BIN_CLASS (fs_rtp_conference_parent_class)->handle_message (bin,
+        message);
 }
 
 static GstStateChangeReturn
@@ -719,9 +702,9 @@ fs_rtp_conference_change_state (GstElement *element, GstStateChange transition)
 
   switch (transition) {
     case GST_STATE_CHANGE_NULL_TO_READY:
-      if (!self->gstrtpbin)
+      if (!self->rtpbin)
       {
-        GST_ERROR_OBJECT (element, "Could not create the GstRtpBin subelement");
+        GST_ERROR_OBJECT (element, "Could not create the RtpBin subelement");
         result = GST_STATE_CHANGE_FAILURE;
         goto failure;
       }
@@ -731,8 +714,8 @@ fs_rtp_conference_change_state (GstElement *element, GstStateChange transition)
   }
 
   if ((result =
-          GST_ELEMENT_CLASS (parent_class)->change_state (element,
-              transition)) == GST_STATE_CHANGE_FAILURE)
+          GST_ELEMENT_CLASS (fs_rtp_conference_parent_class)->change_state (
+            element, transition)) == GST_STATE_CHANGE_FAILURE)
     goto failure;
 
   return result;
@@ -766,7 +749,8 @@ fs_codec_to_gst_caps (const FsCodec *codec)
   if (codec == NULL)
     return NULL;
 
-  structure = gst_structure_new ("application/x-rtp", NULL);
+  caps = gst_caps_new_empty_simple ("application/x-rtp");
+  structure = gst_caps_get_structure (caps, 0);
 
   if (codec->encoding_name)
   {
@@ -833,8 +817,6 @@ fs_codec_to_gst_caps (const FsCodec *codec)
     g_free (lower_type);
     g_free (rtcpfb_name);
   }
-
-  caps = gst_caps_new_full (structure, NULL);
 
   return caps;
 }

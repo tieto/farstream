@@ -612,10 +612,10 @@ fs_rtp_special_source_new (FsRtpSpecialSourceClass *klass,
   }
 
   source->priv->muxer_request_pad = gst_element_get_request_pad (rtpmuxer,
-      "priority_sink_%d");
+      "priority_sink_%u");
   if (!source->priv->muxer_request_pad)
     source->priv->muxer_request_pad = gst_element_get_request_pad (rtpmuxer,
-        "sink_%d");
+        "sink_%u");
 
   if (!source->priv->muxer_request_pad)
   {

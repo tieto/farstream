@@ -27,9 +27,8 @@
 
 #include <farstream/fs-transmitter.h>
 
-#include <gst/netbuffer/gstnetbuffer.h>
-
 #include <gst/gst.h>
+#include <gst/net/gstnetaddressmeta.h>
 
 #ifdef G_OS_WIN32
 # include <ws2tcpip.h>
@@ -93,7 +92,7 @@ struct _FsRawUdpTransmitter
 typedef struct _UdpPort UdpPort;
 
 typedef void (*FsRawUdpAddressUniqueCallbackFunc) (gboolean unique,
-    const GstNetAddress *address, gpointer user_data);
+    GSocketAddress *address, gpointer user_data);
 
 GType fs_rawudp_transmitter_get_type (void);
 
@@ -123,7 +122,7 @@ gboolean fs_rawudp_transmitter_udpport_sendto (UdpPort *udpport,
     GError **error);
 
 gulong fs_rawudp_transmitter_udpport_connect_recv (UdpPort *udpport,
-    GCallback callback,
+    GstPadProbeCallback callback,
     gpointer user_data);
 void fs_rawudp_transmitter_udpport_disconnect_recv (UdpPort *udpport,
     gulong id);
@@ -135,12 +134,12 @@ gint fs_rawudp_transmitter_udpport_get_port (UdpPort *udpport);
 
 
 gboolean fs_rawudp_transmitter_udpport_add_known_address (UdpPort *udpport,
-    GstNetAddress *address,
+    GSocketAddress *address,
     FsRawUdpAddressUniqueCallbackFunc callback,
     gpointer user_data);
 
 void fs_rawudp_transmitter_udpport_remove_known_address (UdpPort *udpport,
-    GstNetAddress *address,
+    GSocketAddress *address,
     FsRawUdpAddressUniqueCallbackFunc callback,
     gpointer user_data);
 
@@ -151,6 +150,9 @@ void fs_rawudp_transmitter_udpport_add_recvonly_dest (UdpPort *udpport,
 void fs_rawudp_transmitter_udpport_remove_recvonly_dest (UdpPort *udpport,
     const gchar *ip,
     gint port);
+
+gboolean fs_g_inet_socket_address_equal (GSocketAddress *addr1,
+    GSocketAddress *addr2);
 
 G_END_DECLS
 

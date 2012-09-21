@@ -48,16 +48,16 @@ check_PROGRAMS = \
 	transmitter/rawudp \
 	transmitter/multicast \
 	transmitter/nice \
-	transmitter/shm \
 	raw/conference \
+	elements/rtcpfilter \
 	rtp/codecs \
 	rtp/sendcodecs \
 	rtp/conference \
 	rtp/recvcodecs \
 	msn/conference \
-	utils/binadded \
-	elements/rtcpfilter \
-	elements/funnel
+	utils/binadded
+noinst_PROGRAMS	= transmitter/shm 
+
 
 AM_CFLAGS = \
 	$(CFLAGS) \
@@ -67,7 +67,7 @@ AM_CFLAGS = \
 	$(GST_CFLAGS)
 
 LDADD = \
-	$(top_builddir)/farstream/libfarstream-@FS_MAJORMINOR@.la \
+	$(top_builddir)/farstream/libfarstream-@FS_APIVERSION@.la \
 	$(GST_CHECK_LIBS) \
 	$(GST_LIBS)
 
@@ -104,6 +104,7 @@ transmitter_multicast_SOURCES = \
 	transmitter/fake-filter.c \
 	transmitter/fake-filter.h \
 	transmitter/multicast.c
+transmitter_multicast_LDADD = $(LDADD) $(GST_BASE_LIBS)
 
 transmitter_nice_CFLAGS = $(FS_INTERNAL_CFLAGS) $(CFLAGS) $(AM_CFLAGS)
 transmitter_nice_SOURCES = \
@@ -113,6 +114,7 @@ transmitter_nice_SOURCES = \
 	transmitter/fake-filter.c \
 	transmitter/fake-filter.h \
 	transmitter/nice.c 
+transmitter_nice_LDADD = $(LDADD) $(GST_BASE_LIBS)
 
 
 transmitter_shm_CFLAGS = $(AM_CFLAGS) $(GUPNP_CFLAGS) $(NICE_CFLAGS)
@@ -125,7 +127,7 @@ transmitter_shm_SOURCES = \
 	transmitter/generic.h \
 	transmitter/shm.c
 
-raw_conference_CFLAGS = $(AM_CFLAGS)
+raw_conference_CFLAGS = $(CFLAGS) $(AM_CFLAGS) $(GST_PLUGINS_BASE_CFLAGS)
 raw_conference_SOURCES = \
 	check-threadsafe.h  \
 	testutils.c \
@@ -147,15 +149,15 @@ rtp_codecs_SOURCES = \
 	rtp/generic.h \
 	rtp/codecs.c
 
-rtp_sendcodecs_CFLAGS = $(AM_CFLAGS)
-rtp_sendcodecs_LDADD = $(LDADD) -lgstrtp-@GST_MAJORMINOR@
+rtp_sendcodecs_CFLAGS = $(AM_CFLAGS) $(GST_PLUGINS_BASE_CFLAGS)
+rtp_sendcodecs_LDADD = $(LDADD) -lgstrtp-@GST_API_VERSION@
 rtp_sendcodecs_SOURCES = \
 	rtp/generic.c \
 	rtp/generic.h \
 	rtp/sendcodecs.c
 
-rtp_recvcodecs_CFLAGS = $(AM_CFLAGS)
-rtp_recvcodecs_LDADD = $(LDADD) -lgstrtp-@GST_MAJORMINOR@
+rtp_recvcodecs_CFLAGS = $(AM_CFLAGS) $(GST_PLUGINS_BASE_CFLAGS)
+rtp_recvcodecs_LDADD = $(LDADD) -lgstrtp-@GST_API_VERSION@
 
 msn_conference_CFLAGS = $(AM_CFLAGS)
 msn_conference_SOURCES = \
@@ -167,9 +169,6 @@ utils_binadded_SOURCES = \
 	testutils.h \
 	utils/binadded.c
 
-elements_rtcpfilter_CFLAGS = $(AM_CFLAGS)
+elements_rtcpfilter_CFLAGS = $(AM_CFLAGS) $(GST_PLUGINS_BASE_CFLAGS)
 elements_rtcpfilter_SOURCES = elements/rtcpfilter.c
-elements_rtcpfilter_LDADD = $(LDADD) -lgstrtp-@GST_MAJORMINOR@
-
-elements_funnel_CFLAGS = $(AM_CFLAGS)
-elements_funnel_SOURCES = elements/funnel.c
+elements_rtcpfilter_LDADD = $(LDADD) -lgstrtp-@GST_API_VERSION@

@@ -255,13 +255,13 @@ fs_nice_transmitter_constructed (GObject *object)
 
     /* Lets create the RTP source funnel */
 
-    self->priv->src_funnels[c] = gst_element_factory_make ("fsfunnel", NULL);
+    self->priv->src_funnels[c] = gst_element_factory_make ("funnel", NULL);
 
     if (!self->priv->src_funnels[c])
     {
       trans->construction_error = g_error_new (FS_ERROR,
         FS_ERROR_CONSTRUCTION,
-        "Could not make the fsfunnel element");
+        "Could not make the funnel element");
       return;
     }
 
@@ -270,11 +270,11 @@ fs_nice_transmitter_constructed (GObject *object)
     {
       trans->construction_error = g_error_new (FS_ERROR,
         FS_ERROR_CONSTRUCTION,
-        "Could not add the fsfunnel element to the transmitter src bin");
+        "Could not add the funnel element to the transmitter src bin");
     }
 
     pad = gst_element_get_static_pad (self->priv->src_funnels[c], "src");
-    padname = g_strdup_printf ("src%d", c);
+    padname = g_strdup_printf ("src_%u", c);
     ghostpad = gst_ghost_pad_new (padname, pad);
     g_free (padname);
     gst_object_unref (pad);
@@ -304,7 +304,7 @@ fs_nice_transmitter_constructed (GObject *object)
     }
 
     pad = gst_element_get_static_pad (self->priv->sink_tees[c], "sink");
-    padname = g_strdup_printf ("sink%d", c);
+    padname = g_strdup_printf ("sink_%u", c);
     ghostpad = gst_ghost_pad_new (padname, pad);
     g_free (padname);
     gst_object_unref (pad);
@@ -336,7 +336,7 @@ fs_nice_transmitter_constructed (GObject *object)
       return;
     }
 
-    pad = gst_element_get_request_pad (self->priv->sink_tees[c], "src%d");
+    pad = gst_element_get_request_pad (self->priv->sink_tees[c], "src_%u");
     pad2 = gst_element_get_static_pad (fakesink, "sink");
 
     ret = gst_pad_link (pad, pad2);
@@ -495,7 +495,7 @@ _create_sinksource (
     guint component_id,
     GstPadDirection direction,
     gboolean do_timestamp,
-    GCallback have_buffer_callback,
+    GstPadProbeCallback have_buffer_callback,
     gpointer have_buffer_user_data,
     gulong *buffer_probe_id,
     GstPad **requested_pad,
@@ -545,9 +545,9 @@ _create_sinksource (
   gst_object_ref (elem);
 
   if (direction == GST_PAD_SINK)
-    *requested_pad = gst_element_get_request_pad (teefunnel, "src%d");
+    *requested_pad = gst_element_get_request_pad (teefunnel, "src_%u");
   else
-    *requested_pad = gst_element_get_request_pad (teefunnel, "sink%d");
+    *requested_pad = gst_element_get_request_pad (teefunnel, "sink_%u");
 
   if (!*requested_pad)
   {
@@ -626,17 +626,18 @@ _create_sinksource (
     {
       g_object_set_data (G_OBJECT (*requested_pad), "component-id",
           GUINT_TO_POINTER (component_id));
-      *buffer_probe_id = gst_pad_add_buffer_probe (*requested_pad,
+      *buffer_probe_id = gst_pad_add_probe (*requested_pad,
+          GST_PAD_PROBE_TYPE_BUFFER,
           have_buffer_callback,
-          have_buffer_user_data);
+          have_buffer_user_data, NULL);
     }
     else
     {
       g_object_set_data (G_OBJECT (elempad), "component-id",
           GUINT_TO_POINTER (component_id));
-      *buffer_probe_id = gst_pad_add_buffer_probe (elempad,
-          have_buffer_callback,
-          have_buffer_user_data);
+      *buffer_probe_id = gst_pad_add_probe (elempad,
+          GST_PAD_PROBE_TYPE_BUFFER,
+          have_buffer_callback, have_buffer_user_data, NULL);
     }
 
     if (*buffer_probe_id == 0)
@@ -709,7 +710,7 @@ NiceGstStream *
 fs_nice_transmitter_add_gst_stream (FsNiceTransmitter *self,
     NiceAgent *agent,
     guint stream_id,
-    GCallback have_buffer_callback,
+    GstPadProbeCallback have_buffer_callback,
     gpointer have_buffer_user_data,
     GError **error)
 {
@@ -920,7 +921,7 @@ fs_nice_transmitter_set_sending (FsNiceTransmitter *self,
 
 
           ns->requested_tee_pads[c] =
-            gst_element_get_request_pad (self->priv->sink_tees[c], "src%d");
+            gst_element_get_request_pad (self->priv->sink_tees[c], "src_%u");
 
           g_assert (ns->requested_tee_pads[c]);
 

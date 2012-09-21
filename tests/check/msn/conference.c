@@ -66,11 +66,6 @@ bus_watch (GstBus *bus, GstMessage *message, gpointer user_data)
           const gchar *error;
 
           ts_fail_unless (
-              gst_implements_interface_check (GST_MESSAGE_SRC (message),
-                  FS_TYPE_CONFERENCE),
-              "Received farstream-error from non-farstream element");
-
-          ts_fail_unless (
               gst_structure_has_field_typed (s, "src-object", G_TYPE_OBJECT),
               "farstream-error structure has no src-object field");
           ts_fail_unless (
@@ -91,11 +86,6 @@ bus_watch (GstBus *bus, GstMessage *message, gpointer user_data)
           FsStream *stream;
           FsCandidate *candidate;
           const GValue *value;
-
-          ts_fail_unless (
-              gst_implements_interface_check (GST_MESSAGE_SRC (message),
-                  FS_TYPE_CONFERENCE),
-              "Received farstream-error from non-farstream element");
 
           ts_fail_unless (
               gst_structure_has_field_typed (s, "stream", FS_TYPE_STREAM),
@@ -164,13 +154,15 @@ bus_watch (GstBus *bus, GstMessage *message, gpointer user_data)
   return TRUE;
 }
 
-static void
-pad_probe_cb (GstPad *pad, GstBuffer *buf, gpointer user_data)
+static GstPadProbeReturn
+pad_probe_cb (GstPad *pad, GstPadProbeInfo *info, gpointer user_data)
 {
   count++;
 
   if (count > 20)
     g_main_loop_quit (loop);
+
+  return GST_PAD_PROBE_OK;
 }
 
 static void
@@ -189,7 +181,8 @@ stream_src_pad_added (FsStream *stream, GstPad *pad, FsCodec *codec,
   sinkpad = gst_element_get_static_pad (sink, "sink");
   ts_fail_unless (sinkpad != NULL);
 
-  gst_pad_add_buffer_probe (sinkpad, G_CALLBACK (pad_probe_cb), dat);
+  gst_pad_add_probe (sinkpad, GST_PAD_PROBE_TYPE_BUFFER, pad_probe_cb, dat,
+    NULL);
 
   ts_fail_if (GST_PAD_LINK_FAILED (gst_pad_link (pad, sinkpad)));
 

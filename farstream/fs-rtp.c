@@ -66,7 +66,7 @@ fs_rtp_header_extension_new (guint id, FsStreamDirection direction,
 }
 
 /**
- * fs_rtp_header_extension_copy: (skip):
+ * fs_rtp_header_extension_copy: (skip)
  * @extension: The RTP header extension definition to copy
  *
  * Copies a #FsRtpHeaderExtension
@@ -115,7 +115,7 @@ fs_rtp_header_extension_are_equal (FsRtpHeaderExtension *extension1,
 }
 
 /**
- * fs_rtp_header_extension_destroy: (skip):
+ * fs_rtp_header_extension_destroy: (skip)
  * @extension: A RTP header extension to free
  *
  * Frees the passed #FsRtpHeaderExtension
@@ -158,7 +158,7 @@ fs_rtp_header_extension_list_copy (GList *extensions)
 }
 
 /**
- * fs_rtp_header_extension_list_destroy: (skip):
+ * fs_rtp_header_extension_list_destroy: (skip)
  * @extensions: a #GList of #FsRtpHeaderExtension
  *
  * Frees the passed #GList of #FsRtpHeaderExtension

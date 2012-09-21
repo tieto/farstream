@@ -2,15 +2,10 @@ DISTCHECK_CONFIGURE_FLAGS=--enable-gtk-doc --enable-introspection
 
 SUBDIRS_EXT =
 
-if WANT_PYTHON
-PYTHON_SUBDIR = python
-endif
-
 SUBDIRS = 			\
 	farstream 		\
 	gst $(SUBDIRS_EXT)	\
 	transmitters		\
-	$(PYTHON_SUBDIR)	\
 	tests 			\
 	docs			\
 	common			\
@@ -23,7 +18,6 @@ DIST_SUBDIRS = 			\
 	farstream		\
 	gst $(SUBDIRS_EXT)	\
 	transmitters		\
-	python			\
 	tests 			\
 	docs			\
 	common			\
@@ -49,14 +43,21 @@ check-torture:
 	true
 endif
 
-pcverfiles = farstream-@FS_MAJORMINOR@.pc
-pcinfiles = farstream.pc.in
+pcverfiles = farstream-@FS_APIVERSION@.pc \
+             farstream-@FS_APIVERSION@-uninstalled.pc
+pcinfiles = farstream.pc.in \
+            farstream-uninstalled.pc.in
 
-%-@FS_MAJORMINOR@.pc: %.pc
+%-@FS_APIVERSION@.pc: %.pc
+	cp $< $@
+
+%-@FS_APIVERSION@-uninstalled.pc: %-uninstalled.pc
 	cp $< $@
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = $(pcverfiles)
+pkgconfig_DATA = farstream-@FS_APIVERSION@.pc
+
+noinst_DATA = farstream-@FS_APIVERSION@-uninstalled.pc
 
 CLEANFILES = $(pcverfiles)
 

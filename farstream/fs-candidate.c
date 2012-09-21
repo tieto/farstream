@@ -70,7 +70,7 @@ fs_candidate_list_get_type (void)
 }
 
 /**
- * fs_candidate_destroy: (skip):
+ * fs_candidate_destroy: (skip)
  * @cand: a #FsCandidate to delete
  *
  * Frees a #FsCandidate and all its contents
@@ -124,7 +124,7 @@ fs_candidate_copy (const FsCandidate * cand)
 }
 
 /**
- * fs_candidate_list_destroy: (skip):
+ * fs_candidate_list_destroy: (skip)
  * @candidate_list: A GList of #FsCandidate
  *
  * Deletes a GList of #FsCandidate and its contents
