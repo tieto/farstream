@@ -4,7 +4,7 @@
 # DOCS_ARE_INCOMPLETE_PLEASE_FIXME=yespleasedo
 
 # The name of the module, e.g. 'glib'.
-#DOC_MODULE=gst-plugins-libs-@GST_MAJORMINOR@
+#DOC_MODULE=gst-plugins-libs-@GST_API_VERSION@
 DOC_MODULE=farstream-libs
 
 # generated basefiles
@@ -46,7 +46,7 @@ CFILE_GLOB=$(DOC_SOURCE_DIR)/*.c
 # this is useful ;)
 
 SCANOBJ_DEPS = \
-	$(top_builddir)/farstream/libfarstream-@FS_MAJORMINOR@.la
+	$(top_builddir)/farstream/libfarstream-@FS_APIVERSION@.la
 
 # Header files to ignore when scanning.
 IGNORE_HFILES = fs-marshal.h fs-enumtypes.h fs-private.h
@@ -64,7 +64,7 @@ extra_files =
 # contains GtkObjects/GObjects and you want to document signals and properties.
 GTKDOC_CFLAGS = $(FS_INTERNAL_CFLAGS) $(GST_PLUGINS_BASE_CFLAGS) $(GST_BASE_CFLAGS)
 GTKDOC_LIBS = -static \
-	$(top_builddir)/farstream/libfarstream-@FS_MAJORMINOR@.la \
+	$(top_builddir)/farstream/libfarstream-@FS_APIVERSION@.la \
 	$(GST_BASE_LIBS) \
 	$(GCOV_LIBS)
 

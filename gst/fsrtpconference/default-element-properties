@@ -8,7 +8,7 @@
 #
 
 # 100ms for the jitterbuffer is a good tradeoff
-[gstrtpbin]
+[rtpbin]
 latency=100
 
 [x264enc]

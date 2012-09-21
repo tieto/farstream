@@ -172,8 +172,8 @@ static void agent_new_candidate (NiceAgent *agent,
     const gchar *foundation,
     gpointer user_data);
 
-static gboolean known_buffer_have_buffer_handler (GstPad *pad,
-    GstBuffer *buffer,
+static GstPadProbeReturn known_buffer_have_buffer_handler (GstPad *pad,
+    GstPadProbeInfo *info,
     gpointer user_data);
 
 
@@ -1398,7 +1398,7 @@ fs_nice_stream_transmitter_build (FsNiceStreamTransmitter *self,
       self->priv->transmitter,
       self->priv->agent->agent,
       self->priv->stream_id,
-      G_CALLBACK (known_buffer_have_buffer_handler), self,
+      known_buffer_have_buffer_handler, self,
       error);
   if (self->priv->gststream == NULL)
     return FALSE;
@@ -1833,12 +1833,13 @@ fs_nice_stream_transmitter_newv (FsNiceTransmitter *transmitter,
 }
 
 
-static gboolean
-known_buffer_have_buffer_handler (GstPad *pad, GstBuffer *buffer,
+static GstPadProbeReturn
+known_buffer_have_buffer_handler (GstPad *pad, GstPadProbeInfo *info,
     gpointer user_data)
 {
   FsNiceStreamTransmitter *self = FS_NICE_STREAM_TRANSMITTER (user_data);
   guint component_id;
+  GstBuffer *buffer = GST_PAD_PROBE_INFO_BUFFER (info);
 
   if (!g_atomic_int_get (&self->priv->associate_on_source))
     return TRUE;

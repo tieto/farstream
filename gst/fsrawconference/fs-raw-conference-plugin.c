@@ -38,14 +38,26 @@ static gboolean plugin_init (GstPlugin * plugin)
                                GST_RANK_NONE, FS_TYPE_RAW_CONFERENCE);
 }
 
+#ifdef BUILD_GTK_DOC
+void
+fs_raw_plugin_init_real (void)
+{
+  gst_plugin_register_static (
+#else
 GST_PLUGIN_DEFINE (
+#endif
   GST_VERSION_MAJOR,
   GST_VERSION_MINOR,
-  "fsrawconference",
+  fsrawconference,
   "Farstream Raw Conference plugin",
   plugin_init,
   VERSION,
   "LGPL",
   "Farstream",
-  "http://farstream.freedesktop.org/"
+  "http://www.freedesktop.org/wiki/Software/Farstream"
+#ifdef BUILD_GTK_DOC
+  );
+}
+#else
 )
+#endif

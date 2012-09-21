@@ -281,13 +281,13 @@ fs_rawudp_transmitter_constructed (GObject *object)
 
     /* Lets create the RTP source funnel */
 
-    self->priv->udpsrc_funnels[c] = gst_element_factory_make ("fsfunnel", NULL);
+    self->priv->udpsrc_funnels[c] = gst_element_factory_make ("funnel", NULL);
 
     if (!self->priv->udpsrc_funnels[c])
     {
       trans->construction_error = g_error_new (FS_ERROR,
           FS_ERROR_CONSTRUCTION,
-          "Could not make the fsfunnel element");
+          "Could not make the funnel element");
       return;
     }
 
@@ -296,11 +296,11 @@ fs_rawudp_transmitter_constructed (GObject *object)
     {
       trans->construction_error = g_error_new (FS_ERROR,
           FS_ERROR_CONSTRUCTION,
-          "Could not add the fsfunnel element to the transmitter src bin");
+          "Could not add the funnel element to the transmitter src bin");
     }
 
     pad = gst_element_get_static_pad (self->priv->udpsrc_funnels[c], "src");
-    padname = g_strdup_printf ("src%d", c);
+    padname = g_strdup_printf ("src_%u", c);
     ghostpad = gst_ghost_pad_new (padname, pad);
     g_free (padname);
     gst_object_unref (pad);
@@ -330,7 +330,7 @@ fs_rawudp_transmitter_constructed (GObject *object)
     }
 
     pad = gst_element_get_static_pad (self->priv->udpsink_tees[c], "sink");
-    padname = g_strdup_printf ("sink%d", c);
+    padname = g_strdup_printf ("sink_%u", c);
     ghostpad = gst_ghost_pad_new (padname, pad);
     g_free (padname);
     gst_object_unref (pad);
@@ -362,7 +362,7 @@ fs_rawudp_transmitter_constructed (GObject *object)
         "sync", FALSE,
         NULL);
 
-    pad = gst_element_get_request_pad (self->priv->udpsink_tees[c], "src%d");
+    pad = gst_element_get_request_pad (self->priv->udpsink_tees[c], "src_%u");
     pad2 = gst_element_get_static_pad (fakesink, "sink");
 
     ret = gst_pad_link (pad, pad2);
@@ -549,6 +549,7 @@ struct _UdpPort {
   guint port;
 
   gint fd;
+  GSocket *socket;
 
   /* These are just convenience pointers to our parent transmitter */
   GstElement *funnel;
@@ -564,7 +565,7 @@ struct _UdpPort {
 struct KnownAddress {
   FsRawUdpAddressUniqueCallbackFunc callback;
   gpointer user_data;
-  GstNetAddress addr;
+  GSocketAddress *addr;
 };
 
 static gint
@@ -645,7 +646,7 @@ _create_sinksource (
     GstBin *bin,
     GstElement *teefunnel,
     GstElement *filter,
-    gint fd,
+    GSocket *socket,
     GstPadDirection direction,
     gboolean do_timestamp,
     GstPad **requested_pad,
@@ -667,9 +668,9 @@ _create_sinksource (
   }
 
   g_object_set (elem,
-      "sockfd", fd,
       "auto-multicast", FALSE,
-      "closefd", FALSE,
+      "close-socket", FALSE,
+      "socket", socket,
       NULL);
 
   if (direction == GST_PAD_SINK)
@@ -692,9 +693,9 @@ _create_sinksource (
   }
 
   if (direction == GST_PAD_SINK)
-    *requested_pad = gst_element_get_request_pad (teefunnel, "src%d");
+    *requested_pad = gst_element_get_request_pad (teefunnel, "src_%u");
   else
-    *requested_pad = gst_element_get_request_pad (teefunnel, "sink%d");
+    *requested_pad = gst_element_get_request_pad (teefunnel, "sink_%u");
 
   if (!*requested_pad)
   {
@@ -885,6 +886,10 @@ fs_rawudp_transmitter_get_udpport (FsRawUdpTransmitter *trans,
   if (udpport->fd < 0)
     goto error;
 
+  udpport->socket = g_socket_new_from_fd (udpport->fd, error);
+  if (!udpport->socket)
+    goto error;
+
   /* Now lets create the elements */
 
   udpport->tee = trans->priv->udpsink_tees[component_id];
@@ -892,14 +897,15 @@ fs_rawudp_transmitter_get_udpport (FsRawUdpTransmitter *trans,
 
   udpport->udpsrc = _create_sinksource ("udpsrc",
       GST_BIN (trans->priv->gst_src), udpport->funnel, NULL,
-      udpport->fd, GST_PAD_SRC, trans->priv->do_timestamp,
+      udpport->socket, GST_PAD_SRC, trans->priv->do_timestamp,
       &udpport->udpsrc_requested_pad, error);
   if (!udpport->udpsrc)
     goto error;
 
   udpport->udpsink = _create_sinksource ("multiudpsink",
       GST_BIN (trans->priv->gst_sink), udpport->tee, NULL,
-      udpport->fd, GST_PAD_SINK, FALSE, &udpport->udpsink_requested_pad, error);
+      udpport->socket, GST_PAD_SINK, FALSE, &udpport->udpsink_requested_pad,
+      error);
   if (!udpport->udpsink)
     goto error;
 
@@ -909,8 +915,9 @@ fs_rawudp_transmitter_get_udpport (FsRawUdpTransmitter *trans,
   if (udpport->recvonly_filter)
   {
     udpport->recvonly_udpsink = _create_sinksource ("multiudpsink",
-        GST_BIN (trans->priv->gst_sink), udpport->tee, udpport->recvonly_filter,
-        udpport->fd, GST_PAD_SINK, FALSE, &udpport->recvonly_requested_pad, error);
+        GST_BIN (trans->priv->gst_sink), udpport->tee,
+        udpport->recvonly_filter, udpport->socket, GST_PAD_SINK, FALSE,
+        &udpport->recvonly_requested_pad, error);
     if (!udpport->recvonly_udpsink)
       goto error;
   }
@@ -1018,13 +1025,21 @@ fs_rawudp_transmitter_put_udpport (FsRawUdpTransmitter *trans,
       GST_ERROR ("Could not remove udpsink element from transmitter source");
   }
 
+  g_clear_object (&udpport->socket);
+
   if (udpport->fd >= 0)
     close (udpport->fd);
 
   if (udpport->mutex)
     g_mutex_free (udpport->mutex);
   if (udpport->known_addresses)
+  {
+    guint i;
+    for (i = 0; i < udpport->known_addresses->len; i++)
+      g_object_unref (g_array_index (udpport->known_addresses,
+              struct KnownAddress, i).addr);
     g_array_free (udpport->known_addresses, TRUE);
+  }
 
   g_free (udpport->requested_ip);
   g_slice_free (UdpPort, udpport);
@@ -1073,7 +1088,7 @@ fs_rawudp_transmitter_udpport_sendto (UdpPort *udpport,
 
 gulong
 fs_rawudp_transmitter_udpport_connect_recv (UdpPort *udpport,
-    GCallback callback,
+    GstPadProbeCallback callback,
     gpointer user_data)
 {
   GstPad *pad;
@@ -1081,7 +1096,9 @@ fs_rawudp_transmitter_udpport_connect_recv (UdpPort *udpport,
 
   pad = gst_element_get_static_pad (udpport->udpsrc, "src");
 
-  id = gst_pad_add_buffer_probe (pad, callback, user_data);
+  id = gst_pad_add_probe (pad,
+      GST_PAD_PROBE_TYPE_BUFFER,
+      callback, user_data, NULL);
 
   gst_object_unref (pad);
 
@@ -1095,7 +1112,7 @@ fs_rawudp_transmitter_udpport_disconnect_recv (UdpPort *udpport,
 {
   GstPad *pad = gst_element_get_static_pad (udpport->udpsrc, "src");
 
-  gst_pad_remove_buffer_probe (pad, id);
+  gst_pad_remove_probe (pad, id);
 
   gst_object_unref (pad);
 }
@@ -1133,7 +1150,7 @@ fs_rawudp_transmitter_get_stream_transmitter_type (FsTransmitter *transmitter)
 /**
  * fs_rawudp_transmitter_udpport_add_known_address:
  * @udpport: a #UdpPort
- * @address: the new #GstNetAddress that we know
+ * @address: the new #GSocketAddress that we know
  * @callback: a Callback that will be called if the uniqueness of an address
  *   changes
  * @user_data: data passed back to the callback
@@ -1146,7 +1163,7 @@ fs_rawudp_transmitter_get_stream_transmitter_type (FsTransmitter *transmitter)
 
 gboolean
 fs_rawudp_transmitter_udpport_add_known_address (UdpPort *udpport,
-    GstNetAddress *address,
+    GSocketAddress *address,
     FsRawUdpAddressUniqueCallbackFunc callback,
     gpointer user_data)
 {
@@ -1159,11 +1176,13 @@ fs_rawudp_transmitter_udpport_add_known_address (UdpPort *udpport,
   g_mutex_lock (udpport->mutex);
 
   for (i = 0;
-       g_array_index (udpport->known_addresses, struct KnownAddress, i).callback;
+       g_array_index (udpport->known_addresses,
+           struct KnownAddress, i).callback;
        i++)
   {
-    struct KnownAddress *ka = &g_array_index (udpport->known_addresses, struct KnownAddress, i);
-    if (gst_netaddress_equal (address, &ka->addr))
+    struct KnownAddress *ka = &g_array_index (udpport->known_addresses,
+        struct KnownAddress, i);
+    if (fs_g_inet_socket_address_equal (address, ka->addr))
     {
       g_assert (!(ka->callback == callback && ka->user_data == user_data));
 
@@ -1179,10 +1198,10 @@ fs_rawudp_transmitter_udpport_add_known_address (UdpPort *udpport,
   else if (counter == 1)
   {
     if (prev_ka->callback)
-      prev_ka->callback (FALSE, &prev_ka->addr, prev_ka->user_data);
+      prev_ka->callback (FALSE, prev_ka->addr, prev_ka->user_data);
   }
 
-  memcpy (&newka.addr, address, sizeof (GstNetAddress));
+  newka.addr = g_object_ref (address);
   newka.callback = callback;
   newka.user_data = user_data;
 
@@ -1208,7 +1227,7 @@ fs_rawudp_transmitter_udpport_add_known_address (UdpPort *udpport,
 
 void
 fs_rawudp_transmitter_udpport_remove_known_address (UdpPort *udpport,
-    GstNetAddress *address,
+    GSocketAddress *address,
     FsRawUdpAddressUniqueCallbackFunc callback,
     gpointer user_data)
 {
@@ -1223,8 +1242,9 @@ fs_rawudp_transmitter_udpport_remove_known_address (UdpPort *udpport,
        g_array_index (udpport->known_addresses, struct KnownAddress, i).callback;
        i++)
   {
-    struct KnownAddress *ka = &g_array_index (udpport->known_addresses, struct KnownAddress, i);
-    if (gst_netaddress_equal (address, &ka->addr))
+    struct KnownAddress *ka = &g_array_index (udpport->known_addresses,
+        struct KnownAddress, i);
+    if (fs_g_inet_socket_address_equal (address, ka->addr))
     {
       if (ka->callback == callback && ka->user_data == user_data)
       {
@@ -1245,8 +1265,10 @@ fs_rawudp_transmitter_udpport_remove_known_address (UdpPort *udpport,
   }
 
   if (counter == 1)
-    prev_ka->callback (TRUE, &prev_ka->addr, prev_ka->user_data);
+    prev_ka->callback (TRUE, prev_ka->addr, prev_ka->user_data);
 
+  g_object_unref (g_array_index (udpport->known_addresses,
+          struct KnownAddress, remove_i).addr);
   g_array_remove_index_fast (udpport->known_addresses, remove_i);
 
  out:
@@ -1306,4 +1328,27 @@ fs_rawudp_transmitter_set_type_of_service (FsRawUdpTransmitter *self,
 
  out:
   g_mutex_unlock (self->priv->mutex);
+}
+
+
+/* TEMPORARY: should be in Glib */
+gboolean
+fs_g_inet_socket_address_equal (GSocketAddress *addr1, GSocketAddress *addr2)
+{
+  GInetSocketAddress *inet1;
+  GInetSocketAddress *inet2;
+
+  if (!G_IS_INET_SOCKET_ADDRESS (addr1) || !G_IS_INET_SOCKET_ADDRESS (addr2))
+    return FALSE;
+
+  inet1 = G_INET_SOCKET_ADDRESS (addr1);
+  inet2 = G_INET_SOCKET_ADDRESS (addr2);
+
+  if (g_inet_socket_address_get_port (inet1) ==
+      g_inet_socket_address_get_port (inet2) &&
+      g_inet_address_equal (g_inet_socket_address_get_address (inet1),
+          g_inet_socket_address_get_address (inet2)))
+    return TRUE;
+  else
+    return FALSE;
 }

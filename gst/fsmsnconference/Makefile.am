@@ -6,7 +6,8 @@ plugin_LTLIBRARIES = libfsmsnconference.la
 noinst_LTLIBRARIES = libfsmsnconference-convenience.la
 
 libfsmsnconference_convenience_la_SOURCES = \
-	fs-msn-conference.c \
+	fs-msn-cam-recv-conference.c \
+	fs-msn-cam-send-conference.c \
 	fs-msn-participant.c \
 	fs-msn-session.c \
 	fs-msn-connection.c \
@@ -32,13 +33,12 @@ AM_CFLAGS = \
 # Build the main plugin
 
 libfsmsnconference_la_SOURCES = \
-	fs-msn-cam-recv-conference.c \
-	fs-msn-cam-send-conference.c
+	fs-msn-conference.c
 
 libfsmsnconference_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
 libfsmsnconference_la_LIBADD = \
 	libfsmsnconference-convenience.la \
-	$(top_builddir)/farstream/libfarstream-@FS_MAJORMINOR@.la \
+	$(top_builddir)/farstream/libfarstream-@FS_APIVERSION@.la \
 	$(FS_LIBS) \
 	$(GST_BASE_LIBS) \
 	$(GST_LIBS) \
@@ -51,16 +51,13 @@ libfsmsnconference_la_LIBADD = \
 if ENABLE_GTK_DOC
 noinst_LTLIBRARIES += libfsmsnconference_doc.la
 
-nodist_libfsmsnconference_doc_la_SOURCES = \
-	fs-msn-cam-recv-conference.doc.c \
-	fs-msn-cam-send-conference.doc.c
+nodist_libfsmsnconference_doc_la_CFLAGS = -DBUILD_GTK_DOC
 
-libfsmsnconference_doc_la_LIBADD = $(libfsmsnconference_la_LIBADD)
+nodist_libfsmsnconference_doc_la_SOURCES = $(libfsmsnconference_la_SOURCES)
 
-%.doc.c: %.c
-	$(AM_V_GEN)sed -e 's:GST_PLUGIN_DEFINE:GST_PLUGIN_DEFINE_STATIC:' 	$< > $@
 
-BUILT_SOURCES = $(nodist_libfsmsnconference_doc_la_SOURCES)
+libfsmsnconference_doc_la_LIBADD = libfsmsnconference-convenience.la \
+	$(libfsmsnconference_la_LIBADD)
 
 CLEANFILES = $(BUILT_SOURCES)
 

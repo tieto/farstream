@@ -718,7 +718,8 @@ connection_cb (FsMsnConnection *self, FsMsnPollFD *pollfd)
 {
   gboolean success = FALSE;
 
-  GST_DEBUG ("handler called on fd %d. %d %d %d %d", pollfd->pollfd.fd,
+  GST_DEBUG ("handler called on fd:%d server: %d status:%d r:%d w:%d",
+      pollfd->pollfd.fd,
       pollfd->server, pollfd->status,
       gst_poll_fd_can_read (self->poll, &pollfd->pollfd),
       gst_poll_fd_can_write (self->poll, &pollfd->pollfd));
@@ -726,7 +727,9 @@ connection_cb (FsMsnConnection *self, FsMsnPollFD *pollfd)
   if (gst_poll_fd_has_error (self->poll, &pollfd->pollfd) ||
       gst_poll_fd_has_closed (self->poll, &pollfd->pollfd))
   {
-    GST_WARNING ("connecton closed or error");
+    GST_WARNING ("connecton closed or error (error: %d closed: %d)",
+        gst_poll_fd_has_error (self->poll, &pollfd->pollfd),
+        gst_poll_fd_has_closed (self->poll, &pollfd->pollfd));
     goto error;
   }
 

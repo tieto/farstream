@@ -107,8 +107,8 @@ fs_transmitter_class_init (FsTransmitterClass *klass)
    * FsTransmitter:gst-src:
    *
    * A network source #GstElement to be used by the #FsSession
-   * This element MUST provide a source pad named "src%d" per component.
-   * These pads number must start at 1 (the %d corresponds to the component
+   * This element MUST provide a source pad named "src_%u" per component.
+   * These pads number must start at 1 (the %u corresponds to the component
    * number).
    * These pads MUST be static pads.
    *
@@ -126,8 +126,8 @@ fs_transmitter_class_init (FsTransmitterClass *klass)
    *
    * A network source #GstElement to be used by the #FsSession
    * These element's sink must have async=FALSE
-   * This element MUST provide a pad named "sink\%d" per component.
-   * These pads number must start at 1 (the \%d corresponds to the component
+   * This element MUST provide a pad named "sink_\%u" per component.
+   * These pads number must start at 1 (the \%u corresponds to the component
    * number).
    * These pads MUST be static pads.
    *
@@ -199,7 +199,7 @@ fs_transmitter_class_init (FsTransmitterClass *klass)
       G_TYPE_NONE, 2, FS_TYPE_ERROR, G_TYPE_STRING);
 
   /**
-   * FsTransmitter::get-recvonly-filter
+   * FsTransmitter::get-recvonly-filter:
    * @self: #FsTransmitter that emitted the signal
    * @component: The component that the filter will be used for
    *

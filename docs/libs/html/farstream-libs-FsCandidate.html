@@ -8,7 +8,7 @@
 <link rel="up" href="ch01.html" title="Farstream Core Library">
 <link rel="prev" href="FsStream.html" title="FsStream">
 <link rel="next" href="farstream-libs-FsCodec.html" title="FsCodec">
-<meta name="generator" content="GTK-Doc V1.18.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -44,16 +44,16 @@ struct              <a class="link" href="farstream-libs-FsCandidate.html#FsCand
 enum                <a class="link" href="farstream-libs-FsCandidate.html#FsCandidateType" title="enum FsCandidateType">FsCandidateType</a>;
 enum                <a class="link" href="farstream-libs-FsCandidate.html#FsNetworkProtocol" title="enum FsNetworkProtocol">FsNetworkProtocol</a>;
 enum                <a class="link" href="farstream-libs-FsCandidate.html#FsComponentType" title="enum FsComponentType">FsComponentType</a>;
-<a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="returnvalue">FsCandidate</span></a> *       <a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-new" title="fs_candidate_new ()">fs_candidate_new</a>                    (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *foundation</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> component_id</code></em>,
+<a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="returnvalue">FsCandidate</span></a> *       <a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-new" title="fs_candidate_new ()">fs_candidate_new</a>                    (<em class="parameter"><code>const <span class="type">gchar</span> *foundation</code></em>,
+                                                         <em class="parameter"><code><span class="type">guint</span> component_id</code></em>,
                                                          <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidateType" title="enum FsCandidateType"><span class="type">FsCandidateType</span></a> type</code></em>,
                                                          <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsNetworkProtocol" title="enum FsNetworkProtocol"><span class="type">FsNetworkProtocol</span></a> proto</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *ip</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> port</code></em>);
+                                                         <em class="parameter"><code>const <span class="type">gchar</span> *ip</code></em>,
+                                                         <em class="parameter"><code><span class="type">guint</span> port</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-destroy" title="fs_candidate_destroy ()">fs_candidate_destroy</a>                (<em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> *cand</code></em>);
 <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="returnvalue">FsCandidate</span></a> *       <a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-copy" title="fs_candidate_copy ()">fs_candidate_copy</a>                   (<em class="parameter"><code>const <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> *cand</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-list-destroy" title="fs_candidate_list_destroy ()">fs_candidate_list_destroy</a>           (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *candidate_list</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *             <a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-list-copy" title="fs_candidate_list_copy ()">fs_candidate_list_copy</a>              (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *candidate_list</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-list-destroy" title="fs_candidate_list_destroy ()">fs_candidate_list_destroy</a>           (<em class="parameter"><code><span class="type">GList</span> *candidate_list</code></em>);
+<span class="returnvalue">GList</span> *             <a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-list-copy" title="fs_candidate_list_copy ()">fs_candidate_list_copy</a>              (<em class="parameter"><code>const <span class="type">GList</span> *candidate_list</code></em>);
 </pre>
 </div>
 <div class="refsect1">
@@ -92,27 +92,27 @@ Struct to hold information about ICE-19 compliant candidates
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="FsCandidate.foundation"></a>foundation</code></em>;</span></p></td>
+<td><p><span class="term"><span class="type">gchar</span> *<em class="structfield"><code><a name="FsCandidate.foundation"></a>foundation</code></em>;</span></p></td>
 <td>a string representing the foundation of this candidate (maximum 32 chars)</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="FsCandidate.component-id"></a>component_id</code></em>;</span></p></td>
+<td><p><span class="term"><span class="type">guint</span> <em class="structfield"><code><a name="FsCandidate.component-id"></a>component_id</code></em>;</span></p></td>
 <td>value between 1 and 256 indicating which component this candidate represents (1 is RTP, 2 is RTCP, <a class="link" href="farstream-libs-FsCandidate.html#FsComponentType" title="enum FsComponentType"><span class="type">FsComponentType</span></a> can be used here)</td>
 </tr>
 <tr>
-<td><p><span class="term">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="FsCandidate.ip"></a>ip</code></em>;</span></p></td>
+<td><p><span class="term">const <span class="type">gchar</span> *<em class="structfield"><code><a name="FsCandidate.ip"></a>ip</code></em>;</span></p></td>
 <td>IP in dotted format</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint16"><span class="type">guint16</span></a> <em class="structfield"><code><a name="FsCandidate.port"></a>port</code></em>;</span></p></td>
+<td><p><span class="term"><span class="type">guint16</span> <em class="structfield"><code><a name="FsCandidate.port"></a>port</code></em>;</span></p></td>
 <td>Port to use</td>
 </tr>
 <tr>
-<td><p><span class="term">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="FsCandidate.base-ip"></a>base_ip</code></em>;</span></p></td>
+<td><p><span class="term">const <span class="type">gchar</span> *<em class="structfield"><code><a name="FsCandidate.base-ip"></a>base_ip</code></em>;</span></p></td>
 <td>IP of base in dotted format as defined in ICE-19.</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint16"><span class="type">guint16</span></a> <em class="structfield"><code><a name="FsCandidate.base-port"></a>base_port</code></em>;</span></p></td>
+<td><p><span class="term"><span class="type">guint16</span> <em class="structfield"><code><a name="FsCandidate.base-port"></a>base_port</code></em>;</span></p></td>
 <td>Port of base as defined in ICE-19.</td>
 </tr>
 <tr>
@@ -121,7 +121,7 @@ Struct to hold information about ICE-19 compliant candidates
 <a class="link" href="farstream-libs-FsCandidate.html#FsNetworkProtocol" title="enum FsNetworkProtocol"><span class="type">FsNetworkProtocol</span></a> for ip protocol to use as candidate</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint32"><span class="type">guint32</span></a> <em class="structfield"><code><a name="FsCandidate.priority"></a>priority</code></em>;</span></p></td>
+<td><p><span class="term"><span class="type">guint32</span> <em class="structfield"><code><a name="FsCandidate.priority"></a>priority</code></em>;</span></p></td>
 <td>Value between 0 and (2^31 - 1) representing the priority</td>
 </tr>
 <tr>
@@ -129,17 +129,17 @@ Struct to hold information about ICE-19 compliant candidates
 <td>The <a class="link" href="farstream-libs-FsCandidate.html#FsCandidateType" title="enum FsCandidateType"><span class="type">FsCandidateType</span></a> of the candidate</td>
 </tr>
 <tr>
-<td><p><span class="term">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="FsCandidate.username"></a>username</code></em>;</span></p></td>
+<td><p><span class="term">const <span class="type">gchar</span> *<em class="structfield"><code><a name="FsCandidate.username"></a>username</code></em>;</span></p></td>
 <td>Username to use to connect to client if necessary,
 NULL otherwise</td>
 </tr>
 <tr>
-<td><p><span class="term">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="FsCandidate.password"></a>password</code></em>;</span></p></td>
+<td><p><span class="term">const <span class="type">gchar</span> *<em class="structfield"><code><a name="FsCandidate.password"></a>password</code></em>;</span></p></td>
 <td>Username to use to connect to client if necessary,
 NULL otherwise</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="FsCandidate.ttl"></a>ttl</code></em>;</span></p></td>
+<td><p><span class="term"><span class="type">guint</span> <em class="structfield"><code><a name="FsCandidate.ttl"></a>ttl</code></em>;</span></p></td>
 <td>The TTL used when sending Multicast packet (0 = auto)</td>
 </tr>
 </tbody>
@@ -253,12 +253,12 @@ This enum contains the component IDs defined in ICE-19
 <hr>
 <div class="refsect2">
 <a name="fs-candidate-new"></a><h3>fs_candidate_new ()</h3>
-<pre class="programlisting"><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="returnvalue">FsCandidate</span></a> *       fs_candidate_new                    (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *foundation</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> component_id</code></em>,
+<pre class="programlisting"><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="returnvalue">FsCandidate</span></a> *       fs_candidate_new                    (<em class="parameter"><code>const <span class="type">gchar</span> *foundation</code></em>,
+                                                         <em class="parameter"><code><span class="type">guint</span> component_id</code></em>,
                                                          <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidateType" title="enum FsCandidateType"><span class="type">FsCandidateType</span></a> type</code></em>,
                                                          <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsNetworkProtocol" title="enum FsNetworkProtocol"><span class="type">FsNetworkProtocol</span></a> proto</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *ip</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> port</code></em>);</pre>
+                                                         <em class="parameter"><code>const <span class="type">gchar</span> *ip</code></em>,
+                                                         <em class="parameter"><code><span class="type">guint</span> port</code></em>);</pre>
 <p>
 Allocates a new <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>, the rest of the fields can be optionally
 filled manually.
@@ -303,6 +303,16 @@ mean any address)</td>
 <div class="refsect2">
 <a name="fs-candidate-destroy"></a><h3>fs_candidate_destroy ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                fs_candidate_destroy                (<em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> *cand</code></em>);</pre>
+<p>
+Frees a <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> and all its contents
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>cand</code></em> :</span></p></td>
+<td>a <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> to delete</td>
+</tr></tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
@@ -329,12 +339,23 @@ Copies a <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" titl
 <hr>
 <div class="refsect2">
 <a name="fs-candidate-list-destroy"></a><h3>fs_candidate_list_destroy ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                fs_candidate_list_destroy           (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *candidate_list</code></em>);</pre>
+<pre class="programlisting"><span class="returnvalue">void</span>                fs_candidate_list_destroy           (<em class="parameter"><code><span class="type">GList</span> *candidate_list</code></em>);</pre>
+<p>
+Deletes a GList of <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> and its contents
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>candidate_list</code></em> :</span></p></td>
+<td>A GList of <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>
+</td>
+</tr></tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="fs-candidate-list-copy"></a><h3>fs_candidate_list_copy ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *             fs_candidate_list_copy              (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *candidate_list</code></em>);</pre>
+<pre class="programlisting"><span class="returnvalue">GList</span> *             fs_candidate_list_copy              (<em class="parameter"><code>const <span class="type">GList</span> *candidate_list</code></em>);</pre>
 <p>
 Copies a GList of <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> and its contents
 </p>
@@ -358,6 +379,6 @@ Copies a GList of <a class="link" href="farstream-libs-FsCandidate.html#FsCandid
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18.1</div>
+          Generated by GTK-Doc V1.18</div>
 </body>
 </html>

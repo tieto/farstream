@@ -56,7 +56,7 @@ setup_fakesrc (FsTransmitter *trans, GstElement *pipeline, guint component_id)
   gchar *padname;
   gchar *tmp;
 
-  tmp = g_strdup_printf ("fakemediasrc_%d", component_id);
+  tmp = g_strdup_printf ("fakemediasrc_%u", component_id);
   src = gst_element_factory_make ("fakesrc", tmp);
   g_free (tmp);
   g_object_set (src,
@@ -78,7 +78,7 @@ setup_fakesrc (FsTransmitter *trans, GstElement *pipeline, guint component_id)
 
   g_object_get (trans, "gst-sink", &trans_sink, NULL);
 
-  padname = g_strdup_printf ("sink%d", component_id);
+  padname = g_strdup_printf ("sink_%u", component_id);
   ts_fail_unless (gst_element_link_pads (src, "src", trans_sink, padname),
     "Could not link the fakesrc to %s", padname);
   g_free (padname);
@@ -125,10 +125,10 @@ setup_pipeline (FsTransmitter *trans, GCallback cb)
   gst_bin_add_many (GST_BIN (pipeline), rtpfakesink, rtcpfakesink,
     trans_sink, trans_src, NULL);
 
-  ts_fail_unless (gst_element_link_pads (trans_src, "src1",
+  ts_fail_unless (gst_element_link_pads (trans_src, "src_1",
       rtpfakesink, "sink"),
     "Coult not link transmitter src and fakesink");
-  ts_fail_unless (gst_element_link_pads (trans_src, "src2",
+  ts_fail_unless (gst_element_link_pads (trans_src, "src_2",
       rtcpfakesink, "sink"),
     "Coult not link transmitter src and fakesink");
 

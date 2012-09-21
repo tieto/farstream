@@ -7,8 +7,8 @@
 <link rel="home" href="index.html" title="Farstream Plugins Manual">
 <link rel="up" href="ch01.html" title="RTP Plugin">
 <link rel="prev" href="ch01.html" title="RTP Plugin">
-<link rel="next" href="farstream-plugins-FsRtpParticipant.html" title="FsRtpParticipant">
-<meta name="generator" content="GTK-Doc V1.18.1 (XML mode)">
+<link rel="next" href="FsRtpParticipant.html" title="FsRtpParticipant">
+<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -18,42 +18,64 @@
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">Farstream Plugins Manual</th>
-<td><a accesskey="n" href="farstream-plugins-FsRtpParticipant.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="FsRtpParticipant.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
-<a href="#farstream-plugins-FsRtpConference.synopsis" class="shortcut">Top</a>
+<a href="#FsRtpConference.synopsis" class="shortcut">Top</a>
                    | 
-                  <a href="#farstream-plugins-FsRtpConference.description" class="shortcut">Description</a>
+                  <a href="#FsRtpConference.description" class="shortcut">Description</a>
                    | 
-                  <a href="#farstream-plugins-FsRtpConference.properties" class="shortcut">Properties</a>
+                  <a href="#FsRtpConference.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                   | 
+                  <a href="#FsRtpConference.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
+                   | 
+                  <a href="#FsRtpConference.properties" class="shortcut">Properties</a>
 </td></tr>
 </table>
 <div class="refentry">
-<a name="farstream-plugins-FsRtpConference"></a><div class="titlepage"></div>
+<a name="FsRtpConference"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
-<h2><span class="refentrytitle"><a name="farstream-plugins-FsRtpConference.top_of_page"></a>FsRtpConference</span></h2>
+<h2><span class="refentrytitle"><a name="FsRtpConference.top_of_page"></a>FsRtpConference</span></h2>
 <p>FsRtpConference — Farstream RTP Conference Gstreamer Elements</p>
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsynopsisdiv">
-<a name="farstream-plugins-FsRtpConference.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">struct              <a class="link" href="farstream-plugins-FsRtpConference.html#FsRtpConference" title="struct FsRtpConference">FsRtpConference</a>;
+<a name="FsRtpConference.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">struct              <a class="link" href="FsRtpConference.html#FsRtpConference-struct" title="struct FsRtpConference">FsRtpConference</a>;
 </pre>
 </div>
 <div class="refsect1">
-<a name="farstream-plugins-FsRtpConference.properties"></a><h2>Properties</h2>
+<a name="FsRtpConference.object-hierarchy"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
-  "<a class="link" href="farstream-plugins-FsRtpConference.html#FsRtpConference--sdes" title='The "sdes" property'>sdes</a>"                     <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstStructure.html#GstStructure"><span class="type">GstStructure</span></a>*         : Read / Write
+  GObject
+   +----GInitiallyUnowned
+         +----<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstObject.html">GstObject</a>
+               +----<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html">GstElement</a>
+                     +----<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html">GstBin</a>
+                           +----<a href="../farstream-libs-0.11/FsConference.html">FsConference</a>
+                                 +----FsRtpConference
 </pre>
 </div>
 <div class="refsect1">
-<a name="farstream-plugins-FsRtpConference.description"></a><h2>Description</h2>
+<a name="FsRtpConference.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
+<p>
+FsRtpConference implements
+ <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstChildProxy.html">GstChildProxy</a>.</p>
+</div>
+<div class="refsect1">
+<a name="FsRtpConference.properties"></a><h2>Properties</h2>
+<pre class="synopsis">
+  "<a class="link" href="FsRtpConference.html#FsRtpConference--sdes" title='The "sdes" property'>sdes</a>"                     <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstStructure.html#GstStructure"><span class="type">GstStructure</span></a>*         : Read / Write
+</pre>
+</div>
+<div class="refsect1">
+<a name="FsRtpConference.description"></a><h2>Description</h2>
 <p>
 This is the core gstreamer element for a RTP conference. It must be added
 to your pipeline before anything else is done. Then you create the session,
-participants and streams according to the <a href="../farstream-libs-0.10/FsConference.html"><span class="type">FsConference</span></a> interface.
+participants and streams according to the <a href="../farstream-libs-0.11/FsConference.html"><span class="type">FsConference</span></a> interface.
 </p>
 <p>
 The various sdes property allow you to set the content of the SDES packet
@@ -62,7 +84,7 @@ in the sent RTCP reports.
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="id603427"></a><h3>Element Information</h3>
+<a name="id394695"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -85,13 +107,13 @@ in the sent RTCP reports.
 </div>
 <hr>
 <div class="refsect2">
-<a name="id551021"></a><h3>Element Pads</h3>
+<a name="id340834"></a><h3>Element Pads</h3>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term">name</span></p></td>
-<td>sink_%d</td>
+<td>sink_%u</td>
 </tr>
 <tr>
 <td><p><span class="term">direction</span></p></td>
@@ -112,7 +134,7 @@ in the sent RTCP reports.
 <tbody>
 <tr>
 <td><p><span class="term">name</span></p></td>
-<td>src_%d_%d_%d</td>
+<td>src_%u_%u_%u</td>
 </tr>
 <tr>
 <td><p><span class="term">direction</span></p></td>
@@ -134,19 +156,16 @@ in the sent RTCP reports.
 </p>
 </div>
 <div class="refsect1">
-<a name="farstream-plugins-FsRtpConference.details"></a><h2>Details</h2>
+<a name="FsRtpConference.details"></a><h2>Details</h2>
 <div class="refsect2">
-<a name="FsRtpConference"></a><h3>struct FsRtpConference</h3>
-<pre class="programlisting">struct FsRtpConference {
-  FsConference parent;
-};
-</pre>
+<a name="FsRtpConference-struct"></a><h3>struct FsRtpConference</h3>
+<pre class="programlisting">struct FsRtpConference;</pre>
 <p>
 </p>
 </div>
 </div>
 <div class="refsect1">
-<a name="farstream-plugins-FsRtpConference.property-details"></a><h2>Property Details</h2>
+<a name="FsRtpConference.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
 <a name="FsRtpConference--sdes"></a><h3>The <code class="literal">"sdes"</code> property</h3>
 <pre class="programlisting">  "sdes"                     <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstStructure.html#GstStructure"><span class="type">GstStructure</span></a>*         : Read / Write</pre>
@@ -156,6 +175,6 @@ in the sent RTCP reports.
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18.1</div>
+          Generated by GTK-Doc V1.18</div>
 </body>
 </html>

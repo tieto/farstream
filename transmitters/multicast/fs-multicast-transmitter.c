@@ -43,6 +43,8 @@
 #include <string.h>
 #include <sys/types.h>
 
+#include <gio/gio.h>
+
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
 #endif
@@ -274,12 +276,12 @@ fs_multicast_transmitter_constructed (GObject *object)
 
     /* Lets create the RTP source funnel */
 
-    self->priv->udpsrc_funnels[c] = gst_element_factory_make ("fsfunnel", NULL);
+    self->priv->udpsrc_funnels[c] = gst_element_factory_make ("funnel", NULL);
 
     if (!self->priv->udpsrc_funnels[c]) {
       trans->construction_error = g_error_new (FS_ERROR,
         FS_ERROR_CONSTRUCTION,
-        "Could not make the fsfunnel element");
+        "Could not make the funnel element");
       return;
     }
 
@@ -287,11 +289,11 @@ fs_multicast_transmitter_constructed (GObject *object)
         self->priv->udpsrc_funnels[c])) {
       trans->construction_error = g_error_new (FS_ERROR,
         FS_ERROR_CONSTRUCTION,
-        "Could not add the fsfunnel element to the transmitter src bin");
+        "Could not add the funnel element to the transmitter src bin");
     }
 
     pad = gst_element_get_static_pad (self->priv->udpsrc_funnels[c], "src");
-    padname = g_strdup_printf ("src%d", c);
+    padname = g_strdup_printf ("src_%u", c);
     ghostpad = gst_ghost_pad_new (padname, pad);
     g_free (padname);
     gst_object_unref (pad);
@@ -319,7 +321,7 @@ fs_multicast_transmitter_constructed (GObject *object)
     }
 
     pad = gst_element_get_static_pad (self->priv->udpsink_tees[c], "sink");
-    padname = g_strdup_printf ("sink%d", c);
+    padname = g_strdup_printf ("sink_%u", c);
     ghostpad = gst_ghost_pad_new (padname, pad);
     g_free (padname);
     gst_object_unref (pad);
@@ -350,7 +352,7 @@ fs_multicast_transmitter_constructed (GObject *object)
         "sync" , FALSE,
         NULL);
 
-    pad = gst_element_get_request_pad (self->priv->udpsink_tees[c], "src%d");
+    pad = gst_element_get_request_pad (self->priv->udpsink_tees[c], "src_%u");
     pad2 = gst_element_get_static_pad (fakesink, "sink");
 
     ret = gst_pad_link (pad, pad2);
@@ -525,6 +527,7 @@ struct _UdpSock {
   guint8 current_ttl;
 
   gint fd;
+  GSocket *socket;
 
   /* Protected by the transmitter mutex */
   GByteArray *ttls;
@@ -698,7 +701,7 @@ _bind_port (
 
 static GstElement *
 _create_sinksource (gchar *elementname, GstBin *bin,
-    GstElement *teefunnel, GstElement *filter, gint fd,
+    GstElement *teefunnel, GstElement *filter, GSocket *socket,
     GstPadDirection direction, GstPad **requested_pad, GError **error)
 {
   GstElement *elem;
@@ -716,8 +719,8 @@ _create_sinksource (gchar *elementname, GstBin *bin,
   }
 
   g_object_set (elem,
-    "closefd", FALSE,
-    "sockfd", fd,
+    "close-socket", FALSE,
+    "socket", socket,
     "auto-multicast", FALSE,
     NULL);
 
@@ -730,9 +733,9 @@ _create_sinksource (gchar *elementname, GstBin *bin,
   }
 
   if (direction == GST_PAD_SINK)
-    *requested_pad = gst_element_get_request_pad (teefunnel, "src%d");
+    *requested_pad = gst_element_get_request_pad (teefunnel, "src_%u");
   else
-    *requested_pad = gst_element_get_request_pad (teefunnel, "sink%d");
+    *requested_pad = gst_element_get_request_pad (teefunnel, "sink_%u");
 
   if (!*requested_pad) {
     g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
@@ -946,13 +949,17 @@ fs_multicast_transmitter_get_udpsock (FsMulticastTransmitter *trans,
   if (udpsock->fd < 0)
     goto error;
 
+  udpsock->socket = g_socket_new_from_fd (udpsock->fd, error);
+  if (!udpsock->socket)
+    goto error;
+
   /* Now lets create the elements */
 
   udpsock->tee = trans->priv->udpsink_tees[component_id];
   udpsock->funnel = trans->priv->udpsrc_funnels[component_id];
 
   udpsock->udpsrc = _create_sinksource ("udpsrc",
-      GST_BIN (trans->priv->gst_src), udpsock->funnel, NULL, udpsock->fd,
+      GST_BIN (trans->priv->gst_src), udpsock->funnel, NULL, udpsock->socket,
       GST_PAD_SRC, &udpsock->udpsrc_requested_pad, error);
   if (!udpsock->udpsrc)
     goto error;
@@ -963,7 +970,7 @@ fs_multicast_transmitter_get_udpsock (FsMulticastTransmitter *trans,
   udpsock->udpsink = _create_sinksource ("multiudpsink",
       GST_BIN (trans->priv->gst_sink), udpsock->tee,
       udpsock->udpsink_recvonly_filter,
-      udpsock->fd, GST_PAD_SINK, &udpsock->udpsink_requested_pad, error);
+      udpsock->socket, GST_PAD_SINK, &udpsock->udpsink_requested_pad, error);
   if (!udpsock->udpsink)
     goto error;
 
@@ -1119,6 +1126,9 @@ fs_multicast_transmitter_put_udpsock (FsMulticastTransmitter *trans,
             udpsock->udpsink_recvonly_filter))
       GST_ERROR ("Could not remove sink filter element from transmitter sink");
   }
+
+  if (udpsock->socket)
+    g_object_unref (udpsock->socket);
 
   if (udpsock->fd >= 0)
     close (udpsock->fd);

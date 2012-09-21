@@ -3,7 +3,7 @@
   <description>Videoanyrate</description>
   <filename>../../gst/fsvideoanyrate/.libs/libfsvideoanyrate.so</filename>
   <basename>libfsvideoanyrate.so</basename>
-  <version>0.1.2</version>
+  <version>0.1.0.1</version>
   <license>LGPL</license>
   <source>farstream</source>
   <package>Farstream</package>
@@ -14,7 +14,7 @@
       <longname>Videoanyrate element</longname>
       <class>Filter</class>
       <description>This element removes the framerate from caps</description>
-      <author>Olivier Crete &lt;olivier.crete@collabora.co.uk&gt;</author>
+      <author>Olivier Crete &lt;olivier.crete@collabora.com&gt;</author>
       <pads>
         <caps>
           <name>sink</name>

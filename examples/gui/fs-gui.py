@@ -245,7 +245,7 @@ class FsUIPipeline:
             element.set_property("speed-preset", 2)
             element.set_property("profile", "baseline")
             element.set_property("tune", "zerolatency")
-        elif element.get_factory().get_name() == "gstrtpbin":
+        elif element.get_factory().get_name() == "rtpbin":
             element.set_property("latency", 100)
             
 
@@ -638,7 +638,7 @@ class FsUIParticipant:
                                                  widget.window.xid,
                                                  "uservideosink")
                 self.pipeline.pipeline.add(self.videosink)
-                self.funnel = gst.element_factory_make("fsfunnel")
+                self.funnel = gst.element_factory_make("funnel")
                 self.pipeline.pipeline.add(self.funnel)
                 self.funnel.link(self.videosink)
                 self.havesize = self.videosink.get_pad("sink").add_buffer_probe(self.have_size)

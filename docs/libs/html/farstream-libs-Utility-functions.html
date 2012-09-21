@@ -8,7 +8,7 @@
 <link rel="up" href="ch03.html" title="Farstream Utility Functions and Objects">
 <link rel="prev" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier">
 <link rel="next" href="pt02.html" title="Part II. Classes used to implement Farstream plugins">
-<meta name="generator" content="GTK-Doc V1.18.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -41,12 +41,12 @@
 #include &lt;farstream/fs-utils.h&gt;
 
 <span class="returnvalue">void</span>                <a class="link" href="farstream-libs-Utility-functions.html#fs-utils-set-bitrate" title="fs_utils_set_bitrate ()">fs_utils_set_bitrate</a>                (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#glong"><span class="type">glong</span></a> bitrate</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *             <a class="link" href="farstream-libs-Utility-functions.html#fs-utils-get-default-codec-preferences" title="fs_utils_get_default_codec_preferences ()">fs_utils_get_default_codec_preferences</a>
+                                                         <em class="parameter"><code><span class="type">glong</span> bitrate</code></em>);
+<span class="returnvalue">GList</span> *             <a class="link" href="farstream-libs-Utility-functions.html#fs-utils-get-default-codec-preferences" title="fs_utils_get_default_codec_preferences ()">fs_utils_get_default_codec_preferences</a>
                                                         (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Key-value-file-parser.html#GKeyFile"><span class="returnvalue">GKeyFile</span></a> *          <a class="link" href="farstream-libs-Utility-functions.html#fs-utils-get-default-element-properties" title="fs_utils_get_default_element_properties ()">fs_utils_get_default_element_properties</a>
+<span class="returnvalue">GKeyFile</span> *          <a class="link" href="farstream-libs-Utility-functions.html#fs-utils-get-default-element-properties" title="fs_utils_get_default_element_properties ()">fs_utils_get_default_element_properties</a>
                                                         (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *             <a class="link" href="farstream-libs-Utility-functions.html#fs-utils-get-default-rtp-header-extension-preferences" title="fs_utils_get_default_rtp_header_extension_preferences ()">fs_utils_get_default_rtp_header_extension_preferences</a>
+<span class="returnvalue">GList</span> *             <a class="link" href="farstream-libs-Utility-functions.html#fs-utils-get-default-rtp-header-extension-preferences" title="fs_utils_get_default_rtp_header_extension_preferences ()">fs_utils_get_default_rtp_header_extension_preferences</a>
                                                         (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>,
                                                          <em class="parameter"><code><a class="link" href="farstream-libs-FsCodec.html#FsMediaType" title="enum FsMediaType"><span class="type">FsMediaType</span></a> media_type</code></em>);
 </pre>
@@ -59,7 +59,7 @@
 <div class="refsect2">
 <a name="fs-utils-set-bitrate"></a><h3>fs_utils_set_bitrate ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                fs_utils_set_bitrate                (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#glong"><span class="type">glong</span></a> bitrate</code></em>);</pre>
+                                                         <em class="parameter"><code><span class="type">glong</span> bitrate</code></em>);</pre>
 <p>
 This allows setting the bitrate on all elements that have a "bitrate"
 property without having to know the type or of the unit used by that element.
@@ -86,7 +86,7 @@ This will be obsolete in 0.11 (when all elements use bit/sec for the
 <hr>
 <div class="refsect2">
 <a name="fs-utils-get-default-codec-preferences"></a><h3>fs_utils_get_default_codec_preferences ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *             fs_utils_get_default_codec_preferences
+<pre class="programlisting"><span class="returnvalue">GList</span> *             fs_utils_get_default_codec_preferences
                                                         (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);</pre>
 <p>
 These default codec preferences should work with the elements that are
@@ -103,7 +103,7 @@ They should be suitable for standards based protocols like SIP or XMPP.
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>The default codec preferences for this plugin.
-This <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> should be freed with <a class="link" href="farstream-libs-FsCodec.html#fs-codec-list-destroy" title="fs_codec_list_destroy ()"><code class="function">fs_codec_list_destroy()</code></a>. <span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec][<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>]</span>
+This <span class="type">GList</span> should be freed with <a class="link" href="farstream-libs-FsCodec.html#fs-codec-list-destroy" title="fs_codec_list_destroy ()"><code class="function">fs_codec_list_destroy()</code></a>. <span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec][<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>]</span>
 </td>
 </tr>
 </tbody>
@@ -112,13 +112,33 @@ This <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Li
 <hr>
 <div class="refsect2">
 <a name="fs-utils-get-default-element-properties"></a><h3>fs_utils_get_default_element_properties ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Key-value-file-parser.html#GKeyFile"><span class="returnvalue">GKeyFile</span></a> *          fs_utils_get_default_element_properties
+<pre class="programlisting"><span class="returnvalue">GKeyFile</span> *          fs_utils_get_default_element_properties
                                                         (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);</pre>
+<p>
+This function produces a <span class="type">GKeyFile</span> that can be fed to
+<a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-set-properties-from-keyfile" title="fs_element_added_notifier_set_properties_from_keyfile ()"><code class="function">fs_element_added_notifier_set_properties_from_keyfile()</code></a>. If no
+default properties have been found, it will return <code class="literal">NULL</code>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
+<td>Element for which to fetch default element properties</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>a <span class="type">GKeyFile</span> containing the default element
+properties for this element or <code class="literal">NULL</code> if no properties were found.
+Caller must free the <span class="type">GKeyFile</span> when he is done.</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="fs-utils-get-default-rtp-header-extension-preferences"></a><h3>fs_utils_get_default_rtp_header_extension_preferences ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *             fs_utils_get_default_rtp_header_extension_preferences
+<pre class="programlisting"><span class="returnvalue">GList</span> *             fs_utils_get_default_rtp_header_extension_preferences
                                                         (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>,
                                                          <em class="parameter"><code><a class="link" href="farstream-libs-FsCodec.html#FsMediaType" title="enum FsMediaType"><span class="type">FsMediaType</span></a> media_type</code></em>);</pre>
 <p>
@@ -141,7 +161,7 @@ preferences</td>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>The default rtp
-header extension preferences for this plugin, this <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> should be
+header extension preferences for this plugin, this <span class="type">GList</span> should be
 freed with <a class="link" href="farstream-libs-FsCodec.html#fs-codec-list-destroy" title="fs_codec_list_destroy ()"><code class="function">fs_codec_list_destroy()</code></a>. <span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec][<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>]</span>
 </td>
 </tr>
@@ -152,6 +172,6 @@ freed with <a class="link" href="farstream-libs-FsCodec.html#fs-codec-list-destr
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18.1</div>
+          Generated by GTK-Doc V1.18</div>
 </body>
 </html>

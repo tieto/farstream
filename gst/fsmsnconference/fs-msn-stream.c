@@ -58,6 +58,9 @@
 
 #include <gst/gst.h>
 
+#include <gst/base/gstbasesrc.h>
+
+
 #include "fs-msn-connection.h"
 
 
@@ -531,7 +534,7 @@ _connected (
         "fdsrc name=fdsrc do-timestamp=true ! mimdec ! valve name=recv_valve", TRUE, &error);
   else
     codecbin = gst_parse_bin_from_description (
-        "ffmpegcolorspace ! videoscale ! mimenc name=enc !"
+        "videoconvert ! videoscale ! mimenc name=enc !"
         " fdsink name=fdsink sync=false async=false",
         TRUE, &error);
 
@@ -555,9 +558,14 @@ _connected (
   }
 
   if (self->priv->conference->max_direction == FS_DIRECTION_RECV)
+  {
     fdelem = gst_bin_get_by_name (GST_BIN (codecbin), "fdsrc");
+    gst_base_src_set_format (GST_BASE_SRC (fdelem), GST_FORMAT_TIME);
+  }
   else
+  {
     fdelem = gst_bin_get_by_name (GST_BIN (codecbin), "fdsink");
+  }
 
   if (!fdelem)
   {

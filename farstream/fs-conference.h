@@ -49,16 +49,11 @@ G_BEGIN_DECLS
 #define FS_CONFERENCE_CAST(obj) \
   ((FsConference *)(obj))
 
-/**
- * FsConference:
- *
- * Opaque #FsConference data structure.
- */
 typedef struct _FsConference FsConference;
 typedef struct _FsConferenceClass FsConferenceClass;
 
 /**
- * FsConference
+ * FsConference:
  *
  * The #FsConference structure, all the members are private
  */

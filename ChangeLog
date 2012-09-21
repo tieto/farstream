@@ -1,3 +1,331 @@
+commit 7436327f318fe87640f01ec34e11c47d611420ce
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Sep 13 21:48:31 2012 -0400
+
+    Version 0.1.91
+
+commit da58e0cfd3c11a56d0079363cdbb27a980d69844
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Wed Sep 12 23:35:29 2012 +0200
+
+    Rename the mutex to test_mutex as gstcheck defines mutex now
+
+commit 0d5714b926e4e2aac1fa7aeeb4c584789a9655b6
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Wed Sep 12 23:34:42 2012 +0200
+
+    Update for gstcheck changes following the GLib api changes
+
+commit 31a4ba93eec6c0813af6f77ce017180e04c06cdf
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Sun Aug 12 13:13:06 2012 +0200
+
+    rtp-discoverer: Fix reference counting
+    
+    gst_caps_merge takes ownership of both arguments, fix the reference
+    counting to take that into account
+
+commit 528caf919d92d6a4f501c161f863fccccd851462
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Sun Aug 26 19:15:33 2012 +0200
+
+    Add uninstalled pc file
+
+commit 129176598afd1d760ef5d7864276fc681d40abfd
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Sep 11 12:36:52 2012 -0400
+
+    Replace FS_MAJORMINOR with FS_APIVERSION
+
+commit d58ba0017be71c37ef4b5a36109c3dd68cc423c3
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Sep 11 12:33:34 2012 -0400
+
+    Using git for a long long time
+
+commit 75e530c41571376e037ecab4c0c1cda0548b3b46
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Sep 11 12:33:13 2012 -0400
+
+    Change version numbers
+
+commit cb7fa417ab3f3268b5565571f79d5d6eba387bb7
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Sep 11 12:08:11 2012 -0400
+
+    fsvideoanyrate: Apply filter caps
+
+commit 812768968f895deb3bf37e98b8a754a54ff631fb
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Aug 28 15:46:59 2012 -0700
+
+    gst_caps_merge now eats references
+
+commit 7ffdc23a2b6ac98c864ab2df58e2989cb268efe6
+Merge: 4263c6b 6d4f0c1
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Aug 28 15:43:38 2012 -0700
+
+    Merge branch 'master' into gstreamer-0.11
+
+commit 4263c6bc1f0f4aff94e7351904102c229c66e47c
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Aug 28 15:43:19 2012 -0700
+
+    Port simple-call to gst 1.0
+
+commit 6d4f0c15cc64ebc99cb1ac08d3703f90c37b35d1
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Aug 14 17:44:52 2012 -0700
+
+    Add dependency to enable parallel build of introspection
+
+commit 462fd20e8174f59cf8835871a0f3fed5eb75c5c6
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Aug 7 15:37:00 2012 -0700
+
+    Fix annotations to make new gir happier
+
+commit 88e90aa877f1acf59374c8011ad2d82071a37b97
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Aug 7 15:27:50 2012 -0700
+
+    Replace GST_MAJORMINOR with GST_API_VERSION
+
+commit b2590cc39404fce58aa214f82dfc23a64f07bbf6
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Aug 6 14:29:50 2012 -0700
+
+    Put the correct new Freedesktop URLs
+
+commit 6fd5e6db851979b11130d7ba081b555dade3e6fa
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Aug 6 13:03:40 2012 -0700
+
+    msn: Add extra debugging info
+
+commit 48bf154c33a478dc9e68698bb112462ca3f5a2f2
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Aug 6 13:03:04 2012 -0700
+
+    Revert "Add breakpoints in error functions for easier debugging"
+    
+    Because the unit tests fail on the breakpoints :-(
+    
+    This reverts commit 9fac4e2b35fccc976cf1d9ed202030beae091e66.
+
+commit e6678aa684635866c9d1c0aeae97dbd89306a41e
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Aug 6 11:45:09 2012 -0700
+
+    The plugin name is no longer a string
+
+commit b1131d0c192d002e98a8db43abd4ea30f73b059a
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Jul 31 18:53:50 2012 +0200
+
+    tests: Remove unfixable tests
+
+commit 8610a3b5466203f7ed1223f8dd90d49032ce624b
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Jul 31 18:53:06 2012 +0200
+
+    tests: Remove broken _destroy() tests
+
+commit 6365c268b7f3074bc0663d7d598b63976cbe4982
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Mon Jul 30 08:43:36 2012 +0200
+
+    Switch to modern video caps
+
+commit bbede55529e95da8c9bd3d5cbd9cfd7046ec7f68
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Mon Jul 30 08:41:56 2012 +0200
+
+    Change video caps from x-raw-yuv to x-raw
+
+commit f8abadfd6bc2fcf217937cd8bf54cdeefe6f00ea
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Sun Jul 29 17:11:22 2012 +0200
+
+    tfrc: Use new API for buffer appending
+
+commit 61bdb747d1027e5040c774cd57c27b477e3dc7c0
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Sun Jul 29 17:09:51 2012 +0200
+
+    tests: gst_rtp_buffer_validate has been pulled into gst_rtp_buffer_map
+
+commit 37a223f60b1002bd84fa0d9f6fbbea655db68e39
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Sun Jul 29 17:08:57 2012 +0200
+
+    tests: Update for changes to the gst_bus_set_sync_handler api
+
+commit 1320a919f835570461948744e52cdb5bb7adbeb2
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Sun Jul 29 17:08:09 2012 +0200
+
+    Add base plugin cflags to tests that need them
+
+commit 66c8f5819a55a2d8a867aa5d2612da43660e0ba7
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Sun Jul 29 12:25:58 2012 +0200
+
+    Use the rtp packet length accessor instead of the struct
+
+commit 0ce579fbd1898d95c2e7bc769783d6ec4e1c109f
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Sun Jul 29 12:25:22 2012 +0200
+
+    gst_caps_fixate now returns the fixated caps
+
+commit 073b7ddecba997ce6717a5e9135e2643a44ec4fb
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Sun Jul 29 12:22:38 2012 +0200
+
+    Update for new BaseTransform fixate-caps prototype
+
+commit 3c9f9f1c05ec655a3529f6e2ae9e3a4c9d262898
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Sun Jul 29 12:15:18 2012 +0200
+
+    Add missing headers for stat
+
+commit 1a9cc3d30a6a3984c65e5cf1b445d7507a59693e
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Sun Jul 29 12:14:55 2012 +0200
+
+    Use accessor functions for pad templates
+
+commit df556de3d968874ea8575bbb65b95f5735b5e42f
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Sun Jul 29 12:13:30 2012 +0200
+
+    Return an error on unknown address family
+
+commit c8e87af2a27edf1279a5ab18f3ec16fcc8722dc7
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Sun Jul 29 12:13:13 2012 +0200
+
+    Fix crash if fs_transmitter_list_available returns NULL
+
+commit 9b4d8c10a2c872791504bb0c6f3f6a18e2d3ba1f
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Sun Jul 29 12:12:38 2012 +0200
+
+    rtp_buffer_validate is gone, validation now happens on mapping
+
+commit 14131d2803f2523780e99c6984b27bd023e38aee
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Sun Jul 29 12:11:41 2012 +0200
+
+    Use gst_caps_merge instead of removed gst_caps_union
+
+commit 14256fb917dac59578dc229f2fc8cfbc109513a2
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Sun Jul 29 12:10:21 2012 +0200
+
+    gst_clock_id_wait_async_full was renamed to gst_clock_id_wait_async
+
+commit d2a7db650913095c2a5d3c0aa97f279e74294c76
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Sun Jul 29 12:07:33 2012 +0200
+
+    Add missing ;
+
+commit 084f8006b2d1991e60da12b58bf6017b07bcb307
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Sun Jul 29 12:07:04 2012 +0200
+
+    Search for python for mangle-tmpl.py
+
+commit 6a6df70780c1693076c1afe39d63ae95896b0d24
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Sun Jul 29 12:06:10 2012 +0200
+
+    Use gstreamer 1.0 instead of 0.11
+
+commit 303c1a902816d3c742a26b34eb12c17b887ac00e
+Author: Sjoerd Simons <sjoerd@luon.net>
+Date:   Sat Jul 28 16:33:07 2012 +0200
+
+    Update common module
+
+commit ec267d9d072298100b6b13bafa1fce3440dabe38
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Sat Jan 28 14:02:06 2012 +0000
+
+    tests: Ignore non-running multicast devices
+
+commit 9fac4e2b35fccc976cf1d9ed202030beae091e66
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Sat Jan 28 13:53:35 2012 +0100
+
+    Add breakpoints in error functions for easier debugging
+
+commit 077745926547f0b7f6859072ffa0d45f11692cfe
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Sat Jan 28 13:44:49 2012 +0100
+
+    debug-msg is gone, remove from tests
+
+commit 53239894e9e1b033744d9404b1e50f402b935449
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Sat Jan 28 08:38:45 2012 +0100
+
+    update rtcpfilter test for gst check api updates
+
+commit ed911efc60de1538c4e24ca01f376e25c09a4124
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Jan 27 16:50:08 2012 +0100
+
+    Port to GStreamer 0.11
+
+commit fb74f736e23844bbf289011f9bff7ad91581af18
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Jun 29 15:35:56 2012 -0400
+
+    fs-codec: Remove outdated TODO
+
+commit 39450457190675716c8e66700e35b05334a6a1a0
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 25 17:06:59 2012 -0400
+
+    Gtk-doc tags belong after the description
+
+commit f6b097be1a591332b2b7af9ff97126d7c0ed80e7
+Author: Guillaume Desmottes <guillaume.desmottes@collabora.co.uk>
+Date:   Wed Apr 4 11:12:42 2012 +0200
+
+    The right macro is GLIB_VERSION_MAX_ALLOWED
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=48285
+
+commit 23122f81bf3eeb20d2acf0af1275ed5abd6be20a
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Mar 23 18:28:24 2012 -0400
+
+    tests: Remove used of deprecated g_strcasecmp
+
+commit 2c266acb41c65004e63fb66b708d5ed02e22ccd0
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Mar 23 17:45:55 2012 -0400
+
+    tests: Link against libgstbase when it is used
+
+commit d686cc11a8135947fb06136edf4320a07d793b91
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Mar 23 15:42:14 2012 -0400
+
+    rtpdiscovercodecs: Typecast factory into feature to make compiler happy
+
+commit f13bbc080f28d22bef6d24472eddc1bdfc689755
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Mar 23 15:33:03 2012 -0400
+
+    Version 0.1.2.1
+
 commit ee62969e5d28a942384f245f4ffd79ca492af838
 Author: Olivier Crête <olivier.crete@collabora.com>
 Date:   Fri Mar 23 13:18:17 2012 -0400

@@ -147,6 +147,7 @@ struct _FsStreamPrivate
 
 G_DEFINE_ABSTRACT_TYPE(FsStream, fs_stream, GST_TYPE_OBJECT);
 
+static void fs_stream_constructed (GObject *obj);
 static void fs_stream_get_property (GObject *object,
                                     guint prop_id,
                                     GValue *value,
@@ -156,6 +157,8 @@ static void fs_stream_set_property (GObject *object,
                                     const GValue *value,
                                     GParamSpec *pspec);
 static void fs_stream_finalize (GObject *obj);
+
+static void fs_stream_pad_removed (FsStream *stream, GstPad *pad);
 
 static guint signals[LAST_SIGNAL] = { 0 };
 
@@ -172,17 +175,18 @@ fs_stream_class_init (FsStreamClass *klass)
   gobject_class->set_property = fs_stream_set_property;
   gobject_class->get_property = fs_stream_get_property;
   gobject_class->finalize = fs_stream_finalize;
+  gobject_class->constructed = fs_stream_constructed;
+
 
   /**
    * FsStream:remote-codecs:
-   *
-   * Type: GLib.List(FsCodec)
-   * Transfer: full
    *
    * This is the list of remote codecs for this stream. They must be set by the
    * user as soon as they are known using fs_stream_set_remote_codecs()
    * (generally through external signaling). It is a #GList of #FsCodec.
    *
+   * Type: GLib.List(FsCodec)
+   * Transfer: full
    */
   g_object_class_install_property (gobject_class,
       PROP_REMOTE_CODECS,
@@ -195,15 +199,14 @@ fs_stream_class_init (FsStreamClass *klass)
   /**
    * FsStream:negotiated-codecs:
    *
-   * Type: GLib.List(FsCodec)
-   * Transfer: full
-   *
    * This is the list of negotiatied codecs, it is the same list as the list
    * of #FsCodec from the parent #FsSession, except that the codec config data
    * has been replaced with the data from the remote codecs for this stream.
    * This is the list of #FsCodec used to receive data from this stream.
    * It is a #GList of #FsCodec.
    *
+   * Type: GLib.List(FsCodec)
+   * Transfer: full
    */
   g_object_class_install_property (gobject_class,
       PROP_NEGOTIATED_CODECS,
@@ -216,9 +219,6 @@ fs_stream_class_init (FsStreamClass *klass)
   /**
    * FsStream:current-recv-codecs:
    *
-   * Type: GLib.List(FsCodec)
-   * Transfer: full
-   *
    * This is the list of codecs that have been received by this stream.
    * The user must free the list if fs_codec_list_destroy().
    * The "farstream-recv-codecs-changed" message is send on the #GstBus
@@ -228,6 +228,8 @@ fs_stream_class_init (FsStreamClass *klass)
    * also be emitted if the pad already exists, but the source material that
    * will come to it is different.
    *
+   * Type: GLib.List(FsCodec)
+   * Transfer: full
    */
   g_object_class_install_property (gobject_class,
       PROP_CURRENT_RECV_CODECS,
@@ -336,6 +338,22 @@ fs_stream_init (FsStream *self)
   /* member init */
   self->priv = FS_STREAM_GET_PRIVATE (self);
   self->priv->mutex = g_mutex_new ();
+}
+
+static void
+fs_stream_constructed (GObject *obj)
+{
+  FsStream *stream = FS_STREAM (obj);
+  FsSession *session;
+  FsConference *conference;
+
+  g_object_get (stream, "session", &session, NULL);
+  g_object_get (session, "conference", &conference, NULL);
+
+  g_signal_connect_object (conference, "pad-removed",
+      G_CALLBACK (fs_stream_pad_removed), obj, G_CONNECT_SWAPPED);
+  g_object_unref (session);
+  g_object_unref (conference);
 }
 
 static void
@@ -532,12 +550,10 @@ fs_stream_emit_error (FsStream *stream,
 
 
 static void
-src_pad_parent_unset (GstObject *srcpad, GstObject *parent, gpointer user_data)
+fs_stream_pad_removed (FsStream *stream, GstPad *pad)
 {
-  FsStream *stream = FS_STREAM (user_data);
-
   FS_STREAM_LOCK (stream);
-  stream->priv->src_pads = g_list_remove (stream->priv->src_pads, srcpad);
+  stream->priv->src_pads = g_list_remove (stream->priv->src_pads, pad);
   stream->priv->src_pads_cookie++;
   FS_STREAM_UNLOCK (stream);
 }
@@ -561,19 +577,9 @@ fs_stream_emit_src_pad_added (FsStream *stream,
   g_assert (!g_list_find (stream->priv->src_pads, pad));
   stream->priv->src_pads = g_list_append (stream->priv->src_pads, pad);
   stream->priv->src_pads_cookie++;
-  g_signal_connect_object (pad, "parent-unset",
-      G_CALLBACK (src_pad_parent_unset), stream, 0);
   FS_STREAM_UNLOCK (stream);
 
   g_signal_emit (stream, signals[SRC_PAD_ADDED], 0, pad, codec);
-}
-
-static GstIteratorItem
-src_pad_iterator_item_func (GstIterator*iter, gpointer item)
-{
-  gst_object_ref (item);
-
-  return GST_ITERATOR_ITEM_PASS;
 }
 
 /**
@@ -592,7 +598,7 @@ fs_stream_iterate_src_pads (FsStream *stream)
 {
   return gst_iterator_new_list (GST_TYPE_PAD, stream->priv->mutex,
       &stream->priv->src_pads_cookie, &stream->priv->src_pads,
-      g_object_ref (stream), src_pad_iterator_item_func, g_object_unref);
+      g_object_ref (stream), NULL);
 }
 
 
@@ -602,8 +608,7 @@ fs_stream_iterate_src_pads (FsStream *stream)
  * @transmitter: Name of the type of transmitter to use for this stream
  * @stream_transmitter_n_parameters: Number of parametrs passed to the stream
  *  transmitter
- * @stream_transmitter_parameters:
- *   (array length=stream_transmitter_n_parameters) (allow-none):
+ * @stream_transmitter_parameters: (array length=stream_transmitter_n_parameters) (allow-none):
  *   an array of n_parameters #GParameter struct that will be passed
  *   to the newly-create #FsStreamTransmitter
  * @error: location of a #GError, or %NULL if no error occured

@@ -93,7 +93,7 @@ typedef struct _NiceGstStream NiceGstStream;
 NiceGstStream *fs_nice_transmitter_add_gst_stream (FsNiceTransmitter *self,
     NiceAgent *agent,
     guint stream_id,
-    GCallback have_buffer_callback,
+    GstPadProbeCallback have_buffer_callback,
     gpointer have_buffer_user_data,
     GError **error);
 

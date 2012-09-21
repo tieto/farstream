@@ -32,7 +32,7 @@
 #include <gst/gst.h>
 #include <farstream/fs-conference.h>
 
-#define DEFAULT_AUDIOSRC       "alsasrc"
+#define DEFAULT_AUDIOSRC       "audiotestsrc"
 #define DEFAULT_AUDIOSINK      "audioconvert ! audioresample ! audioconvert ! alsasink"
 
 typedef struct _TestSession
@@ -151,7 +151,7 @@ add_audio_session (GstElement *pipeline, FsConference *conf, guint id,
           FS_CANDIDATE_TYPE_HOST, FS_NETWORK_PROTOCOL_UDP, remoteip,
           remoteport));
 
-  res = fs_stream_add_remote_candidates (ses->stream, cands, &error);
+  res = fs_stream_force_remote_candidates (ses->stream, cands, &error);
   print_error (error);
   g_assert (res);
 

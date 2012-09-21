@@ -158,45 +158,53 @@ fs_element_added_notifier_add (FsElementAddedNotifier *notifier,
 }
 
 
+
 static void
-_bin_unparented_cb (GstObject *object, GstObject *parent, gpointer user_data)
+_element_removed_callback (GstBin *bin, GstElement *element,
+    FsElementAddedNotifier *notifier)
 {
-  GstIterator *iter = NULL;
-  gboolean done;
 
   /* Return if there was no handler connected */
-  if (g_signal_handlers_disconnect_by_func (object, _element_added_callback,
-          user_data) == 0)
+  if (g_signal_handlers_disconnect_by_func (element, _element_added_callback,
+          notifier) == 0 ||
+      g_signal_handlers_disconnect_by_func (element, _element_removed_callback,
+          notifier) == 0)
     return;
 
-  iter = gst_bin_iterate_elements (GST_BIN (object));
-
-  done = FALSE;
-  while (!done)
+  if (GST_IS_BIN (element))
   {
-    gpointer item;
+    GstIterator *iter = NULL;
+    gboolean done;
+    iter = gst_bin_iterate_elements (GST_BIN (element));
 
-    switch (gst_iterator_next (iter, &item)) {
-      case GST_ITERATOR_OK:
-        if (GST_IS_BIN (item))
-          _bin_unparented_cb (GST_OBJECT (item), object, user_data);
-        gst_object_unref (item);
-        break;
-      case GST_ITERATOR_RESYNC:
-        // We don't rollback anything, we just ignore already processed ones
-        gst_iterator_resync (iter);
-        break;
-      case GST_ITERATOR_ERROR:
-        g_error ("Wrong parameters were given?");
-        done = TRUE;
-        break;
-      case GST_ITERATOR_DONE:
-        done = TRUE;
-        break;
+    done = FALSE;
+    while (!done)
+    {
+      GValue item = {0,};
+
+      switch (gst_iterator_next (iter, &item)) {
+        case GST_ITERATOR_OK:
+          _element_removed_callback (GST_BIN (element),
+              GST_ELEMENT (g_value_get_object (&item)),
+              notifier);
+          g_value_reset (&item);
+          break;
+        case GST_ITERATOR_RESYNC:
+          // We don't rollback anything, we just ignore already processed ones
+          gst_iterator_resync (iter);
+          break;
+        case GST_ITERATOR_ERROR:
+          g_error ("Wrong parameters were given?");
+          done = TRUE;
+          break;
+        case GST_ITERATOR_DONE:
+          done = TRUE;
+          break;
+      }
     }
-  }
 
-  gst_iterator_free (iter);
+    gst_iterator_free (iter);
+  }
 }
 
 
@@ -222,7 +230,7 @@ fs_element_added_notifier_remove (FsElementAddedNotifier *notifier,
           0, 0, NULL, /* id, detail, closure */
           _element_added_callback, notifier) != 0)
   {
-    _bin_unparented_cb (GST_OBJECT (bin), NULL, notifier);
+    _element_removed_callback (NULL, GST_ELEMENT (bin), notifier);
     return TRUE;
   }
   else
@@ -380,26 +388,27 @@ _element_added_callback (GstBin *parent, GstElement *element,
     g_signal_connect_object (element, "element-added",
         G_CALLBACK (_element_added_callback), notifier, 0);
 
-    if (parent)
-      g_signal_connect_object (element, "parent-unset",
-          G_CALLBACK (_bin_unparented_cb), notifier, 0);
+
+    g_signal_connect_object (element, "element-removed",
+        G_CALLBACK (_element_removed_callback), notifier, 0);
 
     iter = gst_bin_iterate_elements (GST_BIN (element));
 
     done = FALSE;
     while (!done)
     {
-      gpointer item = NULL;
+      GValue item = {0,};
 
       switch (gst_iterator_next (iter, &item)) {
        case GST_ITERATOR_OK:
          /* We make sure the callback has not already been added */
-         if (g_signal_handler_find (item,
+         if (g_signal_handler_find (g_value_get_object (&item),
                  G_SIGNAL_MATCH_FUNC | G_SIGNAL_MATCH_DATA,
                  0, 0, NULL, /* id, detail, closure */
                  _element_added_callback, notifier) == 0)
-           _element_added_callback (GST_BIN_CAST (element), item, notifier);
-         gst_object_unref (item);
+           _element_added_callback (GST_BIN_CAST (element),
+               g_value_get_object (&item), notifier);
+         g_value_reset (&item);
          break;
        case GST_ITERATOR_RESYNC:
          // We don't rollback anything, we just ignore already processed ones

@@ -12,9 +12,9 @@ codec_discovery_CFLAGS = \
 	$(CFLAGS)
 
 LDADD = \
-	$(top_builddir)/farstream/libfarstream-@FS_MAJORMINOR@.la \
+	$(top_builddir)/farstream/libfarstream-@FS_APIVERSION@.la \
 	$(top_builddir)/gst/fsrtpconference/libfsrtpconference-convenience.la \
 	$(GST_CHECK_LIBS) \
 	$(GST_PLUGINS_BASE_LIBS) \
 	$(GST_LIBS) \
-	-lgstrtp-@GST_MAJORMINOR@
+	-lgstrtp-@GST_API_VERSION@

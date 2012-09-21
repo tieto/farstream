@@ -610,7 +610,7 @@ fs_raw_session_constructed (GObject *object)
   }
 
   self->priv->send_tee_pad = gst_element_get_request_pad (self->priv->send_tee,
-    "src%d");
+    "src_%u");
 
   if (self->priv->send_tee_pad == NULL)
   {
@@ -663,7 +663,7 @@ fs_raw_session_constructed (GObject *object)
     return;
   }
 
-  if (!gst_element_link_pads (self->priv->send_tee, "src%d",
+  if (!gst_element_link_pads (self->priv->send_tee, "src_%u",
           self->priv->fakesink, "sink"))
   {
     self->priv->construction_error = g_error_new (FS_ERROR,
@@ -770,7 +770,7 @@ _create_transform_bin (FsRawSession *self, GError **error)
       "audioconvert ! audioresample ! audioconvert", TRUE, NULL,
       GST_PARSE_FLAG_NONE, error);
   else if (mtype == FS_MEDIA_TYPE_VIDEO)
-    return gst_parse_bin_from_description_full ("ffmpegcolorspace ! videoscale",
+    return gst_parse_bin_from_description_full ("videoconvert ! videoscale",
         TRUE, NULL, GST_PARSE_FLAG_NONE, error);
 
   g_set_error (error, FS_ERROR, FS_ERROR_NOT_IMPLEMENTED,
@@ -949,7 +949,7 @@ fs_raw_session_remove_stream (FsRawSession *self,
   if (self->priv->transmitter_recv_probe_id)
   {
     if (self->priv->transmitter_src_pad)
-      gst_pad_remove_data_probe (self->priv->transmitter_src_pad,
+      gst_pad_remove_probe (self->priv->transmitter_src_pad,
           self->priv->transmitter_recv_probe_id);
     self->priv->transmitter_recv_probe_id = 0;
   }
@@ -1239,8 +1239,8 @@ fs_raw_session_get_stream_transmitter_type (FsSession *session,
   return transmitter_type;
 }
 
-static gboolean
-_transmitter_pad_have_data_callback (GstPad *pad, GstBuffer *buffer,
+static GstPadProbeReturn
+_transmitter_pad_have_data_callback (GstPad *pad, GstPadProbeInfo *info,
     gpointer user_data)
 {
   FsRawSession *self = FS_RAW_SESSION (user_data);
@@ -1253,7 +1253,7 @@ _transmitter_pad_have_data_callback (GstPad *pad, GstBuffer *buffer,
   FsCodec *codec;
 
   if (!conference)
-    return FALSE;
+    return GST_PAD_PROBE_REMOVE;
 
   GST_OBJECT_LOCK (conference);
   if (!self->priv->codecs ||
@@ -1262,11 +1262,10 @@ _transmitter_pad_have_data_callback (GstPad *pad, GstBuffer *buffer,
   {
     GST_OBJECT_UNLOCK (conference);
     gst_object_unref (conference);
-    return FALSE;
+    return GST_PAD_PROBE_DROP;
   }
 
   recv_capsfilter = gst_object_ref (self->priv->recv_capsfilter);
-  gst_pad_remove_data_probe (pad, self->priv->transmitter_recv_probe_id);
   self->priv->transmitter_recv_probe_id = 0;
   codec = fs_codec_copy (self->priv->codecs->data);
   GST_OBJECT_UNLOCK (conference);
@@ -1314,14 +1313,14 @@ _transmitter_pad_have_data_callback (GstPad *pad, GstBuffer *buffer,
   gst_object_unref (conference);
   gst_object_unref (recv_capsfilter);
 
-  return TRUE;
+  return GST_PAD_PROBE_REMOVE;
 
 error:
   fs_codec_destroy (codec);
   gst_object_unref (conference);
   gst_object_unref (recv_capsfilter);
 
-  return FALSE;
+  return GST_PAD_PROBE_REMOVE;
 }
 
 
@@ -1450,7 +1449,7 @@ static FsStreamTransmitter *_stream_get_stream_transmitter (FsRawStream *stream,
     goto error;
   }
 
-  if (!gst_element_link_pads (transmitter_src, "src1",
+  if (!gst_element_link_pads (transmitter_src, "src_1",
           valve, "sink"))
   {
     g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
@@ -1458,16 +1457,17 @@ static FsStreamTransmitter *_stream_get_stream_transmitter (FsRawStream *stream,
     goto error;
   }
 
-  transmitter_src_pad = gst_element_get_static_pad (transmitter_src, "src1");
+  transmitter_src_pad = gst_element_get_static_pad (transmitter_src, "src_1");
 
   GST_OBJECT_LOCK (conference);
   self->priv->transmitter = fstransmitter;
   self->priv->transmitter_src_pad = transmitter_src_pad;
   GST_OBJECT_UNLOCK (conference);
 
-  self->priv->transmitter_recv_probe_id = gst_pad_add_data_probe (
-      self->priv->transmitter_src_pad,
-      G_CALLBACK (_transmitter_pad_have_data_callback), self);
+  self->priv->transmitter_recv_probe_id = gst_pad_add_probe (
+    self->priv->transmitter_src_pad, GST_PAD_PROBE_TYPE_BLOCK_DOWNSTREAM,
+    _transmitter_pad_have_data_callback, g_object_ref (self),
+    g_object_unref);
 
   if (!gst_element_sync_state_with_parent (transmitter_src))
   {

@@ -22,6 +22,8 @@
 # include <config.h>
 #endif
 
+#include <stdio.h>
+
 #include <gst/check/gstcheck.h>
 #include <farstream/fs-conference.h>
 #include <farstream/fs-stream-transmitter.h>
@@ -248,11 +250,6 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
           const gchar *error;
 
           ts_fail_unless (
-              gst_implements_interface_check (GST_MESSAGE_SRC (message),
-                  FS_TYPE_CONFERENCE),
-              "Received farstream-error from non-farstream element");
-
-          ts_fail_unless (
               gst_structure_has_field_typed (s, "src-object", G_TYPE_OBJECT),
               "farstream-error structure has no src-object field");
           ts_fail_unless (
@@ -273,11 +270,6 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
           FsStream *stream;
           FsCandidate *candidate;
           const GValue *value;
-
-          ts_fail_unless (
-              gst_implements_interface_check (GST_MESSAGE_SRC (message),
-                  FS_TYPE_CONFERENCE),
-              "Received farstream-error from non-farstream element");
 
           ts_fail_unless (
               gst_structure_has_field_typed (s, "stream", FS_TYPE_STREAM),
@@ -303,11 +295,6 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
           FsStream *stream;
           FsCandidate *local_candidate, *remote_candidate;
           const GValue *value;
-
-          ts_fail_unless (
-              gst_implements_interface_check (GST_MESSAGE_SRC (message),
-                  FS_TYPE_CONFERENCE),
-              "Received farstream-error from non-farstream element");
 
           ts_fail_unless (
               gst_structure_has_field_typed (s, "stream", FS_TYPE_STREAM),
@@ -344,12 +331,6 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
           const GValue *value;
 
           ts_fail_unless (
-              gst_implements_interface_check (GST_MESSAGE_SRC (message),
-                  FS_TYPE_CONFERENCE),
-              "Received farstream-current-send-codec-change from non-farstream"
-              " element");
-
-          ts_fail_unless (
               gst_structure_has_field_typed (s, "session", FS_TYPE_SESSION),
               "farstream-current-send-codec-changed structure"
               " has no session field");
@@ -374,12 +355,6 @@ _bus_callback (GstBus *bus, GstMessage *message, gpointer user_data)
         {
           FsStream *stream;
           const GValue *value;
-
-          ts_fail_unless (
-              gst_implements_interface_check (GST_MESSAGE_SRC (message),
-                  FS_TYPE_CONFERENCE),
-              "Received farstream-local-candidates-prepared from non-farstream"
-              " element");
 
           ts_fail_unless (
               gst_structure_has_field_typed (s, "stream", FS_TYPE_STREAM),
@@ -1425,84 +1400,6 @@ GST_START_TEST (test_rtpconference_unref_session_in_pad_added)
 }
 GST_END_TEST;
 
-#if 0
-
-static const gchar *signal_name;
-
-static GstBusSyncReply
-unref_stream_sync_handler (GstBus *bus, GstMessage *message,
-    gpointer data)
-{
-  struct SimpleTestConference *dat = data;
-  const GstStructure *s;
-  FsStream *stream;
-  const GValue *v;
-  GList *item;
-
-  if (GST_MESSAGE_TYPE (message) != GST_MESSAGE_ELEMENT)
-    return GST_BUS_PASS;
-
-  s = gst_message_get_structure (message);
-
-  if (!gst_structure_has_name (s, signal_name))
-    return GST_BUS_PASS;
-
-  v = gst_structure_get_value (s, "stream");
-  ts_fail_unless (G_VALUE_HOLDS (v, FS_TYPE_STREAM));
-  stream = g_value_get_object (v);
-
-  TEST_LOCK ();
-
-  for (item = dat->streams; item; item = item->next)
-  {
-    struct SimpleTestStream *st = item->data;
-    if (st->stream == stream)
-    {
-      ASSERT_CRITICAL (fs_stream_destroy (stream));
-      gst_message_unref (message);
-      g_main_loop_quit (loop);
-      TEST_UNLOCK ();
-      return GST_BUS_DROP;
-    }
-  }
-
-  TEST_UNLOCK ();
-
-  gst_message_unref (message);
-  return GST_BUS_DROP;
-}
-
-static void unref_stream_init (struct SimpleTestConference *dat, guint confid)
-{
-  GstBus *bus = gst_pipeline_get_bus (GST_PIPELINE (dat->pipeline));
-
-  gst_bus_set_sync_handler (bus, NULL, NULL);
-  gst_bus_set_sync_handler (bus, unref_stream_sync_handler, dat);
-  gst_object_unref (bus);
-}
-
-GST_START_TEST (test_rtpconference_unref_stream_in_nice_thread_prepared)
-{
-  signal_name = "farstream-local-candidates-prepared";
-  nway_test (2, unref_stream_init, NULL, "nice", 0, NULL);
-}
-GST_END_TEST;
-
-GST_START_TEST (test_rtpconference_unref_stream_in_nice_thread_new_active)
-{
-  signal_name = "farstream-new-active-candidate-pair";
-  nway_test (2, unref_stream_init, NULL, "nice", 0, NULL);
-}
-GST_END_TEST;
-
-GST_START_TEST (test_rtpconference_unref_stream_in_nice_thread_state_changed)
-{
-  signal_name = "farstream-component-state-changed";
-  nway_test (2, unref_stream_init, NULL, "nice", 0, NULL);
-}
-GST_END_TEST;
-
-#endif
 
 static Suite *
 fsrtpconference_suite (void)
@@ -1587,27 +1484,6 @@ fsrtpconference_suite (void)
   tcase_add_test (tc_chain, test_rtpconference_unref_session_in_pad_added);
   suite_add_tcase (s, tc_chain);
 
-#if 0
-
-  tc_chain = tcase_create (
-      "fsrtpconference_unref_stream_in_nice_thread_prepared");
-  tcase_add_test (tc_chain,
-      test_rtpconference_unref_stream_in_nice_thread_prepared);
-  suite_add_tcase (s, tc_chain);
-
-  tc_chain = tcase_create (
-      "fsrtpconference_unref_stream_in_nice_thread_new_active");
-  tcase_add_test (tc_chain,
-      test_rtpconference_unref_stream_in_nice_thread_new_active);
-  suite_add_tcase (s, tc_chain);
-
-  tc_chain = tcase_create (
-      "fsrtpconference_unref_stream_in_nice_thread_state_changed");
-  tcase_add_test (tc_chain,
-      test_rtpconference_unref_stream_in_nice_thread_state_changed);
-  suite_add_tcase (s, tc_chain);
-
-#endif
 
   return s;
 }

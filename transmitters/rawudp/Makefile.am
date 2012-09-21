@@ -18,19 +18,20 @@ nodist_librawudp_transmitter_la_SOURCES = \
 librawudp_transmitter_la_CFLAGS = \
 	$(FS_INTERNAL_CFLAGS) \
 	$(FS_CFLAGS) \
-	$(GST_PLUGINS_BASE_CFLAGS) \
 	$(GST_CFLAGS) \
 	$(NICE_CFLAGS) \
-	$(GUPNP_CFLAGS)
+	$(GUPNP_CFLAGS) \
+	$(GIO_CFLAGS)
+
 librawudp_transmitter_la_LDFLAGS = $(FS_PLUGIN_LDFLAGS)
 librawudp_transmitter_la_LIBADD = \
-	$(top_builddir)/farstream/libfarstream-@FS_MAJORMINOR@.la \
+	$(top_builddir)/farstream/libfarstream-@FS_APIVERSION@.la \
 	$(FS_LIBS) \
-	$(GST_PLUGINS_BASE_LIBS) \
 	$(GST_LIBS) \
 	$(NICE_LIBS) \
 	$(GUPNP_LIBS) \
-	-lgstnetbuffer-@GST_MAJORMINOR@
+	$(GIO_LIBS) \
+	-lgstnet-@GST_API_VERSION@
 
 noinst_HEADERS = \
 	fs-rawudp-transmitter.h \

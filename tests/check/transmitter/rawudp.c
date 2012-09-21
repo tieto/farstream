@@ -73,7 +73,7 @@ GST_START_TEST (test_rawudptransmitter_new)
   gboolean found_it = FALSE;
 
   transmitters = fs_transmitter_list_available ();
-  for (i=0; transmitters[i]; i++)
+  for (i=0; transmitters != NULL && transmitters[i]; i++)
   {
     if (!strcmp ("rawudp", transmitters[i]))
     {
@@ -200,14 +200,14 @@ _handoff_handler (GstElement *element, GstBuffer *buffer, GstPad *pad,
 {
   gint component_id = GPOINTER_TO_INT (user_data);
 
-  ts_fail_unless (GST_BUFFER_SIZE (buffer) == component_id * 10,
-    "Buffer is size %d but component_id is %d", GST_BUFFER_SIZE (buffer),
+  ts_fail_unless (gst_buffer_get_size (buffer) == component_id * 10,
+    "Buffer is size %d but component_id is %d", gst_buffer_get_size (buffer),
     component_id);
 
   buffer_count[component_id-1]++;
 
   GST_LOG ("Buffer %d component: %d size: %u", buffer_count[component_id-1],
-    component_id, GST_BUFFER_SIZE (buffer));
+    component_id, gst_buffer_get_size (buffer));
 
   ts_fail_if (buffer_count[component_id-1] > 20,
     "Too many buffers %d > 20 for component",

@@ -205,8 +205,8 @@ struct _FsRtpSessionPrivate
 
   GError *construction_error;
 
-  GMutex *send_pad_blocked_mutex;
-  GMutex *discovery_pad_blocked_mutex;
+  gulong send_pad_block_id;
+  gulong discovery_pad_block_id;
 
   /* IP Type of Service, protext by session mutex */
   guint tos;
@@ -256,7 +256,7 @@ static gboolean fs_rtp_session_set_send_codec (FsSession *session,
 static gboolean fs_rtp_session_set_codec_preferences (FsSession *session,
     GList *codec_preferences,
     GError **error);
-static void fs_rtp_session_verify_send_codec_bin (FsRtpSession *self);
+static void fs_rtp_session_verify_send_codec_bin_locked (FsRtpSession *self);
 
 static gchar **fs_rtp_session_list_transmitters (FsSession *session);
 static GType fs_rtp_session_get_stream_transmitter_type (FsSession *session,
@@ -312,8 +312,8 @@ fs_rtp_session_associate_free_substreams (FsRtpSession *session,
 
 static void
 _send_caps_changed (GstPad *pad, GParamSpec *pspec, FsRtpSession *session);
-static void
-_discovery_pad_blocked_callback (GstPad *pad, gboolean blocked,
+static GstPadProbeReturn
+_discovery_pad_blocked_callback (GstPad *pad, GstPadProbeInfo *info,
     gpointer user_data);
 
 static void
@@ -430,8 +430,6 @@ fs_rtp_session_init (FsRtpSession *self)
 
   self->mutex = g_mutex_new ();
 
-  self->priv->send_pad_blocked_mutex = g_mutex_new ();
-  self->priv->discovery_pad_blocked_mutex = g_mutex_new ();
   g_static_rw_lock_init (&self->priv->disposed_lock);
 
   self->priv->media_type = FS_MEDIA_TYPE_LAST + 1;
@@ -679,7 +677,7 @@ fs_rtp_session_dispose (GObject *obj)
   if (self->priv->rtpbin_send_rtcp_src)
   {
     gst_pad_set_active (self->priv->rtpbin_send_rtcp_src, FALSE);
-    gst_element_release_request_pad (self->priv->conference->gstrtpbin,
+    gst_element_release_request_pad (self->priv->conference->rtpbin,
       self->priv->rtpbin_send_rtcp_src);
     gst_object_unref (self->priv->rtpbin_send_rtcp_src);
     self->priv->rtpbin_send_rtcp_src = NULL;
@@ -688,7 +686,7 @@ fs_rtp_session_dispose (GObject *obj)
   if (self->priv->rtpbin_send_rtp_sink)
   {
     gst_pad_set_active (self->priv->rtpbin_send_rtp_sink, FALSE);
-    gst_element_release_request_pad (self->priv->conference->gstrtpbin,
+    gst_element_release_request_pad (self->priv->conference->rtpbin,
       self->priv->rtpbin_send_rtp_sink);
     gst_object_unref (self->priv->rtpbin_send_rtp_sink);
     self->priv->rtpbin_send_rtp_sink = NULL;
@@ -697,7 +695,7 @@ fs_rtp_session_dispose (GObject *obj)
   if (self->priv->rtpbin_recv_rtp_sink)
   {
     gst_pad_set_active (self->priv->rtpbin_recv_rtp_sink, FALSE);
-    gst_element_release_request_pad (self->priv->conference->gstrtpbin,
+    gst_element_release_request_pad (self->priv->conference->rtpbin,
       self->priv->rtpbin_recv_rtp_sink);
     gst_object_unref (self->priv->rtpbin_recv_rtp_sink);
     self->priv->rtpbin_recv_rtp_sink = NULL;
@@ -706,7 +704,7 @@ fs_rtp_session_dispose (GObject *obj)
   if (self->priv->rtpbin_recv_rtcp_sink)
   {
     gst_pad_set_active (self->priv->rtpbin_recv_rtcp_sink, FALSE);
-    gst_element_release_request_pad (self->priv->conference->gstrtpbin,
+    gst_element_release_request_pad (self->priv->conference->rtpbin,
       self->priv->rtpbin_recv_rtcp_sink);
     gst_object_unref (self->priv->rtpbin_recv_rtcp_sink);
     self->priv->rtpbin_recv_rtcp_sink = NULL;
@@ -784,9 +782,6 @@ fs_rtp_session_finalize (GObject *object)
     g_hash_table_destroy (self->priv->ssrc_streams);
   if (self->priv->ssrc_streams_manual)
     g_hash_table_destroy (self->priv->ssrc_streams_manual);
-
-  g_mutex_free (self->priv->send_pad_blocked_mutex);
-  g_mutex_free (self->priv->discovery_pad_blocked_mutex);
 
   g_queue_foreach (&self->priv->telephony_events, (GFunc) gst_event_unref,
       NULL);
@@ -1006,17 +1001,6 @@ _rtp_tfrc_bitrate_changed (GObject *rtp_tfrc, GParamSpec *pspec,
 }
 
 static void
-_rtp_bitrate_adapter_renegotiate (GstElement *bitrate_adapter,
-    FsRtpSession *self)
-{
-  gst_element_post_message (GST_ELEMENT (self->priv->conference),
-      gst_message_new_element (GST_OBJECT (self->priv->conference),
-          gst_structure_new ("farstream-renegotiate",
-              "session", FS_TYPE_SESSION, self,
-              NULL)));
-}
-
-static void
 fs_rtp_session_constructed (GObject *object)
 {
   FsRtpSession *self = FS_RTP_SESSION_CAST (object);
@@ -1082,9 +1066,6 @@ fs_rtp_session_constructed (GObject *object)
   {
     GstElement *bitrate_adapter = fs_rtp_bitrate_adapter_new ();
 
-    g_signal_connect_object (bitrate_adapter, "renegotiate",
-        G_CALLBACK (_rtp_bitrate_adapter_renegotiate), self, 0);
-
     if (!gst_bin_add (GST_BIN (self->priv->conference), bitrate_adapter))
     {
       self->priv->construction_error = g_error_new (FS_ERROR,
@@ -1140,9 +1121,9 @@ fs_rtp_session_constructed (GObject *object)
   gst_object_unref (tee_sink_pad);
 
   self->priv->send_tee_discovery_pad = gst_element_get_request_pad (tee,
-      "src%d");
+      "src_%u");
   self->priv->send_tee_media_pad = gst_element_get_request_pad (tee,
-      "src%d");
+      "src_%u");
 
   if (!self->priv->send_tee_discovery_pad || !self->priv->send_tee_media_pad)
   {
@@ -1198,7 +1179,7 @@ fs_rtp_session_constructed (GObject *object)
   /* Now create the transmitter RTP funnel */
 
   tmp = g_strdup_printf ("recv_rtp_funnel_%u", self->id);
-  funnel = gst_element_factory_make ("fsfunnel", tmp);
+  funnel = gst_element_factory_make ("funnel", tmp);
   g_free (tmp);
 
   if (!funnel)
@@ -1222,7 +1203,7 @@ fs_rtp_session_constructed (GObject *object)
 
   tmp = g_strdup_printf ("recv_rtp_sink_%u", self->id);
   self->priv->rtpbin_recv_rtp_sink =
-    gst_element_get_request_pad (self->priv->conference->gstrtpbin,
+    gst_element_get_request_pad (self->priv->conference->rtpbin,
       tmp);
   g_free (tmp);
 
@@ -1233,11 +1214,10 @@ fs_rtp_session_constructed (GObject *object)
   if (GST_PAD_LINK_FAILED (ret))
   {
     self->priv->construction_error = g_error_new (FS_ERROR,
-      FS_ERROR_CONSTRUCTION,
-      "Could not link pad %s (%p) with pad %s (%p)",
-      GST_PAD_NAME (funnel_src_pad), GST_PAD_CAPS (funnel_src_pad),
-      GST_PAD_NAME (self->priv->rtpbin_recv_rtp_sink),
-      GST_PAD_CAPS (self->priv->rtpbin_recv_rtp_sink));
+        FS_ERROR_CONSTRUCTION,
+        "Could not link pad %s with pad %s",
+        GST_PAD_NAME (funnel_src_pad),
+        GST_PAD_NAME (self->priv->rtpbin_recv_rtp_sink));
 
     gst_object_unref (funnel_src_pad);
     return;
@@ -1250,7 +1230,7 @@ fs_rtp_session_constructed (GObject *object)
   /* Now create the transmitter RTCP funnel */
 
   tmp = g_strdup_printf ("recv_rtcp_funnel_%u", self->id);
-  funnel = gst_element_factory_make ("fsfunnel", tmp);
+  funnel = gst_element_factory_make ("funnel", tmp);
   g_free (tmp);
 
   if (!funnel)
@@ -1274,7 +1254,7 @@ fs_rtp_session_constructed (GObject *object)
 
   tmp = g_strdup_printf ("recv_rtcp_sink_%u", self->id);
   self->priv->rtpbin_recv_rtcp_sink =
-    gst_element_get_request_pad (self->priv->conference->gstrtpbin,
+    gst_element_get_request_pad (self->priv->conference->rtpbin,
       tmp);
   g_free (tmp);
 
@@ -1285,11 +1265,10 @@ fs_rtp_session_constructed (GObject *object)
   if (GST_PAD_LINK_FAILED (ret))
   {
     self->priv->construction_error = g_error_new (FS_ERROR,
-      FS_ERROR_CONSTRUCTION,
-      "Could not link pad %s (%p) with pad %s (%p)",
-      GST_PAD_NAME (funnel_src_pad), GST_PAD_CAPS (funnel_src_pad),
-      GST_PAD_NAME (self->priv->rtpbin_recv_rtcp_sink),
-      GST_PAD_CAPS (self->priv->rtpbin_recv_rtcp_sink));
+        FS_ERROR_CONSTRUCTION,
+        "Could not link pad %s with pad %s",
+        GST_PAD_NAME (funnel_src_pad),
+        GST_PAD_NAME (self->priv->rtpbin_recv_rtcp_sink));
 
     gst_object_unref (funnel_src_pad);
     return;
@@ -1302,7 +1281,7 @@ fs_rtp_session_constructed (GObject *object)
 
   /* Lets get the internal RTP session */
 
-  g_signal_emit_by_name (self->priv->conference->gstrtpbin,
+  g_signal_emit_by_name (self->priv->conference->rtpbin,
       "get-internal-session", self->id, &self->priv->rtpbin_internal_session);
 
   if (!self->priv->rtpbin_internal_session)
@@ -1350,7 +1329,7 @@ fs_rtp_session_constructed (GObject *object)
 
   tmp = g_strdup_printf ("send_rtp_sink_%u", self->id);
   self->priv->rtpbin_send_rtp_sink =
-    gst_element_get_request_pad (self->priv->conference->gstrtpbin,
+    gst_element_get_request_pad (self->priv->conference->rtpbin,
       tmp);
   g_free (tmp);
 
@@ -1361,11 +1340,10 @@ fs_rtp_session_constructed (GObject *object)
   if (GST_PAD_LINK_FAILED (ret))
   {
     self->priv->construction_error = g_error_new (FS_ERROR,
-      FS_ERROR_CONSTRUCTION,
-      "Could not link pad %s (%p) with pad %s (%p)",
-      GST_PAD_NAME (muxer_src_pad), GST_PAD_CAPS (muxer_src_pad),
-      GST_PAD_NAME (self->priv->rtpbin_send_rtp_sink),
-      GST_PAD_CAPS (self->priv->rtpbin_send_rtp_sink));
+        FS_ERROR_CONSTRUCTION,
+        "Could not link pad %s with pad %s",
+        GST_PAD_NAME (muxer_src_pad),
+        GST_PAD_NAME (self->priv->rtpbin_send_rtp_sink));
 
     gst_object_unref (muxer_src_pad);
     return;
@@ -1416,7 +1394,7 @@ fs_rtp_session_constructed (GObject *object)
 
   tmp = g_strdup_printf ("send_rtp_src_%u", self->id);
   if (!gst_element_link_pads (
-          self->priv->conference->gstrtpbin, tmp,
+          self->priv->conference->rtpbin, tmp,
           self->priv->transmitter_rtp_tee, "sink"))
   {
     self->priv->construction_error = g_error_new (FS_ERROR,
@@ -1456,13 +1434,13 @@ fs_rtp_session_constructed (GObject *object)
 
   tmp = g_strdup_printf ("send_rtcp_src_%u", self->id);
   self->priv->rtpbin_send_rtcp_src =
-    gst_element_get_request_pad (self->priv->conference->gstrtpbin, tmp);
+    gst_element_get_request_pad (self->priv->conference->rtpbin, tmp);
 
   if (!self->priv->rtpbin_send_rtcp_src)
   {
      self->priv->construction_error = g_error_new (FS_ERROR,
          FS_ERROR_CONSTRUCTION,
-         "Could not get %s request pad from the gstrtpbin", tmp);
+         "Could not get %s request pad from the rtpbin", tmp);
     g_free (tmp);
     return;
   }
@@ -1516,7 +1494,7 @@ fs_rtp_session_constructed (GObject *object)
 
   self->priv->send_capsfilter = gst_object_ref (capsfilter);
 
-  if (!gst_element_link_pads (capsfilter, "src", muxer, "sink_%d"))
+  if (!gst_element_link_pads (capsfilter, "src", muxer, "sink_%u"))
   {
     self->priv->construction_error = g_error_new (FS_ERROR,
         FS_ERROR_CONSTRUCTION,
@@ -1560,42 +1538,51 @@ _stream_known_source_packet_received (FsRtpStream *stream, guint component,
 {
   guint32 ssrc;
   FsRtpSession *self = FS_RTP_SESSION_CAST (user_data);
+  gboolean valid = FALSE;
 
   if (fs_rtp_session_has_disposed_enter (self, NULL))
     return;
 
+
   if (component == 1)
   {
-    if (gst_rtp_buffer_validate (buffer))
+      GstRTPBuffer rtpbuffer = GST_RTP_BUFFER_INIT;
+
+    if (gst_rtp_buffer_map (buffer, GST_MAP_READ, &rtpbuffer))
     {
-      ssrc = gst_rtp_buffer_get_ssrc (buffer);
-      goto ok;
+      ssrc = gst_rtp_buffer_get_ssrc (&rtpbuffer);
+      gst_rtp_buffer_unmap (&rtpbuffer);
+
+      valid = TRUE;
     }
   }
   else if (component == 2)
   {
     GstRTCPPacket rtcppacket;
+    GstRTCPBuffer rtcpbuffer = GST_RTCP_BUFFER_INIT;
 
-    if (gst_rtcp_buffer_validate (buffer))
+    if (!gst_rtcp_buffer_map (buffer, GST_MAP_READ, &rtcpbuffer))
     {
-      if (gst_rtcp_buffer_get_first_packet (buffer, &rtcppacket))
+      if (gst_rtcp_buffer_get_first_packet (&rtcpbuffer, &rtcppacket))
       {
         do {
           if (gst_rtcp_packet_get_type (&rtcppacket) == GST_RTCP_TYPE_SDES)
           {
             ssrc = gst_rtcp_packet_sdes_get_ssrc (&rtcppacket);
-            goto ok;
+            valid = TRUE;
+            break;
           }
         } while (gst_rtcp_packet_move_to_next (&rtcppacket));
       }
+      gst_rtcp_buffer_unmap (&rtcpbuffer);
     }
   }
 
-  /* We would have jumped to OK if we had a valid packet */
-  fs_rtp_session_has_disposed_exit (self);
-  return;
-
- ok:
+  if (!valid)
+  {
+    fs_rtp_session_has_disposed_exit (self);
+    return;
+  }
 
   FS_RTP_SESSION_LOCK (self);
 
@@ -1998,7 +1985,7 @@ fs_rtp_session_set_send_codec (FsSession *session, FsCodec *send_codec,
 
     self->priv->requested_send_codec = fs_codec_copy (send_codec);
 
-    fs_rtp_session_verify_send_codec_bin (self);
+    fs_rtp_session_verify_send_codec_bin_locked (self);
     ret = TRUE;
   }
   else
@@ -2136,7 +2123,7 @@ _get_request_pad_and_link (GstElement *tee_funnel, const gchar *tee_funnel_name,
   GstPad *requestpad = NULL;
   GstPad *transpad = NULL;
   GstPadLinkReturn ret;
-  gchar *requestpad_name = (direction == GST_PAD_SINK) ? "src%d" : "sink%d";
+  gchar *requestpad_name = (direction == GST_PAD_SINK) ? "src_%u" : "sink_%u";
 
   /* The transmitter will only be removed when the whole session is disposed,
    * then the
@@ -2215,11 +2202,11 @@ fs_rtp_session_add_transmitter_gst_sink (FsRtpSession *self,
   gst_element_sync_state_with_parent (sink);
 
   if (!_get_request_pad_and_link (self->priv->transmitter_rtp_tee,
-      "rtp tee", sink, "sink1", GST_PAD_SINK, error))
+      "rtp tee", sink, "sink_1", GST_PAD_SINK, error))
     goto error;
 
   if (!_get_request_pad_and_link (self->priv->transmitter_rtcp_tee,
-      "rtcp tee", sink, "sink2", GST_PAD_SINK, error))
+      "rtcp tee", sink, "sink_2", GST_PAD_SINK, error))
     goto error;
 
   gst_object_unref (sink);
@@ -2289,11 +2276,11 @@ fs_rtp_session_get_transmitter (FsRtpSession *self,
   }
 
   if (!_get_request_pad_and_link (self->priv->transmitter_rtp_funnel,
-      "rtp funnel", src, "src1", GST_PAD_SRC, error))
+      "rtp funnel", src, "src_1", GST_PAD_SRC, error))
     goto error;
 
   if (!_get_request_pad_and_link (self->priv->transmitter_rtcp_funnel,
-      "rtcp funnel", src, "src2", GST_PAD_SRC, error))
+      "rtcp funnel", src, "src_2", GST_PAD_SRC, error))
     goto error;
 
   gst_element_sync_state_with_parent (src);
@@ -2717,17 +2704,17 @@ fs_rtp_session_update_codecs (FsRtpSession *session,
   fs_rtp_session_verify_recv_codecs_locked (session);
 
   if (is_new)
-    g_signal_emit_by_name (session->priv->conference->gstrtpbin,
+    g_signal_emit_by_name (session->priv->conference->rtpbin,
         "clear-pt-map");
 
   fs_rtp_session_start_codec_param_gathering_locked (session);
 
-  FS_RTP_SESSION_UNLOCK (session);
-
   if (has_remotes)
   {
-    fs_rtp_session_verify_send_codec_bin (session);
+    fs_rtp_session_verify_send_codec_bin_locked (session);
   }
+
+  FS_RTP_SESSION_UNLOCK (session);
 
   if (is_new)
   {
@@ -2992,15 +2979,15 @@ fs_rtp_session_new_recv_pad (FsRtpSession *session, GstPad *new_pad,
 }
 
 static gboolean
-validate_src_pads (gpointer item, GValue *ret, gpointer user_data)
+validate_src_pads (const GValue *item, GValue *ret, gpointer user_data)
 {
-  GstPad *pad = item;
+  GstPad *pad = g_value_get_object (item);
   GList *codecs = user_data;
   GstCaps *caps;
   GList *listitem = NULL;
   gboolean retval = FALSE;
 
-  caps = gst_pad_get_caps_reffed (pad);
+  caps = gst_pad_query_caps (pad, NULL);
 
   if (gst_caps_is_empty (caps))
   {
@@ -3027,7 +3014,6 @@ validate_src_pads (gpointer item, GValue *ret, gpointer user_data)
 
  error:
 
-  gst_object_unref (pad);
   gst_caps_unref (caps);
   if (!retval)
     g_value_set_boolean (ret, FALSE);
@@ -3301,19 +3287,18 @@ struct link_data {
  */
 
 static gboolean
-link_main_pad (gpointer item, GValue *ret, gpointer user_data)
+link_main_pad (const GValue *item, GValue *ret, gpointer user_data)
 {
-  GstPad *pad = item;
+  GstPad *pad = g_value_get_object (item);
   struct link_data *data = user_data;
   GstCaps *caps;
   GstPad *other_pad;
 
-  caps = gst_pad_get_caps_reffed (pad);
+  caps = gst_pad_query_caps (pad, data->caps);
 
   if (!gst_caps_can_intersect (caps, data->caps))
   {
     gst_caps_unref (caps);
-    gst_object_unref (pad);
     return TRUE;
   }
   gst_caps_unref (caps);
@@ -3338,7 +3323,6 @@ link_main_pad (gpointer item, GValue *ret, gpointer user_data)
  error:
 
   gst_object_unref (other_pad);
-  gst_object_unref (pad);
 
   return FALSE;
 }
@@ -3350,9 +3334,9 @@ link_main_pad (gpointer item, GValue *ret, gpointer user_data)
  */
 
 static gboolean
-link_other_pads (gpointer item, GValue *ret, gpointer user_data)
+link_other_pads (const GValue *item, GValue *ret, gpointer user_data)
 {
-  GstPad *pad = item;
+  GstPad *pad = g_value_get_object (item);
   struct link_data *data = user_data;
   GstCaps *caps;
   GstCaps *filter_caps = NULL;
@@ -3362,11 +3346,10 @@ link_other_pads (gpointer item, GValue *ret, gpointer user_data)
 
   if (gst_pad_is_linked (pad))
   {
-    gst_object_unref (pad);
     return TRUE;
   }
 
-  caps = gst_pad_get_caps_reffed (pad);
+  caps = gst_pad_query_caps (pad, NULL);
 
   if (gst_caps_is_empty (caps))
   {
@@ -3397,7 +3380,6 @@ link_other_pads (gpointer item, GValue *ret, gpointer user_data)
     g_set_error (data->error, FS_ERROR, FS_ERROR_INTERNAL,
         "Could not find codec that matches the src pad");
     g_value_set_boolean (ret, FALSE);
-    gst_object_unref (pad);
     return FALSE;
   }
 
@@ -3433,11 +3415,9 @@ link_other_pads (gpointer item, GValue *ret, gpointer user_data)
     goto error;
   }
   gst_object_unref (otherpad);
-  gst_object_unref (pad);
-  pad = NULL;
 
   if (!gst_element_link_pads (capsfilter, NULL,
-          data->session->priv->rtpmuxer, "sink_%d"))
+          data->session->priv->rtpmuxer, "sink_%u"))
   {
     g_set_error (data->error, FS_ERROR, FS_ERROR_CONSTRUCTION,
         "Could not an extra capsfilter to the muxer");
@@ -3464,7 +3444,6 @@ link_other_pads (gpointer item, GValue *ret, gpointer user_data)
   data->session->priv->extra_send_capsfilters =
     g_list_remove (data->session->priv->extra_send_capsfilters,
         capsfilter);
-  gst_object_unref (pad);
   gst_caps_unref (filter_caps);
 
   return FALSE;
@@ -3599,7 +3578,7 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
   GST_DEBUG ("Trying to add send codecbin for " FS_CODEC_FORMAT,
       FS_CODEC_ARGS (ca->send_codec));
 
-  name = g_strdup_printf ("send_%d_%d", session->id, ca->send_codec->id);
+  name = g_strdup_printf ("send_%u_%u", session->id, ca->send_codec->id);
   codecs = codec_associations_to_send_codecs (
       session->priv->codec_associations);
   codecbin = _create_codec_bin (ca, ca->send_codec, name, TRUE, codecs,
@@ -3765,11 +3744,6 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
   return NULL;
 }
 
-static void
-pad_block_do_nothing (GstPad *pad, gboolean blocked, gpointer user_data)
-{
-}
-
 /**
  * _send_src_pad_blocked_callback:
  *
@@ -3777,8 +3751,8 @@ pad_block_do_nothing (GstPad *pad, gboolean blocked, gpointer user_data)
  * It is used to replace the codec bin when the send codec has been changed.
  */
 
-static void
-_send_src_pad_blocked_callback (GstPad *pad, gboolean blocked,
+static GstPadProbeReturn
+_send_src_pad_blocked_callback (GstPad *pad, GstPadProbeInfo *info,
     gpointer user_data)
 {
   FsRtpSession *self = FS_RTP_SESSION (user_data);
@@ -3791,13 +3765,15 @@ _send_src_pad_blocked_callback (GstPad *pad, gboolean blocked,
 
   if (fs_rtp_session_has_disposed_enter (self, NULL))
   {
-    gst_pad_set_blocked_async (pad, FALSE, pad_block_do_nothing, NULL);
-    return;
+    FS_RTP_SESSION_LOCK (self);
+    self->priv->send_pad_block_id = 0;
+    FS_RTP_SESSION_UNLOCK (self);
+    return GST_PAD_PROBE_REMOVE;
   }
 
-  g_mutex_lock (self->priv->send_pad_blocked_mutex);
-
   FS_RTP_SESSION_LOCK (self);
+  self->priv->send_pad_block_id = 0;
+
   ca = fs_rtp_session_select_send_codec_locked (self, &error);
 
   if (!ca)
@@ -3912,11 +3888,8 @@ _send_src_pad_blocked_callback (GstPad *pad, gboolean blocked,
    * with the right caps to come in. Only then can we drop the pad block
    */
 
-  gst_pad_set_blocked_async (pad, FALSE, pad_block_do_nothing, NULL);
-
-  g_mutex_unlock (self->priv->send_pad_blocked_mutex);
   fs_rtp_session_has_disposed_exit (self);
-  return;
+  return GST_PAD_PROBE_REMOVE;
 
  done_locked:
   FS_RTP_SESSION_UNLOCK (self);
@@ -3924,7 +3897,7 @@ _send_src_pad_blocked_callback (GstPad *pad, gboolean blocked,
 }
 
 /**
- * fs_rtp_session_verify_send_codec_bin:
+ * fs_rtp_session_verify_send_codec_bin_locked:
  *
  * Verify that the current send codec is still valid and if it is not
  * do whats required to have the right one be used.
@@ -3934,10 +3907,13 @@ _send_src_pad_blocked_callback (GstPad *pad, gboolean blocked,
  */
 
 static void
-fs_rtp_session_verify_send_codec_bin (FsRtpSession *self)
+fs_rtp_session_verify_send_codec_bin_locked (FsRtpSession *self)
 {
-  gst_pad_set_blocked_async (self->priv->send_tee_media_pad, TRUE,
-      _send_src_pad_blocked_callback, self);
+  if (self->priv->send_pad_block_id == 0)
+    self->priv->send_pad_block_id =
+      gst_pad_add_probe (self->priv->send_tee_media_pad,
+          GST_PAD_PROBE_TYPE_BLOCK_DOWNSTREAM,
+          _send_src_pad_blocked_callback, g_object_ref (self), g_object_unref);
 }
 
 /*
@@ -3968,7 +3944,7 @@ _substream_get_codec_bin (FsRtpSubStream *substream,
   if (!ca)
     goto out;
 
-  name = g_strdup_printf ("recv_%d_%u_%d", session->id, substream->ssrc,
+  name = g_strdup_printf ("recv_%u_%u_%u", session->id, substream->ssrc,
       substream->pt);
   codecbin = _create_codec_bin (ca, *new_codec, name, FALSE, NULL,
       current_builder_hash, new_builder_hash, error);
@@ -4374,13 +4350,16 @@ _discovery_caps_changed (GstPad *pad, GParamSpec *pspec, FsRtpSession *session)
 
  out:
 
-  FS_RTP_SESSION_UNLOCK (session);
-
   gst_caps_unref (caps);
 
-  if (block)
-    gst_pad_set_blocked_async (session->priv->send_tee_discovery_pad, TRUE,
-        _discovery_pad_blocked_callback, session);
+  if (block && session->priv->discovery_pad_block_id == 0)
+    session->priv->discovery_pad_block_id =
+      gst_pad_add_probe (session->priv->send_tee_discovery_pad,
+        GST_PAD_PROBE_TYPE_BLOCK_DOWNSTREAM,
+        _discovery_pad_blocked_callback,
+        g_object_ref (session), g_object_unref);
+
+  FS_RTP_SESSION_UNLOCK (session);
   fs_rtp_session_has_disposed_exit (session);
 }
 
@@ -4411,7 +4390,7 @@ fs_rtp_session_get_codec_params_unlock (FsRtpSession *session,
   fs_codec_destroy (session->priv->discovery_codec);
   session->priv->discovery_codec = NULL;
 
-  tmp = g_strdup_printf ("discover_%d_%d", session->id, ca->send_codec->id);
+  tmp = g_strdup_printf ("discover_%u_%u", session->id, ca->send_codec->id);
   codecbin = _create_codec_bin (ca, ca->send_codec, tmp, TRUE, NULL,
       0, NULL, error);
   g_free (tmp);
@@ -4445,7 +4424,7 @@ fs_rtp_session_get_codec_params_unlock (FsRtpSession *session,
       session->priv->discovery_capsfilter == NULL)
   {
 
-    tmp = g_strdup_printf ("discovery_fakesink_%d", session->id);
+    tmp = g_strdup_printf ("discovery_fakesink_%u", session->id);
     session->priv->discovery_fakesink =
       gst_element_factory_make ("fakesink", tmp);
     g_free (tmp);
@@ -4475,7 +4454,7 @@ fs_rtp_session_get_codec_params_unlock (FsRtpSession *session,
       goto error;
     }
 
-    tmp = g_strdup_printf ("discovery_capsfilter_%d", session->id);
+    tmp = g_strdup_printf ("discovery_capsfilter_%u", session->id);
     session->priv->discovery_capsfilter =
       gst_element_factory_make ("capsfilter", tmp);
     g_free (tmp);
@@ -4615,8 +4594,8 @@ fs_rtp_session_get_codec_params_unlock (FsRtpSession *session,
  * This is the callback to change the discovery codecbin
  */
 
-static void
-_discovery_pad_blocked_callback (GstPad *pad, gboolean blocked,
+static GstPadProbeReturn
+_discovery_pad_blocked_callback (GstPad *pad, GstPadProbeInfo *info,
     gpointer user_data)
 {
   FsRtpSession *session = user_data;
@@ -4626,13 +4605,14 @@ _discovery_pad_blocked_callback (GstPad *pad, gboolean blocked,
 
   if (fs_rtp_session_has_disposed_enter (session, NULL))
   {
-    gst_pad_set_blocked_async (pad, FALSE, pad_block_do_nothing, NULL);
-    return;
+    FS_RTP_SESSION_LOCK (session);
+    session->priv->discovery_pad_block_id = 0;
+    FS_RTP_SESSION_UNLOCK (session);
+    return GST_PAD_PROBE_REMOVE;
   }
 
-  g_mutex_lock (session->priv->discovery_pad_blocked_mutex);
-
   FS_RTP_SESSION_LOCK (session);
+  session->priv->discovery_pad_block_id = 0;
 
   /* Find out if there is a codec that needs the config to be fetched */
   for (item = g_list_first (session->priv->codec_associations);
@@ -4673,10 +4653,8 @@ _discovery_pad_blocked_callback (GstPad *pad, gboolean blocked,
   g_clear_error (&error);
 
  out_unlocked:
-  gst_pad_set_blocked_async (pad, FALSE, pad_block_do_nothing, NULL);
-  g_mutex_unlock (session->priv->discovery_pad_blocked_mutex);
   fs_rtp_session_has_disposed_exit (session);
-  return;
+  return GST_PAD_PROBE_REMOVE;
 
  out_locked:
   FS_RTP_SESSION_UNLOCK (session);
@@ -4711,8 +4689,11 @@ fs_rtp_session_start_codec_param_gathering_locked (FsRtpSession *session)
 
   GST_DEBUG ("Starting Codec Param discovery for session %d", session->id);
 
-  gst_pad_set_blocked_async (session->priv->send_tee_discovery_pad, TRUE,
-      _discovery_pad_blocked_callback, session);
+  if (session->priv->discovery_pad_block_id == 0)
+    session->priv->discovery_pad_block_id =
+      gst_pad_add_probe (session->priv->send_tee_discovery_pad,
+      GST_PAD_PROBE_TYPE_BLOCK_DOWNSTREAM,
+      _discovery_pad_blocked_callback, g_object_ref (session), g_object_unref);
 }
 
 
@@ -4823,9 +4804,9 @@ struct CodecBinSetBitrateData
 };
 
 static void
-codecbin_set_bitrate_func (gpointer e, gpointer user_data)
+codecbin_set_bitrate_func (const GValue *item, gpointer user_data)
 {
-  GstElement *elem = e;
+  GstElement *elem = g_value_get_object (item);
   struct CodecBinSetBitrateData *data = user_data;
 
   if (g_object_class_find_property (G_OBJECT_GET_CLASS (elem), "bitrate"))
@@ -4833,8 +4814,6 @@ codecbin_set_bitrate_func (gpointer e, gpointer user_data)
     fs_utils_set_bitrate (elem, data->bitrate);
     data->ret = TRUE;
   }
-
-  gst_object_unref (elem);
 }
 
 static gboolean

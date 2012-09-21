@@ -134,7 +134,7 @@ fs_stream_transmitter_class_init (FsStreamTransmitterClass *klass)
         G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   /**
-   * FsStreamTransmitter:associate-on-source
+   * FsStreamTransmitter:associate-on-source:
    *
    * This tells the stream transmitter to associate incoming data with this
    * based on the source without looking at the content if possible.
@@ -247,7 +247,7 @@ fs_stream_transmitter_class_init (FsStreamTransmitterClass *klass)
 
 
   /**
-   * FsStreamTransmitter::state-changed
+   * FsStreamTransmitter::state-changed:
    * @self: #FsStreamTransmitter that emitted the signal
    * @component: the id of the component which state has changed
    * @state: the new state of the component
@@ -311,7 +311,7 @@ fs_stream_transmitter_set_property (GObject *object,
 
 
 /**
- * fs_stream_transmitter_add_remote_candidates
+ * fs_stream_transmitter_add_remote_candidates:
  * @streamtransmitter: a #FsStreamTranmitter
  * @candidates: (element-type FsCandidate): a #GList of the remote candidates
  * @error: location of a #GError, or NULL if no error occured

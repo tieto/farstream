@@ -3,23 +3,32 @@
 /* Define if building universal (internal helper macro) */
 #undef AC_APPLE_UNIVERSAL_BUILD
 
+/* Farstream x.y API version */
+#undef FS_APIVERSION
+
+/* Farstream x_y API version */
+#undef FS_API_VERSION
+
 /* Farstream license */
 #undef FS_LICENSE
-
-/* Farstream major.minor version */
-#undef FS_MAJORMINOR
-
-/* Farstream major_minor version */
-#undef FS_MAJOR_MINOR
 
 /* The path were plugins are installed and search by default */
 #undef FS_PLUGIN_PATH
 
+/* The GIO library directory. */
+#undef GIO_LIBDIR
+
+/* The GIO modules directory. */
+#undef GIO_MODULE_DIR
+
 /* Prevent post 2.30 APIs */
-#undef GLIB_VERSION_MAX_REQUIRED
+#undef GLIB_VERSION_MAX_ALLOWED
 
 /* Ignore post 2.30 deprecations */
 #undef GLIB_VERSION_MIN_REQUIRED
+
+/* GStreamer major.minor version */
+#undef GST_API_VERSION
 
 /* Defined if gcov is enabled to force a rebuild due to config.h changing */
 #undef GST_GCOV_ENABLED
@@ -30,55 +39,52 @@
 /* Default errorlevel to use */
 #undef GST_LEVEL_DEFAULT
 
-/* GStreamer major.minor version */
-#undef GST_MAJORMINOR
-
 /* package name in plugins */
 #undef GST_PACKAGE_NAME
 
 /* package origin */
 #undef GST_PACKAGE_ORIGIN
 
-/* Define if the host CPU is an Alpha */
+/* Define if the target CPU is an Alpha */
 #undef HAVE_CPU_ALPHA
 
-/* Define if the host CPU is an ARM */
+/* Define if the target CPU is an ARM */
 #undef HAVE_CPU_ARM
 
-/* Define if the host CPU is a CRIS */
+/* Define if the target CPU is a CRIS */
 #undef HAVE_CPU_CRIS
 
-/* Define if the host CPU is a CRISv32 */
+/* Define if the target CPU is a CRISv32 */
 #undef HAVE_CPU_CRISV32
 
-/* Define if the host CPU is a HPPA */
+/* Define if the target CPU is a HPPA */
 #undef HAVE_CPU_HPPA
 
-/* Define if the host CPU is an x86 */
+/* Define if the target CPU is an x86 */
 #undef HAVE_CPU_I386
 
-/* Define if the host CPU is a IA64 */
+/* Define if the target CPU is a IA64 */
 #undef HAVE_CPU_IA64
 
-/* Define if the host CPU is a M68K */
+/* Define if the target CPU is a M68K */
 #undef HAVE_CPU_M68K
 
-/* Define if the host CPU is a MIPS */
+/* Define if the target CPU is a MIPS */
 #undef HAVE_CPU_MIPS
 
-/* Define if the host CPU is a PowerPC */
+/* Define if the target CPU is a PowerPC */
 #undef HAVE_CPU_PPC
 
-/* Define if the host CPU is a 64 bit PowerPC */
+/* Define if the target CPU is a 64 bit PowerPC */
 #undef HAVE_CPU_PPC64
 
-/* Define if the host CPU is a S390 */
+/* Define if the target CPU is a S390 */
 #undef HAVE_CPU_S390
 
-/* Define if the host CPU is a SPARC */
+/* Define if the target CPU is a SPARC */
 #undef HAVE_CPU_SPARC
 
-/* Define if the host CPU is a x86_64 */
+/* Define if the target CPU is a x86_64 */
 #undef HAVE_CPU_X86_64
 
 /* Define to 1 if you have the <dlfcn.h> header file. */
@@ -86,6 +92,9 @@
 
 /* Define to 1 if you have the `getifaddrs' function. */
 #undef HAVE_GETIFADDRS
+
+/* Have the GUPnP IGD library */
+#undef HAVE_GUPNP
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
@@ -162,6 +171,9 @@
 
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
+
+/* the target CPU */
+#undef TARGET_CPU
 
 /* Version number of package */
 #undef VERSION

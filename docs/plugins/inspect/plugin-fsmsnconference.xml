@@ -3,7 +3,7 @@
   <description>Farstream MSN Conference plugin</description>
   <filename>../../gst/fsmsnconference/.libs/libfsmsnconference.so</filename>
   <basename>libfsmsnconference.so</basename>
-  <version>0.1.2</version>
+  <version>0.1.0.1</version>
   <license>LGPL</license>
   <source>farstream</source>
   <package>Farstream</package>
@@ -14,7 +14,7 @@
       <longname>Farstream MSN Reception Conference</longname>
       <class>Generic/Bin/MSN</class>
       <description>A Farstream MSN Reception Conference</description>
-      <author>Richard Spiers &lt;richard.spiers@gmail.com&gt;, Youness Alaoui &lt;youness.alaoui@collabora.co.uk&gt;, Olivier Crete &lt;olivier.crete@collabora.co.uk&gt;</author>
+      <author>Richard Spiers &lt;richard.spiers@gmail.com&gt;, Youness Alaoui &lt;youness.alaoui@collabora.com&gt;, Olivier Crete &lt;olivier.crete@collabora.com&gt;</author>
       <pads>
         <caps>
           <name>sink_%d</name>

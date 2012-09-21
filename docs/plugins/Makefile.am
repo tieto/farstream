@@ -3,7 +3,7 @@ GST_DOC_SCANOBJ = $(top_srcdir)/common/gstdoc-scangobj
 ## Process this file with automake to produce Makefile.in
 
 # The name of the module, e.g. 'glib'.
-#DOC_MODULE=gst-plugins-libs-@GST_MAJORMINOR@
+#DOC_MODULE=gst-plugins-libs-@GST_API_VERSION@
 MODULE=farstream
 DOC_MODULE=$(MODULE)-plugins
 
@@ -18,11 +18,11 @@ DOC_MODULE=$(MODULE)-plugins
 #	BUILDDIR=`pwd` && \
 #	cd $(srcdir)/tmpl && \
 #	ln -sf gstreamer-libs-unused.sgml \
-#		$$BUILDDIR/tmpl/gstreamer-libs-@GST_MAJORMINOR@-unused.sgml
+#		$$BUILDDIR/tmpl/gstreamer-libs-@GST_API_VERSION@-unused.sgml
 #	touch unused-build.stamp
 
-# these rules are added to create parallel docs using GST_MAJORMINOR
-#$(basefiles): gstreamer-libs-@GST_MAJORMINOR@%: gstreamer-libs%
+# these rules are added to create parallel docs using GST_API_VERSION
+#$(basefiles): gstreamer-libs-@GST_API_VERSION@%: gstreamer-libs%
 #	cp $< $@
 
 #CLEANFILES = $(basefiles)
@@ -62,7 +62,6 @@ SCANOBJ_DEPS = \
 	$(top_builddir)/gst/fsrtpconference/libfsrtpconference_doc.la \
 	$(top_builddir)/gst/fsmsnconference/libfsmsnconference_doc.la \
 	$(top_builddir)/gst/fsrawconference/libfsrawconference_doc.la \
-	$(top_builddir)/gst/fsfunnel/libfsfunnel.la \
 	$(top_builddir)/gst/fsvideoanyrate/libfsvideoanyrate.la 
 
 # Header files to ignore when scanning.
@@ -78,7 +77,6 @@ IGNORE_CFILES =
 # the registry won't have the element
 
 EXTRA_HFILES = \
-	$(top_srcdir)/gst/fsfunnel/fs-funnel.h \
 	$(top_srcdir)/gst/fsvideoanyrate/videoanyrate.h \
 	$(top_srcdir)/gst/fsrtpconference/fs-rtp-conference.h \
 	$(top_srcdir)/gst/fsrtpconference/fs-rtp-session.h \
@@ -126,7 +124,7 @@ CLEANFILES = farstream-transmitters.types
 # contains GtkObjects/GObjects and you want to document signals and properties.
 GTKDOC_CFLAGS = $(GST_BASE_CFLAGS) -I$(top_builddir) -I$(top_builddir)/gst-libs
 GTKDOC_LIBS = \
-	$(top_builddir)/farstream/libfarstream-@FS_MAJORMINOR@.la \
+	$(top_builddir)/farstream/libfarstream-@FS_APIVERSION@.la \
 	$(top_builddir)/gst/fsrtpconference/libfsrtpconference_doc.la \
 	$(top_builddir)/gst/fsrawconference/libfsrawconference_doc.la \
 	$(top_builddir)/gst/fsmsnconference/libfsmsnconference_doc.la \

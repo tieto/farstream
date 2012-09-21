@@ -65,7 +65,7 @@ setup_simple_conference_full (
 
   bus = gst_pipeline_get_bus (GST_PIPELINE (dat->pipeline));
   fail_if (bus == NULL);
-  gst_bus_set_sync_handler (bus, default_sync_handler, dat);
+  gst_bus_set_sync_handler (bus, default_sync_handler, dat, NULL);
   gst_object_unref (bus);
 
   dat->conference = gst_element_factory_make (conference_elem, NULL);
@@ -211,11 +211,9 @@ setup_fakesrc (struct SimpleTestConference *dat)
 }
 
 static gboolean
-pad_count_fold (gpointer pad, GValue *val, gpointer user_data)
+pad_count_fold (const GValue *item, GValue *val, gpointer user_data)
 {
   g_value_set_uint (val, g_value_get_uint (val) + 1);
-
-  gst_object_unref (pad);
 
   return TRUE;
 }

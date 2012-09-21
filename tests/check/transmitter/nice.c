@@ -196,8 +196,8 @@ static void
 _handoff_handler (GstElement *element, GstBuffer *buffer, GstPad *pad,
     guint stream, gint component_id)
 {
-  ts_fail_unless (GST_BUFFER_SIZE (buffer) == component_id * 10,
-    "Buffer is size %d but component_id is %d", GST_BUFFER_SIZE (buffer),
+  ts_fail_unless (gst_buffer_get_size (buffer) == component_id * 10,
+    "Buffer is size %d but component_id is %d", gst_buffer_get_size (buffer),
     component_id);
 
   g_static_mutex_lock (&count_mutex);
@@ -209,7 +209,7 @@ _handoff_handler (GstElement *element, GstBuffer *buffer, GstPad *pad,
   {
     GST_DEBUG ("Buffer %d stream: %u component: %d size: %u",
         buffer_count[stream][component_id-1], stream,
-        component_id, GST_BUFFER_SIZE (buffer));
+        component_id, gst_buffer_get_size (buffer));
     GST_DEBUG ("Received %d %d %d %d",
         buffer_count[0][0], buffer_count[0][1],
         buffer_count[1][0], buffer_count[1][1]);

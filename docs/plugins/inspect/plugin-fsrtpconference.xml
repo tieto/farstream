@@ -3,7 +3,7 @@
   <description>Farstream RTP Conference plugin</description>
   <filename>../../gst/fsrtpconference/.libs/libfsrtpconference.so</filename>
   <basename>libfsrtpconference.so</basename>
-  <version>0.1.2</version>
+  <version>0.1.0.1</version>
   <license>LGPL</license>
   <source>farstream</source>
   <package>Farstream</package>
@@ -17,13 +17,13 @@
       <author>Olivier Crete &lt;olivier.crete@collabora.co.uk&gt;</author>
       <pads>
         <caps>
-          <name>sink_%d</name>
+          <name>sink_%u</name>
           <direction>sink</direction>
           <presence>sometimes</presence>
           <details>ANY</details>
         </caps>
         <caps>
-          <name>src_%d_%d_%d</name>
+          <name>src_%u_%u_%u</name>
           <direction>source</direction>
           <presence>sometimes</presence>
           <details>ANY</details>

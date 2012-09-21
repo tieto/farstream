@@ -113,6 +113,7 @@ struct _FsRtpTfrc
   gulong on_ssrc_validated_id;
   gulong on_sending_rtcp_id;
 
+  gulong modder_check_probe_id;
   GstElement *packet_modder;
 
   GHashTable *tfrc_sources;

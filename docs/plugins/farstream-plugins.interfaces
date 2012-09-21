@@ -1,2 +1,8 @@
+FsConference GstChildProxy
+FsMsnCamRecvConference GstChildProxy
+FsMsnCamSendConference GstChildProxy
+FsMsnConference GstChildProxy
+FsRawConference GstChildProxy
+FsRtpConference GstChildProxy
 GstBin GstChildProxy
 GstPipeline GstChildProxy
