@@ -3095,7 +3095,7 @@ _create_codec_bin (const CodecAssociation *ca, const FsCodec *codec,
           *new_builder_hash, current_builder_hash, FS_CODEC_ARGS (ca->codec));
     }
 
-    codec_bin = parse_bin_from_description_all_linked (profile,
+    codec_bin = parse_bin_from_description_all_linked (profile, is_send,
         &src_pad_count, &sink_pad_count, &tmperror);
 
     if (codec_bin)

@@ -38,6 +38,7 @@
 
 #include <farstream/fs-conference.h>
 
+#include "fs-rtp-bin-error-downgrade.h"
 #include "fs-rtp-conference.h"
 #include "fs-rtp-codec-cache.h"
 #include "fs-rtp-special-source.h"
@@ -1531,7 +1532,10 @@ create_codec_bin_from_blueprint (const FsCodec *codec,
 
   GST_DEBUG ("creating %s codec bin for id %d, pipeline_factory %p",
     direction_str, codec->id, pipeline_factory);
-  codec_bin = gst_bin_new (name);
+  if (is_send)
+    codec_bin = gst_bin_new (name);
+  else
+    codec_bin = fs_rtp_bin_error_downgrade_new (name);
 
   for (walk = g_list_first (pipeline_factory); walk; walk = g_list_next (walk))
   {
