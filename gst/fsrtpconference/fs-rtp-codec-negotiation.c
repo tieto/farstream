@@ -115,7 +115,7 @@ parse_bin_from_description_all_linked (const gchar *bin_description,
   }
   else
   {
-    
+    fs_rtp_bin_error_downgrade_register ();
     desc = g_strdup_printf ("fsrtpbinerrordowngrade.( %s )", bin_description);
   }
   bin = gst_parse_launch_full (desc, NULL, GST_PARSE_FLAG_NONE,
