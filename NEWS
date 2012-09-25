@@ -1,7 +1,18 @@
+farstream 0.2.0 (September 25, 2012)
+=====================================
+
+- Official GStreamer 1.0 release
+- Ported python example to GStreamer 1.0 and GTK+ 3
+- Use GLib 2.32 APIs
+- Made API more introspection friendly
+- Ignore Error messages from the decoders
+- Prefer Opus and VP8
+- Various bug fixes
+
 farstream 0.1.91 (September 13, 2012)
 =====================================
 
-- Port to GStreamer 1.0
+- Port to GStreamer 1.0 API
 
 farstream 0.1.2 (March 23, 2012)
 ================================
