@@ -99,7 +99,7 @@ struct _FsRawStreamPrivate
   stream_get_new_stream_transmitter_cb get_new_stream_transmitter_cb;
   gpointer user_data;
 
-  GMutex *mutex; /* protects the conference */
+  GMutex mutex; /* protects the conference */
 
   gboolean disposed;
 
@@ -118,7 +118,7 @@ G_DEFINE_TYPE(FsRawStream, fs_raw_stream, FS_TYPE_STREAM);
 
 #define FS_RAW_STREAM_LOCK(stream) \
   do { \
-    g_mutex_lock (FS_RAW_STREAM (stream)->priv->mutex);   \
+    g_mutex_lock (&FS_RAW_STREAM (stream)->priv->mutex);   \
     g_assert (FS_RAW_STREAM (stream)->priv->count == 0);  \
     FS_RAW_STREAM (stream)->priv->count++;                \
   } while (0);
@@ -126,17 +126,17 @@ G_DEFINE_TYPE(FsRawStream, fs_raw_stream, FS_TYPE_STREAM);
   do { \
     g_assert (FS_RAW_STREAM (stream)->priv->count == 1);  \
     FS_RAW_STREAM (stream)->priv->count--;                \
-    g_mutex_unlock (FS_RAW_STREAM (stream)->priv->mutex); \
+    g_mutex_unlock (&FS_RAW_STREAM (stream)->priv->mutex); \
   } while (0);
 #define FS_RAW_STREAM_GET_LOCK(stream) \
   (FS_RAW_STREAM (stream)->priv->mutex)
 #else
 #define FS_RAW_STREAM_LOCK(stream) \
-  g_mutex_lock ((stream)->priv->mutex)
+  g_mutex_lock (&(stream)->priv->mutex)
 #define FS_RAW_STREAM_UNLOCK(stream) \
-  g_mutex_unlock ((stream)->priv->mutex)
+  g_mutex_unlock (&(stream)->priv->mutex)
 #define FS_RAW_STREAM_GET_LOCK(stream) \
-  ((stream)->priv->mutex)
+  (&(stream)->priv->mutex)
 #endif
 
 static void fs_raw_stream_dispose (GObject *object);
@@ -255,7 +255,7 @@ fs_raw_stream_init (FsRawStream *self)
 
   self->priv->direction = FS_DIRECTION_NONE;
 
-  self->priv->mutex = g_mutex_new ();
+  g_mutex_init (&self->priv->mutex);
 }
 
 
@@ -346,7 +346,7 @@ fs_raw_stream_finalize (GObject *object)
 
   fs_codec_list_destroy (self->priv->remote_codecs);
 
-  g_mutex_free (self->priv->mutex);
+  g_mutex_clear (&self->priv->mutex);
 
   G_OBJECT_CLASS (fs_raw_stream_parent_class)->finalize (object);
 }

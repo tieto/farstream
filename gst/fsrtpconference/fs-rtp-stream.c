@@ -87,7 +87,7 @@ struct _FsRtpStreamPrivate
   gulong known_source_packet_received_handler_id;
   gulong state_changed_handler_id;
 
-  GMutex *mutex;
+  GMutex mutex;
 };
 
 
@@ -218,7 +218,7 @@ fs_rtp_stream_init (FsRtpStream *self)
   self->participant = NULL;
   self->priv->stream_transmitter = NULL;
 
-  self->priv->mutex = g_mutex_new ();
+  g_mutex_init (&self->priv->mutex);
 
   self->priv->direction = FS_DIRECTION_NONE;
 }
@@ -228,11 +228,11 @@ fs_rtp_stream_get_session (FsRtpStream *self, GError **error)
 {
   FsRtpSession *session;
 
-  g_mutex_lock (self->priv->mutex);
+  g_mutex_lock (&self->priv->mutex);
   session = self->priv->session;
   if (session)
     g_object_ref (session);
-  g_mutex_unlock (self->priv->mutex);
+  g_mutex_unlock (&self->priv->mutex);
 
   if (!session)
     g_set_error (error, FS_ERROR, FS_ERROR_DISPOSED,
@@ -276,9 +276,9 @@ fs_rtp_stream_dispose (GObject *object)
   if (!session)
     return;
 
-  g_mutex_lock (self->priv->mutex);
+  g_mutex_lock (&self->priv->mutex);
   self->priv->session = NULL;
-  g_mutex_unlock (self->priv->mutex);
+  g_mutex_unlock (&self->priv->mutex);
 
   FS_RTP_SESSION_LOCK (session);
 
@@ -340,7 +340,7 @@ fs_rtp_stream_finalize (GObject *object)
   fs_codec_list_destroy (self->remote_codecs);
   fs_codec_list_destroy (self->negotiated_codecs);
 
-  g_mutex_free (self->priv->mutex);
+  g_mutex_clear (&self->priv->mutex);
 
   G_OBJECT_CLASS (fs_rtp_stream_parent_class)->finalize (object);
 }

@@ -70,7 +70,7 @@ struct _FsRtpSpecialSourcePrivate {
   gpointer stopped_data;
 
   /* Protects the content of this struct after object has been disposed of */
-  GMutex *mutex;
+  GMutex mutex;
 };
 
 static GList *classes = NULL;
@@ -83,8 +83,8 @@ G_DEFINE_ABSTRACT_TYPE(FsRtpSpecialSource, fs_rtp_special_source,
    FsRtpSpecialSourcePrivate))
 
 
-#define FS_RTP_SPECIAL_SOURCE_LOCK(src)   g_mutex_lock (src->priv->mutex)
-#define FS_RTP_SPECIAL_SOURCE_UNLOCK(src) g_mutex_unlock (src->priv->mutex)
+#define FS_RTP_SPECIAL_SOURCE_LOCK(src)   g_mutex_lock (&(src)->priv->mutex)
+#define FS_RTP_SPECIAL_SOURCE_UNLOCK(src) g_mutex_unlock (&(src)->priv->mutex)
 
 static void fs_rtp_special_source_dispose (GObject *object);
 static void fs_rtp_special_source_finalize (GObject *object);
@@ -141,7 +141,7 @@ fs_rtp_special_source_init (FsRtpSpecialSource *self)
   self->priv = FS_RTP_SPECIAL_SOURCE_GET_PRIVATE (self);
   self->priv->disposed = FALSE;
 
-  self->priv->mutex = g_mutex_new ();
+  g_mutex_init (&self->priv->mutex);
 }
 
 /**
@@ -203,8 +203,6 @@ fs_rtp_special_source_stop_locked (FsRtpSpecialSource *self)
 
   if (self->priv->src)
   {
-    GError *error = NULL;
-
     if (self->priv->stop_thread)
     {
       GST_DEBUG ("stopping thread for special source already running");
@@ -212,15 +210,10 @@ fs_rtp_special_source_stop_locked (FsRtpSpecialSource *self)
     }
 
     g_object_ref (self);
-    self->priv->stop_thread = g_thread_create (stop_source_thread, self, FALSE,
-        &error);
+    self->priv->stop_thread = g_thread_new ("special-source-stop",
+        stop_source_thread, self);
+    g_thread_unref (self->priv->stop_thread);
 
-    if (!self->priv->stop_thread)
-    {
-      GST_WARNING ("Could not start stopping thread for FsRtpSpecialSource:"
-          " %s", error->message);
-    }
-    g_clear_error (&error);
     return TRUE;
   }
   else
@@ -295,9 +288,7 @@ fs_rtp_special_source_finalize (GObject *object)
     fs_codec_destroy (self->codec);
   self->codec = NULL;
 
-  if (self->priv->mutex)
-    g_mutex_free (self->priv->mutex);
-  self->priv->mutex = NULL;
+  g_mutex_clear (&self->priv->mutex);
 
   G_OBJECT_CLASS (fs_rtp_special_source_parent_class)->finalize (object);
 }

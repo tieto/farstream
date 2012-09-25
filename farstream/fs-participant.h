@@ -78,7 +78,7 @@ struct _FsParticipant
 
   /*< private >*/
 
-  GMutex *mutex;
+  GMutex mutex;
 
   FsParticipantPrivate *priv;
 
@@ -94,7 +94,7 @@ struct _FsParticipant
  */
 
 #define FS_PARTICIPANT_DATA_LOCK(participant) \
-  g_mutex_lock ((participant)->mutex)
+  g_mutex_lock (& FS_PARTICIPANT_CAST(participant)->mutex)
 
 /**
  * FS_PARTICIPANT_DATA_UNLOCK:
@@ -105,7 +105,7 @@ struct _FsParticipant
  */
 
 #define FS_PARTICIPANT_DATA_UNLOCK(participant) \
-  g_mutex_unlock ((participant)->mutex)
+  g_mutex_unlock (& FS_PARTICIPANT_CAST(participant)->mutex)
 
 GType fs_participant_get_type (void);
 

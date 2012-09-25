@@ -118,7 +118,7 @@ struct _FsRawUdpComponentPrivate
   guint stun_port;
   guint stun_timeout;
 
-  GMutex *mutex;
+  GMutex mutex;
 
   StunAgent stun_agent;
   StunMessage stun_message;
@@ -177,9 +177,9 @@ static guint signals[LAST_SIGNAL] = { 0 };
 static GType type = 0;
 
 #define FS_RAWUDP_COMPONENT_LOCK(component) \
-  g_mutex_lock ((component)->priv->mutex)
+  g_mutex_lock (&(component)->priv->mutex)
 #define FS_RAWUDP_COMPONENT_UNLOCK(component) \
-  g_mutex_unlock ((component)->priv->mutex)
+  g_mutex_unlock (&(component)->priv->mutex)
 
 static void
 fs_rawudp_component_class_init (FsRawUdpComponentClass *klass);
@@ -536,7 +536,7 @@ fs_rawudp_component_init (FsRawUdpComponent *self)
   self->priv->upnp_mapping_timeout = DEFAULT_UPNP_MAPPING_TIMEOUT;
 #endif
 
-  self->priv->mutex = g_mutex_new ();
+  g_mutex_init (&self->priv->mutex);
 }
 
 static void
@@ -698,7 +698,7 @@ fs_rawudp_component_finalize (GObject *object)
   g_free (self->priv->ip);
   g_free (self->priv->stun_ip);
 
-  g_mutex_free (self->priv->mutex);
+  g_mutex_clear (&self->priv->mutex);
 
   parent_class->finalize (object);
 }
@@ -1349,8 +1349,8 @@ fs_rawudp_component_start_stun (FsRawUdpComponent *self, GError **error)
       return FALSE;
     }
 
-    self->priv->stun_timeout_thread =
-      g_thread_create (stun_timeout_func, self, TRUE, error);
+    self->priv->stun_timeout_thread = g_thread_try_new ("stun timeout thread",
+        stun_timeout_func, self, error);
   }
 
   res = (self->priv->stun_timeout_thread != NULL);

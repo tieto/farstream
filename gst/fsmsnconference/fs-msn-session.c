@@ -93,7 +93,7 @@ struct _FsMsnSessionPrivate
 
   guint tos; /* Protected by conf lock */
 
-  GMutex *mutex; /* protects the conference */
+  GMutex mutex; /* protects the conference */
 };
 
 G_DEFINE_TYPE (FsMsnSession, fs_msn_session, FS_TYPE_SESSION);
@@ -177,7 +177,7 @@ fs_msn_session_init (FsMsnSession *self)
   self->priv = FS_MSN_SESSION_GET_PRIVATE (self);
   self->priv->construction_error = NULL;
 
-  self->priv->mutex = g_mutex_new ();
+  g_mutex_init (&self->priv->mutex);
 
   self->priv->media_type = FS_MEDIA_TYPE_LAST + 1;
 }
@@ -188,11 +188,11 @@ fs_msn_session_get_conference (FsMsnSession *self, GError **error)
 {
   FsMsnConference *conference;
 
-  g_mutex_lock (self->priv->mutex);
+  g_mutex_lock (&self->priv->mutex);
   conference = self->priv->conference;
   if (conference)
     g_object_ref (conference);
-  g_mutex_unlock (self->priv->mutex);
+  g_mutex_unlock (&self->priv->mutex);
 
   if (!conference)
     g_set_error (error, FS_ERROR, FS_ERROR_DISPOSED,
@@ -210,9 +210,9 @@ fs_msn_session_dispose (GObject *object)
   FsMsnConference *conference = fs_msn_session_get_conference (self, NULL);
   GstElement *valve = NULL;
 
-  g_mutex_lock (self->priv->mutex);
+  g_mutex_lock (&self->priv->mutex);
   self->priv->conference = NULL;
-  g_mutex_unlock (self->priv->mutex);
+  g_mutex_unlock (&self->priv->mutex);
 
   if (!conference)
     goto out;
@@ -262,7 +262,7 @@ fs_msn_session_finalize (GObject *object)
 {
   FsMsnSession *self = FS_MSN_SESSION (object);
 
-  g_mutex_free (self->priv->mutex);
+  g_mutex_clear (&self->priv->mutex);
 
   G_OBJECT_CLASS (fs_msn_session_parent_class)->finalize (object);
 }

@@ -33,8 +33,8 @@
 #define SEND_BUFFER_COUNT 100
 #define BUFFER_COUNT 20
 
-GMutex *count_mutex;
-GCond *count_cond;
+GMutex count_mutex;
+GCond count_cond;
 guint buffer_count = 0;
 
 
@@ -42,15 +42,15 @@ static void
 handoff_handler (GstElement *fakesink, GstBuffer *buffer, GstPad *pad,
     gpointer user_data)
 {
-  g_mutex_lock (count_mutex);
+  g_mutex_lock (&count_mutex);
   buffer_count ++;
 
   GST_LOG ("buffer %d", buffer_count);
 
   if (buffer_count == BUFFER_COUNT)
-    g_cond_broadcast (count_cond);
+    g_cond_broadcast (&count_cond);
   ts_fail_unless (buffer_count <= SEND_BUFFER_COUNT);
-  g_mutex_unlock (count_mutex);
+  g_mutex_unlock (&count_mutex);
 }
 
 static void
@@ -180,8 +180,8 @@ GST_START_TEST (test_rtprecv_inband_config_data)
   GstElement *pay;
   FsElementAddedNotifier *notif;
 
-  count_mutex = g_mutex_new ();
-  count_cond = g_cond_new ();
+  g_mutex_init (&count_mutex);
+  g_cond_init (&count_cond);
   buffer_count = 0;
   decoder_count = 0;
 
@@ -319,11 +319,11 @@ GST_START_TEST (test_rtprecv_inband_config_data)
   gst_element_set_state (pipeline, GST_STATE_PLAYING);
 
 
-  g_mutex_lock (count_mutex);
+  g_mutex_lock (&count_mutex);
   while (buffer_count < BUFFER_COUNT)
-    g_cond_wait (count_cond, count_mutex);
+    g_cond_wait (&count_cond, &count_mutex);
   buffer_count = 0;
-  g_mutex_unlock (count_mutex);
+  g_mutex_unlock (&count_mutex);
 
   gst_element_set_state (pipeline, GST_STATE_NULL);
 
@@ -333,11 +333,11 @@ GST_START_TEST (test_rtprecv_inband_config_data)
 
   gst_element_set_state (pipeline, GST_STATE_PLAYING);
 
-  g_mutex_lock (count_mutex);
+  g_mutex_lock (&count_mutex);
   while (buffer_count < BUFFER_COUNT)
-    g_cond_wait (count_cond, count_mutex);
+    g_cond_wait (&count_cond, &count_mutex);
   buffer_count = 0;
-  g_mutex_unlock (count_mutex);
+  g_mutex_unlock (&count_mutex);
 
   gst_element_set_state (pipeline, GST_STATE_NULL);
 
@@ -368,8 +368,8 @@ GST_START_TEST (test_rtprecv_inband_config_data)
 
   gst_object_unref (fspipeline);
 
-  g_mutex_free (count_mutex);
-  g_cond_free (count_cond);
+  g_mutex_clear (&count_mutex);
+  g_cond_clear (&count_cond);
 }
 GST_END_TEST;
 

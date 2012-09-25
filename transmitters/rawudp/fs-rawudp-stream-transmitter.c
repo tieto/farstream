@@ -139,7 +139,7 @@ struct _FsRawUdpStreamTransmitterPrivate
 #endif
 
   /* Everything below this line is protected by the mutex */
-  GMutex *mutex;
+  GMutex mutex;
   gboolean *candidates_prepared;
 };
 
@@ -147,8 +147,8 @@ struct _FsRawUdpStreamTransmitterPrivate
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), FS_TYPE_RAWUDP_STREAM_TRANSMITTER, \
       FsRawUdpStreamTransmitterPrivate))
 
-#define FS_RAWUDP_STREAM_TRANSMITTER_LOCK(o)   g_mutex_lock ((o)->priv->mutex)
-#define FS_RAWUDP_STREAM_TRANSMITTER_UNLOCK(o) g_mutex_unlock ((o)->priv->mutex)
+#define FS_RAWUDP_STREAM_TRANSMITTER_LOCK(o)   g_mutex_lock (&(o)->priv->mutex)
+#define FS_RAWUDP_STREAM_TRANSMITTER_UNLOCK(o) g_mutex_unlock (&(o)->priv->mutex)
 
 static void fs_rawudp_stream_transmitter_class_init (
     FsRawUdpStreamTransmitterClass *klass);
@@ -350,7 +350,7 @@ fs_rawudp_stream_transmitter_init (FsRawUdpStreamTransmitter *self)
   self->priv->upnp_discovery = TRUE;
 #endif
 
-  self->priv->mutex = g_mutex_new ();
+  g_mutex_init (&self->priv->mutex);
 }
 
 static void
@@ -405,7 +405,7 @@ fs_rawudp_stream_transmitter_finalize (GObject *object)
     self->priv->component = NULL;
   }
 
-  g_mutex_free (self->priv->mutex);
+  g_mutex_clear (&self->priv->mutex);
 
   g_free (self->priv->candidates_prepared);
 

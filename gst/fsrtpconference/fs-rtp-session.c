@@ -220,7 +220,7 @@ struct _FsRtpSessionPrivate
   FsRtpKeyunitManager *keyunit_manager;
 
   /* Can only be used while using the lock */
-  GStaticRWLock disposed_lock;
+  GRWLock disposed_lock;
   gboolean disposed;
 };
 
@@ -429,9 +429,9 @@ fs_rtp_session_init (FsRtpSession *self)
   self->priv->transmitters = g_hash_table_new_full (g_str_hash, g_str_equal,
     g_free, g_object_unref);
 
-  self->mutex = g_mutex_new ();
+  g_mutex_init (&self->mutex);
 
-  g_static_rw_lock_init (&self->priv->disposed_lock);
+  g_rw_lock_init (&self->priv->disposed_lock);
 
   self->priv->media_type = FS_MEDIA_TYPE_LAST + 1;
 
@@ -526,14 +526,14 @@ fs_rtp_session_dispose (GObject *obj)
   }
   fs_rtp_session_has_disposed_exit (self);
 
-  g_static_rw_lock_writer_lock (&self->priv->disposed_lock);
+  g_rw_lock_writer_lock (&self->priv->disposed_lock);
   if (self->priv->disposed)
   {
-    g_static_rw_lock_writer_unlock (&self->priv->disposed_lock);
+    g_rw_lock_writer_unlock (&self->priv->disposed_lock);
     return;
   }
   self->priv->disposed = TRUE;
-  g_static_rw_lock_writer_unlock (&self->priv->disposed_lock);
+  g_rw_lock_writer_unlock (&self->priv->disposed_lock);
 
   conferencebin = GST_BIN (self->priv->conference);
 
@@ -762,8 +762,7 @@ fs_rtp_session_finalize (GObject *object)
 {
   FsRtpSession *self = FS_RTP_SESSION (object);
 
-  g_mutex_free (self->mutex);
-  self->mutex = NULL;
+  g_mutex_clear (&self->mutex);
 
   if (self->priv->blueprints)
   {
@@ -791,7 +790,7 @@ fs_rtp_session_finalize (GObject *object)
   g_queue_foreach (&self->priv->telephony_events, (GFunc) gst_event_unref,
       NULL);
 
-  g_static_rw_lock_free (&self->priv->disposed_lock);
+  g_rw_lock_clear (&self->priv->disposed_lock);
 
   G_OBJECT_CLASS (fs_rtp_session_parent_class)->finalize (object);
 }
@@ -799,11 +798,11 @@ fs_rtp_session_finalize (GObject *object)
 gboolean
 fs_rtp_session_has_disposed_enter (FsRtpSession *self, GError **error)
 {
-  g_static_rw_lock_reader_lock (&self->priv->disposed_lock);
+  g_rw_lock_reader_lock (&self->priv->disposed_lock);
 
   if (self->priv->disposed)
   {
-    g_static_rw_lock_reader_unlock (&self->priv->disposed_lock);
+    g_rw_lock_reader_unlock (&self->priv->disposed_lock);
     g_set_error (error, FS_ERROR, FS_ERROR_DISPOSED,
         "Called function after session has been disposed");
     return TRUE;
@@ -816,7 +815,7 @@ fs_rtp_session_has_disposed_enter (FsRtpSession *self, GError **error)
 void
 fs_rtp_session_has_disposed_exit (FsRtpSession *self)
 {
-  g_static_rw_lock_reader_unlock (&self->priv->disposed_lock);
+  g_rw_lock_reader_unlock (&self->priv->disposed_lock);
 }
 
 static void

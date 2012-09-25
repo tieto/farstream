@@ -85,14 +85,14 @@ static void
 fs_participant_init (FsParticipant *self)
 {
   //self->priv = FS_PARTICIPANT_GET_PRIVATE (self);
-  self->mutex = g_mutex_new ();
+  g_mutex_init (&self->mutex);
 }
 
 static void
 fs_participant_finalize (GObject *object)
 {
   FsParticipant *self = FS_PARTICIPANT (object);
-  g_mutex_free (self->mutex);
+  g_mutex_clear (&self->mutex);
 
   G_OBJECT_CLASS (fs_participant_parent_class)->finalize (object);
 }

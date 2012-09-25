@@ -120,13 +120,13 @@ struct _FsRtpSubStreamPrivate {
   gboolean receiving;
 
   /* Protected by the this mutex */
-  GMutex *mutex;
+  GMutex mutex;
   GstClockID no_rtcp_timeout_id;
   GstClockTime next_no_rtcp_timeout;
   GThread *no_rtcp_timeout_thread;
 
   /* Can only be used while using the lock */
-  GStaticRWLock stopped_lock;
+  GRWLock stopped_lock;
   gboolean stopped;
 
 
@@ -144,9 +144,9 @@ G_DEFINE_TYPE(FsRtpSubStream, fs_rtp_sub_stream, G_TYPE_OBJECT);
 
 
 #define FS_RTP_SUB_STREAM_LOCK(substream) \
-  g_mutex_lock (substream->priv->mutex)
+  g_mutex_lock (&substream->priv->mutex)
 #define FS_RTP_SUB_STREAM_UNLOCK(substream) \
-  g_mutex_unlock (substream->priv->mutex)
+  g_mutex_unlock (&substream->priv->mutex)
 
 
 static void fs_rtp_sub_stream_dispose (GObject *object);
@@ -168,11 +168,11 @@ fs_rtp_sub_stream_emit_error (FsRtpSubStream *substream,
 static gboolean
 fs_rtp_sub_stream_has_stopped_enter (FsRtpSubStream *self)
 {
-  g_static_rw_lock_reader_lock (&self->priv->stopped_lock);
+  g_rw_lock_reader_lock (&self->priv->stopped_lock);
 
   if (self->priv->stopped)
   {
-    g_static_rw_lock_reader_unlock (&self->priv->stopped_lock);
+    g_rw_lock_reader_unlock (&self->priv->stopped_lock);
     return TRUE;
   }
 
@@ -183,7 +183,7 @@ fs_rtp_sub_stream_has_stopped_enter (FsRtpSubStream *self)
 static void
 fs_rtp_sub_stream_has_stopped_exit (FsRtpSubStream *self)
 {
-  g_static_rw_lock_reader_unlock (&self->priv->stopped_lock);
+  g_rw_lock_reader_unlock (&self->priv->stopped_lock);
 }
 
 
@@ -420,9 +420,9 @@ fs_rtp_sub_stream_init (FsRtpSubStream *self)
 {
   self->priv = FS_RTP_SUB_STREAM_GET_PRIVATE (self);
   self->priv->receiving = TRUE;
-  self->priv->mutex = g_mutex_new ();
+  g_mutex_init (&self->priv->mutex);
 
-  g_static_rw_lock_init (&self->priv->stopped_lock);
+  g_rw_lock_init (&self->priv->stopped_lock);
 }
 
 
@@ -497,7 +497,7 @@ fs_rtp_sub_stream_start_no_rtcp_timeout_thread (FsRtpSubStream *self,
     /* only create a new thread if the old one was stopped. Otherwise we can
      * just reuse the currently running one. */
     self->priv->no_rtcp_timeout_thread =
-      g_thread_create (no_rtcp_timeout_func, self, TRUE, error);
+        g_thread_try_new ("no rtcp timeout", no_rtcp_timeout_func, self, error);
   }
 
   res = (self->priv->no_rtcp_timeout_thread != NULL);
@@ -754,11 +754,9 @@ fs_rtp_sub_stream_finalize (GObject *object)
 {
   FsRtpSubStream *self = FS_RTP_SUB_STREAM (object);
 
-  if (self->codec)
-    fs_codec_destroy (self->codec);
-
-  if (self->priv->mutex)
-    g_mutex_free (self->priv->mutex);
+  fs_codec_destroy (self->codec);
+  g_mutex_clear (&self->priv->mutex);
+  g_rw_lock_clear (&self->priv->stopped_lock);
 
   G_OBJECT_CLASS (fs_rtp_sub_stream_parent_class)->finalize (object);
 }
@@ -1025,9 +1023,9 @@ void
 fs_rtp_sub_stream_stop (FsRtpSubStream *substream)
 {
   substream->priv->stopped = TRUE;
-  g_static_rw_lock_writer_lock (&substream->priv->stopped_lock);
+  g_rw_lock_writer_lock (&substream->priv->stopped_lock);
   substream->priv->stopped = TRUE;
-  g_static_rw_lock_writer_unlock (&substream->priv->stopped_lock);
+  g_rw_lock_writer_unlock (&substream->priv->stopped_lock);
 
   if (substream->priv->rtpbin_unlinked_sig) {
     g_signal_handler_disconnect (substream->priv->rtpbin_pad,

@@ -17,9 +17,9 @@ Requirements
 Build time:
  - gstreamer 0.10.36
  - gst-plugins-base 0.10.36
- - glib 2.26
  - Python 2.4
  - libnice 0.1.0
+ - glib 2.32
 
 For UPnP support:
  - GUPnP-IGD

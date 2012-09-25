@@ -108,7 +108,7 @@ struct _FsMulticastStreamTransmitterPrivate
    */
   FsMulticastTransmitter *transmitter;
 
-  GMutex *mutex;
+  GMutex mutex;
 
   /* Protected by the mutex */
   gboolean sending;
@@ -131,9 +131,9 @@ struct _FsMulticastStreamTransmitterPrivate
                                 FsMulticastStreamTransmitterPrivate))
 
 #define FS_MULTICAST_STREAM_TRANSMITTER_LOCK(s) \
-  g_mutex_lock ((s)->priv->mutex)
+  g_mutex_lock (&(s)->priv->mutex)
 #define FS_MULTICAST_STREAM_TRANSMITTER_UNLOCK(s) \
-  g_mutex_unlock ((s)->priv->mutex)
+  g_mutex_unlock (&(s)->priv->mutex)
 
 static void fs_multicast_stream_transmitter_class_init (FsMulticastStreamTransmitterClass *klass);
 static void fs_multicast_stream_transmitter_init (FsMulticastStreamTransmitter *self);
@@ -220,7 +220,7 @@ fs_multicast_stream_transmitter_init (FsMulticastStreamTransmitter *self)
 
   self->priv->sending = TRUE;
 
-  self->priv->mutex = g_mutex_new ();
+  g_mutex_init (&self->priv->mutex);
 }
 
 static void
@@ -294,7 +294,7 @@ fs_multicast_stream_transmitter_finalize (GObject *object)
   g_free (self->priv->udpsocks);
   self->priv->udpsocks = NULL;
 
-  g_mutex_free (self->priv->mutex);
+  g_mutex_clear (&self->priv->mutex);
 
   parent_class->finalize (object);
 }

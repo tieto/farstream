@@ -136,7 +136,7 @@ enum
 
 struct _FsStreamPrivate
 {
-  GMutex *mutex;
+  GMutex mutex;
   GList *src_pads;
   guint32 src_pads_cookie;
 };
@@ -162,8 +162,8 @@ static void fs_stream_pad_removed (FsStream *stream, GstPad *pad);
 
 static guint signals[LAST_SIGNAL] = { 0 };
 
-#define FS_STREAM_LOCK(self)   g_mutex_lock((self)->priv->mutex)
-#define FS_STREAM_UNLOCK(self) g_mutex_unlock((self)->priv->mutex)
+#define FS_STREAM_LOCK(self)   g_mutex_lock(&(self)->priv->mutex)
+#define FS_STREAM_UNLOCK(self) g_mutex_unlock(&(self)->priv->mutex)
 
 static void
 fs_stream_class_init (FsStreamClass *klass)
@@ -337,7 +337,7 @@ fs_stream_init (FsStream *self)
 {
   /* member init */
   self->priv = FS_STREAM_GET_PRIVATE (self);
-  self->priv->mutex = g_mutex_new ();
+  g_mutex_init (&self->priv->mutex);
 }
 
 static void
@@ -362,7 +362,7 @@ fs_stream_finalize (GObject *obj)
   FsStream *stream = FS_STREAM (obj);
 
   g_list_free (stream->priv->src_pads);
-  g_mutex_free (stream->priv->mutex);
+  g_mutex_clear (&stream->priv->mutex);
 
   G_OBJECT_CLASS (fs_stream_parent_class)->finalize (obj);
 }
@@ -596,7 +596,7 @@ fs_stream_emit_src_pad_added (FsStream *stream,
 GstIterator *
 fs_stream_iterate_src_pads (FsStream *stream)
 {
-  return gst_iterator_new_list (GST_TYPE_PAD, stream->priv->mutex,
+  return gst_iterator_new_list (GST_TYPE_PAD, &stream->priv->mutex,
       &stream->priv->src_pads_cookie, &stream->priv->src_pads,
       g_object_ref (stream), NULL);
 }
