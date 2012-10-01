@@ -302,7 +302,7 @@ fi
 AC_SUBST(PROFILE_CFLAGS)
 
 dnl every flag in FS_OPTION_CFLAGS can be overridden at make time
-FS_OPTION_CFLAGS="-DGST_USE_UNSTABLE_API \$(WARNING_CFLAGS) \$(ERROR_CFLAGS) \$(DEBUG_CFLAGS) \$(PROFILE_CFLAGS) \$(GCOV_CFLAGS) \$(OPT_CFLAGS) -Wno-error=deprecated-declarations "
+FS_OPTION_CFLAGS="\$(WARNING_CFLAGS) \$(ERROR_CFLAGS) \$(DEBUG_CFLAGS) \$(PROFILE_CFLAGS) \$(GCOV_CFLAGS) \$(OPT_CFLAGS) -Wno-error=deprecated-declarations "
 AC_SUBST(FS_OPTION_CFLAGS)
 
 dnl our libraries need to be versioned correctly
@@ -311,7 +311,7 @@ AC_SUBST(FS_LT_LDFLAGS)
 dnl FS_INTERNAL_CFLAGS
 dnl prefer internal headers to already installed ones
 dnl also add builddir include for enumtypes and marshal
-FS_INTERNAL_CFLAGS="-I\$(top_srcdir) -I\$(top_builddir) -DGST_USE_UNSTABLE_API"
+FS_INTERNAL_CFLAGS="-I\$(top_srcdir) -I\$(top_builddir)"
 AC_SUBST(FS_INTERNAL_CFLAGS)
 
 dnl FIXME: do we want to rename to GST_ALL_* ?
