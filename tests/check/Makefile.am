@@ -48,6 +48,7 @@ check_PROGRAMS = \
 	transmitter/rawudp \
 	transmitter/multicast \
 	transmitter/nice \
+	transmitter/shm \
 	raw/conference \
 	elements/rtcpfilter \
 	rtp/codecs \
@@ -56,8 +57,6 @@ check_PROGRAMS = \
 	rtp/recvcodecs \
 	msn/conference \
 	utils/binadded
-noinst_PROGRAMS	= transmitter/shm 
-
 
 AM_CFLAGS = \
 	$(CFLAGS) \
