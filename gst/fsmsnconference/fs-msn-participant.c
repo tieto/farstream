@@ -1,8 +1,9 @@
 /*
  * Farstream - Farstream MSN Participant
  *
- *  @author: Richard Spiers <richard.spiers@gmail.com>
+ * Copyright 2007 Collabora Ltd.
  *  @author: Olivier Crete <olivier.crete@collabora.co.uk>
+ * Copyright 2008 Richard Spiers <richard.spiers@gmail.com>
  *
  * fs-msn-participant.c - A MSN Farstream Participant gobject
  *
