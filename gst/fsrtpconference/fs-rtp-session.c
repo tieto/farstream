@@ -1157,6 +1157,14 @@ fs_rtp_session_constructed (GObject *object)
     return;
   }
 
+  if (!gst_element_sync_state_with_parent (self->priv->discovery_valve))
+  {
+    self->priv->construction_error = g_error_new (FS_ERROR,
+        FS_ERROR_CONSTRUCTION,
+        "Could not sync the discovery valve's state with its parent");
+    return;
+  }
+
   pad = gst_element_get_static_pad (self->priv->discovery_valve, "sink");
   ret = gst_pad_link (self->priv->send_tee_discovery_pad, pad);
   gst_object_unref (pad);
