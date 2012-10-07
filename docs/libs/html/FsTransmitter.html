@@ -72,9 +72,7 @@ struct              <a class="link" href="FsTransmitter.html#FsTransmitterClass"
 <a name="FsTransmitter.object-hierarchy"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
   GObject
-   +----GInitiallyUnowned
-         +----<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstObject.html">GstObject</a>
-               +----FsTransmitter
+   +----FsTransmitter
 </pre>
 </div>
 <div class="refsect1">
@@ -117,7 +115,7 @@ All members are private, access them using methods and properties
 <div class="refsect2">
 <a name="FsTransmitterClass"></a><h3>struct FsTransmitterClass</h3>
 <pre class="programlisting">struct FsTransmitterClass {
-  GstObjectClass parent_class;
+  GObjectClass parent_class;
 
   /*virtual functions */
   FsStreamTransmitter *(*new_stream_transmitter) (FsTransmitter *transmitter,
@@ -135,7 +133,7 @@ You must override both methods in a subclass.
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstObject.html#GstObjectClass"><span class="type">GstObjectClass</span></a> <em class="structfield"><code><a name="FsTransmitterClass.parent-class"></a>parent_class</code></em>;</span></p></td>
+<td><p><span class="term"><span class="type">GObjectClass</span> <em class="structfield"><code><a name="FsTransmitterClass.parent-class"></a>parent_class</code></em>;</span></p></td>
 <td>Our parent</td>
 </tr>
 <tr>

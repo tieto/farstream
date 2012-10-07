@@ -58,26 +58,26 @@ sender. The sender socket must exist before the receiver connects to it.
 <p>
 Negotiating the paths of the sockets can happen in two ways. If the
 create-local-candidates is True then the transmitter will generate the
-path of the local candidate and us it as the ip filed in <a href="../farstream-libs-0.11/farstream-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a>. The
+path of the local candidate and us it as the ip filed in <a href="http://www.freedesktop.org/software/farstream/apidoc/farstream/farstream-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a>. The
 transmitter will expect the path of the applications sender socket to be in
-the "ip" field of the remote candidates <a href="../farstream-libs-0.11/farstream-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> as well.
+the "ip" field of the remote candidates <a href="http://www.freedesktop.org/software/farstream/apidoc/farstream/farstream-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> as well.
 </p>
 <p>
 Or alternatively, if create-local-candidates is false then
 the sender socket can be created by giving the transmitter a candidate
-with the path of the socket in the "ip" field of the <a href="../farstream-libs-0.11/farstream-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a>. This
-<a href="../farstream-libs-0.11/farstream-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> can be given to the <a href="../farstream-libs-0.11/FsStreamTransmitter.html"><span class="type">FsStreamTransmitter</span></a> in two ways, either
-by setting the <a href="../farstream-libs-0.11/FsStreamTransmitter.html#FsStreamTransmitter--preferred-local-candidates"><span class="type">"preferred-local-candidates"</span></a> property
-or by calling the <a href="../farstream-libs-0.11/FsStreamTransmitter.html#fs-stream-transmitter-force-remote-candidates"><code class="function">fs_stream_transmitter_force_remote_candidates()</code></a> function.
+with the path of the socket in the "ip" field of the <a href="http://www.freedesktop.org/software/farstream/apidoc/farstream/farstream-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a>. This
+<a href="http://www.freedesktop.org/software/farstream/apidoc/farstream/farstream-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> can be given to the <a href="http://www.freedesktop.org/software/farstream/apidoc/farstream/FsStreamTransmitter.html"><span class="type">FsStreamTransmitter</span></a> in two ways, either
+by setting the <a href="http://www.freedesktop.org/software/farstream/apidoc/farstream/FsStreamTransmitter.html#FsStreamTransmitter--preferred-local-candidates"><span class="type">"preferred-local-candidates"</span></a> property
+or by calling the <a href="http://www.freedesktop.org/software/farstream/apidoc/farstream/FsStreamTransmitter.html#fs-stream-transmitter-force-remote-candidates"><code class="function">fs_stream_transmitter_force_remote_candidates()</code></a> function.
 There can be only one single send socket per stream. When the send socket
-is ready to be connected to, <a href="../farstream-libs-0.11/FsStreamTransmitter.html#FsStreamTransmitter-new-local-candidate"><span class="type">"new-local-candidate"</span></a> signal
+is ready to be connected to, <a href="http://www.freedesktop.org/software/farstream/apidoc/farstream/FsStreamTransmitter.html#FsStreamTransmitter-new-local-candidate"><span class="type">"new-local-candidate"</span></a> signal
 will be emitted.
 </p>
 <p>
 To connect the receive side to the other application, one must create a
-<a href="../farstream-libs-0.11/farstream-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> with the path of the sender's socket in the "username" field.
+<a href="http://www.freedesktop.org/software/farstream/apidoc/farstream/farstream-libs-FsCandidate.html#FsCandidate"><span class="type">FsCandidate</span></a> with the path of the sender's socket in the "username" field.
 If the receiver can not connect to the sender,
-the <a href="../farstream-libs-0.11/FsStreamTransmitter.html#fs-stream-transmitter-force-remote-candidates"><code class="function">fs_stream_transmitter_force_remote_candidates()</code></a> call will fail.
+the <a href="http://www.freedesktop.org/software/farstream/apidoc/farstream/FsStreamTransmitter.html#fs-stream-transmitter-force-remote-candidates"><code class="function">fs_stream_transmitter_force_remote_candidates()</code></a> call will fail.
 </p>
 </div>
 <div class="refsect1">

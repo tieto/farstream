@@ -80,9 +80,7 @@ enum                <a class="link" href="FsStream.html#FsStreamState" title="en
 <a name="FsStream.object-hierarchy"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
   GObject
-   +----GInitiallyUnowned
-         +----<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstObject.html">GstObject</a>
-               +----FsStream
+   +----FsStream
 </pre>
 </div>
 <div class="refsect1">
@@ -118,15 +116,15 @@ This will communicate asynchronous events to the user through <a href="http://gs
 of type <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GST-MESSAGE-ELEMENT:CAPS"><span class="type">GST_MESSAGE_ELEMENT</span></a> sent over the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBus.html"><span class="type">GstBus</span></a>.
 </p>
 <div class="refsect2">
-<a name="id398284"></a><h3>The "<code class="literal">farstream-new-local-candidate</code>" message</h3>
+<a name="id579951"></a><h3>The "<code class="literal">farstream-new-local-candidate</code>" message</h3>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1
 2</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="string">"stream"</span><span class="normal">           </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"FsStream.html"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"FsStream"</span><span class="symbol">&gt;</span><span class="normal"><a href="http://farstream.freedesktop.org/apidoc/farstream/FsStream.html">FsStream</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">          The stream that emits the message</span>
-<span class="string">"candidate"</span><span class="normal">        </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"farstream-libs-FsCandidate.html#FsCandidate"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"struct FsCandidate"</span><span class="symbol">&gt;</span><span class="normal"><a href="http://farstream.freedesktop.org/apidoc/farstream/farstream-libs-FsCandidate.html#FsCandidate">FsCandidate</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">       The new candidate</span></pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="string">"stream"</span><span class="normal">           </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"FsStream.html"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"FsStream"</span><span class="symbol">&gt;</span><span class="normal"><a href="http://www.freedesktop.org/software/farstream/apidoc/farstream/FsStream.html">FsStream</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">          The stream that emits the message</span>
+<span class="string">"candidate"</span><span class="normal">        </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"farstream-libs-FsCandidate.html#FsCandidate"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"struct FsCandidate"</span><span class="symbol">&gt;</span><span class="normal"><a href="http://www.freedesktop.org/software/farstream/apidoc/farstream/farstream-libs-FsCandidate.html#FsCandidate">FsCandidate</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">       The new candidate</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -138,13 +136,13 @@ This message is emitted when a new local candidate is discovered.
 </div>
 <hr>
 <div class="refsect2">
-<a name="id398320"></a><h3>The "<code class="literal">farstream-local-candidates-prepared</code>" message</h3>
+<a name="id579987"></a><h3>The "<code class="literal">farstream-local-candidates-prepared</code>" message</h3>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="string">"stream"</span><span class="normal">           </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"FsStream.html"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"FsStream"</span><span class="symbol">&gt;</span><span class="normal"><a href="http://farstream.freedesktop.org/apidoc/farstream/FsStream.html">FsStream</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">          The stream that emits the message</span></pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="string">"stream"</span><span class="normal">           </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"FsStream.html"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"FsStream"</span><span class="symbol">&gt;</span><span class="normal"><a href="http://www.freedesktop.org/software/farstream/apidoc/farstream/FsStream.html">FsStream</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">          The stream that emits the message</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -157,7 +155,7 @@ prepared, an ICE implementation would send its SDP offer or answer.
 </div>
 <hr>
 <div class="refsect2">
-<a name="id398350"></a><h3>The "<code class="literal">farstream-new-active-candidate-pair</code>" message</h3>
+<a name="id580016"></a><h3>The "<code class="literal">farstream-new-active-candidate-pair</code>" message</h3>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -165,9 +163,9 @@ prepared, an ICE implementation would send its SDP offer or answer.
         <td class="listing_lines" align="right"><pre>1
 2
 3</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="string">"stream"</span><span class="normal">           </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"FsStream.html"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"FsStream"</span><span class="symbol">&gt;</span><span class="normal"><a href="http://farstream.freedesktop.org/apidoc/farstream/FsStream.html">FsStream</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">          The stream that emits the message</span>
-<span class="string">"local-candidate"</span><span class="normal">  </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"farstream-libs-FsCandidate.html#FsCandidate"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"struct FsCandidate"</span><span class="symbol">&gt;</span><span class="normal"><a href="http://farstream.freedesktop.org/apidoc/farstream/farstream-libs-FsCandidate.html#FsCandidate">FsCandidate</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">       Local candidate being used</span>
-<span class="string">"remote-candidate"</span><span class="normal"> </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"farstream-libs-FsCandidate.html#FsCandidate"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"struct FsCandidate"</span><span class="symbol">&gt;</span><span class="normal"><a href="http://farstream.freedesktop.org/apidoc/farstream/farstream-libs-FsCandidate.html#FsCandidate">FsCandidate</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">       Remote candidate being used</span></pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="string">"stream"</span><span class="normal">           </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"FsStream.html"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"FsStream"</span><span class="symbol">&gt;</span><span class="normal"><a href="http://www.freedesktop.org/software/farstream/apidoc/farstream/FsStream.html">FsStream</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">          The stream that emits the message</span>
+<span class="string">"local-candidate"</span><span class="normal">  </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"farstream-libs-FsCandidate.html#FsCandidate"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"struct FsCandidate"</span><span class="symbol">&gt;</span><span class="normal"><a href="http://www.freedesktop.org/software/farstream/apidoc/farstream/farstream-libs-FsCandidate.html#FsCandidate">FsCandidate</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">       Local candidate being used</span>
+<span class="string">"remote-candidate"</span><span class="normal"> </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"farstream-libs-FsCandidate.html#FsCandidate"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"struct FsCandidate"</span><span class="symbol">&gt;</span><span class="normal"><a href="http://www.freedesktop.org/software/farstream/apidoc/farstream/farstream-libs-FsCandidate.html#FsCandidate">FsCandidate</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">       Remote candidate being used</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -183,15 +181,15 @@ outside the callback scope. This message is emitted once per component.
 </div>
 <hr>
 <div class="refsect2">
-<a name="id398394"></a><h3>The "<code class="literal">farstream-recv-codecs-changed</code>" message</h3>
+<a name="id580061"></a><h3>The "<code class="literal">farstream-recv-codecs-changed</code>" message</h3>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1
 2</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="string">"stream"</span><span class="normal">           </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"FsStream.html"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"FsStream"</span><span class="symbol">&gt;</span><span class="normal"><a href="http://farstream.freedesktop.org/apidoc/farstream/FsStream.html">FsStream</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">          The stream that emits the message</span>
-<span class="string">"codecs"</span><span class="normal">           </span><span class="symbol">&lt;</span><span class="usertype">GTKDOCLINK</span><span class="normal"> HREF</span><span class="symbol">=</span><span class="string">"FsCodecGList"</span><span class="symbol">&gt;</span><span class="usertype">FsCodecGList&lt;/GTKDOCLINK&gt;      A &lt;GTKDOCLINK HREF="GList"&gt;GList&lt;/GTKDOCLINK&gt;</span><span class="normal"> of </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"farstream-libs-FsCodec.html#FsCodec"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"struct FsCodec"</span><span class="symbol">&gt;</span><span class="normal"><a href="http://farstream.freedesktop.org/apidoc/farstream/farstream-libs-FsCodec.html#FsCodec">FsCodec</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span></pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="string">"stream"</span><span class="normal">           </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"FsStream.html"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"FsStream"</span><span class="symbol">&gt;</span><span class="normal"><a href="http://www.freedesktop.org/software/farstream/apidoc/farstream/FsStream.html">FsStream</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">          The stream that emits the message</span>
+<span class="string">"codecs"</span><span class="normal">           </span><span class="symbol">&lt;</span><span class="usertype">GTKDOCLINK</span><span class="normal"> HREF</span><span class="symbol">=</span><span class="string">"FsCodecGList"</span><span class="symbol">&gt;</span><span class="usertype">FsCodecGList&lt;/GTKDOCLINK&gt;      A &lt;GTKDOCLINK HREF="GList"&gt;GList&lt;/GTKDOCLINK&gt;</span><span class="normal"> of </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"farstream-libs-FsCodec.html#FsCodec"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"struct FsCodec"</span><span class="symbol">&gt;</span><span class="normal"><a href="http://www.freedesktop.org/software/farstream/apidoc/farstream/farstream-libs-FsCodec.html#FsCodec">FsCodec</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -208,7 +206,7 @@ The list of new recv-codecs is included in the message
 </div>
 <hr>
 <div class="refsect2">
-<a name="id398458"></a><h3>The "<code class="literal">farstream-component-state-changed</code>" message</h3>
+<a name="id580124"></a><h3>The "<code class="literal">farstream-component-state-changed</code>" message</h3>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -216,9 +214,9 @@ The list of new recv-codecs is included in the message
         <td class="listing_lines" align="right"><pre>1
 2
 3</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="string">"stream"</span><span class="normal">           </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"FsStream.html"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"FsStream"</span><span class="symbol">&gt;</span><span class="normal"><a href="http://farstream.freedesktop.org/apidoc/farstream/FsStream.html">FsStream</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">          The stream that emits the message</span>
+        <td class="listing_code"><pre class="programlisting"><span class="string">"stream"</span><span class="normal">           </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"FsStream.html"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"FsStream"</span><span class="symbol">&gt;</span><span class="normal"><a href="http://www.freedesktop.org/software/farstream/apidoc/farstream/FsStream.html">FsStream</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">          The stream that emits the message</span>
 <span class="string">"component"</span><span class="normal">        </span><span class="symbol">&lt;</span><span class="usertype">GTKDOCLINK</span><span class="normal"> HREF</span><span class="symbol">=</span><span class="string">"guint"</span><span class="symbol">&gt;</span><span class="normal">guint</span><span class="symbol">&lt;/</span><span class="normal">GTKDOCLINK</span><span class="symbol">&gt;</span><span class="normal">             The component whose state changed</span>
-<span class="string">"state"</span><span class="normal">            </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"FsStream.html#FsStreamState"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"enum FsStreamState"</span><span class="symbol">&gt;</span><span class="normal"><a href="http://farstream.freedesktop.org/apidoc/farstream/FsStream.html#FsStreamState">FsStreamState</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">     The new state of the component</span></pre></td>
+<span class="string">"state"</span><span class="normal">            </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"FsStream.html#FsStreamState"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"enum FsStreamState"</span><span class="symbol">&gt;</span><span class="normal"><a href="http://www.freedesktop.org/software/farstream/apidoc/farstream/FsStream.html#FsStreamState">FsStreamState</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">     The new state of the component</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -244,7 +242,7 @@ All members are private, access them using methods and properties
 <div class="refsect2">
 <a name="FsStreamClass"></a><h3>struct FsStreamClass</h3>
 <pre class="programlisting">struct FsStreamClass {
-  GstObjectClass parent_class;
+  GObjectClass parent_class;
 
   /*virtual functions */
   gboolean (*add_remote_candidates) (FsStream *stream,
@@ -276,7 +274,7 @@ If you have to negotiate codecs, then you must override set_remote_codecs too
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstObject.html#GstObjectClass"><span class="type">GstObjectClass</span></a> <em class="structfield"><code><a name="FsStreamClass.parent-class"></a>parent_class</code></em>;</span></p></td>
+<td><p><span class="term"><span class="type">GObjectClass</span> <em class="structfield"><code><a name="FsStreamClass.parent-class"></a>parent_class</code></em>;</span></p></td>
 <td>Our parent</td>
 </tr>
 <tr>

@@ -1,4 +1,11 @@
 FsConference GstChildProxy
+FsDynamicBin GstChildProxy
+FsIoAudioSink GstChildProxy
+FsIoAudioSource GstChildProxy
+FsIoSink GstChildProxy
+FsIoSource GstChildProxy
+FsIoVideoSink GstChildProxy
+FsIoVideoSource GstChildProxy
 FsMsnCamRecvConference GstChildProxy
 FsMsnCamSendConference GstChildProxy
 FsMsnConference GstChildProxy

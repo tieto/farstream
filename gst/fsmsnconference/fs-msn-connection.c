@@ -88,8 +88,8 @@ struct _FsMsnPollFD {
   PollFdCallback callback;
 };
 
-#define FS_MSN_CONNECTION_LOCK(conn)   g_static_rec_mutex_lock(&(conn)->mutex)
-#define FS_MSN_CONNECTION_UNLOCK(conn) g_static_rec_mutex_unlock(&(conn)->mutex)
+#define FS_MSN_CONNECTION_LOCK(conn)   g_rec_mutex_lock(&(conn)->mutex)
+#define FS_MSN_CONNECTION_UNLOCK(conn) g_rec_mutex_unlock(&(conn)->mutex)
 
 
 G_DEFINE_TYPE(FsMsnConnection, fs_msn_connection, G_TYPE_OBJECT);
@@ -195,7 +195,7 @@ fs_msn_connection_init (FsMsnConnection *self)
   gst_poll_set_flushing (self->poll, FALSE);
   self->pollfds = g_ptr_array_new ();
 
-  g_static_rec_mutex_init (&self->mutex);
+  g_rec_mutex_init (&self->mutex);
 }
 
 static void
@@ -236,7 +236,7 @@ fs_msn_connection_finalize (GObject *object)
   }
   g_ptr_array_free (self->pollfds, TRUE);
 
-  g_static_rec_mutex_free (&self->mutex);
+  g_rec_mutex_clear (&self->mutex);
 
   G_OBJECT_CLASS (fs_msn_connection_parent_class)->finalize (object);
 }
@@ -318,13 +318,12 @@ fs_msn_connection_gather_local_candidates (FsMsnConnection *self,
 
   FS_MSN_CONNECTION_LOCK(self);
 
-  self->polling_thread = g_thread_create (connection_polling_thread,
-      self, TRUE, NULL);
+  self->polling_thread = g_thread_try_new ("msn polling thread",
+      connection_polling_thread, self, error);
 
   if (!self->polling_thread)
   {
     FS_MSN_CONNECTION_UNLOCK(self);
-    g_set_error (error, FS_ERROR, FS_ERROR_INTERNAL, "Could not start thread");
     return FALSE;
   }
 

@@ -6,26 +6,24 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="index.html" title="Farstream Plugins Manual">
 <link rel="up" href="ch03.html" title="MSN Webcam plugin">
-<link rel="prev" href="FsMsnCamSendConference.html" title="FsMsnCamSendConference">
-<link rel="next" href="FsMsnConference.html" title="FsMsnConference">
+<link rel="prev" href="farstream-plugins-FsMsnCamSendConference.html" title="FsMsnCamSendConference">
+<link rel="next" href="farstream-plugins-FsMsnConference.html" title="FsMsnConference">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
 <tr valign="middle">
-<td><a accesskey="p" href="FsMsnCamSendConference.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="farstream-plugins-FsMsnCamSendConference.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="ch03.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">Farstream Plugins Manual</th>
-<td><a accesskey="n" href="FsMsnConference.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="farstream-plugins-FsMsnConference.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
 <a href="#farstream-plugins-FsMsnCamCamRecvConference.synopsis" class="shortcut">Top</a>
                    | 
                   <a href="#farstream-plugins-FsMsnCamCamRecvConference.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#farstream-plugins-FsMsnCamCamRecvConference.object-hierarchy" class="shortcut">Object Hierarchy</a>
                    | 
                   <a href="#farstream-plugins-FsMsnCamCamRecvConference.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
 </td></tr>
@@ -41,20 +39,7 @@
 </tr></table></div>
 <div class="refsynopsisdiv">
 <a name="farstream-plugins-FsMsnCamCamRecvConference.synopsis"></a><h2>Synopsis</h2>
-<a name="FsMsnCamRecvConference"></a><pre class="synopsis">struct              <a class="link" href="farstream-plugins-FsMsnCamCamRecvConference.html#FsMsnCamRecvConference-struct" title="struct FsMsnCamRecvConference">FsMsnCamRecvConference</a>;
-</pre>
-</div>
-<div class="refsect1">
-<a name="farstream-plugins-FsMsnCamCamRecvConference.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="synopsis">
-  GObject
-   +----GInitiallyUnowned
-         +----<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstObject.html">GstObject</a>
-               +----<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html">GstElement</a>
-                     +----<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html">GstBin</a>
-                           +----<a href="../farstream-libs-0.11/FsConference.html">FsConference</a>
-                                 +----<a class="link" href="FsMsnConference.html" title="FsMsnConference">FsMsnConference</a>
-                                       +----FsMsnCamRecvConference
+<pre class="synopsis">struct              <a class="link" href="farstream-plugins-FsMsnCamCamRecvConference.html#FsMsnCamRecvConference" title="struct FsMsnCamRecvConference">FsMsnCamRecvConference</a>;
 </pre>
 </div>
 <div class="refsect1">
@@ -73,7 +58,7 @@ to receive someone else's webcam.
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="id409589"></a><h3>Element Information</h3>
+<a name="id373726"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -96,7 +81,7 @@ to receive someone else's webcam.
 </div>
 <hr>
 <div class="refsect2">
-<a name="id413492"></a><h3>Element Pads</h3>
+<a name="id395661"></a><h3>Element Pads</h3>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -147,8 +132,11 @@ to receive someone else's webcam.
 <div class="refsect1">
 <a name="farstream-plugins-FsMsnCamCamRecvConference.details"></a><h2>Details</h2>
 <div class="refsect2">
-<a name="FsMsnCamRecvConference-struct"></a><h3>struct FsMsnCamRecvConference</h3>
-<pre class="programlisting">struct FsMsnCamRecvConference;</pre>
+<a name="FsMsnCamRecvConference"></a><h3>struct FsMsnCamRecvConference</h3>
+<pre class="programlisting">struct FsMsnCamRecvConference {
+  FsMsnConference parent;
+};
+</pre>
 <p>
 </p>
 </div>

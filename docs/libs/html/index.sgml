@@ -131,6 +131,7 @@
 <ANCHOR id="FS-COMPONENT-RTP:CAPS" href="farstream-libs-1.0/farstream-libs-FsCandidate.html#FS-COMPONENT-RTP:CAPS">
 <ANCHOR id="FS-COMPONENT-RTCP:CAPS" href="farstream-libs-1.0/farstream-libs-FsCandidate.html#FS-COMPONENT-RTCP:CAPS">
 <ANCHOR id="fs-candidate-new" href="farstream-libs-1.0/farstream-libs-FsCandidate.html#fs-candidate-new">
+<ANCHOR id="fs-candidate-new-full" href="farstream-libs-1.0/farstream-libs-FsCandidate.html#fs-candidate-new-full">
 <ANCHOR id="fs-candidate-destroy" href="farstream-libs-1.0/farstream-libs-FsCandidate.html#fs-candidate-destroy">
 <ANCHOR id="fs-candidate-copy" href="farstream-libs-1.0/farstream-libs-FsCandidate.html#fs-candidate-copy">
 <ANCHOR id="fs-candidate-list-destroy" href="farstream-libs-1.0/farstream-libs-FsCandidate.html#fs-candidate-list-destroy">

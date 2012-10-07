@@ -50,14 +50,14 @@ struct              <a class="link" href="FsElementAddedNotifier.html#FsElementA
                                                          <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> *bin</code></em>);
 <span class="returnvalue">gboolean</span>            <a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-remove" title="fs_element_added_notifier_remove ()">fs_element_added_notifier_remove</a>    (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
                                                          <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> *bin</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-set-properties-from-keyfile" title="fs_element_added_notifier_set_properties_from_keyfile ()">fs_element_added_notifier_set_properties_from_keyfile</a>
+<span class="returnvalue">gulong</span>              <a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-set-properties-from-keyfile" title="fs_element_added_notifier_set_properties_from_keyfile ()">fs_element_added_notifier_set_properties_from_keyfile</a>
                                                         (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
                                                          <em class="parameter"><code><span class="type">GKeyFile</span> *keyfile</code></em>);
 <span class="returnvalue">gboolean</span>            <a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-set-properties-from-file" title="fs_element_added_notifier_set_properties_from_file ()">fs_element_added_notifier_set_properties_from_file</a>
                                                         (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
                                                          <em class="parameter"><code>const <span class="type">gchar</span> *filename</code></em>,
                                                          <em class="parameter"><code><span class="type">GError</span> **error</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-set-default-properties" title="fs_element_added_notifier_set_default_properties ()">fs_element_added_notifier_set_default_properties</a>
+<span class="returnvalue">gulong</span>              <a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-set-default-properties" title="fs_element_added_notifier_set_default_properties ()">fs_element_added_notifier_set_default_properties</a>
                                                         (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
                                                          <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);
 </pre>
@@ -166,7 +166,7 @@ Stop watching the passed bin and its subbins.
 <hr>
 <div class="refsect2">
 <a name="fs-element-added-notifier-set-properties-from-keyfile"></a><h3>fs_element_added_notifier_set_properties_from_keyfile ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                fs_element_added_notifier_set_properties_from_keyfile
+<pre class="programlisting"><span class="returnvalue">gulong</span>              fs_element_added_notifier_set_properties_from_keyfile
                                                         (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
                                                          <em class="parameter"><code><span class="type">GKeyFile</span> *keyfile</code></em>);</pre>
 <p>
@@ -187,8 +187,13 @@ does not match, it will check its name.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>keyfile</code></em> :</span></p></td>
-<td>a <span class="type">GKeyFile</span>
+<td>a <span class="type">GKeyFile</span>. <span class="annotation">[<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>]</span>
 </td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The id of the signal connection, this can be used to disconnect
+this property setter using <code class="function">g_signal_handler_disconnect()</code>.</td>
 </tr>
 </tbody>
 </table></div>
@@ -231,7 +236,7 @@ the name of the file to load instead of the <span class="type">GKeyFile</span> d
 <hr>
 <div class="refsect2">
 <a name="fs-element-added-notifier-set-default-properties"></a><h3>fs_element_added_notifier_set_default_properties ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                fs_element_added_notifier_set_default_properties
+<pre class="programlisting"><span class="returnvalue">gulong</span>              fs_element_added_notifier_set_default_properties
                                                         (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
                                                          <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);</pre>
 <p>
@@ -254,6 +259,11 @@ This is binding friendly (since GKeyFile doesn't have a boxed type).
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
 <td>Element for which to set the default codec
 preferences</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The id of the signal connection, this can be used to disconnect
+this property setter using <code class="function">g_signal_handler_disconnect()</code>.</td>
 </tr>
 </tbody>
 </table></div>

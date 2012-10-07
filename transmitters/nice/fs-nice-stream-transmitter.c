@@ -84,7 +84,7 @@ struct _FsNiceStreamTransmitterPrivate
 
   guint compatibility_mode;
 
-  GMutex *mutex;
+  GMutex mutex;
 
   GList *preferred_local_candidates;
 
@@ -95,7 +95,7 @@ struct _FsNiceStreamTransmitterPrivate
 
   gulong tos_changed_handler_id;
 
-  GValueArray *relay_info;
+  GPtrArray *relay_info;
 
   volatile gint associate_on_source;
 
@@ -122,8 +122,8 @@ struct _FsNiceStreamTransmitterPrivate
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), FS_TYPE_NICE_STREAM_TRANSMITTER, \
                                 FsNiceStreamTransmitterPrivate))
 
-#define FS_NICE_STREAM_TRANSMITTER_LOCK(o)   g_mutex_lock ((o)->priv->mutex)
-#define FS_NICE_STREAM_TRANSMITTER_UNLOCK(o) g_mutex_unlock ((o)->priv->mutex)
+#define FS_NICE_STREAM_TRANSMITTER_LOCK(o)   g_mutex_lock (&(o)->priv->mutex)
+#define FS_NICE_STREAM_TRANSMITTER_UNLOCK(o) g_mutex_unlock (&(o)->priv->mutex)
 
 
 static void fs_nice_stream_transmitter_class_init (FsNiceStreamTransmitterClass *klass);
@@ -287,7 +287,7 @@ fs_nice_stream_transmitter_class_init (FsNiceStreamTransmitterClass *klass)
   /**
    * FsNiceStreamTransmitter:relay-info:
    *
-   * This is a #GValueArray containing one or more #GstStructure.
+   * This is a #GPtrArray containing one or more #GstStructure.
    *
    * The fields in the structure are:
    *  <informaltable>
@@ -328,15 +328,29 @@ fs_nice_stream_transmitter_class_init (FsNiceStreamTransmitterClass *klass)
    *    </td>
    *   </tr>
    *  </informaltable>
+   *
+   * Example:
+   * |[
+   GPtrArray *relay_info = g_ptr_array_new_full (1, (GDestroyNotify) gst_structure_free);
+   g_ptr_array_add (relay_info,
+      gst_structure_new ("aa",
+          "ip", G_TYPE_STRING, "127.0.0.1",
+          "port", G_TYPE_UINT, 7654,
+          "username", G_TYPE_STRING, "blah",
+          "password", G_TYPE_STRING, "blah2",
+          "relay-type", G_TYPE_STRING, "udp",
+          NULL));
+   |]
+   *
    */
 
   g_object_class_install_property (gobject_class, PROP_RELAY_INFO,
-      g_param_spec_value_array (
+      g_param_spec_boxed (
           "relay-info",
           "Information for the TURN server",
           "ip/port/username/password/relay-type/component of the TURN servers"
-          " in a GValueArray of GstStructures",
-          NULL,
+          " in a GPtrArray of GstStructures",
+          G_TYPE_PTR_ARRAY,
           G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_property (gobject_class, PROP_DEBUG,
@@ -356,7 +370,7 @@ fs_nice_stream_transmitter_init (FsNiceStreamTransmitter *self)
   self->priv = FS_NICE_STREAM_TRANSMITTER_GET_PRIVATE (self);
 
   self->priv->sending = TRUE;
-  self->priv->mutex = g_mutex_new ();
+  g_mutex_init (&self->priv->mutex);
 
   self->priv->controlling_mode = TRUE;
 }
@@ -446,11 +460,11 @@ fs_nice_stream_transmitter_finalize (GObject *object)
   fs_candidate_list_destroy (self->priv->local_candidates);
 
   if (self->priv->relay_info)
-    g_value_array_free (self->priv->relay_info);
+    g_ptr_array_unref (self->priv->relay_info);
 
   g_free (self->priv->stun_ip);
 
-  g_mutex_free (self->priv->mutex);
+  g_mutex_clear (&self->priv->mutex);
 
   g_free (self->priv->username);
   g_free (self->priv->password);
@@ -1179,15 +1193,14 @@ fs_nice_stream_transmitter_build (FsNiceStreamTransmitter *self,
 
   if (self->priv->relay_info)
   {
-    for (i = 0; i < self->priv->relay_info->n_values; i++)
+    for (i = 0; i < self->priv->relay_info->len; i++)
     {
-      GValue *val = g_value_array_get_nth (self->priv->relay_info, i);
-      const GstStructure *s = gst_value_get_structure (val);
+      const GstStructure *s = g_ptr_array_index (self->priv->relay_info, i);
 
       if (!s)
       {
         g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
-            "Element %d of the relay-info GValueArray is not a GstStructure",
+            "Element %d of the relay-info GPtrArray is NULL",
             i);
         return FALSE;
       }
@@ -1349,10 +1362,9 @@ fs_nice_stream_transmitter_build (FsNiceStreamTransmitter *self,
     {
       gboolean relay_info_set = FALSE;
 
-      for (i = 0; i < self->priv->relay_info->n_values; i++)
+      for (i = 0; i < self->priv->relay_info->len; i++)
       {
-        GValue *val = g_value_array_get_nth (self->priv->relay_info, i);
-        const GstStructure *s = gst_value_get_structure (val);
+        const GstStructure *s = g_ptr_array_index (self->priv->relay_info, i);
         guint component_id;
 
         if (gst_structure_get_uint (s, "component", &component_id) &&
@@ -1366,10 +1378,9 @@ fs_nice_stream_transmitter_build (FsNiceStreamTransmitter *self,
 
       if (!relay_info_set)
       {
-        for (i = 0; i < self->priv->relay_info->n_values; i++)
+        for (i = 0; i < self->priv->relay_info->len; i++)
         {
-          GValue *val = g_value_array_get_nth (self->priv->relay_info, i);
-          const GstStructure *s = gst_value_get_structure (val);
+          const GstStructure *s = g_ptr_array_index (self->priv->relay_info, i);
 
           if (!gst_structure_has_field (s, "component"))
             if (!fs_nice_stream_transmitter_set_relay_info (self, s, c, error))

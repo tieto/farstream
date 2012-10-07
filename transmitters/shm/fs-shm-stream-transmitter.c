@@ -110,7 +110,7 @@ struct _FsShmStreamTransmitterPrivate
 
   GList *preferred_local_candidates;
 
-  GMutex *mutex;
+  GMutex mutex;
 
   /* Protected by the mutex */
   gboolean sending;
@@ -134,9 +134,9 @@ struct _FsShmStreamTransmitterPrivate
                                 FsShmStreamTransmitterPrivate))
 
 #define FS_SHM_STREAM_TRANSMITTER_LOCK(s) \
-  g_mutex_lock ((s)->priv->mutex)
+  g_mutex_lock (&(s)->priv->mutex)
 #define FS_SHM_STREAM_TRANSMITTER_UNLOCK(s) \
-  g_mutex_unlock ((s)->priv->mutex)
+  g_mutex_unlock (&(s)->priv->mutex)
 
 static void fs_shm_stream_transmitter_class_init (FsShmStreamTransmitterClass *klass);
 static void fs_shm_stream_transmitter_init (FsShmStreamTransmitter *self);
@@ -242,7 +242,7 @@ fs_shm_stream_transmitter_init (FsShmStreamTransmitter *self)
 
   self->priv->sending = TRUE;
 
-  self->priv->mutex = g_mutex_new ();
+  g_mutex_init (&self->priv->mutex);
 }
 
 static void
@@ -283,7 +283,7 @@ fs_shm_stream_transmitter_finalize (GObject *object)
 
   g_free (self->priv->shm_src);
   g_free (self->priv->shm_sink);
-  g_mutex_free (self->priv->mutex);
+  g_mutex_clear (&self->priv->mutex);
 
   parent_class->finalize (object);
 }

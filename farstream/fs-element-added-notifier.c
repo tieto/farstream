@@ -57,7 +57,7 @@ enum
       FsElementAddedNotifierPrivate))
 
 struct _FsElementAddedNotifierPrivate {
-  GList *keyfiles;
+  GPtrArray *bins;
 };
 
 static void _element_added_callback (GstBin *parent, GstElement *element,
@@ -108,6 +108,8 @@ static void
 fs_element_added_notifier_init (FsElementAddedNotifier *notifier)
 {
   notifier->priv = FS_ELEMENT_ADDED_NOTIFIER_GET_PRIVATE(notifier);
+
+  notifier->priv->bins = g_ptr_array_new_with_free_func (gst_object_unref);
 }
 
 
@@ -117,9 +119,9 @@ fs_element_added_notifier_finalize (GObject *object)
 {
   FsElementAddedNotifier *self = FS_ELEMENT_ADDED_NOTIFIER (object);
 
-  g_list_foreach (self->priv->keyfiles, (GFunc) g_key_file_free, NULL);
-  g_list_free (self->priv->keyfiles);
-  self->priv->keyfiles = NULL;
+  g_ptr_array_unref (self->priv->bins);
+
+  G_OBJECT_CLASS (fs_element_added_notifier_parent_class)->finalize (object);
 }
 
 /**
@@ -155,6 +157,7 @@ fs_element_added_notifier_add (FsElementAddedNotifier *notifier,
   g_return_if_fail (bin && GST_IS_BIN (bin));
 
   _element_added_callback (NULL, GST_ELEMENT_CAST (bin), notifier);
+  g_ptr_array_add (notifier->priv->bins, gst_object_ref (bin));
 }
 
 
@@ -225,6 +228,8 @@ fs_element_added_notifier_remove (FsElementAddedNotifier *notifier,
   g_return_val_if_fail (FS_IS_ELEMENT_ADDED_NOTIFIER (notifier), FALSE);
   g_return_val_if_fail (GST_IS_BIN (bin), FALSE);
 
+  g_ptr_array_remove (notifier->priv->bins, bin);
+
   if (g_signal_handler_find (bin,
           G_SIGNAL_MATCH_FUNC | G_SIGNAL_MATCH_DATA,
           0, 0, NULL, /* id, detail, closure */
@@ -247,10 +252,8 @@ fs_element_added_notifier_remove (FsElementAddedNotifier *notifier,
 #endif
 
 static void
-_bin_added_from_keyfile (FsElementAddedNotifier *notifier, GstBin *bin,
-    GstElement *element, gpointer user_data)
+set_properties_from_keyfile (GKeyFile *keyfile, GstElement *element)
 {
-  GKeyFile *keyfile = user_data;
   const gchar *name = NULL;
   gchar *free_name = NULL;
   gchar **keys;
@@ -316,11 +319,31 @@ _bin_added_from_keyfile (FsElementAddedNotifier *notifier, GstBin *bin,
   g_free (free_name);
 }
 
+static void
+_bin_added_from_keyfile (FsElementAddedNotifier *notifier, GstBin *bin,
+    GstElement *element, gpointer user_data)
+{
+  GKeyFile *keyfile = user_data;
+
+  set_properties_from_keyfile (keyfile, element);
+}
+
+static void
+_element_foreach_keyfile (const GValue * item, gpointer user_data)
+{
+  GstElement *element = g_value_get_object (item);
+  GKeyFile *keyfile = user_data;
+
+  set_properties_from_keyfile (keyfile, element);
+
+  gst_object_unref (element);
+}
+
 
 /**
  * fs_element_added_notifier_set_properties_from_keyfile:
  * @notifier: a #FsElementAddedNotifier
- * @keyfile: a #GKeyFile
+ * @keyfile: (transfer full): a #GKeyFile
  *
  * Using a #GKeyFile where the groups are the element's type or name
  * and the key=value are the property and its value, this function
@@ -328,20 +351,35 @@ _bin_added_from_keyfile (FsElementAddedNotifier *notifier, GstBin *bin,
  * this function has been called.  It will take ownership of the
  * GKeyFile structure. It will first try the group as the element type, if that
  * does not match, it will check its name.
+ *
+ * Returns: The id of the signal connection, this can be used to disconnect
+ * this property setter using g_signal_handler_disconnect().
  */
-void
+gulong
 fs_element_added_notifier_set_properties_from_keyfile (
     FsElementAddedNotifier *notifier,
     GKeyFile *keyfile)
 {
-  g_return_if_fail (FS_IS_ELEMENT_ADDED_NOTIFIER (notifier));
-  g_return_if_fail (keyfile);
+  guint i;
 
-  g_signal_connect (notifier, "element-added",
-      G_CALLBACK (_bin_added_from_keyfile), keyfile);
+  g_return_val_if_fail (FS_IS_ELEMENT_ADDED_NOTIFIER (notifier), 0);
+  g_return_val_if_fail (keyfile, 0);
 
-  notifier->priv->keyfiles =
-    g_list_prepend (notifier->priv->keyfiles, keyfile);
+  for (i = 0; i < notifier->priv->bins->len; i++)
+  {
+    GstIterator *iter;
+
+    iter = gst_bin_iterate_recurse (
+        g_ptr_array_index (notifier->priv->bins, i));
+    while (gst_iterator_foreach (iter, _element_foreach_keyfile, keyfile) ==
+        GST_ITERATOR_RESYNC)
+      gst_iterator_resync (iter);
+    gst_iterator_free (iter);
+  }
+
+  return g_signal_connect_data (notifier, "element-added",
+      G_CALLBACK (_bin_added_from_keyfile), keyfile,
+      (GClosureNotify) g_key_file_free, 0);
 }
 
 
@@ -443,8 +481,11 @@ _element_added_callback (GstBin *parent, GstElement *element,
  * fs_element_added_notifier_set_properties_from_keyfile() .
  *
  * This is binding friendly (since GKeyFile doesn't have a boxed type).
+ *
+ * Returns: The id of the signal connection, this can be used to disconnect
+ * this property setter using g_signal_handler_disconnect().
  */
-void
+gulong
 fs_element_added_notifier_set_default_properties (
     FsElementAddedNotifier *notifier,
     GstElement *element)
@@ -452,7 +493,8 @@ fs_element_added_notifier_set_default_properties (
   GKeyFile *keyfile = fs_utils_get_default_element_properties (element);
 
   if (!keyfile)
-    return;
+    return 0;
 
-  fs_element_added_notifier_set_properties_from_keyfile(notifier, keyfile);
+  return fs_element_added_notifier_set_properties_from_keyfile (notifier,
+      keyfile);
 }

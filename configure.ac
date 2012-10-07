@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, cvs and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for cvs/prerelease
-AC_INIT(Farstream, 0.1.91,
+AC_INIT(Farstream, 0.2.1,
     https://bugs.freedesktop.org/enter_bug.cgi?product=Farstream,
     farstream)
 
@@ -56,7 +56,7 @@ dnl - interfaces added/removed/changed -> increment CURRENT, REVISION = 0
 dnl - interfaces added -> increment AGE
 dnl - interfaces removed -> AGE = 0
 dnl sets FS_LT_LDFLAGS
-AS_LIBTOOL(FS, 1, 0, 0)
+AS_LIBTOOL(FS, 2, 1, 0)
 
 dnl FIXME: this macro doesn't actually work;
 dnl the generated libtool script has no support for the listed tags.
@@ -66,8 +66,8 @@ dnl AS_LIBTOOL_TAGS
 AM_PROG_LIBTOOL
 
 dnl *** required versions of GStreamer stuff ***
-GST_REQ=0.11.1
-GSTPB_REQ=0.11.1
+GST_REQ=1.0
+GSTPB_REQ=1.0
 
 dnl *** autotools stuff ****
 
@@ -242,12 +242,12 @@ dnl *** checks for library functions ***
 dnl *** checks for dependency libraries ***
 
 dnl GLib is required
-AG_GST_GLIB_CHECK([2.30])
-AC_DEFINE(GLIB_VERSION_MIN_REQUIRED, GLIB_VERSION_2_30, [Ignore post 2.30 deprecations])
-AC_DEFINE(GLIB_VERSION_MAX_ALLOWED, GLIB_VERSION_2_30, [Prevent post 2.30 APIs])
+AG_GST_GLIB_CHECK([2.32])
+AC_DEFINE(GLIB_VERSION_MIN_REQUIRED, GLIB_VERSION_2_32, [Ignore post 2.32 deprecations])
+AC_DEFINE(GLIB_VERSION_MAX_ALLOWED, GLIB_VERSION_2_32, [Prevent post 2.32 APIs])
 
 
-PKG_CHECK_MODULES(GIO_UNIX, gio-unix-2.0 >= 2.16)
+PKG_CHECK_MODULES(GIO_UNIX, gio-unix-2.0 >= 2.32)
 AC_SUBST(GIO_UNIX_CFLAGS)
 AC_SUBST(GIO_UNIX_LIBS)
 
@@ -302,7 +302,7 @@ fi
 AC_SUBST(PROFILE_CFLAGS)
 
 dnl every flag in FS_OPTION_CFLAGS can be overridden at make time
-FS_OPTION_CFLAGS="-DGST_USE_UNSTABLE_API \$(WARNING_CFLAGS) \$(ERROR_CFLAGS) \$(DEBUG_CFLAGS) \$(PROFILE_CFLAGS) \$(GCOV_CFLAGS) \$(OPT_CFLAGS) -Wno-error=deprecated-declarations "
+FS_OPTION_CFLAGS="\$(WARNING_CFLAGS) \$(ERROR_CFLAGS) \$(DEBUG_CFLAGS) \$(PROFILE_CFLAGS) \$(GCOV_CFLAGS) \$(OPT_CFLAGS) -Wno-error=deprecated-declarations "
 AC_SUBST(FS_OPTION_CFLAGS)
 
 dnl our libraries need to be versioned correctly
@@ -311,7 +311,7 @@ AC_SUBST(FS_LT_LDFLAGS)
 dnl FS_INTERNAL_CFLAGS
 dnl prefer internal headers to already installed ones
 dnl also add builddir include for enumtypes and marshal
-FS_INTERNAL_CFLAGS="-I\$(top_srcdir) -I\$(top_builddir) -DGST_USE_UNSTABLE_API"
+FS_INTERNAL_CFLAGS="-I\$(top_srcdir) -I\$(top_builddir)"
 AC_SUBST(FS_INTERNAL_CFLAGS)
 
 dnl FIXME: do we want to rename to GST_ALL_* ?

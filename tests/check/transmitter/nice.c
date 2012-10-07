@@ -643,9 +643,7 @@ GST_START_TEST (test_nicetransmitter_invalid_arguments)
   GError *error = NULL;
   guint comps = 0;
   GParameter params[1];
-  GValueArray *va;
-  GstStructure *s;
-  GValue val = {0};
+  GPtrArray *relay_info;
   FsCandidate *cand;
   GList *list;
 
@@ -733,19 +731,17 @@ GST_START_TEST (test_nicetransmitter_invalid_arguments)
   g_value_unset (&params[0].value);
 
   params[0].name = "relay-info";
-  g_value_init (&params[0].value, G_TYPE_VALUE_ARRAY);
+  g_value_init (&params[0].value, G_TYPE_PTR_ARRAY);
 
   /* no IP */
-  va = g_value_array_new (1);
-  s = gst_structure_new ("aa",
-      "port", G_TYPE_UINT, 7654,
-      "username", G_TYPE_STRING, "blah",
-      "password", G_TYPE_STRING, "blah2",
-      NULL);
-  g_value_init (&val, GST_TYPE_STRUCTURE);
-  g_value_take_boxed (&val, s);
-  g_value_array_append (va, &val);
-  g_value_take_boxed (&params[0].value, va);
+  relay_info = g_ptr_array_new_full (1, (GDestroyNotify)gst_structure_free);
+  g_ptr_array_add (relay_info,
+      gst_structure_new ("aa",
+          "port", G_TYPE_UINT, 7654,
+          "username", G_TYPE_STRING, "blah",
+          "password", G_TYPE_STRING, "blah2",
+          NULL));
+  g_value_take_boxed (&params[0].value, relay_info);
   st = fs_transmitter_new_stream_transmitter (trans, p, 1, params, &error);
   ts_fail_unless (st == NULL);
   ts_fail_unless (error &&
@@ -754,15 +750,13 @@ GST_START_TEST (test_nicetransmitter_invalid_arguments)
   g_clear_error (&error);
 
   /* no port */
-  va = g_value_array_new (1);
-  s = gst_structure_new ("aa",
-      "ip", G_TYPE_STRING, "127.0.0.1",
-      "username", G_TYPE_STRING, "blah",
-      "password", G_TYPE_STRING, "blah2",
-      NULL);
-  g_value_take_boxed (&val, s);
-  g_value_array_append (va, &val);
-  g_value_take_boxed (&params[0].value, va);
+  relay_info = g_ptr_array_new_full (1, (GDestroyNotify) gst_structure_free);
+  g_ptr_array_add (relay_info,
+      gst_structure_new ("aa",
+          "ip", G_TYPE_STRING, "127.0.0.1",
+          "username", G_TYPE_STRING, "blah",
+          "pasasword", G_TYPE_STRING, "blah2",
+          NULL));
   st = fs_transmitter_new_stream_transmitter (trans, p, 1, params, &error);
   ts_fail_unless (st == NULL);
   ts_fail_unless (error &&
@@ -772,16 +766,15 @@ GST_START_TEST (test_nicetransmitter_invalid_arguments)
 
 
   /* invalid port */
-  va = g_value_array_new (1);
-  s = gst_structure_new ("aa",
-      "ip", G_TYPE_STRING, "127.0.0.1",
-      "port", G_TYPE_UINT, 65536,
-      "username", G_TYPE_STRING, "blah",
-      "password", G_TYPE_STRING, "blah2",
-      NULL);
-  g_value_take_boxed (&val, s);
-  g_value_array_append (va, &val);
-  g_value_take_boxed (&params[0].value, va);
+  relay_info = g_ptr_array_new_full (1, (GDestroyNotify) gst_structure_free);
+  g_ptr_array_add (relay_info,
+      gst_structure_new ("aa",
+          "ip", G_TYPE_STRING, "127.0.0.1",
+          "port", G_TYPE_UINT, 65536,
+          "username", G_TYPE_STRING, "blah",
+          "password", G_TYPE_STRING, "blah2",
+          NULL));
+  g_value_take_boxed (&params[0].value, relay_info);
   st = fs_transmitter_new_stream_transmitter (trans, p, 1, params, &error);
   ts_fail_unless (st == NULL);
   ts_fail_unless (error &&
@@ -790,15 +783,14 @@ GST_START_TEST (test_nicetransmitter_invalid_arguments)
   g_clear_error (&error);
 
   /* no username */
-  va = g_value_array_new (1);
-  s = gst_structure_new ("aa",
-      "ip", G_TYPE_STRING, "127.0.0.1",
-      "port", G_TYPE_UINT, 7654,
-      "password", G_TYPE_STRING, "blah2",
-      NULL);
-  g_value_take_boxed (&val, s);
-  g_value_array_append (va, &val);
-  g_value_take_boxed (&params[0].value, va);
+  relay_info = g_ptr_array_new_full (1, (GDestroyNotify) gst_structure_free);
+  g_ptr_array_add (relay_info,
+      gst_structure_new ("aa",
+          "ip", G_TYPE_STRING, "127.0.0.1",
+          "port", G_TYPE_UINT, 7654,
+          "password", G_TYPE_STRING, "blah2",
+          NULL));
+  g_value_take_boxed (&params[0].value, relay_info);
   st = fs_transmitter_new_stream_transmitter (trans, p, 1, params, &error);
   ts_fail_unless (st == NULL);
   ts_fail_unless (error &&
@@ -807,15 +799,14 @@ GST_START_TEST (test_nicetransmitter_invalid_arguments)
   g_clear_error (&error);
 
   /* no password */
-  va = g_value_array_new (1);
-  s = gst_structure_new ("aa",
+  relay_info = g_ptr_array_new_full (1, (GDestroyNotify) gst_structure_free);
+  g_ptr_array_add (relay_info,
+      gst_structure_new ("aa",
       "ip", G_TYPE_STRING, "127.0.0.1",
       "port", G_TYPE_UINT, 7654,
       "username", G_TYPE_STRING, "blah",
-      NULL);
-  g_value_take_boxed (&val, s);
-  g_value_array_append (va, &val);
-  g_value_take_boxed (&params[0].value, va);
+          NULL));
+  g_value_take_boxed (&params[0].value, relay_info);
   st = fs_transmitter_new_stream_transmitter (trans, p, 1, params, &error);
   ts_fail_unless (st == NULL);
   ts_fail_unless (error &&
@@ -824,20 +815,18 @@ GST_START_TEST (test_nicetransmitter_invalid_arguments)
   g_clear_error (&error);
 
   /* valid */
-  va = g_value_array_new (1);
-  s = gst_structure_new ("aa",
-      "ip", G_TYPE_STRING, "127.0.0.1",
-      "port", G_TYPE_UINT, 7654,
-      "username", G_TYPE_STRING, "blah",
-      "password", G_TYPE_STRING, "blah2",
-      NULL);
-  g_value_take_boxed (&val, s);
-  g_value_array_append (va, &val);
-  g_value_take_boxed (&params[0].value, va);
+  relay_info = g_ptr_array_new_full (1, (GDestroyNotify) gst_structure_free);
+  g_ptr_array_add (relay_info,
+      gst_structure_new ("aa",
+          "ip", G_TYPE_STRING, "127.0.0.1",
+          "port", G_TYPE_UINT, 7654,
+          "username", G_TYPE_STRING, "blah",
+          "password", G_TYPE_STRING, "blah2",
+          NULL));
+  g_value_take_boxed (&params[0].value, relay_info);
   st = fs_transmitter_new_stream_transmitter (trans, p, 1, params, &error);
   ts_fail_if (st == NULL);
   ts_fail_unless (error == NULL);
-  g_value_unset (&val);
   g_value_unset (&params[0].value);
 
   /* Valid candidate, port 0 */

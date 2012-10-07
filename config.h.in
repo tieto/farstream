@@ -21,10 +21,10 @@
 /* The GIO modules directory. */
 #undef GIO_MODULE_DIR
 
-/* Prevent post 2.30 APIs */
+/* Prevent post 2.32 APIs */
 #undef GLIB_VERSION_MAX_ALLOWED
 
-/* Ignore post 2.30 deprecations */
+/* Ignore post 2.32 deprecations */
 #undef GLIB_VERSION_MIN_REQUIRED
 
 /* GStreamer major.minor version */

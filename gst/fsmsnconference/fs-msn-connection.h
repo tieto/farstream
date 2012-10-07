@@ -77,7 +77,7 @@ struct _FsMsnConnection
   GstClockTime poll_timeout; /* protected by lock */
   GstPoll *poll;
   GPtrArray *pollfds; /* protected by lock */
-  GStaticRecMutex mutex;
+  GRecMutex mutex;
 };
 
 GType fs_msn_connection_get_type (void);

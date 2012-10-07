@@ -91,7 +91,7 @@ struct _FsMulticastTransmitterPrivate
   GstElement **udpsrc_funnels;
   GstElement **udpsink_tees;
 
-  GMutex *mutex;
+  GMutex mutex;
   GList **udpsocks;
 
   gint type_of_service;
@@ -103,6 +103,11 @@ struct _FsMulticastTransmitterPrivate
 #define FS_MULTICAST_TRANSMITTER_GET_PRIVATE(o)  \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), FS_TYPE_MULTICAST_TRANSMITTER, \
     FsMulticastTransmitterPrivate))
+
+#define FS_MULTICAST_TRANSMITTER_LOCK(self) \
+  g_mutex_lock (&(self)->priv->mutex);
+#define FS_MULTICAST_TRANSMITTER_UNLOCK(self) \
+  g_mutex_unlock (&(self)->priv->mutex);
 
 static void fs_multicast_transmitter_class_init (
     FsMulticastTransmitterClass *klass);
@@ -219,7 +224,7 @@ fs_multicast_transmitter_init (FsMulticastTransmitter *self)
   self->priv->disposed = FALSE;
 
   self->components = 2;
-  self->priv->mutex = g_mutex_new ();
+  g_mutex_init (&self->priv->mutex);
   self->priv->do_timestamp = TRUE;
 }
 
@@ -417,7 +422,7 @@ fs_multicast_transmitter_finalize (GObject *object)
     self->priv->udpsocks = NULL;
   }
 
-  g_mutex_free (self->priv->mutex);
+  g_mutex_clear (&self->priv->mutex);
 
   parent_class->finalize (object);
 }
@@ -441,9 +446,9 @@ fs_multicast_transmitter_get_property (GObject *object,
       g_value_set_uint (value, self->components);
       break;
     case PROP_TYPE_OF_SERVICE:
-      g_mutex_lock (self->priv->mutex);
+      FS_MULTICAST_TRANSMITTER_LOCK (self);
       g_value_set_uint (value, self->priv->type_of_service);
-      g_mutex_unlock (self->priv->mutex);
+      FS_MULTICAST_TRANSMITTER_UNLOCK (self);
       break;
     case PROP_DO_TIMESTAMP:
       g_value_set_boolean (value, self->priv->do_timestamp);
@@ -913,11 +918,11 @@ fs_multicast_transmitter_get_udpsock (FsMulticastTransmitter *trans,
     return NULL;
   }
 
-  g_mutex_lock (trans->priv->mutex);
+  FS_MULTICAST_TRANSMITTER_LOCK (trans);
   udpsock = fs_multicast_transmitter_get_udpsock_locked (trans, component_id,
       local_ip, multicast_ip, port, ttl, sending, &local_error);
   tos = trans->priv->type_of_service;
-  g_mutex_unlock (trans->priv->mutex);
+  FS_MULTICAST_TRANSMITTER_UNLOCK (trans);
 
   if (local_error)
   {
@@ -979,14 +984,14 @@ fs_multicast_transmitter_get_udpsock (FsMulticastTransmitter *trans,
       "sync", FALSE,
       NULL);
 
-  g_mutex_lock (trans->priv->mutex);
+  FS_MULTICAST_TRANSMITTER_LOCK (trans);
   /* Check if someone else has added the same thing at the same time */
   tmpudpsock = fs_multicast_transmitter_get_udpsock_locked (trans, component_id,
       local_ip, multicast_ip, port, ttl, sending, &local_error);
 
   if (tmpudpsock || local_error)
   {
-    g_mutex_unlock (trans->priv->mutex);
+    FS_MULTICAST_TRANSMITTER_UNLOCK (trans);
     fs_multicast_transmitter_put_udpsock (trans, udpsock, ttl);
     if (local_error)
     {
@@ -1000,7 +1005,7 @@ fs_multicast_transmitter_get_udpsock (FsMulticastTransmitter *trans,
 
   trans->priv->udpsocks[component_id] =
     g_list_prepend (trans->priv->udpsocks[component_id], udpsock);
-  g_mutex_unlock (trans->priv->mutex);
+  FS_MULTICAST_TRANSMITTER_UNLOCK (trans);
 
   if (udpsock->udpsink_recvonly_filter)
   {
@@ -1028,7 +1033,7 @@ fs_multicast_transmitter_put_udpsock (FsMulticastTransmitter *trans,
 {
   guint i;
 
-  g_mutex_lock (trans->priv->mutex);
+  FS_MULTICAST_TRANSMITTER_LOCK (trans);
   for (i = udpsock->ttls->len - 1;; i--)
   {
     if (udpsock->ttls->data[i] == ttl)
@@ -1060,20 +1065,20 @@ fs_multicast_transmitter_put_udpsock (FsMulticastTransmitter *trans,
         {
           GST_WARNING ("Error setting the multicast TTL to %u: %s", max,
               g_strerror (errno));
-          g_mutex_unlock (trans->priv->mutex);
+          FS_MULTICAST_TRANSMITTER_UNLOCK (trans);
           return;
         }
         udpsock->current_ttl = max;
       }
     }
-    g_mutex_unlock (trans->priv->mutex);
+    FS_MULTICAST_TRANSMITTER_UNLOCK (trans);
     return;
   }
 
   trans->priv->udpsocks[udpsock->component_id] =
     g_list_remove (trans->priv->udpsocks[udpsock->component_id], udpsock);
 
-  g_mutex_unlock (trans->priv->mutex);
+  FS_MULTICAST_TRANSMITTER_UNLOCK (trans);
 
   if (udpsock->udpsrc)
   {
@@ -1182,9 +1187,9 @@ void
 fs_multicast_transmitter_udpsock_ref (FsMulticastTransmitter *trans,
     UdpSock *udpsock, guint8 ttl)
 {
-  g_mutex_lock (trans->priv->mutex);
+  FS_MULTICAST_TRANSMITTER_LOCK (trans);
   g_byte_array_append (udpsock->ttls, &ttl, 1);
-  g_mutex_unlock (trans->priv->mutex);
+  FS_MULTICAST_TRANSMITTER_UNLOCK (trans);
 }
 
 
@@ -1194,7 +1199,7 @@ fs_multicast_transmitter_set_type_of_service (FsMulticastTransmitter *self,
 {
   gint i;
 
-  g_mutex_lock (self->priv->mutex);
+  FS_MULTICAST_TRANSMITTER_LOCK (self);
   if (self->priv->type_of_service == tos)
     goto out;
 
@@ -1221,5 +1226,5 @@ fs_multicast_transmitter_set_type_of_service (FsMulticastTransmitter *self,
   }
 
  out:
-  g_mutex_unlock (self->priv->mutex);
+  FS_MULTICAST_TRANSMITTER_UNLOCK (self);
 }

@@ -64,7 +64,7 @@ typedef struct _FsTransmitterPrivate FsTransmitterPrivate;
 
 struct _FsTransmitterClass
 {
-  GstObjectClass parent_class;
+  GObjectClass parent_class;
 
   /*virtual functions */
   FsStreamTransmitter *(*new_stream_transmitter) (FsTransmitter *transmitter,
@@ -85,7 +85,7 @@ struct _FsTransmitterClass
  */
 struct _FsTransmitter
 {
-  GstObject parent;
+  GObject parent;
 
   /*< private >*/
   FsTransmitterPrivate *priv;

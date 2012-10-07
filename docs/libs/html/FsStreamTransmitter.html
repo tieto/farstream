@@ -89,9 +89,7 @@ struct              <a class="link" href="FsStreamTransmitter.html#FsStreamTrans
 <a name="FsStreamTransmitter.object-hierarchy"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
   GObject
-   +----GInitiallyUnowned
-         +----<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstObject.html">GstObject</a>
-               +----FsStreamTransmitter
+   +----FsStreamTransmitter
 </pre>
 </div>
 <div class="refsect1">
@@ -135,7 +133,7 @@ All members are private, access them using methods and properties
 <div class="refsect2">
 <a name="FsStreamTransmitterClass"></a><h3>struct FsStreamTransmitterClass</h3>
 <pre class="programlisting">struct FsStreamTransmitterClass {
-  GstObjectClass parent_class;
+  GObjectClass parent_class;
 
   /*virtual functions */
   gboolean (*add_remote_candidates) (FsStreamTransmitter *streamtransmitter,
@@ -156,7 +154,7 @@ You must override the add_remote_candidate in a subclass
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstObject.html#GstObjectClass"><span class="type">GstObjectClass</span></a> <em class="structfield"><code><a name="FsStreamTransmitterClass.parent-class"></a>parent_class</code></em>;</span></p></td>
+<td><p><span class="term"><span class="type">GObjectClass</span> <em class="structfield"><code><a name="FsStreamTransmitterClass.parent-class"></a>parent_class</code></em>;</span></p></td>
 <td>Our parent</td>
 </tr>
 <tr>

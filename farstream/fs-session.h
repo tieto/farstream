@@ -116,7 +116,7 @@ typedef enum _FsDTMFMethod
 
 struct _FsSessionClass
 {
-  GstObjectClass parent_class;
+  GObjectClass parent_class;
 
   /*virtual functions */
   FsStream *(* new_stream) (FsSession *session,
@@ -153,7 +153,7 @@ struct _FsSessionClass
  */
 struct _FsSession
 {
-  GstObject parent;
+  GObject parent;
   /*< private >*/
 
   FsSessionPrivate *priv;
