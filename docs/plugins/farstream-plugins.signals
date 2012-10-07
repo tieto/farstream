@@ -1,1 +1,52 @@
+<SIGNAL>
+<NAME>FsDynamicBin::append</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>la</FLAGS>
+FsDynamicBin *fsdynamicbin
+GstElement *arg1
+gpointer  arg2
+gpointer  arg3
+</SIGNAL>
+
+<SIGNAL>
+<NAME>FsDynamicBin::insert-after</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>la</FLAGS>
+FsDynamicBin *fsdynamicbin
+GstElement *arg1
+GstElement *arg2
+gpointer  arg3
+gpointer  arg4
+</SIGNAL>
+
+<SIGNAL>
+<NAME>FsDynamicBin::insert-before</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>la</FLAGS>
+FsDynamicBin *fsdynamicbin
+GstElement *arg1
+GstElement *arg2
+gpointer  arg3
+gpointer  arg4
+</SIGNAL>
+
+<SIGNAL>
+<NAME>FsDynamicBin::prepend</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>la</FLAGS>
+FsDynamicBin *fsdynamicbin
+GstElement *arg1
+gpointer  arg2
+gpointer  arg3
+</SIGNAL>
+
+<SIGNAL>
+<NAME>FsDynamicBin::remove</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>la</FLAGS>
+FsDynamicBin *fsdynamicbin
+GstElement *arg1
+gpointer  arg2
+gpointer  arg3
+</SIGNAL>
 

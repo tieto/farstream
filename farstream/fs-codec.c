@@ -35,7 +35,7 @@
 
 #include "fs-private.h"
 
-#define GST_CAT_DEFAULT fs_conference_debug
+#define GST_CAT_DEFAULT _fs_conference_debug
 
 /**
  * SECTION:fs-codec
@@ -660,8 +660,8 @@ fs_codec_are_equal (const FsCodec *codec1, const FsCodec *codec2)
 
 /**
  * fs_codec_list_are_equal:
- * @list1: (element-type FsCodec): a #GList of #FsCodec
- * @list2: (element-type FsCodec): a #GList of #FsCodec
+ * @list1: (element-type FsCodec) (allow-none): a #GList of #FsCodec
+ * @list2: (element-type FsCodec) (allow-none): a #GList of #FsCodec
  *
  * Verifies if two glist of fscodecs are identical
  *
@@ -739,7 +739,8 @@ fs_codec_remove_optional_parameter (FsCodec *codec,
  * fs_codec_get_optional_parameter:
  * @codec: a #FsCodec
  * @name: The name of the parameter to search for
- * @value: The value of the parameter to search for or %NULL for any value
+ * @value: (allow-none): The value of the parameter to search for or %NULL for
+ * any value
  *
  * Finds the #FsCodecParameter in the #FsCodec that has the requested name
  * and, if not %NULL, the requested value
@@ -802,10 +803,12 @@ fs_codec_add_feedback_parameter (FsCodec *codec, const gchar *type,
 /**
  * fs_codec_get_feedback_parameter:
  * @codec: a #FsCodec
- * @type: The subtype of the parameter to search for or %NULL for any type
- * @subtype: The subtype of the parameter to search for or %NULL for any subtype
- * @extra_params: The extra_params of the parameter to search for or %NULL for
- *   any extra_params
+ * @type: (allow-none): The subtype of the parameter to search for or %NULL for
+ * any type
+ * @subtype: (allow-none): The subtype of the parameter to search for or %NULL
+ * for any subtype
+ * @extra_params: (allow-none): The extra_params of the parameter to search for
+ * or %NULL for any extra_params
  *
  * Finds the #FsFeedbackParameter in the #FsCodec that has the requested
  * subtype, type and extra_params. One of which must be non-NULL;

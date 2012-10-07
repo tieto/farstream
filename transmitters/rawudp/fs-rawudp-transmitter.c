@@ -89,7 +89,7 @@ struct _FsRawUdpTransmitterPrivate
   GstElement **udpsrc_funnels;
   GstElement **udpsink_tees;
 
-  GMutex *mutex;
+  GMutex mutex;
   /* Protected by the mutex */
   GList **udpports;
 
@@ -221,7 +221,7 @@ fs_rawudp_transmitter_init (FsRawUdpTransmitter *self)
   self->priv->disposed = FALSE;
 
   self->components = 2;
-  self->priv->mutex = g_mutex_new ();
+  g_mutex_init (&self->priv->mutex);
   self->priv->do_timestamp = TRUE;
 }
 
@@ -432,7 +432,7 @@ fs_rawudp_transmitter_finalize (GObject *object)
     self->priv->udpports = NULL;
   }
 
-  g_mutex_free (self->priv->mutex);
+  g_mutex_clear (&self->priv->mutex);
 
   parent_class->finalize (object);
 }
@@ -457,9 +457,9 @@ fs_rawudp_transmitter_get_property (GObject *object,
       g_value_set_uint (value, self->components);
       break;
     case PROP_TYPE_OF_SERVICE:
-      g_mutex_lock (self->priv->mutex);
+      g_mutex_lock (&self->priv->mutex);
       g_value_set_uint (value, self->priv->type_of_service);
-      g_mutex_unlock (self->priv->mutex);
+      g_mutex_unlock (&self->priv->mutex);
       break;
     case PROP_DO_TIMESTAMP:
       g_value_set_boolean (value, self->priv->do_timestamp);
@@ -558,7 +558,7 @@ struct _UdpPort {
   guint component_id;
 
   /* Everything below is protected by the mutex */
-  GMutex *mutex;
+  GMutex mutex;
   GArray *known_addresses;
 };
 
@@ -856,11 +856,11 @@ fs_rawudp_transmitter_get_udpport (FsRawUdpTransmitter *trans,
     return NULL;
   }
 
-  g_mutex_lock (trans->priv->mutex);
+  g_mutex_lock (&trans->priv->mutex);
   udpport = fs_rawudp_transmitter_get_udpport_locked (trans, component_id,
       requested_ip, requested_port);
   tos = trans->priv->type_of_service;
-  g_mutex_unlock (trans->priv->mutex);
+  g_mutex_unlock (&trans->priv->mutex);
 
   if (udpport)
     return udpport;
@@ -875,7 +875,7 @@ fs_rawudp_transmitter_get_udpport (FsRawUdpTransmitter *trans,
   udpport->requested_port = requested_port;
   udpport->fd = -1;
   udpport->component_id = component_id;
-  udpport->mutex = g_mutex_new ();
+  g_mutex_init (&udpport->mutex);
   udpport->known_addresses = g_array_new (TRUE, FALSE,
       sizeof (struct KnownAddress));
 
@@ -922,7 +922,7 @@ fs_rawudp_transmitter_get_udpport (FsRawUdpTransmitter *trans,
       goto error;
   }
 
-  g_mutex_lock (trans->priv->mutex);
+  g_mutex_lock (&trans->priv->mutex);
 
   /* Check if someone else added the same port at the same time */
   tmpudpport = fs_rawudp_transmitter_get_udpport_locked (trans, component_id,
@@ -930,14 +930,14 @@ fs_rawudp_transmitter_get_udpport (FsRawUdpTransmitter *trans,
 
   if (tmpudpport)
   {
-    g_mutex_unlock (trans->priv->mutex);
+    g_mutex_unlock (&trans->priv->mutex);
     fs_rawudp_transmitter_put_udpport (trans, udpport);
     return tmpudpport;
   }
 
   trans->priv->udpports[component_id] =
     g_list_prepend (trans->priv->udpports[component_id], udpport);
-  g_mutex_unlock (trans->priv->mutex);
+  g_mutex_unlock (&trans->priv->mutex);
 
   return udpport;
 
@@ -953,19 +953,19 @@ fs_rawudp_transmitter_put_udpport (FsRawUdpTransmitter *trans,
 {
   GST_LOG ("Put port refcount %d->%d", udpport->refcount, udpport->refcount-1);
 
-  g_mutex_lock (trans->priv->mutex);
+  g_mutex_lock (&trans->priv->mutex);
 
   if (udpport->refcount > 1)
   {
     udpport->refcount--;
-    g_mutex_unlock (trans->priv->mutex);
+    g_mutex_unlock (&trans->priv->mutex);
     return;
   }
 
   trans->priv->udpports[udpport->component_id] =
     g_list_remove (trans->priv->udpports[udpport->component_id], udpport);
 
-  g_mutex_unlock (trans->priv->mutex);
+  g_mutex_unlock (&trans->priv->mutex);
 
   if (udpport->udpsrc)
   {
@@ -1030,8 +1030,6 @@ fs_rawudp_transmitter_put_udpport (FsRawUdpTransmitter *trans,
   if (udpport->fd >= 0)
     close (udpport->fd);
 
-  if (udpport->mutex)
-    g_mutex_free (udpport->mutex);
   if (udpport->known_addresses)
   {
     guint i;
@@ -1042,6 +1040,7 @@ fs_rawudp_transmitter_put_udpport (FsRawUdpTransmitter *trans,
   }
 
   g_free (udpport->requested_ip);
+  g_mutex_clear (&udpport->mutex);
   g_slice_free (UdpPort, udpport);
 }
 
@@ -1173,7 +1172,7 @@ fs_rawudp_transmitter_udpport_add_known_address (UdpPort *udpport,
   guint counter = 0;
   struct KnownAddress *prev_ka = NULL;
 
-  g_mutex_lock (udpport->mutex);
+  g_mutex_lock (&udpport->mutex);
 
   for (i = 0;
        g_array_index (udpport->known_addresses,
@@ -1207,7 +1206,7 @@ fs_rawudp_transmitter_udpport_add_known_address (UdpPort *udpport,
 
   g_array_append_val (udpport->known_addresses, newka);
 
-  g_mutex_unlock (udpport->mutex);
+  g_mutex_unlock (&udpport->mutex);
 
   return unique;
 }
@@ -1236,7 +1235,7 @@ fs_rawudp_transmitter_udpport_remove_known_address (UdpPort *udpport,
   guint counter = 0;
   struct KnownAddress *prev_ka = NULL;
 
-  g_mutex_lock (udpport->mutex);
+  g_mutex_lock (&udpport->mutex);
 
   for (i = 0;
        g_array_index (udpport->known_addresses, struct KnownAddress, i).callback;
@@ -1273,7 +1272,7 @@ fs_rawudp_transmitter_udpport_remove_known_address (UdpPort *udpport,
 
  out:
 
-  g_mutex_unlock (udpport->mutex);
+  g_mutex_unlock (&udpport->mutex);
 }
 
 void
@@ -1301,7 +1300,7 @@ fs_rawudp_transmitter_set_type_of_service (FsRawUdpTransmitter *self,
 {
   gint i;
 
-  g_mutex_lock (self->priv->mutex);
+  g_mutex_lock (&self->priv->mutex);
   if (self->priv->type_of_service == tos)
     goto out;
 
@@ -1327,7 +1326,7 @@ fs_rawudp_transmitter_set_type_of_service (FsRawUdpTransmitter *self,
   }
 
  out:
-  g_mutex_unlock (self->priv->mutex);
+  g_mutex_unlock (&self->priv->mutex);
 }
 
 

@@ -87,7 +87,7 @@ void fs_element_added_notifier_add (FsElementAddedNotifier *notifier,
 gboolean fs_element_added_notifier_remove (FsElementAddedNotifier *notifier,
     GstBin *bin);
 
-void fs_element_added_notifier_set_properties_from_keyfile (
+gulong fs_element_added_notifier_set_properties_from_keyfile (
     FsElementAddedNotifier *notifier,
     GKeyFile *keyfile);
 
@@ -96,7 +96,7 @@ gboolean fs_element_added_notifier_set_properties_from_file (
     const gchar *filename,
     GError **error);
 
-void fs_element_added_notifier_set_default_properties (
+gulong fs_element_added_notifier_set_default_properties (
     FsElementAddedNotifier *notifier,
     GstElement *element);
 

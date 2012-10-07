@@ -21,49 +21,35 @@
 <td><a accesskey="n" href="farstream-plugins-FsRawParticipant.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
-<a href="#FsRawConference.synopsis" class="shortcut">Top</a>
+<a href="#farstream-plugins-FsRawConference.synopsis" class="shortcut">Top</a>
                    | 
-                  <a href="#FsRawConference.description" class="shortcut">Description</a>
+                  <a href="#farstream-plugins-FsRawConference.description" class="shortcut">Description</a>
                    | 
-                  <a href="#FsRawConference.object-hierarchy" class="shortcut">Object Hierarchy</a>
-                   | 
-                  <a href="#FsRawConference.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
+                  <a href="#farstream-plugins-FsRawConference.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
 </td></tr>
 </table>
 <div class="refentry">
-<a name="FsRawConference"></a><div class="titlepage"></div>
+<a name="farstream-plugins-FsRawConference"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
-<h2><span class="refentrytitle"><a name="FsRawConference.top_of_page"></a>FsRawConference</span></h2>
+<h2><span class="refentrytitle"><a name="farstream-plugins-FsRawConference.top_of_page"></a>FsRawConference</span></h2>
 <p>FsRawConference — Farstream Raw Conference Gstreamer Elements Base class</p>
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsynopsisdiv">
-<a name="FsRawConference.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">struct              <a class="link" href="FsRawConference.html#FsRawConference-struct" title="struct FsRawConference">FsRawConference</a>;
+<a name="farstream-plugins-FsRawConference.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">struct              <a class="link" href="farstream-plugins-FsRawConference.html#FsRawConference" title="struct FsRawConference">FsRawConference</a>;
 </pre>
 </div>
 <div class="refsect1">
-<a name="FsRawConference.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="synopsis">
-  GObject
-   +----GInitiallyUnowned
-         +----<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstObject.html">GstObject</a>
-               +----<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html">GstElement</a>
-                     +----<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html">GstBin</a>
-                           +----<a href="../farstream-libs-0.11/FsConference.html">FsConference</a>
-                                 +----FsRawConference
-</pre>
-</div>
-<div class="refsect1">
-<a name="FsRawConference.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
+<a name="farstream-plugins-FsRawConference.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
 <p>
 FsRawConference implements
  <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstChildProxy.html">GstChildProxy</a>.</p>
 </div>
 <div class="refsect1">
-<a name="FsRawConference.description"></a><h2>Description</h2>
+<a name="farstream-plugins-FsRawConference.description"></a><h2>Description</h2>
 <p>
 This element implements a raw content stream over which any Gstreamer
 content may travel.
@@ -71,7 +57,7 @@ content may travel.
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="id397624"></a><h3>Element Information</h3>
+<a name="id390609"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -94,7 +80,7 @@ content may travel.
 </div>
 <hr>
 <div class="refsect2">
-<a name="id394501"></a><h3>Element Pads</h3>
+<a name="id408231"></a><h3>Element Pads</h3>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -143,10 +129,13 @@ content may travel.
 </p>
 </div>
 <div class="refsect1">
-<a name="FsRawConference.details"></a><h2>Details</h2>
+<a name="farstream-plugins-FsRawConference.details"></a><h2>Details</h2>
 <div class="refsect2">
-<a name="FsRawConference-struct"></a><h3>struct FsRawConference</h3>
-<pre class="programlisting">struct FsRawConference;</pre>
+<a name="FsRawConference"></a><h3>struct FsRawConference</h3>
+<pre class="programlisting">struct FsRawConference {
+  FsConference parent;
+};
+</pre>
 <p>
 </p>
 </div>

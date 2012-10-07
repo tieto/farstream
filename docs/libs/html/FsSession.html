@@ -97,9 +97,7 @@ enum                <a class="link" href="FsSession.html#FsDTMFMethod" title="en
 <a name="FsSession.object-hierarchy"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
   GObject
-   +----GInitiallyUnowned
-         +----<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstObject.html">GstObject</a>
-               +----FsSession
+   +----FsSession
 </pre>
 </div>
 <div class="refsect1">
@@ -138,9 +136,9 @@ This will communicate asynchronous events to the user through <a href="http://gs
 of type <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GST-MESSAGE-ELEMENT:CAPS"><span class="type">GST_MESSAGE_ELEMENT</span></a> sent over the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBus.html"><span class="type">GstBus</span></a>.
 </p>
 <div class="refsect2">
-<a name="id366067"></a><h3>The "<code class="literal">farstream-send-codec-changed</code>"
+<a name="id558236"></a><h3>The "<code class="literal">farstream-send-codec-changed</code>"
   message</h3>
-<table id="id366078">
+<table id="id558247">
 <tr>
   <td><code class="code">"session"</code></td>
   <td><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></td>
@@ -165,9 +163,9 @@ This message is sent on the bus when the value of the
 </div>
 <hr>
 <div class="refsect2">
-<a name="id366178"></a><h3>The "<code class="literal">farstream-codecs-changed</code>"
+<a name="id558348"></a><h3>The "<code class="literal">farstream-codecs-changed</code>"
  message</h3>
-<table id="id366189"><tr>
+<table id="id558358"><tr>
   <td><code class="code">"session"</code></td>
   <td><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></td>
   <td>The session that emits the message</td>
@@ -182,9 +180,9 @@ transmitted reliably, one should fetch <a class="link" href="FsSession.html#FsSe
 </div>
 <hr>
 <div class="refsect2">
-<a name="id366248"></a><h3>The "<code class="literal">farstream-telephony-event-started</code>"
+<a name="id558417"></a><h3>The "<code class="literal">farstream-telephony-event-started</code>"
  message</h3>
-<table id="id366258">
+<table id="id558428">
 <tr>
   <td><code class="code">"session"</code></td>
   <td><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></td>
@@ -214,9 +212,9 @@ telephony event has started.
 </div>
 <hr>
 <div class="refsect2">
-<a name="id366354"></a><h3>The "<code class="literal">farstream-telephony-event-stopped</code>"
+<a name="id558524"></a><h3>The "<code class="literal">farstream-telephony-event-stopped</code>"
  message</h3>
-<table id="id366365">
+<table id="id558535">
 <tr>
   <td><code class="code">"session"</code></td>
   <td><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></td>
@@ -250,7 +248,7 @@ All members are private, access them using methods and properties
 <div class="refsect2">
 <a name="FsSessionClass"></a><h3>struct FsSessionClass</h3>
 <pre class="programlisting">struct FsSessionClass {
-  GstObjectClass parent_class;
+  GObjectClass parent_class;
 
   /*virtual functions */
   FsStream *(* new_stream) (FsSession *session,
@@ -284,7 +282,7 @@ You must override at least new_stream in a subclass.
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstObject.html#GstObjectClass"><span class="type">GstObjectClass</span></a> <em class="structfield"><code><a name="FsSessionClass.parent-class"></a>parent_class</code></em>;</span></p></td>
+<td><p><span class="term"><span class="type">GObjectClass</span> <em class="structfield"><code><a name="FsSessionClass.parent-class"></a>parent_class</code></em>;</span></p></td>
 <td>Our parent</td>
 </tr>
 <tr>
@@ -442,7 +440,7 @@ be returned.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>codec_preferences</code></em> :</span></p></td>
 <td>a <span class="type">GList</span> of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> with the
-desired configuration. <span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec]</span>
+desired configuration. <span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec][<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span>
 </td>
 </tr>
 <tr>
@@ -666,12 +664,12 @@ Other codec updates, caused by user action, don't.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>old_codecs</code></em> :</span></p></td>
-<td>Codecs previously retrieved from the <a class="link" href="FsSession.html#FsSession--codecs" title='The "codecs" property'><span class="type">"codecs"</span></a> property. <span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>]</span>
+<td>Codecs previously retrieved from the <a class="link" href="FsSession.html#FsSession--codecs" title='The "codecs" property'><span class="type">"codecs"</span></a> property. <span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>new_codecs</code></em> :</span></p></td>
-<td>Codecs recently retrieved from the <a class="link" href="FsSession.html#FsSession--codecs" title='The "codecs" property'><span class="type">"codecs"</span></a> property. <span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>]</span>
+<td>Codecs recently retrieved from the <a class="link" href="FsSession.html#FsSession--codecs" title='The "codecs" property'><span class="type">"codecs"</span></a> property. <span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span>
 </td>
 </tr>
 <tr>

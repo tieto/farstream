@@ -30,7 +30,7 @@
     </sub>
   </chapters>
   <functions>
-    <keyword type="" name="The &quot;farstream-error&quot; message" link="FsConference.html#id318855"/>
+    <keyword type="" name="The &quot;farstream-error&quot; message" link="FsConference.html#id500549"/>
     <keyword type="struct" name="struct FsConference" link="FsConference.html#FsConference-struct"/>
     <keyword type="function" name="fs_conference_new_session ()" link="FsConference.html#fs-conference-new-session"/>
     <keyword type="function" name="fs_conference_new_participant ()" link="FsConference.html#fs-conference-new-participant"/>
@@ -42,10 +42,10 @@
     <keyword type="struct" name="struct FsParticipantClass" link="FsParticipant.html#FsParticipantClass"/>
     <keyword type="macro" name="FS_PARTICIPANT_DATA_LOCK()" link="FsParticipant.html#FS-PARTICIPANT-DATA-LOCK:CAPS"/>
     <keyword type="macro" name="FS_PARTICIPANT_DATA_UNLOCK()" link="FsParticipant.html#FS-PARTICIPANT-DATA-UNLOCK:CAPS"/>
-    <keyword type="" name="The &quot;farstream-send-codec-changed&quot;&#10;  message" link="FsSession.html#id366067"/>
-    <keyword type="" name="The &quot;farstream-codecs-changed&quot;&#10; message" link="FsSession.html#id366178"/>
-    <keyword type="" name="The &quot;farstream-telephony-event-started&quot;&#10; message" link="FsSession.html#id366248"/>
-    <keyword type="" name="The &quot;farstream-telephony-event-stopped&quot;&#10; message" link="FsSession.html#id366354"/>
+    <keyword type="" name="The &quot;farstream-send-codec-changed&quot;&#10;  message" link="FsSession.html#id558236"/>
+    <keyword type="" name="The &quot;farstream-codecs-changed&quot;&#10; message" link="FsSession.html#id558348"/>
+    <keyword type="" name="The &quot;farstream-telephony-event-started&quot;&#10; message" link="FsSession.html#id558417"/>
+    <keyword type="" name="The &quot;farstream-telephony-event-stopped&quot;&#10; message" link="FsSession.html#id558524"/>
     <keyword type="struct" name="FsSession" link="FsSession.html#FsSession-struct"/>
     <keyword type="struct" name="struct FsSessionClass" link="FsSession.html#FsSessionClass"/>
     <keyword type="enum" name="enum FsDTMFEvent" link="FsSession.html#FsDTMFEvent"/>
@@ -74,11 +74,11 @@
     <keyword type="property" name="The &quot;sink-pad&quot; property" link="FsSession.html#FsSession--sink-pad"/>
     <keyword type="property" name="The &quot;tos&quot; property" link="FsSession.html#FsSession--tos"/>
     <keyword type="signal" name="The &quot;error&quot; signal" link="FsSession.html#FsSession-error"/>
-    <keyword type="" name="The &quot;farstream-new-local-candidate&quot; message" link="FsStream.html#id398284"/>
-    <keyword type="" name="The &quot;farstream-local-candidates-prepared&quot; message" link="FsStream.html#id398320"/>
-    <keyword type="" name="The &quot;farstream-new-active-candidate-pair&quot; message" link="FsStream.html#id398350"/>
-    <keyword type="" name="The &quot;farstream-recv-codecs-changed&quot; message" link="FsStream.html#id398394"/>
-    <keyword type="" name="The &quot;farstream-component-state-changed&quot; message" link="FsStream.html#id398458"/>
+    <keyword type="" name="The &quot;farstream-new-local-candidate&quot; message" link="FsStream.html#id579951"/>
+    <keyword type="" name="The &quot;farstream-local-candidates-prepared&quot; message" link="FsStream.html#id579987"/>
+    <keyword type="" name="The &quot;farstream-new-active-candidate-pair&quot; message" link="FsStream.html#id580016"/>
+    <keyword type="" name="The &quot;farstream-recv-codecs-changed&quot; message" link="FsStream.html#id580061"/>
+    <keyword type="" name="The &quot;farstream-component-state-changed&quot; message" link="FsStream.html#id580124"/>
     <keyword type="struct" name="FsStream" link="FsStream.html#FsStream-struct"/>
     <keyword type="struct" name="struct FsStreamClass" link="FsStream.html#FsStreamClass"/>
     <keyword type="enum" name="enum FsStreamDirection" link="FsStream.html#FsStreamDirection"/>
@@ -105,6 +105,7 @@
     <keyword type="enum" name="enum FsNetworkProtocol" link="farstream-libs-FsCandidate.html#FsNetworkProtocol"/>
     <keyword type="enum" name="enum FsComponentType" link="farstream-libs-FsCandidate.html#FsComponentType"/>
     <keyword type="function" name="fs_candidate_new ()" link="farstream-libs-FsCandidate.html#fs-candidate-new"/>
+    <keyword type="function" name="fs_candidate_new_full ()" link="farstream-libs-FsCandidate.html#fs-candidate-new-full"/>
     <keyword type="function" name="fs_candidate_destroy ()" link="farstream-libs-FsCandidate.html#fs-candidate-destroy"/>
     <keyword type="function" name="fs_candidate_copy ()" link="farstream-libs-FsCandidate.html#fs-candidate-copy"/>
     <keyword type="function" name="fs_candidate_list_destroy ()" link="farstream-libs-FsCandidate.html#fs-candidate-list-destroy"/>

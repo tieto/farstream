@@ -1,3 +1,188 @@
+commit 6c488e499417dbfa8957d7717c3cbe6a5214ac09
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Oct 4 16:17:33 2012 -0400
+
+    Version 0.2.1
+
+commit be619f6564d552dba6cacca91b7515d650d5de83
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Oct 4 15:30:55 2012 -0400
+
+    rtpsession: Set the discovery valve to playing before linking it
+
+commit 3f1f966a1db423b7068d14f2487aa10b0154f881
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Oct 3 12:28:11 2012 -0400
+
+    Update the LGPL headers to the new FSF address
+
+commit e08986bf2e923896800681011a705c005ffbca75
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Apr 27 17:18:39 2012 -0400
+
+    elementaddednotifier: Add signal id when setting default properties too
+
+commit 3901964fa0696305a548191cf568eca05a4aec15
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Apr 27 16:39:07 2012 -0400
+
+    elementaddednotifier: Return the signal ID when adding from a keyfile
+
+commit 44b935ca4b889816a004e413f95bdaa0b4c7156f
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Apr 27 16:37:25 2012 -0400
+
+    elementaddednotifier: Free keyfile using GClosure notifiers
+
+commit 36508987dc0c03c12fc4b8dcf26d5f86f6b9ebab
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Apr 27 16:35:52 2012 -0400
+
+    elementaddednotifier: Chain up finalize
+
+commit 3160dfb4abe8420a4790d6549212471678a81184
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Apr 27 16:05:13 2012 -0400
+
+    elementaddednotifier: Set keyfile properties on already-added bins too
+    
+    Iterate through already added bins to add element properties
+
+commit d406132e22bf7fc28c1024455232631cdace1492
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Mar 9 15:00:03 2012 -0500
+
+    elemendaddednotifier: Annotate the fact it takes ownership of the keyfile
+
+commit 402b496c7a483c906d0598c59d5b2fd462968191
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Apr 27 16:04:33 2012 -0400
+
+    utils: Don't crash if trying to get default properties of a factory-less element
+
+commit 4a3606a6ec570ecf0500dfefbc6bfffa4cbeb120
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Apr 17 18:16:48 2012 -0400
+
+    Make fs_conference_debug category symbol private
+    
+    Don't export it in the dll
+
+commit 1b77821dd10a08b2a23325b700384ac8b6bdcebb
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed May 2 17:36:28 2012 -0400
+
+    stream: Keep ref to src pads for iterator to not break
+
+commit 895b34c4dab9840c478816e8713c29d12c321a7e
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Oct 1 17:46:43 2012 -0400
+
+    tests: Re-enable shm test
+
+commit 444b0d1b9aef13ef0b5017858b76610eea429b30
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Oct 1 17:23:21 2012 -0400
+
+    Remove GST_USE_UNSTABLE_API as GStreamer 1.0 has been released
+
+commit 87556cc9902e7ab257fe533e89681a03ed5cd566
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Sep 25 16:47:30 2012 -0400
+
+    Version 0.2.0.1
+
+commit 501ef7d6ad4ff3cb724ab4ea43e466796eb66c9a
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Sep 25 15:10:43 2012 -0400
+
+    Version 0.2.0
+
+commit dfcbd4cbcf111d6cfe6c174c4fdb5a9235062cf9
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Sep 25 15:08:26 2012 -0400
+
+    Port to GLib 2.32
+
+commit 224a49a5c784efbe6bc4b9e8c7632332efcf7456
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Sep 24 13:26:54 2012 -0400
+
+    rtp: Register error downgrade element before using it
+
+commit 4650d969bd0e55d13b273d8f1a1fd68aa3011c35
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Sat Sep 22 15:13:10 2012 -0400
+
+    rtp: Prefer Opus and VP8
+    
+    But we still place H.264 above VP8
+
+commit f1a047a526360480bc2c2e3835b236271adeea30
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Sep 21 16:57:18 2012 -0400
+
+    Example: Port to GStreamer 1.0 and misc improvements
+    
+    Also add volume controls
+    Also port to GTK+ 3
+    Also port to GObject introspection
+    Also use default properties and preferences
+
+commit d074dd9f633dc9244d354a90ae2eabf5ee5ce295
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Sep 21 22:00:16 2012 -0400
+
+    rtp: Ignore decoder error messages
+    
+    Add a GstBin that transforms the error messages into warnings
+
+commit 177fa0ecfff9c5e946f65006ca289a7b0690a217
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Sep 20 18:54:08 2012 -0400
+
+    rtpsession: Announce send codec parameters whenever they change
+    
+    Re-announce send codec parameters if they change in any way
+
+commit f68a5d7d7615bab8911d818bad14e82f5a9fb87a
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Sep 20 18:53:15 2012 -0400
+
+    rtpsession: Set codec pointer for debug messages
+
+commit 97f705a3ba001fd8d948d6493c057bdb1c8ee845
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Sep 20 18:52:27 2012 -0400
+
+    Add some allow-none annotations
+
+commit 740ec399f90944d56648367bba914b922f97b4cc
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Sep 18 17:36:07 2012 -0400
+
+    fsrtpsession: Add a valve before the param discovery pipeline
+
+commit 48e94cef47a605fdb1e5034a8d3eeec2f31a5b2d
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Sep 18 17:35:38 2012 -0400
+
+    Re-base onto GObject
+
+commit 23376fd825bf8aaa9181e9217edbb82189ee07d9
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Sep 14 16:37:32 2012 -0400
+
+    candidate: Add fs_candidate_new_full()
+    
+    Without it, introspection can not set the other field
+
+commit 143aff0c4420f517f9ac2258f1fefbeddd5fbf37
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Sep 13 21:53:28 2012 -0400
+
+    Version 0.1.91.1
+
 commit 7436327f318fe87640f01ec34e11c47d611420ce
 Author: Olivier Crête <olivier.crete@collabora.com>
 Date:   Thu Sep 13 21:48:31 2012 -0400

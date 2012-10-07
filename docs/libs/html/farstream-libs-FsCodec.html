@@ -491,12 +491,12 @@ Verifies if two glist of fscodecs are identical
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list1</code></em> :</span></p></td>
-<td>a <span class="type">GList</span> of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a>. <span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec]</span>
+<td>a <span class="type">GList</span> of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a>. <span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec][<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list2</code></em> :</span></p></td>
-<td>a <span class="type">GList</span> of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a>. <span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec]</span>
+<td>a <span class="type">GList</span> of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a>. <span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec][<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span>
 </td>
 </tr>
 <tr>
@@ -605,7 +605,9 @@ and, if not <code class="literal">NULL</code>, the requested value
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
-<td>The value of the parameter to search for or <code class="literal">NULL</code> for any value</td>
+<td>The value of the parameter to search for or <code class="literal">NULL</code> for
+any value. <span class="annotation">[<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -678,16 +680,21 @@ subtype, type and extra_params. One of which must be non-NULL;
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
-<td>The subtype of the parameter to search for or <code class="literal">NULL</code> for any type</td>
+<td>The subtype of the parameter to search for or <code class="literal">NULL</code> for
+any type. <span class="annotation">[<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>subtype</code></em> :</span></p></td>
-<td>The subtype of the parameter to search for or <code class="literal">NULL</code> for any subtype</td>
+<td>The subtype of the parameter to search for or <code class="literal">NULL</code>
+for any subtype. <span class="annotation">[<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>extra_params</code></em> :</span></p></td>
-<td>The extra_params of the parameter to search for or <code class="literal">NULL</code> for
-any extra_params</td>
+<td>The extra_params of the parameter to search for
+or <code class="literal">NULL</code> for any extra_params. <span class="annotation">[<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>

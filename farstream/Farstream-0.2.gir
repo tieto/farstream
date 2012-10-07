@@ -12,7 +12,7 @@ and/or use gtk-doc annotations.  -->
   <include name="Gst" version="1.0"/>
   <namespace name="Farstream"
              version="0.2"
-             shared-library="libfarstream-0.2.so.1"
+             shared-library="libfarstream-0.2.so.2"
              c:identifier-prefixes="fs_,Fs"
              c:symbol-prefixes="fs_,fs">
     <constant name="CODEC_FORMAT"
@@ -70,7 +70,7 @@ and/or use gtk-doc annotations.  -->
       </field>
       <constructor name="new" c:identifier="fs_candidate_new">
         <doc xml:whitespace="preserve">Allocates a new #FsCandidate, the rest of the fields can be optionally
-filled manually.</doc>
+filled manually. See also fs_candidate_new_full()</doc>
         <return-value transfer-ownership="full">
           <doc xml:whitespace="preserve">a newly-allocated #FsCandidate</doc>
           <type name="Candidate" c:type="FsCandidate*"/>
@@ -78,7 +78,7 @@ filled manually.</doc>
         <parameters>
           <parameter name="foundation" transfer-ownership="none">
             <doc xml:whitespace="preserve">The foundation of the candidate</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
           <parameter name="component_id" transfer-ownership="none">
             <doc xml:whitespace="preserve">The component this candidate is for</doc>
@@ -94,10 +94,68 @@ filled manually.</doc>
           </parameter>
           <parameter name="ip" transfer-ownership="none">
             <doc xml:whitespace="preserve">The IP address of this component (can be NULL for local candidate to mean any address)</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
           <parameter name="port" transfer-ownership="none">
             <doc xml:whitespace="preserve">the UDP/TCP port</doc>
+            <type name="guint" c:type="guint"/>
+          </parameter>
+        </parameters>
+      </constructor>
+      <constructor name="new_full" c:identifier="fs_candidate_new_full">
+        <doc xml:whitespace="preserve">Allocates a new #FsCandidate, filling all the fields. See also
+fs_candidate_new()</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:whitespace="preserve">a newly-allocated #FsCandidate</doc>
+          <type name="Candidate" c:type="FsCandidate*"/>
+        </return-value>
+        <parameters>
+          <parameter name="foundation" transfer-ownership="none">
+            <doc xml:whitespace="preserve">The foundation of the candidate</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="component_id" transfer-ownership="none">
+            <doc xml:whitespace="preserve">The component this candidate is for</doc>
+            <type name="guint" c:type="guint"/>
+          </parameter>
+          <parameter name="ip" transfer-ownership="none">
+            <doc xml:whitespace="preserve">The IP address of this component (can be NULL for local candidate to mean any address)</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="port" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the UDP/TCP port</doc>
+            <type name="guint16" c:type="guint16"/>
+          </parameter>
+          <parameter name="base_ip" transfer-ownership="none">
+            <doc xml:whitespace="preserve">IP of base in dotted format as defined in ICE-19.</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="base_port" transfer-ownership="none">
+            <doc xml:whitespace="preserve">Port of base as defined in ICE-19.</doc>
+            <type name="guint16" c:type="guint16"/>
+          </parameter>
+          <parameter name="proto" transfer-ownership="none">
+            <doc xml:whitespace="preserve">The protocol this component is for</doc>
+            <type name="NetworkProtocol" c:type="FsNetworkProtocol"/>
+          </parameter>
+          <parameter name="priority" transfer-ownership="none">
+            <doc xml:whitespace="preserve">Value between 0 and (2^31 - 1) representing the priority</doc>
+            <type name="guint32" c:type="guint32"/>
+          </parameter>
+          <parameter name="type" transfer-ownership="none">
+            <doc xml:whitespace="preserve">The type of candidate</doc>
+            <type name="CandidateType" c:type="FsCandidateType"/>
+          </parameter>
+          <parameter name="username" transfer-ownership="none">
+            <doc xml:whitespace="preserve">Username to use to connect to client if necessary, NULL otherwise</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="password" transfer-ownership="none">
+            <doc xml:whitespace="preserve">Username to use to connect to client if necessary, NULL otherwise</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="ttl" transfer-ownership="none">
+            <doc xml:whitespace="preserve">The TTL used when sending Multicast packet (0 = auto)</doc>
             <type name="guint" c:type="guint"/>
           </parameter>
         </parameters>
@@ -133,7 +191,7 @@ filled manually.</doc>
         <parameters>
           <parameter name="candidate_list" transfer-ownership="none">
             <doc xml:whitespace="preserve">A GList of #FsCandidate</doc>
-            <type name="GLib.List" c:type="GList*">
+            <type name="GLib.List" c:type="const GList*">
               <type name="Codec"/>
             </type>
           </parameter>
@@ -229,7 +287,7 @@ filled manually.</doc>
           </parameter>
           <parameter name="encoding_name" transfer-ownership="none">
             <doc xml:whitespace="preserve">Name of media type this encodes</doc>
-            <type name="utf8" c:type="char*"/>
+            <type name="utf8" c:type="const char*"/>
           </parameter>
           <parameter name="media_type" transfer-ownership="none">
             <doc xml:whitespace="preserve">#FsMediaType for type of codec</doc>
@@ -250,15 +308,15 @@ filled manually.</doc>
         <parameters>
           <parameter name="type" transfer-ownership="none">
             <doc xml:whitespace="preserve">The type of the feedback parameter</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
           <parameter name="subtype" transfer-ownership="none">
             <doc xml:whitespace="preserve">The subtype of the feedback parameter</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
           <parameter name="extra_params" transfer-ownership="none">
             <doc xml:whitespace="preserve">The extra_params of the feeback parameter</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
         </parameters>
       </method>
@@ -271,11 +329,11 @@ filled manually.</doc>
         <parameters>
           <parameter name="name" transfer-ownership="none">
             <doc xml:whitespace="preserve">The name of the optional parameter</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
           <parameter name="value" transfer-ownership="none">
             <doc xml:whitespace="preserve">The extra_params of the optional parameter</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
         </parameters>
       </method>
@@ -290,7 +348,7 @@ are ignored.</doc>
         <parameters>
           <parameter name="codec2" transfer-ownership="none">
             <doc xml:whitespace="preserve">Second codec</doc>
-            <type name="Codec" c:type="FsCodec*"/>
+            <type name="Codec" c:type="const FsCodec*"/>
           </parameter>
         </parameters>
       </method>
@@ -318,17 +376,19 @@ subtype, type and extra_params. One of which must be non-NULL;</doc>
           <type name="FeedbackParameter" c:type="FsFeedbackParameter*"/>
         </return-value>
         <parameters>
-          <parameter name="type" transfer-ownership="none">
+          <parameter name="type" transfer-ownership="none" allow-none="1">
             <doc xml:whitespace="preserve">The subtype of the parameter to search for or %NULL for any type</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
-          <parameter name="subtype" transfer-ownership="none">
+          <parameter name="subtype" transfer-ownership="none" allow-none="1">
             <doc xml:whitespace="preserve">The subtype of the parameter to search for or %NULL for any subtype</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
-          <parameter name="extra_params" transfer-ownership="none">
+          <parameter name="extra_params"
+                     transfer-ownership="none"
+                     allow-none="1">
             <doc xml:whitespace="preserve">The extra_params of the parameter to search for or %NULL for any extra_params</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
         </parameters>
       </method>
@@ -343,11 +403,11 @@ and, if not %NULL, the requested value</doc>
         <parameters>
           <parameter name="name" transfer-ownership="none">
             <doc xml:whitespace="preserve">The name of the parameter to search for</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
-          <parameter name="value" transfer-ownership="none">
+          <parameter name="value" transfer-ownership="none" allow-none="1">
             <doc xml:whitespace="preserve">The value of the parameter to search for or %NULL for any value</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
         </parameters>
       </method>
@@ -402,13 +462,13 @@ NULL param will do nothing.</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
-          <parameter name="list1" transfer-ownership="none">
+          <parameter name="list1" transfer-ownership="none" allow-none="1">
             <doc xml:whitespace="preserve">a #GList of #FsCodec</doc>
             <type name="GLib.List" c:type="GList*">
               <type name="Codec"/>
             </type>
           </parameter>
-          <parameter name="list2" transfer-ownership="none">
+          <parameter name="list2" transfer-ownership="none" allow-none="1">
             <doc xml:whitespace="preserve">a #GList of #FsCodec</doc>
             <type name="GLib.List" c:type="GList*">
               <type name="Codec"/>
@@ -427,7 +487,7 @@ NULL param will do nothing.</doc>
         <parameters>
           <parameter name="codec_list" transfer-ownership="none">
             <doc xml:whitespace="preserve">a GList of #FsCodec to copy</doc>
-            <type name="GLib.List" c:type="GList*">
+            <type name="GLib.List" c:type="const GList*">
               <type name="Codec"/>
             </type>
           </parameter>
@@ -483,7 +543,7 @@ feedback:tfrc=
         <parameters>
           <parameter name="filename" transfer-ownership="none">
             <doc xml:whitespace="preserve">Name of the #GKeyFile to read the codecs parameters from</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
         </parameters>
       </function>
@@ -744,7 +804,8 @@ fs_element_added_notifier_set_properties_from_keyfile() .
 
 This is binding friendly (since GKeyFile doesn't have a boxed type).</doc>
         <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
+          <doc xml:whitespace="preserve">The id of the signal connection, this can be used to disconnect this property setter using g_signal_handler_disconnect().</doc>
+          <type name="gulong" c:type="gulong"/>
         </return-value>
         <parameters>
           <parameter name="element" transfer-ownership="none">
@@ -765,7 +826,7 @@ the name of the file to load instead of the #GKeyFile directly.</doc>
         <parameters>
           <parameter name="filename" transfer-ownership="none">
             <doc xml:whitespace="preserve">The name of the keyfile to use</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
         </parameters>
       </method>
@@ -778,10 +839,11 @@ this function has been called.  It will take ownership of the
 GKeyFile structure. It will first try the group as the element type, if that
 does not match, it will check its name.</doc>
         <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
+          <doc xml:whitespace="preserve">The id of the signal connection, this can be used to disconnect this property setter using g_signal_handler_disconnect().</doc>
+          <type name="gulong" c:type="gulong"/>
         </return-value>
         <parameters>
-          <parameter name="keyfile" transfer-ownership="none">
+          <parameter name="keyfile" transfer-ownership="full">
             <doc xml:whitespace="preserve">a #GKeyFile</doc>
             <type name="GLib.KeyFile" c:type="GKeyFile*"/>
           </parameter>
@@ -935,7 +997,7 @@ signal, from the Gst Bus or for error in the FS_ERROR domain in GErrors</doc>
         <doc xml:whitespace="preserve">Gives a user-printable string representing the media type</doc>
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">a static string representing the media type</doc>
-          <type name="utf8" c:type="gchar*"/>
+          <type name="utf8" c:type="const gchar*"/>
         </return-value>
         <parameters>
           <parameter name="media_type" transfer-ownership="none">
@@ -962,17 +1024,17 @@ signal, from the Gst Bus or for error in the FS_ERROR domain in GErrors</doc>
     <class name="Participant"
            c:symbol-prefix="participant"
            c:type="FsParticipant"
-           parent="Gst.Object"
+           parent="GObject.Object"
            abstract="1"
            glib:type-name="FsParticipant"
            glib:get-type="fs_participant_get_type"
            glib:type-struct="ParticipantClass">
       <doc xml:whitespace="preserve">All members are private (access them using the properties)</doc>
       <field name="parent">
-        <type name="Gst.Object" c:type="GstObject"/>
+        <type name="GObject.Object" c:type="GObject"/>
       </field>
       <field name="mutex" readable="0" private="1">
-        <type name="GLib.Mutex" c:type="GMutex*"/>
+        <type name="GLib.Mutex" c:type="GMutex"/>
       </field>
       <field name="priv" readable="0" private="1">
         <type name="ParticipantPrivate" c:type="FsParticipantPrivate*"/>
@@ -989,7 +1051,7 @@ signal, from the Gst Bus or for error in the FS_ERROR domain in GErrors</doc>
       <doc xml:whitespace="preserve">The FsParticipant class has no virtual methods to implement,
 but you may want to override the properties or attach more date to it</doc>
       <field name="parent_class">
-        <type name="Gst.ObjectClass" c:type="GstObjectClass"/>
+        <type name="GObject.ObjectClass" c:type="GObjectClass"/>
       </field>
       <field name="priv" readable="0" private="1">
         <type name="ParticipantPrivate" c:type="FsParticipantPrivate*"/>
@@ -1025,11 +1087,11 @@ the requested type</doc>
         <parameters>
           <parameter name="name" transfer-ownership="none">
             <doc xml:whitespace="preserve">The name of the plugin to load</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
           <parameter name="type_suffix" transfer-ownership="none">
             <doc xml:whitespace="preserve">The type of plugin to load (normally "transmitter")</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
           <parameter name="error" transfer-ownership="none">
             <doc xml:whitespace="preserve">location of a #GError, or NULL if no error occured</doc>
@@ -1037,7 +1099,7 @@ the requested type</doc>
           </parameter>
           <parameter name="first_property_name" transfer-ownership="none">
             <doc xml:whitespace="preserve">The name of the first property to be set on the object</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
           <parameter transfer-ownership="none">
             <varargs>
@@ -1057,11 +1119,11 @@ the requested type</doc>
         <parameters>
           <parameter name="name" transfer-ownership="none">
             <doc xml:whitespace="preserve">The name of the plugin to load</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
           <parameter name="type_suffix" transfer-ownership="none">
             <doc xml:whitespace="preserve">The type of plugin to load (normally "transmitter")</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
           <parameter name="error" transfer-ownership="none">
             <doc xml:whitespace="preserve">location of a #GError, or NULL if no error occured</doc>
@@ -1069,7 +1131,7 @@ the requested type</doc>
           </parameter>
           <parameter name="first_property_name" transfer-ownership="none">
             <doc xml:whitespace="preserve">The name of the first property to be set on the object</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
           <parameter name="var_args" transfer-ownership="none">
             <doc xml:whitespace="preserve">The rest of the arguments</doc>
@@ -1088,7 +1150,7 @@ the requested type</doc>
         <parameters>
           <parameter name="type_suffix" transfer-ownership="none">
             <doc xml:whitespace="preserve">Get list of plugins with this type suffix</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
         </parameters>
       </function>
@@ -1150,7 +1212,7 @@ the requested type</doc>
           </parameter>
           <parameter name="uri" transfer-ownership="none">
             <doc xml:whitespace="preserve">The URI that defines this extension</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
         </parameters>
       </constructor>
@@ -1261,7 +1323,7 @@ direction=receive
         <parameters>
           <parameter name="filename" transfer-ownership="none">
             <doc xml:whitespace="preserve">Name of the #GKeyFile to read the RTP Header Extensions from</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
           <parameter name="media_type" transfer-ownership="none">
             <doc xml:whitespace="preserve">The media type for which to get header extensions</doc>
@@ -1273,7 +1335,7 @@ direction=receive
     <class name="Session"
            c:symbol-prefix="session"
            c:type="FsSession"
-           parent="Gst.Object"
+           parent="GObject.Object"
            abstract="1"
            glib:type-name="FsSession"
            glib:get-type="fs_session_get_type"
@@ -1290,13 +1352,17 @@ Other codec updates, caused by user action, don't.</doc>
           </type>
         </return-value>
         <parameters>
-          <parameter name="old_codecs" transfer-ownership="none">
+          <parameter name="old_codecs"
+                     transfer-ownership="none"
+                     allow-none="1">
             <doc xml:whitespace="preserve">Codecs previously retrieved from the #FsSession:codecs property</doc>
             <type name="GLib.List" c:type="GList*">
               <type name="Codec"/>
             </type>
           </parameter>
-          <parameter name="new_codecs" transfer-ownership="none">
+          <parameter name="new_codecs"
+                     transfer-ownership="none"
+                     allow-none="1">
             <doc xml:whitespace="preserve">Codecs recently retrieved from the #FsSession:codecs property</doc>
             <type name="GLib.List" c:type="GList*">
               <type name="Codec"/>
@@ -1315,7 +1381,7 @@ to validate/convert the parameters passed to fs_session_new_stream().</doc>
         <parameters>
           <parameter name="transmitter" transfer-ownership="none">
             <doc xml:whitespace="preserve">The name of the transmitter</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
         </parameters>
       </virtual-method>
@@ -1367,7 +1433,9 @@ be returned.</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
-          <parameter name="codec_preferences" transfer-ownership="none">
+          <parameter name="codec_preferences"
+                     transfer-ownership="none"
+                     allow-none="1">
             <doc xml:whitespace="preserve">a #GList of #FsCodec with the desired configuration</doc>
             <type name="GLib.List" c:type="GList*">
               <type name="Codec"/>
@@ -1444,13 +1512,17 @@ Other codec updates, caused by user action, don't.</doc>
           </type>
         </return-value>
         <parameters>
-          <parameter name="old_codecs" transfer-ownership="none">
+          <parameter name="old_codecs"
+                     transfer-ownership="none"
+                     allow-none="1">
             <doc xml:whitespace="preserve">Codecs previously retrieved from the #FsSession:codecs property</doc>
             <type name="GLib.List" c:type="GList*">
               <type name="Codec"/>
             </type>
           </parameter>
-          <parameter name="new_codecs" transfer-ownership="none">
+          <parameter name="new_codecs"
+                     transfer-ownership="none"
+                     allow-none="1">
             <doc xml:whitespace="preserve">Codecs recently retrieved from the #FsSession:codecs property</doc>
             <type name="GLib.List" c:type="GList*">
               <type name="Codec"/>
@@ -1483,7 +1555,7 @@ called by subclasses.</doc>
           </parameter>
           <parameter name="error_msg" transfer-ownership="none">
             <doc xml:whitespace="preserve">Error message</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
         </parameters>
       </method>
@@ -1498,7 +1570,7 @@ to validate/convert the parameters passed to fs_session_new_stream().</doc>
         <parameters>
           <parameter name="transmitter" transfer-ownership="none">
             <doc xml:whitespace="preserve">The name of the transmitter</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
         </parameters>
       </method>
@@ -1657,7 +1729,9 @@ be returned.</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
-          <parameter name="codec_preferences" transfer-ownership="none">
+          <parameter name="codec_preferences"
+                     transfer-ownership="none"
+                     allow-none="1">
             <doc xml:whitespace="preserve">a #GList of #FsCodec with the desired configuration</doc>
             <type name="GLib.List" c:type="GList*">
               <type name="Codec"/>
@@ -1823,7 +1897,7 @@ session. User must unref this GstPad when done with it.</doc>
         <type name="guint"/>
       </property>
       <field name="parent">
-        <type name="Gst.Object" c:type="GstObject"/>
+        <type name="GObject.Object" c:type="GObject"/>
       </field>
       <field name="priv" readable="0" private="1">
         <type name="SessionPrivate" c:type="FsSessionPrivate*"/>
@@ -1860,7 +1934,7 @@ thread. Applications should listen to the GstBus for errors.</doc>
             glib:is-gtype-struct-for="Session">
       <doc xml:whitespace="preserve">You must override at least new_stream in a subclass.</doc>
       <field name="parent_class">
-        <type name="Gst.ObjectClass" c:type="GstObjectClass"/>
+        <type name="GObject.ObjectClass" c:type="GObjectClass"/>
       </field>
       <field name="new_stream">
         <callback name="new_stream" throws="1">
@@ -1944,7 +2018,9 @@ thread. Applications should listen to the GstBus for errors.</doc>
             <parameter name="session" transfer-ownership="none">
               <type name="Session" c:type="FsSession*"/>
             </parameter>
-            <parameter name="codec_preferences" transfer-ownership="none">
+            <parameter name="codec_preferences"
+                       transfer-ownership="none"
+                       allow-none="1">
               <doc xml:whitespace="preserve">a #GList of #FsCodec with the desired configuration</doc>
               <type name="GLib.List" c:type="GList*">
                 <type name="Codec"/>
@@ -1980,7 +2056,7 @@ thread. Applications should listen to the GstBus for errors.</doc>
             </parameter>
             <parameter name="transmitter" transfer-ownership="none">
               <doc xml:whitespace="preserve">The name of the transmitter</doc>
-              <type name="utf8" c:type="gchar*"/>
+              <type name="utf8" c:type="const gchar*"/>
             </parameter>
           </parameters>
         </callback>
@@ -1997,13 +2073,17 @@ thread. Applications should listen to the GstBus for errors.</doc>
             <parameter name="session" transfer-ownership="none">
               <type name="Session" c:type="FsSession*"/>
             </parameter>
-            <parameter name="old_codecs" transfer-ownership="none">
+            <parameter name="old_codecs"
+                       transfer-ownership="none"
+                       allow-none="1">
               <doc xml:whitespace="preserve">Codecs previously retrieved from the #FsSession:codecs property</doc>
               <type name="GLib.List" c:type="GList*">
                 <type name="Codec"/>
               </type>
             </parameter>
-            <parameter name="new_codecs" transfer-ownership="none">
+            <parameter name="new_codecs"
+                       transfer-ownership="none"
+                       allow-none="1">
               <doc xml:whitespace="preserve">Codecs recently retrieved from the #FsSession:codecs property</doc>
               <type name="GLib.List" c:type="GList*">
                 <type name="Codec"/>
@@ -2023,7 +2103,7 @@ thread. Applications should listen to the GstBus for errors.</doc>
     <class name="Stream"
            c:symbol-prefix="stream"
            c:type="FsStream"
-           parent="Gst.Object"
+           parent="GObject.Object"
            abstract="1"
            glib:type-name="FsStream"
            glib:get-type="fs_stream_get_type"
@@ -2128,7 +2208,7 @@ selected stream transmitter.</doc>
         <parameters>
           <parameter name="transmitter" transfer-ownership="none">
             <doc xml:whitespace="preserve">Name of the type of transmitter to use for this stream</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
           <parameter name="stream_transmitter_parameters"
                      transfer-ownership="none"
@@ -2213,7 +2293,7 @@ called by subclasses.</doc>
           </parameter>
           <parameter name="error_msg" transfer-ownership="none">
             <doc xml:whitespace="preserve">Error message to be displayed to user</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
         </parameters>
       </method>
@@ -2419,7 +2499,7 @@ selected stream transmitter.</doc>
         <parameters>
           <parameter name="transmitter" transfer-ownership="none">
             <doc xml:whitespace="preserve">Name of the type of transmitter to use for this stream</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
           <parameter name="stream_transmitter_parameters"
                      transfer-ownership="none"
@@ -2493,7 +2573,7 @@ is read-only construction.</doc>
         <type name="Session"/>
       </property>
       <field name="parent">
-        <type name="Gst.Object" c:type="GstObject"/>
+        <type name="GObject.Object" c:type="GObject"/>
       </field>
       <field name="priv" readable="0" private="1">
         <type name="StreamPrivate" c:type="FsStreamPrivate*"/>
@@ -2549,7 +2629,7 @@ thread!</doc>
       <doc xml:whitespace="preserve">You must override add_remote_candidate in a subclass.
 If you have to negotiate codecs, then you must override set_remote_codecs too</doc>
       <field name="parent_class">
-        <type name="Gst.ObjectClass" c:type="GstObjectClass"/>
+        <type name="GObject.ObjectClass" c:type="GObjectClass"/>
       </field>
       <field name="add_remote_candidates">
         <callback name="add_remote_candidates" throws="1">
@@ -2636,7 +2716,7 @@ If you have to negotiate codecs, then you must override set_remote_codecs too</d
             </parameter>
             <parameter name="transmitter" transfer-ownership="none">
               <doc xml:whitespace="preserve">Name of the type of transmitter to use for this stream</doc>
-              <type name="utf8" c:type="gchar*"/>
+              <type name="utf8" c:type="const gchar*"/>
             </parameter>
             <parameter name="stream_transmitter_parameters"
                        transfer-ownership="none"
@@ -2719,7 +2799,7 @@ An stream using an ICE transmitter would use all of these.</doc>
     <class name="StreamTransmitter"
            c:symbol-prefix="stream_transmitter"
            c:type="FsStreamTransmitter"
-           parent="Gst.Object"
+           parent="GObject.Object"
            abstract="1"
            glib:type-name="FsStreamTransmitter"
            glib:get-type="fs_stream_transmitter_get_type"
@@ -2810,7 +2890,7 @@ only be called by subclasses.</doc>
           </parameter>
           <parameter name="error_msg" transfer-ownership="none">
             <doc xml:whitespace="preserve">Error message (for the programmer)</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
         </parameters>
       </method>
@@ -2870,7 +2950,7 @@ based on the source without looking at the content if possible.</doc>
         <type name="gboolean"/>
       </property>
       <field name="parent">
-        <type name="Gst.Object" c:type="GstObject"/>
+        <type name="GObject.Object" c:type="GObject"/>
       </field>
       <field name="priv" readable="0" private="1">
         <type name="StreamTransmitterPrivate"
@@ -2976,7 +3056,7 @@ changes</doc>
             glib:is-gtype-struct-for="StreamTransmitter">
       <doc xml:whitespace="preserve">You must override the add_remote_candidate in a subclass</doc>
       <field name="parent_class">
-        <type name="Gst.ObjectClass" c:type="GstObjectClass"/>
+        <type name="GObject.ObjectClass" c:type="GObjectClass"/>
       </field>
       <field name="add_remote_candidates">
         <callback name="add_remote_candidates" throws="1">
@@ -3054,7 +3134,7 @@ changes</doc>
     <class name="Transmitter"
            c:symbol-prefix="transmitter"
            c:type="FsTransmitter"
-           parent="Gst.Object"
+           parent="GObject.Object"
            abstract="1"
            glib:type-name="FsTransmitter"
            glib:get-type="fs_transmitter_get_type"
@@ -3063,14 +3143,14 @@ changes</doc>
       <constructor name="new" c:identifier="fs_transmitter_new" throws="1">
         <doc xml:whitespace="preserve">This function creates a new transmitter of the requested type.
 It will load the appropriate plugin as required.</doc>
-        <return-value transfer-ownership="none">
+        <return-value transfer-ownership="full">
           <doc xml:whitespace="preserve">a newly-created #FsTransmitter of the requested type (or NULL if there is an error)</doc>
           <type name="Transmitter" c:type="FsTransmitter*"/>
         </return-value>
         <parameters>
           <parameter name="type" transfer-ownership="none">
             <doc xml:whitespace="preserve">The type of transmitter to create</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
           <parameter name="components" transfer-ownership="none">
             <doc xml:whitespace="preserve">The number of components to create</doc>
@@ -3139,7 +3219,7 @@ only be called by subclasses.</doc>
           </parameter>
           <parameter name="error_msg" transfer-ownership="none">
             <doc xml:whitespace="preserve">Error message to be displayed to user</doc>
-            <type name="utf8" c:type="gchar*"/>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
         </parameters>
       </method>
@@ -3227,7 +3307,7 @@ These pads MUST be static pads.</doc>
         <type name="guint"/>
       </property>
       <field name="parent">
-        <type name="Gst.Object" c:type="GstObject"/>
+        <type name="GObject.Object" c:type="GObject"/>
       </field>
       <field name="priv" readable="0" private="1">
         <type name="TransmitterPrivate" c:type="FsTransmitterPrivate*"/>
@@ -3280,7 +3360,7 @@ sending state of the stream. It should default to %TRUE.</doc>
             glib:is-gtype-struct-for="Transmitter">
       <doc xml:whitespace="preserve">You must override both methods in a subclass.</doc>
       <field name="parent_class">
-        <type name="Gst.ObjectClass" c:type="GstObjectClass"/>
+        <type name="GObject.ObjectClass" c:type="GObjectClass"/>
       </field>
       <field name="new_stream_transmitter">
         <callback name="new_stream_transmitter" throws="1">
@@ -3354,7 +3434,7 @@ sending state of the stream. It should default to %TRUE.</doc>
       <parameters>
         <parameter name="candidate_list" transfer-ownership="none">
           <doc xml:whitespace="preserve">A GList of #FsCandidate</doc>
-          <type name="GLib.List" c:type="GList*">
+          <type name="GLib.List" c:type="const GList*">
             <type name="Codec"/>
           </type>
         </parameter>
@@ -3386,13 +3466,13 @@ sending state of the stream. It should default to %TRUE.</doc>
         <type name="gboolean" c:type="gboolean"/>
       </return-value>
       <parameters>
-        <parameter name="list1" transfer-ownership="none">
+        <parameter name="list1" transfer-ownership="none" allow-none="1">
           <doc xml:whitespace="preserve">a #GList of #FsCodec</doc>
           <type name="GLib.List" c:type="GList*">
             <type name="Codec"/>
           </type>
         </parameter>
-        <parameter name="list2" transfer-ownership="none">
+        <parameter name="list2" transfer-ownership="none" allow-none="1">
           <doc xml:whitespace="preserve">a #GList of #FsCodec</doc>
           <type name="GLib.List" c:type="GList*">
             <type name="Codec"/>
@@ -3413,7 +3493,7 @@ sending state of the stream. It should default to %TRUE.</doc>
       <parameters>
         <parameter name="codec_list" transfer-ownership="none">
           <doc xml:whitespace="preserve">a GList of #FsCodec to copy</doc>
-          <type name="GLib.List" c:type="GList*">
+          <type name="GLib.List" c:type="const GList*">
             <type name="Codec"/>
           </type>
         </parameter>
@@ -3471,7 +3551,7 @@ feedback:tfrc=
       <parameters>
         <parameter name="filename" transfer-ownership="none">
           <doc xml:whitespace="preserve">Name of the #GKeyFile to read the codecs parameters from</doc>
-          <type name="utf8" c:type="gchar*"/>
+          <type name="utf8" c:type="const gchar*"/>
         </parameter>
       </parameters>
     </function>
@@ -3488,7 +3568,7 @@ feedback:tfrc=
       <doc xml:whitespace="preserve">Gives a user-printable string representing the media type</doc>
       <return-value transfer-ownership="none">
         <doc xml:whitespace="preserve">a static string representing the media type</doc>
-        <type name="utf8" c:type="gchar*"/>
+        <type name="utf8" c:type="const gchar*"/>
       </return-value>
       <parameters>
         <parameter name="media_type" transfer-ownership="none">
@@ -3525,7 +3605,7 @@ the @object parameters.</doc>
                    caller-allocates="0"
                    transfer-ownership="none">
           <doc xml:whitespace="preserve">Returns the error message if not %NULL</doc>
-          <type name="utf8" c:type="gchar**"/>
+          <type name="utf8" c:type="const gchar**"/>
         </parameter>
       </parameters>
     </function>
@@ -3604,7 +3684,7 @@ direction=receive
       <parameters>
         <parameter name="filename" transfer-ownership="none">
           <doc xml:whitespace="preserve">Name of the #GKeyFile to read the RTP Header Extensions from</doc>
-          <type name="utf8" c:type="gchar*"/>
+          <type name="utf8" c:type="const gchar*"/>
         </parameter>
         <parameter name="media_type" transfer-ownership="none">
           <doc xml:whitespace="preserve">The media type for which to get header extensions</doc>

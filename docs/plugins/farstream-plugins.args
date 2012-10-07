@@ -88,3 +88,13 @@
 <DEFAULT></DEFAULT>
 </ARG>
 
+<ARG>
+<NAME>FsIoVideoSink::window-handle</NAME>
+<TYPE>guint</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Sink window handle</NICK>
+<BLURB>The window_handle of the window in which to embed the video sink.</BLURB>
+<DEFAULT>0</DEFAULT>
+</ARG>
+

@@ -46,7 +46,7 @@
 #include "fs-conference.h"
 #include "fs-private.h"
 
-#define GST_CAT_DEFAULT fs_conference_debug
+#define GST_CAT_DEFAULT _fs_conference_debug
 
 /* Signals */
 enum
@@ -75,7 +75,7 @@ struct _FsStreamTransmitterPrivate
 };
 
 G_DEFINE_ABSTRACT_TYPE(FsStreamTransmitter, fs_stream_transmitter,
-    GST_TYPE_OBJECT);
+    G_TYPE_OBJECT);
 
 
 #define FS_STREAM_TRANSMITTER_GET_PRIVATE(o)  \

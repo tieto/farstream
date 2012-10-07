@@ -70,7 +70,7 @@ struct _FsRtpSession
   /* This ID can be accessed by the stream/substreams for this session */
   guint id;
 
-  GMutex *mutex; /* Should only be accessed using the macros */
+  GMutex mutex; /* Should only be accessed using the macros */
 
 #ifdef DEBUG_MUTEXES
   guint count;
@@ -83,7 +83,7 @@ struct _FsRtpSession
 
 #define FS_RTP_SESSION_LOCK(session) \
   do { \
-    g_mutex_lock (FS_RTP_SESSION (session)->mutex);   \
+    g_mutex_lock (&FS_RTP_SESSION (session)->mutex);   \
     g_assert (FS_RTP_SESSION (session)->count == 0);  \
     FS_RTP_SESSION (session)->count++;                \
   } while (0);
@@ -91,17 +91,17 @@ struct _FsRtpSession
   do { \
     g_assert (FS_RTP_SESSION (session)->count == 1);  \
     FS_RTP_SESSION (session)->count--;                \
-    g_mutex_unlock (FS_RTP_SESSION (session)->mutex); \
+    g_mutex_unlock (&FS_RTP_SESSION (session)->mutex); \
   } while (0);
 #define FS_RTP_SESSION_GET_LOCK(session) \
-  (FS_RTP_SESSION (session)->mutex)
+  (&FS_RTP_SESSION (session)->mutex)
 #else
 #define FS_RTP_SESSION_LOCK(session) \
-  g_mutex_lock ((session)->mutex)
+  g_mutex_lock (&(session)->mutex)
 #define FS_RTP_SESSION_UNLOCK(session) \
-  g_mutex_unlock ((session)->mutex)
+  g_mutex_unlock (&(session)->mutex)
 #define FS_RTP_SESSION_GET_LOCK(session) \
-  ((session)->mutex)
+  (&(session)->mutex)
 #endif
 
 

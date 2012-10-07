@@ -103,7 +103,7 @@ struct _FsMsnStreamPrivate
   gint fd;
   gint tos;
 
-  GMutex *mutex; /* protects the conference */
+  GMutex mutex; /* protects the conference */
 };
 
 
@@ -217,7 +217,7 @@ fs_msn_stream_init (FsMsnStream *self)
 
   self->priv->direction = FS_DIRECTION_NONE;
 
-  self->priv->mutex = g_mutex_new ();
+  g_mutex_init (&self->priv->mutex);
 }
 
 
@@ -226,11 +226,11 @@ fs_msn_stream_get_conference (FsMsnStream *self, GError **error)
 {
   FsMsnConference *conference;
 
-  g_mutex_lock (self->priv->mutex);
+  g_mutex_lock (&self->priv->mutex);
   conference = self->priv->conference;
   if (conference)
     g_object_ref (conference);
-  g_mutex_unlock (self->priv->mutex);
+  g_mutex_unlock (&self->priv->mutex);
 
   if (!conference)
     g_set_error (error, FS_ERROR, FS_ERROR_DISPOSED,
@@ -248,9 +248,9 @@ fs_msn_stream_dispose (GObject *object)
   if (!conference)
     return;
 
-  g_mutex_lock (self->priv->mutex);
+  g_mutex_lock (&self->priv->mutex);
   self->priv->conference = NULL;
-  g_mutex_unlock (self->priv->mutex);
+  g_mutex_unlock (&self->priv->mutex);
 
   if (self->priv->src_pad)
   {
@@ -302,7 +302,7 @@ fs_msn_stream_finalize (GObject *object)
 {
   FsMsnStream *self = FS_MSN_STREAM (object);
 
-  g_mutex_free (self->priv->mutex);
+  g_mutex_clear (&self->priv->mutex);
 
   G_OBJECT_CLASS (fs_msn_stream_parent_class)->finalize (object);
 }

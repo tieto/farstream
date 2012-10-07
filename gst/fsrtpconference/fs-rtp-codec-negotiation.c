@@ -32,6 +32,7 @@
 
 #include <string.h>
 
+#include "fs-rtp-bin-error-downgrade.h"
 #include "fs-rtp-codec-specific.h"
 #include "fs-rtp-conference.h"
 
@@ -102,10 +103,24 @@ link_unlinked_pads (GstElement *bin,
 
 GstElement *
 parse_bin_from_description_all_linked (const gchar *bin_description,
-    guint *src_pad_count, guint *sink_pad_count, GError **error)
+    gboolean is_send, guint *src_pad_count, guint *sink_pad_count,
+    GError **error)
 {
-  GstElement *bin =
-    gst_parse_bin_from_description (bin_description, FALSE, error);
+  GstElement *bin;
+  gchar *desc;
+
+  if (is_send)
+  {
+    desc = g_strdup_printf ("bin.( %s )", bin_description);
+  }
+  else
+  {
+    fs_rtp_bin_error_downgrade_register ();
+    desc = g_strdup_printf ("fsrtpbinerrordowngrade.( %s )", bin_description);
+  }
+  bin = gst_parse_launch_full (desc, NULL, GST_PARSE_FLAG_NONE,
+      error);
+  g_free (desc);
 
   if (!bin)
     return NULL;
@@ -155,7 +170,7 @@ validate_codec_profile (FsCodec *codec,const gchar *bin_description,
   gboolean has_matching_pad = FALSE;
   GValue val = {0,};
 
-  bin = parse_bin_from_description_all_linked (bin_description,
+  bin = parse_bin_from_description_all_linked (bin_description, is_send,
       &src_pad_count, &sink_pad_count, &error);
 
   /* if could not build bin, fail */

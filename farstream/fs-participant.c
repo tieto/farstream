@@ -58,7 +58,7 @@ struct _FsParticipantPrivate
 };
 */
 
-G_DEFINE_ABSTRACT_TYPE(FsParticipant, fs_participant, GST_TYPE_OBJECT);
+G_DEFINE_ABSTRACT_TYPE(FsParticipant, fs_participant, G_TYPE_OBJECT);
 
 #define FS_PARTICIPANT_GET_PRIVATE(o)  \
    (G_TYPE_INSTANCE_GET_PRIVATE ((o), FS_TYPE_PARTICIPANT, \
@@ -85,14 +85,14 @@ static void
 fs_participant_init (FsParticipant *self)
 {
   //self->priv = FS_PARTICIPANT_GET_PRIVATE (self);
-  self->mutex = g_mutex_new ();
+  g_mutex_init (&self->mutex);
 }
 
 static void
 fs_participant_finalize (GObject *object)
 {
   FsParticipant *self = FS_PARTICIPANT (object);
-  g_mutex_free (self->mutex);
+  g_mutex_clear (&self->mutex);
 
   G_OBJECT_CLASS (fs_participant_parent_class)->finalize (object);
 }

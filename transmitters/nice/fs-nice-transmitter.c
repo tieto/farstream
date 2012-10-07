@@ -699,7 +699,7 @@ struct _NiceGstStream {
   gulong *probe_ids;
 
   /* Protects the sending field and the addition/state of the elements */
-  GMutex *mutex;
+  GMutex mutex;
 
   gboolean sending;
   gboolean desired_sending;
@@ -720,7 +720,7 @@ fs_nice_transmitter_add_gst_stream (FsNiceTransmitter *self,
   ns = g_slice_new0 (NiceGstStream);
   ns->sending = TRUE;
   ns->desired_sending = TRUE;
-  ns->mutex = g_mutex_new ();
+  g_mutex_init (&ns->mutex);
   ns->nicesrcs = g_new0 (GstElement *, self->components + 1);
   ns->nicesinks = g_new0 (GstElement *, self->components + 1);
   ns->recvonly_filters = g_new0 (GstElement *, self->components + 1);
@@ -858,7 +858,7 @@ fs_nice_transmitter_free_gst_stream (FsNiceTransmitter *self,
   g_free (ns->requested_tee_pads);
   g_free (ns->requested_funnel_pads);
   g_free (ns->probe_ids);
-  g_mutex_free (ns->mutex);
+  g_mutex_clear (&ns->mutex);
   g_slice_free (NiceGstStream, ns);
 }
 
@@ -868,7 +868,7 @@ fs_nice_transmitter_set_sending (FsNiceTransmitter *self,
 {
   guint c;
 
-  g_mutex_lock (ns->mutex);
+  g_mutex_lock (&ns->mutex);
 
   ns->desired_sending = sending;
 
@@ -876,7 +876,7 @@ fs_nice_transmitter_set_sending (FsNiceTransmitter *self,
 
   if (ns->modifying)
   {
-    g_mutex_unlock (ns->mutex);
+    g_mutex_unlock (&ns->mutex);
     return;
   }
 
@@ -886,7 +886,7 @@ fs_nice_transmitter_set_sending (FsNiceTransmitter *self,
   {
     gboolean current_sending = ns->sending;
 
-    g_mutex_unlock (ns->mutex);
+    g_mutex_unlock (&ns->mutex);
 
     GST_DEBUG ("Changing gst stream sending status to %d", !current_sending);
 
@@ -936,7 +936,7 @@ fs_nice_transmitter_set_sending (FsNiceTransmitter *self,
       }
     }
 
-    g_mutex_lock (ns->mutex);
+    g_mutex_lock (&ns->mutex);
 
     ns->sending = sending;
 
@@ -944,7 +944,7 @@ fs_nice_transmitter_set_sending (FsNiceTransmitter *self,
 
   ns->modifying = FALSE;
 
-  g_mutex_unlock (ns->mutex);
+  g_mutex_unlock (&ns->mutex);
 
 }
 

@@ -67,7 +67,7 @@ struct _FsNiceAgentPrivate
 
   GList *preferred_local_candidates;
 
-  GMutex *mutex;
+  GMutex mutex;
 
   /* Everything below is protected by the mutex */
 
@@ -79,8 +79,8 @@ struct _FsNiceAgentPrivate
     FsNiceAgentPrivate))
 
 
-#define FS_NICE_AGENT_LOCK(o)   g_mutex_lock ((o)->priv->mutex)
-#define FS_NICE_AGENT_UNLOCK(o) g_mutex_unlock ((o)->priv->mutex)
+#define FS_NICE_AGENT_LOCK(o)   g_mutex_lock (&(o)->priv->mutex)
+#define FS_NICE_AGENT_UNLOCK(o) g_mutex_unlock (&(o)->priv->mutex)
 
 static void fs_nice_agent_class_init (
     FsNiceAgentClass *klass);
@@ -175,7 +175,7 @@ fs_nice_agent_init (FsNiceAgent *self)
   /* member init */
   self->priv = FS_NICE_AGENT_GET_PRIVATE (self);
 
-  self->priv->mutex = g_mutex_new ();
+  g_mutex_init (&self->priv->mutex);
 
   self->priv->main_context = g_main_context_new ();
   self->priv->main_loop = g_main_loop_new (self->priv->main_context, FALSE);
@@ -213,8 +213,7 @@ fs_nice_agent_finalize (GObject *object)
   fs_candidate_list_destroy (self->priv->preferred_local_candidates);
   self->priv->preferred_local_candidates = NULL;
 
-  g_mutex_free (self->priv->mutex);
-  self->priv->mutex = NULL;
+  g_mutex_clear (&self->priv->mutex);
 
   parent_class->finalize (object);
 }
@@ -418,8 +417,8 @@ fs_nice_agent_new (guint compatibility_mode,
 
   FS_NICE_AGENT_LOCK (self);
 
-  self->priv->thread = g_thread_create (fs_nice_agent_main_thread,
-      self, TRUE, error);
+  self->priv->thread = g_thread_try_new ("libnice agent thread",
+      fs_nice_agent_main_thread, self, error);
 
   if (!self->priv->thread)
   {
