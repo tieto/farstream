@@ -37,10 +37,11 @@ rtp-payload-size=1
 bitrate=256
 
 [vp8enc]
-bitrate=256000
-max-latency=1
-speed=2
-error-resilient=true
+target-bitrate=256000
+deadline=1
+cpu-used=4
+lag-in-frames=0
+error-resilient=1
 
 [rtppcmupay]
 ptime-multiple=20000000
