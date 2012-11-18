@@ -1,3 +1,9 @@
+farstream-0.2 (0.2.2-1) experimental; urgency=low
+
+  * New upstream release
+
+ -- Sjoerd Simons <sjoerd@debian.org>  Sun, 18 Nov 2012 17:07:12 +0100
+
 farstream-0.2 (0.2.1-1) experimental; urgency=low
 
   * New upstream release
