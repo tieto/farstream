@@ -1,3 +1,29 @@
+commit bfad285b3695bd154a36f7d67149e7f3562a8745
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Nov 14 13:13:16 2012 +0100
+
+    Version
+
+commit fef0054b2c492426219e23ac8f1c36d23968f217
+Author: Debarshi Ray <debarshir@freedesktop.org>
+Date:   Wed Oct 24 17:54:08 2012 +0200
+
+    Update and fix the default properties for vp8enc
+    
+    The property names of the vp8enc element changed in GStreamer 1.0. See
+    the following commits from gst-plugins-good for some of the
+    corresponding changes:
+      - 392bd12a45b959b696365e5f25e315c2489fe025
+      - 9c0ff2f38174f2e4111859bd66956a77764cb515
+    
+    Also, vp8enc uses target-bitrate, not bitrate.
+
+commit 1fd82440d4b3c16dcb1d1b5df0c3484eb95ffc43
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Oct 4 16:31:21 2012 -0400
+
+    Version 0.2.1.1
+
 commit 6c488e499417dbfa8957d7717c3cbe6a5214ac09
 Author: Olivier Crête <olivier.crete@collabora.com>
 Date:   Thu Oct 4 16:17:33 2012 -0400

@@ -21,35 +21,50 @@
 <td><a accesskey="n" href="farstream-plugins-FsMsnCamCamRecvConference.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
-<a href="#farstream-plugins-FsMsnCamSendConference.synopsis" class="shortcut">Top</a>
+<a href="#FsMsnCamSendConference.synopsis" class="shortcut">Top</a>
                    | 
-                  <a href="#farstream-plugins-FsMsnCamSendConference.description" class="shortcut">Description</a>
+                  <a href="#FsMsnCamSendConference.description" class="shortcut">Description</a>
                    | 
-                  <a href="#farstream-plugins-FsMsnCamSendConference.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
+                  <a href="#FsMsnCamSendConference.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                   | 
+                  <a href="#FsMsnCamSendConference.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
 </td></tr>
 </table>
 <div class="refentry">
-<a name="farstream-plugins-FsMsnCamSendConference"></a><div class="titlepage"></div>
+<a name="FsMsnCamSendConference"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
-<h2><span class="refentrytitle"><a name="farstream-plugins-FsMsnCamSendConference.top_of_page"></a>FsMsnCamSendConference</span></h2>
+<h2><span class="refentrytitle"><a name="FsMsnCamSendConference.top_of_page"></a>FsMsnCamSendConference</span></h2>
 <p>FsMsnCamSendConference — Farstream MSN send Conference Gstreamer Element</p>
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsynopsisdiv">
-<a name="farstream-plugins-FsMsnCamSendConference.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">struct              <a class="link" href="farstream-plugins-FsMsnCamSendConference.html#FsMsnCamSendConference" title="struct FsMsnCamSendConference">FsMsnCamSendConference</a>;
+<a name="FsMsnCamSendConference.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">struct              <a class="link" href="FsMsnCamSendConference.html#FsMsnCamSendConference-struct" title="struct FsMsnCamSendConference">FsMsnCamSendConference</a>;
 </pre>
 </div>
 <div class="refsect1">
-<a name="farstream-plugins-FsMsnCamSendConference.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
+<a name="FsMsnCamSendConference.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+  GObject
+   +----GInitiallyUnowned
+         +----<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstObject.html">GstObject</a>
+               +----<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html">GstElement</a>
+                     +----<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html">GstBin</a>
+                           +----<a href="http://www.freedesktop.org/software/farstream/apidoc/farstream/FsConference.html">FsConference</a>
+                                 +----<a class="link" href="FsMsnConference.html" title="FsMsnConference">FsMsnConference</a>
+                                       +----FsMsnCamSendConference
+</pre>
+</div>
+<div class="refsect1">
+<a name="FsMsnCamSendConference.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
 <p>
 FsMsnCamSendConference implements
  <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstChildProxy.html">GstChildProxy</a>.</p>
 </div>
 <div class="refsect1">
-<a name="farstream-plugins-FsMsnCamSendConference.description"></a><h2>Description</h2>
+<a name="FsMsnCamSendConference.description"></a><h2>Description</h2>
 <p>
 This element implements the unidirection webcam feature found in various
 version of MSN Messenger (tm) and Windows Live Messenger (tm). This is
@@ -58,7 +73,7 @@ to send the local webcam's video to someone else.
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="id412700"></a><h3>Element Information</h3>
+<a name="idp7781920"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -81,7 +96,7 @@ to send the local webcam's video to someone else.
 </div>
 <hr>
 <div class="refsect2">
-<a name="id400865"></a><h3>Element Pads</h3>
+<a name="idp9337904"></a><h3>Element Pads</h3>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -130,13 +145,10 @@ to send the local webcam's video to someone else.
 </p>
 </div>
 <div class="refsect1">
-<a name="farstream-plugins-FsMsnCamSendConference.details"></a><h2>Details</h2>
+<a name="FsMsnCamSendConference.details"></a><h2>Details</h2>
 <div class="refsect2">
-<a name="FsMsnCamSendConference"></a><h3>struct FsMsnCamSendConference</h3>
-<pre class="programlisting">struct FsMsnCamSendConference {
-  FsMsnConference parent;
-};
-</pre>
+<a name="FsMsnCamSendConference-struct"></a><h3>struct FsMsnCamSendConference</h3>
+<pre class="programlisting">struct FsMsnCamSendConference;</pre>
 <p>
 </p>
 </div>
