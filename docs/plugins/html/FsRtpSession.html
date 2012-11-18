@@ -6,62 +6,72 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="index.html" title="Farstream Plugins Manual">
 <link rel="up" href="ch01.html" title="RTP Plugin">
-<link rel="prev" href="farstream-plugins-FsRtpParticipant.html" title="FsRtpParticipant">
-<link rel="next" href="farstream-plugins-FsRtpStream.html" title="FsRtpStream">
+<link rel="prev" href="FsRtpParticipant.html" title="FsRtpParticipant">
+<link rel="next" href="FsRtpStream.html" title="FsRtpStream">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
 <tr valign="middle">
-<td><a accesskey="p" href="farstream-plugins-FsRtpParticipant.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="FsRtpParticipant.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">Farstream Plugins Manual</th>
-<td><a accesskey="n" href="farstream-plugins-FsRtpStream.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="FsRtpStream.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
-<a href="#farstream-plugins-FsRtpSession.synopsis" class="shortcut">Top</a>
+<a href="#FsRtpSession.synopsis" class="shortcut">Top</a>
                    | 
-                  <a href="#farstream-plugins-FsRtpSession.description" class="shortcut">Description</a>
+                  <a href="#FsRtpSession.description" class="shortcut">Description</a>
                    | 
-                  <a href="#farstream-plugins-FsRtpSession.properties" class="shortcut">Properties</a>
+                  <a href="#FsRtpSession.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                   | 
+                  <a href="#FsRtpSession.properties" class="shortcut">Properties</a>
 </td></tr>
 </table>
 <div class="refentry">
-<a name="farstream-plugins-FsRtpSession"></a><div class="titlepage"></div>
+<a name="FsRtpSession"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
-<h2><span class="refentrytitle"><a name="farstream-plugins-FsRtpSession.top_of_page"></a>FsRtpSession</span></h2>
-<p>FsRtpSession — A  RTP session in a <a class="link" href="farstream-plugins-FsRtpConference.html#FsRtpConference" title="struct FsRtpConference"><span class="type">FsRtpConference</span></a></p>
+<h2><span class="refentrytitle"><a name="FsRtpSession.top_of_page"></a>FsRtpSession</span></h2>
+<p>FsRtpSession — A  RTP session in a <a class="link" href="FsRtpConference.html" title="FsRtpConference"><span class="type">FsRtpConference</span></a></p>
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsynopsisdiv">
-<a name="farstream-plugins-FsRtpSession.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">                    <a class="link" href="farstream-plugins-FsRtpSession.html#FsRtpSession" title="FsRtpSession">FsRtpSession</a>;
+<a name="FsRtpSession.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">                    <a class="link" href="FsRtpSession.html#FsRtpSession-struct" title="FsRtpSession">FsRtpSession</a>;
 </pre>
 </div>
 <div class="refsect1">
-<a name="farstream-plugins-FsRtpSession.properties"></a><h2>Properties</h2>
+<a name="FsRtpSession.object-hierarchy"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
-  "<a class="link" href="farstream-plugins-FsRtpSession.html#FsRtpSession--no-rtcp-timeout" title='The "no-rtcp-timeout" property'>no-rtcp-timeout</a>"          <span class="type">gint</span>                  : Read / Write
-  "<a class="link" href="farstream-plugins-FsRtpSession.html#FsRtpSession--rtp-header-extension-preferences" title='The "rtp-header-extension-preferences" property'>rtp-header-extension-preferences</a>" <span class="type">FsRtpHeaderExtensionGList</span>*  : Read / Write
-  "<a class="link" href="farstream-plugins-FsRtpSession.html#FsRtpSession--rtp-header-extensions" title='The "rtp-header-extensions" property'>rtp-header-extensions</a>"    <span class="type">FsRtpHeaderExtensionGList</span>*  : Read
-  "<a class="link" href="farstream-plugins-FsRtpSession.html#FsRtpSession--send-bitrate" title='The "send-bitrate" property'>send-bitrate</a>"             <span class="type">guint</span>                 : Read / Write
-  "<a class="link" href="farstream-plugins-FsRtpSession.html#FsRtpSession--ssrc" title='The "ssrc" property'>ssrc</a>"                     <span class="type">guint</span>                 : Read / Write
+  GObject
+   +----<a href="http://www.freedesktop.org/software/farstream/apidoc/farstream/FsSession.html">FsSession</a>
+         +----FsRtpSession
 </pre>
 </div>
 <div class="refsect1">
-<a name="farstream-plugins-FsRtpSession.description"></a><h2>Description</h2>
+<a name="FsRtpSession.properties"></a><h2>Properties</h2>
+<pre class="synopsis">
+  "<a class="link" href="FsRtpSession.html#FsRtpSession--no-rtcp-timeout" title='The "no-rtcp-timeout" property'>no-rtcp-timeout</a>"          <span class="type">gint</span>                  : Read / Write
+  "<a class="link" href="FsRtpSession.html#FsRtpSession--rtp-header-extension-preferences" title='The "rtp-header-extension-preferences" property'>rtp-header-extension-preferences</a>" <span class="type">FsRtpHeaderExtensionGList</span>*  : Read / Write
+  "<a class="link" href="FsRtpSession.html#FsRtpSession--rtp-header-extensions" title='The "rtp-header-extensions" property'>rtp-header-extensions</a>"    <span class="type">FsRtpHeaderExtensionGList</span>*  : Read
+  "<a class="link" href="FsRtpSession.html#FsRtpSession--send-bitrate" title='The "send-bitrate" property'>send-bitrate</a>"             <span class="type">guint</span>                 : Read / Write
+  "<a class="link" href="FsRtpSession.html#FsRtpSession--ssrc" title='The "ssrc" property'>ssrc</a>"                     <span class="type">guint</span>                 : Read / Write
+</pre>
+</div>
+<div class="refsect1">
+<a name="FsRtpSession.description"></a><h2>Description</h2>
 <p>
 This object represents one session, it is created by called
-<a href="http://www.freedesktop.org/software/farstream/apidoc/farstream/FsConference.html#fs-conference-new-session"><code class="function">fs_conference_new_session()</code></a> on a <a class="link" href="farstream-plugins-FsRtpConference.html#FsRtpConference" title="struct FsRtpConference"><span class="type">FsRtpConference</span></a>. It can be either
+<a href="http://www.freedesktop.org/software/farstream/apidoc/farstream/FsConference.html#fs-conference-new-session"><code class="function">fs_conference_new_session()</code></a> on a <a class="link" href="FsRtpConference.html" title="FsRtpConference"><span class="type">FsRtpConference</span></a>. It can be either
 Audio or Video. It also represents data send with one and only one
 SSRC (although if there is a SSRC collision, that SSRC may change).
 </p>
 <div class="refsect2">
-<a name="id373716"></a><h3>Codec profiles</h3>
+<a name="idp6607248"></a><h3>Codec profiles</h3>
 <p>
 It is possible to define "codec profiles", that is non-autodetected
 encoding and decoding pipelines for codecs. It is even possible to declare
@@ -89,14 +99,14 @@ secondary pad of some other codec.
 </p>
 </div>
 <div class="refsect1">
-<a name="farstream-plugins-FsRtpSession.details"></a><h2>Details</h2>
+<a name="FsRtpSession.details"></a><h2>Details</h2>
 <div class="refsect2">
-<a name="FsRtpSession"></a><h3>FsRtpSession</h3>
+<a name="FsRtpSession-struct"></a><h3>FsRtpSession</h3>
 <pre class="programlisting">typedef struct _FsRtpSession FsRtpSession;</pre>
 </div>
 </div>
 <div class="refsect1">
-<a name="farstream-plugins-FsRtpSession.property-details"></a><h2>Property Details</h2>
+<a name="FsRtpSession.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
 <a name="FsRtpSession--no-rtcp-timeout"></a><h3>The <code class="literal">"no-rtcp-timeout"</code> property</h3>
 <pre class="programlisting">  "no-rtcp-timeout"          <span class="type">gint</span>                  : Read / Write</pre>
