@@ -259,3 +259,20 @@ fs_candidate_new_full (
 
   return candidate;
 }
+
+/**
+ * fs_value_set_candidate_list:
+ * @value: a #GValue of type #FS_TYPE_CANDIDATE_LIST
+ * @candidates: (element-type FsCandidate) (allow-none): A #GList of #FsCandidate
+ *
+ * This is for the bindings benefit. Works around the limitations of GObject
+ * introspection.
+ *
+ */
+
+void
+fs_value_set_candidate_list (GValue *value, GList *candidates)
+{
+  g_value_init (value, FS_TYPE_CANDIDATE_LIST);
+  g_value_set_boxed (value, candidates);
+}
