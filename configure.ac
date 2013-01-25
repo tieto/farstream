@@ -24,7 +24,7 @@ dnl can autoconf find the source ?
 AC_CONFIG_SRCDIR([farstream/fs-conference.c])
 
 dnl define the output header for config
-AM_CONFIG_HEADER([config.h])
+AC_CONFIG_HEADERS([config.h])
 
 dnl sets host_* variables
 AC_CANONICAL_HOST
