@@ -105,7 +105,6 @@
 #include <gst/gst.h>
 
 #include "fs-session.h"
-#include "fs-marshal.h"
 #include "fs-codec.h"
 #include "fs-candidate.h"
 #include "fs-stream-transmitter.h"
@@ -298,10 +297,7 @@ fs_stream_class_init (FsStreamClass *klass)
   signals[ERROR_SIGNAL] = g_signal_new ("error",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      0,
-      NULL,
-      NULL,
-      _fs_marshal_VOID__ENUM_STRING,
+      0, NULL, NULL, NULL,
       G_TYPE_NONE, 2, FS_TYPE_ERROR, G_TYPE_STRING);
 
   /**
@@ -323,10 +319,7 @@ fs_stream_class_init (FsStreamClass *klass)
   signals[SRC_PAD_ADDED] = g_signal_new ("src-pad-added",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      0,
-      NULL,
-      NULL,
-      _fs_marshal_VOID__BOXED_BOXED,
+      0, NULL, NULL, NULL,
       G_TYPE_NONE, 2, GST_TYPE_PAD, FS_TYPE_CODEC);
 
   g_type_class_add_private (klass, sizeof (FsStreamPrivate));

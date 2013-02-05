@@ -15,16 +15,8 @@ Makefile.in
 *.typelib
 *.gir
 
-gst/fsrtpconference/fs-rtp-marshal.[ch]
-gst/fsrtpconference/fs-rtp-marshal.list
 gst/*/*.doc.c
 
-transmitters/rawudp/fs-rawudp-marshal.[ch]
-transmitters/rawudp/fs-rawudp-marshal.list
-
-farstream/fs-marshal.[ch]
-farstream/fs-marshal.list
-farstream/fs-enum-types.h
 farstream/fs-enumtypes.[ch]
 
 docs/libs/farstream-libs-decl-list.txt

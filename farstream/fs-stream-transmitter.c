@@ -42,7 +42,6 @@
 
 #include <gst/gst.h>
 
-#include "fs-marshal.h"
 #include "fs-conference.h"
 #include "fs-private.h"
 
@@ -161,10 +160,7 @@ fs_stream_transmitter_class_init (FsStreamTransmitterClass *klass)
   signals[ERROR_SIGNAL] = g_signal_new ("error",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      0,
-      NULL,
-      NULL,
-      _fs_marshal_VOID__ENUM_STRING,
+      0, NULL, NULL, NULL,
       G_TYPE_NONE, 2, FS_TYPE_ERROR, G_TYPE_STRING);
 
     /**
@@ -184,10 +180,7 @@ fs_stream_transmitter_class_init (FsStreamTransmitterClass *klass)
     ("new-active-candidate-pair",
         G_TYPE_FROM_CLASS (klass),
         G_SIGNAL_RUN_LAST,
-        0,
-        NULL,
-        NULL,
-        _fs_marshal_VOID__BOXED_BOXED,
+        0, NULL, NULL, NULL,
         G_TYPE_NONE, 2, FS_TYPE_CANDIDATE, FS_TYPE_CANDIDATE);
 
  /**
@@ -239,10 +232,7 @@ fs_stream_transmitter_class_init (FsStreamTransmitterClass *klass)
     ("known-source-packet-received",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      0,
-      NULL,
-      NULL,
-      _fs_marshal_VOID__UINT_POINTER,
+      0, NULL, NULL, NULL,
       G_TYPE_NONE, 2, G_TYPE_UINT, G_TYPE_POINTER);
 
 
@@ -259,10 +249,7 @@ fs_stream_transmitter_class_init (FsStreamTransmitterClass *klass)
     ("state-changed",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      0,
-      NULL,
-      NULL,
-      _fs_marshal_VOID__UINT_ENUM,
+      0, NULL, NULL, NULL,
       G_TYPE_NONE, 2, G_TYPE_UINT, FS_TYPE_STREAM_STATE);
 
 

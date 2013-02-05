@@ -29,8 +29,6 @@
 
 #include "fs-rawudp-component.h"
 
-#include "fs-rawudp-marshal.h"
-
 #include <stun/usages/bind.h>
 #include <stun/stunagent.h>
 #include <stun/usages/timer.h>
@@ -456,10 +454,7 @@ fs_rawudp_component_class_init (FsRawUdpComponentClass *klass)
     ("new-active-candidate-pair",
         G_TYPE_FROM_CLASS (klass),
         G_SIGNAL_RUN_LAST,
-        0,
-        NULL,
-        NULL,
-        _fs_rawudp_marshal_VOID__BOXED_BOXED,
+        0, NULL, NULL, NULL,
         G_TYPE_NONE, 2, FS_TYPE_CANDIDATE, FS_TYPE_CANDIDATE);
 
  /**
@@ -476,10 +471,7 @@ fs_rawudp_component_class_init (FsRawUdpComponentClass *klass)
     ("known-source-packet-received",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      0,
-      NULL,
-      NULL,
-      _fs_rawudp_marshal_VOID__UINT_POINTER,
+      0, NULL, NULL, NULL,
       G_TYPE_NONE, 2, G_TYPE_UINT, G_TYPE_POINTER);
 
   /**
@@ -494,10 +486,7 @@ fs_rawudp_component_class_init (FsRawUdpComponentClass *klass)
   signals[ERROR_SIGNAL] = g_signal_new ("error",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      0,
-      NULL,
-      NULL,
-      _fs_rawudp_marshal_VOID__ENUM_STRING,
+      0, NULL, NULL, NULL,
       G_TYPE_NONE, 2, FS_TYPE_ERROR, G_TYPE_STRING);
 
 

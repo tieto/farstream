@@ -310,7 +310,7 @@ AC_SUBST(FS_LT_LDFLAGS)
 
 dnl FS_INTERNAL_CFLAGS
 dnl prefer internal headers to already installed ones
-dnl also add builddir include for enumtypes and marshal
+dnl also add builddir include for enumtypes
 FS_INTERNAL_CFLAGS="-I\$(top_srcdir) -I\$(top_builddir)"
 AC_SUBST(FS_INTERNAL_CFLAGS)
 

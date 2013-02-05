@@ -49,7 +49,7 @@ SCANOBJ_DEPS = \
 	$(top_builddir)/farstream/libfarstream-@FS_APIVERSION@.la
 
 # Header files to ignore when scanning.
-IGNORE_HFILES = fs-marshal.h fs-enumtypes.h fs-private.h
+IGNORE_HFILES = fs-enumtypes.h fs-private.h
 
 # Images to copy into HTML directory.
 HTML_IMAGES =

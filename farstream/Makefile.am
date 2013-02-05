@@ -24,7 +24,7 @@ BUILT_SOURCES = \
 	$(nodist_libfarstream_@FS_APIVERSION@_la_SOURCES) \
 	$(nodist_libfarstreaminclude_HEADERS)
 
-CLEANFILES = $(BUILT_SOURCES) fs-marshal.list
+CLEANFILES = $(BUILT_SOURCES)
 
 libfarstream_@FS_APIVERSION@_la_SOURCES = \
 		fs-candidate.c \
@@ -42,22 +42,8 @@ libfarstream_@FS_APIVERSION@_la_SOURCES = \
 		fs-private.h
 
 nodist_libfarstream_@FS_APIVERSION@_la_SOURCES = \
-		fs-marshal.c \
-		fs-marshal.h \
 		fs-enumtypes.c
 
-
-fs-marshal.list: $(libfarstream_@FS_APIVERSION@_la_SOURCES) Makefile.am
-	$(AM_V_GEN) ( cd $(srcdir) && \
-	sed -n -e 's/.*_fs_marshal_\([[:upper:][:digit:]]*__[[:upper:][:digit:]_]*\).*/\1/p' \
-	$(libfarstream_@FS_APIVERSION@_la_SOURCES) ) \
-	| sed -e 's/__/:/' -e 'y/_/,/' | sort -u > $@.tmp
-	@if cmp -s $@.tmp $@; then \
-		rm $@.tmp; \
-		touch $@; \
-	else \
-		mv $@.tmp $@; \
-	fi
 
 libfarstream_@FS_APIVERSION@_la_CFLAGS = \
 	$(FS_INTERNAL_CFLAGS) $(FS_CFLAGS) \

@@ -41,8 +41,6 @@
 
 #include <farstream/fs-rtp.h>
 
-#include "fs-rtp-marshal.h"
-
 /* Signals */
 enum
 {

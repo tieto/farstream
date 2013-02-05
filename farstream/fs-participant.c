@@ -38,7 +38,6 @@
 
 #include "fs-participant.h"
 #include "fs-enumtypes.h"
-#include "fs-marshal.h"
 
 /* Signals */
 enum

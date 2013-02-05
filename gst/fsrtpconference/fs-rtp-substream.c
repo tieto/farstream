@@ -33,7 +33,6 @@
 #include <farstream/fs-session.h>
 
 #include "fs-rtp-stream.h"
-#include "fs-rtp-marshal.h"
 
 
 #define GST_CAT_DEFAULT fsrtpconference_debug
@@ -326,10 +325,7 @@ fs_rtp_sub_stream_class_init (FsRtpSubStreamClass *klass)
   signals[SRC_PAD_ADDED] = g_signal_new ("src-pad-added",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      0,
-      NULL,
-      NULL,
-      _fs_rtp_marshal_VOID__BOXED_BOXED,
+      0, NULL, NULL, NULL,
       G_TYPE_NONE, 2, GST_TYPE_PAD, FS_TYPE_CODEC);
 
   /**
@@ -345,10 +341,7 @@ fs_rtp_sub_stream_class_init (FsRtpSubStreamClass *klass)
   signals[ERROR_SIGNAL] = g_signal_new ("error",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      0,
-      NULL,
-      NULL,
-      _fs_rtp_marshal_VOID__INT_STRING_STRING,
+      0, NULL, NULL, NULL,
       G_TYPE_NONE, 3, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING);
 
  /**
@@ -387,10 +380,7 @@ fs_rtp_sub_stream_class_init (FsRtpSubStreamClass *klass)
   signals[GET_CODEC_BIN] = g_signal_new ("get-codec-bin",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      0,
-      NULL,
-      NULL,
-      _fs_rtp_marshal_POINTER__POINTER_POINTER_UINT_POINTER_POINTER,
+      0, NULL, NULL, NULL,
       G_TYPE_POINTER, 5, G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_UINT,
       G_TYPE_POINTER, G_TYPE_POINTER);
 
