@@ -47,10 +47,12 @@ nodist_libfarstream_@FS_APIVERSION@_la_SOURCES = \
 
 libfarstream_@FS_APIVERSION@_la_CFLAGS = \
 	$(FS_INTERNAL_CFLAGS) $(FS_CFLAGS) \
+	$(GLIB_FLAGS) \
 	$(GST_PLUGINS_BASE_CFLAGS) \
 	$(GST_BASE_CFLAGS) \
 	$(GST_CFLAGS)
 libfarstream_@FS_APIVERSION@_la_LIBADD = \
+	$(GLIB_LIBS) \
 	$(GST_BASE_LIBS) \
 	$(GST_LIBS)
 libfarstream_@FS_APIVERSION@_la_LDFLAGS = \
