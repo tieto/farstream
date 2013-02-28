@@ -216,6 +216,7 @@ run_shm_transmitter_test (gint flags)
   FsCandidate *cand;
   GList *remote_cands = NULL;
   int param_count = 0;
+  gint bus_source;
 
   done = FALSE;
   connected_count = 0;
@@ -279,7 +280,7 @@ run_shm_transmitter_test (gint flags)
   pipeline = setup_pipeline (trans, G_CALLBACK (_handoff_handler));
 
   bus = gst_element_get_bus (pipeline);
-  gst_bus_add_watch (bus, bus_error_callback, NULL);
+  bus_source = gst_bus_add_watch (bus, bus_error_callback, NULL);
 
   gst_bus_enable_sync_message_emission (bus);
   g_signal_connect (bus, "sync-message::error",
@@ -396,6 +397,7 @@ run_shm_transmitter_test (gint flags)
 
   g_object_unref (trans);
 
+  g_source_remove (bus_source);
   gst_object_unref (pipeline);
 
   g_cond_clear (&cond);
