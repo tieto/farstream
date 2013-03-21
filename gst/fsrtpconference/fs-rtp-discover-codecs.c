@@ -536,7 +536,7 @@ remove_duplicates (GList *list)
       if (gst_caps_is_equal (codec_cap1->rtp_caps, codec_cap2->rtp_caps))
       {
         codec_cap_free (codec_cap2);
-        walk1 = g_list_remove_link (walk1, walk2);
+        walk1 = g_list_delete_link (walk1, walk2);
         goto again;
       }
     }
