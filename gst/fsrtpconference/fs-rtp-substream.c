@@ -1332,6 +1332,8 @@ _rtpbin_pad_blocked_callback (GstPad *pad, GstPadProbeInfo *info,
   else
     fs_session_emit_error (FS_SESSION (substream->priv->session),
         FS_ERROR_CONSTRUCTION, error->message);
+  if (caps)
+    gst_caps_unref (caps);
 
   goto out;
 }
