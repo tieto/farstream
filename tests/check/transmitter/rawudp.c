@@ -50,7 +50,7 @@ gboolean has_stun = FALSE;
 gboolean associate_on_source = TRUE;
 
 gboolean pipeline_done = FALSE;
-GStaticMutex pipeline_mod_mutex = G_STATIC_MUTEX_INIT;
+GMutex pipeline_mod_mutex;
 
 void *stun_alternd_data = NULL;
 
@@ -187,11 +187,11 @@ _new_active_candidate_pair (FsStreamTransmitter *st, FsCandidate *local,
 
   GST_DEBUG ("New active candidate pair for component %d", local->component_id);
 
-  g_static_mutex_lock (&pipeline_mod_mutex);
+  g_mutex_lock (&pipeline_mod_mutex);
   if (!pipeline_done && !src_setup[local->component_id-1])
     setup_fakesrc (user_data, pipeline, local->component_id);
   src_setup[local->component_id-1] = TRUE;
-  g_static_mutex_unlock (&pipeline_mod_mutex);
+  g_mutex_unlock (&pipeline_mod_mutex);
 }
 
 static void
@@ -385,9 +385,9 @@ run_rawudp_transmitter_test (gint n_parameters, GParameter *params,
 
  skip:
 
-  g_static_mutex_lock (&pipeline_mod_mutex);
+  g_mutex_lock (&pipeline_mod_mutex);
   pipeline_done = TRUE;
-  g_static_mutex_unlock (&pipeline_mod_mutex);
+  g_mutex_unlock (&pipeline_mod_mutex);
 
   gst_element_set_state (pipeline, GST_STATE_NULL);
 
