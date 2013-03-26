@@ -1108,11 +1108,8 @@ compare_media_caps (gconstpointer a, gconstpointer b)
 }
 
 static gint
-compare_rtp_caps (gconstpointer a, gconstpointer b)
+compare_rtp_caps (CodecCap *element, GstCaps *c_caps)
 {
-  CodecCap *element = (CodecCap *)a;
-  GstCaps *c_caps = (GstCaps *)b;
-
   return !gst_caps_can_intersect (element->rtp_caps, c_caps);
 }
 
@@ -1221,8 +1218,9 @@ create_codec_cap_list (GstElementFactory *factory,
 
         if (rtp_caps) {
           if (entry->rtp_caps) {
-            entry->rtp_caps = gst_caps_merge (gst_caps_copy (rtp_caps),
-              entry->rtp_caps);
+            GstCaps *tmp = gst_caps_intersect (rtp_caps, entry->rtp_caps);
+            gst_caps_unref (entry->rtp_caps);
+            entry->rtp_caps = tmp;
           } else {
             entry->rtp_caps = gst_caps_ref (rtp_caps);
             /* This shouldn't happen, its we're looking at rtp elements
