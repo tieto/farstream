@@ -867,7 +867,6 @@ fs_rtp_sub_stream_get_property (GObject *object,
 
 static gboolean
 fs_rtp_sub_stream_set_codecbin (FsRtpSubStream *substream,
-    FsCodec *codec,
     GstElement *codecbin,
     guint builder_hash,
     GError **error)
@@ -887,7 +886,6 @@ fs_rtp_sub_stream_set_codecbin (FsRtpSubStream *substream,
           " and payload type %d to the state NULL", substream->ssrc,
           substream->pt);
       gst_object_unref (codecbin);
-      fs_codec_destroy (codec);
       return FALSE;
     }
 
@@ -904,7 +902,6 @@ fs_rtp_sub_stream_set_codecbin (FsRtpSubStream *substream,
   if (!gst_bin_add (GST_BIN (substream->priv->conference), codecbin))
   {
     gst_object_unref (codecbin);
-    fs_codec_destroy (codec);
     g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
       "Could not add the codec bin to the conference");
     return FALSE;
@@ -948,7 +945,6 @@ fs_rtp_sub_stream_set_codecbin (FsRtpSubStream *substream,
   FS_RTP_SESSION_LOCK (substream->priv->session);
   substream->priv->codecbin = codecbin;
   substream->priv->builder_hash = builder_hash;
-  codec = NULL;
 
   if (substream->priv->stream && !substream->priv->output_ghostpad)
   {
@@ -969,8 +965,6 @@ fs_rtp_sub_stream_set_codecbin (FsRtpSubStream *substream,
   gst_element_set_locked_state (codecbin, TRUE);
   gst_element_set_state (codecbin, GST_STATE_NULL);
   gst_bin_remove (GST_BIN (substream->priv->conference), codecbin);
-
-  fs_codec_destroy (codec);
 
   return ret;
 }
@@ -1283,12 +1277,16 @@ _rtpbin_pad_blocked_callback (GstPad *pad, GstPadProbeInfo *info,
     g_free (tmp);
     g_object_set (substream->priv->capsfilter, "caps", caps, NULL);
   }
+  else if (codec)
+  {
+    fs_codec_destroy (codec);
+  }
   FS_RTP_SESSION_UNLOCK (substream->priv->session);
 
   if (codecbin)
   {
-    if (!fs_rtp_sub_stream_set_codecbin (substream, codec, codecbin,
-            new_builder_hash, &error))
+    if (!fs_rtp_sub_stream_set_codecbin (substream, codecbin, new_builder_hash,
+            &error))
       goto error;
   }
 
