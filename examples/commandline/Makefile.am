@@ -1,5 +1,11 @@
 
-noinst_PROGRAMS = simple-call simple-call-shm
+if HAVE_GIO_UNIX
+SIMPLE_CALL_SHM = simple-call-shm
+else
+SIMPLE_CALL_SHM =
+endif
+
+noinst_PROGRAMS = simple-call $(SIMPLE_CALL_SHM)
 
 
 AM_CFLAGS = \

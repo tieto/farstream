@@ -562,7 +562,7 @@ fs_shm_stream_transmitter_gather_local_candidates (
     socket_dir = g_build_filename (g_get_tmp_dir (),
       "farstream-shm-XXXXXX", NULL);
 
-    if (mkdtemp (socket_dir) == NULL)
+    if (g_mkdtemp (socket_dir) == NULL)
       return FALSE;
 
     self->priv->socket_dir = socket_dir;

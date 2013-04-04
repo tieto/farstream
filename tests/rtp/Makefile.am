@@ -12,8 +12,8 @@ codec_discovery_CFLAGS = \
 	$(CFLAGS)
 
 LDADD = \
-	$(top_builddir)/farstream/libfarstream-@FS_APIVERSION@.la \
 	$(top_builddir)/gst/fsrtpconference/libfsrtpconference-convenience.la \
+	$(top_builddir)/farstream/libfarstream-@FS_APIVERSION@.la \
 	$(GST_CHECK_LIBS) \
 	$(GST_PLUGINS_BASE_LIBS) \
 	$(GST_LIBS) \

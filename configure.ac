@@ -247,9 +247,10 @@ AC_DEFINE(GLIB_VERSION_MIN_REQUIRED, GLIB_VERSION_2_32, [Ignore post 2.32 deprec
 AC_DEFINE(GLIB_VERSION_MAX_ALLOWED, GLIB_VERSION_2_32, [Prevent post 2.32 APIs])
 
 
-PKG_CHECK_MODULES(GIO_UNIX, gio-unix-2.0 >= 2.32)
+PKG_CHECK_MODULES(GIO_UNIX, gio-unix-2.0 >= 2.32, [HAVE_GIO_UNIX=true],[HAVE_GIO_UNIX=false])
 AC_SUBST(GIO_UNIX_CFLAGS)
 AC_SUBST(GIO_UNIX_LIBS)
+AM_CONDITIONAL(HAVE_GIO_UNIX, test "x$HAVE_GIO_UNIX" = "xyes")
 
 dnl checks for gstreamer
 dnl uninstalled is selected preferentially -- see pkg-config(1)

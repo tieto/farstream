@@ -48,10 +48,6 @@
 #include "fs-raw-stream.h"
 #include "fs-raw-session.h"
 
-#include <arpa/inet.h>
-#include <fcntl.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
 #include <string.h>
 #include <unistd.h>
 
