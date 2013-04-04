@@ -28,7 +28,9 @@
 #include <sys/socket.h>
 #include <pthread.h>
 
-void *stun_alternd_init (int family,
+#include <gio/gio.h>
+
+void *stun_alternd_init (GSocketFamily family,
     char *redirect_ip,
     unsigned int redirect_port,
     unsigned int listen_port);

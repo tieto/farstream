@@ -76,9 +76,11 @@ base_fscodec_SOURCES = \
 	base/fscodec.c
 
 
-transmitter_rawudp_CFLAGS = $(AM_CFLAGS) $(GUPNP_CFLAGS) $(NICE_CFLAGS)
+transmitter_rawudp_CFLAGS = $(AM_CFLAGS) \
+	$(GUPNP_CFLAGS) $(GIO_CFLAGS) $(NICE_CFLAGS)
 transmitter_rawudp_LDADD = $(LDADD) \
 	$(GUPNP_LIBS) \
+	$(GIO_LIBS) \
 	$(NICE_LIBS)
 transmitter_rawudp_SOURCES = \
 	check-threadsafe.h  \

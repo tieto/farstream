@@ -915,7 +915,7 @@ GST_END_TEST;
 void
 setup_stunalternd_valid (void)
 {
-  stun_alternd_data = stun_alternd_init (AF_INET,
+  stun_alternd_data = stun_alternd_init (G_SOCKET_FAMILY_IPV4,
       "127.0.0.1", 3478, 3480);
 
   if (!stun_alternd_data)
@@ -926,7 +926,7 @@ setup_stunalternd_valid (void)
 static void
 setup_stunalternd_loop (void)
 {
-  stun_alternd_data = stun_alternd_init (AF_INET,
+  stun_alternd_data = stun_alternd_init (G_SOCKET_FAMILY_IPV4,
       "127.0.0.1", 3478, 3478);
 
   if (!stun_alternd_data)
