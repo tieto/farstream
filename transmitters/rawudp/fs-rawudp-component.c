@@ -43,21 +43,14 @@
 #include <libgupnp-igd/gupnp-simple-igd-thread.h>
 #endif
 
+#include <gio/gio.h>
+
 #include <string.h>
 #include <sys/types.h>
 
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
 #endif
-
-#ifdef G_OS_WIN32
-# include <winsock2.h>
-#else /*G_OS_WIN32*/
-# include <netdb.h>
-# include <sys/socket.h>
-# include <netinet/in.h>
-# include <arpa/inet.h>
-#endif /*G_OS_WIN32*/
 
 #define GST_CAT_DEFAULT fs_rawudp_transmitter_debug
 
@@ -926,9 +919,6 @@ fs_rawudp_component_set_remote_candidate (FsRawUdpComponent *self,
 {
   FsCandidate *old_candidate = NULL;
   gboolean sending;
-  struct addrinfo hints = {0};
-  struct addrinfo *res = NULL;
-  int rv;
   GInetAddress *addr;
 
   if (candidate->component_id != self->priv->component)
@@ -940,12 +930,11 @@ fs_rawudp_component_set_remote_candidate (FsRawUdpComponent *self,
     return FALSE;
   }
 
-  hints.ai_flags = AI_NUMERICHOST;
-  rv = getaddrinfo (candidate->ip, NULL, &hints, &res);
-  if (rv != 0)
+  addr = g_inet_address_new_from_string (candidate->ip);
+  if (addr == NULL)
   {
     g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
-        "Invalid address passed: %s", gai_strerror (rv));
+        "Invalid address passed: %s", candidate->ip);
     return FALSE;
   }
 
@@ -956,6 +945,7 @@ fs_rawudp_component_set_remote_candidate (FsRawUdpComponent *self,
     g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
         "Can't call set_remote_candidate after the thread has been stopped");
     FS_RAWUDP_COMPONENT_UNLOCK (self);
+    g_object_unref (addr);
     return FALSE;
   }
 
@@ -969,25 +959,6 @@ fs_rawudp_component_set_remote_candidate (FsRawUdpComponent *self,
 
   g_clear_object (&self->priv->remote_address);
 
-  switch (res->ai_family)
-  {
-    case AF_INET:
-      addr = g_inet_address_new_from_bytes (
-        (guint8*) &(((struct sockaddr_in *)res->ai_addr)->sin_addr.s_addr),
-        G_SOCKET_FAMILY_IPV4);
-      break;
-    case AF_INET6:
-      addr = g_inet_address_new_from_bytes (
-        (guint8*) &(((struct sockaddr_in6 *)res->ai_addr)->sin6_addr.s6_addr),
-        G_SOCKET_FAMILY_IPV6);
-      break;
-    default:
-      g_set_error (error, FS_ERROR, FS_ERROR_INTERNAL,
-        "Unknown address family");
-      return FALSE;
-  }
-
-
   self->priv->remote_address = g_inet_socket_address_new (addr,
       candidate->port);
   g_object_unref (addr);
@@ -997,8 +968,6 @@ fs_rawudp_component_set_remote_candidate (FsRawUdpComponent *self,
         self->priv->remote_address, remote_is_unique_cb, self);
 
   FS_RAWUDP_COMPONENT_UNLOCK (self);
-
-  freeaddrinfo (res);
 
   if (sending)
     fs_rawudp_transmitter_udpport_add_dest (self->priv->udpport,
@@ -1386,7 +1355,7 @@ stun_recv_cb (GstPad *pad, GstPadProbeInfo *info, gpointer user_data)
   socklen_t addr_len = sizeof(addr);
   struct sockaddr_storage alt_addr;
   socklen_t alt_addr_len = sizeof(alt_addr);
-  gchar addr_str[NI_MAXHOST];
+  gchar addr_str[NICE_ADDRESS_STRING_LEN + 1];
   NiceAddress niceaddr;
   GstMapInfo map;
 
