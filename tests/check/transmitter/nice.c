@@ -207,7 +207,7 @@ _handoff_handler (GstElement *element, GstBuffer *buffer, GstPad *pad,
 
   if (buffer_count[stream][component_id-1] % 10 == 0)
   {
-    GST_DEBUG ("Buffer %d stream: %u component: %d size: %u",
+    GST_DEBUG ("Buffer %d stream: %u component: %d size: %" G_GSIZE_FORMAT,
         buffer_count[stream][component_id-1], stream,
         component_id, gst_buffer_get_size (buffer));
     GST_DEBUG ("Received %d %d %d %d",
