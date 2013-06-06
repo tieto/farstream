@@ -40,22 +40,14 @@
 #include <farstream/fs-conference.h>
 #include <farstream/fs-plugin.h>
 
+#include <gio/gio.h>
+
 #include <string.h>
 #include <sys/types.h>
 
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
 #endif
-
-#ifdef G_OS_WIN32
-# include <winsock2.h>
-# define close closesocket
-#else /*G_OS_WIN32*/
-# include <netdb.h>
-# include <sys/socket.h>
-# include <netinet/ip.h>
-# include <arpa/inet.h>
-#endif /*G_OS_WIN32*/
 
 GST_DEBUG_CATEGORY (fs_rawudp_transmitter_debug);
 #define GST_CAT_DEFAULT fs_rawudp_transmitter_debug
@@ -548,7 +540,6 @@ struct _UdpPort {
 
   guint port;
 
-  gint fd;
   GSocket *socket;
 
   /* These are just convenience pointers to our parent transmitter */
@@ -568,7 +559,7 @@ struct KnownAddress {
   GSocketAddress *addr;
 };
 
-static gint
+static GSocket *
 _bind_port (
     const gchar *ip,
     guint port,
@@ -576,68 +567,66 @@ _bind_port (
     int tos,
     GError **error)
 {
-  int sock;
-  struct sockaddr_in address;
-  int retval;
-
-  memset (&address, 0, sizeof(struct sockaddr_in));
-  address.sin_family = AF_INET;
-  address.sin_addr.s_addr = INADDR_ANY;
+  GSocketAddress *socket_addr;
+  GInetAddress *addr;
+  GSocket *socket;
+  int fd;
 
   if (ip)
   {
-    struct addrinfo hints;
-    struct addrinfo *result = NULL;
-
-    memset (&hints, 0, sizeof (struct addrinfo));
-    hints.ai_family = AF_INET;
-    hints.ai_flags = AI_NUMERICHOST;
-    retval = getaddrinfo (ip, NULL, &hints, &result);
-    if (retval != 0)
-    {
+    addr = g_inet_address_new_from_string (ip);
+    if (!addr) {
       g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
-          "Invalid IP address %s passed: %s", ip, gai_strerror (retval));
-      return -1;
+          "Invalid IP address %s passed", ip);
+      return NULL;
     }
-    memcpy (&address, result->ai_addr, sizeof (struct sockaddr_in));
-    freeaddrinfo (result);
   }
-
-  if ((sock = socket (AF_INET, SOCK_DGRAM, 0)) <= 0)
+  else
   {
-    g_set_error (error, FS_ERROR, FS_ERROR_NETWORK,
-        "Error creating socket: %s", g_strerror (errno));
-    return -1;
+    addr = g_inet_address_new_any (G_SOCKET_FAMILY_IPV4);
   }
 
-  do {
-    address.sin_port = htons (port);
-    retval = bind (sock, (struct sockaddr *) &address, sizeof (address));
-    if (retval != 0)
+  socket = g_socket_new (g_inet_address_get_family (addr),
+      G_SOCKET_TYPE_DATAGRAM, G_SOCKET_PROTOCOL_UDP, error);
+  if (!socket)
+    return FALSE;
+
+  for (;;) {
+    socket_addr = g_inet_socket_address_new (addr, port);
+
+    if (g_socket_bind (socket, socket_addr, FALSE, NULL))
+      break;
+
+    g_object_unref (socket_addr);
+
+    GST_INFO ("could not bind port %d", port);
+    port += 2;
+    if (port > 65535)
     {
-      GST_INFO ("could not bind port %d", port);
-      port += 2;
-      if (port > 65535)
-      {
-        g_set_error (error, FS_ERROR, FS_ERROR_NETWORK,
-            "Could not bind the socket to a port");
-        close (sock);
-        return -1;
-      }
+      g_set_error (error, FS_ERROR, FS_ERROR_NETWORK,
+          "Could not bind the socket to a port");
+      g_socket_close (socket, NULL);
+      g_object_unref (socket);
+      return NULL;
     }
-  } while (retval != 0);
+  }
+
+  g_object_unref (socket_addr);
+  g_object_unref (addr);
 
   *used_port = port;
 
-  if (setsockopt (sock, IPPROTO_IP, IP_TOS, &tos, sizeof (tos)) < 0)
+  fd = g_socket_get_fd (socket);
+
+  if (setsockopt (fd, IPPROTO_IP, IP_TOS, &tos, sizeof (tos)) < 0)
     GST_WARNING ("could not set socket ToS: %s", g_strerror (errno));
 
 #ifdef IPV6_TCLASS
-  if (setsockopt (sock, IPPROTO_IPV6, IPV6_TCLASS, &tos, sizeof (tos)) < 0)
+  if (setsockopt (fd, IPPROTO_IPV6, IPV6_TCLASS, &tos, sizeof (tos)) < 0)
     GST_WARNING ("could not set TCLASS: %s", g_strerror (errno));
 #endif
 
-  return sock;
+  return socket;
 }
 
 static GstElement *
@@ -873,7 +862,6 @@ fs_rawudp_transmitter_get_udpport (FsRawUdpTransmitter *trans,
   udpport->refcount = 1;
   udpport->requested_ip = g_strdup (requested_ip);
   udpport->requested_port = requested_port;
-  udpport->fd = -1;
   udpport->component_id = component_id;
   g_mutex_init (&udpport->mutex);
   udpport->known_addresses = g_array_new (TRUE, FALSE,
@@ -881,12 +869,8 @@ fs_rawudp_transmitter_get_udpport (FsRawUdpTransmitter *trans,
 
   /* Now lets bind both ports */
 
-  udpport->fd = _bind_port (requested_ip, requested_port, &udpport->port, tos,
-      error);
-  if (udpport->fd < 0)
-    goto error;
-
-  udpport->socket = g_socket_new_from_fd (udpport->fd, error);
+  udpport->socket = _bind_port (requested_ip, requested_port, &udpport->port,
+      tos, error);
   if (!udpport->socket)
     goto error;
 
@@ -1025,10 +1009,10 @@ fs_rawudp_transmitter_put_udpport (FsRawUdpTransmitter *trans,
       GST_ERROR ("Could not remove udpsink element from transmitter source");
   }
 
-  g_clear_object (&udpport->socket);
 
-  if (udpport->fd >= 0)
-    close (udpport->fd);
+  if (udpport->socket)
+    g_socket_close (udpport->socket, NULL);
+  g_clear_object (&udpport->socket);
 
   if (udpport->known_addresses)
   {
@@ -1075,14 +1059,14 @@ fs_rawudp_transmitter_udpport_sendto (UdpPort *udpport,
     socklen_t tolen,
     GError **error)
 {
-  if (sendto (udpport->fd, msg, len, 0, to, tolen) != len)
-  {
-    g_set_error (error, FS_ERROR, FS_ERROR_NETWORK,
-        "Could not send STUN request: %s", g_strerror (errno));
-    return FALSE;
-  }
+  GSocketAddress *addr;
+  gboolean ret;
 
-  return TRUE;
+  addr = g_socket_address_new_from_native ((gpointer) to, tolen);
+  ret = g_socket_send_to (udpport->socket, addr, msg, len, NULL, error);
+  g_object_unref (addr);
+
+  return ret;
 }
 
 gulong
@@ -1313,13 +1297,13 @@ fs_rawudp_transmitter_set_type_of_service (FsRawUdpTransmitter *self,
     for (item = self->priv->udpports[i]; item; item = item->next)
     {
       UdpPort *udpport = item->data;
+      int fd = g_socket_get_fd (udpport->socket);
 
-      if (setsockopt (udpport->fd, IPPROTO_IP, IP_TOS, &tos, sizeof (tos)) < 0)
+      if (setsockopt (fd, IPPROTO_IP, IP_TOS, &tos, sizeof (tos)) < 0)
         GST_WARNING ( "could not set socket ToS: %s", g_strerror (errno));
 
 #ifdef IPV6_TCLASS
-      if (setsockopt (udpport->fd, IPPROTO_IPV6, IPV6_TCLASS,
-              &tos, sizeof (tos)) < 0)
+      if (setsockopt (fd, IPPROTO_IPV6, IPV6_TCLASS, &tos, sizeof (tos)) < 0)
         GST_WARNING ("could not set TCLASS: %s", g_strerror (errno));
 #endif
     }

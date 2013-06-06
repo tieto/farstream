@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>FsStream</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="Farstream Reference Manual">
 <link rel="up" href="ch01.html" title="Farstream Core Library">
 <link rel="prev" href="FsSession.html" title="FsSession">
@@ -116,7 +116,7 @@ This will communicate asynchronous events to the user through <a href="http://gs
 of type <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GST-MESSAGE-ELEMENT:CAPS"><span class="type">GST_MESSAGE_ELEMENT</span></a> sent over the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBus.html"><span class="type">GstBus</span></a>.
 </p>
 <div class="refsect2">
-<a name="idp9931952"></a><h3>The "<code class="literal">farstream-new-local-candidate</code>" message</h3>
+<a name="idp9600624"></a><h3>The "<code class="literal">farstream-new-local-candidate</code>" message</h3>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -136,7 +136,7 @@ This message is emitted when a new local candidate is discovered.
 </div>
 <hr>
 <div class="refsect2">
-<a name="idp9936272"></a><h3>The "<code class="literal">farstream-local-candidates-prepared</code>" message</h3>
+<a name="idp9604944"></a><h3>The "<code class="literal">farstream-local-candidates-prepared</code>" message</h3>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -155,7 +155,7 @@ prepared, an ICE implementation would send its SDP offer or answer.
 </div>
 <hr>
 <div class="refsect2">
-<a name="idp9939840"></a><h3>The "<code class="literal">farstream-new-active-candidate-pair</code>" message</h3>
+<a name="idp9608512"></a><h3>The "<code class="literal">farstream-new-active-candidate-pair</code>" message</h3>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -181,7 +181,7 @@ outside the callback scope. This message is emitted once per component.
 </div>
 <hr>
 <div class="refsect2">
-<a name="idp9945152"></a><h3>The "<code class="literal">farstream-recv-codecs-changed</code>" message</h3>
+<a name="idp9613824"></a><h3>The "<code class="literal">farstream-recv-codecs-changed</code>" message</h3>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -206,7 +206,7 @@ The list of new recv-codecs is included in the message
 </div>
 <hr>
 <div class="refsect2">
-<a name="idp9952800"></a><h3>The "<code class="literal">farstream-component-state-changed</code>" message</h3>
+<a name="idp9621472"></a><h3>The "<code class="literal">farstream-component-state-changed</code>" message</h3>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -270,8 +270,11 @@ All members are private, access them using methods and properties
 You must override add_remote_candidate in a subclass.
 If you have to negotiate codecs, then you must override set_remote_codecs too
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><span class="type">GObjectClass</span> <em class="structfield"><code><a name="FsStreamClass.parent-class"></a>parent_class</code></em>;</span></p></td>
@@ -313,8 +316,11 @@ If you have to negotiate codecs, then you must override set_remote_codecs too
 <p>
 An enum for specifying the direction of a stream
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="FS-DIRECTION-NONE:CAPS"></a><span class="term"><code class="literal">FS_DIRECTION_NONE</code></span></p></td>
@@ -356,8 +362,11 @@ These are the possible states of a stream, a simple multicast stream
 could only be in "disconnected" or "ready" state.
 An stream using an ICE transmitter would use all of these.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="FS-STREAM-STATE-FAILED:CAPS"></a><span class="term"><code class="literal">FS_STREAM_STATE_FAILED</code></span></p></td>
@@ -409,8 +418,11 @@ once.
 The parameters correspond to the varios GObject properties of the
 selected stream transmitter.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>stream</code></em> :</span></p></td>
@@ -456,8 +468,11 @@ added to the list. The candidates will be used to establish a connection
 with the peer. A copy will be made so the user must free the
 passed candidate using <a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-destroy" title="fs_candidate_destroy ()"><code class="function">fs_candidate_destroy()</code></a> when done.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>stream</code></em> :</span></p></td>
@@ -494,8 +509,11 @@ codecs or already negotiated codecs for the corresponding <a class="link" href="
 will be set and <code class="literal">FALSE</code> will be returned. The <em class="parameter"><code>remote_codecs</code></em> list will be
 copied so it must be free'd using <a class="link" href="farstream-libs-FsCodec.html#fs-codec-list-destroy" title="fs_codec_list_destroy ()"><code class="function">fs_codec_list_destroy()</code></a> when done.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>stream</code></em> :</span></p></td>
@@ -531,8 +549,11 @@ This function forces data to be sent immediately to the selected remote
 candidate, by-passing any connectivity checks. There should be at most
 one candidate per component.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>stream</code></em> :</span></p></td>
@@ -569,8 +590,11 @@ can not be used anymore.
 It is strongly recommended to call this function from the main thread because
 releasing the application's reference to a stream.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>stream</code></em> :</span></p></td>
 <td>a <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a>
@@ -587,8 +611,11 @@ Creates a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstr
 stream. These are the pads that were announced by <span class="type">"src-pad-added"</span>
 and are still valid.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>stream</code></em> :</span></p></td>
@@ -625,8 +652,11 @@ For most protocols, calling this function is optional as the incoming data
 can be matched with a stream by its source IP address. This is mostly useful
 if one is using multicast or is behind a muxer server.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>stream</code></em> :</span></p></td>
@@ -650,8 +680,11 @@ if one is using multicast or is behind a muxer server.
 This function emits the <a class="link" href="FsStream.html#FsStream-error" title='The "error" signal'><span class="type">"error"</span></a>" signal, it should only be
 called by subclasses.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>stream</code></em> :</span></p></td>
@@ -679,8 +712,11 @@ called by subclasses.
 Emits the <a class="link" href="FsStream.html#FsStream-src-pad-added" title='The "src-pad-added" signal'><span class="type">"src-pad-added"</span></a>" signal, it should only be
 called by subclasses.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>stream</code></em> :</span></p></td>
@@ -789,8 +825,11 @@ is read-only construction.
 <p>
 This signal is emitted in any error condition
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
@@ -830,8 +869,11 @@ wants to use it outside the callback scope.
 This signal is not emitted on the main thread, but on GStreamer's streaming
 thread!
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>

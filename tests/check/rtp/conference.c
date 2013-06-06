@@ -56,10 +56,10 @@ gint max_buffer_count = 20;
 
 guint max_src_pads = 1;
 
-GStaticMutex testlock = G_STATIC_MUTEX_INIT;
+GMutex testlock;
 
-#define TEST_LOCK()   g_static_mutex_lock (&testlock)
-#define TEST_UNLOCK() g_static_mutex_unlock (&testlock)
+#define TEST_LOCK()   g_mutex_lock (&testlock)
+#define TEST_UNLOCK() g_mutex_unlock (&testlock)
 
 
 GST_START_TEST (test_rtpconference_new)

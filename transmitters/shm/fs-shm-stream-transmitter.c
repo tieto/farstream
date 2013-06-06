@@ -281,6 +281,8 @@ fs_shm_stream_transmitter_finalize (GObject *object)
 {
   FsShmStreamTransmitter *self = FS_SHM_STREAM_TRANSMITTER (object);
 
+  fs_candidate_list_destroy (self->priv->preferred_local_candidates);
+
   g_free (self->priv->shm_src);
   g_free (self->priv->shm_sink);
   g_mutex_clear (&self->priv->mutex);
@@ -560,7 +562,7 @@ fs_shm_stream_transmitter_gather_local_candidates (
     socket_dir = g_build_filename (g_get_tmp_dir (),
       "farstream-shm-XXXXXX", NULL);
 
-    if (mkdtemp (socket_dir) == NULL)
+    if (g_mkdtemp (socket_dir) == NULL)
       return FALSE;
 
     self->priv->socket_dir = socket_dir;

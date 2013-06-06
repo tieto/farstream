@@ -31,7 +31,6 @@
 #include <sys/types.h>
 
 #include <sys/socket.h>
-#include <netdb.h>
 #include <netinet/in.h>
 
 #include <unistd.h>
@@ -66,7 +65,7 @@ static const uint16_t known_attributes[] =  {
 /**
  * Creates a listening socket
  */
-int listen_socket (int fam, int type, int proto, unsigned int port)
+int listen_socket (GSocketFamily fam, int type, int proto, unsigned int port)
 {
   int yes = 1;
   int fd = socket (fam, type, proto);
@@ -87,22 +86,23 @@ int listen_socket (int fam, int type, int proto, unsigned int port)
     goto error;
 
   memset (&addr, 0, sizeof (addr));
-  addr.storage.ss_family = fam;
 
   switch (fam)
   {
-    case AF_INET:
+    case G_SOCKET_FAMILY_IPV4:
+      addr.storage.ss_family = AF_INET;
       addr.in.sin_port = htons (port);
       socklen = sizeof (struct sockaddr_in);
       break;
 
-    case AF_INET6:
+    case G_SOCKET_FAMILY_IPV6:
+      addr.storage.ss_family = AF_INET6;
       addr.in6.sin6_port = htons (port);
       socklen = sizeof (struct sockaddr_in6);
       break;
     default:
       socklen = 0;
-      abort ();
+      g_assert_not_reached ();
   }
 
   if (bind (fd, (struct sockaddr *)&addr, socklen))
@@ -115,16 +115,19 @@ int listen_socket (int fam, int type, int proto, unsigned int port)
   {
     switch (fam)
     {
-#ifdef IP_RECVERR
       case AF_INET:
+#ifdef IP_RECVERR
         setsockopt (fd, SOL_IP, IP_RECVERR, &yes, sizeof (yes));
-        break;
 #endif
-#ifdef IPV6_RECVERR
+        break;
       case AF_INET6:
+#ifdef IPV6_RECVERR
         setsockopt (fd, SOL_IPV6, IPV6_RECVERR, &yes, sizeof (yes));
-        break;
 #endif
+        break;
+      default:
+        g_assert_not_reached ();
+        break;
     }
   }
   else
@@ -259,34 +262,32 @@ send_buf:
 
 
 static int
-resolve_addr (char *server, unsigned int port, int family,
+resolve_addr (char *server, unsigned int port, GSocketFamily family,
     struct sockaddr *addr, socklen_t *addr_len)
 {
-  struct addrinfo hints, *res;
-  int ret = -1;
-  char portstr[10];
+  GInetAddress *inetaddr;
+  GSocketAddress *sockaddr;
+  gboolean ret;
 
-  memset (&hints, 0, sizeof (hints));
-  hints.ai_family = family;
-  hints.ai_socktype = SOCK_DGRAM;
-  hints.ai_flags = AI_NUMERICHOST;
+  inetaddr = g_inet_address_new_from_string (server);
 
-  snprintf (portstr, 9, "%u", port);
+  if (!inetaddr)
+    return 0;
 
-  ret = getaddrinfo (server, portstr, &hints, &res);
-  if (ret)
-  {
-    fprintf (stderr, "%s: %s:%s\n", server, portstr,
-             gai_strerror (ret));
+  if (g_inet_address_get_family (inetaddr) != family) {
+    g_object_unref (inetaddr);
     return 0;
   }
 
-  memcpy (addr, res->ai_addr, res->ai_addrlen);
-  *addr_len = res->ai_addrlen;
+  sockaddr = g_inet_socket_address_new (inetaddr, port);
 
-  freeaddrinfo (res);
+  ret = g_socket_address_to_native (sockaddr, addr,
+      sizeof(struct sockaddr_storage), NULL);
 
-  return 1;
+  g_object_unref (sockaddr);
+  g_object_unref (inetaddr);
+
+  return ret;
 }
 
 struct thread_data {
@@ -313,7 +314,7 @@ void * stund_thread (void *data)
   return NULL;
 }
 
-void *stun_alternd_init (int family, char *redirect_ip,
+void *stun_alternd_init (GSocketFamily family, char *redirect_ip,
     unsigned int redirect_port,
     unsigned int listen_port)
 {

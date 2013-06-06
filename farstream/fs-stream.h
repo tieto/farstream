@@ -185,6 +185,11 @@ gboolean fs_stream_set_transmitter (FsStream *stream,
     guint stream_transmitter_n_parameters,
     GError **error);
 
+gboolean fs_stream_set_transmitter_ht (FsStream *stream,
+    const gchar *transmitter,
+    GHashTable *stream_transmitter_parameters,
+    GError **error);
+
 void fs_stream_destroy (FsStream *stream);
 
 gboolean fs_stream_parse_new_local_candidate (FsStream *stream,

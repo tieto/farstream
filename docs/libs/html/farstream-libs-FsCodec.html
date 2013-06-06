@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>FsCodec</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="Farstream Reference Manual">
 <link rel="up" href="ch01.html" title="Farstream Core Library">
 <link rel="prev" href="farstream-libs-FsCandidate.html" title="FsCandidate">
@@ -114,8 +114,11 @@ representative of the codec information exchanged in the signaling.
 <p>
 This structure reprensents one codec that can be offered or received
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><span class="type">gint</span> <em class="structfield"><code><a name="FsCodec.id"></a>id</code></em>;</span></p></td>
@@ -169,8 +172,11 @@ feedbck param type, subtype and extra string that is supported for this codec. <
 <p>
 Enum used to signify the media type of a codec or stream.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="FS-MEDIA-TYPE-AUDIO:CAPS"></a><span class="term"><code class="literal">FS_MEDIA_TYPE_AUDIO</code></span></p></td>
@@ -201,8 +207,11 @@ Enum used to signify the media type of a codec or stream.
 <p>
 Used to store arbitary parameters for a codec
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><span class="type">gchar</span> *<em class="structfield"><code><a name="FsCodecParameter.name"></a>name</code></em>;</span></p></td>
@@ -227,8 +236,11 @@ Used to store arbitary parameters for a codec
 <p>
 Use to store feedback parameters
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><span class="type">gchar</span> *<em class="structfield"><code><a name="FsFeedbackParameter.type"></a>type</code></em>;</span></p></td>
@@ -275,8 +287,11 @@ not be used
 <p>
 Allocates and initializes a <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> structure
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>id</code></em> :</span></p></td>
@@ -310,8 +325,11 @@ Allocates and initializes a <a class="link" href="farstream-libs-FsCodec.html#Fs
 <p>
 Deletes a <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> structure and all its data. Is a no-op on <code class="literal">NULL</code> codec
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>codec</code></em> :</span></p></td>
 <td>
@@ -326,8 +344,11 @@ Deletes a <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="stru
 <p>
 Copies a <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> structure.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>codec</code></em> :</span></p></td>
@@ -350,8 +371,11 @@ Compare two codecs, it will declare two codecs to be identical even
 if their optional parameters are in a different order. <code class="literal">NULL</code> encoding names
 are ignored.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>codec1</code></em> :</span></p></td>
@@ -420,8 +444,11 @@ Example:
 
 <p>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
@@ -447,8 +474,11 @@ Example:
 Deletes a list of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> structures and the list itself.
 Does nothing on <code class="literal">NULL</code> lists.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>codec_list</code></em> :</span></p></td>
 <td>a GList of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> to delete</td>
@@ -462,8 +492,11 @@ Does nothing on <code class="literal">NULL</code> lists.
 <p>
 Copies a list of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> structures.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>codec_list</code></em> :</span></p></td>
@@ -486,8 +519,11 @@ Copies a list of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" titl
 <p>
 Verifies if two glist of fscodecs are identical
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list1</code></em> :</span></p></td>
@@ -514,8 +550,11 @@ Verifies if two glist of fscodecs are identical
 <p>
 Returns a newly-allocated string representing the codec
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>codec</code></em> :</span></p></td>
@@ -537,8 +576,11 @@ Returns a newly-allocated string representing the codec
 <p>
 This function adds an new optional parameter to a <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>codec</code></em> :</span></p></td>
@@ -566,8 +608,11 @@ Removes an optional parameter from a codec.
 <p>
 NULL param will do nothing.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>codec</code></em> :</span></p></td>
@@ -591,8 +636,11 @@ NULL param will do nothing.
 Finds the <a class="link" href="farstream-libs-FsCodec.html#FsCodecParameter" title="struct FsCodecParameter"><span class="type">FsCodecParameter</span></a> in the <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> that has the requested name
 and, if not <code class="literal">NULL</code>, the requested value
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>codec</code></em> :</span></p></td>
@@ -637,8 +685,11 @@ any value. <span class="annotation">[<a href="http://foldoc.org/allow-none"><spa
 <p>
 This function adds an new feedback parameter to a <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>codec</code></em> :</span></p></td>
@@ -670,8 +721,11 @@ This function adds an new feedback parameter to a <a class="link" href="farstrea
 Finds the <a class="link" href="farstream-libs-FsCodec.html#FsFeedbackParameter" title="struct FsFeedbackParameter"><span class="type">FsFeedbackParameter</span></a> in the <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> that has the requested
 subtype, type and extra_params. One of which must be non-NULL;
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>codec</code></em> :</span></p></td>
@@ -715,8 +769,11 @@ Removes an optional parameter from a codec.
 <p>
 NULL param will do nothing.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>codec</code></em> :</span></p></td>
@@ -758,8 +815,11 @@ A format that can be used in printf like format strings to format a FsCodec
 <p>
 Formats the codec in args for FS_CODEC_FORMAT
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>codec</code></em> :</span></p></td>
 <td>a <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a>
@@ -774,8 +834,11 @@ Formats the codec in args for FS_CODEC_FORMAT
 <p>
 Gives a user-printable string representing the media type
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>media_type</code></em> :</span></p></td>

@@ -41,8 +41,6 @@
 
 #include <farstream/fs-rtp.h>
 
-#include "fs-rtp-marshal.h"
-
 /* Signals */
 enum
 {
@@ -1085,6 +1083,7 @@ fs_rtp_stream_set_transmitter (FsStream *stream,
   if (self->priv->stream_transmitter)
   {
     FS_RTP_SESSION_UNLOCK (session);
+    g_object_unref (session);
     return FALSE;
   }
   FS_RTP_SESSION_UNLOCK (session);
@@ -1151,8 +1150,10 @@ fs_rtp_stream_set_transmitter (FsStream *stream,
     self->priv->stream_transmitter = NULL;
     FS_RTP_SESSION_UNLOCK (session);
     g_object_unref (st);
+    g_object_unref (session);
     return FALSE;
   }
 
+  g_object_unref (session);
   return TRUE;
 }

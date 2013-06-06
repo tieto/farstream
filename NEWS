@@ -1,3 +1,14 @@
+farstream 0.2.3 (April 15, 2013)
+================================
+- Use generic marshallers
+- Fix building by gold linker (Emanuele Aina)
+- Fix leaks, found by Havard Graff and others
+- Fix building with automake 1.13 (Nuno Araujo)
+- Lower PulseAudio latencies (Arun Raghavan)
+- Fix codec intersection
+- Add API to make the API be introspection accessible, fixing the Python example
+- Use GSocket and other win32 portability improvements
+
 farstream 0.2.2 (November 13, 2012)
 =================================
 - Update and fix the default properties for vp8enc

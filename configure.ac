@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, cvs and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for cvs/prerelease
-AC_INIT(Farstream, 0.2.2,
+AC_INIT(Farstream, 0.2.3,
     https://bugs.freedesktop.org/enter_bug.cgi?product=Farstream,
     farstream)
 
@@ -24,7 +24,7 @@ dnl can autoconf find the source ?
 AC_CONFIG_SRCDIR([farstream/fs-conference.c])
 
 dnl define the output header for config
-AM_CONFIG_HEADER([config.h])
+AC_CONFIG_HEADERS([config.h])
 
 dnl sets host_* variables
 AC_CANONICAL_HOST
@@ -56,7 +56,7 @@ dnl - interfaces added/removed/changed -> increment CURRENT, REVISION = 0
 dnl - interfaces added -> increment AGE
 dnl - interfaces removed -> AGE = 0
 dnl sets FS_LT_LDFLAGS
-AS_LIBTOOL(FS, 2, 1, 0)
+AS_LIBTOOL(FS, 3, 0, 1)
 
 dnl FIXME: this macro doesn't actually work;
 dnl the generated libtool script has no support for the listed tags.
@@ -247,9 +247,10 @@ AC_DEFINE(GLIB_VERSION_MIN_REQUIRED, GLIB_VERSION_2_32, [Ignore post 2.32 deprec
 AC_DEFINE(GLIB_VERSION_MAX_ALLOWED, GLIB_VERSION_2_32, [Prevent post 2.32 APIs])
 
 
-PKG_CHECK_MODULES(GIO_UNIX, gio-unix-2.0 >= 2.32)
+PKG_CHECK_MODULES(GIO_UNIX, gio-unix-2.0 >= 2.32, [HAVE_GIO_UNIX=true],[HAVE_GIO_UNIX=false])
 AC_SUBST(GIO_UNIX_CFLAGS)
 AC_SUBST(GIO_UNIX_LIBS)
+AM_CONDITIONAL(HAVE_GIO_UNIX, test "x$HAVE_GIO_UNIX" = "xyes")
 
 dnl checks for gstreamer
 dnl uninstalled is selected preferentially -- see pkg-config(1)
@@ -310,7 +311,7 @@ AC_SUBST(FS_LT_LDFLAGS)
 
 dnl FS_INTERNAL_CFLAGS
 dnl prefer internal headers to already installed ones
-dnl also add builddir include for enumtypes and marshal
+dnl also add builddir include for enumtypes
 FS_INTERNAL_CFLAGS="-I\$(top_srcdir) -I\$(top_builddir)"
 AC_SUBST(FS_INTERNAL_CFLAGS)
 

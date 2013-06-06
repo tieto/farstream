@@ -3648,6 +3648,9 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
 
   if (!codecbin)
   {
+    g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
+        "Could not create codec bin for : " FS_CODEC_FORMAT,
+        FS_CODEC_ARGS (send_codec_copy));
     fs_codec_destroy (send_codec_copy);
     fs_codec_destroy (codec_copy);
     fs_codec_list_destroy (codecs);
@@ -3708,13 +3711,16 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
         "Could not iterate over the src pads of the send codec bin to link"
         " the main pad for: " FS_CODEC_FORMAT, FS_CODEC_ARGS (send_codec_copy));
     gst_iterator_free (iter);
-   goto error;
+    goto error;
   }
 
   gst_caps_unref (sendcaps);
 
   if (!g_value_get_boolean (&link_rv))
   {
+    g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
+        "Could not link codec bin's main pads for : " FS_CODEC_FORMAT,
+        FS_CODEC_ARGS (send_codec_copy));
     gst_iterator_free (iter);
     goto error;
   }
@@ -3734,8 +3740,12 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
 
   gst_iterator_free (iter);
 
-  if (!g_value_get_boolean (&link_rv))
+  if (!g_value_get_boolean (&link_rv)) {
+    g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
+        "Could not link codec bin's other pads for : " FS_CODEC_FORMAT,
+        FS_CODEC_ARGS (send_codec_copy));
     goto error;
+  }
 
   gst_element_set_locked_state (codecbin, FALSE);
 

@@ -1,3 +1,207 @@
+commit c79445e6df897014cdbe2799717226394f89a6fb
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Apr 15 21:47:13 2013 -0400
+
+    Version 0.2.3
+
+commit 47b852d92214d0e3a6fa732b08a9c92cf32ec5e0
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Apr 15 20:55:33 2013 -0400
+
+    tests: Use G_GSIZE_FORMAT where appropriate
+
+commit 10b3d38560ec53d980d13240559e6758c1113e21
+Author: Havard Graff <havard.graff@gmail.com>
+Date:   Thu Mar 21 13:46:11 2013 +0100
+
+    fs-rtp-discover-codecs: plug memoryleak
+    
+    use g_list_delete_link to free the list as well
+
+commit d5d734480e923156c8155cbc1d4f1faacd89c969
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Apr 4 14:17:59 2013 -0400
+
+    rawudp: Use GSocket abstraction for portability
+
+commit 5caa188909453f8890a8af8b4b41fe3d287a7fec
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Apr 4 14:17:15 2013 -0400
+
+    multicast: Use gio instead of getaddrinfo for resolving
+
+commit cdf4998b4ce7da59f15aa88b5f4629e5995cab94
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Apr 4 14:04:03 2013 -0400
+
+    tests: Use GSocket instead of getaddrinfo to parse IP addresses
+
+commit 81351b580da0f8db520ca0ff5e5725c199a7a8b9
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Apr 4 12:19:18 2013 -0400
+
+    Misc win32 portability fixes
+    
+    Based on a patch by Conrad Poelman
+
+commit 50fffb08d941dce58ae48bf531faead8a4e22ed7
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Apr 2 19:13:06 2013 -0400
+
+    codec-discovery: Intersect different parts of the same caps to reduce them
+    
+    We do this because a caps may have the static payload in a separate structure from the encoding-name
+    We just want both in the same structure
+
+commit 982231315490a59b83b3ff8165d21caa7cb1944d
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Apr 2 16:34:42 2013 -0400
+
+    rtpsession: Set error in all error cases
+
+commit a5c7a7d4afa43a1a2b65587c5ddfc1ea9a553b5a
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Mar 29 14:44:50 2013 -0400
+
+    rtpsubstream: Don't free codec after setting it inside substream
+    
+    Bug discovered by Havard Graff
+
+commit 2c19591ca948fc302508b2afbdd232b219d92e2a
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Jan 11 19:47:42 2013 -0500
+
+    session: Add API to set the transmitter parameters as a GHashTable
+
+commit 77df96b6b6fad5aac69dc73c06816d050f60a735
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Jan 11 19:46:52 2013 -0500
+
+    candidate: Add helper function for pygi
+    
+    This way, it can set a FsCandidateList to a GValue
+
+commit 9676376e6c5e31fb83d205c33c1a755acd58f61e
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Jan 11 19:46:19 2013 -0500
+
+    candidate: Allow various elements to be NULL
+
+commit fdf07e579b90760f1e2cdcd1a4c4a9b3476009af
+Author: Havard Graff <havard.graff@gmail.com>
+Date:   Thu Mar 21 17:50:51 2013 -0400
+
+    fs-codec: plug memory leak
+    
+    encoding_name is already g_strdup'ed in codec_new
+
+commit eca3548baca2ba4fbed2addf960342d846936b39
+Author: Havard Graff <havard.graff@gmail.com>
+Date:   Thu Mar 21 17:49:18 2013 -0400
+
+    rtp-stream: plug session leak
+
+commit bc8fd0624d7da549d1d76d02488d3fbe8e444b95
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Mar 21 17:47:04 2013 -0400
+
+    fs-rtp-substream: Don't leak caps on error
+    
+    Based on patch from Havard Graff
+
+commit 076cf029c54ac5d328a70d186897fa0678df387a
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Mar 26 14:33:52 2013 -0400
+
+    rtp-codec-discovery: Intersect instead of merge
+    
+    We want the semantics of intersection, not merging, as this will
+    produce a caps with two separate structures in some cases.
+
+commit 5d84ac699038d3d53f6c79c0cf1fee24c2c13be1
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Mar 22 15:15:25 2013 -0400
+
+    Use == instead of = test for portability
+    
+    Bug reported by OBATA Akio
+
+commit 5bdb476dfe467c129cb2e50fc7bf120df7babfdd
+Author: Arun Raghavan <arun.raghavan@collabora.co.uk>
+Date:   Fri Mar 22 15:09:29 2013 -0400
+
+    rtp: Tune pulsesink/pulsesrc latency values further
+    
+    This makes for lower overall values without forcing a bunch of underruns
+    at the start which we got by having pulsesink's buffer-time as
+    2*latency-time.
+
+commit 1a0dd0526eb5ab5ed40fe54ccb37b61a619c7d6c
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Mar 22 15:04:55 2013 -0400
+
+    Remove deprecated GStaticMutex usage
+
+commit c355f2191a9bd67026d9d08969c370a4018513f0
+Author: Nuno Araujo <nuno.araujo@russo79.com>
+Date:   Fri Jan 25 01:37:08 2013 +0100
+
+    Fix the build with automake 1.13
+    
+    In Automake 1.13, the long-deprecated macro AM_CONFIG_HEADER (deprecated
+    since 2002) has been removed in favour of AC_CONFIG_HEADERS.
+
+commit ba382df8e27bd1e3e7fda1a9740f2b7928535d73
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Feb 28 17:26:54 2013 -0500
+
+    tests: Fix GSource leak
+
+commit 1f9fcbdf164612d0d630bb3c903e7e70fe61693f
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Feb 28 16:54:32 2013 -0500
+
+    shm: Fix candidate leak
+
+commit 45b9a3fe974a72140cdfda21c0e98f16dd8cc4e6
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Feb 28 16:52:33 2013 -0500
+
+    shm: Fix funnelpad leak
+
+commit 7a453aff93040adf414d5bc7af34b214d51a471f
+Author: Emanuele Aina <emanuele.aina@collabora.com>
+Date:   Fri Feb 22 11:05:00 2013 +0000
+
+    build: Fix building with the gold linker by referencing gmodule-2.0
+    
+    With the binutils-gold linker the '--no-copy-dt-needed-entries' flag is
+    active by default and using any symbol from indirectly loaded libraries
+    will result in undefined reference errors.
+    
+    Add to the libfarstream target the AG_GST_GLIB_CHECK-generated GLIB_LIBS
+    variable, which references gmodule-no-export-2.0.
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=61268
+
+commit f4727622b206f534bf6e6c1a1711d3df9c2e19ec
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Feb 5 17:25:41 2013 +0100
+
+    Use the generic marshallers instead of generating them
+
+commit 8c05863f85469223192409f7852b2ce19f44fdfc
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Jan 11 18:40:14 2013 -0500
+
+    dtmfdetect has moved to spandsp
+
+commit 31b5b16da88a0a9623981d1dbd8e08b989077a20
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Nov 14 13:23:35 2012 +0100
+
+    Version 0.2.2.1
+
 commit bfad285b3695bd154a36f7d67149e7f3562a8745
 Author: Olivier Crête <olivier.crete@collabora.com>
 Date:   Wed Nov 14 13:13:16 2012 +0100

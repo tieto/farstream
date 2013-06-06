@@ -182,8 +182,6 @@ fs_codec_copy (const FsCodec * codec)
   copy->channels = codec->channels;
   copy->minimum_reporting_interval = codec->minimum_reporting_interval;
 
-  copy->encoding_name = g_strdup (codec->encoding_name);
-
   for (lp = codec->optional_params; lp; lp = g_list_next (lp))
   {
     FsCodecParameter *param_copy;

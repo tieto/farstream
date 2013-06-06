@@ -12,4 +12,5 @@ FsMsnConference GstChildProxy
 FsRawConference GstChildProxy
 FsRtpConference GstChildProxy
 GstBin GstChildProxy
+GstInsertBin GstChildProxy
 GstPipeline GstChildProxy

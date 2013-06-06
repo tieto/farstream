@@ -382,7 +382,7 @@ class FsUISession:
             
     def new_stream(self, id, participant):
         "Creates a new stream for a specific participant"
-        transmitter_params = []
+        transmitter_params = {}
         # If its video, we start at port 9078, to make it more easy
         # to differentiate it in a tcpdump log
         if self.source.get_type() == Farstream.MediaType.VIDEO and \
@@ -390,18 +390,14 @@ class FsUISession:
             cand = Farstream.Candidate.new("",Farstream.ComponentType.RTP,
                                            Farstream.CandidateType.HOST,
                                            Farstream.NetworkProtocol.UDP,
-                                           "", 9078)
-            param = GObject.Parameter()
-            param.name = "preferred-local-candidates"
-            param.cand.set_boxed(cand)
-            transmitter_params.append(params)
-        print transmitter_params
-        print participant.fsparticipant
+                                           None, 9078)
+            value = GObject.Value()
+            Farstream.value_set_candidate_list(value, [cand])
+            transmitter_params["preferred-local-candidates"] = value
         realstream = self.fssession.new_stream(participant.fsparticipant,
                                                Farstream.StreamDirection.BOTH)
-        print TRANSMITTER
-        print transmitter_params
-        realstream.set_transmitter(TRANSMITTER, transmitter_params)
+        print TRANSMITTER + ": " + str(transmitter_params)
+        realstream.set_transmitter_ht(TRANSMITTER, transmitter_params)
         stream = FsUIStream(id, self, participant, realstream)
         self.streams.add(stream)
         return stream
@@ -455,11 +451,11 @@ class FsUIStream:
     def new_local_candidate(self, candidate):
         "Callback from FsStream"
         if "." in candidate.ip:
-            print "IPv4 Candidate: " +candidate.ip
+            print "IPv4 Candidate: %s %s" % (candidate.ip, candidate.port)
         elif ":" in candidate.ip:
-            print "IPv6 Candidate: " +candidate.ip
+            print "IPv6 Candidate: %s %s" % (candidate.ip, candidate.port)
         else:
-            print "STRANGE Candidate: " +candidate.ip
+            print "STRANGE Candidate: " + candidate.ip
         self.connect.send_candidate(self.participant.id, self.id, candidate)
     def __src_pad_added(self, stream, pad, codec):
         "Callback from FsStream"

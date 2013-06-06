@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>FsStreamTransmitter</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="Farstream Reference Manual">
 <link rel="up" href="ch04.html" title="Farstream Transmitter Classes">
 <link rel="prev" href="FsTransmitter.html" title="FsTransmitter">
@@ -150,8 +150,11 @@ All members are private, access them using methods and properties
 <p>
 You must override the add_remote_candidate in a subclass
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><span class="type">GObjectClass</span> <em class="structfield"><code><a name="FsStreamTransmitterClass.parent-class"></a>parent_class</code></em>;</span></p></td>
@@ -187,8 +190,11 @@ that needs to be done)</td>
 <p>
 This function is used to add remote candidates to the transmitter
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>streamtransmitter</code></em> :</span></p></td>
@@ -223,8 +229,11 @@ This function tells the transmitter to start gathering local candidates,
 signals for new candidates and newly active candidates can be emitted
 during the call to this function.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>streamtransmitter</code></em> :</span></p></td>
@@ -255,8 +264,11 @@ This function forces data to be sent immediately to the selected remote
 candidate, by-passing any connectivity checks. There should be at most
 one candidate per component.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>streamtransmitter</code></em> :</span></p></td>
@@ -289,8 +301,11 @@ force. <span class="annotation">[<a href="http://foldoc.org/element-type"><span 
 This functions stops the <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a>, it must be called before
 the last reference is dropped.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>streamtransmitter</code></em> :</span></p></td>
 <td>a <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a>
@@ -308,8 +323,11 @@ the last reference is dropped.
 This function emit the "error" signal on a <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a>, it should
 only be called by subclasses.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>streamtransmitter</code></em> :</span></p></td>
@@ -339,8 +357,11 @@ only be called by subclasses.
 Parses a "farstream-component-state-changed" message and checks if it matches
 the <em class="parameter"><code>stream</code></em> parameters.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>stream</code></em> :</span></p></td>
@@ -378,8 +399,11 @@ the <em class="parameter"><code>stream</code></em> parameters.
 Parses a "farstream-local-candidates-prepared" message and checks if it matches
 the <em class="parameter"><code>stream</code></em> parameters.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>stream</code></em> :</span></p></td>
@@ -409,8 +433,11 @@ the <em class="parameter"><code>stream</code></em> parameters.
 Parses a "farstream-new-active-candidate-pair" message and checks
 if it matches the <em class="parameter"><code>stream</code></em> parameters.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>stream</code></em> :</span></p></td>
@@ -450,8 +477,11 @@ the message if not <code class="literal">NULL</code>. <span class="annotation">[
 Parses a "farstream-new-local-candidate" message and checks if it matches
 the <em class="parameter"><code>stream</code></em> parameters.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>stream</code></em> :</span></p></td>
@@ -485,8 +515,11 @@ if not <code class="literal">NULL</code>. <span class="annotation">[<a href="htt
 Parses a "farstream-recv-codecs-changed" message and checks if it matches
 the <em class="parameter"><code>stream</code></em> parameters.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>stream</code></em> :</span></p></td>
@@ -548,8 +581,11 @@ A network source <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/he
 <p>
 This signal is emitted in any error condition
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
@@ -582,8 +618,11 @@ This signal is emitted in any error condition
 This signal is emitted when a buffer coming from a confirmed known source
 is received.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
@@ -614,8 +653,11 @@ is received.
 This signal is emitted when all local candidates have been
 prepared, an ICE implementation would send its SDP offer or answer.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
@@ -643,8 +685,11 @@ candidate pair can change automatically due to network conditions. The user
 must not modify the candidates and must copy them if he wants to use them
 outside the callback scope.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
@@ -677,8 +722,11 @@ outside the callback scope.
 <p>
 This signal is emitted when a new local candidate is discovered.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
@@ -708,8 +756,11 @@ This signal is emitted when a new local candidate is discovered.
 This signal is emitted when the ICE state (or equivalent) of the component
 changes
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>

@@ -92,7 +92,7 @@ filled manually. See also fs_candidate_new_full()</doc>
             <doc xml:whitespace="preserve">The protocol this component is for</doc>
             <type name="NetworkProtocol" c:type="FsNetworkProtocol"/>
           </parameter>
-          <parameter name="ip" transfer-ownership="none">
+          <parameter name="ip" transfer-ownership="none" allow-none="1">
             <doc xml:whitespace="preserve">The IP address of this component (can be NULL for local candidate to mean any address)</doc>
             <type name="utf8" c:type="const gchar*"/>
           </parameter>
@@ -118,7 +118,7 @@ fs_candidate_new()</doc>
             <doc xml:whitespace="preserve">The component this candidate is for</doc>
             <type name="guint" c:type="guint"/>
           </parameter>
-          <parameter name="ip" transfer-ownership="none">
+          <parameter name="ip" transfer-ownership="none" allow-none="1">
             <doc xml:whitespace="preserve">The IP address of this component (can be NULL for local candidate to mean any address)</doc>
             <type name="utf8" c:type="const gchar*"/>
           </parameter>
@@ -126,7 +126,7 @@ fs_candidate_new()</doc>
             <doc xml:whitespace="preserve">the UDP/TCP port</doc>
             <type name="guint16" c:type="guint16"/>
           </parameter>
-          <parameter name="base_ip" transfer-ownership="none">
+          <parameter name="base_ip" transfer-ownership="none" allow-none="1">
             <doc xml:whitespace="preserve">IP of base in dotted format as defined in ICE-19.</doc>
             <type name="utf8" c:type="const gchar*"/>
           </parameter>
@@ -143,14 +143,13 @@ fs_candidate_new()</doc>
             <type name="guint32" c:type="guint32"/>
           </parameter>
           <parameter name="type" transfer-ownership="none">
-            <doc xml:whitespace="preserve">The type of candidate</doc>
+            <doc xml:whitespace="preserve">The type of candidate @username (allow-none):: Username to use to connect to client if necessary, NULL otherwise</doc>
             <type name="CandidateType" c:type="FsCandidateType"/>
           </parameter>
           <parameter name="username" transfer-ownership="none">
-            <doc xml:whitespace="preserve">Username to use to connect to client if necessary, NULL otherwise</doc>
             <type name="utf8" c:type="const gchar*"/>
           </parameter>
-          <parameter name="password" transfer-ownership="none">
+          <parameter name="password" transfer-ownership="none" allow-none="1">
             <doc xml:whitespace="preserve">Username to use to connect to client if necessary, NULL otherwise</doc>
             <type name="utf8" c:type="const gchar*"/>
           </parameter>
@@ -2516,6 +2515,37 @@ selected stream transmitter.</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="set_transmitter_ht"
+              c:identifier="fs_stream_set_transmitter_ht"
+              throws="1">
+        <doc xml:whitespace="preserve">Set the transmitter to use for this stream. This function will only succeed
+once.
+
+The parameters correspond to the varios GObject properties of the
+selected stream transmitter.
+
+This is the same as fs_stream_set_transmitter() except that the parameters
+are passed in a #GHashTable to make it more friendly to GObject introspection</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">%TRUE if the transmitter could be set, %FALSE otherwise</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <parameter name="transmitter" transfer-ownership="none">
+            <doc xml:whitespace="preserve">Name of the type of transmitter to use for this stream</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="stream_transmitter_parameters"
+                     transfer-ownership="none"
+                     allow-none="1">
+            <doc xml:whitespace="preserve">A #GHashTable of &lt;String-&gt;GValue) containing the parameters.</doc>
+            <type name="GLib.HashTable" c:type="GHashTable*">
+              <type name="utf8"/>
+              <type name="GObject.Value"/>
+            </type>
+          </parameter>
+        </parameters>
+      </method>
       <property name="current-recv-codecs" transfer-ownership="full">
         <doc xml:whitespace="preserve">This is the list of codecs that have been received by this stream.
 The user must free the list if fs_codec_list_destroy().
@@ -3766,6 +3796,26 @@ This will be obsolete in 0.11 (when all elements use bit/sec for the
         <parameter name="bitrate" transfer-ownership="none">
           <doc xml:whitespace="preserve">The bitrate in bits/sec</doc>
           <type name="glong" c:type="glong"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="value_set_candidate_list"
+              c:identifier="fs_value_set_candidate_list">
+      <doc xml:whitespace="preserve">This is for the bindings benefit. Works around the limitations of GObject
+introspection.</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="value" transfer-ownership="none">
+          <doc xml:whitespace="preserve">a #GValue of type #FS_TYPE_CANDIDATE_LIST</doc>
+          <type name="GObject.Value" c:type="GValue*"/>
+        </parameter>
+        <parameter name="candidates" transfer-ownership="none" allow-none="1">
+          <doc xml:whitespace="preserve">A #GList of #FsCandidate</doc>
+          <type name="GLib.List" c:type="GList*">
+            <type name="Candidate"/>
+          </type>
         </parameter>
       </parameters>
     </function>

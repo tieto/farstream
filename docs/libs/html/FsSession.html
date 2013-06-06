@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>FsSession</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="Farstream Reference Manual">
 <link rel="up" href="ch01.html" title="Farstream Core Library">
 <link rel="prev" href="FsParticipant.html" title="FsParticipant">
@@ -136,9 +136,9 @@ This will communicate asynchronous events to the user through <a href="http://gs
 of type <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GST-MESSAGE-ELEMENT:CAPS"><span class="type">GST_MESSAGE_ELEMENT</span></a> sent over the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBus.html"><span class="type">GstBus</span></a>.
 </p>
 <div class="refsect2">
-<a name="idp4774624"></a><h3>The "<code class="literal">farstream-send-codec-changed</code>"
+<a name="idp4898112"></a><h3>The "<code class="literal">farstream-send-codec-changed</code>"
   message</h3>
-<table id="idp4775936">
+<div class="table"><table>
 <tr>
   <td><code class="code">"session"</code></td>
   <td><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></td>
@@ -155,7 +155,7 @@ of type <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstrea
   <td>A <span class="type">GList</span> of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> (to be freed with <a class="link" href="farstream-libs-FsCodec.html#fs-codec-list-destroy" title="fs_codec_list_destroy ()"><code class="function">fs_codec_list_destroy()</code></a>)
   </td>
  </tr>
-</table>
+</table></div>
 <p>
 This message is sent on the bus when the value of the
 <a class="link" href="FsSession.html#FsSession--current-send-codec" title='The "current-send-codec" property'><span class="type">"current-send-codec"</span></a> property changes.
@@ -163,13 +163,13 @@ This message is sent on the bus when the value of the
 </div>
 <hr>
 <div class="refsect2">
-<a name="idp4788000"></a><h3>The "<code class="literal">farstream-codecs-changed</code>"
+<a name="idp4911488"></a><h3>The "<code class="literal">farstream-codecs-changed</code>"
  message</h3>
-<table id="idp4789312"><tr>
+<div class="table"><table><tr>
   <td><code class="code">"session"</code></td>
   <td><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></td>
   <td>The session that emits the message</td>
- </tr></table>
+ </tr></table></div>
 <p>
 This message is sent on the bus when the value of the
 <a class="link" href="FsSession.html#FsSession--codecs" title='The "codecs" property'><span class="type">"codecs"</span></a> or <a class="link" href="FsSession.html#FsSession--codecs-without-config" title='The "codecs-without-config" property'><span class="type">"codecs-without-config"</span></a> properties change.
@@ -180,9 +180,9 @@ transmitted reliably, one should fetch <a class="link" href="FsSession.html#FsSe
 </div>
 <hr>
 <div class="refsect2">
-<a name="idp4796336"></a><h3>The "<code class="literal">farstream-telephony-event-started</code>"
+<a name="idp4919824"></a><h3>The "<code class="literal">farstream-telephony-event-started</code>"
  message</h3>
-<table id="idp4797648">
+<div class="table"><table>
 <tr>
   <td><code class="code">"session"</code></td>
   <td><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></td>
@@ -203,7 +203,7 @@ transmitted reliably, one should fetch <a class="link" href="FsSession.html#FsSe
   <td>guchar</td>
   <td>The volume of the event</td>
  </tr>
-</table>
+</table></div>
 <p>
 This message is emitted after a succesful call to
 <a class="link" href="FsSession.html#fs-session-start-telephony-event" title="fs_session_start_telephony_event ()"><code class="function">fs_session_start_telephony_event()</code></a> to inform the application that the
@@ -212,9 +212,9 @@ telephony event has started.
 </div>
 <hr>
 <div class="refsect2">
-<a name="idp4809168"></a><h3>The "<code class="literal">farstream-telephony-event-stopped</code>"
+<a name="idp4932656"></a><h3>The "<code class="literal">farstream-telephony-event-stopped</code>"
  message</h3>
-<table id="idp4810480">
+<div class="table"><table>
 <tr>
   <td><code class="code">"session"</code></td>
   <td><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></td>
@@ -225,7 +225,7 @@ telephony event has started.
   <td><a class="link" href="FsSession.html#FsDTMFMethod" title="enum FsDTMFMethod"><span class="type">FsDTMFMethod</span></a></td>
   <td>The method used to send the DTMF</td>
  </tr>
-</table>
+</table></div>
 <p>
 This message is emitted after a succesful call to
 <a class="link" href="FsSession.html#fs-session-stop-telephony-event" title="fs_session_stop_telephony_event ()"><code class="function">fs_session_stop_telephony_event()</code></a> to inform the application that the
@@ -278,8 +278,11 @@ All members are private, access them using methods and properties
 <p>
 You must override at least new_stream in a subclass.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><span class="type">GObjectClass</span> <em class="structfield"><code><a name="FsSessionClass.parent-class"></a>parent_class</code></em>;</span></p></td>
@@ -345,8 +348,11 @@ http://www.iana.org/assignments/audio-telephone-event-registry
 <p>
 An enum that represents the different ways a DTMF event can be sent
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="FS-DTMF-METHOD-RTP-RFC4733:CAPS"></a><span class="term"><code class="literal">FS_DTMF_METHOD_RTP_RFC4733</code></span></p></td>
@@ -372,8 +378,11 @@ An enum that represents the different ways a DTMF event can be sent
 <p>
 This function creates a stream for the given participant into the active session.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
@@ -429,8 +438,11 @@ dynamically assigned payload type.
 If the list of specifications would invalidate all codecs, an error will
 be returned.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
@@ -469,8 +481,11 @@ can not be used anymore.
 It is strongly recommended to call this function from the main thread because
 releasing the application's reference to a session.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
 <td>a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>
@@ -493,8 +508,11 @@ tone) on the <a class="link" href="FsSession.html" title="FsSession"><span class
 If this function returns <code class="literal">TRUE</code>, a "farstream-telephony-event-started" will
 always be emitted when the event is actually played out.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
@@ -535,8 +553,11 @@ short.
 If this function returns <code class="literal">TRUE</code>, a "farstream-telephony-event-stopped" will
 always be emitted when the event is actually stopped.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
@@ -565,8 +586,11 @@ property of the session. If the given codec is not in the codecs
 list, <em class="parameter"><code>error</code></em> will be set and <code class="literal">FALSE</code> will be returned. The <em class="parameter"><code>send_codec</code></em> will be
 copied so it must be free'd using <a class="link" href="farstream-libs-FsCodec.html#fs-codec-destroy" title="fs_codec_destroy ()"><code class="function">fs_codec_destroy()</code></a> when done.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
@@ -596,8 +620,11 @@ copied so it must be free'd using <a class="link" href="farstream-libs-FsCodec.h
 <p>
 Get the list of all available transmitters for this session.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
@@ -624,8 +651,11 @@ session. It should be freed with <code class="function">g_strfreev()</code>. <sp
 Returns the GType of the stream transmitter, bindings can use it
 to validate/convert the parameters passed to <a class="link" href="FsSession.html#fs-session-new-stream" title="fs_session_new_stream ()"><code class="function">fs_session_new_stream()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
@@ -654,8 +684,11 @@ Some codec updates need to be reliably transmitted to the other side
 because they contain important parameters required to decode the media.
 Other codec updates, caused by user action, don't.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
@@ -692,8 +725,11 @@ list must be freed with <a class="link" href="farstream-libs-FsCodec.html#fs-cod
 This function emit the "error" signal on a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>, it should only be
 called by subclasses.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
@@ -721,8 +757,11 @@ called by subclasses.
 Parses a "farstream-codecs-changed" message and checks if it matches
 the <em class="parameter"><code>session</code></em> parameters.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
@@ -751,8 +790,11 @@ the <em class="parameter"><code>session</code></em> parameters.
 Parses a "farstream-send-codec-changed" message and checks if it matches
 the <em class="parameter"><code>session</code></em> parameters.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
@@ -794,8 +836,11 @@ the <em class="parameter"><code>session</code></em> parameters.
 Parses a "farstream-telephony-event-started" message and checks if it matches
 the <em class="parameter"><code>session</code></em> parameters.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
@@ -839,8 +884,11 @@ the <em class="parameter"><code>session</code></em> parameters.
 Parses a "farstream-telephony-event-stopped" message and checks if it matches
 the <em class="parameter"><code>session</code></em> parameters.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
@@ -1023,8 +1071,11 @@ Sets the IP ToS field (and if possible the IPv6 TCLASS field
 This signal is emitted in any error condition, it can be emitted on any
 thread. Applications should listen to the GstBus for errors.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>

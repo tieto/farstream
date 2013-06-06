@@ -28,7 +28,7 @@
 #include <farstream/fs-transmitter.h>
 
 #include <gst/gst.h>
-#include <agent.h>
+#include <nice/agent.h>
 
 G_BEGIN_DECLS
 

@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>FsConference</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="Farstream Reference Manual">
 <link rel="up" href="ch01.html" title="Farstream Core Library">
 <link rel="prev" href="ch01.html" title="Farstream Core Library">
@@ -88,7 +88,7 @@ This will communicate asynchronous events to the user through <a href="http://gs
 of type <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GST-MESSAGE-ELEMENT:CAPS"><span class="type">GST_MESSAGE_ELEMENT</span></a> sent over the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBus.html"><span class="type">GstBus</span></a>.
 </p>
 <div class="refsect2">
-<a name="idp484000"></a><h3>The "<code class="literal">farstream-error</code>" message</h3>
+<a name="idp83760"></a><h3>The "<code class="literal">farstream-error</code>" message</h3>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -129,8 +129,11 @@ The <a class="link" href="FsConference.html" title="FsConference"><span class="t
 <p>
 Create a new Farstream session for the given conference.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>conference</code></em> :</span></p></td>
@@ -164,8 +167,11 @@ The <a class="link" href="FsSession.html" title="FsSession"><span class="type">F
 <p>
 Create a new Farstream Participant for the type of the given conference.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>conference</code></em> :</span></p></td>
@@ -218,8 +224,11 @@ This quark is used to denote errors coming from Farstream objects
 This is the enum of error numbers that will come either on the "error"
 signal, from the Gst Bus or for error in the FS_ERROR domain in GErrors
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="FS-ERROR-CONSTRUCTION:CAPS"></a><span class="term"><code class="literal">FS_ERROR_CONSTRUCTION</code></span></p></td>
@@ -305,8 +314,11 @@ Tells the programmer if an error if fatal or not, if it returns <code class="lit
 the error is fatal, and the object that created it should
 be discarded. It returns <code class="literal">FALSE</code> otherwise.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
 <td>a <a class="link" href="FsConference.html#FsError" title="enum FsError"><span class="type">FsError</span></a>
@@ -325,8 +337,11 @@ be discarded. It returns <code class="literal">FALSE</code> otherwise.
 Parses a "farstream-farstream" message and checks if it matches
 the <em class="parameter"><code>object</code></em> parameters.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>

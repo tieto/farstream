@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>FsPlugin</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="Farstream Reference Manual">
 <link rel="up" href="ch05.html" title="Farstream Plugins Infrastructure">
 <link rel="prev" href="ch05.html" title="Farstream Plugins Infrastructure">
@@ -72,8 +72,11 @@ With this simple class, you can only have one type per plugin.
 <p>
 This structure represents a plugin, it is opaque.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><span class="type">GTypeModule</span> <em class="structfield"><code><a name="FsPlugin.parent"></a>parent</code></em>;</span></p></td>
 <td>the parent object</td>
@@ -92,8 +95,11 @@ This structure represents a plugin, it is opaque.
 Loads the appropriate plugin if necessary and creates a GObject of
 the requested type
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
@@ -136,8 +142,11 @@ object</td>
 Loads the appropriate plugin if necessary and creates a GObject of
 the requested type
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
@@ -176,8 +185,11 @@ object</td>
 This macro is used to declare Farstream plugins and must be used once
 in any farstream plugin.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>type_register_func</code></em> :</span></p></td>
 <td>A function that register a <span class="type">GType</span> and returns it</td>
@@ -191,8 +203,11 @@ in any farstream plugin.
 <p>
 Gets the list of all available plugins of a certain type
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>type_suffix</code></em> :</span></p></td>

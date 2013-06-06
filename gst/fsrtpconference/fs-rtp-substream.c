@@ -33,7 +33,6 @@
 #include <farstream/fs-session.h>
 
 #include "fs-rtp-stream.h"
-#include "fs-rtp-marshal.h"
 
 
 #define GST_CAT_DEFAULT fsrtpconference_debug
@@ -326,10 +325,7 @@ fs_rtp_sub_stream_class_init (FsRtpSubStreamClass *klass)
   signals[SRC_PAD_ADDED] = g_signal_new ("src-pad-added",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      0,
-      NULL,
-      NULL,
-      _fs_rtp_marshal_VOID__BOXED_BOXED,
+      0, NULL, NULL, NULL,
       G_TYPE_NONE, 2, GST_TYPE_PAD, FS_TYPE_CODEC);
 
   /**
@@ -345,10 +341,7 @@ fs_rtp_sub_stream_class_init (FsRtpSubStreamClass *klass)
   signals[ERROR_SIGNAL] = g_signal_new ("error",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      0,
-      NULL,
-      NULL,
-      _fs_rtp_marshal_VOID__INT_STRING_STRING,
+      0, NULL, NULL, NULL,
       G_TYPE_NONE, 3, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING);
 
  /**
@@ -387,10 +380,7 @@ fs_rtp_sub_stream_class_init (FsRtpSubStreamClass *klass)
   signals[GET_CODEC_BIN] = g_signal_new ("get-codec-bin",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      0,
-      NULL,
-      NULL,
-      _fs_rtp_marshal_POINTER__POINTER_POINTER_UINT_POINTER_POINTER,
+      0, NULL, NULL, NULL,
       G_TYPE_POINTER, 5, G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_UINT,
       G_TYPE_POINTER, G_TYPE_POINTER);
 
@@ -877,7 +867,6 @@ fs_rtp_sub_stream_get_property (GObject *object,
 
 static gboolean
 fs_rtp_sub_stream_set_codecbin (FsRtpSubStream *substream,
-    FsCodec *codec,
     GstElement *codecbin,
     guint builder_hash,
     GError **error)
@@ -897,7 +886,6 @@ fs_rtp_sub_stream_set_codecbin (FsRtpSubStream *substream,
           " and payload type %d to the state NULL", substream->ssrc,
           substream->pt);
       gst_object_unref (codecbin);
-      fs_codec_destroy (codec);
       return FALSE;
     }
 
@@ -914,7 +902,6 @@ fs_rtp_sub_stream_set_codecbin (FsRtpSubStream *substream,
   if (!gst_bin_add (GST_BIN (substream->priv->conference), codecbin))
   {
     gst_object_unref (codecbin);
-    fs_codec_destroy (codec);
     g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
       "Could not add the codec bin to the conference");
     return FALSE;
@@ -958,7 +945,6 @@ fs_rtp_sub_stream_set_codecbin (FsRtpSubStream *substream,
   FS_RTP_SESSION_LOCK (substream->priv->session);
   substream->priv->codecbin = codecbin;
   substream->priv->builder_hash = builder_hash;
-  codec = NULL;
 
   if (substream->priv->stream && !substream->priv->output_ghostpad)
   {
@@ -979,8 +965,6 @@ fs_rtp_sub_stream_set_codecbin (FsRtpSubStream *substream,
   gst_element_set_locked_state (codecbin, TRUE);
   gst_element_set_state (codecbin, GST_STATE_NULL);
   gst_bin_remove (GST_BIN (substream->priv->conference), codecbin);
-
-  fs_codec_destroy (codec);
 
   return ret;
 }
@@ -1293,12 +1277,16 @@ _rtpbin_pad_blocked_callback (GstPad *pad, GstPadProbeInfo *info,
     g_free (tmp);
     g_object_set (substream->priv->capsfilter, "caps", caps, NULL);
   }
+  else if (codec)
+  {
+    fs_codec_destroy (codec);
+  }
   FS_RTP_SESSION_UNLOCK (substream->priv->session);
 
   if (codecbin)
   {
-    if (!fs_rtp_sub_stream_set_codecbin (substream, codec, codecbin,
-            new_builder_hash, &error))
+    if (!fs_rtp_sub_stream_set_codecbin (substream, codecbin, new_builder_hash,
+            &error))
       goto error;
   }
 
@@ -1342,6 +1330,8 @@ _rtpbin_pad_blocked_callback (GstPad *pad, GstPadProbeInfo *info,
   else
     fs_session_emit_error (FS_SESSION (substream->priv->session),
         FS_ERROR_CONSTRUCTION, error->message);
+  if (caps)
+    gst_caps_unref (caps);
 
   goto out;
 }

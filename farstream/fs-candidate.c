@@ -172,7 +172,7 @@ fs_candidate_list_copy (const GList *candidate_list)
  * @component_id: The component this candidate is for
  * @type: The type of candidate
  * @proto: The protocol this component is for
- * @ip: The IP address of this component (can be NULL for local candidate to
+ * @ip: (allow-none): The IP address of this component (can be NULL for local candidate to
  *     mean any address)
  * @port: the UDP/TCP port
  *
@@ -207,17 +207,17 @@ fs_candidate_new (
  * fs_candidate_new_full:
  * @foundation: The foundation of the candidate
  * @component_id: The component this candidate is for
- * @ip: The IP address of this component (can be NULL for local candidate to
+ * @ip: (allow-none): The IP address of this component (can be NULL for local candidate to
  *     mean any address)
  * @port: the UDP/TCP port
- * @base_ip: IP of base in dotted format as defined in ICE-19.
+ * @base_ip: (allow-none): IP of base in dotted format as defined in ICE-19.
  * @base_port: Port of base as defined in ICE-19.
  * @proto: The protocol this component is for
  * @priority: Value between 0 and (2^31 - 1) representing the priority
  * @type: The type of candidate
- * @username: Username to use to connect to client if necessary,
+ * @username (allow-none):: Username to use to connect to client if necessary,
  *            NULL otherwise
- * @password: Username to use to connect to client if necessary,
+ * @password: (allow-none): Username to use to connect to client if necessary,
  *            NULL otherwise
  * @ttl: The TTL used when sending Multicast packet (0 = auto)
  *
@@ -258,4 +258,21 @@ fs_candidate_new_full (
   candidate->ttl = ttl;
 
   return candidate;
+}
+
+/**
+ * fs_value_set_candidate_list:
+ * @value: a #GValue of type #FS_TYPE_CANDIDATE_LIST
+ * @candidates: (element-type FsCandidate) (allow-none): A #GList of #FsCandidate
+ *
+ * This is for the bindings benefit. Works around the limitations of GObject
+ * introspection.
+ *
+ */
+
+void
+fs_value_set_candidate_list (GValue *value, GList *candidates)
+{
+  g_value_init (value, FS_TYPE_CANDIDATE_LIST);
+  g_value_set_boxed (value, candidates);
 }
