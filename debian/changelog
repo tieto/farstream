@@ -1,6 +1,8 @@
 farstream-0.2 (0.2.3-1) UNRELEASED; urgency=low
 
   * New upstream release
+  * Add patch from upstream git to try to use payload type 101 for
+    telephone events, improving interoperability
 
  -- Simon McVittie <smcv@debian.org>  Thu, 06 Jun 2013 09:51:34 +0100
 

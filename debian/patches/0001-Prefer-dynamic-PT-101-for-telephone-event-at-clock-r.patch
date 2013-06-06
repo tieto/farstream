@@ -1,0 +1,50 @@
+From: Simon McVittie <simon.mcvittie@collabora.co.uk>
+Date: Mon, 3 Jun 2013 20:06:53 +0100
+Subject: Prefer dynamic PT 101 for telephone-event at clock rate 8000
+
+The WebRTC implementation in Google Chrome <= 26 would reject calls
+if there was "a telephone-event payload type less than 101"[1] and
+as of 2013-06-03, the Google Mail web UI with the VoIP extension
+seems to have a similar signalling bug. Experimenting with the web UI
+indicates that telephone-events with clock rate != 8000 are irrelevant,
+and only clock rate 8000 matters. Hopefully the same was true in WebRTC
+(I can't find a libjingle commit that looks likely to have fixed this).
+
+Meanwhile, many SIP implementations and at least one Jingle
+implementation (Freeswitch's mod_dingaling) either hard-code payload
+type 101 to be telephone-event, or make the payload type for
+telephone-event a configuration option. I can't help thinking this
+was not how dynamic payload types were meant to work, but
+interoperability is interoperability...
+
+This fixes interop when Empathy 3.8 + telepathy-gabble 0.17.4, on a
+system with not many codecs installed) calls the Google Mail web
+UI. When the same setup is called by a peer that specifies a different
+PT for telephone-event:8000 (the Google Mail web UI uses 126 in its
+outgoing calls), the peer's choice of PT takes precedence.
+
+[1] https://code.google.com/p/webrtc/issues/detail?id=1783
+
+Bug: https://bugs.freedesktop.org/show_bug.cgi?id=65311
+Origin: upstream, 0.2.4, commit:6e899cdc8210aa28fec63cce0de65338c73234d2
+---
+ gst/fsrtpconference/default-codec-preferences |    6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/gst/fsrtpconference/default-codec-preferences b/gst/fsrtpconference/default-codec-preferences
+index afe737e..e7ceb8a 100644
+--- a/gst/fsrtpconference/default-codec-preferences
++++ b/gst/fsrtpconference/default-codec-preferences
+@@ -18,6 +18,12 @@ clock-rate=16000
+ 
+ [audio/ILBC]
+ 
++# It seems to be pretty common to hard-code that dynamic payload type 101
++# is telephone-event at clock rate 8000. This also avoids an interop
++# bug with Google Chrome's WebRTC, GMail and possibly other implementations.
++[audio/telephone-event:8000]
++clock-rate=8000
++id=101
+ 
+ # Disabled audio codecs
+ # These are unsuitable for calling
