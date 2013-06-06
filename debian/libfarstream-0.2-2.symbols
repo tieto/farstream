@@ -95,6 +95,7 @@ libfarstream-0.2.so.2 libfarstream-0.2-2 #MINVER#
  fs_stream_parse_recv_codecs_changed@Base 0.1.91
  fs_stream_set_remote_codecs@Base 0.1.91
  fs_stream_set_transmitter@Base 0.1.91
+ fs_stream_set_transmitter_ht@Base 0.2.3
  fs_stream_state_get_type@Base 0.1.91
  fs_stream_transmitter_add_remote_candidates@Base 0.1.91
  fs_stream_transmitter_emit_error@Base 0.1.91
@@ -113,3 +114,4 @@ libfarstream-0.2.so.2 libfarstream-0.2-2 #MINVER#
  fs_utils_get_default_element_properties@Base 0.1.91
  fs_utils_get_default_rtp_header_extension_preferences@Base 0.1.91
  fs_utils_set_bitrate@Base 0.1.91
+ fs_value_set_candidate_list@Base 0.2.3
