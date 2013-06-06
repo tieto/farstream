@@ -7,6 +7,7 @@ Uploaders: Simon McVittie <smcv@debian.org>,
            Laurent Bigonville <bigon@debian.org>,
            Jonny Lamb <jonny@debian.org>
 Build-Depends: debhelper (>= 9),
+               dh-autoreconf,
                autotools-dev,
                libglib2.0-dev (>= 2.32),
                libgstreamer1.0-dev,
