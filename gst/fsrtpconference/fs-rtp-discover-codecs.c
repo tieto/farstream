@@ -384,7 +384,6 @@ validate_h263_codecs (CodecCap *codec_cap)
   if (!rtp_struct)
     return FALSE;
 
-  /* If there no h263version, we accept everything */
   encoding_name = gst_structure_get_string (rtp_struct, "encoding-name");
 
   /* If there is no encoding name, we have a problem, lets refuse it */
@@ -537,7 +536,7 @@ remove_duplicates (GList *list)
       if (gst_caps_is_equal (codec_cap1->rtp_caps, codec_cap2->rtp_caps))
       {
         codec_cap_free (codec_cap2);
-        walk1 = g_list_remove_link (walk1, walk2);
+        walk1 = g_list_delete_link (walk1, walk2);
         goto again;
       }
     }
@@ -1108,11 +1107,8 @@ compare_media_caps (gconstpointer a, gconstpointer b)
 }
 
 static gint
-compare_rtp_caps (gconstpointer a, gconstpointer b)
+compare_rtp_caps (CodecCap *element, GstCaps *c_caps)
 {
-  CodecCap *element = (CodecCap *)a;
-  GstCaps *c_caps = (GstCaps *)b;
-
   return !gst_caps_can_intersect (element->rtp_caps, c_caps);
 }
 
@@ -1221,8 +1217,9 @@ create_codec_cap_list (GstElementFactory *factory,
 
         if (rtp_caps) {
           if (entry->rtp_caps) {
-            entry->rtp_caps = gst_caps_merge (gst_caps_copy (rtp_caps),
-              entry->rtp_caps);
+            GstCaps *tmp = gst_caps_intersect (rtp_caps, entry->rtp_caps);
+            gst_caps_unref (entry->rtp_caps);
+            entry->rtp_caps = tmp;
           } else {
             entry->rtp_caps = gst_caps_ref (rtp_caps);
             /* This shouldn't happen, its we're looking at rtp elements
@@ -1302,15 +1299,44 @@ get_plugins_filtered_from_caps (FilterFunc filter,
     else
     {
       gint i;
-      for (i = 0; i < gst_caps_get_size (matched_caps); i++)
-      {
-        GstCaps *cur_caps =
-            gst_caps_copy_nth (matched_caps, i);
+      GPtrArray *capslist = g_ptr_array_new_with_free_func (
+        (GDestroyNotify) gst_caps_unref);
 
-        list = create_codec_cap_list (factory, direction, list, cur_caps);
-        gst_caps_unref (cur_caps);
+      while (gst_caps_get_size (matched_caps) > 0)
+      {
+        GstCaps *stolencaps = gst_caps_new_full (
+          gst_caps_steal_structure (matched_caps, 0), NULL);
+        gboolean got_match = FALSE;
+
+        for (i = 0; i < capslist->len; i++)
+        {
+          GstCaps *intersect = gst_caps_intersect (stolencaps,
+              g_ptr_array_index (capslist, i));
+
+          if (gst_caps_is_empty (intersect))
+          {
+            gst_caps_unref (intersect);
+          }
+          else
+          {
+            got_match = TRUE;
+            gst_caps_unref (g_ptr_array_index (capslist, i));
+            g_ptr_array_index (capslist, i) = intersect;
+          }
+        }
+
+        if (got_match)
+          gst_caps_unref (stolencaps);
+        else
+          g_ptr_array_add (capslist, stolencaps);
+
       }
       gst_caps_unref (matched_caps);
+
+      for (i = 0; i < capslist->len; i++)
+        list = create_codec_cap_list (factory, direction, list,
+            g_ptr_array_index (capslist, i));
+      g_ptr_array_unref (capslist);
     }
   }
 

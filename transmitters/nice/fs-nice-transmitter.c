@@ -42,8 +42,6 @@
 #include <farstream/fs-conference.h>
 #include <farstream/fs-plugin.h>
 
-#include <agent.h>
-
 #include <string.h>
 #include <sys/types.h>
 

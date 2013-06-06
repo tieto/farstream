@@ -137,8 +137,8 @@ _handoff_handler (GstElement *element, GstBuffer *buffer, GstPad *pad,
 
   buffer_count[component_id-1]++;
 
-  GST_LOG ("Buffer %d component: %d size: %u", buffer_count[component_id-1],
-    component_id, gst_buffer_get_size (buffer));
+  GST_LOG ("Buffer %d component: %d size: %" G_GSIZE_FORMAT,
+      buffer_count[component_id-1], component_id, gst_buffer_get_size (buffer));
 
   ts_fail_if (buffer_count[component_id-1] > 20,
     "Too many buffers %d > 20 for component",
@@ -179,7 +179,7 @@ _known_source_packet_received (FsStreamTransmitter *st, guint component_id,
 
   received_known[component_id - 1]++;
 
-  GST_LOG ("Known source buffer %d component: %d size: %u",
+  GST_LOG ("Known source buffer %d component: %d size: %" G_GSIZE_FORMAT,
       received_known[component_id-1], component_id,
       gst_buffer_get_size (buffer));
 }
@@ -216,6 +216,7 @@ run_shm_transmitter_test (gint flags)
   FsCandidate *cand;
   GList *remote_cands = NULL;
   int param_count = 0;
+  gint bus_source;
 
   done = FALSE;
   connected_count = 0;
@@ -279,7 +280,7 @@ run_shm_transmitter_test (gint flags)
   pipeline = setup_pipeline (trans, G_CALLBACK (_handoff_handler));
 
   bus = gst_element_get_bus (pipeline);
-  gst_bus_add_watch (bus, bus_error_callback, NULL);
+  bus_source = gst_bus_add_watch (bus, bus_error_callback, NULL);
 
   gst_bus_enable_sync_message_emission (bus);
   g_signal_connect (bus, "sync-message::error",
@@ -396,6 +397,7 @@ run_shm_transmitter_test (gint flags)
 
   g_object_unref (trans);
 
+  g_source_remove (bus_source);
   gst_object_unref (pipeline);
 
   g_cond_clear (&cond);

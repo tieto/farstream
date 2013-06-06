@@ -695,6 +695,13 @@ fs_shm_transmitter_check_shm_src (FsShmTransmitter *self, ShmSrc *shm,
     gst_pad_remove_probe (shm->funnelpad, shm->buffer_probe);
   shm->buffer_probe = 0;
 
+  if (shm->funnelpad) {
+    gst_element_release_request_pad (self->priv->funnels[shm->component],
+        shm->funnelpad);
+    gst_object_unref (shm->funnelpad);
+  }
+  shm->funnelpad = NULL;
+
   if (shm->src)
   {
     gst_element_set_locked_state (shm->src, TRUE);

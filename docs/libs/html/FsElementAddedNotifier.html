@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>FsElementAddedNotifier</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="Farstream Reference Manual">
 <link rel="up" href="ch03.html" title="Farstream Utility Functions and Objects">
 <link rel="prev" href="ch03.html" title="Farstream Utility Functions and Objects">
@@ -101,8 +101,11 @@ All members are private
 <p>
 Creates a new <a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> object
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>the newly-created <a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a>
@@ -120,8 +123,11 @@ Add a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreame
 will be called on every element and sub-element present and added in the
 future.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>notifier</code></em> :</span></p></td>
@@ -143,8 +149,11 @@ future.
 <p>
 Stop watching the passed bin and its subbins.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>notifier</code></em> :</span></p></td>
@@ -177,8 +186,11 @@ this function has been called.  It will take ownership of the
 GKeyFile structure. It will first try the group as the element type, if that
 does not match, it will check its name.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>notifier</code></em> :</span></p></td>
@@ -209,8 +221,11 @@ this property setter using <code class="function">g_signal_handler_disconnect()<
 Same as <a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-set-properties-from-keyfile" title="fs_element_added_notifier_set_properties_from_keyfile ()"><code class="function">fs_element_added_notifier_set_properties_from_keyfile()</code></a> but using
 the name of the file to load instead of the <span class="type">GKeyFile</span> directly.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>notifier</code></em> :</span></p></td>
@@ -247,8 +262,11 @@ the result with
 <p>
 This is binding friendly (since GKeyFile doesn't have a boxed type).
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>notifier</code></em> :</span></p></td>
@@ -284,8 +302,11 @@ Be careful, there is no guarantee that this will be emitted on your
 main thread, it will be emitted in the thread that added the element.
 The bin may be <code class="literal">NULL</code> if this is the top-level bin.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>

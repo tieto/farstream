@@ -914,9 +914,9 @@ incoming_rtcp_probe (GstPad *pad, GstPadProbeInfo *info, gpointer user_data)
       x_recv = GST_READ_UINT32_BE (buf);
       buf += 4;
       loss_event_rate = (gdouble) GST_READ_UINT32_BE (buf) / (gdouble) G_MAXUINT;
-      GST_LOG_OBJECT (self, "Got RTCP TFRC packet last_sent_ts: %u"
-          " delay: %u x_recv: %u loss_event_rate: %f", ts, delay, x_recv,
-          loss_event_rate);
+      GST_LOG_OBJECT (self, "Got RTCP TFRC packet last_sent_ts: %"
+          G_GUINT64_FORMAT " delay: %u x_recv: %u loss_event_rate: %f", ts,
+          delay, x_recv, loss_event_rate);
 
       GST_OBJECT_LOCK (self);
 
@@ -968,7 +968,8 @@ incoming_rtcp_probe (GstPad *pad, GstPadProbeInfo *info, gpointer user_data)
 
       if (rtt > 10 * 1000 * 1000)
       {
-        GST_WARNING_OBJECT (self, "Impossible RTT %u ms, ignoring", rtt);
+        GST_WARNING_OBJECT (self, "Impossible RTT %" G_GUINT64_FORMAT
+            " ms, ignoring", rtt);
         goto done;
       }
 

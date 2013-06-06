@@ -24,12 +24,6 @@ libfsrtpconference_convenience_la_SOURCES = \
 	fs-rtp-packet-modder.c \
 	tfrc.c
 
-nodist_libfsrtpconference_convenience_la_SOURCES = \
-	fs-rtp-marshal.c \
-	fs-rtp-marshal.h
-
-BUILT_SOURCES = $(nodist_libfsrtpconference_convenience_la_SOURCES)
-
 noinst_HEADERS = \
 	fs-rtp-conference.h \
 	fs-rtp-participant.h \
@@ -49,8 +43,6 @@ noinst_HEADERS = \
 	fs-rtp-tfrc.h \
 	fs-rtp-packet-modder.h \
 	tfrc.h
-
-CLEANFILES = $(BUILT_SOURCES) fs-rtp-marshal.list
 
 AM_CFLAGS = \
 	$(FS_INTERNAL_CFLAGS) \
@@ -95,17 +87,6 @@ endif
 
 # Build the build sources
 
-fs-rtp-marshal.list: $(libfsrtpconference_convenience_la_SOURCES) Makefile.am
-	$(AM_V_GEN)( cd $(srcdir) && \
-	sed -n -e 's/.*fs_rtp_marshal_\([[:upper:][:digit:]]*__[[:upper:][:digit:]_]*\).*/\1/p' \
-	$(libfsrtpconference_convenience_la_SOURCES) ) \
-	| sed -e 's/__/:/' -e 'y/_/,/' | sort -u > $@.tmp
-	@if cmp -s $@.tmp $@; then \
-		rm $@.tmp; \
-		touch $@; \
-	else \
-		mv $@.tmp $@; \
-	fi
 
 glib_enum_define=FS_RTP
 glib_gen_prefix=_fs_rtp

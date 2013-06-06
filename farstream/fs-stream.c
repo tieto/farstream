@@ -105,7 +105,6 @@
 #include <gst/gst.h>
 
 #include "fs-session.h"
-#include "fs-marshal.h"
 #include "fs-codec.h"
 #include "fs-candidate.h"
 #include "fs-stream-transmitter.h"
@@ -298,10 +297,7 @@ fs_stream_class_init (FsStreamClass *klass)
   signals[ERROR_SIGNAL] = g_signal_new ("error",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      0,
-      NULL,
-      NULL,
-      _fs_marshal_VOID__ENUM_STRING,
+      0, NULL, NULL, NULL,
       G_TYPE_NONE, 2, FS_TYPE_ERROR, G_TYPE_STRING);
 
   /**
@@ -323,10 +319,7 @@ fs_stream_class_init (FsStreamClass *klass)
   signals[SRC_PAD_ADDED] = g_signal_new ("src-pad-added",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      0,
-      NULL,
-      NULL,
-      _fs_marshal_VOID__BOXED_BOXED,
+      0, NULL, NULL, NULL,
       G_TYPE_NONE, 2, GST_TYPE_PAD, FS_TYPE_CODEC);
 
   g_type_class_add_private (klass, sizeof (FsStreamPrivate));
@@ -652,6 +645,105 @@ fs_stream_set_transmitter (FsStream *stream,
       "set_transmitter not defined in class");
 
   return FALSE;
+}
+
+/**
+ * fs_stream_set_transmitter_ht:
+ * @stream: a #FsStream
+ * @transmitter: Name of the type of transmitter to use for this stream
+ * @stream_transmitter_parameters: (element-type utf8 GValue) (allow-none):
+ *   A #GHashTable of <String->GValue) containing the parameters.
+ * @error: location of a #GError, or %NULL if no error occured
+ *
+ * Set the transmitter to use for this stream. This function will only succeed
+ * once.
+ *
+ * The parameters correspond to the varios GObject properties of the
+ * selected stream transmitter.
+ *
+ * This is the same as fs_stream_set_transmitter() except that the parameters
+ * are passed in a #GHashTable to make it more friendly to GObject introspection
+ *
+ * Returns: %TRUE if the transmitter could be set, %FALSE otherwise
+ */
+gboolean fs_stream_set_transmitter_ht (FsStream *stream,
+    const gchar *transmitter,
+    GHashTable *stream_transmitter_parameters,
+    GError **error)
+{
+  GParameter *params = NULL;
+  gboolean ret = FALSE;
+  guint n_params = 0;
+  guint i = 0;
+
+  if (stream_transmitter_parameters &&
+      g_hash_table_size (stream_transmitter_parameters) != 0)
+  {
+    FsSession *session = NULL;
+    GType st_type;
+    GObjectClass *st_class  = NULL;
+    GHashTableIter iter;
+    gpointer key, value;
+
+    n_params = g_hash_table_size (stream_transmitter_parameters);
+
+    g_object_get (stream, "session", &session, NULL);
+
+    if (!session) {
+      g_set_error_literal (error, FS_ERROR, FS_ERROR_DISPOSED,
+          "Stream has already been disposed");
+      return FALSE;
+    }
+
+    st_type = fs_session_get_stream_transmitter_type (session,
+        transmitter);
+    g_object_unref (session);
+
+    if (st_type == 0) {
+      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+          "Unknown transmitter: %s", transmitter);
+      return FALSE;
+    }
+
+    params = g_new0 (GParameter, n_params);
+    st_class = g_type_class_ref (st_type);
+
+    g_hash_table_iter_init (&iter, stream_transmitter_parameters);
+    while (g_hash_table_iter_next (&iter, &key, &value)) {
+      GParamSpec *spec;
+      gchar *name = key;
+      const GValue *v = value;
+
+      spec = g_object_class_find_property (st_class, name);
+
+      if (!spec) {
+        g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+            "Unknown argument %s for transmitter %s", name, transmitter);
+        goto end;
+      }
+
+      params[i].name = name;
+      g_value_init (&params[i].value, G_PARAM_SPEC_VALUE_TYPE(spec));
+      if (!g_value_transform (v, &params[i].value)) {
+        g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+            "Invalid type of argument %s for transmitter %s",
+            name, transmitter);
+        goto end;
+      }
+      i++;
+    }
+  }
+
+  ret = fs_stream_set_transmitter (stream, transmitter, params, n_params,
+      error);
+
+end:
+
+  for (i = 0; i < n_params; i++)
+    g_value_unset (&params[i].value);
+  g_free (params);
+
+  return ret;
 }
 
 /**

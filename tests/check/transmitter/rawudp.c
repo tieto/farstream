@@ -50,7 +50,7 @@ gboolean has_stun = FALSE;
 gboolean associate_on_source = TRUE;
 
 gboolean pipeline_done = FALSE;
-GStaticMutex pipeline_mod_mutex = G_STATIC_MUTEX_INIT;
+GMutex pipeline_mod_mutex;
 
 void *stun_alternd_data = NULL;
 
@@ -187,11 +187,11 @@ _new_active_candidate_pair (FsStreamTransmitter *st, FsCandidate *local,
 
   GST_DEBUG ("New active candidate pair for component %d", local->component_id);
 
-  g_static_mutex_lock (&pipeline_mod_mutex);
+  g_mutex_lock (&pipeline_mod_mutex);
   if (!pipeline_done && !src_setup[local->component_id-1])
     setup_fakesrc (user_data, pipeline, local->component_id);
   src_setup[local->component_id-1] = TRUE;
-  g_static_mutex_unlock (&pipeline_mod_mutex);
+  g_mutex_unlock (&pipeline_mod_mutex);
 }
 
 static void
@@ -206,8 +206,8 @@ _handoff_handler (GstElement *element, GstBuffer *buffer, GstPad *pad,
 
   buffer_count[component_id-1]++;
 
-  GST_LOG ("Buffer %d component: %d size: %u", buffer_count[component_id-1],
-    component_id, gst_buffer_get_size (buffer));
+  GST_LOG ("Buffer %d component: %d size: %" G_GSIZE_FORMAT,
+      buffer_count[component_id-1], component_id, gst_buffer_get_size (buffer));
 
   ts_fail_if (buffer_count[component_id-1] > 20,
     "Too many buffers %d > 20 for component",
@@ -385,9 +385,9 @@ run_rawudp_transmitter_test (gint n_parameters, GParameter *params,
 
  skip:
 
-  g_static_mutex_lock (&pipeline_mod_mutex);
+  g_mutex_lock (&pipeline_mod_mutex);
   pipeline_done = TRUE;
-  g_static_mutex_unlock (&pipeline_mod_mutex);
+  g_mutex_unlock (&pipeline_mod_mutex);
 
   gst_element_set_state (pipeline, GST_STATE_NULL);
 
@@ -915,7 +915,7 @@ GST_END_TEST;
 void
 setup_stunalternd_valid (void)
 {
-  stun_alternd_data = stun_alternd_init (AF_INET,
+  stun_alternd_data = stun_alternd_init (G_SOCKET_FAMILY_IPV4,
       "127.0.0.1", 3478, 3480);
 
   if (!stun_alternd_data)
@@ -926,7 +926,7 @@ setup_stunalternd_valid (void)
 static void
 setup_stunalternd_loop (void)
 {
-  stun_alternd_data = stun_alternd_init (AF_INET,
+  stun_alternd_data = stun_alternd_init (G_SOCKET_FAMILY_IPV4,
       "127.0.0.1", 3478, 3478);
 
   if (!stun_alternd_data)

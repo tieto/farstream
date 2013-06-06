@@ -10,7 +10,7 @@ TESTS_ENVIRONMENT = \
 	CK_DEFAULT_TIMEOUT=120					\
 	STATE_IGNORE_ELEMENTS="$(STATE_IGNORE_ELEMENTS)"	\
 	$(REGISTRY_ENVIRONMENT)					\
-	GST_PLUGIN_LOADING_WHITELIST=gstreamer:gst-plugins-base:gst-plugins-good:libnice:valve:siren:autoconvert:rtpmux:dtmf:mimic:shm:farstream@$(top_builddir)/gst \
+	GST_PLUGIN_LOADING_WHITELIST=gstreamer:gst-plugins-base:gst-plugins-good:libnice:valve:siren:autoconvert:rtpmux:dtmf:mimic:shm:spandsp:farstream@$(top_builddir)/gst \
 	GST_PLUGIN_PATH=$(top_builddir)/gst:${GST_PLUGIN_PATH}	\
 	FS_PLUGIN_PATH=$(top_builddir)/transmitters/rawudp/.libs:$(top_builddir)/transmitters/multicast/.libs:$(top_builddir)/transmitters/nice/.libs:$(top_builddir)/transmitters/shm/.libs \
 	LD_LIBRARY_PATH=$(top_builddir)/farstream/.libs:${LD_LIBRARY_PATH} \
@@ -76,9 +76,11 @@ base_fscodec_SOURCES = \
 	base/fscodec.c
 
 
-transmitter_rawudp_CFLAGS = $(AM_CFLAGS) $(GUPNP_CFLAGS) $(NICE_CFLAGS)
+transmitter_rawudp_CFLAGS = $(AM_CFLAGS) \
+	$(GUPNP_CFLAGS) $(GIO_CFLAGS) $(NICE_CFLAGS)
 transmitter_rawudp_LDADD = $(LDADD) \
 	$(GUPNP_LIBS) \
+	$(GIO_LIBS) \
 	$(NICE_LIBS)
 transmitter_rawudp_SOURCES = \
 	check-threadsafe.h  \

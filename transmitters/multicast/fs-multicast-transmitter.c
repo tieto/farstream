@@ -53,7 +53,6 @@
 # include <ws2tcpip.h>
 # define close closesocket
 #else /*G_OS_WIN32*/
-# include <netdb.h>
 # include <sys/socket.h>
 # include <netinet/ip.h>
 # include <arpa/inet.h>
@@ -550,24 +549,34 @@ static gboolean
 _ip_string_into_sockaddr_in (const gchar *ip_as_string,
     struct sockaddr_in *sockaddr_in, GError **error)
 {
-  struct addrinfo hints;
-  struct addrinfo *result = NULL;
-  int retval;
+  GInetAddress *inetaddr;
+  GSocketAddress *socket_addr;
+  gboolean ret;
 
-  memset (&hints, 0, sizeof (struct addrinfo));
-  hints.ai_family = AF_INET;
-  hints.ai_flags = AI_NUMERICHOST;
-  retval = getaddrinfo (ip_as_string, NULL, &hints, &result);
-  if (retval != 0) {
+  inetaddr = g_inet_address_new_from_string (ip_as_string);
+
+  if (!inetaddr) {
     g_set_error (error, FS_ERROR, FS_ERROR_NETWORK,
-        "Invalid IP address %s passed: %s", ip_as_string,
-        gai_strerror (retval));
+        "Invalid IP address %s passed", ip_as_string);
     return FALSE;
   }
-  memcpy (sockaddr_in, result->ai_addr, sizeof (struct sockaddr_in));
-  freeaddrinfo (result);
 
-  return TRUE;
+  if (g_inet_address_get_family (inetaddr) != G_SOCKET_FAMILY_IPV4) {
+    g_set_error (error, FS_ERROR, FS_ERROR_NETWORK,
+        "IP address %s passed is not IPv4", ip_as_string);
+    g_object_unref (inetaddr);
+    return 0;
+  }
+
+  socket_addr = g_inet_socket_address_new (inetaddr, 1);
+
+  ret = g_socket_address_to_native (socket_addr, sockaddr_in,
+      sizeof (struct sockaddr_in), error);
+
+  g_object_unref (socket_addr);
+  g_object_unref (inetaddr);
+
+  return ret;
 }
 
 static gint

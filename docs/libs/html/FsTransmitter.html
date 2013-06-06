@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>FsTransmitter</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="Farstream Reference Manual">
 <link rel="up" href="ch04.html" title="Farstream Transmitter Classes">
 <link rel="prev" href="ch04.html" title="Farstream Transmitter Classes">
@@ -129,8 +129,11 @@ All members are private, access them using methods and properties
 <p>
 You must override both methods in a subclass.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><span class="type">GObjectClass</span> <em class="structfield"><code><a name="FsTransmitterClass.parent-class"></a>parent_class</code></em>;</span></p></td>
@@ -160,8 +163,11 @@ created by this class (useful for bindings)</td>
 This function creates a new transmitter of the requested type.
 It will load the appropriate plugin as required.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
@@ -200,8 +206,11 @@ It will load the appropriate plugin as required.
 This function will create a new <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> element for a
 specific participant for this <a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>transmitter</code></em> :</span></p></td>
@@ -247,8 +256,11 @@ This function returns the GObject type for the stream transmitter.
 This is meant for bindings that need to introspect the type of arguments
 that can be passed to the _new_stream_transmitter.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>transmitter</code></em> :</span></p></td>
@@ -272,8 +284,11 @@ that can be passed to the _new_stream_transmitter.
 This function emit the "error" signal on a <a class="link" href="FsTransmitter.html" title="FsTransmitter"><span class="type">FsTransmitter</span></a>, it should
 only be called by subclasses.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>transmitter</code></em> :</span></p></td>
@@ -302,8 +317,11 @@ Get the filter to add on the send pipeline if sending is disabled.
 <p>
 Only for use by subclasses.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>transmitter</code></em> :</span></p></td>
@@ -329,8 +347,11 @@ Only for use by subclasses.
 <p>
 Get the list of all available transmitters
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>a newly allocated array of strings containing the
@@ -409,8 +430,11 @@ Sets the IP ToS field (and if possible the IPv6 TCLASS field
 <p>
 This signal is emitted in any error condition
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
@@ -447,8 +471,11 @@ don't listen to the signal.
 This element should have a "sending" property that can be changed with the
 sending state of the stream. It should default to <code class="literal">TRUE</code>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>

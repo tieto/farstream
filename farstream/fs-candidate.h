@@ -156,6 +156,8 @@ FsCandidate *fs_candidate_new_full (
   const gchar *password,
   guint ttl);
 
+void fs_value_set_candidate_list (GValue *value, GList *candidates);
+
 
 G_END_DECLS
 #endif /* __FS_CANDIDATE_H__ */

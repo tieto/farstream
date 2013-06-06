@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>FsCandidate</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="Farstream Reference Manual">
 <link rel="up" href="ch01.html" title="Farstream Core Library">
 <link rel="prev" href="FsStream.html" title="FsStream">
@@ -100,8 +100,11 @@ information exchanged in the signaling.
 <p>
 Struct to hold information about ICE-19 compliant candidates
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><span class="type">gchar</span> *<em class="structfield"><code><a name="FsCandidate.foundation"></a>foundation</code></em>;</span></p></td>
@@ -171,8 +174,11 @@ NULL otherwise</td>
 <p>
 An enum for the type of candidate used/reported
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="FS-CANDIDATE-TYPE-HOST:CAPS"></a><span class="term"><code class="literal">FS_CANDIDATE_TYPE_HOST</code></span></p></td>
@@ -213,8 +219,11 @@ An enum for the type of candidate used/reported
 <p>
 An enum for the base IP protocol
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="FS-NETWORK-PROTOCOL-UDP:CAPS"></a><span class="term"><code class="literal">FS_NETWORK_PROTOCOL_UDP</code></span></p></td>
@@ -241,8 +250,11 @@ An enum for the base IP protocol
 <p>
 This enum contains the component IDs defined in ICE-19
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="FS-COMPONENT-NONE:CAPS"></a><span class="term"><code class="literal">FS_COMPONENT_NONE</code></span></p></td>
@@ -275,8 +287,11 @@ This enum contains the component IDs defined in ICE-19
 Allocates a new <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>, the rest of the fields can be optionally
 filled manually. See also <a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-new-full" title="fs_candidate_new_full ()"><code class="function">fs_candidate_new_full()</code></a>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>foundation</code></em> :</span></p></td>
@@ -297,7 +312,8 @@ filled manually. See also <a class="link" href="farstream-libs-FsCandidate.html#
 <tr>
 <td><p><span class="term"><em class="parameter"><code>ip</code></em> :</span></p></td>
 <td>The IP address of this component (can be NULL for local candidate to
-mean any address)</td>
+mean any address). <span class="annotation">[<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>port</code></em> :</span></p></td>
@@ -330,8 +346,11 @@ mean any address)</td>
 Allocates a new <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>, filling all the fields. See also
 <a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-new" title="fs_candidate_new ()"><code class="function">fs_candidate_new()</code></a>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>foundation</code></em> :</span></p></td>
@@ -344,7 +363,8 @@ Allocates a new <a class="link" href="farstream-libs-FsCandidate.html#FsCandidat
 <tr>
 <td><p><span class="term"><em class="parameter"><code>ip</code></em> :</span></p></td>
 <td>The IP address of this component (can be NULL for local candidate to
-mean any address)</td>
+mean any address). <span class="annotation">[<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>port</code></em> :</span></p></td>
@@ -352,7 +372,8 @@ mean any address)</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>base_ip</code></em> :</span></p></td>
-<td>IP of base in dotted format as defined in ICE-19.</td>
+<td>IP of base in dotted format as defined in ICE-19. <span class="annotation">[<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>base_port</code></em> :</span></p></td>
@@ -368,17 +389,15 @@ mean any address)</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
-<td>The type of candidate</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>username</code></em> :</span></p></td>
-<td>Username to use to connect to client if necessary,
+<td>The type of candidate
+<em class="parameter"><code>username</code></em> (allow-none):: Username to use to connect to client if necessary,
 NULL otherwise</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>password</code></em> :</span></p></td>
 <td>Username to use to connect to client if necessary,
-NULL otherwise</td>
+NULL otherwise. <span class="annotation">[<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>ttl</code></em> :</span></p></td>
@@ -399,8 +418,11 @@ NULL otherwise</td>
 <p>
 Frees a <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> and all its contents
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>cand</code></em> :</span></p></td>
 <td>a <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> to delete</td>
@@ -414,8 +436,11 @@ Frees a <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title
 <p>
 Copies a <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> and its contents.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cand</code></em> :</span></p></td>
@@ -436,8 +461,11 @@ Copies a <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" titl
 <p>
 Deletes a GList of <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> and its contents
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>candidate_list</code></em> :</span></p></td>
 <td>A GList of <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>
@@ -452,8 +480,11 @@ Deletes a GList of <a class="link" href="farstream-libs-FsCandidate.html#FsCandi
 <p>
 Copies a GList of <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> and its contents
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>candidate_list</code></em> :</span></p></td>

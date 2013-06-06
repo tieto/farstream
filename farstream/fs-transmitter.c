@@ -42,7 +42,6 @@
 
 #include <gst/gst.h>
 
-#include "fs-marshal.h"
 #include "fs-plugin.h"
 #include "fs-conference.h"
 #include "fs-private.h"
@@ -193,9 +192,7 @@ fs_transmitter_class_init (FsTransmitterClass *klass)
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
       0,
-      NULL,
-      NULL,
-      _fs_marshal_VOID__ENUM_STRING,
+      NULL, NULL, NULL,
       G_TYPE_NONE, 2, FS_TYPE_ERROR, G_TYPE_STRING);
 
   /**
@@ -217,10 +214,7 @@ fs_transmitter_class_init (FsTransmitterClass *klass)
   signals[GET_RECVONLY_FILTER_SIGNAL] = g_signal_new ("get-recvonly-filter",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      0,
-      NULL,
-      NULL,
-      _fs_marshal_OBJECT__UINT,
+      0, NULL, NULL, NULL,
       GST_TYPE_ELEMENT, 1, G_TYPE_UINT);
 
 

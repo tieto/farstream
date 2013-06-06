@@ -145,7 +145,6 @@
 
 #include "fs-conference.h"
 #include "fs-codec.h"
-#include "fs-marshal.h"
 #include "fs-enumtypes.h"
 #include "fs-private.h"
 
@@ -403,10 +402,7 @@ fs_session_class_init (FsSessionClass *klass)
   signals[ERROR_SIGNAL] = g_signal_new ("error",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      0,
-      NULL,
-      NULL,
-      _fs_marshal_VOID__OBJECT_ENUM_STRING,
+      0, NULL, NULL, NULL,
       G_TYPE_NONE, 3, G_TYPE_OBJECT, FS_TYPE_ERROR, G_TYPE_STRING);
 }
 

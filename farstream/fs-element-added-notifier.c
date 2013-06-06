@@ -42,9 +42,6 @@
 
 #include "fs-utils.h"
 
-#include "fs-marshal.h"
-
-
 /* Signals */
 enum
 {
@@ -94,10 +91,7 @@ fs_element_added_notifier_class_init (FsElementAddedNotifierClass *klass)
   signals[ELEMENT_ADDED] = g_signal_new ("element-added",
       G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      0,
-      NULL,
-      NULL,
-      _fs_marshal_VOID__OBJECT_OBJECT,
+      0, NULL, NULL, NULL,
       G_TYPE_NONE, 2, GST_TYPE_BIN, GST_TYPE_ELEMENT);
 
   g_type_class_add_private (klass, sizeof (FsElementAddedNotifierPrivate));
