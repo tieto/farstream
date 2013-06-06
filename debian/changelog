@@ -7,6 +7,7 @@ farstream-0.2 (0.2.3-1) UNRELEASED; urgency=low
   * Use dh-autoreconf
   * Don't try to use dh_python2, we no longer have static Python bindings
   * Canonicalize Vcs-*
+  * Standards-Version: 3.9.4 (no further changes)
 
  -- Simon McVittie <smcv@debian.org>  Thu, 06 Jun 2013 09:51:34 +0100
 
