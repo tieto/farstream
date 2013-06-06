@@ -28,6 +28,6 @@ override_dh_strip:
 	dh_strip --dbg-package=libfarstream-0.2-dbg
 
 %:
-	dh $@ --with autoreconf,python2
+	dh $@ --with autoreconf
 
 .PHONY: override_dh_strip
