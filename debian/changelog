@@ -1,4 +1,4 @@
-farstream-0.2 (0.2.3-1) UNRELEASED; urgency=low
+farstream-0.2 (0.2.3-1) unstable; urgency=low
 
   * New upstream release
     - update symbols file
@@ -10,8 +10,9 @@ farstream-0.2 (0.2.3-1) UNRELEASED; urgency=low
   * Standards-Version: 3.9.4 (no further changes)
   * Do rebuild documentation from source
   * Disable silent build rules
+  * Release to unstable
 
- -- Simon McVittie <smcv@debian.org>  Thu, 06 Jun 2013 09:51:34 +0100
+ -- Simon McVittie <smcv@debian.org>  Thu, 06 Jun 2013 10:41:36 +0100
 
 farstream-0.2 (0.2.2-1) experimental; urgency=low
 
