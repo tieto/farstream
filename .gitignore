@@ -85,6 +85,12 @@ examples/commandline/simple-call-shm
 examples/gui/*.pyo
 examples/gui/*.pyc
 
+m4/libtool.m4
+m4/ltoptions.m4
+m4/ltsugar.m4
+m4/ltversion.m4
+m4/lt~obsolete.m4
+
 aclocal.m4
 autom4te.cache
 autoregen.sh
@@ -104,7 +110,7 @@ ltmain.sh
 missing
 stamp-h.in
 stamp-h1
+test-driver
 
-farstream-0.10.pc
-farstream.pc
+farstream*.pc
 
