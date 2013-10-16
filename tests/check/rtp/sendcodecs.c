@@ -466,12 +466,14 @@ build_dtmf_sound_recv_pipeline (gint *port)
   GstElement *pipeline;
   GstElement *src;
   GstBus *bus;
+  GError *error = NULL;
 
   pipeline = gst_parse_launch_full (
       "udpsrc name=src caps=\"application/x-rtp, payload=0\" !"
       " rtppcmudepay ! mulawdec ! dtmfdetect ! fakesink sync=0", NULL,
-      GST_PARSE_FLAG_FATAL_ERRORS, NULL);
+      GST_PARSE_FLAG_FATAL_ERRORS, &error);
   fail_if (pipeline == NULL);
+  fail_if (error != NULL);
 
   bus = gst_element_get_bus (pipeline);
   gst_bus_add_watch (bus, dtmf_bus_watch, NULL);
