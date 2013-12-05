@@ -4961,13 +4961,12 @@ fs_rtp_session_handle_dtmf_event_message (FsRtpSession *self,
     goto invalid;
   gst_structure_get_boolean (es, "start", &e_start);
 
+  if (!gst_structure_get_int (ms, "method", &m_method))
+    goto invalid;
+  gst_structure_get_int (es, "method", &e_method);
+
   if (m_start)
   {
-    if (!gst_structure_get_int (ms, "method", &m_method))
-      goto invalid;
-    gst_structure_get_int (es, "method", &e_method);
-
-
     if (!gst_structure_get_int (ms, "number", &m_number))
       goto invalid;
     gst_structure_get_int (es, "number", &e_number);
