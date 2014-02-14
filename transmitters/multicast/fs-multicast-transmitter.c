@@ -54,6 +54,7 @@
 # define close closesocket
 #else /*G_OS_WIN32*/
 # include <sys/socket.h>
+# include <netinet/in.h>
 # include <arpa/inet.h>
 #endif /*G_OS_WIN32*/
 

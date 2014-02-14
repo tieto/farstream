@@ -34,6 +34,7 @@
 # include <ws2tcpip.h>
 #else /*G_OS_WIN32*/
 # include <arpa/inet.h>
+# include <netinet/in.h>
 #endif /*G_OS_WIN32*/
 
 G_BEGIN_DECLS
