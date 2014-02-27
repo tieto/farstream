@@ -436,7 +436,8 @@ fs_raw_stream_set_property (GObject *object,
               (direction & FS_DIRECTION_SEND) ? TRUE : FALSE, NULL);
           g_object_unref (st);
         }
-        fs_raw_session_update_direction (self->priv->session, direction);
+        if (self->priv->session)
+          fs_raw_session_update_direction (self->priv->session, direction);
         if (conference)
           GST_OBJECT_LOCK (conference);
       }
