@@ -30,7 +30,7 @@
  * fs_conference_new_session() on a #FsRtpConference. It can be either
  * Audio or Video. It also represents data send with one and only one
  * SSRC (although if there is a SSRC collision, that SSRC may change).
- * </para>
+ *
  * <refsect2><title>Codec profiles</title>
  * <para>
  * It is possible to define "codec profiles", that is non-autodetected
@@ -50,7 +50,7 @@
  * Also, it is possible to declare profiles with only a decoding pipeline,
  * you will only be able to receive from this codec, the encoding may be a
  * secondary pad of some other codec.
- * </para></refsect2><para>
+ * </para></refsect2>
  */
 
 #ifdef HAVE_CONFIG_H

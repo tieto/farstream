@@ -39,7 +39,7 @@
  *
  * This will communicate asynchronous events to the user through #GstMessage
  * of type #GST_MESSAGE_ELEMENT sent over the #GstBus.
- * </para>
+ *
  * <refsect2><title>The "<literal>farstream-send-codec-changed</literal>"
  *   message</title>
  * <table>
@@ -132,7 +132,7 @@
  * telephony event has stopped.
  * </para>
  * </refsect2>
- * <para>
+ *
  */
 
 #ifdef HAVE_CONFIG_H

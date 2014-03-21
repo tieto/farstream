@@ -36,7 +36,7 @@
  *
  * This will communicate asynchronous events to the user through #GstMessage
  * of type #GST_MESSAGE_ELEMENT sent over the #GstBus.
- * </para>
+ *
  * <refsect2><title>The "<literal>farstream-new-local-candidate</literal>" message</title>
  * |[
  * "stream"           #FsStream          The stream that emits the message
@@ -93,7 +93,7 @@
  * This message is emitted the state of a component of a stream changes.
  * </para>
  * </refsect2>
- * <para>
+ *
  */
 
 #ifdef HAVE_CONFIG_H
