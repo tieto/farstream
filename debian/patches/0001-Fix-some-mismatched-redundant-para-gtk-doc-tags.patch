@@ -1,0 +1,106 @@
+>From ce20a4ca68c7d8f806f5278c2a131269920dd800 Mon Sep 17 00:00:00 2001
+From: Iain Lane <iain.lane@canonical.com>
+Date: Fri, 21 Mar 2014 15:18:38 +0000
+Subject: [PATCH] Fix some mismatched / redundant <para> gtk-doc tags
+
+gtk-doc 1.20 got more strict about correctness here wrt. balanced tags.
+
+https://bugs.freedesktop.org/show_bug.cgi?id=76458
+---
+ farstream/fs-conference.c            | 4 ++--
+ farstream/fs-session.c               | 4 ++--
+ farstream/fs-stream.c                | 4 ++--
+ gst/fsrtpconference/fs-rtp-session.c | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/farstream/fs-conference.c b/farstream/fs-conference.c
+index f6d6404..7c6327a 100644
+--- a/farstream/fs-conference.c
++++ b/farstream/fs-conference.c
+@@ -43,7 +43,7 @@
+  *
+  * This will communicate asynchronous events to the user through #GstMessage
+  * of type #GST_MESSAGE_ELEMENT sent over the #GstBus.
+- * </para>
++ *
+  * <refsect2><title>The "<literal>farstream-error</literal>" message</title>
+  * |[
+  * "src-object"       #GObject           The object (#FsConference, #FsSession or #FsStream) that emitted the error
+@@ -54,7 +54,7 @@
+  * The message is sent on asynchronous errors.
+  * </para>
+  * </refsect2>
+- * <para>
++ *
+  */
+ 
+ 
+diff --git a/farstream/fs-session.c b/farstream/fs-session.c
+index f6cc23a..08a1517 100644
+--- a/farstream/fs-session.c
++++ b/farstream/fs-session.c
+@@ -39,7 +39,7 @@
+  *
+  * This will communicate asynchronous events to the user through #GstMessage
+  * of type #GST_MESSAGE_ELEMENT sent over the #GstBus.
+- * </para>
++ *
+  * <refsect2><title>The "<literal>farstream-send-codec-changed</literal>"
+  *   message</title>
+  * <table>
+@@ -132,7 +132,7 @@
+  * telephony event has stopped.
+  * </para>
+  * </refsect2>
+- * <para>
++ *
+  */
+ 
+ #ifdef HAVE_CONFIG_H
+diff --git a/farstream/fs-stream.c b/farstream/fs-stream.c
+index c81e878..8502eb2 100644
+--- a/farstream/fs-stream.c
++++ b/farstream/fs-stream.c
+@@ -36,7 +36,7 @@
+  *
+  * This will communicate asynchronous events to the user through #GstMessage
+  * of type #GST_MESSAGE_ELEMENT sent over the #GstBus.
+- * </para>
++ *
+  * <refsect2><title>The "<literal>farstream-new-local-candidate</literal>" message</title>
+  * |[
+  * "stream"           #FsStream          The stream that emits the message
+@@ -93,7 +93,7 @@
+  * This message is emitted the state of a component of a stream changes.
+  * </para>
+  * </refsect2>
+- * <para>
++ *
+  */
+ 
+ #ifdef HAVE_CONFIG_H
+diff --git a/gst/fsrtpconference/fs-rtp-session.c b/gst/fsrtpconference/fs-rtp-session.c
+index e20539f..00e15cb 100644
+--- a/gst/fsrtpconference/fs-rtp-session.c
++++ b/gst/fsrtpconference/fs-rtp-session.c
+@@ -30,7 +30,7 @@
+  * fs_conference_new_session() on a #FsRtpConference. It can be either
+  * Audio or Video. It also represents data send with one and only one
+  * SSRC (although if there is a SSRC collision, that SSRC may change).
+- * </para>
++ *
+  * <refsect2><title>Codec profiles</title>
+  * <para>
+  * It is possible to define "codec profiles", that is non-autodetected
+@@ -50,7 +50,7 @@
+  * Also, it is possible to declare profiles with only a decoding pipeline,
+  * you will only be able to receive from this codec, the encoding may be a
+  * secondary pad of some other codec.
+- * </para></refsect2><para>
++ * </para></refsect2>
+  */
+ 
+ #ifdef HAVE_CONFIG_H
+-- 
+1.9.1
+

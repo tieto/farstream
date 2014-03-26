@@ -1,3 +1,10 @@
+farstream-0.2 (0.2.3-3) unstable; urgency=medium
+
+  * Add patch from Iain Lane to build successfully with current gtk-doc
+    (Closes: #742280)
+
+ -- Simon McVittie <smcv@debian.org>  Wed, 26 Mar 2014 15:12:09 +0000
+
 farstream-0.2 (0.2.3-2) unstable; urgency=medium
 
   * Use the farstream-0.2 repository in Vcs-*, not the farstream (0.1)
