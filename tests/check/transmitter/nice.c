@@ -65,9 +65,8 @@ _new_local_candidate (FsStreamTransmitter *st, FsCandidate *candidate,
 
   ts_fail_if (candidate == NULL, "Passed NULL candidate");
   ts_fail_unless (candidate->ip != NULL, "Null IP in candidate");
-  ts_fail_if (candidate->port == 0, "Candidate has port 0");
-  ts_fail_unless (candidate->proto == FS_NETWORK_PROTOCOL_UDP,
-    "Protocol is not UDP");
+  ts_fail_if (candidate->port == 0 &&
+      candidate->proto != FS_NETWORK_PROTOCOL_TCP_ACTIVE);
   ts_fail_if (candidate->foundation == NULL,
       "Candidate doenst have a foundation");
   ts_fail_if (candidate->component_id == 0, "Component id is 0");
@@ -125,6 +124,8 @@ set_the_candidates (gpointer user_data)
 
       next = g_list_next (item);
 
+      if (cand->proto != FS_NETWORK_PROTOCOL_UDP)
+        continue;
       if (cand->type != FS_CANDIDATE_TYPE_HOST)
         continue;
       if (cand->component_id != 1)
@@ -695,18 +696,6 @@ GST_START_TEST (test_nicetransmitter_invalid_arguments)
   g_value_take_boxed (&params[0].value, g_list_append (NULL,
           fs_candidate_new (NULL, 0, FS_CANDIDATE_TYPE_MULTICAST,
               FS_NETWORK_PROTOCOL_UDP, "127.0.0.1", 0)));
-
-  st = fs_transmitter_new_stream_transmitter (trans, p, 1, params, &error);
-  ts_fail_unless (st == NULL);
-  ts_fail_unless (error &&
-      error->domain == FS_ERROR &&
-      error->code == FS_ERROR_INVALID_ARGUMENTS);
-  g_clear_error (&error);
-
-  /* invalid proto */
-  g_value_take_boxed (&params[0].value, g_list_append (NULL,
-          fs_candidate_new (NULL, 0, FS_CANDIDATE_TYPE_HOST,
-              FS_NETWORK_PROTOCOL_TCP, "127.0.0.1", 0)));
 
   st = fs_transmitter_new_stream_transmitter (trans, p, 1, params, &error);
   ts_fail_unless (st == NULL);

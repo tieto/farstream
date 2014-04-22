@@ -59,14 +59,25 @@ typedef enum
 /**
  * FsNetworkProtocol:
  * @FS_NETWORK_PROTOCOL_UDP: A UDP based protocol
- * @FS_NETWORK_PROTOCOL_TCP: A TCP based protocol
+ * @FS_NETWORK_PROTOCOL_TCP: A TCP based protocol, will listen for
+ * incoming connections
+ * @FS_NETWORK_PROTOCOL_TCP_PASSIVE: A TCP based protocol, will listen for
+ * incoming connections
+ * @FS_NETWORK_PROTOCOL_TCP_ACTIVE: A TCP based protocol, will attempt to
+ * open an outbound connection
+ * @FS_NETWORK_PROTOCOL_TCP_SO: A TCP based protocol, will listen for
+ * incoming connections and attempt an outbound connection at the same time
+ * as the peer (Simultanuous-Open)
  *
  * An enum for the base IP protocol
  */
 typedef enum
 {
   FS_NETWORK_PROTOCOL_UDP,
-  FS_NETWORK_PROTOCOL_TCP
+  FS_NETWORK_PROTOCOL_TCP,
+  FS_NETWORK_PROTOCOL_TCP_PASSIVE = FS_NETWORK_PROTOCOL_TCP,
+  FS_NETWORK_PROTOCOL_TCP_ACTIVE,
+  FS_NETWORK_PROTOCOL_TCP_SO,
 } FsNetworkProtocol;
 
 /**
