@@ -297,7 +297,7 @@ install-data-local:
 	  echo '-- Installing $(builddir)/html/$(DOC_MODULE).devhelp2' ; \
 	  if test -e $(builddir)/html/$(DOC_MODULE).devhelp2; then \
 	            $(INSTALL_DATA) $(builddir)/html/$(DOC_MODULE).devhelp2 \
-	            $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_API_VERSION@.devhelp2; \
+	            $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@FS_APIVERSION@.devhelp2; \
 	  fi; \
 	  (which gtkdoc-rebase >/dev/null && \
 	    gtkdoc-rebase --relative --dest-dir=$(DESTDIR) --html-dir=$(DESTDIR)$(TARGET_DIR)) || true ; \
