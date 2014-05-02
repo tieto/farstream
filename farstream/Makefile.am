@@ -95,7 +95,6 @@ Farstream_@FS_API_VERSION@_gir_SCANNERFLAGS = --identifier-prefix=fs_ \
 	--identifier-prefix=Fs --add-init-section="gst_init(NULL,NULL);"
 Farstream_@FS_API_VERSION@_gir_LDFLAGS = $(GST_LIBS)
 
-
 girdir = $(datadir)/gir-1.0
 dist_gir_DATA = Farstream-@FS_APIVERSION@.gir
 typelibdir = $(libdir)/girepository-1.0

@@ -110,6 +110,7 @@ typedef enum _FsDTMFMethod
  * @get_stream_transmitter_type: Returns the GType of the stream transmitter
  * @codecs_need_resend: Returns the list of codecs that need resending
  * @set_allowed_caps: Set the possible allowed src and sink caps
+ * @set_encryption_parameters: Set encryption parameters
  *
  * You must override at least new_stream in a subclass.
  */
@@ -145,6 +146,9 @@ struct _FsSessionClass
 
   gboolean (* set_allowed_caps) (FsSession *session, GstCaps *sink_caps,
       GstCaps *src_caps, GError **error);
+
+  gboolean (* set_encryption_parameters) (FsSession *session,
+      GstStructure *parameters, GError **error);
 
   /*< private >*/
   gpointer _padding[7];
@@ -200,6 +204,9 @@ GList* fs_session_codecs_need_resend (FsSession *session,
 gboolean fs_session_set_allowed_caps (FsSession *session, GstCaps *sink_caps,
     GstCaps *src_caps, GError **error);
 
+gboolean fs_session_set_encryption_parameters (FsSession *session,
+    GstStructure *parameters, GError **error);
+
 void fs_session_destroy (FsSession *session);
 
 
@@ -220,7 +227,6 @@ gboolean fs_session_parse_telephony_event_started (FsSession *session,
 gboolean fs_session_parse_telephony_event_stopped (FsSession *session,
     GstMessage *message,
     FsDTMFMethod *method);
-
 
 
 G_END_DECLS

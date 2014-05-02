@@ -129,7 +129,8 @@ enum
   PROP_CURRENT_RECV_CODECS,
   PROP_DIRECTION,
   PROP_PARTICIPANT,
-  PROP_SESSION
+  PROP_SESSION,
+  PROP_DECRYPTION_PARAMETERS
 };
 
 
@@ -286,6 +287,19 @@ fs_stream_class_init (FsStreamClass *klass)
         G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   /**
+   * FsStream:decryption-parameters:
+   *
+   * Retrieves previously set decryption parameters
+   */
+  g_object_class_install_property (gobject_class,
+      PROP_DECRYPTION_PARAMETERS,
+      g_param_spec_boxed ("decryption-parameters",
+          "Decryption parameters",
+          "Parameters used to decrypt the stream",
+          GST_TYPE_STRUCTURE,
+          G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
+
+  /**
    * FsStream::error:
    * @self: #FsStream that emitted the signal
    * @errorno: The number of the error
@@ -366,10 +380,18 @@ fs_stream_get_property (GObject *object,
                         GValue *value,
                         GParamSpec *pspec)
 {
-  GST_WARNING ("Subclass %s of FsStream does not override the %s property"
-      " getter",
-      G_OBJECT_TYPE_NAME(object),
-      g_param_spec_get_name (pspec));
+  switch (prop_id) {
+    case PROP_DECRYPTION_PARAMETERS:
+      g_value_set_boxed (value, NULL);
+      /* Not having parameters is valid, in this case set nothing */
+      break;
+    default:
+      GST_WARNING ("Subclass %s of FsStream does not override the %s property"
+          " getter",
+          G_OBJECT_TYPE_NAME(object),
+          g_param_spec_get_name (pspec));
+      break;
+  }
 }
 
 static void
@@ -744,6 +766,38 @@ end:
   g_free (params);
 
   return ret;
+}
+
+/**
+ * fs_stream_set_decryption_parameters:
+ * @stream: a #FsStream
+ * @parameters: (transfer none): a #GstStructure containing the decryption
+ *  parameters
+ * @error: the location where to store a #GError or %NULL
+ *
+ * Sets decryption parameters. The exact parameters depend on the type of
+ * plugin being used.
+ *
+ * Returns: %TRUE if the decryption parameters could be set, %FALSE otherwise
+ * Since: UNRELEASED
+ */
+gboolean
+fs_stream_set_decryption_parameters (FsStream *stream,
+    GstStructure *parameters, GError **error)
+{
+  FsStreamClass *klass;
+
+  g_return_val_if_fail (stream, FALSE);
+  g_return_val_if_fail (FS_IS_STREAM (stream), FALSE);
+  klass = FS_STREAM_GET_CLASS (stream);
+
+  if (klass->set_decryption_parameters)
+    return klass->set_decryption_parameters (stream, parameters, error);
+
+  g_set_error (error, FS_ERROR, FS_ERROR_NOT_IMPLEMENTED,
+      "Does not support decryption");
+
+  return FALSE;
 }
 
 /**

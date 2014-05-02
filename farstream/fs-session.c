@@ -171,7 +171,8 @@ enum
   PROP_CURRENT_SEND_CODEC,
   PROP_TYPE_OF_SERVICE,
   PROP_ALLOWED_SRC_CAPS,
-  PROP_ALLOWED_SINK_CAPS
+  PROP_ALLOWED_SINK_CAPS,
+  PROP_ENCRYPTION_PARAMETERS
 };
 
 /*
@@ -419,6 +420,19 @@ fs_session_class_init (FsSessionClass *klass)
         GST_TYPE_CAPS,
         G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
+  /**
+   * FsSession:encryption-parameters:
+   *
+   * Retrieves previously set encryption parameters
+   */
+  g_object_class_install_property (gobject_class,
+      PROP_ENCRYPTION_PARAMETERS,
+      g_param_spec_boxed ("encryption-parameters",
+          "Encryption parameters",
+          "Parameters used to encrypt the stream",
+          GST_TYPE_STRUCTURE,
+          G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
+
 
   /**
    * FsSession::error:
@@ -451,10 +465,18 @@ fs_session_get_property (GObject *object,
                          GValue *value,
                          GParamSpec *pspec)
 {
-  GST_WARNING ("Subclass %s of FsSession does not override the %s property"
-      " getter",
-      G_OBJECT_TYPE_NAME(object),
-      g_param_spec_get_name (pspec));
+  switch (prop_id) {
+    case PROP_ENCRYPTION_PARAMETERS:
+      g_value_set_boxed (value, NULL);
+      /* Not having parameters is valid, in this case set nothing */
+      break;
+    default:
+      GST_WARNING ("Subclass %s of FsSession does not override the %s property"
+          " getter",
+          G_OBJECT_TYPE_NAME(object),
+          g_param_spec_get_name (pspec));
+      break;
+  }
 }
 
 static void
@@ -770,6 +792,38 @@ fs_session_codecs_need_resend (FsSession *session,
     return klass->codecs_need_resend (session, old_codecs, new_codecs);
 
   return NULL;
+}
+
+/**
+ * fs_session_set_encryption_parameters:
+ * @session: a #FsSession
+ * @parameters: (transfer none) (allow-none): a #GstStructure containing the
+ *   encryption  parameters or %NULL to disable encryption
+ * @error: the location where to store a #GError or %NULL
+ *
+ * Sets encryption parameters. The exact parameters depend on the type of
+ * plugin being used.
+ *
+ * Returns: %TRUE if the encryption parameters could be set, %FALSE otherwise
+ * Since: UNRELEASED
+ */
+gboolean
+fs_session_set_encryption_parameters (FsSession *session,
+    GstStructure *parameters, GError **error)
+{
+  FsSessionClass *klass;
+
+  g_return_val_if_fail (session, FALSE);
+  g_return_val_if_fail (FS_IS_SESSION (session), FALSE);
+  klass = FS_SESSION_GET_CLASS (session);
+
+  if (klass->set_encryption_parameters)
+    return klass->set_encryption_parameters (session, parameters, error);
+
+  g_set_error (error, FS_ERROR, FS_ERROR_NOT_IMPLEMENTED,
+      "Does not support encryption");
+
+  return FALSE;
 }
 
 /**
