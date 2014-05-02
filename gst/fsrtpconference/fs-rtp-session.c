@@ -133,6 +133,8 @@ struct _FsRtpSessionPrivate
   GstElement *transmitter_rtcp_funnel;
 
   GstElement *rtpmuxer;
+  GstElement *srtpenc;
+  GstElement *srtpdec;
 
   GObject *rtpbin_internal_session;
 
@@ -730,6 +732,9 @@ fs_rtp_session_dispose (GObject *obj)
     self->priv->rtpbin_recv_rtcp_sink = NULL;
   }
 
+  g_clear_object (&self->priv->srtpenc);
+  g_clear_object (&self->priv->srtpdec);
+
   if (self->priv->transmitters)
   {
     g_hash_table_foreach (self->priv->transmitters, _remove_transmitter,
@@ -1066,6 +1071,33 @@ _rtp_tfrc_bitrate_changed (GObject *rtp_tfrc, GParamSpec *pspec,
   fs_rtp_session_set_send_bitrate (self, bitrate);
 }
 
+
+
+static GstElement *
+_rtpbin_request_encoder (GstElement *rtpbin, guint session_id,
+    gpointer user_data)
+{
+  FsRtpSession *self = FS_RTP_SESSION (user_data);
+
+  if (self->id == session_id) {
+    return gst_object_ref (self->priv->srtpenc);
+  } else {
+    return NULL;
+  }
+}
+
+static GstElement *
+_rtpbin_request_decoder (GstElement *rtpbin, guint session_id,
+    gpointer user_data)
+{
+  FsRtpSession *self = FS_RTP_SESSION (user_data);
+
+  if (self->id == session_id)
+    return gst_object_ref (self->priv->srtpdec);
+  else
+    return NULL;
+}
+
 static void
 fs_rtp_session_constructed (GObject *object)
 {
@@ -1083,6 +1115,10 @@ fs_rtp_session_constructed (GObject *object)
   GstPad *pad;
   GstPadLinkReturn ret;
   gchar *tmp;
+  gulong request_rtp_encoder_id = 0;
+  gulong request_rtp_decoder_id = 0;
+  gulong request_rtcp_encoder_id = 0;
+  gulong request_rtcp_decoder_id = 0;
 
   if (self->id == 0)
   {
@@ -1196,6 +1232,113 @@ fs_rtp_session_constructed (GObject *object)
   }
 
   gst_object_unref (tee_sink_pad);
+
+  /* Create the SRTP encoder & decoder */
+
+  tmp = g_strdup_printf ("srtpenc_%u", self->id);
+  self->priv->srtpenc = gst_element_factory_make ("srtpenc", tmp);
+  g_free (tmp);
+  if (self->priv->srtpenc) {
+    GstPad *tmppad;
+    gst_object_ref_sink (self->priv->srtpenc);
+
+    g_object_set (self->priv->srtpenc,
+        "rtp-cipher", 0, "rtp-auth", 0, "rtcp-cipher", 0, "rtcp-auth", 0, NULL);
+
+    tmp = g_strdup_printf ("rtp_sink_%u", self->id);
+    tmppad = gst_element_get_request_pad (self->priv->srtpenc, tmp);
+    gst_object_unref (tmppad);
+    g_free (tmp);
+
+    tmp = g_strdup_printf ("rtcp_sink_%u", self->id);
+    tmppad = gst_element_get_request_pad (self->priv->srtpenc, tmp);
+    gst_object_unref (tmppad);
+    g_free (tmp);
+  }
+  tmp = g_strdup_printf ("srtpdec_%u", self->id);
+  self->priv->srtpdec = gst_element_factory_make ("srtpdec", tmp);
+  g_free (tmp);
+  if (self->priv->srtpdec)
+    gst_object_ref_sink (self->priv->srtpdec);
+
+  request_rtp_encoder_id =
+      g_signal_connect (self->priv->conference->rtpbin, "request-rtp-encoder",
+          G_CALLBACK (_rtpbin_request_encoder), self);
+  request_rtp_decoder_id =
+      g_signal_connect (self->priv->conference->rtpbin, "request-rtp-decoder",
+          G_CALLBACK (_rtpbin_request_decoder), self);
+  request_rtcp_encoder_id =
+      g_signal_connect (self->priv->conference->rtpbin, "request-rtcp-encoder",
+          G_CALLBACK (_rtpbin_request_encoder), self);
+  request_rtcp_decoder_id =
+      g_signal_connect (self->priv->conference->rtpbin, "request-rtcp-decoder",
+          G_CALLBACK (_rtpbin_request_decoder), self);
+
+  /* Request the parts of rtpbin */
+
+
+  tmp = g_strdup_printf ("recv_rtp_sink_%u", self->id);
+  self->priv->rtpbin_recv_rtp_sink =
+      gst_element_get_request_pad (self->priv->conference->rtpbin, tmp);
+  g_free (tmp);
+
+  tmp = g_strdup_printf ("recv_rtcp_sink_%u", self->id);
+  self->priv->rtpbin_recv_rtcp_sink =
+    gst_element_get_request_pad (self->priv->conference->rtpbin,
+      tmp);
+  g_free (tmp);
+
+  tmp = g_strdup_printf ("send_rtp_sink_%u", self->id);
+  self->priv->rtpbin_send_rtp_sink =
+    gst_element_get_request_pad (self->priv->conference->rtpbin, tmp);
+  g_free (tmp);
+
+  tmp = g_strdup_printf ("send_rtcp_src_%u", self->id);
+  self->priv->rtpbin_send_rtcp_src =
+    gst_element_get_request_pad (self->priv->conference->rtpbin, tmp);
+  g_free (tmp);
+
+  g_signal_handler_disconnect (self->priv->conference->rtpbin,
+      request_rtp_encoder_id);
+  g_signal_handler_disconnect (self->priv->conference->rtpbin,
+      request_rtp_decoder_id);
+  g_signal_handler_disconnect (self->priv->conference->rtpbin,
+      request_rtcp_encoder_id);
+  g_signal_handler_disconnect (self->priv->conference->rtpbin,
+      request_rtcp_decoder_id);
+
+  if (!self->priv->rtpbin_recv_rtp_sink)
+  {
+     self->priv->construction_error = g_error_new (FS_ERROR,
+         FS_ERROR_CONSTRUCTION,
+         "Could not get recv_rtp_sink_%u  request pad from the rtpbin",
+         self->id);
+     return;
+  }
+  if (!self->priv->rtpbin_recv_rtcp_sink)
+  {
+     self->priv->construction_error = g_error_new (FS_ERROR,
+         FS_ERROR_CONSTRUCTION,
+         "Could not get recv_rtcp_sink_%u  request pad from the rtpbin",
+         self->id);
+     return;
+  }
+  if (!self->priv->rtpbin_send_rtp_sink)
+  {
+     self->priv->construction_error = g_error_new (FS_ERROR,
+         FS_ERROR_CONSTRUCTION,
+         "Could not get send_rtp_sink_%u request pad from the rtpbin",
+         self->id);
+     return;
+  }
+  if (!self->priv->rtpbin_send_rtcp_src)
+  {
+     self->priv->construction_error = g_error_new (FS_ERROR,
+         FS_ERROR_CONSTRUCTION,
+         "Could not get send_rtcp_src_%u request pad from the rtpbin",
+         self->id);
+     return;
+  }
 
   self->priv->send_tee_discovery_pad = gst_element_get_request_pad (tee,
       "src_%u");
@@ -1319,12 +1462,6 @@ fs_rtp_session_constructed (GObject *object)
 
   self->priv->transmitter_rtp_funnel = gst_object_ref (funnel);
 
-  tmp = g_strdup_printf ("recv_rtp_sink_%u", self->id);
-  self->priv->rtpbin_recv_rtp_sink =
-    gst_element_get_request_pad (self->priv->conference->rtpbin,
-      tmp);
-  g_free (tmp);
-
   funnel_src_pad = gst_element_get_static_pad (funnel, "src");
 
   ret = gst_pad_link (funnel_src_pad, self->priv->rtpbin_recv_rtp_sink);
@@ -1369,12 +1506,6 @@ fs_rtp_session_constructed (GObject *object)
   }
 
   self->priv->transmitter_rtcp_funnel = gst_object_ref (funnel);
-
-  tmp = g_strdup_printf ("recv_rtcp_sink_%u", self->id);
-  self->priv->rtpbin_recv_rtcp_sink =
-    gst_element_get_request_pad (self->priv->conference->rtpbin,
-      tmp);
-  g_free (tmp);
 
   funnel_src_pad = gst_element_get_static_pad (funnel, "src");
 
@@ -1444,13 +1575,6 @@ fs_rtp_session_constructed (GObject *object)
   }
 
   self->priv->rtpmuxer = gst_object_ref (muxer);
-
-  tmp = g_strdup_printf ("send_rtp_sink_%u", self->id);
-  self->priv->rtpbin_send_rtp_sink =
-    gst_element_get_request_pad (self->priv->conference->rtpbin,
-      tmp);
-  g_free (tmp);
-
 
   g_signal_connect_object (self->priv->rtpbin_send_rtp_sink, "notify::caps",
       G_CALLBACK (_rtpbin_send_rtp_sink_notify_caps), self, 0);
@@ -1554,20 +1678,6 @@ fs_rtp_session_constructed (GObject *object)
   gst_element_set_state (tee, GST_STATE_PLAYING);
 
   self->priv->transmitter_rtcp_tee = gst_object_ref (tee);
-
-  tmp = g_strdup_printf ("send_rtcp_src_%u", self->id);
-  self->priv->rtpbin_send_rtcp_src =
-    gst_element_get_request_pad (self->priv->conference->rtpbin, tmp);
-
-  if (!self->priv->rtpbin_send_rtcp_src)
-  {
-     self->priv->construction_error = g_error_new (FS_ERROR,
-         FS_ERROR_CONSTRUCTION,
-         "Could not get %s request pad from the rtpbin", tmp);
-    g_free (tmp);
-    return;
-  }
-  g_free (tmp);
 
 
   transmitter_rtcp_tee_sink_pad =
