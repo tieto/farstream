@@ -27,6 +27,7 @@ FsStreamClass
 FsStreamDirection
 FsStreamState
 fs_stream_set_transmitter
+fs_stream_set_transmitter_ht
 fs_stream_add_remote_candidates
 fs_stream_set_remote_codecs
 fs_stream_force_remote_candidates
@@ -120,6 +121,7 @@ fs_candidate_destroy
 fs_candidate_copy
 fs_candidate_list_destroy
 fs_candidate_list_copy
+fs_value_set_candidate_list
 <SUBSECTION Standard>
 FS_TYPE_CANDIDATE
 fs_candidate_get_type

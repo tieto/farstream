@@ -114,6 +114,13 @@ fs_codec_new (int id, const char *encoding_name,
   return codec;
 }
 
+/**
+ * fs_codec_parameter_free:
+ * @param: a #FsCodecParameter to free
+ *
+ * Frees a #FsCodecParameter
+ *
+ */
 void
 fs_codec_parameter_free (FsCodecParameter *param)
 
@@ -123,7 +130,13 @@ fs_codec_parameter_free (FsCodecParameter *param)
   g_slice_free (FsCodecParameter, param);
 }
 
-
+/**
+ * fs_feedback_parameter_free:
+ * @param: a #FsFeedbackParameter to free
+ *
+ * Frees a #FsFeedbackParameter
+ *
+ */
 void
 fs_feedback_parameter_free (FsFeedbackParameter *param)
 {
@@ -865,6 +878,15 @@ fs_codec_remove_feedback_parameter (FsCodec *codec, GList *item)
       g_list_delete_link (codec->feedback_params, item);
 }
 
+/**
+ * fs_codec_parameter_copy:
+ * @param: a #FsCodecParameter
+ *
+ * Makes a copy of a #FsCodecParameter
+ *
+ * Returns: a newly allocated #FsCodecParameter
+ */
+
 FsCodecParameter *
 fs_codec_parameter_copy (const FsCodecParameter *param)
 {
@@ -876,6 +898,15 @@ fs_codec_parameter_copy (const FsCodecParameter *param)
   return outparam;
 }
 
+
+/**
+ * fs_feedback_parameter_copy:
+ * @param: a #FsFeedbackParameter
+ *
+ * Makes a copy of a #FsFeedbackParameter
+ *
+ * Returns: a newly allocated #FsFeedbackParameter
+ */
 
 FsFeedbackParameter *
 fs_feedback_parameter_copy (const FsFeedbackParameter *param)

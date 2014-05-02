@@ -652,7 +652,7 @@ fs_stream_set_transmitter (FsStream *stream,
  * @stream: a #FsStream
  * @transmitter: Name of the type of transmitter to use for this stream
  * @stream_transmitter_parameters: (element-type utf8 GValue) (allow-none):
- *   A #GHashTable of <String->GValue) containing the parameters.
+ *   A #GHashTable of string->GValue containing the parameters.
  * @error: location of a #GError, or %NULL if no error occured
  *
  * Set the transmitter to use for this stream. This function will only succeed
