@@ -994,6 +994,12 @@ _rtpbin_internal_session_notify_internal_ssrc (GObject *internal_session,
 }
 
 static void
+_rtpbin_send_rtp_sink_notify_caps (GstPad *pad, GParamSpec *param, gpointer self)
+{
+  g_object_notify (G_OBJECT (self), "ssrc");
+}
+
+static void
 _rtp_tfrc_bitrate_changed (GObject *rtp_tfrc, GParamSpec *pspec,
     FsRtpSession *self)
 {
@@ -1377,6 +1383,11 @@ fs_rtp_session_constructed (GObject *object)
     gst_element_get_request_pad (self->priv->conference->rtpbin,
       tmp);
   g_free (tmp);
+
+
+  g_signal_connect_object (self->priv->rtpbin_send_rtp_sink, "notify::caps",
+      G_CALLBACK (_rtpbin_send_rtp_sink_notify_caps), self, 0);
+
 
   muxer_src_pad = gst_element_get_static_pad (muxer, "src");
 
