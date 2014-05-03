@@ -889,9 +889,24 @@ fs_rtp_session_get_property (GObject *object,
       FS_RTP_SESSION_UNLOCK (self);
       break;
     case PROP_SSRC:
-      g_object_get_property (G_OBJECT (self->priv->rtpbin_internal_session),
-          "internal-ssrc", value);
-      break;
+      if (self->priv->rtpbin_send_rtp_sink)
+      {
+        GstCaps *caps = NULL;
+        g_object_get (self->priv->rtpbin_send_rtp_sink, "caps", &caps, NULL);
+        if (caps)
+        {
+          if (gst_caps_get_size (caps) > 0)
+          {
+            const GstStructure *s = gst_caps_get_structure (caps, 0);
+            guint ssrc;
+
+            if (gst_structure_get_uint (s, "ssrc", &ssrc))
+              g_value_set_uint (value, ssrc);
+          }
+          gst_caps_unref (caps);
+        }
+        break;
+      }
     case PROP_TOS:
       FS_RTP_SESSION_LOCK (self);
       g_value_set_uint (value, self->priv->tos);
