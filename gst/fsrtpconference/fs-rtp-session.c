@@ -3194,6 +3194,12 @@ _create_codec_bin (const CodecAssociation *ca, const FsCodec *codec,
         *new_builder_hash, current_builder_hash, FS_CODEC_ARGS (ca->codec));
   }
 
+  if (!ca->blueprint) {
+    g_set_error (error, FS_ERROR, FS_ERROR_INTERNAL,
+        "Codec Association has neither blueprint nor profile");
+    return NULL;
+  }
+
   return create_codec_bin_from_blueprint (codec, ca->blueprint, name,
       is_send, error);
 }
