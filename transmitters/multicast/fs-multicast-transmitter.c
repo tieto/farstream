@@ -1055,6 +1055,8 @@ fs_multicast_transmitter_put_udpsock (FsMulticastTransmitter *trans,
 
   if (udpsock->ttls->len > 0)
   {
+    g_assert (udpsock->fd >= 0);
+
     /* If we were the max, check if there is a new max */
     if (udpsock->current_ttl == ttl && ttl > 1)
     {
