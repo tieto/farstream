@@ -1030,8 +1030,7 @@ fs_multicast_transmitter_get_udpsock (FsMulticastTransmitter *trans,
 
  error:
 
-  if (udpsock)
-    fs_multicast_transmitter_put_udpsock (trans, udpsock, ttl);
+  fs_multicast_transmitter_put_udpsock (trans, udpsock, ttl);
 
   return NULL;
 }
