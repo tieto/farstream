@@ -791,7 +791,7 @@ connection_cb (FsMsnConnection *self, FsMsnPollFD *pollfd)
               if (recv (pollfd->pollfd.fd, str, 13, 0) != 13)
               {
                 GST_WARNING ("Could not read 13 bytes that had previously"
-                    " been peeked at!"):
+                    " been peeked at!");
                 goto error;
               }
               pollfd->status = FS_MSN_STATUS_CONNECTED2;
@@ -838,7 +838,7 @@ connection_cb (FsMsnConnection *self, FsMsnPollFD *pollfd)
               if (recv (pollfd->pollfd.fd, str, 13, 0) != 13)
               {
                 GST_WARNING ("Could not read 13 bytes that had previously"
-                    " been peeked at!"):
+                    " been peeked at!");
 
                 goto error;
               }
