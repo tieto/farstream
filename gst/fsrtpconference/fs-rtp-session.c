@@ -50,7 +50,59 @@
  * Also, it is possible to declare profiles with only a decoding pipeline,
  * you will only be able to receive from this codec, the encoding may be a
  * secondary pad of some other codec.
- * </para></refsect2>
+ * </para>
+ * </refsect2>
+ * <refsect2><title>SRTP signature and encryption</title>
+ * <para>
+ *
+ * To tell #FsRtpSession to authenticate encrypt the media it is
+ * sending using SRTP, one must set the parameters using a
+ * #GstStructure named "FarstreamSRTP" and passing it to
+ * fs_session_set_encryption_parameters().
+ *
+ * The cipher, auth, and key must be specified:
+ * <refsect3 id="FarstreamSRTP"><title>FarstreamSRTP</title>
+ * <table>
+ *  <tr>
+ *   <td><code>"rtp-cipher" and "rtcp-cipher"</code></td>
+ *   <td>gchar *</td>
+ *   <td>
+ *    <para>Encryption algorithm</para>
+ *    <para>Possible values: "null", "aes-128-icm" or "aes-256-icm"</para>
+ *   </td>
+ *  </tr>
+ *  <tr>
+ *   <td><code>"cipher"</code></td>
+ *   <td>gchar *</td>
+ *   <td><para>Default value for "rtp-cipher" and "rtcp-cipher"</para>
+ *       <para>Possible values: "null", "aes-128-icm" or "aes-256-icm"</para>
+ *   </td>
+ *  </tr>
+ *  <tr>
+ *   <td><code>"rtp-auth" and "rtcp-auth"</code></td>
+ *   <td>gchar *</td>
+ *   <td>
+ *    <para>Authentication algorithm, can never be null</para>
+ *    <para>Possible values: "hmac-sha1-32" or "hmac-sha1-80"</para>
+ *   </td>
+ *  </tr>
+ *  <tr>
+ *   <td><code>"auth"</code></td>
+ *   <td>gchar *</td>
+ *   <td><para>Default value for "rtp-auth" and "rtcp-auth"</para>
+ *       <para>Possible values: "hmac-sha1-32" or "hmac-sha1-80"</para>
+ *   </td>
+ *  </tr>
+ *  <tr>
+ *   <td><code>"key"</code></td>
+ *   <td>#GstBuffer</td>
+ *   <td>Size must be 30 if cipher is "aes-128-icm" and 46 if cipher is
+ *   "aes-256-icm" </td>
+ *  </tr>
+ * </table>
+ * </refsect3>
+ * </para>
+ * </refsect2>
  */
 
 #ifdef HAVE_CONFIG_H
@@ -107,6 +159,7 @@ enum
   PROP_RTP_HEADER_EXTENSION_PREFERENCES,
   PROP_ALLOWED_SINK_CAPS,
   PROP_ALLOWED_SRC_CAPS,
+  PROP_ENCRYPTION_PARAMETERS
 };
 
 #define DEFAULT_NO_RTCP_TIMEOUT (7000)
@@ -218,6 +271,7 @@ struct _FsRtpSessionPrivate
 
   /* Protected by session mutex */
   guint send_bitrate;
+  GstStructure *encryption_parameters;
 
   /* Protected by session mutex */
   guint caps_generation;
@@ -334,6 +388,11 @@ static gboolean
 fs_rtp_session_set_allowed_caps (FsSession *session, GstCaps *sink_caps,
     GstCaps *src_caps, GError **error);
 
+static gboolean
+fs_rtp_session_set_encryption_parameters (FsSession *session,
+    GstStructure *parameters, GError **error);
+
+
 //static guint signals[LAST_SIGNAL] = { 0 };
 
 static void
@@ -360,6 +419,8 @@ fs_rtp_session_class_init (FsRtpSessionClass *klass)
     fs_rtp_session_get_stream_transmitter_type;
   session_class->codecs_need_resend = fs_rtp_session_get_codecs_need_resend;
   session_class->set_allowed_caps = fs_rtp_session_set_allowed_caps;
+  session_class->set_encryption_parameters =
+      fs_rtp_session_set_encryption_parameters;
 
   g_object_class_override_property (gobject_class,
     PROP_CONFERENCE, "conference");
@@ -383,6 +444,8 @@ fs_rtp_session_class_init (FsRtpSessionClass *klass)
     PROP_ALLOWED_SINK_CAPS, "allowed-sink-caps");
   g_object_class_override_property (gobject_class,
     PROP_ALLOWED_SRC_CAPS, "allowed-src-caps");
+  g_object_class_override_property (gobject_class,
+    PROP_ENCRYPTION_PARAMETERS, "encryption-parameters");
 
   g_object_class_install_property (gobject_class,
       PROP_NO_RTCP_TIMEOUT,
@@ -814,6 +877,9 @@ fs_rtp_session_finalize (GObject *object)
   g_queue_foreach (&self->priv->telephony_events, (GFunc) gst_event_unref,
       NULL);
 
+  if (self->priv->encryption_parameters)
+    gst_structure_free (self->priv->encryption_parameters);
+
   g_rw_lock_clear (&self->priv->disposed_lock);
 
   G_OBJECT_CLASS (fs_rtp_session_parent_class)->finalize (object);
@@ -971,6 +1037,11 @@ fs_rtp_session_get_property (GObject *object,
     case PROP_ALLOWED_SRC_CAPS:
       FS_RTP_SESSION_LOCK (self);
       g_value_set_boxed (value, self->priv->output_caps);
+      FS_RTP_SESSION_UNLOCK (self);
+      break;
+    case PROP_ENCRYPTION_PARAMETERS:
+      FS_RTP_SESSION_LOCK (self);
+      g_value_set_boxed (value, self->priv->encryption_parameters);
       FS_RTP_SESSION_UNLOCK (self);
       break;
     default:
@@ -5278,6 +5349,212 @@ invalid:
   fs_rtp_session_try_sending_dtmf_event (self);
 
   return TRUE;
+}
+
+static gint
+parse_enum (const gchar *name, const gchar *value, GError **error)
+{
+  GstElementFactory *factory;
+  GstPluginFeature *loaded_feature;
+  GType srtpenc_type;
+  GObjectClass *srtpenc_class;
+  GParamSpec *spec;
+  GParamSpecEnum *enumspec;
+  GEnumValue *enumvalue;
+
+  if (value == NULL)
+    goto error;
+
+  factory = gst_element_factory_find ("srtpenc");
+  if (!factory)
+    goto error_not_installed;
+
+  loaded_feature = gst_plugin_feature_load (GST_PLUGIN_FEATURE (factory));
+  gst_object_unref (factory);
+  factory = GST_ELEMENT_FACTORY (loaded_feature);
+
+  srtpenc_type = gst_element_factory_get_element_type (factory);
+  gst_object_unref (factory);
+  if (srtpenc_type == 0)
+    goto error_not_installed;
+
+  srtpenc_class = g_type_class_ref (srtpenc_type);
+  if (!srtpenc_class)
+    goto error_not_installed;
+
+  spec = g_object_class_find_property (srtpenc_class, name);
+  g_type_class_unref (srtpenc_class);
+  if (!spec)
+    goto error_internal;
+
+  if (!G_IS_PARAM_SPEC_ENUM (spec))
+    goto error_internal;
+  enumspec = G_PARAM_SPEC_ENUM (spec);
+
+  enumvalue = g_enum_get_value_by_nick (enumspec->enum_class, value);
+  if (enumvalue)
+    return enumvalue->value;
+
+  enumvalue = g_enum_get_value_by_name (enumspec->enum_class, value);
+  if (enumvalue)
+    return enumvalue->value;
+
+error:
+  g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+      "Invalid %s value: %s", name, value);
+  return -1;
+
+error_not_installed:
+  g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
+      "Can't find srtpenc, no encryption possible");
+  return -1;
+
+error_internal:
+  g_set_error (error, FS_ERROR, FS_ERROR_INTERNAL,
+      "Can't find srtpenc %s property or is not a GEnum type!", name);
+  return -1;
+}
+
+static gboolean
+fs_rtp_session_set_encryption_parameters (FsSession *session,
+    GstStructure *parameters, GError **error)
+{
+  FsRtpSession *self = FS_RTP_SESSION (session);
+  gboolean ret = FALSE;
+  const gchar *tmp;
+  GstBuffer *key = NULL;
+  gint cipher = 0; /* 0 is null cipher, no encryption */
+  gint rtp_cipher = -1;
+  gint rtcp_cipher = -1;
+  gint auth = -1;
+  gint rtp_auth = -1;
+  gint rtcp_auth = -1;
+  guint replay_window_size = 0;
+
+  g_return_val_if_fail (FS_IS_RTP_SESSION (session), FALSE);
+  g_return_val_if_fail (parameters == NULL ||
+      GST_IS_STRUCTURE (parameters), FALSE);
+
+  if (fs_rtp_session_has_disposed_enter (self, error))
+    return FALSE;
+
+  if (!self->priv->srtpenc)
+  {
+    g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+        "Can't set encryption because srtpenc is not installed");
+    goto done;
+  }
+
+  if (parameters) {
+    const GValue *v = NULL;
+
+    if (!gst_structure_has_name (parameters, "FarstreamSRTPEncrypt"))
+    {
+      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+          "The only structure accepted is FarstreamSRTPEncrypt");
+      goto done;
+    }
+    if ((tmp = gst_structure_get_string (parameters, "cipher")))
+    {
+      cipher = parse_enum ("rtp-cipher", tmp, error);
+      if (cipher == -1)
+        goto done;
+    }
+    if ((tmp = gst_structure_get_string (parameters, "rtp-cipher")))
+    {
+      rtp_cipher = parse_enum ("rtp-cipher", tmp, error);
+      if (cipher == -1)
+        goto done;
+    }
+    if ((tmp = gst_structure_get_string (parameters, "rtcp-cipher")))
+    {
+      rtcp_cipher = parse_enum ("rtcp-cipher", tmp, error);
+      if (cipher == -1)
+        goto done;
+    }
+    if ((tmp = gst_structure_get_string (parameters, "auth")))
+    {
+      auth = parse_enum ("rtp-auth", tmp, error);
+      if (cipher == -1)
+        goto done;
+    }
+    if ((tmp = gst_structure_get_string (parameters, "rtp-auth")))
+    {
+      rtp_auth = parse_enum ("rtp-auth", tmp, error);
+      if (cipher == -1)
+        goto done;
+    }
+    if ((tmp = gst_structure_get_string (parameters, "rtcp-auth")))
+    {
+      rtcp_auth = parse_enum ("rtcp-auth", tmp, error);
+      if (cipher == -1)
+        goto done;
+    }
+
+    if (rtp_cipher == -1)
+      rtp_cipher = cipher;
+    if (rtcp_cipher == -1)
+      rtcp_cipher = cipher;
+
+    if (rtp_auth == -1)
+      rtp_auth = auth;
+    if (rtcp_auth == -1)
+      rtcp_auth = auth;
+    if (rtp_auth == -1 || rtcp_auth == -1)
+    {
+      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+          "At least the authentication MUST be set, \"auth\" or \"rtp-auth\""
+          " and \"rtcp-auth\" are required.");
+      goto done;
+    }
+
+    v = gst_structure_get_value (parameters, "key");
+    if (!v) {
+      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+          "The argument \"key\" is required.");
+      goto done;
+    }
+    if (!GST_VALUE_HOLDS_BUFFER (v) || gst_value_get_buffer (v) == NULL) {
+       g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+           "The argument \"key\" MUST hold a GstBuffer.");
+       goto done;
+    }
+    key = gst_value_get_buffer (v);
+
+    if (gst_structure_get_uint (parameters, "replay-window-size",
+            &replay_window_size))
+    {
+      if (replay_window_size < 64 || replay_window_size >= 32768) {
+        g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+            "Reply window size must be between 64 and 32768");
+        goto done;
+      }
+    }
+  } else {
+    rtcp_auth = rtp_auth = 0; /* 0 is NULL */
+  }
+
+
+  FS_RTP_SESSION_LOCK (self);
+  if (self->priv->encryption_parameters)
+    gst_structure_free (self->priv->encryption_parameters);
+
+  if (parameters)
+    self->priv->encryption_parameters = gst_structure_copy (parameters);
+  else
+    self->priv->encryption_parameters = NULL;
+  FS_RTP_SESSION_UNLOCK (self);
+
+  g_object_set (self->priv->srtpenc,
+      "replay-window-size", replay_window_size,
+      "rtp-auth", rtp_auth, "rtcp-auth", rtcp_auth,
+      "rtp-cipher", rtp_cipher, "rtcp-cipher", rtcp_cipher, "key", key, NULL);
+
+  ret = TRUE;
+
+done:
+  fs_rtp_session_has_disposed_exit (self);
+  return ret;
 }
 
 static gboolean
