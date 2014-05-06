@@ -14,6 +14,36 @@ FS_IS_VIDEOANYRATE_CLASS
 </SECTION>
 
 <SECTION>
+<FILE>element-fsrtpxdatapay</FILE>
+<TITLE>FsRTPXdataPay</TITLE>
+FsRTPXdataPay
+<SUBSECTION Standard>
+FS_IS_RTP_XDATA_PAY
+FS_IS_RTP_XDATA_PAY_CLASS
+FS_RTP_XDATA_PAY
+FS_RTP_XDATA_PAY_CLASS
+FS_TYPE_RTP_XDATA_PAY
+FsRTPXdataPayClass
+fs_rtp_xdata_pay_get_type
+fs_rtp_xdata_pay_plugin_init
+</SECTION>
+
+<SECTION>
+<FILE>element-fsrtpxdatadepay</FILE>
+<TITLE>FsRTPXdataDepay</TITLE>
+FsRTPXdataDepay
+<SUBSECTION Standard>
+FS_IS_RTP_XDATA_DEPAY
+FS_IS_RTP_XDATA_DEPAY_CLASS
+FS_RTP_XDATA_DEPAY
+FS_RTP_XDATA_DEPAY_CLASS
+FS_TYPE_RTP_XDATA_DEPAY
+FsRTPXdataDepayClass
+fs_rtp_xdata_depay_get_type
+fs_rtp_xdata_depay_plugin_init
+</SECTION>
+
+<SECTION>
 <FILE>element-fsrtpconference</FILE>
 <TITLE>FsRtpConference</TITLE>
 FsRtpConference
