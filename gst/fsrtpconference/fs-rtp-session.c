@@ -2300,9 +2300,6 @@ static GstElement *
 _get_recvonly_filter (FsTransmitter *transmitter, guint component,
     gpointer user_data)
 {
-  if (component == FS_COMPONENT_RTCP)
-    return gst_element_factory_make ("fsrtcpfilter", NULL);
-  else
     return NULL;
 }
 

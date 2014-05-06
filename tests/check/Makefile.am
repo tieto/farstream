@@ -50,7 +50,6 @@ check_PROGRAMS = \
 	transmitter/nice \
 	transmitter/shm \
 	raw/conference \
-	elements/rtcpfilter \
 	rtp/codecs \
 	rtp/sendcodecs \
 	rtp/conference \
@@ -169,7 +168,3 @@ utils_binadded_SOURCES = \
 	testutils.c \
 	testutils.h \
 	utils/binadded.c
-
-elements_rtcpfilter_CFLAGS = $(AM_CFLAGS) $(GST_PLUGINS_BASE_CFLAGS)
-elements_rtcpfilter_SOURCES = elements/rtcpfilter.c
-elements_rtcpfilter_LDADD = $(LDADD) -lgstrtp-@GST_API_VERSION@

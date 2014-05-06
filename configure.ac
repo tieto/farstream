@@ -114,7 +114,6 @@ FS_PLUGINS_ALL=" \
 	fsrawconference \
 	fsrtpconference \
 	fsmsnconference \
-	fsrtcpfilter \
  	fsvideoanyrate \
  	fsrtpxdata \
 	"
@@ -382,7 +381,6 @@ gst/Makefile
 gst/fsrawconference/Makefile
 gst/fsrtpconference/Makefile
 gst/fsmsnconference/Makefile
-gst/fsrtcpfilter/Makefile
 gst/fsvideoanyrate/Makefile
 gst/fsrtpxdata/Makefile
 farstream/Makefile
