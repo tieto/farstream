@@ -101,7 +101,8 @@ typedef FsStreamTransmitter* (*stream_get_new_stream_transmitter_cb) (
   FsRtpStream *stream,  FsParticipant *participant,
   const gchar *transmitter_name, GParameter *parameters, guint n_parameters,
   GError **error, gpointer user_data);
-
+typedef gboolean (*stream_decrypt_clear_locked_cb) (FsRtpStream *stream,
+    gpointer user_data);
 
 FsRtpStream *fs_rtp_stream_new (FsRtpSession *session,
     FsRtpParticipant *participant,
@@ -111,6 +112,7 @@ FsRtpStream *fs_rtp_stream_new (FsRtpSession *session,
     stream_sending_changed_locked_cb sending_changed_locked_cb,
     stream_ssrc_added_cb ssrc_added_cb,
     stream_get_new_stream_transmitter_cb get_new_stream_transmitter_cb,
+    stream_decrypt_clear_locked_cb decrypt_clear_locked_cb,
     gpointer user_data_for_cb);
 
 gboolean fs_rtp_stream_add_substream_unlock (FsRtpStream *stream,
@@ -125,6 +127,9 @@ gboolean
 validate_srtp_parameters (GstStructure *parameters,
     gint *srtp_cipher, gint *srtcp_cipher, gint *srtp_auth, gint *srtcp_auth,
     GstBuffer **key, guint *replay_window, GError **error);
+
+GstCaps *
+fs_rtp_stream_get_srtp_caps_locked (FsRtpStream *self);
 
 G_END_DECLS
 

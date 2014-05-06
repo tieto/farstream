@@ -392,6 +392,11 @@ static gboolean
 fs_rtp_session_set_encryption_parameters (FsSession *session,
     GstStructure *parameters, GError **error);
 
+static GstCaps *
+_srtpdec_request_key (GstElement *srtpdec, guint ssrc, gpointer user_data);
+static gboolean
+_stream_decrypt_clear_locked_cb (FsRtpStream *stream, gpointer user_data);
+
 
 //static guint signals[LAST_SIGNAL] = { 0 };
 
@@ -1329,8 +1334,11 @@ fs_rtp_session_constructed (GObject *object)
   tmp = g_strdup_printf ("srtpdec_%u", self->id);
   self->priv->srtpdec = gst_element_factory_make ("srtpdec", tmp);
   g_free (tmp);
-  if (self->priv->srtpdec)
+  if (self->priv->srtpdec) {
     gst_object_ref_sink (self->priv->srtpdec);
+    g_signal_connect_object (self->priv->srtpdec, "request-key",
+        G_CALLBACK (_srtpdec_request_key), self, 0);
+  }
 
   request_rtp_encoder_id =
       g_signal_connect (self->priv->conference->rtpbin, "request-rtp-encoder",
@@ -1836,6 +1844,23 @@ GET_MEMBER (GObject, rtpbin_internal_session)
 GET_MEMBER (GstElement, rtpmuxer)
 #undef GET_MEMBER
 
+static gboolean
+fs_rtp_session_add_ssrc_stream_locked (FsRtpSession *self, guint32 ssrc,
+    FsRtpStream *stream)
+{
+
+  if (!g_hash_table_lookup (self->priv->ssrc_streams,  GUINT_TO_POINTER (ssrc)))
+  {
+    g_hash_table_insert (self->priv->ssrc_streams, GUINT_TO_POINTER (ssrc),
+        stream);
+    if (self->priv->srtpdec)
+      g_signal_emit_by_name (self->priv->srtpdec, "remove-key", ssrc);
+    return TRUE;
+  } else {
+    return FALSE;
+  }
+}
+
 static void
 _stream_known_source_packet_received (FsRtpStream *stream, guint component,
     GstBuffer *buffer, gpointer user_data)
@@ -1890,12 +1915,8 @@ _stream_known_source_packet_received (FsRtpStream *stream, guint component,
 
   FS_RTP_SESSION_LOCK (self);
 
-  if (!g_hash_table_lookup (self->priv->ssrc_streams,  GUINT_TO_POINTER (ssrc)))
+  if (fs_rtp_session_add_ssrc_stream_locked (self, ssrc, stream))
   {
-    GST_DEBUG ("Associating SSRC %x in session %d", ssrc, self->id);
-    g_hash_table_insert (self->priv->ssrc_streams, GUINT_TO_POINTER (ssrc),
-        stream);
-
     FS_RTP_SESSION_UNLOCK (self);
 
     fs_rtp_session_associate_free_substreams (self, stream, ssrc);
@@ -1943,8 +1964,7 @@ _stream_ssrc_added_cb (FsRtpStream *stream, guint32 ssrc, gpointer user_data)
     return;
 
   FS_RTP_SESSION_LOCK (self);
-  g_hash_table_insert (self->priv->ssrc_streams, GUINT_TO_POINTER (ssrc),
-      stream);
+  fs_rtp_session_add_ssrc_stream_locked (self, ssrc, stream);
   g_hash_table_insert (self->priv->ssrc_streams_manual, GUINT_TO_POINTER (ssrc),
       stream);
   FS_RTP_SESSION_UNLOCK (self);
@@ -2027,6 +2047,7 @@ fs_rtp_session_new_stream (FsSession *session,
           _stream_sending_changed_locked,
           _stream_ssrc_added_cb,
           _stream_get_new_stream_transmitter,
+          _stream_decrypt_clear_locked_cb,
           self));
 
   if (new_stream)
@@ -4392,10 +4413,7 @@ fs_rtp_session_associate_ssrc_cname (FsRtpSession *session,
     return;
   }
 
-  if (!g_hash_table_lookup (session->priv->ssrc_streams,
-          GUINT_TO_POINTER (ssrc)))
-    g_hash_table_insert (session->priv->ssrc_streams, GUINT_TO_POINTER (ssrc),
-        stream);
+  fs_rtp_session_add_ssrc_stream_locked (session, ssrc, stream);
 
   g_object_ref (stream);
   FS_RTP_SESSION_UNLOCK (session);
@@ -5352,59 +5370,6 @@ invalid:
 }
 
 static gboolean
-fs_rtp_session_set_encryption_parameters (FsSession *session,
-    GstStructure *parameters, GError **error)
-{
-  FsRtpSession *self = FS_RTP_SESSION (session);
-  gboolean ret = FALSE;
-  GstBuffer *key;
-  gint rtp_cipher;
-  gint rtcp_cipher;
-  gint rtp_auth;
-  gint rtcp_auth;
-  guint replay_window_size;
-
-  g_return_val_if_fail (FS_IS_RTP_SESSION (session), FALSE);
-  g_return_val_if_fail (parameters == NULL ||
-      GST_IS_STRUCTURE (parameters), FALSE);
-
-  if (!validate_srtp_parameters (parameters, &rtp_cipher, &rtcp_cipher,
-          &rtp_auth, &rtcp_auth, &key, &replay_window_size, error))
-    return FALSE;
-
-  if (fs_rtp_session_has_disposed_enter (self, error))
-    return FALSE;
-
-  if (!self->priv->srtpenc)
-  {
-    g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
-        "Can't set encryption because srtpenc is not installed");
-    goto done;
-  }
-
-  FS_RTP_SESSION_LOCK (self);
-  if (self->priv->encryption_parameters)
-    gst_structure_free (self->priv->encryption_parameters);
-
-  if (parameters)
-    self->priv->encryption_parameters = gst_structure_copy (parameters);
-  else
-    self->priv->encryption_parameters = NULL;
-  FS_RTP_SESSION_UNLOCK (self);
-
-  g_object_set (self->priv->srtpenc,
-      "replay-window-size", replay_window_size,
-      "rtp-auth", rtp_auth, "rtcp-auth", rtcp_auth,
-      "rtp-cipher", rtp_cipher, "rtcp-cipher", rtcp_cipher, "key", key, NULL);
-
-  ret = TRUE;
-
-done:
-  fs_rtp_session_has_disposed_exit (self);
-  return ret;
-}
-
-static gboolean
 fs_rtp_session_set_allowed_caps (FsSession *session, GstCaps *sink_caps,
     GstCaps *src_caps, GError **error)
 {
@@ -5462,4 +5427,115 @@ fs_rtp_session_set_allowed_caps (FsSession *session, GstCaps *sink_caps,
 
   fs_rtp_session_has_disposed_exit (self);
   return ret;
+}
+
+static gboolean
+fs_rtp_session_set_encryption_parameters (FsSession *session,
+    GstStructure *parameters, GError **error)
+{
+  FsRtpSession *self = FS_RTP_SESSION (session);
+  gboolean ret = FALSE;
+  GstBuffer *key;
+  gint rtp_cipher;
+  gint rtcp_cipher;
+  gint rtp_auth;
+  gint rtcp_auth;
+  guint replay_window_size;
+
+  g_return_val_if_fail (FS_IS_RTP_SESSION (session), FALSE);
+  g_return_val_if_fail (parameters == NULL ||
+      GST_IS_STRUCTURE (parameters), FALSE);
+
+  if (!validate_srtp_parameters (parameters, &rtp_cipher, &rtcp_cipher,
+          &rtp_auth, &rtcp_auth, &key, &replay_window_size, error))
+    return FALSE;
+
+  if (fs_rtp_session_has_disposed_enter (self, error))
+    return FALSE;
+
+  if (!self->priv->srtpenc)
+  {
+    g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+        "Can't set encryption because srtpenc is not installed");
+    goto done;
+  }
+
+  FS_RTP_SESSION_LOCK (self);
+  if (self->priv->encryption_parameters)
+    gst_structure_free (self->priv->encryption_parameters);
+
+  if (parameters)
+    self->priv->encryption_parameters = gst_structure_copy (parameters);
+  else
+    self->priv->encryption_parameters = NULL;
+  FS_RTP_SESSION_UNLOCK (self);
+
+  g_object_set (self->priv->srtpenc,
+      "replay-window-size", replay_window_size,
+      "rtp-auth", rtp_auth, "rtcp-auth", rtcp_auth,
+      "rtp-cipher", rtp_cipher, "rtcp-cipher", rtcp_cipher, "key", key, NULL);
+
+  ret = TRUE;
+
+done:
+  fs_rtp_session_has_disposed_exit (self);
+  return ret;
+}
+
+static GstCaps *
+_srtpdec_request_key (GstElement *srtpdec, guint ssrc, gpointer user_data)
+{
+  FsRtpSession *self = FS_RTP_SESSION (user_data);
+  FsRtpStream *stream;
+  GstCaps *caps = NULL;
+
+  if (fs_rtp_session_has_disposed_enter (self, NULL))
+    return NULL;
+
+  FS_RTP_SESSION_LOCK (self);
+  stream = fs_rtp_session_get_stream_by_ssrc_locked (self, ssrc);
+
+  if (stream)
+  {
+    caps = fs_rtp_stream_get_srtp_caps_locked (stream);
+    g_object_unref (stream);
+  }
+
+  FS_RTP_SESSION_UNLOCK (self);
+
+  fs_rtp_session_has_disposed_exit (self);
+
+  if (caps)
+    return caps;
+  else
+    return gst_caps_new_simple ("application/x-srtp",
+        "srtp-cipher", G_TYPE_STRING, "null",
+        "srtcp-cipher", G_TYPE_STRING, "null",
+        "srtp-auth", G_TYPE_STRING, "null",
+        "srtcp-auth", G_TYPE_STRING, "null",
+        NULL);
+}
+
+static gboolean
+_stream_decrypt_clear_locked_cb (FsRtpStream *stream, gpointer user_data)
+{
+  FsRtpSession *self = FS_RTP_SESSION (user_data);
+  GHashTableIter iter;
+  gpointer key, value;
+
+  if (!self->priv->srtpdec)
+    return FALSE;
+
+  g_hash_table_iter_init (&iter, self->priv->ssrc_streams);
+
+  while (g_hash_table_iter_next (&iter, &key, &value))
+  {
+    guint32 ssrc = GPOINTER_TO_UINT (key);
+    FsRtpStream *tmp_stream = value;
+
+    if (tmp_stream == stream)
+      g_signal_emit_by_name (self->priv->srtpdec, "remove-key", ssrc);
+  }
+
+  return TRUE;
 }
