@@ -46,6 +46,7 @@ typedef struct _FsFeedbackParameter FsFeedbackParameter;
  * FsMediaType:
  * @FS_MEDIA_TYPE_AUDIO: A media type that encodes audio.
  * @FS_MEDIA_TYPE_VIDEO: A media type that encodes video.
+ * @FS_MEDIA_TYPE_APPLICATION: A media type for application data.
  * @FS_MEDIA_TYPE_LAST: Largest valid #FsMediaType
  *
  * Enum used to signify the media type of a codec or stream.
@@ -53,7 +54,8 @@ typedef struct _FsFeedbackParameter FsFeedbackParameter;
 typedef enum {
   FS_MEDIA_TYPE_AUDIO,
   FS_MEDIA_TYPE_VIDEO,
-  FS_MEDIA_TYPE_LAST = FS_MEDIA_TYPE_VIDEO
+  FS_MEDIA_TYPE_APPLICATION,
+  FS_MEDIA_TYPE_LAST = FS_MEDIA_TYPE_APPLICATION
 } FsMediaType;
 
 /**

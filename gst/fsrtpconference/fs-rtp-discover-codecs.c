@@ -262,6 +262,11 @@ fs_rtp_blueprints_get (FsMediaType media_type, GError **error)
     caps = gst_caps_new_simple ("application/x-rtp",
             "media", G_TYPE_STRING, "video", NULL);
   }
+  else if (media_type == FS_MEDIA_TYPE_APPLICATION)
+  {
+    caps = gst_caps_new_simple ("application/x-rtp",
+            "media", G_TYPE_STRING, "application", NULL);
+  }
   else
   {
     g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
@@ -605,7 +610,7 @@ parse_codec_cap_list (GList *list, FsMediaType media_type)
 
       GST_DEBUG ("skipping codec %s/%s, no encoding name specified"
           " (pt: %d clock_rate:%u",
-          media_type == FS_MEDIA_TYPE_AUDIO ? "audio" : "video",
+          fs_media_type_to_string (media_type),
           encoding_name ? encoding_name : "unknown", codec->id,
           codec->clock_rate);
 
@@ -1408,6 +1413,10 @@ extract_field_data (GQuark field_id,
     else if (strcmp (tmp, "video") == 0)
     {
       codec->media_type = FS_MEDIA_TYPE_VIDEO;
+    }
+    else if (strcmp (tmp, "application") == 0)
+    {
+      codec->media_type = FS_MEDIA_TYPE_APPLICATION;
     }
 
   }

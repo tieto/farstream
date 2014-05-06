@@ -367,6 +367,11 @@ fs_codec_list_from_keyfile (const gchar *filename, GError **error)
     {
       media_type = FS_MEDIA_TYPE_VIDEO;
     }
+    else if ((next_tok - groups[i]) == 11 /* strlen ("application") */ &&
+        !g_ascii_strncasecmp ("application", groups[i], 11))
+    {
+      media_type = FS_MEDIA_TYPE_APPLICATION;
+    }
     else
     {
       GST_WARNING ("Invalid media type in codec name name %s", groups[i]);
@@ -504,6 +509,8 @@ fs_media_type_to_string (FsMediaType media_type)
     return "audio";
   } else if (media_type == FS_MEDIA_TYPE_VIDEO) {
     return "video";
+  } else if (media_type == FS_MEDIA_TYPE_APPLICATION) {
+    return "application";
   } else {
     return NULL;
   }

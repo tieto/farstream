@@ -139,5 +139,23 @@ int main (int argc, char **argv)
 
   g_print ("VIDEO FINISHED!!\n");
 
+
+  g_print ("APPLICATION STARTING!!\n");
+
+  elements = fs_rtp_blueprints_get (FS_MEDIA_TYPE_APPLICATION, &error);
+
+  if (error)
+    g_printerr ("Error: %s\n", error->message);
+  else
+    g_list_foreach (elements, (GFunc) debug_blueprint, NULL);
+
+  g_clear_error (&error);
+
+  fs_rtp_blueprints_unref (FS_MEDIA_TYPE_APPLICATION);
+
+  g_print ("APPLICATION FINISHED!!\n");
+
+
+
   return 0;
 }

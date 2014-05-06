@@ -1107,6 +1107,8 @@ fs_rtp_session_constructed (GObject *object)
     self->priv->input_caps = gst_caps_new_empty_simple ("audio/x-raw");
   else if (self->priv->media_type == FS_MEDIA_TYPE_VIDEO)
     self->priv->input_caps = gst_caps_new_empty_simple ("video/x-raw");
+  else if (self->priv->media_type == FS_MEDIA_TYPE_APPLICATION)
+    self->priv->input_caps = gst_caps_new_any ();
   else
     g_assert_not_reached ();
 
