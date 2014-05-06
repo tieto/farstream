@@ -121,6 +121,11 @@ void
 fs_rtp_stream_set_negotiated_codecs_unlock (FsRtpStream *stream,
     GList *codecs);
 
+gboolean
+validate_srtp_parameters (GstStructure *parameters,
+    gint *srtp_cipher, gint *srtcp_cipher, gint *srtp_auth, gint *srtcp_auth,
+    GstBuffer **key, guint *replay_window, GError **error);
+
 G_END_DECLS
 
 #endif /* __FS_RTP_STREAM_H__ */

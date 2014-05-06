@@ -1157,3 +1157,180 @@ fs_rtp_stream_set_transmitter (FsStream *stream,
   g_object_unref (session);
   return TRUE;
 }
+
+static gint
+parse_enum (const gchar *name, const gchar *value, GError **error)
+{
+  GstElementFactory *factory;
+  GstPluginFeature *loaded_feature;
+  GType srtpenc_type;
+  GObjectClass *srtpenc_class;
+  GParamSpec *spec;
+  GParamSpecEnum *enumspec;
+  GEnumValue *enumvalue;
+
+  if (value == NULL)
+    goto error;
+
+  factory = gst_element_factory_find ("srtpenc");
+  if (!factory)
+    goto error_not_installed;
+
+  loaded_feature = gst_plugin_feature_load (GST_PLUGIN_FEATURE (factory));
+  gst_object_unref (factory);
+  factory = GST_ELEMENT_FACTORY (loaded_feature);
+
+  srtpenc_type = gst_element_factory_get_element_type (factory);
+  gst_object_unref (factory);
+  if (srtpenc_type == 0)
+    goto error_not_installed;
+
+  srtpenc_class = g_type_class_ref (srtpenc_type);
+  if (!srtpenc_class)
+    goto error_not_installed;
+
+  spec = g_object_class_find_property (srtpenc_class, name);
+  g_type_class_unref (srtpenc_class);
+  if (!spec)
+    goto error_internal;
+
+  if (!G_IS_PARAM_SPEC_ENUM (spec))
+    goto error_internal;
+  enumspec = G_PARAM_SPEC_ENUM (spec);
+
+  enumvalue = g_enum_get_value_by_nick (enumspec->enum_class, value);
+  if (enumvalue)
+    return enumvalue->value;
+
+  enumvalue = g_enum_get_value_by_name (enumspec->enum_class, value);
+  if (enumvalue)
+    return enumvalue->value;
+
+error:
+  g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+      "Invalid %s value: %s", name, value);
+  return -1;
+
+error_not_installed:
+  g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
+      "Can't find srtpenc, no encryption possible");
+  return -1;
+
+error_internal:
+  g_set_error (error, FS_ERROR, FS_ERROR_INTERNAL,
+      "Can't find srtpenc %s property or is not a GEnum type!", name);
+  return -1;
+}
+
+
+gboolean
+validate_srtp_parameters (GstStructure *parameters,
+    gint *srtp_cipher, gint *srtcp_cipher, gint *srtp_auth, gint *srtcp_auth,
+    GstBuffer **key, guint *replay_window, GError **error)
+{
+  gint cipher = 0; /* 0 is null cipher, no encryption */
+  gint auth = -1;
+
+  *key = NULL;
+  *srtp_cipher = -1;
+  *srtcp_cipher = -1;
+  *srtp_auth = -1;
+  *srtcp_auth = -1;
+  *replay_window = 128;
+
+  if (parameters)
+  {
+    const GValue *v = NULL;
+    const gchar *tmp;
+
+    if (!gst_structure_has_name (parameters, "FarstreamSRTP"))
+    {
+      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+          "The only structure accepted is FarstreamSRTP");
+      return FALSE;
+    }
+    if ((tmp = gst_structure_get_string (parameters, "cipher")))
+    {
+      cipher = parse_enum ("rtp-cipher", tmp, error);
+      if (cipher == -1)
+        return FALSE;
+    }
+    if ((tmp = gst_structure_get_string (parameters, "rtp-cipher")))
+    {
+      *srtp_cipher = parse_enum ("rtp-cipher", tmp, error);
+      if (cipher == -1)
+        return FALSE;
+    }
+    if ((tmp = gst_structure_get_string (parameters, "rtcp-cipher")))
+    {
+      *srtcp_cipher = parse_enum ("rtcp-cipher", tmp, error);
+      if (cipher == -1)
+        return FALSE;
+    }
+    if ((tmp = gst_structure_get_string (parameters, "auth")))
+    {
+      auth = parse_enum ("rtp-auth", tmp, error);
+      if (cipher == -1)
+        return FALSE;
+    }
+    if ((tmp = gst_structure_get_string (parameters, "rtp-auth")))
+    {
+      *srtp_auth = parse_enum ("rtp-auth", tmp, error);
+      if (cipher == -1)
+        return FALSE;
+    }
+    if ((tmp = gst_structure_get_string (parameters, "rtcp-auth")))
+    {
+      *srtcp_auth = parse_enum ("rtcp-auth", tmp, error);
+      if (cipher == -1)
+        return FALSE;
+    }
+
+    if (*srtp_cipher == -1)
+      *srtp_cipher = cipher;
+    if (*srtcp_cipher == -1)
+      *srtcp_cipher = cipher;
+
+    if (*srtp_auth == -1)
+      *srtp_auth = auth;
+    if (*srtcp_auth == -1)
+      *srtcp_auth = auth;
+    if (*srtp_auth == -1 || *srtcp_auth == -1)
+    {
+      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+          "At least the authentication MUST be set, \"auth\" or \"rtp-auth\""
+          " and \"rtcp-auth\" are required.");
+      return FALSE;
+    }
+
+    v = gst_structure_get_value (parameters, "key");
+    if (!v)
+    {
+      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+          "The argument \"key\" is required.");
+      return FALSE;
+    }
+    if (!GST_VALUE_HOLDS_BUFFER (v) || gst_value_get_buffer (v) == NULL)
+    {
+       g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+           "The argument \"key\" MUST hold a GstBuffer.");
+       return FALSE;
+    }
+    *key = gst_value_get_buffer (v);
+
+    if (gst_structure_get_uint (parameters, "replay-window-size",
+            replay_window))
+    {
+      if (*replay_window < 64 || *replay_window >= 32768)
+      {
+        g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+            "Reply window size must be between 64 and 32768");
+        return FALSE;
+      }
+    }
+  } else {
+    *srtp_cipher = *srtcp_cipher = *srtcp_auth = *srtp_auth = 0; /* 0 is NULL */
+  }
+
+  return TRUE;
+}

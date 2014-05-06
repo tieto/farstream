@@ -5351,89 +5351,26 @@ invalid:
   return TRUE;
 }
 
-static gint
-parse_enum (const gchar *name, const gchar *value, GError **error)
-{
-  GstElementFactory *factory;
-  GstPluginFeature *loaded_feature;
-  GType srtpenc_type;
-  GObjectClass *srtpenc_class;
-  GParamSpec *spec;
-  GParamSpecEnum *enumspec;
-  GEnumValue *enumvalue;
-
-  if (value == NULL)
-    goto error;
-
-  factory = gst_element_factory_find ("srtpenc");
-  if (!factory)
-    goto error_not_installed;
-
-  loaded_feature = gst_plugin_feature_load (GST_PLUGIN_FEATURE (factory));
-  gst_object_unref (factory);
-  factory = GST_ELEMENT_FACTORY (loaded_feature);
-
-  srtpenc_type = gst_element_factory_get_element_type (factory);
-  gst_object_unref (factory);
-  if (srtpenc_type == 0)
-    goto error_not_installed;
-
-  srtpenc_class = g_type_class_ref (srtpenc_type);
-  if (!srtpenc_class)
-    goto error_not_installed;
-
-  spec = g_object_class_find_property (srtpenc_class, name);
-  g_type_class_unref (srtpenc_class);
-  if (!spec)
-    goto error_internal;
-
-  if (!G_IS_PARAM_SPEC_ENUM (spec))
-    goto error_internal;
-  enumspec = G_PARAM_SPEC_ENUM (spec);
-
-  enumvalue = g_enum_get_value_by_nick (enumspec->enum_class, value);
-  if (enumvalue)
-    return enumvalue->value;
-
-  enumvalue = g_enum_get_value_by_name (enumspec->enum_class, value);
-  if (enumvalue)
-    return enumvalue->value;
-
-error:
-  g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
-      "Invalid %s value: %s", name, value);
-  return -1;
-
-error_not_installed:
-  g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
-      "Can't find srtpenc, no encryption possible");
-  return -1;
-
-error_internal:
-  g_set_error (error, FS_ERROR, FS_ERROR_INTERNAL,
-      "Can't find srtpenc %s property or is not a GEnum type!", name);
-  return -1;
-}
-
 static gboolean
 fs_rtp_session_set_encryption_parameters (FsSession *session,
     GstStructure *parameters, GError **error)
 {
   FsRtpSession *self = FS_RTP_SESSION (session);
   gboolean ret = FALSE;
-  const gchar *tmp;
-  GstBuffer *key = NULL;
-  gint cipher = 0; /* 0 is null cipher, no encryption */
-  gint rtp_cipher = -1;
-  gint rtcp_cipher = -1;
-  gint auth = -1;
-  gint rtp_auth = -1;
-  gint rtcp_auth = -1;
-  guint replay_window_size = 0;
+  GstBuffer *key;
+  gint rtp_cipher;
+  gint rtcp_cipher;
+  gint rtp_auth;
+  gint rtcp_auth;
+  guint replay_window_size;
 
   g_return_val_if_fail (FS_IS_RTP_SESSION (session), FALSE);
   g_return_val_if_fail (parameters == NULL ||
       GST_IS_STRUCTURE (parameters), FALSE);
+
+  if (!validate_srtp_parameters (parameters, &rtp_cipher, &rtcp_cipher,
+          &rtp_auth, &rtcp_auth, &key, &replay_window_size, error))
+    return FALSE;
 
   if (fs_rtp_session_has_disposed_enter (self, error))
     return FALSE;
@@ -5444,96 +5381,6 @@ fs_rtp_session_set_encryption_parameters (FsSession *session,
         "Can't set encryption because srtpenc is not installed");
     goto done;
   }
-
-  if (parameters) {
-    const GValue *v = NULL;
-
-    if (!gst_structure_has_name (parameters, "FarstreamSRTPEncrypt"))
-    {
-      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
-          "The only structure accepted is FarstreamSRTPEncrypt");
-      goto done;
-    }
-    if ((tmp = gst_structure_get_string (parameters, "cipher")))
-    {
-      cipher = parse_enum ("rtp-cipher", tmp, error);
-      if (cipher == -1)
-        goto done;
-    }
-    if ((tmp = gst_structure_get_string (parameters, "rtp-cipher")))
-    {
-      rtp_cipher = parse_enum ("rtp-cipher", tmp, error);
-      if (cipher == -1)
-        goto done;
-    }
-    if ((tmp = gst_structure_get_string (parameters, "rtcp-cipher")))
-    {
-      rtcp_cipher = parse_enum ("rtcp-cipher", tmp, error);
-      if (cipher == -1)
-        goto done;
-    }
-    if ((tmp = gst_structure_get_string (parameters, "auth")))
-    {
-      auth = parse_enum ("rtp-auth", tmp, error);
-      if (cipher == -1)
-        goto done;
-    }
-    if ((tmp = gst_structure_get_string (parameters, "rtp-auth")))
-    {
-      rtp_auth = parse_enum ("rtp-auth", tmp, error);
-      if (cipher == -1)
-        goto done;
-    }
-    if ((tmp = gst_structure_get_string (parameters, "rtcp-auth")))
-    {
-      rtcp_auth = parse_enum ("rtcp-auth", tmp, error);
-      if (cipher == -1)
-        goto done;
-    }
-
-    if (rtp_cipher == -1)
-      rtp_cipher = cipher;
-    if (rtcp_cipher == -1)
-      rtcp_cipher = cipher;
-
-    if (rtp_auth == -1)
-      rtp_auth = auth;
-    if (rtcp_auth == -1)
-      rtcp_auth = auth;
-    if (rtp_auth == -1 || rtcp_auth == -1)
-    {
-      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
-          "At least the authentication MUST be set, \"auth\" or \"rtp-auth\""
-          " and \"rtcp-auth\" are required.");
-      goto done;
-    }
-
-    v = gst_structure_get_value (parameters, "key");
-    if (!v) {
-      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
-          "The argument \"key\" is required.");
-      goto done;
-    }
-    if (!GST_VALUE_HOLDS_BUFFER (v) || gst_value_get_buffer (v) == NULL) {
-       g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
-           "The argument \"key\" MUST hold a GstBuffer.");
-       goto done;
-    }
-    key = gst_value_get_buffer (v);
-
-    if (gst_structure_get_uint (parameters, "replay-window-size",
-            &replay_window_size))
-    {
-      if (replay_window_size < 64 || replay_window_size >= 32768) {
-        g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
-            "Reply window size must be between 64 and 32768");
-        goto done;
-      }
-    }
-  } else {
-    rtcp_auth = rtp_auth = 0; /* 0 is NULL */
-  }
-
 
   FS_RTP_SESSION_LOCK (self);
   if (self->priv->encryption_parameters)
