@@ -2296,13 +2296,6 @@ _transmitter_error (
   fs_session_emit_error (session, errorno, error_msg);
 }
 
-static GstElement *
-_get_recvonly_filter (FsTransmitter *transmitter, guint component,
-    gpointer user_data)
-{
-    return NULL;
-}
-
 static gboolean
 fs_rtp_session_add_transmitter_gst_sink (FsRtpSession *self,
     FsTransmitter *transmitter,
@@ -2380,8 +2373,6 @@ fs_rtp_session_get_transmitter (FsRtpSession *self,
 
   g_signal_connect (transmitter, "error", G_CALLBACK (_transmitter_error),
       self);
-  g_signal_connect (transmitter, "get-recvonly-filter",
-      G_CALLBACK (_get_recvonly_filter), NULL);
 
   if (!fs_rtp_session_add_transmitter_gst_sink (self, transmitter, error))
     goto error;

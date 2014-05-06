@@ -117,10 +117,6 @@ void fs_transmitter_emit_error (FsTransmitter *transmitter,
 
 char **fs_transmitter_list_available (void);
 
-GstElement *
-fs_transmitter_get_recvonly_filter (FsTransmitter *transmitter,
-    guint component);
-
 G_END_DECLS
 
 #endif /* __FS_TRANSMITTER_H__ */

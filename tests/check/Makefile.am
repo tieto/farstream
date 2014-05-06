@@ -101,8 +101,6 @@ transmitter_multicast_SOURCES = \
 	testutils.h \
 	transmitter/generic.c \
 	transmitter/generic.h \
-	transmitter/fake-filter.c \
-	transmitter/fake-filter.h \
 	transmitter/multicast.c
 transmitter_multicast_LDADD = $(LDADD) $(GST_BASE_LIBS)
 
@@ -111,8 +109,6 @@ transmitter_nice_SOURCES = \
 	check-threadsafe.h  \
 	transmitter/generic.c \
 	transmitter/generic.h \
-	transmitter/fake-filter.c \
-	transmitter/fake-filter.h \
 	transmitter/nice.c 
 transmitter_nice_LDADD = $(LDADD) $(GST_BASE_LIBS)
 

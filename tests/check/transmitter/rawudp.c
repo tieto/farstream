@@ -58,8 +58,7 @@ enum {
   FLAG_HAS_STUN  = 1 << 0,
   FLAG_IS_LOCAL  = 1 << 1,
   FLAG_NO_SOURCE = 1 << 2,
-  FLAG_NOT_SENDING = 1 << 3,
-  FLAG_RECVONLY_FILTER = 1 << 4
+  FLAG_NOT_SENDING = 1 << 3
 };
 
 #define RTP_PORT 9828
@@ -264,15 +263,6 @@ sync_error_handler (GstBus *bus, GstMessage *message, gpointer blob)
 }
 
 
-static GstElement *
-get_recvonly_filter (FsTransmitter *trans, guint component, gpointer user_data)
-{
-  if (component == 1)
-    return NULL;
-
-  return gst_element_factory_make ("identity", NULL);
-}
-
 static void
 run_rawudp_transmitter_test (gint n_parameters, GParameter *params,
   gint flags)
@@ -292,7 +282,7 @@ run_rawudp_transmitter_test (gint n_parameters, GParameter *params,
   has_stun = flags & FLAG_HAS_STUN;
   associate_on_source = !(flags & FLAG_NO_SOURCE);
 
-  if ((flags & FLAG_NOT_SENDING) && (flags & FLAG_RECVONLY_FILTER))
+  if ((flags & FLAG_NOT_SENDING))
   {
     buffer_count[0] = 20;
     received_known[0] = 20;
@@ -311,11 +301,6 @@ run_rawudp_transmitter_test (gint n_parameters, GParameter *params,
   g_object_set (trans, "tos", 2, NULL);
   g_object_get (trans, "tos", &tos, NULL);
   ts_fail_unless (tos == 2);
-
-  if (flags & FLAG_RECVONLY_FILTER)
-    ts_fail_unless (g_signal_connect (trans, "get-recvonly-filter",
-            G_CALLBACK (get_recvonly_filter), NULL));
-
 
   pipeline = setup_pipeline (trans, G_CALLBACK (_handoff_handler));
 
@@ -773,25 +758,6 @@ GST_END_TEST;
 #endif /* HAVE_GUPNP */
 
 
-GST_START_TEST (test_rawudptransmitter_with_filter)
-{
-  GParameter params[2];
-
-  memset (params, 0, sizeof (GParameter) * 2);
-
-  params[0].name = "associate-on-source";
-  g_value_init (&params[0].value, G_TYPE_BOOLEAN);
-  g_value_set_boolean (&params[0].value, TRUE);
-
-  params[1].name = "upnp-discovery";
-  g_value_init (&params[1].value, G_TYPE_BOOLEAN);
-  g_value_set_boolean (&params[1].value, FALSE);
-
-  run_rawudp_transmitter_test (2, params,
-      FLAG_RECVONLY_FILTER);
-}
-GST_END_TEST;
-
 GST_START_TEST (test_rawudptransmitter_sending_half)
 {
   GParameter params[2];
@@ -806,8 +772,7 @@ GST_START_TEST (test_rawudptransmitter_sending_half)
   g_value_init (&params[1].value, G_TYPE_BOOLEAN);
   g_value_set_boolean (&params[1].value, FALSE);
 
-  run_rawudp_transmitter_test (2, params,
-      FLAG_NOT_SENDING | FLAG_RECVONLY_FILTER);
+  run_rawudp_transmitter_test (2, params, FLAG_NOT_SENDING);
 }
 GST_END_TEST;
 
@@ -1026,10 +991,6 @@ rawudptransmitter_suite (void)
     }
   }
 #endif
-
-  tc_chain = tcase_create ("rawudptransmitter-with-filter");
-  tcase_add_test (tc_chain, test_rawudptransmitter_with_filter);
-  suite_add_tcase (s, tc_chain);
 
   tc_chain = tcase_create ("rawudptransmitter-sending-half");
   tcase_add_test (tc_chain, test_rawudptransmitter_sending_half);

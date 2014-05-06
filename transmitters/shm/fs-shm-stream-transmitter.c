@@ -324,20 +324,14 @@ fs_shm_stream_transmitter_set_property (GObject *object,
                                            GParamSpec *pspec)
 {
   FsShmStreamTransmitter *self = FS_SHM_STREAM_TRANSMITTER (object);
-  gint c;
 
   switch (prop_id) {
     case PROP_SENDING:
       FS_SHM_STREAM_TRANSMITTER_LOCK (self);
       self->priv->sending = g_value_get_boolean (value);
-      for (c = 1; c <= self->priv->transmitter->components; c++)
-      {
-        if (self->priv->shm_sink[c])
-        {
-          fs_shm_transmitter_sink_set_sending (self->priv->transmitter,
-              self->priv->shm_sink[c], self->priv->sending);
-        }
-      }
+      if (self->priv->shm_sink[1])
+        fs_shm_transmitter_sink_set_sending (self->priv->transmitter,
+            self->priv->shm_sink[1], self->priv->sending);
       FS_SHM_STREAM_TRANSMITTER_UNLOCK (self);
       break;
     case PROP_PREFERRED_LOCAL_CANDIDATES:
@@ -422,8 +416,9 @@ fs_shm_stream_transmitter_add_sink (FsShmStreamTransmitter *self,
   if (self->priv->shm_sink[candidate->component_id] == NULL)
     return FALSE;
 
-  fs_shm_transmitter_sink_set_sending (self->priv->transmitter,
-      self->priv->shm_sink[candidate->component_id], self->priv->sending);
+  if (candidate->component_id == 1)
+    fs_shm_transmitter_sink_set_sending (self->priv->transmitter,
+        self->priv->shm_sink[candidate->component_id], self->priv->sending);
 
   return TRUE;
 }
@@ -579,8 +574,9 @@ fs_shm_stream_transmitter_gather_local_candidates (
       if (self->priv->shm_sink[c] == NULL)
         return FALSE;
 
-      fs_shm_transmitter_sink_set_sending (self->priv->transmitter,
-          self->priv->shm_sink[c], self->priv->sending);
+      if (c == 1)
+        fs_shm_transmitter_sink_set_sending (self->priv->transmitter,
+            self->priv->shm_sink[c], self->priv->sending);
     }
 
     return TRUE;
