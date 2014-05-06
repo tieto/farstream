@@ -20,8 +20,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
-#ifndef __GST_VIDEOANYRATE_H__
-#define __GST_VIDEOANYRATE_H__
+#ifndef __FS_VIDEOANYRATE_H__
+#define __FS_VIDEOANYRATE_H__
 
 #include <gst/gst.h>
 #include <gst/base/gstbasetransform.h>
@@ -29,35 +29,34 @@
 G_BEGIN_DECLS
 
 /* #define's don't like whitespacey bits */
-#define GST_TYPE_VIDEOANYRATE \
-  (gst_videoanyrate_get_type())
-#define GST_VIDEOANYRATE(obj) \
+#define FS_TYPE_VIDEOANYRATE \
+  (fs_videoanyrate_get_type())
+#define FS_VIDEOANYRATE(obj) \
   (G_TYPE_CHECK_INSTANCE_CAST((obj), \
-  GST_TYPE_VIDEOANYRATE,GstVideoanyrate))
-#define GST_VIDEOANYRATE_CLASS(klass) \
+  FS_TYPE_VIDEOANYRATE,FsVideoanyrate))
+#define FS_VIDEOANYRATE_CLASS(klass) \
   (G_TYPE_CHECK_CLASS_CAST((klass), \
-  GST_TYPE_VIDEOANYRATE,GstVideoanyrateClass))
-#define GST_IS_VIDEOANYRATE(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE((obj),GST_TYPE_VIDEOANYRATE))
-#define GST_IS_VIDEOANYRATE_CLASS(obj) \
-  (G_TYPE_CHECK_CLASS_TYPE((klass),GST_TYPE_VIDEOANYRATE))
+  FS_TYPE_VIDEOANYRATE,FsVideoanyrateClass))
+#define FS_IS_VIDEOANYRATE(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE((obj),FS_TYPE_VIDEOANYRATE))
+#define FS_IS_VIDEOANYRATE_CLASS(obj) \
+  (G_TYPE_CHECK_CLASS_TYPE((klass),FS_TYPE_VIDEOANYRATE))
 
-typedef struct _GstVideoanyrate GstVideoanyrate;
-typedef struct _GstVideoanyrateClass GstVideoanyrateClass;
-typedef struct _GstVideoanyratePrivate GstVideoanyratePrivate;
+typedef struct _FsVideoanyrate FsVideoanyrate;
+typedef struct _FsVideoanyrateClass FsVideoanyrateClass;
 
-struct _GstVideoanyrate
+struct _FsVideoanyrate
 {
   GstBaseTransform parent;
 };
 
-struct _GstVideoanyrateClass
+struct _FsVideoanyrateClass
 {
   GstBaseTransformClass parent_class;
 };
 
-GType gst_videoanyrate_get_type (void);
+GType fs_videoanyrate_get_type (void);
 
 G_END_DECLS
 
-#endif /* __GST_VIDEOANYRATE_H__ */
+#endif /* __FS_VIDEOANYRATE_H__ */

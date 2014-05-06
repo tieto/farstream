@@ -1,16 +1,16 @@
 <SECTION>
 <FILE>element-fsvideoanyrate</FILE>
-<TITLE>GstVideoanyrate</TITLE>
-GstVideoanyrate
+<TITLE>FsVideoanyrate</TITLE>
+FsVideoanyrate
 <SUBSECTION Standard>
-GstVideoanyratePrivate
-GST_VIDEOANYRATE
-GST_IS_VIDEOANYRATE
-GST_TYPE_VIDEOANYRATE
-gst_videoanyrate_get_type
-GST_VIDEOANYRATE_CLASS
-GstVideoanyrateClass
-GST_IS_VIDEOANYRATE_CLASS
+FsVideoanyratePrivate
+FS_VIDEOANYRATE
+FS_IS_VIDEOANYRATE
+FS_TYPE_VIDEOANYRATE
+fs_videoanyrate_get_type
+FS_VIDEOANYRATE_CLASS
+FsVideoanyrateClass
+FS_IS_VIDEOANYRATE_CLASS
 </SECTION>
 
 <SECTION>

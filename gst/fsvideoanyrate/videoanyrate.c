@@ -63,20 +63,20 @@ enum
 
 
 static GstCaps *
-gst_videoanyrate_transform_caps (GstBaseTransform *trans,
+fs_videoanyrate_transform_caps (GstBaseTransform *trans,
     GstPadDirection direction,
     GstCaps *caps,
     GstCaps *filter);
 static GstCaps *
-gst_videoanyrate_fixate_caps (GstBaseTransform * base,
+fs_videoanyrate_fixate_caps (GstBaseTransform * base,
     GstPadDirection direction, GstCaps * caps, GstCaps * othercaps);
 
 
-G_DEFINE_TYPE (GstVideoanyrate, gst_videoanyrate, GST_TYPE_BASE_TRANSFORM);
+G_DEFINE_TYPE (FsVideoanyrate, fs_videoanyrate, GST_TYPE_BASE_TRANSFORM);
 
 
 static void
-gst_videoanyrate_class_init (GstVideoanyrateClass *klass)
+fs_videoanyrate_class_init (FsVideoanyrateClass *klass)
 {
   GstElementClass *element_class;
   GstBaseTransformClass *gstbasetransform_class;
@@ -100,18 +100,18 @@ gst_videoanyrate_class_init (GstVideoanyrateClass *klass)
       "Olivier Crete <olivier.crete@collabora.com>");
 
   gstbasetransform_class->transform_caps =
-    GST_DEBUG_FUNCPTR(gst_videoanyrate_transform_caps);
+    GST_DEBUG_FUNCPTR (fs_videoanyrate_transform_caps);
   gstbasetransform_class->fixate_caps =
-    GST_DEBUG_FUNCPTR(gst_videoanyrate_fixate_caps);
+    GST_DEBUG_FUNCPTR (fs_videoanyrate_fixate_caps);
 }
 
 static void
-gst_videoanyrate_init (GstVideoanyrate *videoanyrate)
+fs_videoanyrate_init (FsVideoanyrate *videoanyrate)
 {
 }
 
 static GstCaps *
-gst_videoanyrate_transform_caps (GstBaseTransform *trans,
+fs_videoanyrate_transform_caps (GstBaseTransform *trans,
     GstPadDirection direction,
     GstCaps *caps,
     GstCaps *filter)
@@ -146,7 +146,7 @@ gst_videoanyrate_transform_caps (GstBaseTransform *trans,
 }
 
 static GstCaps *
-gst_videoanyrate_fixate_caps (GstBaseTransform * base,
+fs_videoanyrate_fixate_caps (GstBaseTransform * base,
     GstPadDirection direction, GstCaps * caps, GstCaps * othercaps)
 {
   GstStructure *ins, *outs;
@@ -186,15 +186,15 @@ gst_videoanyrate_fixate_caps (GstBaseTransform * base,
 }
 
 gboolean
-gst_videoanyrate_plugin_init (GstPlugin *plugin)
+fs_videoanyrate_plugin_init (GstPlugin *plugin)
 {
   return gst_element_register (plugin, "fsvideoanyrate",
-      GST_RANK_MARGINAL, GST_TYPE_VIDEOANYRATE);
+      GST_RANK_MARGINAL, FS_TYPE_VIDEOANYRATE);
 }
 
 GST_PLUGIN_DEFINE (GST_VERSION_MAJOR,
     GST_VERSION_MINOR,
     fsvideoanyrate,
     "Videoanyrate",
-    gst_videoanyrate_plugin_init, VERSION, "LGPL", "Farstream",
+    fs_videoanyrate_plugin_init, VERSION, "LGPL", "Farstream",
     "http://www.freedesktop.org/wiki/Software/Farstream")
