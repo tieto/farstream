@@ -770,7 +770,8 @@ fs_rtp_session_finalize (GObject *object)
     self->priv->blueprints = NULL;
   }
 
-  fs_codec_list_destroy (self->priv->codec_preferences);
+  g_list_free_full (self->priv->codec_preferences,
+      (GDestroyNotify) codec_preference_destroy);
   codec_association_list_destroy (self->priv->codec_associations);
 
   fs_rtp_header_extension_list_destroy (self->priv->hdrext_preferences);
@@ -841,10 +842,22 @@ fs_rtp_session_get_property (GObject *object,
       g_value_set_object (value, self->priv->media_sink_pad);
       break;
     case PROP_CODEC_PREFERENCES:
-      FS_RTP_SESSION_LOCK (self);
-      g_value_set_boxed (value, self->priv->codec_preferences);
-      FS_RTP_SESSION_UNLOCK (self);
-      break;
+      {
+        GQueue tmpqueue = G_QUEUE_INIT;
+        GList *item;
+
+        FS_RTP_SESSION_LOCK (self);
+        for (item = self->priv->codec_preferences; item; item = item->next)
+        {
+          CodecPreference *cp = item->data;
+
+          g_queue_push_tail (&tmpqueue, fs_codec_copy (cp->codec));
+        }
+
+        g_value_take_boxed (value, tmpqueue.head);
+        FS_RTP_SESSION_UNLOCK (self);
+        break;
+      }
     case PROP_CODECS:
       {
         GList *codecs = NULL;
@@ -2086,12 +2099,10 @@ fs_rtp_session_set_codec_preferences (FsSession *session,
   if (fs_rtp_session_has_disposed_enter (self, error))
     return FALSE;
 
-  new_codec_prefs = fs_codec_list_copy (codec_preferences);
-
   new_codec_prefs =
     validate_codecs_configuration (
         self->priv->media_type, self->priv->blueprints,
-        new_codec_prefs);
+        codec_preferences);
 
   if (new_codec_prefs == NULL)
     GST_DEBUG ("None of the new codec preferences passed are usable,"
@@ -2108,7 +2119,8 @@ fs_rtp_session_set_codec_preferences (FsSession *session,
 
   if (ret)
   {
-    fs_codec_list_destroy (old_codec_prefs);
+    g_list_free_full (old_codec_prefs,
+        (GDestroyNotify) codec_preference_destroy);
 
     g_object_notify ((GObject*) self, "codec-preferences");
   }
@@ -2117,13 +2129,15 @@ fs_rtp_session_set_codec_preferences (FsSession *session,
     FS_RTP_SESSION_LOCK (self);
     if (self->priv->codec_preferences_generation == current_generation)
     {
-      fs_codec_list_destroy (self->priv->codec_preferences);
+      g_list_free_full (self->priv->codec_preferences,
+          (GDestroyNotify) codec_preference_destroy);
       self->priv->codec_preferences = old_codec_prefs;
       self->priv->codec_preferences_generation++;
     }
     else
     {
-      fs_codec_list_destroy (old_codec_prefs);
+      g_list_free_full (old_codec_prefs,
+          (GDestroyNotify) codec_preference_destroy);
     }
     FS_RTP_SESSION_UNLOCK (self);
     GST_WARNING ("Invalid new codec preferences");

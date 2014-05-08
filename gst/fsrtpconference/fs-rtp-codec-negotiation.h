@@ -67,6 +67,9 @@ typedef struct _CodecAssociation {
 
 } CodecAssociation;
 
+typedef struct _CodecPreference {
+  FsCodec *codec;
+} CodecPreference;
 
 GList *validate_codecs_configuration (
     FsMediaType media_type,
@@ -138,6 +141,9 @@ negotiate_stream_header_extensions (GList *hdrext, GList *hdrext_remote,
     gboolean favor_remote, guint8 *used_ids);
 GList *
 finish_header_extensions_nego (GList *hdrexts, guint8 *used_ids);
+
+void
+codec_preference_destroy (CodecPreference *cp);
 
 G_END_DECLS
 

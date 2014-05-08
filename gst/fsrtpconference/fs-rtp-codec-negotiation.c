@@ -163,7 +163,7 @@ find_matching_pad (gconstpointer a, gconstpointer b)
 }
 
 static gboolean
-validate_codec_profile (FsCodec *codec,const gchar *bin_description,
+validate_codec_profile (FsCodec *codec, const gchar *bin_description,
     FsStreamDirection direction)
 {
   GError *error = NULL;
@@ -266,29 +266,30 @@ codec_sdp_compare (FsCodec *local_codec, FsCodec *remote_codec)
  * @blueprints: A #GList of #CodecBlueprints to validate the codecs agsint
  * @codecs: a #GList of #FsCodec that represent the preferences
  *
- * This function validates a GList of passed FarstreamCodec structures
+ * This function validates a GList of passed FsCodec structures
  * against the valid discovered payloaders
- * It removes all "invalid" codecs from the list, it modifies the list
- * passed in as an argument.
+ * It returns a list of the valid ones.
  *
- * Returns: the #GList of #FsCodec minus the invalid ones
+ * Returns: a #GList of #CodecPreference
  */
 GList *
 validate_codecs_configuration (FsMediaType media_type, GList *blueprints,
   GList *codecs)
 {
+  GQueue result = G_QUEUE_INIT;
   GList *codec_e = codecs;
 
-  while (codec_e)
+  for (codec_e = codecs; codec_e; codec_e = codec_e->next)
   {
     FsCodec *codec = codec_e->data;
     GList *blueprint_e = NULL;
     FsCodecParameter *param;
+    CodecPreference *cp;
 
     /* Check if codec is for the wrong media_type.. this would be wrong
      */
     if (media_type != codec->media_type)
-      goto remove_this_codec;
+      goto ignore_this_codec;
 
     if (codec->id >= 0 && codec->id < 128 && codec->encoding_name &&
         !g_ascii_strcasecmp (codec->encoding_name, "reserve-pt"))
@@ -320,42 +321,40 @@ validate_codecs_configuration (FsMediaType media_type, GList *blueprints,
     param = fs_codec_get_optional_parameter (codec, RECV_PROFILE_ARG, NULL);
     if (param && !validate_codec_profile (codec, param->value,
             FS_DIRECTION_RECV))
-        goto remove_this_codec;
+      goto ignore_this_codec;
 
     param = fs_codec_get_optional_parameter (codec, SEND_PROFILE_ARG, NULL);
     if (param && !validate_codec_profile (codec, param->value,
             FS_DIRECTION_SEND))
-      goto remove_this_codec;
+      goto ignore_this_codec;
 
     /* If no blueprint was found */
     if (blueprint_e == NULL)
     {
+      gchar *tmp;
+
       /* Accept codecs with no blueprints if they have a valid profile */
       if (fs_codec_get_optional_parameter (codec, RECV_PROFILE_ARG, NULL) &&
           codec->encoding_name && codec->clock_rate)
         goto accept_codec;
 
-      goto remove_this_codec;
-    }
-
-  accept_codec:
-    codec_e = g_list_next (codec_e);
-
-    continue;
-  remove_this_codec:
-    {
-      GList *nextcodec_e = g_list_next (codec_e);
-      gchar *tmp = fs_codec_to_string (codec);
+      tmp = fs_codec_to_string (codec);
       GST_DEBUG ("Preferred codec %s could not be matched with a blueprint",
           tmp);
       g_free (tmp);
-      fs_codec_destroy (codec);
-      codecs = g_list_delete_link (codecs, codec_e);
-      codec_e = nextcodec_e;
+      goto ignore_this_codec;
     }
+
+  accept_codec:
+    cp = g_slice_new0 (CodecPreference);
+    cp->codec = fs_codec_copy (codec);
+    g_queue_push_tail (&result, cp);
+
+  ignore_this_codec:
+    continue;
   }
 
-  return codecs;
+  return result.head;
 }
 
 
@@ -431,15 +430,15 @@ _is_disabled (GList *codec_prefs, CodecBlueprint *bp)
 
   for (item = g_list_first (codec_prefs); item; item = g_list_next (item))
   {
-    FsCodec *codec = item->data;
+    CodecPreference *cp = item->data;
     GstCaps *caps = NULL;
     gboolean ok = FALSE;
 
     /* Only check for DISABLE entries */
-    if (codec->id != FS_CODEC_ID_DISABLE)
+    if (cp->codec->id != FS_CODEC_ID_DISABLE)
       continue;
 
-    caps = fs_codec_to_gst_caps (codec);
+    caps = fs_codec_to_gst_caps (cp->codec);
     if (!caps)
       continue;
 
@@ -518,8 +517,8 @@ list_insert_local_ca (GList *list, CodecAssociation *ca)
 
 /**
  * create_local_codec_associations:
- * @blueprints: The #GList of CodecBlueprint
- * @codec_pref: The #GList of #FsCodec representing codec preferences
+ * @blueprints: The #GList of #CodecBlueprint
+ * @codec_prefs: The #GList of #CodecPreference representing codec preferences
  * @current_codec_associations: The #GList of current #CodecAssociation
  *
  * This function creates a list of codec associations from installed codecs
@@ -552,54 +551,55 @@ create_local_codec_associations (
        codec_pref_e;
        codec_pref_e = g_list_next (codec_pref_e))
   {
-    FsCodec *codec_pref = codec_pref_e->data;
-    CodecBlueprint *bp = _find_matching_blueprint (codec_pref, blueprints);
+    CodecPreference *cp = codec_pref_e->data;
+    CodecBlueprint *bp = _find_matching_blueprint (cp->codec,
+        blueprints);
     CodecAssociation *ca = NULL;
     GList *bp_param_e = NULL;
 
     /* If its a negative pref, ignore it in this stage */
-    if (codec_pref->id == FS_CODEC_ID_DISABLE)
+    if (cp->codec->id == FS_CODEC_ID_DISABLE)
       continue;
 
     /* If we want to disable a codec ID, we just insert a reserved codec assoc
      * in the list
      */
-    if (codec_pref->id >= 0 && codec_pref->id < 128 &&
-        codec_pref->encoding_name &&
-        !g_ascii_strcasecmp (codec_pref->encoding_name, "reserve-pt"))
+    if (cp->codec->id >= 0 && cp->codec->id < 128 &&
+        cp->codec->encoding_name &&
+        !g_ascii_strcasecmp (cp->codec->encoding_name, "reserve-pt"))
     {
       CodecAssociation *ca = g_slice_new0 (CodecAssociation);
-      ca->codec = fs_codec_copy (codec_pref);
+      ca->codec = fs_codec_copy (cp->codec);
       ca->reserved = TRUE;
       codec_associations = g_list_append (codec_associations, ca);
-      GST_DEBUG ("Add reserved payload type %d", codec_pref->id);
+      GST_DEBUG ("Add reserved payload type %d", cp->codec->id);
       continue;
     }
 
     /* No matching blueprint, can't use this codec */
     if (!bp &&
-        !fs_codec_get_optional_parameter (codec_pref, RECV_PROFILE_ARG,
+        !fs_codec_get_optional_parameter (cp->codec, RECV_PROFILE_ARG,
                 NULL))
     {
       GST_LOG ("Could not find matching blueprint for preferred codec %s/%s",
-          fs_media_type_to_string (codec_pref->media_type),
-          codec_pref->encoding_name);
+          fs_media_type_to_string (cp->codec->media_type),
+          cp->codec->encoding_name);
       continue;
     }
 
     /* Now lets see if there is an existing codec that matches this preference
      */
 
-    if (codec_pref->id == FS_CODEC_ID_ANY)
+    if (cp->codec->id == FS_CODEC_ID_ANY)
     {
       oldca = lookup_codec_association_custom_internal (
           current_codec_associations, TRUE,
-          match_original_codec_and_codec_pref, codec_pref);
+          match_original_codec_and_codec_pref, cp->codec);
     }
     else
     {
       oldca = lookup_codec_association_by_pt_list (current_codec_associations,
-          codec_pref->id, FALSE);
+          cp->codec->id, FALSE);
       if (oldca && oldca->reserved)
         oldca = NULL;
     }
@@ -611,7 +611,7 @@ create_local_codec_associations (
     {
       FsCodec *codec = sdp_negotiate_codec (
           oldca->codec, FS_PARAM_TYPE_BOTH | FS_PARAM_TYPE_CONFIG,
-          codec_pref, FS_PARAM_TYPE_ALL);
+          cp->codec, FS_PARAM_TYPE_ALL);
       FsCodec *send_codec;
 
       if (codec)
@@ -620,7 +620,8 @@ create_local_codec_associations (
 
         send_codec = sdp_negotiate_codec (
             oldca->send_codec, FS_PARAM_TYPE_SEND,
-            codec_pref, FS_PARAM_TYPE_SEND | FS_PARAM_TYPE_SEND_AVOID_NEGO);
+            cp->codec,
+            FS_PARAM_TYPE_SEND | FS_PARAM_TYPE_SEND_AVOID_NEGO);
         if (send_codec)
           fs_codec_destroy (send_codec);
         else
@@ -634,16 +635,17 @@ create_local_codec_associations (
 
     ca = g_slice_new0 (CodecAssociation);
     ca->blueprint = bp;
-    ca->codec = fs_codec_copy (codec_pref);
+    ca->codec = fs_codec_copy (cp->codec);
     codec_remove_parameter (ca->codec, SEND_PROFILE_ARG);
     codec_remove_parameter (ca->codec, RECV_PROFILE_ARG);
-    ca->send_codec = codec_copy_filtered (codec_pref, FS_PARAM_TYPE_CONFIG);
+    ca->send_codec = codec_copy_filtered (cp->codec,
+        FS_PARAM_TYPE_CONFIG);
     codec_remove_parameter (ca->send_codec, SEND_PROFILE_ARG);
     codec_remove_parameter (ca->send_codec, RECV_PROFILE_ARG);
     if (oldca)
       ca->send_codec->id = ca->codec->id = oldca->codec->id;
-    ca->send_profile = dup_param_value (codec_pref, SEND_PROFILE_ARG);
-    ca->recv_profile = dup_param_value (codec_pref, RECV_PROFILE_ARG);
+    ca->send_profile = dup_param_value (cp->codec, SEND_PROFILE_ARG);
+    ca->recv_profile = dup_param_value (cp->codec, RECV_PROFILE_ARG);
 
     if (bp)
     {
@@ -1639,4 +1641,12 @@ finish_header_extensions_nego (GList *hdrexts, guint8 *used_ids)
 
   return hdrexts;
 
+}
+
+void
+codec_preference_destroy (CodecPreference *cp)
+{
+  fs_codec_destroy (cp->codec);
+
+  g_slice_free (CodecPreference, cp);
 }
