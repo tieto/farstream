@@ -1721,7 +1721,6 @@ codec_blueprint_add_in_out_caps (CodecBlueprint *blueprint)
   if (!blueprint->send_pipeline_factory)
     goto output_caps;
 
-
   codecbin = create_codec_bin_from_blueprint (codec, blueprint,
       "gather_send_codecbin", TRUE, &error);
   if (!codecbin)
@@ -1748,7 +1747,6 @@ codec_blueprint_add_in_out_caps (CodecBlueprint *blueprint)
   }
 
   blueprint->input_caps = gst_pad_query_caps (pad, NULL);
-
   if (!blueprint->input_caps)
   {
     GST_WARNING ("Query for input caps on codecbin failed for  "
@@ -1757,17 +1755,48 @@ codec_blueprint_add_in_out_caps (CodecBlueprint *blueprint)
   }
 
   g_clear_object (&pad);
-  g_clear_object (&capsfilter);
   g_clear_object (&codecbin);
 
 output_caps:
+
+  codecbin = create_codec_bin_from_blueprint (codec, blueprint,
+      "gather_recv_codecbin", FALSE, &error);
+  if (!codecbin)
+  {
+    GST_WARNING ("Could not create receive codec bin from blueprint for "
+        FS_CODEC_FORMAT": %s", FS_CODEC_ARGS (blueprint->codec),
+        error->message);
+    goto done;
+  }
+
+  if (!gst_element_link (capsfilter, codecbin))
+  {
+    GST_WARNING ("Could not link recv codecbin to capsfilter for "
+        FS_CODEC_FORMAT, FS_CODEC_ARGS (blueprint->codec));
+    goto done;
+  }
+
+  pad = gst_element_get_static_pad (codecbin, "src");
+  if (!pad)
+  {
+    GST_WARNING ("Could not get src pad on receive codecbin for "
+        FS_CODEC_FORMAT,  FS_CODEC_ARGS (blueprint->codec));
+    goto done;
+  }
+
+  blueprint->output_caps = gst_pad_query_caps (pad, NULL);
+  if (!blueprint->output_caps)
+  {
+    GST_WARNING ("Query for output caps on receive codecbin failed for  "
+        FS_CODEC_FORMAT, FS_CODEC_ARGS (blueprint->codec));
+    goto done;
+  }
 
   if (!blueprint->input_caps)
     blueprint->input_caps = gst_caps_new_any ();
 
   if (!blueprint->output_caps)
     blueprint->output_caps = gst_caps_new_any ();
-
 
   ret = TRUE;
 done:

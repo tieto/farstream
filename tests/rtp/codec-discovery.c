@@ -81,6 +81,10 @@ debug_blueprint (CodecBlueprint *blueprint)
   g_print ("input_caps: %s\n", str);
   g_free (str);
 
+  str = gst_caps_to_string (blueprint->output_caps);
+  g_print ("output_caps: %s\n", str);
+  g_free (str);
+
   debug_pipeline ("send pipeline:", blueprint->send_pipeline_factory);
 
   debug_pipeline ("recv pipeline:", blueprint->receive_pipeline_factory);
