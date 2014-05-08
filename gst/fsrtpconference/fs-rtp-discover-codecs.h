@@ -43,6 +43,10 @@ typedef struct _CodecBlueprint
   FsCodec *codec;
   GstCaps *media_caps;
   GstCaps *rtp_caps;
+
+  GstCaps *input_caps;
+  GstCaps *output_caps;
+
   /*
    * These are #GList of #GList of #GstElementFactory
    */

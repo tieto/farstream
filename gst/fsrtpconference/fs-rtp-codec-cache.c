@@ -203,6 +203,14 @@ load_codec_blueprint (FsMediaType media_type, gchar **in, gsize *size) {
   codec_blueprint->rtp_caps = gst_caps_from_string (tmp);
   g_free (tmp);
 
+  READ_CHECK (read_codec_blueprint_string (in, size, &tmp));
+  codec_blueprint->input_caps = gst_caps_from_string (tmp);
+  g_free (tmp);
+
+  READ_CHECK (read_codec_blueprint_string (in, size, &tmp));
+  codec_blueprint->output_caps = gst_caps_from_string (tmp);
+  g_free (tmp);
+
   READ_CHECK (read_codec_blueprint_int (in, size, &tmp_size));
   for (i = 0; i < tmp_size; i++) {
     int j, tmp_size2;
@@ -338,7 +346,7 @@ load_codecs_cache (FsMediaType media_type)
       magic[2] != magic_media ||
       magic[3] != 'C' ||
       magic[4] != '1' ||   /* This is the version number */
-      magic[5] != '1') {
+      magic[5] != '2') {
     GST_WARNING ("Cache file has incorrect magic header. File corrupted");
     goto error;
   }
@@ -439,6 +447,14 @@ save_codec_blueprint (int fd, CodecBlueprint *codec_blueprint) {
   WRITE_CHECK (write_codec_blueprint_string (fd, caps));
   g_free (caps);
 
+  caps = gst_caps_to_string (codec_blueprint->input_caps);
+  WRITE_CHECK (write_codec_blueprint_string (fd, caps));
+  g_free (caps);
+
+  caps = gst_caps_to_string (codec_blueprint->output_caps);
+  WRITE_CHECK (write_codec_blueprint_string (fd, caps));
+  g_free (caps);
+
   walk = codec_blueprint->send_pipeline_factory;
   size = g_list_length (walk);
   if (write (fd, &size, sizeof (gint)) != sizeof (gint))
@@ -531,7 +547,7 @@ save_codecs_cache (FsMediaType media_type, GList *blueprints)
 
   /* version of the binary format */
   magic[4] = '1';
-  magic[5] = '1';
+  magic[5] = '2';
 
   if (write (fd, magic, 8) != 8)
     return FALSE;

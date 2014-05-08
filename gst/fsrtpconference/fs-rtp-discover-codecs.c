@@ -79,6 +79,7 @@ static GList *get_plugins_filtered_from_caps (FilterFunc filter,
 static gboolean extract_field_data (GQuark field_id,
                                     const GValue *value,
                                     gpointer user_data);
+static gboolean codec_blueprint_add_in_out_caps (CodecBlueprint *blueprint);
 
 
 /* GLOBAL variables */
@@ -712,6 +713,12 @@ parse_codec_cap_list (GList *list, FsMediaType media_type)
       }
     }
 
+    if (!codec_blueprint_add_in_out_caps (codec_blueprint)) {
+      /* Skip and destroy if it can't be created */
+      codec_blueprint_destroy (codec_blueprint);
+      continue;
+    }
+
     /* insert new information into tables */
     list_codec_blueprints[media_type] = g_list_append (
         list_codec_blueprints[media_type], codec_blueprint);
@@ -1008,6 +1015,16 @@ codec_blueprint_destroy (CodecBlueprint *codec_blueprint)
   if (codec_blueprint->rtp_caps)
   {
     gst_caps_unref (codec_blueprint->rtp_caps);
+  }
+
+  if (codec_blueprint->input_caps)
+  {
+    gst_caps_unref (codec_blueprint->input_caps);
+  }
+
+  if (codec_blueprint->output_caps)
+  {
+    gst_caps_unref (codec_blueprint->output_caps);
   }
 
   for (walk = codec_blueprint->send_pipeline_factory;
@@ -1691,4 +1708,14 @@ create_codec_bin_from_blueprint (const FsCodec *codec,
  error:
   gst_object_unref (codec_bin);
   return NULL;
+}
+
+
+static gboolean
+codec_blueprint_add_in_out_caps (CodecBlueprint *blueprint)
+{
+  blueprint->input_caps = gst_caps_new_any ();
+  blueprint->output_caps = gst_caps_new_any ();
+
+  return TRUE;
 }
