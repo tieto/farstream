@@ -62,7 +62,7 @@ typedef struct _CodecCap
 } CodecCap;
 
 
-typedef gboolean (FilterFunc) (GstElementFactory *factory);
+typedef gboolean (*FilterFunc) (GstElementFactory *factory);
 
 /* Static Functions */
 
