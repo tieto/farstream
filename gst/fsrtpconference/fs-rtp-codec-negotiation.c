@@ -103,20 +103,24 @@ link_unlinked_pads (GstElement *bin,
 
 GstElement *
 parse_bin_from_description_all_linked (const gchar *bin_description,
-    gboolean is_send, guint *src_pad_count, guint *sink_pad_count,
+    FsStreamDirection direction, guint *src_pad_count, guint *sink_pad_count,
     GError **error)
 {
   GstElement *bin;
   gchar *desc;
 
-  if (is_send)
+  if (direction == FS_DIRECTION_SEND)
   {
     desc = g_strdup_printf ("bin.( %s )", bin_description);
   }
-  else
+  else if (direction == FS_DIRECTION_RECV)
   {
     fs_rtp_bin_error_downgrade_register ();
     desc = g_strdup_printf ("fsrtpbinerrordowngrade.( %s )", bin_description);
+  }
+  else
+  {
+    g_assert_not_reached ();
   }
   bin = gst_parse_launch_full (desc, NULL, GST_PARSE_FLAG_NONE,
       error);
@@ -160,7 +164,7 @@ find_matching_pad (gconstpointer a, gconstpointer b)
 
 static gboolean
 validate_codec_profile (FsCodec *codec,const gchar *bin_description,
-    gboolean is_send)
+    FsStreamDirection direction)
 {
   GError *error = NULL;
   GstElement *bin = NULL;
@@ -170,7 +174,7 @@ validate_codec_profile (FsCodec *codec,const gchar *bin_description,
   gboolean has_matching_pad = FALSE;
   GValue val = {0,};
 
-  bin = parse_bin_from_description_all_linked (bin_description, is_send,
+  bin = parse_bin_from_description_all_linked (bin_description, direction,
       &src_pad_count, &sink_pad_count, &error);
 
   /* if could not build bin, fail */
@@ -185,10 +189,12 @@ validate_codec_profile (FsCodec *codec,const gchar *bin_description,
 
   caps = fs_codec_to_gst_caps (codec);
 
-  if (is_send)
+  if (direction == FS_DIRECTION_SEND)
     iter = gst_element_iterate_src_pads (bin);
-  else
+  else if (direction == FS_DIRECTION_RECV)
     iter = gst_element_iterate_sink_pads (bin);
+  else
+    g_assert_not_reached ();
 
   has_matching_pad = gst_iterator_find_custom (iter, find_matching_pad,
       &val, caps);
@@ -198,7 +204,8 @@ validate_codec_profile (FsCodec *codec,const gchar *bin_description,
   if (!has_matching_pad)
   {
     GST_WARNING ("Invalid profile (%s), has no %s pad that matches the codec"
-        " details", is_send ? "src" : "sink", bin_description);
+        " details", (direction == FS_DIRECTION_SEND) ? "src" : "sink",
+        bin_description);
     gst_caps_unref (caps);
     gst_object_unref (bin);
     return FALSE;
@@ -207,7 +214,7 @@ validate_codec_profile (FsCodec *codec,const gchar *bin_description,
   gst_caps_unref (caps);
   gst_object_unref (bin);
 
-  if (is_send)
+  if (direction == FS_DIRECTION_SEND)
   {
     if (src_pad_count == 0)
     {
@@ -215,7 +222,7 @@ validate_codec_profile (FsCodec *codec,const gchar *bin_description,
       return FALSE;
     }
   }
-  else
+  else if (direction == FS_DIRECTION_RECV)
   {
     if (src_pad_count != 1)
     {
@@ -223,6 +230,10 @@ validate_codec_profile (FsCodec *codec,const gchar *bin_description,
           bin_description, src_pad_count);
       return FALSE;
     }
+  }
+  else
+  {
+    g_assert_not_reached ();
   }
 
   if (sink_pad_count != 1)
@@ -307,11 +318,13 @@ validate_codecs_configuration (FsMediaType media_type, GList *blueprints,
 
     /* If there are send and/or recv profiles, lets test them */
     param = fs_codec_get_optional_parameter (codec, RECV_PROFILE_ARG, NULL);
-    if (param && !validate_codec_profile (codec, param->value, FALSE))
+    if (param && !validate_codec_profile (codec, param->value,
+            FS_DIRECTION_RECV))
         goto remove_this_codec;
 
     param = fs_codec_get_optional_parameter (codec, SEND_PROFILE_ARG, NULL);
-    if (param && !validate_codec_profile (codec, param->value, TRUE))
+    if (param && !validate_codec_profile (codec, param->value,
+            FS_DIRECTION_SEND))
       goto remove_this_codec;
 
     /* If no blueprint was found */
@@ -1307,7 +1320,7 @@ codec_association_is_valid_for_sending (CodecAssociation *ca,
       !ca->recv_only &&
       (!needs_codecbin ||
           (ca->blueprint &&
-              codec_blueprint_has_factory (ca->blueprint, TRUE)) ||
+              codec_blueprint_has_factory (ca->blueprint, FS_DIRECTION_SEND)) ||
           ca->send_profile))
     return TRUE;
   else

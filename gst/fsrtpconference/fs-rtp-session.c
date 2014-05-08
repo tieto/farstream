@@ -3094,17 +3094,27 @@ validate_src_pads (const GValue *item, GValue *ret, gpointer user_data)
 
 static GstElement *
 _create_codec_bin (const CodecAssociation *ca, const FsCodec *codec,
-    const gchar *name, gboolean is_send, GList *codecs,
+    const gchar *name, FsStreamDirection direction, GList *codecs,
     guint current_builder_hash, guint *new_builder_hash, GError **error)
 {
   GstElement *codec_bin = NULL;
-  gchar *direction_str = (is_send == TRUE) ? "send" : "receive";
+  const gchar *direction_str;
   gchar *profile = NULL;
 
-  if (is_send)
+  if (direction == FS_DIRECTION_SEND)
+  {
+    direction_str = "send";
     profile = ca->send_profile;
-  else
+  }
+  else if (direction == FS_DIRECTION_RECV)
+  {
+    direction_str = "receive";
     profile = ca->recv_profile;
+  }
+  else
+  {
+    g_assert_not_reached ();
+  }
 
   if (profile)
   {
@@ -3128,7 +3138,7 @@ _create_codec_bin (const CodecAssociation *ca, const FsCodec *codec,
           *new_builder_hash, current_builder_hash, FS_CODEC_ARGS (ca->codec));
     }
 
-    codec_bin = parse_bin_from_description_all_linked (profile, is_send,
+    codec_bin = parse_bin_from_description_all_linked (profile, direction,
         &src_pad_count, &sink_pad_count, &tmperror);
 
     if (codec_bin)
@@ -3168,7 +3178,7 @@ _create_codec_bin (const CodecAssociation *ca, const FsCodec *codec,
       gst_element_set_name (codec_bin, name);
       return codec_bin;
     }
-    else if (!codec_blueprint_has_factory (ca->blueprint, is_send))
+    else if (!codec_blueprint_has_factory (ca->blueprint, direction))
     {
       g_propagate_error (error, tmperror);
       return NULL;
@@ -3201,7 +3211,7 @@ _create_codec_bin (const CodecAssociation *ca, const FsCodec *codec,
   }
 
   return create_codec_bin_from_blueprint (codec, ca->blueprint, name,
-      is_send, error);
+      direction, error);
 }
 
 /**
@@ -3658,8 +3668,8 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
   name = g_strdup_printf ("send_%u_%u", session->id, ca->send_codec->id);
   codecs = codec_associations_to_send_codecs (
       session->priv->codec_associations);
-  codecbin = _create_codec_bin (ca, ca->send_codec, name, TRUE, codecs,
-      0, NULL, error);
+  codecbin = _create_codec_bin (ca, ca->send_codec, name, FS_DIRECTION_SEND,
+      codecs, 0, NULL, error);
   g_free (name);
 
   sendcaps = fs_codec_to_gst_caps (ca->send_codec);
@@ -4034,7 +4044,7 @@ _substream_get_codec_bin (FsRtpSubStream *substream,
 
   name = g_strdup_printf ("recv_%u_%u_%u", session->id, substream->ssrc,
       substream->pt);
-  codecbin = _create_codec_bin (ca, *new_codec, name, FALSE, NULL,
+  codecbin = _create_codec_bin (ca, *new_codec, name, FS_DIRECTION_RECV, NULL,
       current_builder_hash, new_builder_hash, error);
   g_free (name);
 
@@ -4480,7 +4490,8 @@ fs_rtp_session_get_codec_params_unlock (FsRtpSession *session,
   session->priv->discovery_codec = NULL;
 
   tmp = g_strdup_printf ("discoverAA_%u_%u", session->id, ca->send_codec->id);
-  codecbin = _create_codec_bin (ca, ca->send_codec, tmp, TRUE, NULL,
+  codecbin = _create_codec_bin (ca, ca->send_codec, tmp, FS_DIRECTION_SEND,
+      NULL,
       0, NULL, error);
   g_free (tmp);
 

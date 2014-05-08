@@ -1479,12 +1479,14 @@ extract_field_data (GQuark field_id,
 
 gboolean
 codec_blueprint_has_factory (CodecBlueprint *blueprint,
-    gboolean is_send)
+    FsStreamDirection direction)
 {
-  if (is_send)
+  if (direction == FS_DIRECTION_SEND)
     return (blueprint->send_pipeline_factory != NULL);
-  else
+  else if (direction == FS_DIRECTION_RECV)
     return (blueprint->receive_pipeline_factory != NULL);
+  else
+    g_assert_not_reached ();
 }
 
 
@@ -1548,20 +1550,30 @@ _create_ghost_pad (GstElement *current_element, const gchar *padname, GstElement
 
 GstElement *
 create_codec_bin_from_blueprint (const FsCodec *codec,
-    CodecBlueprint *blueprint, const gchar *name, gboolean is_send,
+    CodecBlueprint *blueprint, const gchar *name, FsStreamDirection direction,
     GError **error)
 {
   GstElement *codec_bin = NULL;
-  gchar *direction_str = (is_send == TRUE) ? "send" : "receive";
+  const gchar *direction_str;
   GList *walk = NULL;
   GstElement *current_element = NULL;
   GstElement *previous_element = NULL;
   GList *pipeline_factory = NULL;
 
-  if (is_send)
+  if (direction == FS_DIRECTION_SEND)
+  {
+    direction_str = "send";
     pipeline_factory = blueprint->send_pipeline_factory;
-  else
+  }
+  else if (direction == FS_DIRECTION_RECV)
+  {
+    direction_str = "receive";
     pipeline_factory = blueprint->receive_pipeline_factory;
+  }
+  else
+  {
+    g_assert_not_reached ();
+  }
 
   if (!pipeline_factory)
   {
@@ -1575,10 +1587,12 @@ create_codec_bin_from_blueprint (const FsCodec *codec,
 
   GST_DEBUG ("creating %s codec bin for id %d, pipeline_factory %p",
     direction_str, codec->id, pipeline_factory);
-  if (is_send)
+  if (direction == FS_DIRECTION_SEND)
     codec_bin = gst_bin_new (name);
-  else
+  else if (direction == FS_DIRECTION_RECV)
     codec_bin = fs_rtp_bin_error_downgrade_new (name);
+  else
+    g_assert_not_reached ();
 
   for (walk = g_list_first (pipeline_factory); walk; walk = g_list_next (walk))
   {
@@ -1625,13 +1639,15 @@ create_codec_bin_from_blueprint (const FsCodec *codec,
     if (g_list_previous (walk) == NULL)
       /* if its the first element of the codec bin */
       if (!_create_ghost_pad (current_element,
-              is_send ? "src" : "sink", codec_bin, error))
+              (direction == FS_DIRECTION_SEND) ? "src" : "sink", codec_bin,
+              error))
         goto error;
 
     if (g_list_next (walk) == NULL)
       /* if its the last element of the codec bin */
       if (!_create_ghost_pad (current_element,
-              is_send ? "sink" : "src" , codec_bin, error))
+              (direction == FS_DIRECTION_SEND) ? "sink" : "src" , codec_bin,
+              error))
         goto error;
 
 
@@ -1644,10 +1660,12 @@ create_codec_bin_from_blueprint (const FsCodec *codec,
       GstPad *srcpad;
       GstPadLinkReturn ret;
 
-      if (is_send)
+      if (direction == FS_DIRECTION_SEND)
         sinkpad = gst_element_get_static_pad (previous_element, "sink");
-      else
+      else if (direction == FS_DIRECTION_RECV)
         sinkpad = gst_element_get_static_pad (current_element, "sink");
+      else
+        g_assert_not_reached ();
 
       if (!sinkpad)
       {
@@ -1658,10 +1676,12 @@ create_codec_bin_from_blueprint (const FsCodec *codec,
       }
 
 
-      if (is_send)
+      if (direction == FS_DIRECTION_SEND)
         srcpad = gst_element_get_static_pad (current_element, "src");
-      else
+      else if (direction == FS_DIRECTION_RECV)
         srcpad = gst_element_get_static_pad (previous_element, "src");
+      else
+        g_assert_not_reached ();
 
       if (!srcpad)
       {
@@ -1722,7 +1742,7 @@ codec_blueprint_add_in_out_caps (CodecBlueprint *blueprint)
     goto output_caps;
 
   codecbin = create_codec_bin_from_blueprint (codec, blueprint,
-      "gather_send_codecbin", TRUE, &error);
+      "gather_send_codecbin", FS_DIRECTION_SEND, &error);
   if (!codecbin)
   {
     GST_WARNING ("Could not create send codec bin from blueprint for "
@@ -1760,7 +1780,7 @@ codec_blueprint_add_in_out_caps (CodecBlueprint *blueprint)
 output_caps:
 
   codecbin = create_codec_bin_from_blueprint (codec, blueprint,
-      "gather_recv_codecbin", FALSE, &error);
+      "gather_recv_codecbin", FS_DIRECTION_RECV, &error);
   if (!codecbin)
   {
     GST_WARNING ("Could not create receive codec bin from blueprint for "

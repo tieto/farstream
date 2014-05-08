@@ -125,7 +125,7 @@ lookup_codec_association_custom (GList *codec_associations,
 
 GstElement *
 parse_bin_from_description_all_linked (const gchar *bin_description,
-    gboolean is_send, guint *src_pad_count, guint *sink_pad_count,
+    FsStreamDirection direction, guint *src_pad_count, guint *sink_pad_count,
     GError **error);
 
 

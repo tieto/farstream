@@ -162,7 +162,7 @@ _get_main_codec_association (GList *codec_associations, FsCodec *codec)
       codec_associations, codec);
 
   if (ca && codec_association_is_valid_for_sending (ca, TRUE) &&
-      codec_blueprint_has_factory (ca->blueprint, TRUE))
+      codec_blueprint_has_factory (ca->blueprint, FS_DIRECTION_SEND))
     return ca;
   else
     return NULL;
@@ -309,7 +309,8 @@ fs_rtp_dtmf_sound_source_build (FsRtpSpecialSource *source,
         telephony_codec->id);
     GError *error = NULL;
     GstElement *codecbin = create_codec_bin_from_blueprint (
-        telephony_codec, ca->blueprint, codec_bin_name, TRUE, &error);
+        telephony_codec, ca->blueprint, codec_bin_name, FS_DIRECTION_SEND,
+        &error);
 
     if (!codecbin)
     {

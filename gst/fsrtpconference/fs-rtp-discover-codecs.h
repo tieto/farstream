@@ -28,6 +28,7 @@
 #include <gst/gst.h>
 
 #include <farstream/fs-codec.h>
+#include <farstream/fs-stream.h>
 
 G_BEGIN_DECLS
 
@@ -58,10 +59,10 @@ GList *fs_rtp_blueprints_get (FsMediaType media_type, GError **error);
 void fs_rtp_blueprints_unref (FsMediaType media_type);
 
 gboolean codec_blueprint_has_factory (CodecBlueprint *blueprint,
-    gboolean is_send);
+    FsStreamDirection direction);
 
 GstElement * create_codec_bin_from_blueprint (const FsCodec *codec,
-    CodecBlueprint *blueprint, const gchar *name, gboolean is_send,
+    CodecBlueprint *blueprint, const gchar *name, FsStreamDirection direction,
     GError **error);
 
 
