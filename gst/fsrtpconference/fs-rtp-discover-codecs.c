@@ -584,7 +584,6 @@ parse_codec_cap_list (GList *list, FsMediaType media_type)
   FsCodec *codec;
   CodecBlueprint *codec_blueprint;
   gint i;
-  gchar *tmp;
   GstElementFactory *tmpfact;
 
   /* go thru all common caps */
@@ -720,12 +719,8 @@ parse_codec_cap_list (GList *list, FsMediaType media_type)
         codec->encoding_name, codec->id,
         codec_blueprint->send_pipeline_factory,
         codec_blueprint->receive_pipeline_factory);
-    tmp = gst_caps_to_string (codec_blueprint->media_caps);
-    GST_DEBUG ("media_caps: %s", tmp);
-    g_free (tmp);
-    tmp = gst_caps_to_string (codec_blueprint->rtp_caps);
-    GST_DEBUG ("rtp_caps: %s", tmp);
-    g_free (tmp);
+    GST_DEBUG ("media_caps: %" GST_PTR_FORMAT, codec_blueprint->media_caps);
+    GST_DEBUG ("rtp_caps: %" GST_PTR_FORMAT, codec_blueprint->rtp_caps);
     debug_pipeline (GST_LEVEL_DEBUG, "send pipeline: ",
         codec_blueprint->send_pipeline_factory);
     debug_pipeline (GST_LEVEL_DEBUG, "receive pipeline: ",
