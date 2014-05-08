@@ -79,8 +79,7 @@ static GList *get_plugins_filtered_from_caps (FilterFunc filter,
 static gboolean extract_field_data (GQuark field_id,
                                     const GValue *value,
                                     gpointer user_data);
-static gboolean codec_blueprint_add_in_out_caps (CodecBlueprint *blueprint);
-
+static void codec_blueprints_add_caps (FsMediaType media_type);
 
 /* GLOBAL variables */
 
@@ -128,22 +127,13 @@ debug_pipeline (GstDebugLevel level, const gchar *prefix, GList *pipeline)
 static void
 debug_codec_cap (CodecCap *codec_cap)
 {
-  gchar *caps;
   if (codec_cap->caps)
-  {
-    caps = gst_caps_to_string (codec_cap->caps);
-    GST_LOG ("%p:%d:media_caps %s\n", codec_cap->caps,
-        GST_CAPS_REFCOUNT_VALUE (codec_cap->caps),
-        caps);
-    g_free (caps);
-  }
+    GST_LOG ("%p:%d:media_caps %" GST_PTR_FORMAT, codec_cap->caps,
+        GST_CAPS_REFCOUNT_VALUE (codec_cap->caps), codec_cap->caps);
 
-  if (codec_cap->rtp_caps)
-  {
-    caps = gst_caps_to_string (codec_cap->rtp_caps);
-    GST_LOG ("%p:%d:rtp_caps %s\n", codec_cap->rtp_caps,
-        GST_CAPS_REFCOUNT_VALUE (codec_cap->rtp_caps), caps);
-    g_free (caps);
+  if (codec_cap->rtp_caps) {
+    GST_LOG ("%p:%d:rtp_caps %" GST_PTR_FORMAT, codec_cap->rtp_caps,
+        GST_CAPS_REFCOUNT_VALUE (codec_cap->rtp_caps), codec_cap->rtp_caps);
     g_assert (gst_caps_get_size (codec_cap->rtp_caps) == 1);
   }
 
@@ -343,7 +333,9 @@ create_codec_lists (FsMediaType media_type,
   list_codec_blueprints[media_type] =
     fs_rtp_special_sources_add_blueprints (list_codec_blueprints[media_type]);
 
-  return TRUE;
+  codec_blueprints_add_caps (media_type);
+
+  return (list_codec_blueprints[media_type] != NULL);
 }
 
 static gboolean
@@ -711,12 +703,6 @@ parse_codec_cap_list (GList *list, FsMediaType media_type)
             g_list_append (NULL, tmpfact));
         }
       }
-    }
-
-    if (!codec_blueprint_add_in_out_caps (codec_blueprint)) {
-      /* Skip and destroy if it can't be created */
-      codec_blueprint_destroy (codec_blueprint);
-      continue;
     }
 
     /* insert new information into tables */
@@ -1714,8 +1700,105 @@ create_codec_bin_from_blueprint (const FsCodec *codec,
 static gboolean
 codec_blueprint_add_in_out_caps (CodecBlueprint *blueprint)
 {
-  blueprint->input_caps = gst_caps_new_any ();
-  blueprint->output_caps = gst_caps_new_any ();
+  gboolean ret = FALSE;
+  FsCodec *codec;
+  GstElement *codecbin = NULL;
+  GstElement *capsfilter = NULL;
+  GstPad *pad = NULL;
+  GError *error = NULL;
 
-  return TRUE;
+  /* If there are no pipelines, we have nothing to do ! */
+  if (!blueprint->send_pipeline_factory && !blueprint->receive_pipeline_factory)
+    return TRUE;
+
+  codec = fs_codec_copy (blueprint->codec);
+  if (codec->id == FS_CODEC_ID_ANY)
+    codec->id = 96;
+
+  capsfilter = gst_element_factory_make ("capsfilter", NULL);
+  g_object_set (capsfilter, "caps", blueprint->rtp_caps, NULL);
+
+  if (!blueprint->send_pipeline_factory)
+    goto output_caps;
+
+
+  codecbin = create_codec_bin_from_blueprint (codec, blueprint,
+      "gather_send_codecbin", TRUE, &error);
+  if (!codecbin)
+  {
+    GST_WARNING ("Could not create send codec bin from blueprint for "
+        FS_CODEC_FORMAT": %s", FS_CODEC_ARGS (blueprint->codec),
+        error->message);
+    goto done;
+  }
+
+  if (!gst_element_link (codecbin, capsfilter))
+  {
+    GST_WARNING ("Could not link capsfilter to codecbin for " FS_CODEC_FORMAT,
+        FS_CODEC_ARGS (blueprint->codec));
+    goto done;
+  }
+
+  pad = gst_element_get_static_pad (codecbin, "sink");
+  if (!pad)
+  {
+    GST_WARNING ("Could not get sink pad on codecbin for  " FS_CODEC_FORMAT,
+        FS_CODEC_ARGS (blueprint->codec));
+    goto done;
+  }
+
+  blueprint->input_caps = gst_pad_query_caps (pad, NULL);
+
+  if (!blueprint->input_caps)
+  {
+    GST_WARNING ("Query for input caps on codecbin failed for  "
+        FS_CODEC_FORMAT, FS_CODEC_ARGS (blueprint->codec));
+    goto done;
+  }
+
+  g_clear_object (&pad);
+  g_clear_object (&capsfilter);
+  g_clear_object (&codecbin);
+
+output_caps:
+
+  if (!blueprint->input_caps)
+    blueprint->input_caps = gst_caps_new_any ();
+
+  if (!blueprint->output_caps)
+    blueprint->output_caps = gst_caps_new_any ();
+
+
+  ret = TRUE;
+done:
+
+  g_clear_object (&pad);
+  g_clear_object (&capsfilter);
+  g_clear_object (&codecbin);
+  g_clear_error (&error);
+  fs_codec_destroy (codec);
+
+  return ret;
+}
+
+static void
+codec_blueprints_add_caps (FsMediaType media_type)
+{
+  GList *item;
+
+  for (item = list_codec_blueprints[media_type]; item;)
+  {
+    GList *next = item->next;
+    CodecBlueprint *blueprint = item->data;
+
+
+    if (!codec_blueprint_add_in_out_caps (blueprint))
+    {
+      codec_blueprint_destroy (blueprint);
+      list_codec_blueprints[media_type] = g_list_delete_link (
+        list_codec_blueprints[media_type], item);
+    }
+
+    item = next;
+  }
 }
