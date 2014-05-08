@@ -88,21 +88,40 @@ static gint codecs_lists_ref[FS_MEDIA_TYPE_LAST+1] = { 0 };
 
 
 static void
-debug_pipeline (GList *pipeline)
+debug_pipeline (GstDebugLevel level, const gchar *prefix, GList *pipeline)
 {
   GList *walk;
+  GString *str;
+  gboolean first = TRUE;
 
-  GST_DEBUG ("pipeline: ");
+  if (gst_debug_category_get_threshold (GST_CAT_DEFAULT) <  level)
+    return;
+
+  str = g_string_new (prefix);
+
   for (walk = pipeline; walk; walk = g_list_next (walk))
   {
     GList *walk2;
+    gboolean first_alt = TRUE;
+
+    if (!first)
+      g_string_append (str, " ->");
+    first = FALSE;
+
     for (walk2 = g_list_first (walk->data); walk2; walk2 = g_list_next (walk2))
-      GST_DEBUG ("%p:%d:%s ", walk2->data,
-        GST_OBJECT_REFCOUNT_VALUE (GST_OBJECT (walk2->data)),
-        gst_plugin_feature_get_name (GST_PLUGIN_FEATURE (walk2->data)));
-    GST_DEBUG ("--");
+    {
+      if (first_alt)
+        g_string_append_printf (str, " %s",
+            gst_plugin_feature_get_name (GST_PLUGIN_FEATURE (walk2->data)));
+      else
+        g_string_append_printf (str, " | %s",
+            gst_plugin_feature_get_name (GST_PLUGIN_FEATURE (walk2->data)));
+
+      first_alt = FALSE;
+    }
   }
-  GST_DEBUG ("\n");
+  GST_LOG ("%s\n", str->str);
+  g_string_free (str, TRUE);
 }
 
 static void
@@ -127,10 +146,8 @@ debug_codec_cap (CodecCap *codec_cap)
     g_assert (gst_caps_get_size (codec_cap->rtp_caps) == 1);
   }
 
-  GST_LOG ("element_list1 -> ");
-  debug_pipeline (codec_cap->element_list1);
-  GST_LOG ("element_list2 -> ");
-  debug_pipeline (codec_cap->element_list2);
+  debug_pipeline (GST_LEVEL_LOG, "element_list1: ", codec_cap->element_list1);
+  debug_pipeline (GST_LEVEL_LOG, "element_list2: ", codec_cap->element_list2);
 }
 
 static void
@@ -709,8 +726,10 @@ parse_codec_cap_list (GList *list, FsMediaType media_type)
     tmp = gst_caps_to_string (codec_blueprint->rtp_caps);
     GST_DEBUG ("rtp_caps: %s", tmp);
     g_free (tmp);
-    debug_pipeline (codec_blueprint->send_pipeline_factory);
-    debug_pipeline (codec_blueprint->receive_pipeline_factory);
+    debug_pipeline (GST_LEVEL_DEBUG, "send pipeline: ",
+        codec_blueprint->send_pipeline_factory);
+    debug_pipeline (GST_LEVEL_DEBUG, "receive pipeline: ",
+        codec_blueprint->receive_pipeline_factory);
   }
 }
 
