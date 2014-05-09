@@ -4805,7 +4805,8 @@ fs_rtp_session_stop_codec_param_gathering_unlock (FsRtpSession *session)
     session->priv->discovery_codec = NULL;
   }
 
-  g_object_set (session->priv->discovery_valve, "drop", TRUE, NULL);
+  if (session->priv->discovery_valve)
+    g_object_set (session->priv->discovery_valve, "drop", TRUE, NULL);
 
   FS_RTP_SESSION_UNLOCK (session);
 
