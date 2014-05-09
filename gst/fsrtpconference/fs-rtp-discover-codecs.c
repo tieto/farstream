@@ -1717,117 +1717,55 @@ create_codec_bin_from_blueprint (const FsCodec *codec,
 }
 
 
-static gboolean
-codec_blueprint_add_in_out_caps (CodecBlueprint *blueprint)
+static GstCaps *
+codec_get_in_out_caps (FsCodec *codec, GstCaps *rtp_caps,
+    FsStreamDirection direction, GstElement *codecbin)
 {
-  gboolean ret = FALSE;
-  FsCodec *codec;
-  GstElement *codecbin = NULL;
   GstElement *capsfilter = NULL;
   GstPad *pad = NULL;
-  GError *error = NULL;
-
-  /* If there are no pipelines, we have nothing to do ! */
-  if (!blueprint->send_pipeline_factory && !blueprint->receive_pipeline_factory)
-    return TRUE;
-
-  codec = fs_codec_copy (blueprint->codec);
-  if (codec->id == FS_CODEC_ID_ANY)
-    codec->id = 96;
+  gboolean r;
+  const gchar *padname = (direction == FS_DIRECTION_SEND) ? "sink" : "src";
+  GstCaps *caps = NULL;
 
   capsfilter = gst_element_factory_make ("capsfilter", NULL);
-  g_object_set (capsfilter, "caps", blueprint->rtp_caps, NULL);
+  g_object_set (capsfilter, "caps", rtp_caps, NULL);
 
-  if (!blueprint->send_pipeline_factory)
-    goto output_caps;
+  if (direction == FS_DIRECTION_SEND)
+    r = gst_element_link (codecbin, capsfilter);
+  else if (direction == FS_DIRECTION_RECV)
+    r = gst_element_link (capsfilter, codecbin);
+  else
+    g_assert_not_reached ();
 
-  codecbin = create_codec_bin_from_blueprint (codec, blueprint,
-      "gather_send_codecbin", FS_DIRECTION_SEND, &error);
-  if (!codecbin)
-  {
-    GST_WARNING ("Could not create send codec bin from blueprint for "
-        FS_CODEC_FORMAT": %s", FS_CODEC_ARGS (blueprint->codec),
-        error->message);
-    goto done;
-  }
-
-  if (!gst_element_link (codecbin, capsfilter))
+  if (!r)
   {
     GST_WARNING ("Could not link capsfilter to codecbin for " FS_CODEC_FORMAT,
-        FS_CODEC_ARGS (blueprint->codec));
+        FS_CODEC_ARGS (codec));
     goto done;
   }
 
-  pad = gst_element_get_static_pad (codecbin, "sink");
+  pad = gst_element_get_static_pad (codecbin, padname);
   if (!pad)
   {
-    GST_WARNING ("Could not get sink pad on codecbin for  " FS_CODEC_FORMAT,
-        FS_CODEC_ARGS (blueprint->codec));
+    GST_WARNING ("Could not get %s pad on codecbin for " FS_CODEC_FORMAT,
+        padname, FS_CODEC_ARGS (codec));
     goto done;
   }
 
-  blueprint->input_caps = gst_pad_query_caps (pad, NULL);
-  if (!blueprint->input_caps)
+  caps = gst_pad_query_caps (pad, NULL);
+  if (!caps)
   {
-    GST_WARNING ("Query for input caps on codecbin failed for  "
-        FS_CODEC_FORMAT, FS_CODEC_ARGS (blueprint->codec));
+    GST_WARNING ("Query for caps on codecbin failed for  "
+        FS_CODEC_FORMAT, FS_CODEC_ARGS (codec));
     goto done;
   }
 
-  g_clear_object (&pad);
-  g_clear_object (&codecbin);
-
-output_caps:
-
-  codecbin = create_codec_bin_from_blueprint (codec, blueprint,
-      "gather_recv_codecbin", FS_DIRECTION_RECV, &error);
-  if (!codecbin)
-  {
-    GST_WARNING ("Could not create receive codec bin from blueprint for "
-        FS_CODEC_FORMAT": %s", FS_CODEC_ARGS (blueprint->codec),
-        error->message);
-    goto done;
-  }
-
-  if (!gst_element_link (capsfilter, codecbin))
-  {
-    GST_WARNING ("Could not link recv codecbin to capsfilter for "
-        FS_CODEC_FORMAT, FS_CODEC_ARGS (blueprint->codec));
-    goto done;
-  }
-
-  pad = gst_element_get_static_pad (codecbin, "src");
-  if (!pad)
-  {
-    GST_WARNING ("Could not get src pad on receive codecbin for "
-        FS_CODEC_FORMAT,  FS_CODEC_ARGS (blueprint->codec));
-    goto done;
-  }
-
-  blueprint->output_caps = gst_pad_query_caps (pad, NULL);
-  if (!blueprint->output_caps)
-  {
-    GST_WARNING ("Query for output caps on receive codecbin failed for  "
-        FS_CODEC_FORMAT, FS_CODEC_ARGS (blueprint->codec));
-    goto done;
-  }
-
-  if (!blueprint->input_caps)
-    blueprint->input_caps = gst_caps_new_any ();
-
-  if (!blueprint->output_caps)
-    blueprint->output_caps = gst_caps_new_any ();
-
-  ret = TRUE;
 done:
 
   g_clear_object (&pad);
   g_clear_object (&capsfilter);
-  g_clear_object (&codecbin);
-  g_clear_error (&error);
-  fs_codec_destroy (codec);
 
-  return ret;
+  return caps;
 }
 
 static void
@@ -1839,9 +1777,81 @@ codec_blueprints_add_caps (FsMediaType media_type)
   {
     GList *next = item->next;
     CodecBlueprint *blueprint = item->data;
+    gboolean success = FALSE;
+    GError *error = NULL;
+    FsCodec *codec_copy = NULL;
+
+    /* If there are no pipelines, it's all ok */
+    if (!blueprint->send_pipeline_factory &&
+        !blueprint->receive_pipeline_factory)
+    {
+      success = TRUE;
+      goto next;
+    }
+
+    codec_copy = fs_codec_copy (blueprint->codec);
+    if (codec_copy->id == FS_CODEC_ID_ANY)
+      codec_copy->id = 96;
 
 
-    if (!codec_blueprint_add_in_out_caps (blueprint))
+    if (blueprint->send_pipeline_factory)
+    {
+      GstElement *codecbin;
+
+      codecbin = create_codec_bin_from_blueprint (codec_copy, blueprint,
+          "gather_send_codecbin", FS_DIRECTION_SEND, &error);
+      if (!codecbin)
+      {
+        GST_WARNING ("Could not create send codec bin from blueprint for "
+            FS_CODEC_FORMAT": %s", FS_CODEC_ARGS (blueprint->codec),
+            error->message);
+        goto next;
+      }
+
+      blueprint->input_caps = codec_get_in_out_caps (blueprint->codec,
+          blueprint->rtp_caps, FS_DIRECTION_SEND, codecbin);
+
+      gst_object_unref (codecbin);
+      if (blueprint->input_caps == NULL)
+        goto next;
+    }
+    if (blueprint->receive_pipeline_factory)
+    {
+      GstElement *codecbin;
+
+      codecbin = create_codec_bin_from_blueprint (codec_copy, blueprint,
+          "gather_recv_codecbin", FS_DIRECTION_RECV, &error);
+      if (!codecbin)
+      {
+        GST_WARNING ("Could not create receive codec bin from blueprint for "
+            FS_CODEC_FORMAT": %s", FS_CODEC_ARGS (blueprint->codec),
+            error->message);
+        goto next;
+      }
+
+      blueprint->output_caps = codec_get_in_out_caps (blueprint->codec,
+          blueprint->rtp_caps, FS_DIRECTION_RECV, codecbin);
+
+      gst_object_unref (codecbin);
+      if (!blueprint->output_caps)
+        goto next;
+    }
+
+    if (blueprint->input_caps == NULL)
+      blueprint->input_caps = gst_caps_new_any ();
+    if (blueprint->output_caps == NULL)
+      blueprint->output_caps = gst_caps_new_any ();
+
+    success = TRUE;
+
+  next:
+
+    if (codec_copy)
+      fs_codec_destroy (codec_copy);
+
+    g_clear_error (&error);
+
+    if (!success)
     {
       codec_blueprint_destroy (blueprint);
       list_codec_blueprints[media_type] = g_list_delete_link (
