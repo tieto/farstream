@@ -327,9 +327,11 @@ static GstCaps *
 fs_rtp_bitrate_adapter_getcaps (FsRtpBitrateAdapter *self, GstPad *pad,
     GstCaps *filter)
 {
-  GstCaps *caps;
   GstPad *otherpad;
   GstCaps *peer_caps;
+  GstCaps *result;
+  guint bitrate;
+  guint i;
 
   if (pad == self->srcpad)
     otherpad = self->sinkpad;
@@ -338,17 +340,42 @@ fs_rtp_bitrate_adapter_getcaps (FsRtpBitrateAdapter *self, GstPad *pad,
 
   peer_caps = gst_pad_peer_query_caps (otherpad, filter);
 
+  if (gst_caps_get_size (peer_caps) == 0)
+    return peer_caps;
+
   GST_OBJECT_LOCK (self);
-  if (self->caps)
-    caps = gst_caps_intersect_full (self->caps, peer_caps,
-        GST_CAPS_INTERSECT_FIRST);
-  else
-    caps = gst_caps_intersect (peer_caps,
-        gst_pad_get_pad_template_caps (pad));
-  gst_caps_unref (peer_caps);
+  bitrate = self->last_bitrate;
   GST_OBJECT_UNLOCK (self);
 
-  return caps;
+  if (bitrate == G_MAXUINT)
+    return peer_caps;
+
+  result = gst_caps_new_empty ();
+
+  for (i = 0; i < gst_caps_get_size (peer_caps); i++)
+  {
+    GstStructure *s = gst_caps_get_structure (peer_caps, i);
+
+    if (g_str_has_prefix (gst_structure_get_name (s), "video/"))
+    {
+      GstCaps *rated_caps = caps_from_bitrate (gst_structure_get_name (s),
+          bitrate);
+      GstCaps *copy = gst_caps_copy_nth (peer_caps, i);
+
+      gst_caps_set_features (rated_caps, 0,
+          gst_caps_features_copy (gst_caps_get_features (peer_caps, i)));
+
+      gst_caps_append (result, gst_caps_intersect (rated_caps, copy));
+      gst_caps_unref (copy);
+      gst_caps_unref (rated_caps);
+    }
+    else
+    {
+      gst_caps_append (result, gst_caps_copy_nth (peer_caps, i));
+    }
+  }
+
+  return result;
 }
 
 static gboolean
