@@ -842,7 +842,10 @@ create_local_codec_associations (
     CodecAssociation *ca = lca_e->data;
 
     if (codec_association_is_valid_for_sending (ca, TRUE))
+    {
       has_valid_codec = TRUE;
+      break;
+    }
   }
 
   if (!has_valid_codec)
