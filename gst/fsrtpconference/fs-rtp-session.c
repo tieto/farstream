@@ -215,6 +215,9 @@ struct _FsRtpSessionPrivate
   /* Protected by session mutex */
   guint send_bitrate;
 
+  GstCaps *input_caps;
+  GstCaps *output_caps;
+
   /* Set at construction time, can not change */
   FsRtpTfrc *rtp_tfrc;
   FsRtpKeyunitManager *keyunit_manager;
@@ -788,6 +791,9 @@ fs_rtp_session_finalize (GObject *object)
   if (self->priv->ssrc_streams_manual)
     g_hash_table_destroy (self->priv->ssrc_streams_manual);
 
+  gst_caps_unref (self->priv->input_caps);
+  gst_caps_unref (self->priv->output_caps);
+
   g_queue_foreach (&self->priv->telephony_events, (GFunc) gst_event_unref,
       NULL);
 
@@ -1074,6 +1080,15 @@ fs_rtp_session_constructed (GObject *object)
         "Unknown error while trying to discover codecs");
     return;
   }
+
+  if (self->priv->media_type == FS_MEDIA_TYPE_AUDIO)
+    self->priv->input_caps = gst_caps_new_empty_simple ("audio/x-raw");
+  else if (self->priv->media_type == FS_MEDIA_TYPE_VIDEO)
+    self->priv->input_caps = gst_caps_new_empty_simple ("video/x-raw");
+  else
+    g_assert_not_reached ();
+
+  self->priv->output_caps = gst_caps_ref (self->priv->input_caps);
 
   tmp = g_strdup_printf ("send_tee_%u", self->id);
   tee = gst_element_factory_make ("tee", tmp);
