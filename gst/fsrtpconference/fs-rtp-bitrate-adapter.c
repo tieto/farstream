@@ -26,7 +26,6 @@
 #endif
 
 #include "fs-rtp-bitrate-adapter.h"
-#include <gst/video/video.h>
 
 #include <math.h>
 
@@ -40,13 +39,13 @@ static GstStaticPadTemplate fs_rtp_bitrate_adapter_sink_template =
     GST_STATIC_PAD_TEMPLATE ("sink",
         GST_PAD_SINK,
         GST_PAD_ALWAYS,
-        GST_STATIC_CAPS (GST_VIDEO_CAPS_MAKE (GST_VIDEO_FORMATS_ALL)));
+        GST_STATIC_CAPS_ANY);
 
 static GstStaticPadTemplate fs_rtp_bitrate_adapter_src_template =
     GST_STATIC_PAD_TEMPLATE ("src",
         GST_PAD_SRC,
         GST_PAD_ALWAYS,
-        GST_STATIC_CAPS (GST_VIDEO_CAPS_MAKE (GST_VIDEO_FORMATS_ALL)));
+        GST_STATIC_CAPS_ANY);
 enum
 {
   PROP_0,
