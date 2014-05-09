@@ -2695,7 +2695,8 @@ fs_rtp_session_negotiate_codecs_locked (FsRtpSession *session,
 
   new_negotiated_codec_associations = create_local_codec_associations (
       session->priv->blueprints, session->priv->codec_preferences,
-      session->priv->codec_associations);
+      session->priv->codec_associations, session->priv->input_caps,
+      session->priv->output_caps);
 
   if (!new_negotiated_codec_associations)
   {

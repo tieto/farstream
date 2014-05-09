@@ -531,6 +531,55 @@ list_insert_local_ca (GList *list, CodecAssociation *ca)
   return g_list_append (list, ca);
 }
 
+static gboolean
+verify_caps (CodecPreference *cp, CodecBlueprint *bp, GstCaps *input_caps,
+    GstCaps *output_caps)
+{
+  if (cp && cp->input_caps)
+  {
+    if (!gst_caps_can_intersect (input_caps, cp->input_caps))
+    {
+      GST_LOG ("Rejected codec " FS_CODEC_FORMAT " by input caps, filter: %"
+          GST_PTR_FORMAT " pref caps: %" GST_PTR_FORMAT,
+          FS_CODEC_ARGS (cp->codec), input_caps, cp->input_caps);
+      return FALSE;
+   }
+  }
+  else if (bp && bp->input_caps)
+  {
+    if (!gst_caps_can_intersect (input_caps, bp->input_caps))
+    {
+      GST_LOG ("Rejected codec " FS_CODEC_FORMAT " by input caps, filter: %"
+          GST_PTR_FORMAT " blueprint caps: %" GST_PTR_FORMAT,
+          FS_CODEC_ARGS (bp->codec), input_caps, bp->input_caps);
+      return FALSE;
+    }
+  }
+
+  if (cp && cp->output_caps)
+  {
+    if (!gst_caps_can_intersect (output_caps, cp->output_caps))
+    {
+      GST_LOG ("Rejected codec " FS_CODEC_FORMAT " by output caps, filter: %"
+          GST_PTR_FORMAT " pref caps: %" GST_PTR_FORMAT,
+          FS_CODEC_ARGS (cp->codec), output_caps, cp->output_caps);
+      return FALSE;
+   }
+  }
+  else if (bp && bp->output_caps)
+  {
+    if (!gst_caps_can_intersect (output_caps, bp->output_caps))
+    {
+      GST_LOG ("Rejected codec " FS_CODEC_FORMAT " by output caps, filter: %"
+          GST_PTR_FORMAT " blueprint caps: %" GST_PTR_FORMAT,
+          FS_CODEC_ARGS (bp->codec), output_caps, bp->output_caps);
+      return FALSE;
+    }
+  }
+
+  return TRUE;
+}
+
 /**
  * create_local_codec_associations:
  * @blueprints: The #GList of #CodecBlueprint
@@ -548,7 +597,9 @@ GList *
 create_local_codec_associations (
     GList *blueprints,
     GList *codec_prefs,
-    GList *current_codec_associations)
+    GList *current_codec_associations,
+    GstCaps *input_caps,
+    GstCaps *output_caps)
 {
   GList *codec_associations = NULL;
   GList *bp_e = NULL;
@@ -602,6 +653,9 @@ create_local_codec_associations (
           cp->codec->encoding_name);
       continue;
     }
+
+    if (!verify_caps (cp, bp, input_caps, output_caps))
+      continue;
 
     /* Now lets see if there is an existing codec that matches this preference
      */
@@ -788,6 +842,9 @@ create_local_codec_associations (
           continue;
         fs_codec_destroy (codec);
 
+        if (!verify_caps (NULL, bp, input_caps, output_caps))
+          continue;
+
         ca = g_slice_new0 (CodecAssociation);
         ca->blueprint = bp;
         ca->codec = fs_codec_copy (bp->codec);
@@ -808,6 +865,9 @@ create_local_codec_associations (
     if (!codec)
       continue;
     fs_codec_destroy (codec);
+
+    if (!verify_caps (NULL, bp, input_caps, output_caps))
+      continue;
 
     ca = g_slice_new0 (CodecAssociation);
     ca->blueprint = bp;

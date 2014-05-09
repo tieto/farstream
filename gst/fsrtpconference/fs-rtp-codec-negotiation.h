@@ -83,7 +83,9 @@ GList *
 create_local_codec_associations (
     GList *blueprints,
     GList *codec_prefs,
-    GList *current_codec_associations);
+    GList *current_codec_associations,
+    GstCaps *input_caps,
+    GstCaps *output_caps);
 
 GList *
 negotiate_stream_codecs (

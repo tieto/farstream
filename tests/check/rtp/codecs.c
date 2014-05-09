@@ -1510,6 +1510,8 @@ GST_START_TEST (test_rtpcodecs_nego_ilbc)
   FsCodec *prefcodec = NULL;
   FsCodec *outprefcodec = NULL;
   FsParticipant *participant;
+  GError *error = NULL;
+  GstCaps *caps;
 
   setup_codec_tests (&dat, &participant, FS_MEDIA_TYPE_AUDIO);
 
@@ -1524,6 +1526,11 @@ GST_START_TEST (test_rtpcodecs_nego_ilbc)
       "rtpilbcdepay ! identity");
   fs_codec_add_optional_parameter (prefcodec, "farstream-send-profile",
       "identity ! rtpilbcpay");
+
+  caps = gst_caps_from_string ("audio/x-iLBC; audio/x-raw");
+  fail_unless (fs_session_set_allowed_caps (dat->session, caps, caps, &error));
+  g_assert_no_error (error);
+  gst_caps_unref (caps);
 
   codec = fs_codec_new (100, "ILBC", FS_MEDIA_TYPE_AUDIO, 8000);
   outcodec = fs_codec_new (100, "ILBC", FS_MEDIA_TYPE_AUDIO, 8000);
@@ -1610,6 +1617,8 @@ GST_START_TEST (test_rtpcodecs_nego_g729)
   FsCodec *prefcodec = NULL;
   FsCodec *outprefcodec = NULL;
   FsParticipant *participant;
+  GError *error = NULL;
+  GstCaps *caps;
 
   setup_codec_tests (&dat, &participant, FS_MEDIA_TYPE_AUDIO);
 
@@ -1622,6 +1631,11 @@ GST_START_TEST (test_rtpcodecs_nego_g729)
       "rtpg729depay ! identity");
   fs_codec_add_optional_parameter (prefcodec, "farstream-send-profile",
       "identity ! rtpg729pay");
+
+  caps = gst_caps_from_string ("audio/G729; audio/x-raw");
+  fail_unless (fs_session_set_allowed_caps (dat->session, caps, caps, &error));
+  g_assert_no_error (error);
+  gst_caps_unref (caps);
 
   codec = fs_codec_new (18, "G729", FS_MEDIA_TYPE_AUDIO, 8000);
   outcodec = fs_codec_new (18, "G729", FS_MEDIA_TYPE_AUDIO, 8000);
@@ -1711,6 +1725,8 @@ GST_START_TEST (test_rtpcodecs_nego_h261)
   FsCodec *prefcodec = NULL;
   FsCodec *outprefcodec = NULL;
   FsParticipant *participant;
+  GError *error = NULL;
+  GstCaps *caps;
 
   setup_codec_tests (&dat, &participant, FS_MEDIA_TYPE_VIDEO);
 
@@ -1721,6 +1737,13 @@ GST_START_TEST (test_rtpcodecs_nego_h261)
       "identity");
   fs_codec_add_optional_parameter (prefcodec, "farstream-send-profile",
       "identity");
+
+  caps = gst_caps_from_string ("application/x-rtp, media=(string)video,"
+      " clock-rate=90000, encoding-name=H261; video/x-raw");
+  fail_unless (fs_session_set_allowed_caps (dat->session, caps, caps, &error));
+  g_assert_no_error (error);
+  gst_caps_unref (caps);
+
 
   codec = fs_codec_new (31, "H261", FS_MEDIA_TYPE_VIDEO, 90000);
   outcodec = fs_codec_new (31, "H261", FS_MEDIA_TYPE_VIDEO, 90000);
@@ -1789,6 +1812,8 @@ GST_START_TEST (test_rtpcodecs_nego_h263_1998)
   FsCodec *prefcodec = NULL;
   FsCodec *outprefcodec = NULL;
   FsParticipant *participant;
+  GError *error = NULL;
+  GstCaps *caps;
 
   setup_codec_tests (&dat, &participant, FS_MEDIA_TYPE_VIDEO);
 
@@ -1799,6 +1824,12 @@ GST_START_TEST (test_rtpcodecs_nego_h263_1998)
       "identity");
   fs_codec_add_optional_parameter (prefcodec, "farstream-send-profile",
       "identity");
+
+  caps = gst_caps_from_string ("application/x-rtp, media=(string)video,"
+      " clock-rate=90000, encoding-name=H263-1998; video/x-raw");
+  fail_unless (fs_session_set_allowed_caps (dat->session, caps, caps, &error));
+  g_assert_no_error (error);
+  gst_caps_unref (caps);
 
   codec = fs_codec_new (96, "H263-1998", FS_MEDIA_TYPE_VIDEO, 90000);
   outcodec = fs_codec_new (96, "H263-1998", FS_MEDIA_TYPE_VIDEO, 90000);
@@ -1951,6 +1982,8 @@ GST_START_TEST (test_rtpcodecs_nego_h263_2000)
   FsCodec *prefcodec = NULL;
   FsCodec *outprefcodec = NULL;
   FsParticipant *participant;
+  GError *error = NULL;
+  GstCaps *caps;
 
   setup_codec_tests (&dat, &participant, FS_MEDIA_TYPE_VIDEO);
 
@@ -1961,6 +1994,14 @@ GST_START_TEST (test_rtpcodecs_nego_h263_2000)
       "identity");
   fs_codec_add_optional_parameter (prefcodec, "farstream-send-profile",
       "identity");
+
+
+  caps = gst_caps_from_string ("application/x-rtp, media=(string)video,"
+      " clock-rate=90000, encoding-name=H263-2000; video/x-raw");
+  fail_unless (fs_session_set_allowed_caps (dat->session, caps, caps, &error));
+  g_assert_no_error (error);
+  gst_caps_unref (caps);
+
 
   codec = fs_codec_new (96, "H263-2000", FS_MEDIA_TYPE_VIDEO, 90000);
   outcodec = fs_codec_new (96, "H263-2000", FS_MEDIA_TYPE_VIDEO, 90000);
@@ -2037,6 +2078,8 @@ GST_START_TEST (test_rtpcodecs_nego_h264)
   FsCodec *outprefcodec = NULL;
   FsCodec *tmp_prefcodec, *tmp_outprefcodec;
   FsParticipant *participant;
+  GError *error = NULL;
+  GstCaps *caps;
 
   setup_codec_tests (&dat, &participant, FS_MEDIA_TYPE_VIDEO);
 
@@ -2047,6 +2090,12 @@ GST_START_TEST (test_rtpcodecs_nego_h264)
       "identity");
   fs_codec_add_optional_parameter (prefcodec, "farstream-send-profile",
       "identity");
+
+  caps = gst_caps_from_string ("application/x-rtp, media=(string)video,"
+      " clock-rate=90000, encoding-name=H264; video/x-raw");
+  fail_unless (fs_session_set_allowed_caps (dat->session, caps, caps, &error));
+  g_assert_no_error (error);
+  gst_caps_unref (caps);
 
   codec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
   outcodec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
@@ -2169,8 +2218,10 @@ GST_START_TEST (test_rtpcodecs_nego_feedback)
   FsCodec *prefcodec = NULL;
   FsCodec *outprefcodec = NULL;
   FsParticipant *participant;
-  setup_codec_tests (&dat, &participant, FS_MEDIA_TYPE_VIDEO);
+  GError *error = NULL;
+  GstCaps *caps;
 
+  setup_codec_tests (&dat, &participant, FS_MEDIA_TYPE_VIDEO);
 
   outprefcodec = fs_codec_new (FS_CODEC_ID_ANY, "H264",
       FS_MEDIA_TYPE_VIDEO, 90000);
@@ -2179,6 +2230,12 @@ GST_START_TEST (test_rtpcodecs_nego_feedback)
       "identity");
   fs_codec_add_optional_parameter (prefcodec, "farstream-send-profile",
       "identity");
+
+  caps = gst_caps_from_string ("application/x-rtp, media=(string)video,"
+      " clock-rate=90000, encoding-name=H264; video/x-raw");
+  fail_unless (fs_session_set_allowed_caps (dat->session, caps, caps, &error));
+  g_assert_no_error (error);
+  gst_caps_unref (caps);
 
   codec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
   outcodec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
