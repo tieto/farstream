@@ -341,7 +341,9 @@ fs_rtp_bitrate_adapter_getcaps (FsRtpBitrateAdapter *self, GstPad *pad,
     return peer_caps;
 
   GST_OBJECT_LOCK (self);
-  bitrate = self->last_bitrate;
+  bitrate = self->bitrate;
+  if (pad == self->sinkpad)
+    self->last_bitrate = self->bitrate;
   GST_OBJECT_UNLOCK (self);
 
   if (bitrate == G_MAXUINT)
@@ -451,21 +453,16 @@ fs_rtp_bitrate_adapter_get_bitrate_locked (FsRtpBitrateAdapter *self)
 static void
 fs_rtp_bitrate_adapter_updated_unlock (FsRtpBitrateAdapter *self)
 {
-  guint bitrate;
   gboolean changed = FALSE;
 
-  bitrate = fs_rtp_bitrate_adapter_get_bitrate_locked (self);
+  self->bitrate = fs_rtp_bitrate_adapter_get_bitrate_locked (self);
 
-  GST_DEBUG ("Computed average lower bitrate: %u", bitrate);
-  if (bitrate == G_MAXUINT)
+  GST_DEBUG ("Computed average lower bitrate: %u", self->bitrate);
+  if (self->bitrate != G_MAXUINT &&
+      (self->bitrate > self->last_bitrate * 1.1 ||
+          self->bitrate < self->last_bitrate * 0.9))
   {
-    GST_OBJECT_UNLOCK (self);
-    return;
-  }
-  if (bitrate > self->last_bitrate * 1.1 ||
-      bitrate < self->last_bitrate * 0.9)
-  {
-    self->last_bitrate = bitrate;
+    self->last_bitrate = self->bitrate;
     changed = TRUE;
   }
   GST_OBJECT_UNLOCK (self);
