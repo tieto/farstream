@@ -58,6 +58,7 @@ struct _FsRtpBitrateAdapter
   GstClockTime interval;
   GQueue bitrate_history;
   GstClockID clockid;
+  guint last_bitrate;
 };
 
 struct _FsRtpBitrateAdapterClass
