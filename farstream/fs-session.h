@@ -109,6 +109,7 @@ typedef enum _FsDTMFMethod
  * @list_transmitters: Returns a list of the available transmitters
  * @get_stream_transmitter_type: Returns the GType of the stream transmitter
  * @codecs_need_resend: Returns the list of codecs that need resending
+ * @set_allowed_caps: Set the possible allowed src and sink caps
  *
  * You must override at least new_stream in a subclass.
  */
@@ -142,8 +143,11 @@ struct _FsSessionClass
   GList* (* codecs_need_resend) (FsSession *session, GList *old_codecs,
       GList *new_codecs);
 
+  gboolean (* set_allowed_caps) (FsSession *session, GstCaps *sink_caps,
+      GstCaps *src_caps, GError **error);
+
   /*< private >*/
-  gpointer _padding[8];
+  gpointer _padding[7];
 };
 
 /**
@@ -192,6 +196,9 @@ GType fs_session_get_stream_transmitter_type (FsSession *session,
 
 GList* fs_session_codecs_need_resend (FsSession *session,
     GList *old_codecs, GList *new_codecs);
+
+gboolean fs_session_set_allowed_caps (FsSession *session, GstCaps *sink_caps,
+    GstCaps *src_caps, GError **error);
 
 void fs_session_destroy (FsSession *session);
 

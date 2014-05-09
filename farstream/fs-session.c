@@ -169,7 +169,9 @@ enum
   PROP_CODECS,
   PROP_CODECS_WITHOUT_CONFIG,
   PROP_CURRENT_SEND_CODEC,
-  PROP_TYPE_OF_SERVICE
+  PROP_TYPE_OF_SERVICE,
+  PROP_ALLOWED_SRC_CAPS,
+  PROP_ALLOWED_SINK_CAPS
 };
 
 /*
@@ -386,6 +388,36 @@ fs_session_class_init (FsSessionClass *klass)
           "The IP Type of Service to set on sent packets",
           0, 255, 0,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
+  /**
+   * FsSession:allowed-sink-caps:
+   *
+   * These are the #GstCaps that can be fed into the session,
+   * they are used to filter the codecs to only those that can
+   * accepted those caps as input.
+   */
+  g_object_class_install_property (gobject_class,
+      PROP_ALLOWED_SINK_CAPS,
+      g_param_spec_boxed ("allowed-sink-caps",
+        "Allowed sink caps",
+        "GstCaps that can be fed into the session",
+        GST_TYPE_CAPS,
+        G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
+
+  /**
+   * FsSession:allowed-src-caps:
+   *
+   * These are the #GstCaps that the session can produce,
+   * they are used to filter the codecs to only those that can
+   * accepted those caps as output.
+   */
+  g_object_class_install_property (gobject_class,
+      PROP_ALLOWED_SRC_CAPS,
+      g_param_spec_boxed ("allowed-src-caps",
+        "Allowed source caps",
+        "GstCaps that the session can produce",
+        GST_TYPE_CAPS,
+        G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
 
   /**
@@ -935,4 +967,50 @@ fs_session_parse_telephony_event_stopped (FsSession *session,
     gst_structure_get_enum (s, "method", FS_TYPE_DTMF_METHOD, (gint*) method);
 
   return TRUE;
+}
+
+/**
+ * fs_session_set_allowed_caps:
+ * @session: a #FsSession
+ * @sink_caps: (allow-none): Caps for the sink pad or %NULL
+ * @src_caps: (allow-none): Caps for the src pad or %NULL
+ * @error: the location where a #GError can be stored or %NULL
+ *
+ * Sets the allowed caps for the sink and source pads for this #FsSession.
+ * Only codecs that can take the input specified by the @sink_caps and
+ * can produce output as specified by the @src_caps will be produced
+ * in the #FsSession:codecs property and so only those will be negotiated.
+ *
+ * If %NULL is passed to either @src_caps or @sink_caps, it is not changed.
+ *
+ * The default is "video/x-raw" for a video stream, "audio/x-raw" for an audio
+ * stream and "ANY" for an application stream.
+ *
+ * The values can be retrived using the #FsSession:allowed-src-caps and
+ * #FsSession:allowed-sink-caps properties.
+ *
+ * Returns: %TRUE if the new filter caps were acceptable.
+ *
+ * Since: UNRELEASED
+ */
+gboolean
+fs_session_set_allowed_caps (FsSession *session, GstCaps *sink_caps,
+    GstCaps *src_caps, GError **error)
+{
+  FsSessionClass *klass;
+
+  g_return_val_if_fail (FS_IS_SESSION (session), FALSE);
+
+  if (sink_caps == NULL && src_caps == NULL)
+    return TRUE;
+
+  klass = FS_SESSION_GET_CLASS (session);
+
+  if (klass->set_allowed_caps)
+    return klass->set_allowed_caps (session, sink_caps, src_caps, error);
+
+  g_set_error (error, FS_ERROR, FS_ERROR_NOT_IMPLEMENTED,
+      "set_allowed_caps is not implemented");
+
+  return FALSE;
 }
