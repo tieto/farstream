@@ -558,14 +558,14 @@ remove_duplicates (GList *list)
 static GList *
 copy_element_list (GList *inlist)
 {
-  GList *outlist = NULL;
+  GQueue outqueue = G_QUEUE_INIT;
   GList *tmp1;
 
   for (tmp1 = g_list_first (inlist); tmp1; tmp1 = g_list_next (tmp1)) {
-    outlist = g_list_append (outlist, g_list_copy (tmp1->data));
+    g_queue_push_tail (&outqueue, g_list_copy (tmp1->data));
     g_list_foreach (tmp1->data, (GFunc) gst_object_ref, NULL);
   }
-  return outlist;
+  return outqueue.head;
 }
 
 /* insert given codec_cap list into list_codecs and list_codec_blueprints */
