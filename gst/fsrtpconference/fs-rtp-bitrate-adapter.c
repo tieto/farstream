@@ -30,6 +30,7 @@
 #include <math.h>
 
 /* This is a magical value that smarter people discovered */
+/* This is H.264... other codecs (H.265 / VP9 ) will have different numbers */
 #define  H264_MAX_PIXELS_PER_BIT 25
 
 GST_DEBUG_CATEGORY_STATIC (fs_rtp_bitrate_adapter_debug);
@@ -167,9 +168,6 @@ static void
 fs_rtp_bitrate_adapter_finalize (GObject *object)
 {
   FsRtpBitrateAdapter *self = FS_RTP_BITRATE_ADAPTER (object);
-
-  if (self->caps)
-    gst_caps_unref (self->caps);
 
   if (self->system_clock)
     gst_object_unref (self->system_clock);
@@ -467,9 +465,6 @@ fs_rtp_bitrate_adapter_updated_unlock (FsRtpBitrateAdapter *self)
   if (bitrate > self->last_bitrate * 1.1 ||
       bitrate < self->last_bitrate * 0.9)
   {
-    if (self->caps)
-      gst_caps_unref (self->caps);
-    self->caps = caps_from_bitrate ("video/x-raw", bitrate);
     self->last_bitrate = bitrate;
     changed = TRUE;
   }
