@@ -52,16 +52,11 @@ enum
   PROP_0,
   PROP_BITRATE,
   PROP_INTERVAL,
-  PROP_CAPS,
 };
 
 #define PROP_INTERVAL_DEFAULT (10 * GST_SECOND)
 
 static void fs_rtp_bitrate_adapter_finalize (GObject *object);
-static void fs_rtp_bitrate_adapter_get_property (GObject *object,
-    guint prop_id,
-    GValue *value,
-    GParamSpec *pspec);
 static void fs_rtp_bitrate_adapter_set_property (GObject *object,
     guint prop_id,
     const GValue *value,
@@ -79,15 +74,12 @@ static GstStateChangeReturn
 fs_rtp_bitrate_adapter_change_state (GstElement *element,
     GstStateChange transition);
 
-static GParamSpec *caps_pspec;
-
 static void
 fs_rtp_bitrate_adapter_class_init (FsRtpBitrateAdapterClass *klass)
 {
   GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
   GstElementClass *gstelement_class = GST_ELEMENT_CLASS (klass);
 
-  gobject_class->get_property = fs_rtp_bitrate_adapter_get_property;
   gobject_class->set_property = fs_rtp_bitrate_adapter_set_property;
   gobject_class->finalize = fs_rtp_bitrate_adapter_finalize;
 
@@ -124,13 +116,6 @@ fs_rtp_bitrate_adapter_class_init (FsRtpBitrateAdapterClass *klass)
           "The minimum interval before adapting after a change",
           0, G_MAXUINT64, PROP_INTERVAL_DEFAULT,
           G_PARAM_WRITABLE | G_PARAM_STATIC_STRINGS));
-
- caps_pspec = g_param_spec_pointer ("caps",
-     "Current input caps",
-     "The caps that getcaps on the sink pad would return",
-     G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
- g_object_class_install_property (gobject_class,
-     PROP_CAPS, caps_pspec);
 }
 
 struct BitratePoint
@@ -607,30 +592,6 @@ fs_rtp_bitrate_adapter_set_property (GObject *object,
     GST_OBJECT_UNLOCK (self);
 }
 
-
-static void
-fs_rtp_bitrate_adapter_get_property (GObject *object,
-    guint prop_id,
-    GValue *value,
-    GParamSpec *pspec)
-{
-  FsRtpBitrateAdapter *self = FS_RTP_BITRATE_ADAPTER (object);
-
-  GST_OBJECT_LOCK (self);
-
-  switch (prop_id)
-  {
-    case PROP_CAPS:
-      if (self->caps)
-        g_value_set_pointer (value, gst_caps_ref (self->caps));
-      break;
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-      break;
-  }
-
-  GST_OBJECT_UNLOCK (self);
-}
 
 static GstStateChangeReturn
 fs_rtp_bitrate_adapter_change_state (GstElement *element,
