@@ -249,7 +249,7 @@ video_caps_add (GstCaps *caps, const gchar *type,
 }
 
 static void
-add_one_resolution_inner (GstCaps *caps, GstCaps *caps_gray,
+add_one_resolution_inner (GstCaps *caps,
     guint min_framerate, guint max_framerate, guint width, guint height,
     guint par_n, guint par_d)
 {
@@ -258,9 +258,9 @@ add_one_resolution_inner (GstCaps *caps, GstCaps *caps_gray,
 }
 
 static void
-add_one_resolution (GstCaps *caps, GstCaps *caps_gray,
-    GstCaps *lower_caps, GstCaps *lower_caps_gray,
-    GstCaps *extra_low_caps, GstCaps *extra_low_caps_gray,
+add_one_resolution (GstCaps *caps,
+    GstCaps *lower_caps,
+    GstCaps *extra_low_caps,
     guint max_pixels_per_second,
     guint width, guint height,
     guint par_n, guint par_d)
@@ -274,24 +274,21 @@ add_one_resolution (GstCaps *caps, GstCaps *caps_gray,
 
   if (max_framerate >= 20)
   {
-    add_one_resolution_inner (caps, caps_gray,
-        20, 66, width, height, par_n, par_d);
-    add_one_resolution_inner (lower_caps, lower_caps_gray,
-        10, 66, width, height, par_n, par_d);
-    add_one_resolution_inner (extra_low_caps, extra_low_caps_gray,
-        1, 66, width, height, par_n, par_d);
+    add_one_resolution_inner (caps, 20, 66, width, height, par_n, par_d);
+    add_one_resolution_inner (lower_caps, 10, 66, width, height, par_n, par_d);
+    add_one_resolution_inner (extra_low_caps, 1, 66, width, height,
+        par_n, par_d);
   }
   else if (max_framerate >= 10)
   {
-    add_one_resolution_inner (lower_caps, lower_caps_gray,
-        10, 66, width, height, par_n, par_d);
-    add_one_resolution_inner (extra_low_caps, extra_low_caps_gray,
-        1, 66, width, height, par_n, par_d);
+    add_one_resolution_inner (lower_caps, 10, 66, width, height, par_n, par_d);
+    add_one_resolution_inner (extra_low_caps, 1, 66, width, height,
+        par_n, par_d);
   }
   else if (max_framerate > 0)
   {
-    add_one_resolution_inner (extra_low_caps, extra_low_caps_gray,
-        1, 66, width, height, par_n, par_d);
+    add_one_resolution_inner (extra_low_caps, 1, 66, width, height,
+        par_n, par_d);
   }
 }
 
@@ -300,11 +297,8 @@ GstCaps *
 caps_from_bitrate (guint bitrate)
 {
   GstCaps *caps = gst_caps_new_empty ();
-  GstCaps *caps_gray = gst_caps_new_empty ();
   GstCaps *lower_caps = gst_caps_new_empty ();
-  GstCaps *lower_caps_gray = gst_caps_new_empty ();
   GstCaps *extra_low_caps = gst_caps_new_empty ();
-  GstCaps *extra_low_caps_gray = gst_caps_new_empty ();
   GstCaps *template_caps;
   guint max_pixels_per_second = bitrate * H264_MAX_PIXELS_PER_BIT;
   gint i;
@@ -313,34 +307,22 @@ caps_from_bitrate (guint bitrate)
   max_pixels_per_second = MAX (max_pixels_per_second, 128 * 96);
 
   for (i = 0; one_on_one_resolutions[i].width > 1; i++)
-    add_one_resolution (caps, caps_gray, lower_caps, lower_caps_gray,
-        extra_low_caps, extra_low_caps_gray,
+    add_one_resolution (caps, lower_caps, extra_low_caps,
         max_pixels_per_second,
         one_on_one_resolutions[i].width,
         one_on_one_resolutions[i].height, 1, 1);
 
   for (i = 0; twelve_on_eleven_resolutions[i].width > 1; i++)
-    add_one_resolution (caps, caps_gray, lower_caps, lower_caps_gray,
-        extra_low_caps, extra_low_caps_gray,
+    add_one_resolution (caps, lower_caps, extra_low_caps,
         twelve_on_eleven_resolutions[i].width,
         twelve_on_eleven_resolutions[i].height,
         max_pixels_per_second, 12, 11);
 
   gst_caps_append (caps, lower_caps);
   if (gst_caps_is_empty (caps))
-  {
     gst_caps_append (caps, extra_low_caps);
-  }
   else
-  {
     gst_caps_unref (extra_low_caps);
-    gst_caps_unref (extra_low_caps_gray);
-    extra_low_caps_gray = NULL;
-  }
-  gst_caps_append (caps, caps_gray);
-  gst_caps_append (caps, lower_caps_gray);
-  if (extra_low_caps_gray)
-    gst_caps_append (caps, extra_low_caps_gray);
 
   template_caps =
       gst_static_pad_template_get_caps (&fs_rtp_bitrate_adapter_sink_template);
