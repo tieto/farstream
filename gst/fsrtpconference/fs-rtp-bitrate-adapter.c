@@ -229,13 +229,13 @@ static const struct Resolution twelve_on_eleven_resolutions[] =
 };
 
 static void
-video_caps_add (GstCaps *caps, const gchar *type,
+video_caps_add (GstCaps *caps, const gchar *media_type,
     guint min_framerate, guint max_framerate, guint width, guint height,
     guint par_n, guint par_d)
 {
   GstStructure *s;
 
-  s = gst_structure_new (type,
+  s = gst_structure_new (media_type,
       "pixel-aspect-ratio", GST_TYPE_FRACTION, par_n, par_d,
       "width", G_TYPE_INT, width,
       "height", G_TYPE_INT, height,
@@ -249,16 +249,16 @@ video_caps_add (GstCaps *caps, const gchar *type,
 }
 
 static void
-add_one_resolution_inner (GstCaps *caps,
+add_one_resolution_inner (GstCaps *caps, const gchar *media_type, 
     guint min_framerate, guint max_framerate, guint width, guint height,
     guint par_n, guint par_d)
 {
-  video_caps_add (caps, "video/x-raw", min_framerate, max_framerate,
+  video_caps_add (caps, media_type, min_framerate, max_framerate,
       width, height, par_n, par_d);
 }
 
 static void
-add_one_resolution (GstCaps *caps,
+add_one_resolution (const gchar *media_type, GstCaps *caps,
     GstCaps *lower_caps,
     GstCaps *extra_low_caps,
     guint max_pixels_per_second,
@@ -274,27 +274,30 @@ add_one_resolution (GstCaps *caps,
 
   if (max_framerate >= 20)
   {
-    add_one_resolution_inner (caps, 20, 66, width, height, par_n, par_d);
-    add_one_resolution_inner (lower_caps, 10, 66, width, height, par_n, par_d);
-    add_one_resolution_inner (extra_low_caps, 1, 66, width, height,
+    add_one_resolution_inner (caps, media_type, 20, 66, width, height,
+        par_n, par_d);
+    add_one_resolution_inner (lower_caps, media_type, 10, 66, width, height,
+        par_n, par_d);
+    add_one_resolution_inner (extra_low_caps, media_type, 1, 66, width, height,
         par_n, par_d);
   }
   else if (max_framerate >= 10)
   {
-    add_one_resolution_inner (lower_caps, 10, 66, width, height, par_n, par_d);
-    add_one_resolution_inner (extra_low_caps, 1, 66, width, height,
+    add_one_resolution_inner (lower_caps, media_type, 10, 66, width, height,
+        par_n, par_d);
+    add_one_resolution_inner (extra_low_caps, media_type, 1, 66, width, height,
         par_n, par_d);
   }
   else if (max_framerate > 0)
   {
-    add_one_resolution_inner (extra_low_caps, 1, 66, width, height,
+    add_one_resolution_inner (extra_low_caps, media_type, 1, 66, width, height,
         par_n, par_d);
   }
 }
 
 
 GstCaps *
-caps_from_bitrate (guint bitrate)
+caps_from_bitrate (const gchar *media_type, guint bitrate)
 {
   GstCaps *caps = gst_caps_new_empty ();
   GstCaps *lower_caps = gst_caps_new_empty ();
@@ -307,13 +310,13 @@ caps_from_bitrate (guint bitrate)
   max_pixels_per_second = MAX (max_pixels_per_second, 128 * 96);
 
   for (i = 0; one_on_one_resolutions[i].width > 1; i++)
-    add_one_resolution (caps, lower_caps, extra_low_caps,
+    add_one_resolution (media_type, caps, lower_caps, extra_low_caps,
         max_pixels_per_second,
         one_on_one_resolutions[i].width,
         one_on_one_resolutions[i].height, 1, 1);
 
   for (i = 0; twelve_on_eleven_resolutions[i].width > 1; i++)
-    add_one_resolution (caps, lower_caps, extra_low_caps,
+    add_one_resolution (media_type, caps, lower_caps, extra_low_caps,
         twelve_on_eleven_resolutions[i].width,
         twelve_on_eleven_resolutions[i].height,
         max_pixels_per_second, 12, 11);
@@ -483,7 +486,7 @@ fs_rtp_bitrate_adapter_updated_unlock (FsRtpBitrateAdapter *self)
     GST_OBJECT_UNLOCK (self);
     return;
   }
-  self->caps = caps_from_bitrate (bitrate);
+  self->caps = caps_from_bitrate ("video/x-raw", bitrate);
   GST_OBJECT_UNLOCK (self);
 
   current_caps = gst_pad_get_current_caps (self->sinkpad);
