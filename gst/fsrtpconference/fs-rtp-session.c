@@ -104,7 +104,9 @@ enum
   PROP_TOS,
   PROP_SEND_BITRATE,
   PROP_RTP_HEADER_EXTENSIONS,
-  PROP_RTP_HEADER_EXTENSION_PREFERENCES
+  PROP_RTP_HEADER_EXTENSION_PREFERENCES,
+  PROP_ALLOWED_SINK_CAPS,
+  PROP_ALLOWED_SRC_CAPS,
 };
 
 #define DEFAULT_NO_RTCP_TIMEOUT (7000)
@@ -215,6 +217,8 @@ struct _FsRtpSessionPrivate
   /* Protected by session mutex */
   guint send_bitrate;
 
+  /* Protected by session mutex */
+  guint caps_generation;
   GstCaps *input_caps;
   GstCaps *output_caps;
 
@@ -324,6 +328,9 @@ static void
 fs_rtp_session_set_send_bitrate (FsRtpSession *self, guint bitrate);
 static gboolean
 codecbin_set_bitrate (GstElement *codecbin, guint bitrate);
+static gboolean
+fs_rtp_session_set_allowed_caps (FsSession *session, GstCaps *sink_caps,
+    GstCaps *src_caps, GError **error);
 
 //static guint signals[LAST_SIGNAL] = { 0 };
 
@@ -350,6 +357,7 @@ fs_rtp_session_class_init (FsRtpSessionClass *klass)
   session_class->get_stream_transmitter_type =
     fs_rtp_session_get_stream_transmitter_type;
   session_class->codecs_need_resend = fs_rtp_session_get_codecs_need_resend;
+  session_class->set_allowed_caps = fs_rtp_session_set_allowed_caps;
 
   g_object_class_override_property (gobject_class,
     PROP_CONFERENCE, "conference");
@@ -369,6 +377,10 @@ fs_rtp_session_class_init (FsRtpSessionClass *klass)
     PROP_CURRENT_SEND_CODEC, "current-send-codec");
   g_object_class_override_property (gobject_class,
     PROP_TOS, "tos");
+  g_object_class_override_property (gobject_class,
+    PROP_ALLOWED_SINK_CAPS, "allowed-sink-caps");
+  g_object_class_override_property (gobject_class,
+    PROP_ALLOWED_SRC_CAPS, "allowed-src-caps");
 
   g_object_class_install_property (gobject_class,
       PROP_NO_RTCP_TIMEOUT,
@@ -944,6 +956,16 @@ fs_rtp_session_get_property (GObject *object,
     case PROP_RTP_HEADER_EXTENSION_PREFERENCES:
       FS_RTP_SESSION_LOCK (self);
       g_value_set_boxed (value, self->priv->hdrext_preferences);
+      FS_RTP_SESSION_UNLOCK (self);
+      break;
+    case PROP_ALLOWED_SINK_CAPS:
+      FS_RTP_SESSION_LOCK (self);
+      g_value_set_boxed (value, self->priv->input_caps);
+      FS_RTP_SESSION_UNLOCK (self);
+      break;
+    case PROP_ALLOWED_SRC_CAPS:
+      FS_RTP_SESSION_LOCK (self);
+      g_value_set_boxed (value, self->priv->output_caps);
       FS_RTP_SESSION_UNLOCK (self);
       break;
     default:
@@ -5155,4 +5177,64 @@ invalid:
   fs_rtp_session_try_sending_dtmf_event (self);
 
   return TRUE;
+}
+
+static gboolean
+fs_rtp_session_set_allowed_caps (FsSession *session, GstCaps *sink_caps,
+    GstCaps *src_caps, GError **error)
+{
+  FsRtpSession *self = FS_RTP_SESSION (session);
+  GstCaps *old_input_caps = NULL;
+  GstCaps *old_output_caps = NULL;
+  gboolean ret;
+  guint current_generation;
+
+  if (fs_rtp_session_has_disposed_enter (self, error))
+    return FALSE;
+
+  FS_RTP_SESSION_LOCK (self);
+  if (sink_caps)
+  {
+    old_input_caps = gst_caps_ref (self->priv->input_caps);
+    gst_caps_replace (&self->priv->input_caps, sink_caps);
+  }
+  if (src_caps)
+  {
+    old_output_caps = gst_caps_ref (self->priv->output_caps);
+    gst_caps_replace (&self->priv->output_caps, src_caps);
+  }
+  current_generation = self->priv->caps_generation;
+  self->priv->caps_generation++;
+  FS_RTP_SESSION_UNLOCK (self);
+
+  ret = fs_rtp_session_update_codecs (self, NULL, NULL, error);
+
+  if (ret)
+  {
+    if (sink_caps)
+      g_object_notify ((GObject *) self, "allowed-sink-caps");
+    if (src_caps)
+      g_object_notify ((GObject *) self, "allowed-src-caps");
+  }
+  else
+  {
+    FS_RTP_SESSION_LOCK (self);
+    if (self->priv->caps_generation == current_generation)
+    {
+      if (old_input_caps)
+        gst_caps_replace (&self->priv->input_caps, old_input_caps);
+      if (old_output_caps)
+        gst_caps_replace (&self->priv->output_caps, old_output_caps);
+
+      self->priv->caps_generation++;
+    }
+    FS_RTP_SESSION_UNLOCK (self);
+    GST_WARNING ("Invalid new codec preferences");
+  }
+
+  gst_caps_replace (&old_input_caps, NULL);
+  gst_caps_replace (&old_output_caps, NULL);
+
+  fs_rtp_session_has_disposed_exit (self);
+  return ret;
 }
