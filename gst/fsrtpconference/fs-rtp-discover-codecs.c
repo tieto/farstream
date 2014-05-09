@@ -1717,7 +1717,7 @@ create_codec_bin_from_blueprint (const FsCodec *codec,
 }
 
 
-static GstCaps *
+GstCaps *
 codec_get_in_out_caps (FsCodec *codec, GstCaps *rtp_caps,
     FsStreamDirection direction, GstElement *codecbin)
 {

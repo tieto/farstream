@@ -69,6 +69,9 @@ typedef struct _CodecAssociation {
 
 typedef struct _CodecPreference {
   FsCodec *codec;
+
+  GstCaps *input_caps;
+  GstCaps *output_caps;
 } CodecPreference;
 
 GList *validate_codecs_configuration (

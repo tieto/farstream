@@ -65,6 +65,8 @@ GstElement * create_codec_bin_from_blueprint (const FsCodec *codec,
     CodecBlueprint *blueprint, const gchar *name, FsStreamDirection direction,
     GError **error);
 
+GstCaps *codec_get_in_out_caps (FsCodec *codec, GstCaps *rtp_caps,
+    FsStreamDirection direction, GstElement *codecbin);
 
 /*
  * Only exported for the caching stuff

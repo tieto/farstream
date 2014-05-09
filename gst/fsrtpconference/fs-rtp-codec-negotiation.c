@@ -163,22 +163,23 @@ find_matching_pad (gconstpointer a, gconstpointer b)
 }
 
 static gboolean
-validate_codec_profile (FsCodec *codec, const gchar *bin_description,
+validate_codec_profile (CodecPreference *cp, const gchar *bin_description,
     FsStreamDirection direction)
 {
   GError *error = NULL;
-  GstElement *bin = NULL;
+  GstElement *codecbin = NULL;
   guint src_pad_count = 0, sink_pad_count = 0;
   GstCaps *caps;
   GstIterator *iter;
   gboolean has_matching_pad = FALSE;
   GValue val = {0,};
+  gboolean ret = FALSE;
 
-  bin = parse_bin_from_description_all_linked (bin_description, direction,
+  codecbin = parse_bin_from_description_all_linked (bin_description, direction,
       &src_pad_count, &sink_pad_count, &error);
 
   /* if could not build bin, fail */
-  if (!bin)
+  if (!codecbin)
   {
     GST_WARNING ("Could not build profile (%s): %s", bin_description,
         error->message);
@@ -187,12 +188,12 @@ validate_codec_profile (FsCodec *codec, const gchar *bin_description,
   }
   g_clear_error (&error);
 
-  caps = fs_codec_to_gst_caps (codec);
+  caps = fs_codec_to_gst_caps (cp->codec);
 
   if (direction == FS_DIRECTION_SEND)
-    iter = gst_element_iterate_src_pads (bin);
+    iter = gst_element_iterate_src_pads (codecbin);
   else if (direction == FS_DIRECTION_RECV)
-    iter = gst_element_iterate_sink_pads (bin);
+    iter = gst_element_iterate_sink_pads (codecbin);
   else
     g_assert_not_reached ();
 
@@ -206,20 +207,14 @@ validate_codec_profile (FsCodec *codec, const gchar *bin_description,
     GST_WARNING ("Invalid profile (%s), has no %s pad that matches the codec"
         " details", (direction == FS_DIRECTION_SEND) ? "src" : "sink",
         bin_description);
-    gst_caps_unref (caps);
-    gst_object_unref (bin);
-    return FALSE;
+    goto done;
   }
-
-  gst_caps_unref (caps);
-  gst_object_unref (bin);
-
   if (direction == FS_DIRECTION_SEND)
   {
     if (src_pad_count == 0)
     {
       GST_WARNING ("Invalid profile (%s), has 0 src pad", bin_description);
-      return FALSE;
+      goto done;
     }
   }
   else if (direction == FS_DIRECTION_RECV)
@@ -228,22 +223,39 @@ validate_codec_profile (FsCodec *codec, const gchar *bin_description,
     {
       GST_WARNING ("Invalid profile (%s), has %u src pads, should have one",
           bin_description, src_pad_count);
-      return FALSE;
+      goto done;
     }
-  }
-  else
-  {
-    g_assert_not_reached ();
   }
 
   if (sink_pad_count != 1)
   {
     GST_WARNING ("Invalid profile (%s), has %u sink pads, should have one",
         bin_description, sink_pad_count);
-    return FALSE;
+    goto done;
   }
 
-  return TRUE;
+  if (direction == FS_DIRECTION_SEND)
+  {
+    cp->input_caps = codec_get_in_out_caps (cp->codec, caps, FS_DIRECTION_SEND,
+        codecbin);
+    if (!cp->input_caps)
+      goto done;
+  }
+  else if (direction == FS_DIRECTION_RECV)
+  {
+    cp->output_caps = codec_get_in_out_caps (cp->codec, caps, FS_DIRECTION_RECV,
+        codecbin);
+    if (!cp->output_caps)
+      goto done;
+  }
+
+  ret = TRUE;
+done:
+
+  gst_caps_unref (caps);
+  gst_object_unref (codecbin);
+
+  return ret;
 }
 
 static gboolean
@@ -284,12 +296,15 @@ validate_codecs_configuration (FsMediaType media_type, GList *blueprints,
     FsCodec *codec = codec_e->data;
     GList *blueprint_e = NULL;
     FsCodecParameter *param;
-    CodecPreference *cp;
+    CodecPreference *cp = NULL;
 
     /* Check if codec is for the wrong media_type.. this would be wrong
      */
     if (media_type != codec->media_type)
       goto ignore_this_codec;
+
+    cp = g_slice_new0 (CodecPreference);
+    cp->codec = fs_codec_copy (codec);
 
     if (codec->id >= 0 && codec->id < 128 && codec->encoding_name &&
         !g_ascii_strcasecmp (codec->encoding_name, "reserve-pt"))
@@ -319,12 +334,12 @@ validate_codecs_configuration (FsMediaType media_type, GList *blueprints,
 
     /* If there are send and/or recv profiles, lets test them */
     param = fs_codec_get_optional_parameter (codec, RECV_PROFILE_ARG, NULL);
-    if (param && !validate_codec_profile (codec, param->value,
+    if (param && !validate_codec_profile (cp, param->value,
             FS_DIRECTION_RECV))
       goto ignore_this_codec;
 
     param = fs_codec_get_optional_parameter (codec, SEND_PROFILE_ARG, NULL);
-    if (param && !validate_codec_profile (codec, param->value,
+    if (param && !validate_codec_profile (cp, param->value,
             FS_DIRECTION_SEND))
       goto ignore_this_codec;
 
@@ -346,11 +361,12 @@ validate_codecs_configuration (FsMediaType media_type, GList *blueprints,
     }
 
   accept_codec:
-    cp = g_slice_new0 (CodecPreference);
-    cp->codec = fs_codec_copy (codec);
-    g_queue_push_tail (&result, cp);
 
+    g_queue_push_tail (&result, cp);
+    continue;
   ignore_this_codec:
+    if (cp)
+      codec_preference_destroy (cp);
     continue;
   }
 
@@ -1647,6 +1663,9 @@ void
 codec_preference_destroy (CodecPreference *cp)
 {
   fs_codec_destroy (cp->codec);
+
+  gst_caps_replace (&cp->input_caps, NULL);
+  gst_caps_replace (&cp->output_caps, NULL);
 
   g_slice_free (CodecPreference, cp);
 }
