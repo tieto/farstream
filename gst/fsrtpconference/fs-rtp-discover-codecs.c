@@ -484,6 +484,8 @@ remove_dynamic_duplicates (GList *list)
 
     /* let's skip all non static payload types */
     value = gst_structure_get_value (rtp_struct, "payload");
+    if (!value)
+      continue;
     type = G_VALUE_TYPE (value);
     if (type != G_TYPE_INT)
     {
