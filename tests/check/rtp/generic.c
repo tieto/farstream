@@ -147,7 +147,7 @@ simple_conference_add_stream (
 }
 
 
-void
+static void
 cleanup_simple_stream (struct SimpleTestStream *st)
 {
   if (st->stream)

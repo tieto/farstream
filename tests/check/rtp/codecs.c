@@ -2442,6 +2442,48 @@ GST_START_TEST (test_rtpcodecs_codec_need_resend)
 GST_END_TEST;
 
 
+GST_START_TEST (test_rtpcodecs_application_xdata)
+{
+  struct SimpleTestConference *dat;
+  struct SimpleTestStream *st;
+  GstCaps *caps;
+  GError *error = NULL;
+  GList *codecs;
+  FsCodec *codec;
+
+  dat = setup_simple_conference_full (1, "fsrtpconference", "bob@127.0.0.1",
+      FS_MEDIA_TYPE_APPLICATION);
+
+  caps = gst_caps_from_string ("application/octet-stream");
+  fail_unless (fs_session_set_allowed_caps (dat->session, caps, caps, &error));
+  g_assert_no_error (error);
+  gst_caps_unref (caps);
+
+  g_object_get (dat->session, "codecs-without-config", &codecs, NULL);
+  fail_unless (g_list_length (codecs) == 1);
+  codec = codecs->data;
+  fail_unless_equals_string (codec->encoding_name, "X-DATA");
+  fail_unless_equals_int (codec->clock_rate, 90000);
+
+  st = simple_conference_add_stream (dat, NULL, "rawudp", 0, NULL);
+
+  fail_unless (fs_stream_set_remote_codecs (st->stream, codecs, &error));
+  g_assert_no_error (error);
+
+  fs_codec_list_destroy (codecs);
+
+  g_object_get (dat->session, "codecs-without-config", &codecs, NULL);
+  fail_unless (g_list_length (codecs) == 1);
+  codec = codecs->data;
+  fail_unless_equals_string (codec->encoding_name, "X-DATA");
+  fail_unless_equals_int (codec->clock_rate, 90000);
+  fs_codec_list_destroy (codecs);
+
+
+  cleanup_simple_conference (dat);
+}
+GST_END_TEST;
+
 static Suite *
 fsrtpcodecs_suite (void)
 {
@@ -2534,7 +2576,9 @@ fsrtpcodecs_suite (void)
   tcase_add_test (tc_chain, test_rtpcodecs_codec_need_resend);
   suite_add_tcase (s, tc_chain);
 
-
+  tc_chain = tcase_create ("fsrtpcodecs_application_xdata");
+  tcase_add_test (tc_chain, test_rtpcodecs_application_xdata);
+  suite_add_tcase (s, tc_chain);
 
   return s;
 }
