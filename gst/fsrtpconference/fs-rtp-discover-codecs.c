@@ -73,7 +73,8 @@ static GList *remove_duplicates (GList *list);
 static void parse_codec_cap_list (GList *list, FsMediaType media_type);
 static GList *detect_send_codecs (GstCaps *caps);
 static GList *detect_recv_codecs (GstCaps *caps);
-static GList *codec_cap_list_intersect (GList *list1, GList *list2);
+static GList *codec_cap_list_intersect (GList *list1, GList *list2,
+    gboolean one_is_enough);
 static GList *get_plugins_filtered_from_caps (FilterFunc filter,
   GstCaps *caps, GstPadDirection direction);
 static gboolean extract_field_data (GQuark field_id,
@@ -308,7 +309,7 @@ create_codec_lists (FsMediaType media_type,
 
   /* TODO we should support non duplex as well, as in have some caps that are
    * only sendable or only receivable */
-  duplex_list = codec_cap_list_intersect (recv_list, send_list);
+  duplex_list = codec_cap_list_intersect (recv_list, send_list, FALSE);
 
   if (!duplex_list) {
     GST_WARNING ("There are no send/recv codecs");
@@ -811,7 +812,7 @@ detect_send_codecs (GstCaps *caps)
 
   /* create intersection list of codecs common
    * to encoders and payloaders lists */
-  send_list = codec_cap_list_intersect (payloaders, encoders);
+  send_list = codec_cap_list_intersect (payloaders, encoders, TRUE);
 
   if (!send_list)
   {
@@ -868,7 +869,7 @@ detect_recv_codecs (GstCaps *caps)
 
   /* create intersection list of codecs common
    * to decoders and depayloaders lists */
-  recv_list = codec_cap_list_intersect (depayloaders, decoders);
+  recv_list = codec_cap_list_intersect (depayloaders, decoders, TRUE);
 
   if (!recv_list)
   {
@@ -887,7 +888,7 @@ detect_recv_codecs (GstCaps *caps)
 
 /* returns the intersection of two lists */
 static GList *
-codec_cap_list_intersect (GList *list1, GList *list2)
+codec_cap_list_intersect (GList *list1, GList *list2, gboolean one_is_enough)
 {
   GList *walk1, *walk2;
   CodecCap *codec_cap1, *codec_cap2;
@@ -978,6 +979,16 @@ codec_cap_list_intersect (GList *list1, GList *list2)
           gst_caps_unref (rtp_intersection);
         gst_caps_unref (intersection);
       }
+    }
+
+    if (!item && one_is_enough) {
+      item = g_slice_new0 (CodecCap);
+      item->caps = gst_caps_ref (codec_cap1->caps);
+      item->rtp_caps = gst_caps_ref (codec_cap1->rtp_caps);
+      item->element_list1 = copy_element_list (codec_cap1->element_list1);
+      item->element_list2 = copy_element_list (codec_cap1->element_list2);
+
+      intersection_list = g_list_append (intersection_list, item);
     }
   }
 
