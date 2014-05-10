@@ -120,7 +120,7 @@ debug_pipeline (GstDebugLevel level, const gchar *prefix, GList *pipeline)
       first_alt = FALSE;
     }
   }
-  GST_LOG ("%s\n", str->str);
+  GST_CAT_LEVEL_LOG (GST_CAT_DEFAULT, level, NULL, str->str);
   g_string_free (str, TRUE);
 }
 
