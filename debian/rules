@@ -5,6 +5,10 @@
 
 DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
+export XDG_DATA_DIRS := /opt/gstreamer1.4/share:$(XDG_DATA_DIRS)
+export PKG_CONFIG_PATH=/opt/gstreamer1.4/lib/$(DEB_HOST_MULTIARCH)/pkgconfig
+DEB_MAKE_ENVVARS += LD_LIBRARY_PATH=/opt/gstreamer1.4/lib/x86_64-linux-gnu
+
 override_dh_install:
 	find debian/tmp/opt/gstreamer1.4/lib/ -name *.la -exec rm {} \;
 	find debian/tmp/opt/gstreamer1.4/lib/$(DEB_HOST_MULTIARCH)/farstream-0.2 -name *.a -exec rm {} \;
