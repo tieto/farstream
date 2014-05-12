@@ -1,2 +1,2 @@
-debian/tmp/usr/share/gtk-doc/html/farstream-libs-1.0
-debian/tmp/usr/share/gtk-doc/html/farstream-plugins-1.0
+debian/tmp/opt/gstreamer1.4/share/gtk-doc/html/farstream-libs-1.0
+debian/tmp/opt/gstreamer1.4/share/gtk-doc/html/farstream-plugins-1.0

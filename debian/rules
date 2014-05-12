@@ -6,9 +6,9 @@
 DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
 override_dh_install:
-	find debian/tmp/usr/lib/ -name *.la -exec rm {} \;
-	find debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/farstream-0.2 -name *.a -exec rm {} \;
-	find debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer-1.0  -name *.a -exec rm {} \;
+	find debian/tmp/opt/gstreamer1.4/lib/ -name *.la -exec rm {} \;
+	find debian/tmp/opt/gstreamer1.4/lib/$(DEB_HOST_MULTIARCH)/farstream-0.2 -name *.a -exec rm {} \;
+	find debian/tmp/opt/gstreamer1.4/lib/$(DEB_HOST_MULTIARCH)/gstreamer-1.0  -name *.a -exec rm {} \;
 	dh_install --list-missing
 
 override_dh_shlibdeps:
@@ -23,7 +23,7 @@ override_dh_makeshlibs:
 override_dh_auto_test:
 	:
 override_dh_auto_configure:
-	dh_auto_configure -- --enable-gtk-doc --disable-silent-rules
+	dh_auto_configure -- --prefix=/opt/gstreamer1.4 --enable-gtk-doc --disable-silent-rules
 
 override_dh_strip:
 	dh_strip --dbg-package=libfarstream-0.2-sipe-dbg

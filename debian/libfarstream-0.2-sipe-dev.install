@@ -1,4 +1,4 @@
-usr/include/*
-usr/lib/*/lib*.so
-usr/lib/*/pkgconfig/*
-usr/share/gir-1.0
+opt/gstreamer1.4/include/*
+opt/gstreamer1.4/lib/*/lib*.so
+opt/gstreamer1.4/lib/*/pkgconfig/*
+opt/gstreamer1.4/share/gir-1.0
