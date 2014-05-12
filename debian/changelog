@@ -1,4 +1,4 @@
-farstream-0.2 (0.2.8+sipe-1) UNRELEASED; urgency=medium
+farstream-0.2-sipe (0.2.8+sipe-1) UNRELEASED; urgency=medium
 
   * New upstream release with Sipe patches.
 

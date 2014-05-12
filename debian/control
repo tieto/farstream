@@ -1,4 +1,4 @@
-Source: farstream-0.2
+Source: farstream-0.2-sipe
 Priority: optional
 Section: libs
 Maintainer: Debian Telepathy maintainers <pkg-telepathy-maintainers@lists.alioth.debian.org>
@@ -22,7 +22,7 @@ Vcs-Git: https://anonscm.debian.org/git/pkg-telepathy/farstream-0.2.git
 Vcs-Browser: https://anonscm.debian.org/gitweb/?p=pkg-telepathy/farstream-0.2.git
 Homepage: https://www.freedesktop.org/wiki/Software/Farstream/
 
-Package: libfarstream-0.2-5
+Package: libfarstream-0.2-5-sipe
 Architecture: any
 Multi-Arch: same
 Conflicts: libfarstream-0.2-0, libfarstream-0.2-2
@@ -42,12 +42,12 @@ Description: Audio/Video communications framework: core library
  .
  This package provides the core Farstream library.
 
-Package: libfarstream-0.2-dev
+Package: libfarstream-0.2-sipe-dev
 Section: libdevel
 Architecture: any
-Depends: gir1.2-farstream-0.2,
-         libfarstream-0.2-5 (= ${binary:Version}),
-         libgstreamer1.0-dev,
+Depends: gir1.2-farstream-0.2-sipe,
+         libfarstream-0.2-5-sipe (= ${binary:Version}),
+         libgstreamer1.4-dev,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: Audio/Video communications framework: development files
@@ -59,7 +59,7 @@ Description: Audio/Video communications framework: development files
  .
  This package provides development files for Farstream.
 
-Package: libfarstream-0.2-doc
+Package: libfarstream-0.2-sipe-doc
 Section: doc
 Architecture: all
 Depends: ${misc:Depends}
@@ -72,12 +72,12 @@ Description: Audio/Video communications framework: documentation
  .
  This package provides documentation for Farstream.
 
-Package: libfarstream-0.2-dbg
+Package: libfarstream-0.2-sipe-dbg
 Section: debug
 Priority: extra
 Architecture: any
 Multi-Arch: same
-Depends: ${misc:Depends}, libfarstream-0.2-5 (= ${binary:Version}), libgstreamer1.0-dev
+Depends: ${misc:Depends}, libfarstream-0.2-5-sipe (= ${binary:Version}), libgstreamer1.4-dev
 Description: Audio/Video communications framework: debugging symbols
  The Farstream project is an effort to create a framework to deal with all
  known audio/video conferencing protocols. On one side it offers a generic
@@ -87,7 +87,7 @@ Description: Audio/Video communications framework: debugging symbols
  .
  This package provides debugging symbols for Farstream.
 
-Package: gir1.2-farstream-0.2
+Package: gir1.2-farstream-0.2-sipe
 Architecture: any
 Depends: ${gir:Depends}, ${misc:Depends}
 Section: introspection
