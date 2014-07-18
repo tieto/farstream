@@ -389,6 +389,7 @@ fs_nice_agent_init_agent (FsNiceAgent *self, GError **error)
 FsNiceAgent *
 fs_nice_agent_new (guint compatibility_mode,
     GList *preferred_local_candidates,
+    gboolean reliable,
     GError **error)
 {
   FsNiceAgent *self = NULL;
@@ -398,8 +399,12 @@ fs_nice_agent_new (guint compatibility_mode,
       "preferred-local-candidates", preferred_local_candidates,
       NULL);
 
-  self->agent = nice_agent_new (self->priv->main_context,
-      self->priv->compatibility_mode);
+  if (reliable)
+    self->agent = nice_agent_new_reliable (self->priv->main_context,
+        self->priv->compatibility_mode);
+  else
+    self->agent = nice_agent_new (self->priv->main_context,
+        self->priv->compatibility_mode);
 
   if (self->agent == NULL)
   {

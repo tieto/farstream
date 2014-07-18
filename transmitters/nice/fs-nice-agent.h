@@ -85,6 +85,7 @@ GType fs_nice_agent_get_type (void);
 
 FsNiceAgent *fs_nice_agent_new (guint compatibility_mode,
     GList *preferred_local_candidates,
+    gboolean reliable,
     GError **error);
 
 void fs_nice_agent_add_idle (FsNiceAgent *agent, GSourceFunc func,
