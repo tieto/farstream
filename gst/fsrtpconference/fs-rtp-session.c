@@ -1868,24 +1868,20 @@ _stream_known_source_packet_received (FsRtpStream *stream, guint component,
   guint32 ssrc;
   FsRtpSession *self = FS_RTP_SESSION_CAST (user_data);
   gboolean valid = FALSE;
+  GstRTPBuffer rtpbuffer = GST_RTP_BUFFER_INIT;
 
   if (fs_rtp_session_has_disposed_enter (self, NULL))
     return;
 
-
-  if (component == 1)
+  if (gst_rtp_buffer_map (buffer, GST_MAP_READ, &rtpbuffer))
   {
-      GstRTPBuffer rtpbuffer = GST_RTP_BUFFER_INIT;
 
-    if (gst_rtp_buffer_map (buffer, GST_MAP_READ, &rtpbuffer))
-    {
-      ssrc = gst_rtp_buffer_get_ssrc (&rtpbuffer);
-      gst_rtp_buffer_unmap (&rtpbuffer);
+    ssrc = gst_rtp_buffer_get_ssrc (&rtpbuffer);
+    gst_rtp_buffer_unmap (&rtpbuffer);
 
-      valid = TRUE;
-    }
+    valid = TRUE;
   }
-  else if (component == 2)
+  else
   {
     GstRTCPPacket rtcppacket;
     GstRTCPBuffer rtcpbuffer = GST_RTCP_BUFFER_INIT;
@@ -1894,14 +1890,29 @@ _stream_known_source_packet_received (FsRtpStream *stream, guint component,
     {
       if (gst_rtcp_buffer_get_first_packet (&rtcpbuffer, &rtcppacket))
       {
+        GstRTCPType type;
+
         do {
-          if (gst_rtcp_packet_get_type (&rtcppacket) == GST_RTCP_TYPE_SDES)
-          {
-            ssrc = gst_rtcp_packet_sdes_get_ssrc (&rtcppacket);
-            valid = TRUE;
-            break;
+          type = gst_rtcp_packet_get_type (&rtcppacket);
+          switch (type) {
+            case GST_RTCP_TYPE_RR:
+              ssrc = gst_rtcp_packet_rr_get_ssrc (&rtcppacket);
+              valid = TRUE;
+              break;
+            case GST_RTCP_TYPE_SR:
+              gst_rtcp_packet_sr_get_sender_info (&rtcppacket, &ssrc, NULL,
+                  NULL, NULL, NULL);
+              valid = TRUE;
+              break;
+            case GST_RTCP_TYPE_SDES:
+              ssrc = gst_rtcp_packet_sdes_get_ssrc (&rtcppacket);
+              valid = TRUE;
+              break;
+            default:
+              break;
           }
-        } while (gst_rtcp_packet_move_to_next (&rtcppacket));
+        } while (valid == FALSE && type != GST_RTCP_TYPE_INVALID &&
+            gst_rtcp_packet_move_to_next (&rtcppacket));
       }
       gst_rtcp_buffer_unmap (&rtcpbuffer);
     }

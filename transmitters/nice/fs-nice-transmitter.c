@@ -214,7 +214,7 @@ fs_nice_transmitter_constructed (GObject *object)
   self->priv->src_funnels = g_new0 (GstElement *, self->components+1);
   self->priv->sink_tees = g_new0 (GstElement *, self->components+1);
 
-  /* First we need the src elemnet */
+  /* First we need the src element */
 
   self->priv->gst_src = gst_bin_new (NULL);
 
