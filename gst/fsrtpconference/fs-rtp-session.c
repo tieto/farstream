@@ -1632,7 +1632,7 @@ _stream_known_source_packet_received (FsRtpStream *stream, guint component,
     GstRTCPPacket rtcppacket;
     GstRTCPBuffer rtcpbuffer = GST_RTCP_BUFFER_INIT;
 
-    if (!gst_rtcp_buffer_map (buffer, GST_MAP_READ, &rtcpbuffer))
+    if (gst_rtcp_buffer_map (buffer, GST_MAP_READ, &rtcpbuffer))
     {
       if (gst_rtcp_buffer_get_first_packet (&rtcpbuffer, &rtcppacket))
       {
