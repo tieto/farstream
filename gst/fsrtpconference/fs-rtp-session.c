@@ -159,7 +159,8 @@ enum
   PROP_RTP_HEADER_EXTENSION_PREFERENCES,
   PROP_ALLOWED_SINK_CAPS,
   PROP_ALLOWED_SRC_CAPS,
-  PROP_ENCRYPTION_PARAMETERS
+  PROP_ENCRYPTION_PARAMETERS,
+  PROP_INTERNAL_SESSION
 };
 
 #define DEFAULT_NO_RTCP_TIMEOUT (7000)
@@ -496,6 +497,14 @@ fs_rtp_session_class_init (FsRtpSessionClass *klass)
           " desired by the application",
           FS_TYPE_RTP_HEADER_EXTENSION_LIST,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
+  g_object_class_install_property (gobject_class,
+      PROP_INTERNAL_SESSION,
+      g_param_spec_object ("internal-session",
+          "Internal RTP Session",
+          "Internal RTPSession object from rtpbin",
+          G_TYPE_OBJECT,
+          G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
   gobject_class->dispose = fs_rtp_session_dispose;
   gobject_class->finalize = fs_rtp_session_finalize;
@@ -1048,6 +1057,9 @@ fs_rtp_session_get_property (GObject *object,
       FS_RTP_SESSION_LOCK (self);
       g_value_set_boxed (value, self->priv->encryption_parameters);
       FS_RTP_SESSION_UNLOCK (self);
+      break;
+    case PROP_INTERNAL_SESSION:
+      g_value_set_object (value, self->priv->rtpbin_internal_session);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
