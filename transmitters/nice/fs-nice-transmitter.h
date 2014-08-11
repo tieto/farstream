@@ -106,6 +106,9 @@ void fs_nice_transmitter_set_sending (FsNiceTransmitter *self,
 void fs_nice_transmitter_request_keyunit (FsNiceTransmitter *self,
     NiceGstStream *ns, guint component);
 
+void fs_nice_transmitter_set_send_component_mux (FsNiceTransmitter *self,
+    NiceGstStream *ns, gboolean send_component_mux);
+
 
 G_END_DECLS
 

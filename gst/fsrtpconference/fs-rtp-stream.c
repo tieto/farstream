@@ -76,7 +76,8 @@ enum
   PROP_PARTICIPANT,
   PROP_SESSION,
   PROP_RTP_HEADER_EXTENSIONS,
-  PROP_DECRYPTION_PARAMETERS
+  PROP_DECRYPTION_PARAMETERS,
+  PROP_SEND_RTCP_MUX
 };
 
 struct _FsRtpStreamPrivate
@@ -85,6 +86,7 @@ struct _FsRtpStreamPrivate
   FsStreamTransmitter *stream_transmitter;
 
   FsStreamDirection direction;
+  gboolean send_rtcp_mux;
 
   stream_new_remote_codecs_cb new_remote_codecs_cb;
   stream_known_source_packet_receive_cb known_source_packet_received_cb;
@@ -230,6 +232,14 @@ fs_rtp_stream_class_init (FsRtpStreamClass *klass)
           "GList of RTP Header extensions that the participant for this stream"
           " would like to use",
           FS_TYPE_RTP_HEADER_EXTENSION_LIST,
+          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
+  g_object_class_install_property (gobject_class,
+      PROP_SEND_RTCP_MUX,
+      g_param_spec_boolean ("send-rtcp-mux",
+          "Send RTCP muxed with on the same RTP connection",
+          "Send RTCP muxed with on the same RTP connection",
+          FALSE,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 }
 
@@ -454,6 +464,17 @@ fs_rtp_stream_get_property (GObject *object,
       g_value_set_boxed (value, self->priv->decryption_parameters);
       FS_RTP_SESSION_UNLOCK (session);
       break;
+    case PROP_SEND_RTCP_MUX:
+      FS_RTP_SESSION_LOCK (session);
+      if (self->priv->stream_transmitter == NULL ||
+          g_object_class_find_property (
+              G_OBJECT_GET_CLASS (self->priv->stream_transmitter),
+              "send-component-mux") != NULL)
+        g_value_set_boolean (value, self->priv->send_rtcp_mux);
+      else
+        g_value_set_boolean (value, FALSE);
+      FS_RTP_SESSION_UNLOCK (session);
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -538,6 +559,23 @@ fs_rtp_stream_set_property (GObject *object,
           self->priv->new_remote_codecs_cb (NULL, NULL, NULL,
               self->priv->user_data_for_cb);
           g_object_unref (session);
+        }
+      }
+      break;
+    case PROP_SEND_RTCP_MUX:
+      {
+        FsRtpSession *session = fs_rtp_stream_get_session (self, NULL);
+
+        if (session) {
+          FS_RTP_SESSION_LOCK (session);
+          self->priv->send_rtcp_mux = g_value_get_boolean (value);
+          if (self->priv->stream_transmitter != NULL &&
+              g_object_class_find_property (
+                  G_OBJECT_GET_CLASS (self->priv->stream_transmitter),
+                  "send-component-mux") != NULL)
+            g_object_set (self->priv->stream_transmitter,
+                "send-component-mux", self->priv->send_rtcp_mux, NULL);
+          FS_RTP_SESSION_UNLOCK (session);
         }
       }
       break;
@@ -1178,6 +1216,9 @@ fs_rtp_stream_set_transmitter (FsStream *stream,
     self->priv->sending_changed_locked_cb (self,
         self->priv->direction & FS_DIRECTION_SEND,
         self->priv->user_data_for_cb);
+  if (g_object_class_find_property (G_OBJECT_GET_CLASS (st),
+          "send-component-mux") != NULL)
+    g_object_set (st, "send-component-mux", self->priv->send_rtcp_mux, NULL);
   FS_RTP_SESSION_UNLOCK (session);
 
   if (!fs_stream_transmitter_gather_local_candidates (st, error))

@@ -71,7 +71,8 @@ enum
   PROP_ICE_TCP,
   PROP_ICE_UDP,
   PROP_RELIABLE,
-  PROP_DEBUG
+  PROP_DEBUG,
+  PROP_SEND_COMPONENT_MUX
 };
 
 struct _FsNiceStreamTransmitterPrivate
@@ -92,6 +93,7 @@ struct _FsNiceStreamTransmitterPrivate
   gboolean ice_udp;
   gboolean ice_tcp;
   gboolean reliable;
+  gboolean send_component_mux;
 
   guint compatibility_mode;
 
@@ -417,6 +419,14 @@ fs_nice_stream_transmitter_class_init (FsNiceStreamTransmitterClass *klass)
           0,
           G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS));
 
+  g_object_class_install_property (gobject_class, PROP_SEND_COMPONENT_MUX,
+      g_param_spec_boolean (
+          "send-component-mux",
+          "Send component mux",
+          "Whether to mux all components on the same component as component 1",
+          FALSE,
+          G_PARAM_WRITABLE | G_PARAM_STATIC_STRINGS));
+
 }
 
 static void
@@ -605,6 +615,9 @@ fs_nice_stream_transmitter_get_property (GObject *object,
       g_value_set_boolean (value,
           g_atomic_int_get (&self->priv->associate_on_source));
       break;
+    case PROP_SEND_COMPONENT_MUX:
+      g_value_set_boolean (value, self->priv->send_component_mux);
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -682,6 +695,13 @@ fs_nice_stream_transmitter_set_property (GObject *object,
         nice_debug_disable (TRUE);
       }
       break;
+    case PROP_SEND_COMPONENT_MUX:
+      self->priv->send_component_mux = g_value_get_boolean (value);
+      if (self->priv->gststream != NULL)
+        fs_nice_transmitter_set_send_component_mux (self->priv->transmitter,
+            self->priv->gststream, self->priv->send_component_mux);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -1524,6 +1544,9 @@ fs_nice_stream_transmitter_build (FsNiceStreamTransmitter *self,
       error);
   if (self->priv->gststream == NULL)
     return FALSE;
+
+  fs_nice_transmitter_set_send_component_mux (self->priv->transmitter,
+      self->priv->gststream, self->priv->send_component_mux);
 
   GST_DEBUG ("Created a stream with %u components",
       self->priv->transmitter->components);

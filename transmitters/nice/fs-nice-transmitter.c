@@ -868,3 +868,16 @@ fs_nice_transmitter_request_keyunit (FsNiceTransmitter *self,
               "all-headers", G_TYPE_BOOLEAN, TRUE,
               NULL)));
 }
+
+void
+fs_nice_transmitter_set_send_component_mux (FsNiceTransmitter *self,
+    NiceGstStream *ns, gboolean send_component_mux)
+{
+  guint component;
+
+  for (component = 2; component <= self->components; component++)
+  {
+    g_object_set (ns->nicesinks[component],
+        "component", send_component_mux ? 1 : component, NULL);
+  }
+}
