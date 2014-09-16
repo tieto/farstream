@@ -1,3 +1,10 @@
+farstream-0.2 (0.2.4-1) unstable; urgency=medium
+
+  * New upstream release
+    - drop patch for payload type 101, fixed upstream
+
+ -- Simon McVittie <smcv@debian.org>  Tue, 16 Sep 2014 15:44:40 +0100
+
 farstream-0.2 (0.2.3-3) unstable; urgency=medium
 
   * Add patch from Iain Lane to build successfully with current gtk-doc
