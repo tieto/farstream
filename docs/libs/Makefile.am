@@ -76,4 +76,4 @@ GTKDOC_LD=$(LIBTOOL) --tag=CC --mode=link $(CC)
 DOC_OVERRIDES = $(DOC_MODULE)-overrides.txt
 #DOC_OVERRIDES =
 
-include $(top_srcdir)/common/gtk-doc.mak
+include $(top_srcdir)/common-modified/gtk-doc.mak

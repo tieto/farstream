@@ -889,9 +889,24 @@ fs_rtp_session_get_property (GObject *object,
       FS_RTP_SESSION_UNLOCK (self);
       break;
     case PROP_SSRC:
-      g_object_get_property (G_OBJECT (self->priv->rtpbin_internal_session),
-          "internal-ssrc", value);
-      break;
+      if (self->priv->rtpbin_send_rtp_sink)
+      {
+        GstCaps *caps = NULL;
+        g_object_get (self->priv->rtpbin_send_rtp_sink, "caps", &caps, NULL);
+        if (caps)
+        {
+          if (gst_caps_get_size (caps) > 0)
+          {
+            const GstStructure *s = gst_caps_get_structure (caps, 0);
+            guint ssrc;
+
+            if (gst_structure_get_uint (s, "ssrc", &ssrc))
+              g_value_set_uint (value, ssrc);
+          }
+          gst_caps_unref (caps);
+        }
+        break;
+      }
     case PROP_TOS:
       FS_RTP_SESSION_LOCK (self);
       g_value_set_uint (value, self->priv->tos);
@@ -989,6 +1004,12 @@ fs_rtp_session_set_property (GObject *object,
 static void
 _rtpbin_internal_session_notify_internal_ssrc (GObject *internal_session,
     GParamSpec *pspec, gpointer self)
+{
+  g_object_notify (G_OBJECT (self), "ssrc");
+}
+
+static void
+_rtpbin_send_rtp_sink_notify_caps (GstPad *pad, GParamSpec *param, gpointer self)
 {
   g_object_notify (G_OBJECT (self), "ssrc");
 }
@@ -1377,6 +1398,11 @@ fs_rtp_session_constructed (GObject *object)
     gst_element_get_request_pad (self->priv->conference->rtpbin,
       tmp);
   g_free (tmp);
+
+
+  g_signal_connect_object (self->priv->rtpbin_send_rtp_sink, "notify::caps",
+      G_CALLBACK (_rtpbin_send_rtp_sink_notify_caps), self, 0);
+
 
   muxer_src_pad = gst_element_get_static_pad (muxer, "src");
 
@@ -3166,6 +3192,12 @@ _create_codec_bin (const CodecAssociation *ca, const FsCodec *codec,
     GST_DEBUG ("blueprint builder hash is different (new: %u != old: %u)"
         " for " FS_CODEC_FORMAT,
         *new_builder_hash, current_builder_hash, FS_CODEC_ARGS (ca->codec));
+  }
+
+  if (!ca->blueprint) {
+    g_set_error (error, FS_ERROR, FS_ERROR_INTERNAL,
+        "Codec Association has neither blueprint nor profile");
+    return NULL;
   }
 
   return create_codec_bin_from_blueprint (codec, ca->blueprint, name,
@@ -4961,13 +4993,12 @@ fs_rtp_session_handle_dtmf_event_message (FsRtpSession *self,
     goto invalid;
   gst_structure_get_boolean (es, "start", &e_start);
 
+  if (!gst_structure_get_int (ms, "method", &m_method))
+    goto invalid;
+  gst_structure_get_int (es, "method", &e_method);
+
   if (m_start)
   {
-    if (!gst_structure_get_int (ms, "method", &m_method))
-      goto invalid;
-    gst_structure_get_int (es, "method", &e_method);
-
-
     if (!gst_structure_get_int (ms, "number", &m_number))
       goto invalid;
     gst_structure_get_int (es, "number", &e_number);

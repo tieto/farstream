@@ -8,7 +8,7 @@
 <link rel="up" href="ch04.html" title="Farstream Transmitter Classes">
 <link rel="prev" href="FsTransmitter.html" title="FsTransmitter">
 <link rel="next" href="ch05.html" title="Farstream Plugins Infrastructure">
-<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -66,22 +66,22 @@ struct              <a class="link" href="FsStreamTransmitter.html#FsStreamTrans
                                                          <em class="parameter"><code>const <span class="type">gchar</span> *error_msg</code></em>);
 <span class="returnvalue">gboolean</span>            <a class="link" href="FsStreamTransmitter.html#fs-stream-parse-component-state-changed" title="fs_stream_parse_component_state_changed ()">fs_stream_parse_component_state_changed</a>
                                                         (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
+                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
                                                          <em class="parameter"><code><span class="type">guint</span> *component</code></em>,
                                                          <em class="parameter"><code><a class="link" href="FsStream.html#FsStreamState" title="enum FsStreamState"><span class="type">FsStreamState</span></a> *state</code></em>);
 <span class="returnvalue">gboolean</span>            <a class="link" href="FsStreamTransmitter.html#fs-stream-parse-local-candidates-prepared" title="fs_stream_parse_local_candidates_prepared ()">fs_stream_parse_local_candidates_prepared</a>
                                                         (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> *message</code></em>);
+                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>);
 <span class="returnvalue">gboolean</span>            <a class="link" href="FsStreamTransmitter.html#fs-stream-parse-new-active-candidate-pair" title="fs_stream_parse_new_active_candidate_pair ()">fs_stream_parse_new_active_candidate_pair</a>
                                                         (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
+                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
                                                          <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> **local_candidate</code></em>,
                                                          <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> **remote_candidate</code></em>);
 <span class="returnvalue">gboolean</span>            <a class="link" href="FsStreamTransmitter.html#fs-stream-parse-new-local-candidate" title="fs_stream_parse_new_local_candidate ()">fs_stream_parse_new_local_candidate</a> (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
+                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
                                                          <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> **candidate</code></em>);
 <span class="returnvalue">gboolean</span>            <a class="link" href="FsStreamTransmitter.html#fs-stream-parse-recv-codecs-changed" title="fs_stream_parse_recv_codecs_changed ()">fs_stream_parse_recv_codecs_changed</a> (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
+                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
                                                          <em class="parameter"><code><span class="type">GList</span> **codecs</code></em>);
 </pre>
 </div>
@@ -350,7 +350,7 @@ only be called by subclasses.
 <a name="fs-stream-parse-component-state-changed"></a><h3>fs_stream_parse_component_state_changed ()</h3>
 <pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_stream_parse_component_state_changed
                                                         (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
+                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
                                                          <em class="parameter"><code><span class="type">guint</span> *component</code></em>,
                                                          <em class="parameter"><code><a class="link" href="FsStream.html#FsStreamState" title="enum FsStreamState"><span class="type">FsStreamState</span></a> *state</code></em>);</pre>
 <p>
@@ -369,16 +369,16 @@ the <em class="parameter"><code>stream</code></em> parameters.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>message</code></em> :</span></p></td>
-<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> to parse</td>
+<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>component</code></em> :</span></p></td>
-<td>Returns the component from the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> if not <code class="literal">NULL</code>. <span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>]</span>
+<td>Returns the component from the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> if not <code class="literal">NULL</code>. <span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>]</span>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>state</code></em> :</span></p></td>
-<td>Returns the <a class="link" href="FsStream.html#FsStreamState" title="enum FsStreamState"><span class="type">FsStreamState</span></a> from the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> if not <code class="literal">NULL</code>. <span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>]</span>
+<td>Returns the <a class="link" href="FsStream.html#FsStreamState" title="enum FsStreamState"><span class="type">FsStreamState</span></a> from the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> if not <code class="literal">NULL</code>. <span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>]</span>
 </td>
 </tr>
 <tr>
@@ -394,7 +394,7 @@ the <em class="parameter"><code>stream</code></em> parameters.
 <a name="fs-stream-parse-local-candidates-prepared"></a><h3>fs_stream_parse_local_candidates_prepared ()</h3>
 <pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_stream_parse_local_candidates_prepared
                                                         (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> *message</code></em>);</pre>
+                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>);</pre>
 <p>
 Parses a "farstream-local-candidates-prepared" message and checks if it matches
 the <em class="parameter"><code>stream</code></em> parameters.
@@ -411,7 +411,7 @@ the <em class="parameter"><code>stream</code></em> parameters.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>message</code></em> :</span></p></td>
-<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> to parse</td>
+<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -426,7 +426,7 @@ the <em class="parameter"><code>stream</code></em> parameters.
 <a name="fs-stream-parse-new-active-candidate-pair"></a><h3>fs_stream_parse_new_active_candidate_pair ()</h3>
 <pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_stream_parse_new_active_candidate_pair
                                                         (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
+                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
                                                          <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> **local_candidate</code></em>,
                                                          <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> **remote_candidate</code></em>);</pre>
 <p>
@@ -445,7 +445,7 @@ if it matches the <em class="parameter"><code>stream</code></em> parameters.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>message</code></em> :</span></p></td>
-<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> to parse</td>
+<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>local_candidate</code></em> :</span></p></td>
@@ -471,7 +471,7 @@ the message if not <code class="literal">NULL</code>. <span class="annotation">[
 <div class="refsect2">
 <a name="fs-stream-parse-new-local-candidate"></a><h3>fs_stream_parse_new_local_candidate ()</h3>
 <pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_stream_parse_new_local_candidate (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
+                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
                                                          <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> **candidate</code></em>);</pre>
 <p>
 Parses a "farstream-new-local-candidate" message and checks if it matches
@@ -489,7 +489,7 @@ the <em class="parameter"><code>stream</code></em> parameters.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>message</code></em> :</span></p></td>
-<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> to parse</td>
+<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>candidate</code></em> :</span></p></td>
@@ -509,8 +509,11 @@ if not <code class="literal">NULL</code>. <span class="annotation">[<a href="htt
 <div class="refsect2">
 <a name="fs-stream-parse-recv-codecs-changed"></a><h3>fs_stream_parse_recv_codecs_changed ()</h3>
 <pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_stream_parse_recv_codecs_changed (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
+                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
                                                          <em class="parameter"><code><span class="type">GList</span> **codecs</code></em>);</pre>
+<p>
+Returns a <span class="type">GList</span> of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> of the message if not <code class="literal">NULL</code>
+</p>
 <p>
 Parses a "farstream-recv-codecs-changed" message and checks if it matches
 the <em class="parameter"><code>stream</code></em> parameters.
@@ -527,11 +530,11 @@ the <em class="parameter"><code>stream</code></em> parameters.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>message</code></em> :</span></p></td>
-<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> to parse</td>
+<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>codecs</code></em> :</span></p></td>
-<td>Returns a <span class="type">GList</span> of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> of the message if not <code class="literal">NULL</code>. <span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec]</span>
+<td>. <span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec]</span>
 </td>
 </tr>
 <tr>
@@ -635,7 +638,7 @@ is received.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>buffer</code></em> :</span></p></td>
-<td>the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a> coming from the known source</td>
+<td>the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> coming from the known source</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -786,6 +789,6 @@ changes
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18</div>
+          Generated by GTK-Doc V1.19</div>
 </body>
 </html>

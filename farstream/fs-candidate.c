@@ -215,7 +215,7 @@ fs_candidate_new (
  * @proto: The protocol this component is for
  * @priority: Value between 0 and (2^31 - 1) representing the priority
  * @type: The type of candidate
- * @username (allow-none):: Username to use to connect to client if necessary,
+ * @username: (allow-none): Username to use to connect to client if necessary,
  *            NULL otherwise
  * @password: (allow-none): Username to use to connect to client if necessary,
  *            NULL otherwise

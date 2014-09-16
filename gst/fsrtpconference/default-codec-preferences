@@ -18,6 +18,12 @@ clock-rate=16000
 
 [audio/ILBC]
 
+# It seems to be pretty common to hard-code that dynamic payload type 101
+# is telephone-event at clock rate 8000. This also avoids an interop
+# bug with Google Chrome's WebRTC, GMail and possibly other implementations.
+[audio/telephone-event:8000]
+clock-rate=8000
+id=101
 
 # Disabled audio codecs
 # These are unsuitable for calling

@@ -788,7 +788,12 @@ connection_cb (FsMsnConnection *self, FsMsnPollFD *pollfd)
             if (size == 13 && strcmp (str, "connected\r\n\r\n") == 0)
             {
               GST_DEBUG ("connection successful");
-              recv (pollfd->pollfd.fd, str, 13, 0);
+              if (recv (pollfd->pollfd.fd, str, 13, 0) != 13)
+              {
+                GST_WARNING ("Could not read 13 bytes that had previously"
+                    " been peeked at!");
+                goto error;
+              }
               pollfd->status = FS_MSN_STATUS_CONNECTED2;
               pollfd->want_write = TRUE;
               gst_poll_fd_ctl_write (self->poll, &pollfd->pollfd, TRUE);
@@ -830,7 +835,13 @@ connection_cb (FsMsnConnection *self, FsMsnPollFD *pollfd)
             if (size == 13 && strcmp (str, "connected\r\n\r\n") == 0)
             {
               GST_DEBUG ("connection successful");
-              recv (pollfd->pollfd.fd, str, 13, 0);
+              if (recv (pollfd->pollfd.fd, str, 13, 0) != 13)
+              {
+                GST_WARNING ("Could not read 13 bytes that had previously"
+                    " been peeked at!");
+
+                goto error;
+              }
               pollfd->status = FS_MSN_STATUS_SEND_RECEIVE;
               success = TRUE;
             }

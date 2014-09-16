@@ -37,6 +37,7 @@
 #include <getopt.h>
 #include <errno.h>
 #include <limits.h>
+#include <sys/uio.h>
 
 #include <pthread.h>
 

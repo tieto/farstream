@@ -101,7 +101,7 @@ fs_rtp_header_extension_are_equal (FsRtpHeaderExtension *extension1,
   if (extension1 == extension2)
     return TRUE;
 
-  if (!extension2 || !extension2)
+  if (!extension1 || !extension2)
     return FALSE;
 
   if (extension1->id == extension2->id &&

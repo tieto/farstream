@@ -1003,7 +1003,7 @@ rawudptransmitter_suite (void)
   suite_add_tcase (s, tc_chain);
 
 #ifdef HAVE_GUPNP
-  {
+  if (g_getenv ("UPNP")) {
     gchar *multicast_addr;
 
     multicast_addr = find_multicast_capable_address ();
