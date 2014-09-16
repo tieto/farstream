@@ -926,8 +926,7 @@ fs_rawudp_transmitter_get_udpport (FsRawUdpTransmitter *trans,
   return udpport;
 
  error:
-  if (udpport)
-    fs_rawudp_transmitter_put_udpport (trans, udpport);
+  fs_rawudp_transmitter_put_udpport (trans, udpport);
   return NULL;
 }
 

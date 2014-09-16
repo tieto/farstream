@@ -664,7 +664,7 @@ incoming_rtp_probe (GstPad *pad, GstPadProbeInfo *info, gpointer user_data)
   pt = gst_rtp_buffer_get_payload_type (&rtpbuffer);
   seq = gst_rtp_buffer_get_seq (&rtpbuffer);
 
-  if (pt > 128 || !self->pts[pt])
+  if (pt >= 128 || !self->pts[pt])
     goto out_no_header_unmap;
 
   if (self->extension_type == EXTENSION_NONE)

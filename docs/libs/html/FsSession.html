@@ -8,7 +8,7 @@
 <link rel="up" href="ch01.html" title="Farstream Core Library">
 <link rel="prev" href="FsParticipant.html" title="FsParticipant">
 <link rel="next" href="FsStream.html" title="FsStream">
-<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -76,20 +76,20 @@ enum                <a class="link" href="FsSession.html#FsDTMFMethod" title="en
                                                          <em class="parameter"><code><span class="type">gint</span> error_no</code></em>,
                                                          <em class="parameter"><code>const <span class="type">gchar</span> *error_msg</code></em>);
 <span class="returnvalue">gboolean</span>            <a class="link" href="FsSession.html#fs-session-parse-codecs-changed" title="fs_session_parse_codecs_changed ()">fs_session_parse_codecs_changed</a>     (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> *message</code></em>);
+                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>);
 <span class="returnvalue">gboolean</span>            <a class="link" href="FsSession.html#fs-session-parse-send-codec-changed" title="fs_session_parse_send_codec_changed ()">fs_session_parse_send_codec_changed</a> (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
+                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
                                                          <em class="parameter"><code><a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> **codec</code></em>,
                                                          <em class="parameter"><code><span class="type">GList</span> **secondary_codecs</code></em>);
 <span class="returnvalue">gboolean</span>            <a class="link" href="FsSession.html#fs-session-parse-telephony-event-started" title="fs_session_parse_telephony_event_started ()">fs_session_parse_telephony_event_started</a>
                                                         (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
+                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
                                                          <em class="parameter"><code><a class="link" href="FsSession.html#FsDTMFMethod" title="enum FsDTMFMethod"><span class="type">FsDTMFMethod</span></a> *method</code></em>,
                                                          <em class="parameter"><code><a class="link" href="FsSession.html#FsDTMFEvent" title="enum FsDTMFEvent"><span class="type">FsDTMFEvent</span></a> *event</code></em>,
                                                          <em class="parameter"><code><span class="type">guint8</span> *volume</code></em>);
 <span class="returnvalue">gboolean</span>            <a class="link" href="FsSession.html#fs-session-parse-telephony-event-stopped" title="fs_session_parse_telephony_event_stopped ()">fs_session_parse_telephony_event_stopped</a>
                                                         (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
+                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
                                                          <em class="parameter"><code><a class="link" href="FsSession.html#FsDTMFMethod" title="enum FsDTMFMethod"><span class="type">FsDTMFMethod</span></a> *method</code></em>);
 </pre>
 </div>
@@ -132,11 +132,11 @@ contained in the same conference will be synchronised together during
 playback.
 </p>
 <p>
-This will communicate asynchronous events to the user through <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a>
-of type <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GST-MESSAGE-ELEMENT:CAPS"><span class="type">GST_MESSAGE_ELEMENT</span></a> sent over the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBus.html"><span class="type">GstBus</span></a>.
+This will communicate asynchronous events to the user through <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a>
+of type <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html#GST-MESSAGE-ELEMENT:CAPS"><span class="type">GST_MESSAGE_ELEMENT</span></a> sent over the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBus.html"><span class="type">GstBus</span></a>.
 </p>
 <div class="refsect2">
-<a name="idp4898112"></a><h3>The "<code class="literal">farstream-send-codec-changed</code>"
+<a name="id-1.2.2.4.7.4"></a><h3>The "<code class="literal">farstream-send-codec-changed</code>"
   message</h3>
 <div class="table"><table>
 <tr>
@@ -163,7 +163,7 @@ This message is sent on the bus when the value of the
 </div>
 <hr>
 <div class="refsect2">
-<a name="idp4911488"></a><h3>The "<code class="literal">farstream-codecs-changed</code>"
+<a name="id-1.2.2.4.7.5"></a><h3>The "<code class="literal">farstream-codecs-changed</code>"
  message</h3>
 <div class="table"><table><tr>
   <td><code class="code">"session"</code></td>
@@ -180,7 +180,7 @@ transmitted reliably, one should fetch <a class="link" href="FsSession.html#FsSe
 </div>
 <hr>
 <div class="refsect2">
-<a name="idp4919824"></a><h3>The "<code class="literal">farstream-telephony-event-started</code>"
+<a name="id-1.2.2.4.7.6"></a><h3>The "<code class="literal">farstream-telephony-event-started</code>"
  message</h3>
 <div class="table"><table>
 <tr>
@@ -212,7 +212,7 @@ telephony event has started.
 </div>
 <hr>
 <div class="refsect2">
-<a name="idp4932656"></a><h3>The "<code class="literal">farstream-telephony-event-stopped</code>"
+<a name="id-1.2.2.4.7.7"></a><h3>The "<code class="literal">farstream-telephony-event-stopped</code>"
  message</h3>
 <div class="table"><table>
 <tr>
@@ -336,6 +336,13 @@ An enum that represents the different DTMF event that can be sent to a
 The rest of the possibles values are in the IANA registry at:
 http://www.iana.org/assignments/audio-telephone-event-registry
 </p>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody></tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
@@ -752,7 +759,7 @@ called by subclasses.
 <div class="refsect2">
 <a name="fs-session-parse-codecs-changed"></a><h3>fs_session_parse_codecs_changed ()</h3>
 <pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_session_parse_codecs_changed     (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> *message</code></em>);</pre>
+                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>);</pre>
 <p>
 Parses a "farstream-codecs-changed" message and checks if it matches
 the <em class="parameter"><code>session</code></em> parameters.
@@ -769,7 +776,7 @@ the <em class="parameter"><code>session</code></em> parameters.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>message</code></em> :</span></p></td>
-<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> to parse</td>
+<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -783,9 +790,12 @@ the <em class="parameter"><code>session</code></em> parameters.
 <div class="refsect2">
 <a name="fs-session-parse-send-codec-changed"></a><h3>fs_session_parse_send_codec_changed ()</h3>
 <pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_session_parse_send_codec_changed (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
+                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
                                                          <em class="parameter"><code><a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> **codec</code></em>,
                                                          <em class="parameter"><code><span class="type">GList</span> **secondary_codecs</code></em>);</pre>
+<p>
+Returns a <span class="type">GList</span> of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> of the message if not <code class="literal">NULL</code>
+</p>
 <p>
 Parses a "farstream-send-codec-changed" message and checks if it matches
 the <em class="parameter"><code>session</code></em> parameters.
@@ -802,7 +812,7 @@ the <em class="parameter"><code>session</code></em> parameters.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>message</code></em> :</span></p></td>
-<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> to parse</td>
+<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>codec</code></em> :</span></p></td>
@@ -812,7 +822,7 @@ the <em class="parameter"><code>session</code></em> parameters.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>secondary_codecs</code></em> :</span></p></td>
-<td>Returns a <span class="type">GList</span> of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> of the message if not <code class="literal">NULL</code>. <span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec]</span>
+<td>. <span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec]</span>
 </td>
 </tr>
 <tr>
@@ -828,7 +838,7 @@ the <em class="parameter"><code>session</code></em> parameters.
 <a name="fs-session-parse-telephony-event-started"></a><h3>fs_session_parse_telephony_event_started ()</h3>
 <pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_session_parse_telephony_event_started
                                                         (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
+                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
                                                          <em class="parameter"><code><a class="link" href="FsSession.html#FsDTMFMethod" title="enum FsDTMFMethod"><span class="type">FsDTMFMethod</span></a> *method</code></em>,
                                                          <em class="parameter"><code><a class="link" href="FsSession.html#FsDTMFEvent" title="enum FsDTMFEvent"><span class="type">FsDTMFEvent</span></a> *event</code></em>,
                                                          <em class="parameter"><code><span class="type">guint8</span> *volume</code></em>);</pre>
@@ -848,7 +858,7 @@ the <em class="parameter"><code>session</code></em> parameters.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>message</code></em> :</span></p></td>
-<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> to parse</td>
+<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>method</code></em> :</span></p></td>
@@ -878,7 +888,7 @@ the <em class="parameter"><code>session</code></em> parameters.
 <a name="fs-session-parse-telephony-event-stopped"></a><h3>fs_session_parse_telephony_event_stopped ()</h3>
 <pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_session_parse_telephony_event_stopped
                                                         (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
+                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
                                                          <em class="parameter"><code><a class="link" href="FsSession.html#FsDTMFMethod" title="enum FsDTMFMethod"><span class="type">FsDTMFMethod</span></a> *method</code></em>);</pre>
 <p>
 Parses a "farstream-telephony-event-stopped" message and checks if it matches
@@ -896,7 +906,7 @@ the <em class="parameter"><code>session</code></em> parameters.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>message</code></em> :</span></p></td>
-<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GstMessage"><span class="type">GstMessage</span></a> to parse</td>
+<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>method</code></em> :</span></p></td>
@@ -1105,6 +1115,6 @@ thread. Applications should listen to the GstBus for errors.
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18</div>
+          Generated by GTK-Doc V1.19</div>
 </body>
 </html>

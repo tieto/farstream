@@ -124,24 +124,32 @@ set_the_candidates (gpointer user_data)
     {
       FsCandidate *cand = item->data;
       GList *item2 = NULL;
+
       next = g_list_next (item);
 
-      for (item2 = new_list; item2; item2 = g_list_next (item2))
+      if (cand->type != FS_CANDIDATE_TYPE_HOST)
+        continue;
+      if (cand->component_id != 1)
+        continue;
+
+      for (item2 = candidates; item2; item2 = g_list_next (item2))
       {
         FsCandidate *cand2 = item2->data;
-        if (cand2->component_id == cand->component_id)
-          break;
-      }
-      if (!item2)
-      {
-        candidates = g_list_remove (candidates, cand);
-        new_list = g_list_append (new_list, cand);
+        if (cand2->component_id == 2 &&
+            !strcmp (cand->foundation, cand2->foundation))
+        {
+          new_list = g_list_append (new_list, cand);
+          new_list = g_list_append (new_list, cand2);
+          goto got_candidates;
+        }
       }
     }
 
-    ret = fs_stream_transmitter_force_remote_candidates (st, new_list, &error);
+    ts_fail ("Could not find two matching host candidates???");
 
-    fs_candidate_list_destroy (new_list);
+  got_candidates:
+    ts_fail_unless (g_list_length (new_list) == 2);
+    ret = fs_stream_transmitter_force_remote_candidates (st, new_list, &error);
   }
   else
   {

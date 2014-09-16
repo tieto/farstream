@@ -94,6 +94,7 @@
 <ANCHOR id="FS-STREAM-STATE-CONNECTED:CAPS" href="farstream-libs-1.0/FsStream.html#FS-STREAM-STATE-CONNECTED:CAPS">
 <ANCHOR id="FS-STREAM-STATE-READY:CAPS" href="farstream-libs-1.0/FsStream.html#FS-STREAM-STATE-READY:CAPS">
 <ANCHOR id="fs-stream-set-transmitter" href="farstream-libs-1.0/FsStream.html#fs-stream-set-transmitter">
+<ANCHOR id="fs-stream-set-transmitter-ht" href="farstream-libs-1.0/FsStream.html#fs-stream-set-transmitter-ht">
 <ANCHOR id="fs-stream-add-remote-candidates" href="farstream-libs-1.0/FsStream.html#fs-stream-add-remote-candidates">
 <ANCHOR id="fs-stream-set-remote-codecs" href="farstream-libs-1.0/FsStream.html#fs-stream-set-remote-codecs">
 <ANCHOR id="fs-stream-force-remote-candidates" href="farstream-libs-1.0/FsStream.html#fs-stream-force-remote-candidates">
@@ -136,6 +137,7 @@
 <ANCHOR id="fs-candidate-copy" href="farstream-libs-1.0/farstream-libs-FsCandidate.html#fs-candidate-copy">
 <ANCHOR id="fs-candidate-list-destroy" href="farstream-libs-1.0/farstream-libs-FsCandidate.html#fs-candidate-list-destroy">
 <ANCHOR id="fs-candidate-list-copy" href="farstream-libs-1.0/farstream-libs-FsCandidate.html#fs-candidate-list-copy">
+<ANCHOR id="fs-value-set-candidate-list" href="farstream-libs-1.0/farstream-libs-FsCandidate.html#fs-value-set-candidate-list">
 <ANCHOR id="farstream-libs-FsCodec" href="farstream-libs-1.0/farstream-libs-FsCodec.html">
 <ANCHOR id="farstream-libs-FsCodec.synopsis" href="farstream-libs-1.0/farstream-libs-FsCodec.html#farstream-libs-FsCodec.synopsis">
 <ANCHOR id="farstream-libs-FsCodec.description" href="farstream-libs-1.0/farstream-libs-FsCodec.html#farstream-libs-FsCodec.description">

@@ -192,9 +192,10 @@ on_feedback_rtcp (GObject *rtpsession, GstRTCPType type, GstRTCPFBType fbtype,
 
       ssrc = GST_READ_UINT32_BE (data);
 
-      if (ssrc == local_ssrc)
+      if (ssrc == local_ssrc) {
         our_request = TRUE;
-      break;
+        break;
+      }
     }
     gst_buffer_unmap (fci, &mapinfo);
     if (!our_request)

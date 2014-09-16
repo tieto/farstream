@@ -1,3 +1,236 @@
+commit 798be3e02f665855577b6886768868ee24d7e4df
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon May 5 15:09:16 2014 -0400
+
+    Version 0.2.4
+
+commit 53db372266191c757fc38e222f4d08f9c6d6f46f
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon May 5 14:41:23 2014 -0400
+
+    msnconnection: Fix typo
+
+commit 587f35ea8e3126c00b6c4e33e67277a60c3d45ba
+Author: Olivier Crête <olivier.crete@ocrete.ca>
+Date:   Sun May 4 01:18:47 2014 -0400
+
+    msnconnection: Double check return value of recv()
+    
+    Even though it has already been peeked at!
+
+commit 3aec0fb8ec87299835987266fed208f5267bb000
+Author: Olivier Crête <olivier.crete@ocrete.ca>
+Date:   Sun May 4 00:48:28 2014 -0400
+
+    rtpsession: Check that there is either a blueprint or a profile
+    
+    Having neither is always invalid!
+
+commit 64bfaf6af39957996ae1114767d1f674e246fd97
+Author: Olivier Crête <olivier.crete@ocrete.ca>
+Date:   Sun May 4 00:47:13 2014 -0400
+
+    msnconnection: Make sure token is correctly read
+
+commit 3610fe76c1856f19595b8d966180444922ca4056
+Author: Olivier Crête <olivier.crete@ocrete.ca>
+Date:   Sun May 4 00:45:40 2014 -0400
+
+    rtp: Check both variants, not only one!
+
+commit 4b1f0b5fa6bc9f435453839d4d58ca5d8a6c863e
+Author: Olivier Crête <olivier.crete@ocrete.ca>
+Date:   Sun May 4 00:40:03 2014 -0400
+
+    multicast: Assert that udpsock is valid if there are ttls left
+    
+    If the sock is not valid, that we should be the only user and the ttl
+    should have been flushed.
+
+commit 148e8f2f815c5060e35840de00daa8eba5b58897
+Author: Olivier Crête <olivier.crete@ocrete.ca>
+Date:   Sun May 4 00:36:57 2014 -0400
+
+    rtptfrc: Fix off by one error
+    
+    128 is dynamic and needs checking
+
+commit 89b390d95860eacccdf0686de28c332ff779a16d
+Author: Olivier Crête <olivier.crete@ocrete.ca>
+Date:   Sun May 4 00:35:19 2014 -0400
+
+    rawudp:  udpsock is never NULL there
+
+commit e126cd6e0c1e23682b3ca79154cede6994297dc8
+Author: Olivier Crête <olivier.crete@ocrete.ca>
+Date:   Sun May 4 00:34:14 2014 -0400
+
+    multicast: udpsock is never NULL there
+
+commit dc1e2819c45341d2232cefce47bfb7d086b4e554
+Author: Olivier Crête <olivier.crete@ocrete.ca>
+Date:   Sat May 3 18:53:25 2014 -0400
+
+    rtpkeyunitmanager: Correctly check for local ssrc
+    
+    Found by coverity
+
+commit 67538d45102afb55bcee200917aabc866117e04e
+Author: Olivier Crête <olivier.crete@ocrete.ca>
+Date:   Sat May 3 18:39:11 2014 -0400
+
+    rtpsession: Since GStreamer 1.2, the real internal SSRC is on the incoming caps
+
+commit eb809dbae5074cf527b37f6bb7171ccd1d20682b
+Author: Olivier Crête <olivier.crete@ocrete.ca>
+Date:   Sat May 3 18:38:55 2014 -0400
+
+    rtpsession: Also notify of SSRC change on caps change
+
+commit 055e0f4089a094c6f9735270280e9d5970716bd3
+Author: Olivier Crête <olivier.crete@ocrete.ca>
+Date:   Sat May 3 17:00:24 2014 -0400
+
+    tests: Disable upnp tests by default
+
+commit 4bf22a838a8641c997ef50e38b1d0b784a63e444
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 2 16:01:20 2014 -0400
+
+    Fix documentation
+
+commit 70267acdd6cde281d9be936701d4e3d1c92cd885
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu May 1 19:00:34 2014 -0400
+
+    docs: Use Farstream API version when installing docs
+    
+    This also forces us to make a private copy of the gtk-doc.mak
+
+commit 02e2009bca52f7a886a981c5559c6344e8d63371
+Author: Jasper Lievisse Adriaanse <jasper@humppa.nl>
+Date:   Mon Mar 3 15:21:30 2014 +0100
+
+    include <sys/socket.h> for setsockopt(2)
+
+commit 5f52c16b14fd8fac562aaf04e926a0d8e9a298e1
+Author: Jasper Lievisse Adriaanse <jasper@humppa.nl>
+Date:   Mon Mar 3 15:39:00 2014 +0100
+
+    Include <netinet/in.h> for struct sin_addr.
+
+commit 8fb69ff4f49a42548321177135af99dcc168fb56
+Author: Jasper Lievisse Adriaanse <jasper@humppa.nl>
+Date:   Mon Mar 3 15:48:16 2014 +0100
+
+    Include <sys/uio.h> for struct iovec.
+
+commit e349a7db681b643beaf8174a32b071292abd980e
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Feb 27 18:00:13 2014 -0500
+
+    raw: Fix crash where the stream would try to contact its session before its been set
+
+commit 8b99315a911e82aaaac31566c33d0a2d7f3483b1
+Author: Ryan Lortie <desrt@desrt.ca>
+Date:   Thu Feb 13 22:03:09 2014 -0500
+
+    transmitters: include <netinet/in.h> for IPPROTO_*
+    
+    POSIX says that we need <netinet/in.h> for IPPROTO_* to be defined, so
+    make sure we include it.
+    
+    It also ensures that we get a definition of 'struct sockaddr' which
+    appears in the rawudp header as an argument type.
+
+commit cbe9ad35878f921ea7ad67957335eb7a2685eb93
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Dec 5 17:14:29 2013 -0500
+
+    rtpsession: Need to read the method on stop too
+    
+    Otherwise it used an initialized variable. Thank you clang-analyzer
+
+commit ad52fadfa918a3f0f72dd400502e9b6e0813d218
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Dec 5 17:14:16 2013 -0500
+
+    examples: Remove unused variable
+
+commit 320f6514aad713e465fb8c7b963e9680bb606c79
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Nov 7 16:46:32 2013 -0500
+
+    rtp-codec-nego: Actually test that the codec id is valid
+    
+    Bug found by David Binderman <dcb314@hotmail.com>
+
+commit e035edc0fd27b2ae7f08742d820f8fc22c7023a2
+Author: Mathieu Duponchelle <mduponchelle1@gmail.com>
+Date:   Wed Oct 16 16:33:11 2013 +0200
+
+    tests/rtp/sendcodecs: pass a GError to parse_launch.
+    
+    Otherwise for some reason launch_full returns a pipeline
+    even when an element is missing, despite the FATAL_ERRORS flag.
+
+commit d2931996112ad9850ff57019c1b1d779b52fa1c3
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Sep 5 12:41:28 2013 -0400
+
+    Add files from newer autotools to .gitignore
+
+commit c217975266aa3ad379b613a9b154f757432413df
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Jun 25 10:38:24 2013 -0400
+
+    multicast: Remove not required non-standard header
+
+commit 699ab34321dff414ba3e9c8f329bfc3d2a9ff6d0
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Jun 20 22:58:52 2013 -0400
+
+    tests: Only use matching host candidates for nice force_remote_candidates test
+    
+    The other candidates may or not may not work
+
+commit 6e899cdc8210aa28fec63cce0de65338c73234d2
+Author: Simon McVittie <simon.mcvittie@collabora.co.uk>
+Date:   Mon Jun 3 20:06:53 2013 +0100
+
+    Prefer dynamic PT 101 for telephone-event at clock rate 8000
+    
+    The WebRTC implementation in Google Chrome <= 26 would reject calls
+    if there was "a telephone-event payload type less than 101"[1] and
+    as of 2013-06-03, the Google Mail web UI with the VoIP extension
+    seems to have a similar signalling bug. Experimenting with the web UI
+    indicates that telephone-events with clock rate != 8000 are irrelevant,
+    and only clock rate 8000 matters. Hopefully the same was true in WebRTC
+    (I can't find a libjingle commit that looks likely to have fixed this).
+    
+    Meanwhile, many SIP implementations and at least one Jingle
+    implementation (Freeswitch's mod_dingaling) either hard-code payload
+    type 101 to be telephone-event, or make the payload type for
+    telephone-event a configuration option. I can't help thinking this
+    was not how dynamic payload types were meant to work, but
+    interoperability is interoperability...
+    
+    This fixes interop when Empathy 3.8 + telepathy-gabble 0.17.4, on a
+    system with not many codecs installed) calls the Google Mail web
+    UI. When the same setup is called by a peer that specifies a different
+    PT for telephone-event:8000 (the Google Mail web UI uses 126 in its
+    outgoing calls), the peer's choice of PT takes precedence.
+    
+    [1] https://code.google.com/p/webrtc/issues/detail?id=1783
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=65311
+
+commit ea40fa9de7ed76c92dd8806be944633374bf9b7e
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Apr 15 21:53:22 2013 -0400
+
+    Version 0.2.3.1
+
 commit c79445e6df897014cdbe2799717226394f89a6fb
 Author: Olivier Crête <olivier.crete@collabora.com>
 Date:   Mon Apr 15 21:47:13 2013 -0400

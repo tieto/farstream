@@ -54,7 +54,7 @@
 # define close closesocket
 #else /*G_OS_WIN32*/
 # include <sys/socket.h>
-# include <netinet/ip.h>
+# include <netinet/in.h>
 # include <arpa/inet.h>
 #endif /*G_OS_WIN32*/
 
@@ -1030,8 +1030,7 @@ fs_multicast_transmitter_get_udpsock (FsMulticastTransmitter *trans,
 
  error:
 
-  if (udpsock)
-    fs_multicast_transmitter_put_udpsock (trans, udpsock, ttl);
+  fs_multicast_transmitter_put_udpsock (trans, udpsock, ttl);
 
   return NULL;
 }
@@ -1056,6 +1055,8 @@ fs_multicast_transmitter_put_udpsock (FsMulticastTransmitter *trans,
 
   if (udpsock->ttls->len > 0)
   {
+    g_assert (udpsock->fd >= 0);
+
     /* If we were the max, check if there is a new max */
     if (udpsock->current_ttl == ttl && ttl > 1)
     {

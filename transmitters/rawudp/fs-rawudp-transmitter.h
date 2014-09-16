@@ -33,7 +33,9 @@
 #ifdef G_OS_WIN32
 # include <ws2tcpip.h>
 #else /*G_OS_WIN32*/
+# include <sys/socket.h>
 # include <arpa/inet.h>
+# include <netinet/in.h>
 #endif /*G_OS_WIN32*/
 
 G_BEGIN_DECLS
