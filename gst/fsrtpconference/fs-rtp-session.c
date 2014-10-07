@@ -1966,7 +1966,8 @@ _stream_sending_changed_locked (FsRtpStream *stream, gboolean sending,
   if (fs_rtp_session_has_disposed_enter (session, NULL))
     return;
 
-  if (session->priv->streams_sending && session->priv->send_codecbin)
+  if (session->priv->streams_sending && session->priv->send_codecbin &&
+      g_hash_table_size (session->priv->transmitters))
     g_object_set (session->priv->media_sink_valve, "drop", FALSE, NULL);
   else
     g_object_set (session->priv->media_sink_valve, "drop", TRUE, NULL);
@@ -2076,13 +2077,6 @@ fs_rtp_session_new_stream (FsSession *session,
   if (new_stream)
   {
     FS_RTP_SESSION_LOCK (self);
-    if (direction & FS_DIRECTION_SEND)
-    {
-      self->priv->streams_sending++;
-      if (self->priv->send_codecbin)
-        g_object_set (self->priv->media_sink_valve, "drop", FALSE, NULL);
-    }
-
     self->priv->streams = g_list_append (self->priv->streams, new_stream);
     self->priv->streams_cookie++;
     FS_RTP_SESSION_UNLOCK (self);
@@ -4072,7 +4066,8 @@ fs_rtp_session_add_send_codec_bin_unlock (FsRtpSession *session,
   /* Re-set it here in case in changed while we were unlocked */
   codecbin_set_bitrate (codecbin, session->priv->send_bitrate);
 
-  if (session->priv->streams_sending)
+  if (session->priv->streams_sending &&
+      g_hash_table_size (session->priv->transmitters))
     g_object_set (session->priv->media_sink_valve, "drop", FALSE, NULL);
 
   while (data.other_codecs)
