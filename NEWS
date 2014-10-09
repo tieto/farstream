@@ -1,4 +1,9 @@
-farstream 0.2.5 (Octobe 9, 2014)
+farstream 0.2.6 (October 9, 2014)
+================================
+- Add ICE-TCP support
+- Now require libnice 0.1.8
+
+farstream 0.2.5 (October 9, 2014)
 ================================
 - Add SRTP support
 - Add API to set allowed input/output caps
