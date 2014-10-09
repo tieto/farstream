@@ -66,8 +66,8 @@ dnl AS_LIBTOOL_TAGS
 AM_PROG_LIBTOOL
 
 dnl *** required versions of GStreamer stuff ***
-GST_REQ=1.2
-GSTPB_REQ=1.2
+GST_REQ=1.4
+GSTPB_REQ=1.4
 
 dnl *** autotools stuff ****
 
