@@ -997,7 +997,7 @@ nice_candidate_transport_to_fs_network_protocol (NiceCandidateTransport trans)
       return FS_NETWORK_PROTOCOL_UDP;
     default:
       GST_WARNING ("Invalid Nice network transport type %u", trans);
-      return FS_NETWORK_PROTOCOL_UDP;
+      return FS_NETWORK_PROTOCOL_TCP;
   }
 }
 
@@ -1655,6 +1655,9 @@ agent_new_candidate (NiceAgent *agent,
   {
     NiceCandidate *candidate = item->data;
 
+    if (candidate->transport != NICE_CANDIDATE_TRANSPORT_UDP)
+      continue;
+
     if (!strcmp (candidate->foundation, foundation))
     {
       fscandidate = nice_candidate_to_fs_candidate (agent, candidate, TRUE);
@@ -1700,8 +1703,9 @@ agent_new_candidate (NiceAgent *agent,
   }
   else
   {
+    FS_NICE_STREAM_TRANSMITTER_UNLOCK (self);
     GST_WARNING ("Could not find local candidate with foundation %s"
-        " for component_ %d in stream %d", foundation, component_id,
+        " for component %d in stream %d", foundation, component_id,
         stream_id);
   }
 }
