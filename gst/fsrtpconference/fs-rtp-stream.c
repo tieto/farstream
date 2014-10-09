@@ -1295,31 +1295,31 @@ validate_srtp_parameters (GstStructure *parameters,
     if ((tmp = gst_structure_get_string (parameters, "rtp-cipher")))
     {
       *srtp_cipher = parse_enum ("rtp-cipher", tmp, error);
-      if (cipher == -1)
+      if (*srtp_cipher == -1)
         return FALSE;
     }
     if ((tmp = gst_structure_get_string (parameters, "rtcp-cipher")))
     {
       *srtcp_cipher = parse_enum ("rtcp-cipher", tmp, error);
-      if (cipher == -1)
+      if (*srtcp_cipher == -1)
         return FALSE;
     }
     if ((tmp = gst_structure_get_string (parameters, "auth")))
     {
       auth = parse_enum ("rtp-auth", tmp, error);
-      if (cipher == -1)
+      if (auth == -1)
         return FALSE;
     }
     if ((tmp = gst_structure_get_string (parameters, "rtp-auth")))
     {
       *srtp_auth = parse_enum ("rtp-auth", tmp, error);
-      if (cipher == -1)
+      if (*srtp_auth == -1)
         return FALSE;
     }
     if ((tmp = gst_structure_get_string (parameters, "rtcp-auth")))
     {
       *srtcp_auth = parse_enum ("rtcp-auth", tmp, error);
-      if (cipher == -1)
+      if (*srtcp_auth == -1)
         return FALSE;
     }
 
