@@ -1703,7 +1703,6 @@ agent_new_candidate (NiceAgent *agent,
   }
   else
   {
-    FS_NICE_STREAM_TRANSMITTER_UNLOCK (self);
     GST_WARNING ("Could not find local candidate with foundation %s"
         " for component %d in stream %d", foundation, component_id,
         stream_id);
