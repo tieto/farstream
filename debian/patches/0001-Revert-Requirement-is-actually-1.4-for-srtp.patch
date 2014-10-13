@@ -1,0 +1,59 @@
+From 650cd8ab670ef39e1ac8cf6a14050f444cd6d664 Mon Sep 17 00:00:00 2001
+From: Jakub Adam <jakub.adam@ktknet.cz>
+Date: Fri, 11 Mar 2016 13:05:40 +0100
+Subject: [PATCH] Revert "Requirement is actually 1.4 for srtp"
+
+This reverts commit baf132613b41ff2f7acaf54abe6cd2111046d43b.
+---
+ README       | 10 +++++-----
+ configure.ac |  4 ++--
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/README b/README
+index 55e482c..6650d55 100644
+--- a/README
++++ b/README
+@@ -15,8 +15,8 @@ Requirements
+ ============
+ 
+ Build time:
+- - gstreamer 1.4.0
+- - gst-plugins-base 1.4.0
++ - gstreamer 1.2.0
++ - gst-plugins-base 1.2.0
+  - glib 2.32
+  - libnice 0.1.8
+  - gobject-introspection 0.10.1
+@@ -26,11 +26,11 @@ For UPnP support:
+ 
+ Run time for the RTP plugin:
+  All of the build time requirements (except gtk-doc) plus
+- - gst-plugins-good 1.4.0
+- - gst-plugins-bad 1.4.0
++ - gst-plugins-good 1.2.0
++ - gst-plugins-bad 1.2.0
+ 
+ Run time for the MSN plugin:
+- - gst-plugins-bad 1.4.0
++ - gst-plugins-bad 1.2.0
+ 
+ For the GUI example:
+  - Gtk 3.0
+diff --git a/configure.ac b/configure.ac
+index 240a485..e0dd788 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -66,8 +66,8 @@ dnl AS_LIBTOOL_TAGS
+ AM_PROG_LIBTOOL
+ 
+ dnl *** required versions of GStreamer stuff ***
+-GST_REQ=1.4
+-GSTPB_REQ=1.4
++GST_REQ=1.2
++GSTPB_REQ=1.2
+ 
+ dnl *** autotools stuff ****
+ 
+-- 
+2.7.0
+
