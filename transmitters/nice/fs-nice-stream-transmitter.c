@@ -66,6 +66,8 @@ enum
   PROP_COMPATIBILITY_MODE,
   PROP_ASSOCIATE_ON_SOURCE,
   PROP_RELAY_INFO,
+  PROP_MIN_PORT,
+  PROP_MAX_PORT,
   PROP_DEBUG
 };
 
@@ -76,6 +78,9 @@ struct _FsNiceStreamTransmitterPrivate
   FsNiceAgent *agent;
 
   guint stream_id;
+
+  guint min_port;
+  guint max_port;
 
   gchar *stun_ip;
   guint stun_port;
@@ -361,6 +366,27 @@ fs_nice_stream_transmitter_class_init (FsNiceStreamTransmitterClass *klass)
           FALSE,
           G_PARAM_WRITABLE | G_PARAM_STATIC_STRINGS));
 
+  g_object_class_install_property (gobject_class, PROP_MIN_PORT,
+      g_param_spec_uint (
+          "min-port",
+          "Minimal listen port",
+          "Minimal port number for allocating host candidates."
+          " 0 means use any port",
+          0, 65535,
+          0,
+          G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS));
+
+  g_object_class_install_property (gobject_class, PROP_MAX_PORT,
+      g_param_spec_uint (
+          "max-port",
+          "Maximal listen port",
+          "Maximal port number for allocating host candidates."
+          " It should apply that min-port < max-port; otherwise, any port is"
+          " used, just as when the value is 0",
+          0, 65535,
+          0,
+          G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS));
+
 }
 
 static void
@@ -573,6 +599,12 @@ fs_nice_stream_transmitter_set_property (GObject *object,
       break;
     case PROP_RELAY_INFO:
       self->priv->relay_info = g_value_dup_boxed (value);
+      break;
+    case PROP_MIN_PORT:
+      self->priv->min_port = g_value_get_uint (value);
+      break;
+    case PROP_MAX_PORT:
+      self->priv->max_port = g_value_get_uint (value);
       break;
     case PROP_DEBUG:
       if (g_value_get_boolean (value)) {
@@ -1387,6 +1419,17 @@ fs_nice_stream_transmitter_build (FsNiceStreamTransmitter *self,
               return FALSE;
         }
       }
+    }
+  }
+
+  /* Set a port range if it has been specified. */
+  if (self->priv->min_port && (self->priv->min_port < self->priv->max_port))
+  {
+    gint c;
+    for (c = 1; c <= self->priv->transmitter->components; c++)
+    {
+      nice_agent_set_port_range (self->priv->agent->agent,
+          self->priv->stream_id, c, self->priv->min_port, self->priv->max_port);
     }
   }
 
