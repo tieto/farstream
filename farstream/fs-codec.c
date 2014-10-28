@@ -80,13 +80,13 @@ fs_codec_list_get_type (void)
 G_DEFINE_BOXED_TYPE (FsCodecParameter,
     fs_codec_parameter,
     fs_codec_parameter_copy,
-    fs_codec_parameter_free);
+    fs_codec_parameter_free)
 
 
 G_DEFINE_BOXED_TYPE (FsFeedbackParameter,
     fs_feedback_parameter,
     fs_feedback_parameter_copy,
-    fs_feedback_parameter_free);
+    fs_feedback_parameter_free)
 
 /**
  * fs_codec_new:
