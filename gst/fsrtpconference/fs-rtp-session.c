@@ -1167,7 +1167,7 @@ _rtpbin_request_encoder (GstElement *rtpbin, guint session_id,
 {
   FsRtpSession *self = FS_RTP_SESSION (user_data);
 
-  if (self->id == session_id) {
+  if (self->id == session_id && self->priv->srtpenc) {
     return gst_object_ref (self->priv->srtpenc);
   } else {
     return NULL;
@@ -1180,7 +1180,7 @@ _rtpbin_request_decoder (GstElement *rtpbin, guint session_id,
 {
   FsRtpSession *self = FS_RTP_SESSION (user_data);
 
-  if (self->id == session_id)
+  if (self->id == session_id && self->priv->srtpdec)
     return gst_object_ref (self->priv->srtpdec);
   else
     return NULL;
