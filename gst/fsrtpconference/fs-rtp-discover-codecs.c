@@ -86,6 +86,7 @@ static void codec_blueprints_add_caps (FsMediaType media_type);
 
 static GList *list_codec_blueprints[FS_MEDIA_TYPE_LAST+1] = { NULL };
 static gint codecs_lists_ref[FS_MEDIA_TYPE_LAST+1] = { 0 };
+G_LOCK_DEFINE_STATIC (codecs_lists);
 
 
 static void
@@ -225,6 +226,7 @@ fs_rtp_blueprints_get (FsMediaType media_type, GError **error)
   GstCaps *caps;
   GList *recv_list = NULL;
   GList *send_list = NULL;
+  GList *ret = NULL;
 
   if (media_type > FS_MEDIA_TYPE_LAST)
   {
@@ -232,6 +234,8 @@ fs_rtp_blueprints_get (FsMediaType media_type, GError **error)
       "Invalid media type given");
     return NULL;
   }
+
+  G_LOCK (codecs_lists);
 
   codecs_lists_ref[media_type]++;
 
@@ -242,13 +246,15 @@ fs_rtp_blueprints_get (FsMediaType media_type, GError **error)
       g_set_error (error, FS_ERROR, FS_ERROR_NO_CODECS,
           "No codecs for media type %s detected",
           fs_media_type_to_string (media_type));
-    return list_codec_blueprints[media_type];
+    ret = list_codec_blueprints[media_type];
+    goto out;
   }
 
   list_codec_blueprints[media_type] = load_codecs_cache (media_type);
   if (list_codec_blueprints[media_type]) {
     GST_DEBUG ("Loaded codec blueprints from cache file");
-    return list_codec_blueprints[media_type];
+    ret = list_codec_blueprints[media_type];
+    goto out;
   }
 
   /* caps used to find the payloaders and depayloaders based on media type */
@@ -272,7 +278,7 @@ fs_rtp_blueprints_get (FsMediaType media_type, GError **error)
     g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
       "Invalid media type given to load_codecs");
     codecs_lists_ref[media_type]--;
-    return NULL;
+    goto out;
   }
 
   recv_list = detect_recv_codecs (caps);
@@ -295,14 +301,17 @@ fs_rtp_blueprints_get (FsMediaType media_type, GError **error)
 
   /* Save the codecs blueprint cache */
   save_codecs_cache (media_type, list_codec_blueprints[media_type]);
+  ret = list_codec_blueprints[media_type];
 
  out:
+  G_UNLOCK (codecs_lists);
+
   if (recv_list)
     codec_cap_list_free (recv_list);
   if (send_list)
     codec_cap_list_free (send_list);
 
-  return list_codec_blueprints[media_type];
+  return ret;
 }
 
 static gboolean
@@ -1059,6 +1068,8 @@ codec_blueprint_destroy (CodecBlueprint *codec_blueprint)
 void
 fs_rtp_blueprints_unref (FsMediaType media_type)
 {
+  G_LOCK (codecs_lists);
+
   codecs_lists_ref[media_type]--;
   if (!codecs_lists_ref[media_type])
   {
@@ -1074,6 +1085,8 @@ fs_rtp_blueprints_unref (FsMediaType media_type)
       list_codec_blueprints[media_type] = NULL;
     }
   }
+
+  G_UNLOCK (codecs_lists);
 }
 
 
