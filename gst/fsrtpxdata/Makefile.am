@@ -6,6 +6,7 @@ libfsrtpxdata_la_CFLAGS = \
 	$(GST_BASE_CFLAGS) \
 	$(GST_CFLAGS)
 libfsrtpxdata_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
+libfsrtpxdata_la_LIBTOOLFLAGS = $(PLUGIN_LIBTOOLFLAGS)
 libfsrtpxdata_la_LIBADD = \
 	$(FS_LIBS) \
 	$(GST_BASE_LIBS) \
