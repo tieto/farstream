@@ -337,7 +337,7 @@ AC_SUBST(FS_LIB_LDFLAGS)
 
 dnl this really should only contain flags, not libs - they get added before
 dnl whatevertarget_LIBS and -L flags here affect the rest of the linking
-FS_PLUGIN_LDFLAGS="-module -avoid-version -export-symbols-regex '^[_]*fs_init_plugin\$\$' $FS_ALL_LDFLAGS"
+FS_PLUGIN_LDFLAGS="-module -avoid-version -export-symbols-regex '^[_]*fs_.*plugin.*' $FS_ALL_LDFLAGS"
 AC_SUBST(FS_PLUGIN_LDFLAGS)
 
 dnl this really should only contain flags, not libs - they get added before

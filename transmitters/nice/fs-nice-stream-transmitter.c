@@ -203,7 +203,7 @@ fs_nice_stream_transmitter_get_type (void)
 }
 
 GType
-fs_nice_stream_transmitter_register_type (FsPlugin *module)
+fs_nice_stream_transmitter_register_type (FsPlugin *module G_GNUC_UNUSED)
 {
   static const GTypeInfo info = {
     sizeof (FsNiceStreamTransmitterClass),
@@ -217,8 +217,8 @@ fs_nice_stream_transmitter_register_type (FsPlugin *module)
     (GInstanceInitFunc) fs_nice_stream_transmitter_init
   };
 
-  type = g_type_module_register_type (G_TYPE_MODULE (module),
-    FS_TYPE_STREAM_TRANSMITTER, "FsNiceStreamTransmitter", &info, 0);
+  type = g_type_register_static (FS_TYPE_STREAM_TRANSMITTER,
+      "FsNiceStreamTransmitter", &info, 0);
 
   return type;
 }

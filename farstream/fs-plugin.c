@@ -390,3 +390,26 @@ fs_plugin_list_available (const gchar *type_suffix)
 
   return retval;
 }
+
+/**
+ * fs_plugin_register_static:
+ * @name: The name of the plugin to register
+ * @type_suffix: The type of plugin to register (normally "transmitter")
+ *
+ * Register a staticly linked transmitter. This function should strictly be
+ * used by plugins own register function. To register a static plugin:
+ *   extern fs_plugin_<name>_<type>_register_pluing (void);
+ *   fs_plugin_<name>_<type>_register_pluing ();
+ **/
+
+void
+fs_plugin_register_static (const gchar *name, const gchar *type_suffix, GType type)
+{
+  FsPlugin *plugin;
+
+  plugin = g_object_new (FS_TYPE_PLUGIN, NULL);
+  plugin->name = g_strdup_printf ("%s-%s", name, type_suffix);
+  g_type_module_set_name (G_TYPE_MODULE (plugin), plugin->name);
+  plugin->type = type;
+  plugins = g_list_append (plugins, plugin);
+}

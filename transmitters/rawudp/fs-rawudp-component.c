@@ -235,7 +235,7 @@ fs_rawudp_component_get_type (void)
 }
 
 GType
-fs_rawudp_component_register_type (FsPlugin *module)
+fs_rawudp_component_register_type (FsPlugin *module G_GNUC_UNUSED)
 {
   static const GTypeInfo info = {
     sizeof (FsRawUdpComponentClass),
@@ -251,8 +251,7 @@ fs_rawudp_component_register_type (FsPlugin *module)
 
   /* Required because the GST type registration is not thread safe */
 
-  type = g_type_module_register_type (G_TYPE_MODULE (module),
-      G_TYPE_OBJECT, "FsRawUdpComponent", &info, 0);
+  type = g_type_register_static (G_TYPE_OBJECT, "FsRawUdpComponent", &info, 0);
 
   return type;
 }

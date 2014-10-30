@@ -15,6 +15,7 @@ libshm_transmitter_la_CFLAGS = \
 	$(GST_PLUGINS_BASE_CFLAGS) \
 	$(GST_CFLAGS)
 libshm_transmitter_la_LDFLAGS = $(FS_PLUGIN_LDFLAGS)
+libshm_transmitter_la_LIBTOOLFLAGS = $(PLUGIN_LIBTOOLFLAGS)
 libshm_transmitter_la_LIBADD = \
 	$(top_builddir)/farstream/libfarstream-@FS_APIVERSION@.la \
 	$(FS_LIBS) \
