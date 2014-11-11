@@ -1856,7 +1856,7 @@ known_buffer_have_buffer_handler (GstPad *pad, GstPadProbeInfo *info,
   GstBuffer *buffer = GST_PAD_PROBE_INFO_BUFFER (info);
 
   if (!g_atomic_int_get (&self->priv->associate_on_source))
-    return TRUE;
+    return GST_PAD_PROBE_OK;
 
   component_id = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT (pad),
           "component-id"));
@@ -1864,5 +1864,5 @@ known_buffer_have_buffer_handler (GstPad *pad, GstPadProbeInfo *info,
   g_signal_emit_by_name (self, "known-source-packet-received", component_id,
       buffer);
 
-  return TRUE;
+  return GST_PAD_PROBE_OK;
 }
