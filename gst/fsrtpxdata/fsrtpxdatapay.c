@@ -48,6 +48,8 @@ GST_STATIC_PAD_TEMPLATE ("src",
         "encoding-name = (string) \"X-DATA\"")
     );
 
+#define MAX_PAYLOAD_SIZE 1200
+
 static gboolean fs_rtp_xdata_pay_setcaps (GstRTPBasePayload * payload,
     GstCaps * caps);
 static GstFlowReturn fs_rtp_xdata_pay_handle_buffer (GstRTPBasePayload *payload,
@@ -90,6 +92,8 @@ fs_rtp_xdata_pay_init (FsRTPXdataPay * rtpxdatapay)
 
   gst_rtp_base_payload_set_options (rtpbasepayload, "application", TRUE,
       "X-DATA", 90000);
+  GST_RTP_BASE_PAYLOAD_MTU(rtpbasepayload) = MAX_PAYLOAD_SIZE +
+      gst_rtp_buffer_calc_header_len (0);
 }
 
 static gboolean
@@ -102,11 +106,34 @@ static GstFlowReturn
 fs_rtp_xdata_pay_handle_buffer (GstRTPBasePayload *payload, GstBuffer *buffer)
 {
   GstBuffer *rtpbuf;
+  gsize size;
+  guint mtu;
 
-  rtpbuf = gst_rtp_buffer_new_allocate (0, 0, 0);
-  rtpbuf = gst_buffer_append (rtpbuf, buffer);
+  size = gst_buffer_get_size (buffer);
+  mtu = GST_RTP_BASE_PAYLOAD_MTU(payload);
+  mtu -= gst_rtp_buffer_calc_header_len (0);
 
-  return gst_rtp_base_payload_push (payload, rtpbuf);
+  if (size <= mtu) {
+    rtpbuf = gst_rtp_buffer_new_allocate (0, 0, 0);
+    rtpbuf = gst_buffer_append (rtpbuf, buffer);
+
+    return gst_rtp_base_payload_push (payload, rtpbuf);
+  } else {
+    GstBufferList *rtplist = gst_buffer_list_new_sized (2);
+    gsize offset = 0;
+    gsize new_size;
+
+    while (size > 0) {
+      new_size = size > mtu ? mtu : size;
+
+      rtpbuf = gst_rtp_buffer_new_allocate (0, 0, 0);
+      rtpbuf = gst_buffer_append_region (rtpbuf, buffer, offset, new_size);
+      gst_buffer_list_add (rtplist, rtpbuf);
+      offset += new_size;
+      size -= new_size;
+    }
+    return gst_rtp_base_payload_push_list (payload, rtplist);
+  }
 }
 
 gboolean
