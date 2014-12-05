@@ -127,11 +127,13 @@ fs_rtp_xdata_pay_handle_buffer (GstRTPBasePayload *payload, GstBuffer *buffer)
       new_size = size > mtu ? mtu : size;
 
       rtpbuf = gst_rtp_buffer_new_allocate (0, 0, 0);
-      rtpbuf = gst_buffer_append_region (rtpbuf, buffer, offset, new_size);
+      gst_buffer_copy_into (rtpbuf, buffer, GST_BUFFER_COPY_MEMORY |
+          GST_BUFFER_COPY_TIMESTAMPS, offset, new_size);
       gst_buffer_list_add (rtplist, rtpbuf);
       offset += new_size;
       size -= new_size;
     }
+    gst_buffer_unref (buffer);
     return gst_rtp_base_payload_push_list (payload, rtplist);
   }
 }
