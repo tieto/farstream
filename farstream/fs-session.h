@@ -151,7 +151,7 @@ struct _FsSessionClass
       GstStructure *parameters, GError **error);
 
   /*< private >*/
-  gpointer _padding[7];
+  gpointer _padding[6];
 };
 
 /**
