@@ -37,6 +37,7 @@ enum {
   FLAG_IS_LOCAL = 1 << 1,
   FLAG_FORCE_CANDIDATES = 1 << 2,
   FLAG_NOT_SENDING = 1 << 3,
+  FLAG_MUXED = 1 << 4,
 };
 
 
@@ -47,6 +48,7 @@ volatile gint running = TRUE;
 gboolean associate_on_source = TRUE;
 gboolean is_address_local = FALSE;
 gboolean force_candidates = FALSE;
+gboolean is_muxed = FALSE;
 
 GMutex count_mutex;
 
@@ -200,7 +202,7 @@ _new_active_candidate_pair (FsStreamTransmitter *st, FsCandidate *local,
 }
 
 static void
-_handoff_handler (GstElement *element, GstBuffer *buffer, GstPad *pad,
+_handoff_handler_internal (GstElement *element, GstBuffer *buffer, GstPad *pad,
     guint stream, gint component_id)
 {
   ts_fail_unless (gst_buffer_get_size (buffer) == component_id * 10,
@@ -252,6 +254,25 @@ _handoff_handler (GstElement *element, GstBuffer *buffer, GstPad *pad,
   }
 
   g_mutex_unlock (&count_mutex);
+}
+
+static void
+_handoff_handler (GstElement *element, GstBuffer *buffer, GstPad *pad,
+    guint stream, gint component_id)
+{
+  if (is_muxed) {
+    ts_fail_if (component_id != 1,
+        "Received data on component %d while the stream is muxed",
+        component_id);
+
+    if (gst_buffer_get_size (buffer) == 20) {
+      received_known[stream][component_id-1]--;
+      component_id = 2;
+      received_known[stream][component_id-1]++;
+    }
+  }
+
+  _handoff_handler_internal (element, buffer, pad, stream, component_id);
 }
 
 static void
@@ -390,6 +411,7 @@ run_nice_transmitter_test (gint n_parameters, GParameter *params,
   associate_on_source = !(flags & FLAG_NO_SOURCE);
   is_address_local = (flags & FLAG_IS_LOCAL);
   force_candidates = (flags & FLAG_FORCE_CANDIDATES);
+  is_muxed = (flags & FLAG_MUXED);
 
   if (flags & FLAG_NOT_SENDING)
   {
@@ -828,6 +850,17 @@ GST_START_TEST (test_nicetransmitter_sending_half)
 }
 GST_END_TEST;
 
+GST_START_TEST (test_nicetransmitter_send_component_mux)
+{
+  GParameter param = {NULL, {0}};
+
+  param.name = "send-component-mux";
+  g_value_init (&param.value, G_TYPE_BOOLEAN);
+  g_value_set_boolean (&param.value, TRUE);
+
+  run_nice_transmitter_test (1, &param, FLAG_MUXED);
+}
+GST_END_TEST;
 
 static Suite *
 nicetransmitter_suite (void)
@@ -874,6 +907,10 @@ nicetransmitter_suite (void)
 
   tc_chain = tcase_create ("nicetransmitter-sending-half");
   tcase_add_test (tc_chain, test_nicetransmitter_sending_half);
+  suite_add_tcase (s, tc_chain);
+
+  tc_chain = tcase_create ("nicetransmitter-send-component-mux");
+  tcase_add_test (tc_chain, test_nicetransmitter_send_component_mux);
   suite_add_tcase (s, tc_chain);
 
   return s;
