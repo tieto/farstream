@@ -207,8 +207,12 @@ fs_msn_connection_dispose (GObject *object)
 
   if (self->polling_thread)
   {
+    GThread *polling_thread = g_thread_ref (self->polling_thread);
     gst_poll_set_flushing (self->poll, TRUE);
-    g_thread_join (self->polling_thread);
+    FS_MSN_CONNECTION_UNLOCK(self);
+    g_thread_join (polling_thread);
+    FS_MSN_CONNECTION_LOCK(self);
+    g_thread_unref (polling_thread);
     self->polling_thread = NULL;
   }
 
