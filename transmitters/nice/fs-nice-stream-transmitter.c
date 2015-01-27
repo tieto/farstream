@@ -646,6 +646,12 @@ fs_network_protocol_to_nice_candidate_protocol (FsNetworkProtocol proto)
   {
     case FS_NETWORK_PROTOCOL_UDP:
       return NICE_CANDIDATE_TRANSPORT_UDP;
+    case FS_NETWORK_PROTOCOL_TCP_ACTIVE:
+      return NICE_CANDIDATE_TRANSPORT_TCP_ACTIVE;
+    case FS_NETWORK_PROTOCOL_TCP_PASSIVE:
+      return NICE_CANDIDATE_TRANSPORT_TCP_PASSIVE;
+    case FS_NETWORK_PROTOCOL_TCP_SO:
+      return NICE_CANDIDATE_TRANSPORT_TCP_SO;
     default:
       GST_WARNING ("Invalid Fs network protocol type %u", proto);
       return NICE_CANDIDATE_TRANSPORT_UDP;
@@ -958,14 +964,6 @@ fs_nice_stream_transmitter_force_remote_candidates (
       goto out;
     }
 
-    if (candidate->proto != FS_NETWORK_PROTOCOL_UDP)
-    {
-      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
-          "Only UDP candidates can be set");
-      res = FALSE;
-      goto out;
-    }
-
     if (done[candidate->component_id-1])
     {
       g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
@@ -1027,9 +1025,15 @@ nice_candidate_transport_to_fs_network_protocol (NiceCandidateTransport trans)
   {
     case NICE_CANDIDATE_TRANSPORT_UDP:
       return FS_NETWORK_PROTOCOL_UDP;
+    case NICE_CANDIDATE_TRANSPORT_TCP_PASSIVE:
+      return FS_NETWORK_PROTOCOL_TCP_PASSIVE;
+    case NICE_CANDIDATE_TRANSPORT_TCP_ACTIVE:
+      return FS_NETWORK_PROTOCOL_TCP_ACTIVE;
+    case NICE_CANDIDATE_TRANSPORT_TCP_SO:
+      return FS_NETWORK_PROTOCOL_TCP_SO;
     default:
       GST_WARNING ("Invalid Nice network transport type %u", trans);
-      return FS_NETWORK_PROTOCOL_TCP;
+      return FS_NETWORK_PROTOCOL_UDP;
   }
 }
 
@@ -1210,13 +1214,6 @@ fs_nice_stream_transmitter_build (FsNiceStreamTransmitter *self,
     {
       g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
           "You can only set preferred candidates of type host");
-      return FALSE;
-    }
-
-    if (cand->proto != FS_NETWORK_PROTOCOL_UDP)
-    {
-      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
-          "Only UDP preferred candidates can be set");
       return FALSE;
     }
   }
@@ -1697,9 +1694,6 @@ agent_new_candidate (NiceAgent *agent,
   for (item = candidates; item; item = g_slist_next (item))
   {
     NiceCandidate *candidate = item->data;
-
-    if (candidate->transport != NICE_CANDIDATE_TRANSPORT_UDP)
-      continue;
 
     if (!strcmp (candidate->foundation, foundation))
     {

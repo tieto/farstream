@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, cvs and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for cvs/prerelease
-AC_INIT(Farstream, 0.2.5.1,
+AC_INIT(Farstream, 0.2.6.1,
     https://bugs.freedesktop.org/enter_bug.cgi?product=Farstream,
     farstream)
 
@@ -167,7 +167,7 @@ AC_ARG_WITH(transmitter-plugins,
     [FS_TRANSMITTER_PLUGINS_SELECTED=$FS_TRANSMITTER_PLUGINS_ALL])
 
 
-NICE_REQUIRED=0.1.3
+NICE_REQUIRED=0.1.8
 
 PKG_CHECK_MODULES(NICE, \
        nice >= $NICE_REQUIRED,, AC_MSG_ERROR([Need libnice >= $NICE_REQUIRED]))
