@@ -313,6 +313,23 @@ _known_source_packet_received (FsStreamTransmitter *st, guint component_id,
 }
 
 static void
+_setup_fakesink_for_ready_component (FsTransmitter *trans, const gchar *prop,
+    FsStreamTransmitter *st, guint component)
+{
+
+  if (g_object_get_data (G_OBJECT (trans), prop) == NULL)
+  {
+    GstElement *pipeline = GST_ELEMENT (
+        g_object_get_data (G_OBJECT (trans), "pipeline"));
+    GST_DEBUG ("%p: Setting up fakesrc for component %u", st, component);
+    setup_fakesrc (trans, pipeline, component);
+    g_object_set_data (G_OBJECT (trans), prop, "");
+  }
+  else
+    GST_DEBUG ("FAKESRC ALREADY SETUP for component %u", component);
+}
+
+static void
 _stream_state_changed (FsStreamTransmitter *st, guint component,
     FsStreamState state, gpointer user_data)
 {
@@ -349,21 +366,14 @@ _stream_state_changed (FsStreamTransmitter *st, guint component,
   if (state < FS_STREAM_STATE_READY)
     return;
 
-  if (component == 1)
-    prop = "src_setup_1";
-  else if (component == 2)
-    prop = "src_setup_2";
-
-  if (g_object_get_data (G_OBJECT (trans), prop) == NULL)
-  {
-    GstElement *pipeline = GST_ELEMENT (
-        g_object_get_data (G_OBJECT (trans), "pipeline"));
-    GST_DEBUG ("%p: Setting up fakesrc for component %u", st, component);
-    setup_fakesrc (trans, pipeline, component);
-    g_object_set_data (G_OBJECT (trans), prop, "");
+  if (component == 1) {
+    _setup_fakesink_for_ready_component (trans, "src_setup_1", st, component);
+    if (is_muxed)
+      _setup_fakesink_for_ready_component (trans, "src_setup_2", st, 2);
   }
-  else
-    GST_DEBUG ("FAKESRC ALREADY SETUP for component %u", component);
+  if (!is_muxed && component == 2)
+    _setup_fakesink_for_ready_component (trans, "src_setup_2", st, component);
+
 }
 
 
