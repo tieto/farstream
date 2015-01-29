@@ -1,3 +1,10 @@
+farstream 0.2.7 (January 29, 2015)
+==================================
+- Add "send-rtcp-mux" parameters to fsrtpsession
+- Add MTU and buffer splitting to rtpxdatapay
+- Fix crash if srtpenc/dec is missing
+- Bug fixes
+
 farstream 0.2.6 (October 9, 2014)
 ================================
 - Add ICE-TCP support
