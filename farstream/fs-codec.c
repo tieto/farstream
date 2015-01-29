@@ -763,7 +763,7 @@ fs_codec_remove_optional_parameter (FsCodec *codec,
  * Finds the #FsCodecParameter in the #FsCodec that has the requested name
  * and, if not %NULL, the requested value
  *
- * Returns: (transfer none) the #FsCodecParameter from the #FsCodec or %NULL
+ * Returns: (transfer none): the #FsCodecParameter from the #FsCodec or %NULL
  */
 
 FsCodecParameter *

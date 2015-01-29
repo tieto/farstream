@@ -179,14 +179,11 @@ fs_stream_class_init (FsStreamClass *klass)
 
 
   /**
-   * FsStream:remote-codecs:
+   * FsStream:remote-codecs: (type GLib.List(FsCodec)) (transfer full)
    *
    * This is the list of remote codecs for this stream. They must be set by the
    * user as soon as they are known using fs_stream_set_remote_codecs()
    * (generally through external signaling). It is a #GList of #FsCodec.
-   *
-   * Type: GLib.List(FsCodec)
-   * Transfer: full
    */
   g_object_class_install_property (gobject_class,
       PROP_REMOTE_CODECS,
@@ -197,16 +194,13 @@ fs_stream_class_init (FsStreamClass *klass)
         G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
   /**
-   * FsStream:negotiated-codecs:
+   * FsStream:negotiated-codecs: (type GLib.List(FsCodec)) (transfer full)
    *
    * This is the list of negotiatied codecs, it is the same list as the list
    * of #FsCodec from the parent #FsSession, except that the codec config data
    * has been replaced with the data from the remote codecs for this stream.
    * This is the list of #FsCodec used to receive data from this stream.
    * It is a #GList of #FsCodec.
-   *
-   * Type: GLib.List(FsCodec)
-   * Transfer: full
    */
   g_object_class_install_property (gobject_class,
       PROP_NEGOTIATED_CODECS,
@@ -217,7 +211,7 @@ fs_stream_class_init (FsStreamClass *klass)
         G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
   /**
-   * FsStream:current-recv-codecs:
+   * FsStream:current-recv-codecs: (type GLib.List(FsCodec)) (transfer full)
    *
    * This is the list of codecs that have been received by this stream.
    * The user must free the list if fs_codec_list_destroy().
@@ -227,9 +221,6 @@ fs_stream_class_init (FsStreamClass *klass)
    * only if that codec was not previously received in this stream, but it can
    * also be emitted if the pad already exists, but the source material that
    * will come to it is different.
-   *
-   * Type: GLib.List(FsCodec)
-   * Transfer: full
    */
   g_object_class_install_property (gobject_class,
       PROP_CURRENT_RECV_CODECS,

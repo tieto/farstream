@@ -270,7 +270,7 @@ fs_session_class_init (FsSessionClass *klass)
         G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
   /**
-   * FsSession:codec-preferences:
+   * FsSession:codec-preferences: (type GLib.List(FsCodec)) (transfer full)
    *
    * This is the current preferences list for the local codecs. It is
    * set by the user to specify the codec options and priorities. The user may
@@ -282,9 +282,6 @@ fs_session_class_init (FsSessionClass *klass)
    * or %FS_CODEC_ID_ANY. If the encoding name is "reserve-pt", then the
    * payload type of the codec will be "reserved" and not be used by any
    * dynamically assigned payload type.
-   *
-   * Type: GLib.List(FsCodec)
-   * Transfer: full
    */
   g_object_class_install_property (gobject_class,
       PROP_CODEC_PREFERENCES,
@@ -296,7 +293,7 @@ fs_session_class_init (FsSessionClass *klass)
         G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
   /**
-   * FsSession:codecs:
+   * FsSession:codecs: (type GLib.List(FsCodec)) (transfer full)
    *
    * This is the list of codecs used for this session. It will include the
    * codecs and payload type used to receive media on this session. It will
@@ -315,9 +312,6 @@ fs_session_class_init (FsSessionClass *klass)
    *
    * It is a #GList of #FsCodec. User must free this codec list using
    * fs_codec_list_destroy() when done.
-   *
-   * Type: GLib.List(FsCodec)
-   * Transfer: full
    */
   g_object_class_install_property (gobject_class,
       PROP_CODECS,
@@ -328,7 +322,7 @@ fs_session_class_init (FsSessionClass *klass)
         G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
   /**
-   * FsSession:codecs-without-config:
+   * FsSession:codecs-without-config: (type GLib.List(FsCodec)) (transfer full)
    *
    * This is the same list of codecs as #FsSession:codecs without
    * the configuration information that describes the data sent. It is suitable
@@ -346,9 +340,6 @@ fs_session_class_init (FsSessionClass *klass)
    *
    * It is a #GList of #FsCodec. User must free this codec list using
    * fs_codec_list_destroy() when done.
-   *
-   * Type: GLib.List(FsCodec)
-   * Transfer: full
    */
   g_object_class_install_property (gobject_class,
       PROP_CODECS_WITHOUT_CONFIG,
