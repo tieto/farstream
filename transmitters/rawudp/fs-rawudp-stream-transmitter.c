@@ -655,6 +655,7 @@ fs_rawudp_stream_transmitter_build (FsRawUdpStreamTransmitter *self,
     if (used_port != requested_port  &&  !ports[c])
     {
       do {
+        fs_rawudp_component_stop (self->priv->component[c]);
         g_object_unref (self->priv->component[c]);
         self->priv->component[c] = NULL;
 
