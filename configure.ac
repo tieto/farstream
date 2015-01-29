@@ -12,7 +12,7 @@ AC_INIT(Farstream, 0.2.6.1,
 AG_GST_INIT
 
 dnl initialize automake
-AM_INIT_AUTOMAKE([-Wno-portability])
+AM_INIT_AUTOMAKE([-Wno-portability subdir-objects])
 
 dnl define PACKAGE_VERSION_* variables
 AS_VERSION
