@@ -1532,7 +1532,7 @@ lookup_codec_association_by_codec_for_sending (GList *codec_associations,
   return res;
 }
 
-FsRtpHeaderExtension *
+static FsRtpHeaderExtension *
 get_extension (GList *hdrexts, const gchar *uri, guint id)
 {
   GList *item;
