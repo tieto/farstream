@@ -5523,15 +5523,7 @@ _srtpdec_request_key (GstElement *srtpdec, guint ssrc, gpointer user_data)
 
   fs_rtp_session_has_disposed_exit (self);
 
-  if (caps)
-    return caps;
-  else
-    return gst_caps_new_simple ("application/x-srtp",
-        "srtp-cipher", G_TYPE_STRING, "null",
-        "srtcp-cipher", G_TYPE_STRING, "null",
-        "srtp-auth", G_TYPE_STRING, "null",
-        "srtcp-auth", G_TYPE_STRING, "null",
-        NULL);
+  return caps;
 }
 
 static gboolean

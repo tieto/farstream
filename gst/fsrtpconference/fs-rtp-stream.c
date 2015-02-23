@@ -77,7 +77,8 @@ enum
   PROP_SESSION,
   PROP_RTP_HEADER_EXTENSIONS,
   PROP_DECRYPTION_PARAMETERS,
-  PROP_SEND_RTCP_MUX
+  PROP_SEND_RTCP_MUX,
+  PROP_REQUIRE_ENCRYPTION
 };
 
 struct _FsRtpStreamPrivate
@@ -98,6 +99,7 @@ struct _FsRtpStreamPrivate
 
   /* protected by session lock */
   GstStructure *decryption_parameters;
+  gboolean encrypted;
 
   gulong local_candidates_prepared_handler_id;
   gulong new_active_candidate_pair_handler_id;
@@ -224,6 +226,9 @@ fs_rtp_stream_class_init (FsRtpStreamClass *klass)
   g_object_class_override_property (gobject_class,
                                     PROP_DECRYPTION_PARAMETERS,
                                     "decryption-parameters");
+  g_object_class_override_property (gobject_class,
+                                    PROP_REQUIRE_ENCRYPTION,
+                                    "require-encryption");
 
   g_object_class_install_property (gobject_class,
       PROP_RTP_HEADER_EXTENSIONS,
@@ -475,6 +480,11 @@ fs_rtp_stream_get_property (GObject *object,
         g_value_set_boolean (value, FALSE);
       FS_RTP_SESSION_UNLOCK (session);
       break;
+    case PROP_REQUIRE_ENCRYPTION:
+      FS_RTP_SESSION_LOCK (session);
+      g_value_set_boolean (value, self->priv->encrypted);
+      FS_RTP_SESSION_UNLOCK (session);
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -575,6 +585,28 @@ fs_rtp_stream_set_property (GObject *object,
                   "send-component-mux") != NULL)
             g_object_set (self->priv->stream_transmitter,
                 "send-component-mux", self->priv->send_rtcp_mux, NULL);
+          FS_RTP_SESSION_UNLOCK (session);
+        }
+      }
+      break;
+    case PROP_REQUIRE_ENCRYPTION:
+      {
+        FsRtpSession *session = fs_rtp_stream_get_session (self, NULL);
+
+        if (session) {
+          FS_RTP_SESSION_LOCK (session);
+
+          if (self->priv->encrypted != g_value_get_boolean (value))
+          {
+            self->priv->encrypted = g_value_get_boolean (value);
+
+            if (!self->priv->decrypt_clear_locked_cb (self,
+                    self->priv->user_data_for_cb)) {
+              g_warning ("Can't set encryption because srtpdec is not"
+                  " installed");
+              self->priv->encrypted = FALSE;
+            }
+          }
           FS_RTP_SESSION_UNLOCK (session);
         }
       }
@@ -1492,7 +1524,20 @@ fs_rtp_stream_get_srtp_caps_locked (FsRtpStream *self)
    */
   if (!gst_structure_has_name (self->priv->decryption_parameters,
           "FarstreamSRTP"))
-    return NULL;
+  {
+    /* Return NULL (drop packets) if encrypted, otherwise return
+     * the NULL codec.
+     */
+    if (self->priv->encrypted)
+      return NULL;
+    else
+      return gst_caps_new_simple ("application/x-srtp",
+          "srtp-cipher", G_TYPE_STRING, "null",
+          "srtcp-cipher", G_TYPE_STRING, "null",
+          "srtp-auth", G_TYPE_STRING, "null",
+          "srtcp-auth", G_TYPE_STRING, "null",
+          NULL);
+  }
 
   srtp_cipher = gst_structure_get_string (self->priv->decryption_parameters,
       "rtp-cipher");
