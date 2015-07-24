@@ -1516,13 +1516,11 @@ fs_rtp_stream_get_srtp_caps_locked (FsRtpStream *self)
   const GValue *v;
   GstBuffer *key;
 
-  if (!self->priv->decryption_parameters)
-    return NULL;
-
   /* This is always TRUE for now, but when we expand to DTLS-SRTP, it may
    * not be.
    */
-  if (!gst_structure_has_name (self->priv->decryption_parameters,
+  if (!self->priv->decryption_parameters ||
+      !gst_structure_has_name (self->priv->decryption_parameters,
           "FarstreamSRTP"))
   {
     /* Return NULL (drop packets) if encrypted, otherwise return
