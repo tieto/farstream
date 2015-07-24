@@ -5518,6 +5518,32 @@ _srtpdec_request_key (GstElement *srtpdec, guint ssrc, gpointer user_data)
     caps = fs_rtp_stream_get_srtp_caps_locked (stream);
     g_object_unref (stream);
   }
+  else
+  {
+    GList *item;
+    gboolean no_crypto = TRUE;
+    for (item = self->priv->streams; item; item = item->next)
+      if (fs_rtp_stream_requires_crypto_locked (item->data))
+      {
+        no_crypto = FALSE;
+        break;
+      }
+    if (no_crypto)
+    {
+      GST_DEBUG ("No stream found for SSRC %x, none of the streams require"
+          " crypto, so letting through", ssrc);
+      caps = gst_caps_new_simple ("application/x-srtp",
+          "srtp-cipher", G_TYPE_STRING, "null",
+          "srtcp-cipher", G_TYPE_STRING, "null",
+          "srtp-auth", G_TYPE_STRING, "null",
+          "srtcp-auth", G_TYPE_STRING, "null",
+          NULL);
+    }
+    else
+    {
+      GST_DEBUG ("Some streams require crypto, dropping packets");
+    }
+  }
 
   FS_RTP_SESSION_UNLOCK (self);
 

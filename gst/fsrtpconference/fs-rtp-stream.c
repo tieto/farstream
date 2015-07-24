@@ -482,7 +482,7 @@ fs_rtp_stream_get_property (GObject *object,
       break;
     case PROP_REQUIRE_ENCRYPTION:
       FS_RTP_SESSION_LOCK (session);
-      g_value_set_boolean (value, self->priv->encrypted);
+      g_value_set_boolean (value, fs_rtp_stream_requires_crypto_locked (self));
       FS_RTP_SESSION_UNLOCK (session);
       break;
     default:
@@ -1579,4 +1579,10 @@ fs_rtp_stream_get_srtp_caps_locked (FsRtpStream *self)
       "srtp-auth", G_TYPE_STRING, srtp_auth,
       "srtcp-auth", G_TYPE_STRING, srtcp_auth,
       NULL);
+}
+
+gboolean
+fs_rtp_stream_requires_crypto_locked (FsRtpStream *self)
+{
+  return self->priv->encrypted;
 }
