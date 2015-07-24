@@ -55,7 +55,6 @@ check_PROGRAMS = \
 	rtp/sendcodecs \
 	rtp/conference \
 	rtp/recvcodecs \
-	msn/conference \
 	utils/binadded
 
 AM_CFLAGS = \
@@ -155,10 +154,6 @@ rtp_sendcodecs_SOURCES = \
 
 rtp_recvcodecs_CFLAGS = $(AM_CFLAGS) $(GST_PLUGINS_BASE_CFLAGS)
 rtp_recvcodecs_LDADD = $(LDADD) -lgstrtp-@GST_API_VERSION@
-
-msn_conference_CFLAGS = $(AM_CFLAGS)
-msn_conference_SOURCES = \
-	msn/conference.c
 
 utils_binadded_CFLAGS = $(AM_CFLAGS)
 utils_binadded_SOURCES = \

@@ -29,9 +29,6 @@ Run time for the RTP plugin:
  - gst-plugins-good 1.4.0
  - gst-plugins-bad 1.4.0
 
-Run time for the MSN plugin:
- - gst-plugins-bad 1.4.0
-
 For the GUI example:
  - Gtk 3.0
 

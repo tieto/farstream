@@ -60,7 +60,6 @@ SCANOBJ_DEPS = \
 	$(top_builddir)/transmitters/nice/libnice-transmitter.la \
 	$(top_builddir)/transmitters/shm/libshm-transmitter.la \
 	$(top_builddir)/gst/fsrtpconference/libfsrtpconference_doc.la \
-	$(top_builddir)/gst/fsmsnconference/libfsmsnconference_doc.la \
 	$(top_builddir)/gst/fsrawconference/libfsrawconference_doc.la \
 	$(top_builddir)/gst/fsvideoanyrate/libfsvideoanyrate.la \
 	$(top_builddir)/gst/fsrtpxdata/libfsrtpxdata.la
@@ -89,12 +88,6 @@ EXTRA_HFILES = \
 	$(top_srcdir)/gst/fsrawconference/fs-raw-session.h \
 	$(top_srcdir)/gst/fsrawconference/fs-raw-stream.h \
 	$(top_srcdir)/gst/fsrawconference/fs-raw-participant.h \
-	$(top_srcdir)/gst/fsmsnconference/fs-msn-cam-recv-conference.h \
-	$(top_srcdir)/gst/fsmsnconference/fs-msn-cam-send-conference.h \
-	$(top_srcdir)/gst/fsmsnconference/fs-msn-conference.h \
-	$(top_srcdir)/gst/fsmsnconference/fs-msn-session.h \
-	$(top_srcdir)/gst/fsmsnconference/fs-msn-stream.h \
-	$(top_srcdir)/gst/fsmsnconference/fs-msn-participant.h \
 	$(top_srcdir)/transmitters/rawudp/fs-rawudp-transmitter.h \
 	$(top_srcdir)/transmitters/rawudp/fs-rawudp-stream-transmitter.h \
 	$(top_srcdir)/transmitters/multicast/fs-multicast-transmitter.h \
@@ -130,7 +123,6 @@ GTKDOC_LIBS = \
 	$(top_builddir)/farstream/libfarstream-@FS_APIVERSION@.la \
 	$(top_builddir)/gst/fsrtpconference/libfsrtpconference_doc.la \
 	$(top_builddir)/gst/fsrawconference/libfsrawconference_doc.la \
-	$(top_builddir)/gst/fsmsnconference/libfsmsnconference_doc.la \
 	$(GST_BASE_LIBS) 
 
 GTKDOC_CC=$(LIBTOOL) --tag=CC --mode=compile $(CC)
