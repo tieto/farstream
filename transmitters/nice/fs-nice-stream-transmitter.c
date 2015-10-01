@@ -176,13 +176,11 @@ static void agent_gathering_done (NiceAgent *agent, guint stream_id,
 static void agent_new_selected_pair (NiceAgent *agent,
     guint stream_id,
     guint component_id,
-    const gchar *lfoundation,
-    const gchar *rfoundation,
+    NiceCandidate *l_candidate,
+    NiceCandidate *r_candidate,
     gpointer user_data);
 static void agent_new_candidate (NiceAgent *agent,
-    guint stream_id,
-    guint component_id,
-    const gchar *foundation,
+    NiceCandidate *candidate,
     gpointer user_data);
 
 static GstPadProbeReturn known_buffer_have_buffer_handler (GstPad *pad,
@@ -1528,10 +1526,11 @@ fs_nice_stream_transmitter_build (FsNiceStreamTransmitter *self,
   self->priv->gathering_done_handler_id = g_signal_connect_object (agent->agent,
       "candidate-gathering-done", G_CALLBACK (agent_gathering_done), self, 0);
   self->priv->new_selected_pair_handler_id = g_signal_connect_object (
-      agent->agent, "new-selected-pair", G_CALLBACK (agent_new_selected_pair),
+      agent->agent, "new-selected-pair-full",
+      G_CALLBACK (agent_new_selected_pair),
       self, 0);
   self->priv->new_candidate_handler_id = g_signal_connect_object (agent->agent,
-      "new-candidate", G_CALLBACK (agent_new_candidate), self, 0);
+      "new-candidate-full", G_CALLBACK (agent_new_candidate), self, 0);
   self->priv->tos_changed_handler_id = g_signal_connect_object (
       self->priv->transmitter, "notify::tos", G_CALLBACK (tos_changed), self,
       0);
@@ -1703,142 +1702,72 @@ static void
 agent_new_selected_pair (NiceAgent *agent,
     guint stream_id,
     guint component_id,
-    const gchar *lfoundation,
-    const gchar *rfoundation,
+    NiceCandidate *l_candidate,
+    NiceCandidate *r_candidate,
     gpointer user_data)
 {
   FsNiceStreamTransmitter *self = FS_NICE_STREAM_TRANSMITTER (user_data);
-  GSList *candidates, *item;
   FsCandidate *local = NULL;
   FsCandidate *remote = NULL;
+  struct candidate_signal_data *data;
 
   if (stream_id != self->priv->stream_id)
     return;
 
-  candidates = nice_agent_get_local_candidates (agent,
-      self->priv->stream_id, component_id);
+  local = nice_candidate_to_fs_candidate (agent, l_candidate, TRUE);
+  remote = nice_candidate_to_fs_candidate (agent, r_candidate, FALSE);
 
-  for (item = candidates; item; item = g_slist_next (item))
-  {
-    NiceCandidate *candidate = item->data;
-
-    if (!strcmp (candidate->foundation, lfoundation))
-    {
-      local = nice_candidate_to_fs_candidate (agent, candidate, TRUE);
-      break;
-    }
-  }
-  g_slist_foreach (candidates, (GFunc)nice_candidate_free, NULL);
-  g_slist_free (candidates);
-
-  candidates = nice_agent_get_remote_candidates (agent,
-      self->priv->stream_id, component_id);
-
-  for (item = candidates; item; item = g_slist_next (item))
-  {
-    NiceCandidate *candidate = item->data;
-
-    if (!strcmp (candidate->foundation, rfoundation))
-    {
-      remote = nice_candidate_to_fs_candidate (agent, candidate, FALSE);
-      break;
-    }
-  }
-  g_slist_foreach (candidates, (GFunc)nice_candidate_free, NULL);
-  g_slist_free (candidates);
-
-
-  if (local && remote)
-  {
-    struct candidate_signal_data *data =
-      g_slice_new (struct candidate_signal_data);
-    data->self = g_object_ref (self);
-    data->signal_name = "new-active-candidate-pair";
-    data->candidate1 = local;
-    data->candidate2 = remote;
-    fs_nice_agent_add_idle (self->priv->agent, agent_candidate_signal_idle,
-        data, free_candidate_signal_data);
-  }
-  else
-  {
-    if (local)
-      fs_candidate_destroy (local);
-    if (remote)
-      fs_candidate_destroy (remote);
-  }
+  data = g_slice_new (struct candidate_signal_data);
+  data->self = g_object_ref (self);
+  data->signal_name = "new-active-candidate-pair";
+  data->candidate1 = local;
+  data->candidate2 = remote;
+  fs_nice_agent_add_idle (self->priv->agent, agent_candidate_signal_idle,
+      data, free_candidate_signal_data);
 }
 
 static void
 agent_new_candidate (NiceAgent *agent,
-    guint stream_id,
-    guint component_id,
-    const gchar *foundation,
+    NiceCandidate *candidate,
     gpointer user_data)
 {
   FsNiceStreamTransmitter *self = FS_NICE_STREAM_TRANSMITTER (user_data);
   FsCandidate *fscandidate = NULL;
-  GSList *candidates, *item;
 
-  if (stream_id != self->priv->stream_id)
-    return;
+  GST_DEBUG ("New candidate found");
 
-  GST_DEBUG ("New candidate found for stream %u component %u",
-      stream_id, component_id);
+  fscandidate = nice_candidate_to_fs_candidate (agent, candidate, TRUE);
 
-  candidates = nice_agent_get_local_candidates (agent, stream_id, component_id);
-
-  for (item = candidates; item; item = g_slist_next (item))
+  FS_NICE_STREAM_TRANSMITTER_LOCK (self);
+  if (!self->priv->gathered)
   {
-    NiceCandidate *candidate = item->data;
+    /* Nice doesn't do connchecks while gathering, so don't tell the upper
+     * layers about the candidates untill gathering is finished.
+     * Also older versions of farstream would fail the connection right away
+     * when the first candidate given failed immediately (e.g. ipv6 on a
+     * non-ipv6 capable host, so we order ipv6 candidates after ipv4 ones */
 
-    if (!strcmp (candidate->foundation, foundation))
-    {
-      fscandidate = nice_candidate_to_fs_candidate (agent, candidate, TRUE);
-      break;
-    }
-  }
-  g_slist_foreach (candidates, (GFunc) nice_candidate_free, NULL);
-  g_slist_free (candidates);
-
-  if (fscandidate)
-  {
-    FS_NICE_STREAM_TRANSMITTER_LOCK (self);
-    if (!self->priv->gathered)
-    {
-      /* Nice doesn't do connchecks while gathering, so don't tell the upper
-       * layers about the candidates untill gathering is finished.
-       * Also older versions of farstream would fail the connection right away
-       * when the first candidate given failed immediately (e.g. ipv6 on a
-       * non-ipv6 capable host, so we order ipv6 candidates after ipv4 ones */
-
-       if (strchr (fscandidate->ip, ':'))
-        self->priv->local_candidates = g_list_append
-          (self->priv->local_candidates, fscandidate);
-      else
-        self->priv->local_candidates = g_list_prepend
-          (self->priv->local_candidates, fscandidate);
-      FS_NICE_STREAM_TRANSMITTER_UNLOCK (self);
-    }
+     if (strchr (fscandidate->ip, ':'))
+      self->priv->local_candidates = g_list_append
+        (self->priv->local_candidates, fscandidate);
     else
-    {
-      struct candidate_signal_data *data =
-        g_slice_new (struct candidate_signal_data);
-
-      FS_NICE_STREAM_TRANSMITTER_UNLOCK (self);
-
-      data->self = g_object_ref (self);
-      data->signal_name = "new-local-candidate";
-      data->candidate1 = fscandidate;
-      data->candidate2 = NULL;
-      fs_nice_agent_add_idle (self->priv->agent, agent_candidate_signal_idle,
-        data, free_candidate_signal_data);
-    }
+      self->priv->local_candidates = g_list_prepend
+        (self->priv->local_candidates, fscandidate);
+    FS_NICE_STREAM_TRANSMITTER_UNLOCK (self);
   }
   else
   {
-    GST_WARNING ("Could not find local candidate with foundation %s"
-        " for component %d in stream %d", foundation, component_id,
-        stream_id);
+    struct candidate_signal_data *data =
+      g_slice_new (struct candidate_signal_data);
+
+    FS_NICE_STREAM_TRANSMITTER_UNLOCK (self);
+
+    data->self = g_object_ref (self);
+    data->signal_name = "new-local-candidate";
+    data->candidate1 = fscandidate;
+    data->candidate2 = NULL;
+    fs_nice_agent_add_idle (self->priv->agent, agent_candidate_signal_idle,
+      data, free_candidate_signal_data);
   }
 }
 
