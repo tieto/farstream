@@ -27,19 +27,37 @@
 
 
 static void
-debug_pipeline (GList *pipeline)
+debug_pipeline (const gchar *prefix, GList *pipeline)
 {
   GList *walk;
+  GString *str;
+  gboolean first = FALSE;
+
+  str = g_string_new (prefix);
 
   for (walk = pipeline; walk; walk = g_list_next (walk))
   {
     GList *walk2;
+    gboolean first_alt = TRUE;
+
+    if (!first)
+      g_string_append (str, " ->");
+    first = FALSE;
+
     for (walk2 = g_list_first (walk->data); walk2; walk2 = g_list_next (walk2))
-      g_message ("%p:%d:%s ", walk2->data,
-        GST_OBJECT_REFCOUNT_VALUE(GST_OBJECT (walk2->data)),
-        gst_plugin_feature_get_name (GST_PLUGIN_FEATURE (walk2->data)));
-    g_message ("--");
+    {
+      if (first_alt)
+        g_string_append_printf (str, " %s",
+            gst_plugin_feature_get_name (GST_PLUGIN_FEATURE (walk2->data)));
+      else
+        g_string_append_printf (str, " | %s",
+            gst_plugin_feature_get_name (GST_PLUGIN_FEATURE (walk2->data)));
+
+      first_alt = FALSE;
+    }
   }
+  g_print ("%s\n", str->str);
+  g_string_free (str, TRUE);
 }
 
 static void
@@ -48,24 +66,30 @@ debug_blueprint (CodecBlueprint *blueprint)
   gchar *str;
 
   str = fs_codec_to_string (blueprint->codec);
-  g_message ("Codec: %s", str);
+  g_print ("Codec: %s\n", str);
   g_free (str);
 
   str = gst_caps_to_string (blueprint->media_caps);
-  g_message ("media_caps: %s", str);
+  g_print ("media_caps: %s\n", str);
   g_free (str);
 
   str = gst_caps_to_string (blueprint->rtp_caps);
-  g_message ("rtp_caps: %s", str);
+  g_print ("rtp_caps: %s\n", str);
   g_free (str);
 
-  g_message ("send pipeline:");
-  debug_pipeline (blueprint->send_pipeline_factory);
+  str = gst_caps_to_string (blueprint->input_caps);
+  g_print ("input_caps: %s\n", str);
+  g_free (str);
 
-  g_message ("recv pipeline:");
-  debug_pipeline (blueprint->receive_pipeline_factory);
+  str = gst_caps_to_string (blueprint->output_caps);
+  g_print ("output_caps: %s\n", str);
+  g_free (str);
 
-  g_message ("================================");
+  debug_pipeline ("send pipeline:", blueprint->send_pipeline_factory);
+
+  debug_pipeline ("recv pipeline:", blueprint->receive_pipeline_factory);
+
+  g_print ("================================\n");
 }
 
 int main (int argc, char **argv)
@@ -84,12 +108,12 @@ int main (int argc, char **argv)
 
   gst_debug_set_default_threshold (GST_LEVEL_WARNING);
 
-  g_message ("AUDIO STARTING!!");
+  g_print ("AUDIO STARTING!!\n");
 
   elements = fs_rtp_blueprints_get (FS_MEDIA_TYPE_AUDIO, &error);
 
   if (error)
-    g_message ("Error: %s", error->message);
+    g_printerr ("Error: %s\n", error->message);
   else
     g_list_foreach (elements, (GFunc) debug_blueprint, NULL);
 
@@ -97,15 +121,15 @@ int main (int argc, char **argv)
 
   fs_rtp_blueprints_unref (FS_MEDIA_TYPE_AUDIO);
 
-  g_message ("AUDIO FINISHED!!");
+  g_print ("AUDIO FINISHED!!\n");
 
 
-  g_message ("VIDEO STARTING!!");
+  g_print ("VIDEO STARTING!!\n");
 
   elements = fs_rtp_blueprints_get (FS_MEDIA_TYPE_VIDEO, &error);
 
   if (error)
-    g_message ("Error: %s", error->message);
+    g_printerr ("Error: %s\n", error->message);
   else
     g_list_foreach (elements, (GFunc) debug_blueprint, NULL);
 
@@ -113,7 +137,25 @@ int main (int argc, char **argv)
 
   fs_rtp_blueprints_unref (FS_MEDIA_TYPE_VIDEO);
 
-  g_message ("VIDEO FINISHED!!");
+  g_print ("VIDEO FINISHED!!\n");
+
+
+  g_print ("APPLICATION STARTING!!\n");
+
+  elements = fs_rtp_blueprints_get (FS_MEDIA_TYPE_APPLICATION, &error);
+
+  if (error)
+    g_printerr ("Error: %s\n", error->message);
+  else
+    g_list_foreach (elements, (GFunc) debug_blueprint, NULL);
+
+  g_clear_error (&error);
+
+  fs_rtp_blueprints_unref (FS_MEDIA_TYPE_APPLICATION);
+
+  g_print ("APPLICATION FINISHED!!\n");
+
+
 
   return 0;
 }

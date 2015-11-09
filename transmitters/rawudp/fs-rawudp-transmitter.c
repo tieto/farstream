@@ -531,10 +531,6 @@ struct _UdpPort {
   GstElement *udpsink;
   GstPad *udpsink_requested_pad;
 
-  GstElement *recvonly_filter;
-  GstElement *recvonly_udpsink;
-  GstPad *recvonly_requested_pad;
-
   gchar *requested_ip;
   guint requested_port;
 
@@ -893,19 +889,6 @@ fs_rawudp_transmitter_get_udpport (FsRawUdpTransmitter *trans,
   if (!udpport->udpsink)
     goto error;
 
-  udpport->recvonly_filter = fs_transmitter_get_recvonly_filter (
-      FS_TRANSMITTER (trans), udpport->component_id);
-
-  if (udpport->recvonly_filter)
-  {
-    udpport->recvonly_udpsink = _create_sinksource ("multiudpsink",
-        GST_BIN (trans->priv->gst_sink), udpport->tee,
-        udpport->recvonly_filter, udpport->socket, GST_PAD_SINK, FALSE,
-        &udpport->recvonly_requested_pad, error);
-    if (!udpport->recvonly_udpsink)
-      goto error;
-  }
-
   g_mutex_lock (&trans->priv->mutex);
 
   /* Check if someone else added the same port at the same time */
@@ -987,27 +970,6 @@ fs_rawudp_transmitter_put_udpport (FsRawUdpTransmitter *trans,
     if (!gst_bin_remove (GST_BIN (trans->priv->gst_sink), udpport->udpsink))
       GST_ERROR ("Could not remove udpsink element from transmitter source");
   }
-
-  if (udpport->recvonly_requested_pad)
-  {
-    gst_element_release_request_pad (udpport->tee,
-        udpport->recvonly_requested_pad);
-    gst_object_unref (udpport->recvonly_requested_pad);
-  }
-
-  if (udpport->recvonly_udpsink)
-  {
-    GstStateChangeReturn ret;
-    gst_element_set_locked_state (udpport->recvonly_udpsink, TRUE);
-    ret = gst_element_set_state (udpport->recvonly_udpsink, GST_STATE_NULL);
-    if (ret != GST_STATE_CHANGE_SUCCESS)
-      GST_ERROR ("Error changing state of udpsink: %s",
-          gst_element_state_change_return_get_name (ret));
-    if (!gst_bin_remove (GST_BIN (trans->priv->gst_sink),
-            udpport->recvonly_udpsink))
-      GST_ERROR ("Could not remove udpsink element from transmitter source");
-  }
-
 
   if (udpport->socket)
     g_socket_close (udpport->socket, NULL);
@@ -1256,25 +1218,6 @@ fs_rawudp_transmitter_udpport_remove_known_address (UdpPort *udpport,
  out:
 
   g_mutex_unlock (&udpport->mutex);
-}
-
-void
-fs_rawudp_transmitter_udpport_add_recvonly_dest (UdpPort *udpport,
-    const gchar *ip,
-    gint port)
-{
-  if (udpport->recvonly_udpsink)
-    g_signal_emit_by_name (udpport->recvonly_udpsink, "add", ip, port);
-}
-
-
-void
-fs_rawudp_transmitter_udpport_remove_recvonly_dest (UdpPort *udpport,
-    const gchar *ip,
-    gint port)
-{
-  if (udpport->recvonly_udpsink)
-    g_signal_emit_by_name (udpport->recvonly_udpsink, "remove", ip, port);
 }
 
 static void

@@ -772,6 +772,8 @@ _create_transform_bin (FsRawSession *self, GError **error)
   else if (mtype == FS_MEDIA_TYPE_VIDEO)
     return gst_parse_bin_from_description_full ("videoconvert ! videoscale",
         TRUE, NULL, GST_PARSE_FLAG_NONE, error);
+  else if (mtype == FS_MEDIA_TYPE_APPLICATION)
+    return gst_element_factory_make ("identify", NULL);
 
   g_set_error (error, FS_ERROR, FS_ERROR_NOT_IMPLEMENTED,
     "No transform bin for this media type");

@@ -2,34 +2,28 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>FsRtpStream</title>
+<title>Farstream Plugins Manual: FsRtpStream</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="Farstream Plugins Manual">
 <link rel="up" href="ch01.html" title="RTP Plugin">
 <link rel="prev" href="FsRtpSession.html" title="FsRtpSession">
 <link rel="next" href="ch02.html" title="Raw Plugin">
-<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
-<tr valign="middle">
-<td><a accesskey="p" href="FsRtpSession.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
-<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
-<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">Farstream Plugins Manual</th>
-<td><a accesskey="n" href="ch02.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
-</tr>
-<tr><td colspan="5" class="shortcuts">
-<a href="#FsRtpStream.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#FsRtpStream.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#FsRtpStream.object-hierarchy" class="shortcut">Object Hierarchy</a>
-                   | 
-                  <a href="#FsRtpStream.properties" class="shortcut">Properties</a>
-</td></tr>
-</table>
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#FsRtpStream.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
+                  <a href="#FsRtpStream.object-hierarchy" class="shortcut">Object Hierarchy</a></span><span id="nav_properties">  <span class="dim">|</span> 
+                  <a href="#FsRtpStream.properties" class="shortcut">Properties</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="FsRtpSession.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="ch02.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
 <div class="refentry">
 <a name="FsRtpStream"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
@@ -37,53 +31,101 @@
 <h2><span class="refentrytitle"><a name="FsRtpStream.top_of_page"></a>FsRtpStream</span></h2>
 <p>FsRtpStream — A RTP stream in a <a class="link" href="FsRtpSession.html" title="FsRtpSession"><span class="type">FsRtpSession</span></a> in a <a class="link" href="FsRtpConference.html" title="FsRtpConference"><span class="type">FsRtpConference</span></a></p>
 </td>
-<td valign="top" align="right"></td>
+<td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
-<div class="refsynopsisdiv">
-<a name="FsRtpStream.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">                    <a class="link" href="FsRtpStream.html#FsRtpStream-struct" title="FsRtpStream">FsRtpStream</a>;
-</pre>
+<div class="refsect1">
+<a name="FsRtpStream.properties"></a><h2>Properties</h2>
+<div class="informaltable"><table border="0">
+<colgroup>
+<col width="150px" class="properties_type">
+<col width="300px" class="properties_name">
+<col width="200px" class="properties_flags">
+</colgroup>
+<tbody>
+<tr>
+<td class="property_type">
+<span class="type">FsRtpHeaderExtensionGList</span> *</td>
+<td class="property_name"><a class="link" href="FsRtpStream.html#FsRtpStream--rtp-header-extensions" title="The “rtp-header-extensions” property">rtp-header-extensions</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_name"><a class="link" href="FsRtpStream.html#FsRtpStream--send-rtcp-mux" title="The “send-rtcp-mux” property">send-rtcp-mux</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="FsRtpStream.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="name">
+<col class="description">
+</colgroup>
+<tbody><tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="FsRtpStream.html#FsRtpStream-struct" title="struct FsRtpStream">FsRtpStream</a></td>
+</tr></tbody>
+</table></div>
 </div>
 <div class="refsect1">
 <a name="FsRtpStream.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="synopsis">
-  GObject
-   +----FsStream
-         +----FsRtpStream
-</pre>
-</div>
-<div class="refsect1">
-<a name="FsRtpStream.properties"></a><h2>Properties</h2>
-<pre class="synopsis">
-  "<a class="link" href="FsRtpStream.html#FsRtpStream--rtp-header-extensions" title='The "rtp-header-extensions" property'>rtp-header-extensions</a>"    <span class="type">FsRtpHeaderExtensionGList</span>*  : Read / Write
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/farstream-libs-1.0/FsStream.html">FsStream</a>
+        <span class="lineart">╰──</span> FsRtpStream
 </pre>
 </div>
 <div class="refsect1">
 <a name="FsRtpStream.description"></a><h2>Description</h2>
+<p>This is the conjunction of a <a class="link" href="FsRtpParticipant.html" title="FsRtpParticipant"><span class="type">FsRtpParticipant</span></a> and a <a class="link" href="FsRtpSession.html" title="FsRtpSession"><span class="type">FsRtpSession</span></a>,
+it is created by calling <a href="/usr/share/gtk-doc/html/farstream-libs-1.0/FsSession.html#fs-session-new-stream"><code class="function">fs_session_new_stream()</code></a> on a
+<a class="link" href="FsRtpSession.html" title="FsRtpSession"><span class="type">FsRtpSession</span></a>.</p>
+<div class="refsect2">
+<a name="id-1.2.2.5.6.3"></a><h3>SRTP authentication &amp; decryption</h3>
 <p>
-This is the conjunction of a <a class="link" href="FsRtpParticipant.html" title="FsRtpParticipant"><span class="type">FsRtpParticipant</span></a> and a <a class="link" href="FsRtpSession.html" title="FsRtpSession"><span class="type">FsRtpSession</span></a>,
-it is created by calling <code class="function">fs_session_new_stream()</code> on a
-<a class="link" href="FsRtpSession.html" title="FsRtpSession"><span class="type">FsRtpSession</span></a>.
+
+To tell <a class="link" href="FsRtpStream.html" title="FsRtpStream"><span class="type">FsRtpStream</span></a> to authenticate and decrypt the media it is
+receiving using SRTP, one must set the parameters using a
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstStructure.html"><span class="type">GstStructure</span></a> named "FarstreamSRTP" and pass it to
+<code class="function">fs_stream_set_decryption_parameters()</code>.
+
+The cipher, auth, and key must be specified, refer to the <a class="link" href="FsRtpSession.html#FarstreamSRTP" title="FarstreamSRTP">FsRtpSession
+documentation</a> for details.
+
 </p>
 </div>
+</div>
 <div class="refsect1">
-<a name="FsRtpStream.details"></a><h2>Details</h2>
+<a name="FsRtpStream.functions_details"></a><h2>Functions</h2>
+</div>
+<div class="refsect1">
+<a name="FsRtpStream.other_details"></a><h2>Types and Values</h2>
 <div class="refsect2">
-<a name="FsRtpStream-struct"></a><h3>FsRtpStream</h3>
-<pre class="programlisting">typedef struct _FsRtpStream FsRtpStream;</pre>
+<a name="FsRtpStream-struct"></a><h3>struct FsRtpStream</h3>
+<pre class="programlisting">struct FsRtpStream;</pre>
 </div>
 </div>
 <div class="refsect1">
 <a name="FsRtpStream.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
-<a name="FsRtpStream--rtp-header-extensions"></a><h3>The <code class="literal">"rtp-header-extensions"</code> property</h3>
-<pre class="programlisting">  "rtp-header-extensions"    <span class="type">FsRtpHeaderExtensionGList</span>*  : Read / Write</pre>
+<a name="FsRtpStream--rtp-header-extensions"></a><h3>The <code class="literal">“rtp-header-extensions”</code> property</h3>
+<pre class="programlisting">  “rtp-header-extensions”    <span class="type">FsRtpHeaderExtensionGList</span> *</pre>
 <p>GList of RTP Header extensions that the participant for this stream would like to use.</p>
+<p>Flags: Read / Write</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="FsRtpStream--send-rtcp-mux"></a><h3>The <code class="literal">“send-rtcp-mux”</code> property</h3>
+<pre class="programlisting">  “send-rtcp-mux”            <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>Send RTCP muxed with on the same RTP connection.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: FALSE</p>
 </div>
 </div>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.19</div>
+          Generated by GTK-Doc V1.21</div>
 </body>
 </html>

@@ -3,11 +3,11 @@
   <description>Farstream RTP Conference plugin</description>
   <filename>../../gst/fsrtpconference/.libs/libfsrtpconference.so</filename>
   <basename>libfsrtpconference.so</basename>
-  <version>0.1.0.1</version>
+  <version>0.2.4.1</version>
   <license>LGPL</license>
   <source>farstream</source>
   <package>Farstream</package>
-  <origin>http://farstream.freedesktop.org/</origin>
+  <origin>http://www.freedesktop.org/wiki/Software/Farstream</origin>
   <elements>
     <element>
       <name>fsrtpconference</name>

@@ -30,7 +30,6 @@
 
 #include "check-threadsafe.h"
 #include "generic.h"
-#include "fake-filter.h"
 
 
 enum {
@@ -38,7 +37,7 @@ enum {
   FLAG_IS_LOCAL = 1 << 1,
   FLAG_FORCE_CANDIDATES = 1 << 2,
   FLAG_NOT_SENDING = 1 << 3,
-  FLAG_RECVONLY_FILTER = 1 << 4
+  FLAG_MUXED = 1 << 4,
 };
 
 
@@ -49,6 +48,7 @@ volatile gint running = TRUE;
 gboolean associate_on_source = TRUE;
 gboolean is_address_local = FALSE;
 gboolean force_candidates = FALSE;
+gboolean is_muxed = FALSE;
 
 GMutex count_mutex;
 
@@ -67,9 +67,8 @@ _new_local_candidate (FsStreamTransmitter *st, FsCandidate *candidate,
 
   ts_fail_if (candidate == NULL, "Passed NULL candidate");
   ts_fail_unless (candidate->ip != NULL, "Null IP in candidate");
-  ts_fail_if (candidate->port == 0, "Candidate has port 0");
-  ts_fail_unless (candidate->proto == FS_NETWORK_PROTOCOL_UDP,
-    "Protocol is not UDP");
+  ts_fail_if (candidate->port == 0 &&
+      candidate->proto != FS_NETWORK_PROTOCOL_TCP_ACTIVE);
   ts_fail_if (candidate->foundation == NULL,
       "Candidate doenst have a foundation");
   ts_fail_if (candidate->component_id == 0, "Component id is 0");
@@ -127,6 +126,8 @@ set_the_candidates (gpointer user_data)
 
       next = g_list_next (item);
 
+      if (cand->proto != FS_NETWORK_PROTOCOL_UDP)
+        continue;
       if (cand->type != FS_CANDIDATE_TYPE_HOST)
         continue;
       if (cand->component_id != 1)
@@ -201,7 +202,7 @@ _new_active_candidate_pair (FsStreamTransmitter *st, FsCandidate *local,
 }
 
 static void
-_handoff_handler (GstElement *element, GstBuffer *buffer, GstPad *pad,
+_handoff_handler_internal (GstElement *element, GstBuffer *buffer, GstPad *pad,
     guint stream, gint component_id)
 {
   ts_fail_unless (gst_buffer_get_size (buffer) == component_id * 10,
@@ -256,6 +257,25 @@ _handoff_handler (GstElement *element, GstBuffer *buffer, GstPad *pad,
 }
 
 static void
+_handoff_handler (GstElement *element, GstBuffer *buffer, GstPad *pad,
+    guint stream, gint component_id)
+{
+  if (is_muxed) {
+    ts_fail_if (component_id != 1,
+        "Received data on component %d while the stream is muxed",
+        component_id);
+
+    if (gst_buffer_get_size (buffer) == 20) {
+      received_known[stream][component_id-1]--;
+      component_id = 2;
+      received_known[stream][component_id-1]++;
+    }
+  }
+
+  _handoff_handler_internal (element, buffer, pad, stream, component_id);
+}
+
+static void
 _handoff_handler1 (GstElement *element, GstBuffer *buffer, GstPad *pad,
     gpointer user_data)
 {
@@ -290,6 +310,23 @@ _known_source_packet_received (FsStreamTransmitter *st, guint component_id,
       buffer);
 
   received_known[stream - 1][component_id - 1]++;
+}
+
+static void
+_setup_fakesink_for_ready_component (FsTransmitter *trans, const gchar *prop,
+    FsStreamTransmitter *st, guint component)
+{
+
+  if (g_object_get_data (G_OBJECT (trans), prop) == NULL)
+  {
+    GstElement *pipeline = GST_ELEMENT (
+        g_object_get_data (G_OBJECT (trans), "pipeline"));
+    GST_DEBUG ("%p: Setting up fakesrc for component %u", st, component);
+    setup_fakesrc (trans, pipeline, component);
+    g_object_set_data (G_OBJECT (trans), prop, "");
+  }
+  else
+    GST_DEBUG ("FAKESRC ALREADY SETUP for component %u", component);
 }
 
 static void
@@ -329,21 +366,14 @@ _stream_state_changed (FsStreamTransmitter *st, guint component,
   if (state < FS_STREAM_STATE_READY)
     return;
 
-  if (component == 1)
-    prop = "src_setup_1";
-  else if (component == 2)
-    prop = "src_setup_2";
-
-  if (g_object_get_data (G_OBJECT (trans), prop) == NULL)
-  {
-    GstElement *pipeline = GST_ELEMENT (
-        g_object_get_data (G_OBJECT (trans), "pipeline"));
-    GST_DEBUG ("%p: Setting up fakesrc for component %u", st, component);
-    setup_fakesrc (trans, pipeline, component);
-    g_object_set_data (G_OBJECT (trans), prop, "");
+  if (component == 1) {
+    _setup_fakesink_for_ready_component (trans, "src_setup_1", st, component);
+    if (is_muxed)
+      _setup_fakesink_for_ready_component (trans, "src_setup_2", st, 2);
   }
-  else
-    GST_DEBUG ("FAKESRC ALREADY SETUP for component %u", component);
+  if (!is_muxed && component == 2)
+    _setup_fakesink_for_ready_component (trans, "src_setup_2", st, component);
+
 }
 
 
@@ -372,15 +402,6 @@ fs_nice_test_participant_class_init (FsNiceTestParticipantClass *klass)
 {
 }
 
-static GstElement *
-_get_recvonly_filter (FsTransmitter *trans, guint component, gpointer user_data)
-{
-  if (component == 1)
-    return NULL;
-
-  return gst_element_factory_make ("fsfakefilter", NULL);
-}
-
 static void
 run_nice_transmitter_test (gint n_parameters, GParameter *params,
   gint flags)
@@ -400,9 +421,7 @@ run_nice_transmitter_test (gint n_parameters, GParameter *params,
   associate_on_source = !(flags & FLAG_NO_SOURCE);
   is_address_local = (flags & FLAG_IS_LOCAL);
   force_candidates = (flags & FLAG_FORCE_CANDIDATES);
-
-  if (flags & FLAG_RECVONLY_FILTER)
-    ts_fail_unless (fs_fake_filter_register ());
+  is_muxed = (flags & FLAG_MUXED);
 
   if (flags & FLAG_NOT_SENDING)
   {
@@ -421,20 +440,12 @@ run_nice_transmitter_test (gint n_parameters, GParameter *params,
   }
   ts_fail_if (trans == NULL, "No transmitter create, yet error is still NULL");
 
-  if (flags & FLAG_RECVONLY_FILTER)
-    ts_fail_unless (g_signal_connect (trans, "get-recvonly-filter",
-            G_CALLBACK (_get_recvonly_filter), NULL));
-
   trans2 = fs_transmitter_new ("nice", 2, 0, &error);
   if (error) {
     ts_fail ("Error creating transmitter: (%s:%d) %s",
         g_quark_to_string (error->domain), error->code, error->message);
   }
   ts_fail_if (trans2 == NULL, "No transmitter create, yet error is still NULL");
-
- if (flags & FLAG_RECVONLY_FILTER)
-    ts_fail_unless (g_signal_connect (trans2, "get-recvonly-filter",
-            G_CALLBACK (_get_recvonly_filter), NULL));
 
   pipeline = setup_pipeline (trans, G_CALLBACK (_handoff_handler1));
   pipeline2 = setup_pipeline (trans2, G_CALLBACK (_handoff_handler2));
@@ -724,18 +735,6 @@ GST_START_TEST (test_nicetransmitter_invalid_arguments)
       error->domain == FS_ERROR &&
       error->code == FS_ERROR_INVALID_ARGUMENTS);
   g_clear_error (&error);
-
-  /* invalid proto */
-  g_value_take_boxed (&params[0].value, g_list_append (NULL,
-          fs_candidate_new (NULL, 0, FS_CANDIDATE_TYPE_HOST,
-              FS_NETWORK_PROTOCOL_TCP, "127.0.0.1", 0)));
-
-  st = fs_transmitter_new_stream_transmitter (trans, p, 1, params, &error);
-  ts_fail_unless (st == NULL);
-  ts_fail_unless (error &&
-      error->domain == FS_ERROR &&
-      error->code == FS_ERROR_INVALID_ARGUMENTS);
-  g_clear_error (&error);
   g_value_unset (&params[0].value);
 
   params[0].name = "relay-info";
@@ -855,18 +854,23 @@ GST_START_TEST (test_nicetransmitter_invalid_arguments)
 }
 GST_END_TEST;
 
-GST_START_TEST (test_nicetransmitter_with_filter)
-{
-  run_nice_transmitter_test (0, NULL, FLAG_RECVONLY_FILTER);
-}
-GST_END_TEST;
-
 GST_START_TEST (test_nicetransmitter_sending_half)
 {
-  run_nice_transmitter_test (0, NULL, FLAG_NOT_SENDING | FLAG_RECVONLY_FILTER);
+  run_nice_transmitter_test (0, NULL, FLAG_NOT_SENDING);
 }
 GST_END_TEST;
 
+GST_START_TEST (test_nicetransmitter_send_component_mux)
+{
+  GParameter param = {NULL, {0}};
+
+  param.name = "send-component-mux";
+  g_value_init (&param.value, G_TYPE_BOOLEAN);
+  g_value_set_boolean (&param.value, TRUE);
+
+  run_nice_transmitter_test (1, &param, FLAG_MUXED);
+}
+GST_END_TEST;
 
 static Suite *
 nicetransmitter_suite (void)
@@ -911,12 +915,12 @@ nicetransmitter_suite (void)
   tcase_add_test (tc_chain, test_nicetransmitter_invalid_arguments);
   suite_add_tcase (s, tc_chain);
 
-  tc_chain = tcase_create ("nicetransmitter-with-filter");
-  tcase_add_test (tc_chain, test_nicetransmitter_with_filter);
-  suite_add_tcase (s, tc_chain);
-
   tc_chain = tcase_create ("nicetransmitter-sending-half");
   tcase_add_test (tc_chain, test_nicetransmitter_sending_half);
+  suite_add_tcase (s, tc_chain);
+
+  tc_chain = tcase_create ("nicetransmitter-send-component-mux");
+  tcase_add_test (tc_chain, test_nicetransmitter_send_component_mux);
   suite_add_tcase (s, tc_chain);
 
   return s;

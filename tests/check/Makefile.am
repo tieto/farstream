@@ -10,8 +10,9 @@ TESTS_ENVIRONMENT = \
 	CK_DEFAULT_TIMEOUT=120					\
 	STATE_IGNORE_ELEMENTS="$(STATE_IGNORE_ELEMENTS)"	\
 	$(REGISTRY_ENVIRONMENT)					\
-	GST_PLUGIN_LOADING_WHITELIST=gstreamer:gst-plugins-base:gst-plugins-good:libnice:valve:siren:autoconvert:rtpmux:dtmf:mimic:shm:spandsp:farstream@$(top_builddir)/gst \
+	GST_PLUGIN_LOADING_WHITELIST=gstreamer:gst-plugins-base:gst-plugins-good:libnice:valve:siren:autoconvert:rtpmux:dtmf:mimic:shm:spandsp:srtp:farstream@$(top_builddir)/gst \
 	GST_PLUGIN_PATH=$(top_builddir)/gst:${GST_PLUGIN_PATH}	\
+	GST_PLUGIN_PATH_1_0=$(top_builddir)/gst:${GST_PLUGIN_PATH_1_0}	\
 	FS_PLUGIN_PATH=$(top_builddir)/transmitters/rawudp/.libs:$(top_builddir)/transmitters/multicast/.libs:$(top_builddir)/transmitters/nice/.libs:$(top_builddir)/transmitters/shm/.libs \
 	LD_LIBRARY_PATH=$(top_builddir)/farstream/.libs:${LD_LIBRARY_PATH} \
 	UPNP_XML_PATH=$(srcdir)/upnp \
@@ -50,7 +51,6 @@ check_PROGRAMS = \
 	transmitter/nice \
 	transmitter/shm \
 	raw/conference \
-	elements/rtcpfilter \
 	rtp/codecs \
 	rtp/sendcodecs \
 	rtp/conference \
@@ -102,8 +102,6 @@ transmitter_multicast_SOURCES = \
 	testutils.h \
 	transmitter/generic.c \
 	transmitter/generic.h \
-	transmitter/fake-filter.c \
-	transmitter/fake-filter.h \
 	transmitter/multicast.c
 transmitter_multicast_LDADD = $(LDADD) $(GST_BASE_LIBS)
 
@@ -112,8 +110,6 @@ transmitter_nice_SOURCES = \
 	check-threadsafe.h  \
 	transmitter/generic.c \
 	transmitter/generic.h \
-	transmitter/fake-filter.c \
-	transmitter/fake-filter.h \
 	transmitter/nice.c 
 transmitter_nice_LDADD = $(LDADD) $(GST_BASE_LIBS)
 
@@ -169,7 +165,3 @@ utils_binadded_SOURCES = \
 	testutils.c \
 	testutils.h \
 	utils/binadded.c
-
-elements_rtcpfilter_CFLAGS = $(AM_CFLAGS) $(GST_PLUGINS_BASE_CFLAGS)
-elements_rtcpfilter_SOURCES = elements/rtcpfilter.c
-elements_rtcpfilter_LDADD = $(LDADD) -lgstrtp-@GST_API_VERSION@

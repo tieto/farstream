@@ -43,7 +43,7 @@
  *
  * This will communicate asynchronous events to the user through #GstMessage
  * of type #GST_MESSAGE_ELEMENT sent over the #GstBus.
- * </para>
+ *
  * <refsect2><title>The "<literal>farstream-error</literal>" message</title>
  * |[
  * "src-object"       #GObject           The object (#FsConference, #FsSession or #FsStream) that emitted the error
@@ -54,7 +54,7 @@
  * The message is sent on asynchronous errors.
  * </para>
  * </refsect2>
- * <para>
+ *
  */
 
 

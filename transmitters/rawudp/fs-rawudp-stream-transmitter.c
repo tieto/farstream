@@ -480,14 +480,11 @@ fs_rawudp_stream_transmitter_set_property (GObject *object,
   {
     case PROP_SENDING:
       {
-        gint c;
-
         self->priv->sending = g_value_get_boolean (value);
 
-        for (c = 1; c <= self->priv->transmitter->components; c++)
-          if (self->priv->component[c])
-            g_object_set_property (G_OBJECT (self->priv->component[c]),
-                "sending", value);
+        if (self->priv->component[1])
+          g_object_set_property (G_OBJECT (self->priv->component[1]),
+              "sending", value);
       }
       break;
     case PROP_PREFERRED_LOCAL_CANDIDATES:

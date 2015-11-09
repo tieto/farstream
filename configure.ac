@@ -5,14 +5,14 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, cvs and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for cvs/prerelease
-AC_INIT(Farstream, 0.2.4,
+AC_INIT(Farstream, 0.2.7,
     https://bugs.freedesktop.org/enter_bug.cgi?product=Farstream,
     farstream)
 
 AG_GST_INIT
 
 dnl initialize automake
-AM_INIT_AUTOMAKE([-Wno-portability])
+AM_INIT_AUTOMAKE([-Wno-portability subdir-objects])
 
 dnl define PACKAGE_VERSION_* variables
 AS_VERSION
@@ -56,7 +56,7 @@ dnl - interfaces added/removed/changed -> increment CURRENT, REVISION = 0
 dnl - interfaces added -> increment AGE
 dnl - interfaces removed -> AGE = 0
 dnl sets FS_LT_LDFLAGS
-AS_LIBTOOL(FS, 3, 1, 1)
+AS_LIBTOOL(FS, 5, 0, 0)
 
 dnl FIXME: this macro doesn't actually work;
 dnl the generated libtool script has no support for the listed tags.
@@ -66,8 +66,8 @@ dnl AS_LIBTOOL_TAGS
 AM_PROG_LIBTOOL
 
 dnl *** required versions of GStreamer stuff ***
-GST_REQ=1.0
-GSTPB_REQ=1.0
+GST_REQ=1.4
+GSTPB_REQ=1.4
 
 dnl *** autotools stuff ****
 
@@ -114,8 +114,8 @@ FS_PLUGINS_ALL=" \
 	fsrawconference \
 	fsrtpconference \
 	fsmsnconference \
-	fsrtcpfilter \
- 	fsvideoanyrate
+ 	fsvideoanyrate \
+ 	fsrtpxdata \
 	"
 AC_SUBST(FS_PLUGINS_ALL)
 
@@ -167,7 +167,7 @@ AC_ARG_WITH(transmitter-plugins,
     [FS_TRANSMITTER_PLUGINS_SELECTED=$FS_TRANSMITTER_PLUGINS_ALL])
 
 
-NICE_REQUIRED=0.1.3
+NICE_REQUIRED=0.1.8
 
 PKG_CHECK_MODULES(NICE, \
        nice >= $NICE_REQUIRED,, AC_MSG_ERROR([Need libnice >= $NICE_REQUIRED]))
@@ -200,7 +200,7 @@ dnl check for gobject-introspection
 GOBJECT_INTROSPECTION_CHECK([0.10.1])
 
 dnl check for documentation tools
-GTK_DOC_CHECK([1.8])
+GTK_DOC_CHECK([1.18])
 AS_PATH_PYTHON([2.1])
 AG_GST_PLUGIN_DOCS([1.8],[2.1])
 
@@ -381,8 +381,8 @@ gst/Makefile
 gst/fsrawconference/Makefile
 gst/fsrtpconference/Makefile
 gst/fsmsnconference/Makefile
-gst/fsrtcpfilter/Makefile
 gst/fsvideoanyrate/Makefile
+gst/fsrtpxdata/Makefile
 farstream/Makefile
 transmitters/Makefile
 transmitters/rawudp/Makefile

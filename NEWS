@@ -1,3 +1,26 @@
+farstream 0.2.7 (January 29, 2015)
+==================================
+- Add "send-rtcp-mux" parameters to fsrtpsession
+- Add MTU and buffer splitting to rtpxdatapay
+- Fix crash if srtpenc/dec is missing
+- Bug fixes
+
+farstream 0.2.6 (October 9, 2014)
+================================
+- Add ICE-TCP support
+- Now require libnice 0.1.8
+
+farstream 0.2.5 (October 9, 2014)
+================================
+- Add SRTP support
+- Add API to set allowed input/output caps
+- Make it possible to have input that is not a raw format
+- Support formats with no encoders/decoders
+- Add payloader for the Microsoft Lync x-data format
+- Ignore ICE-TCP in new libnice
+- Fix misc bugs
+- Now require GStreamer 1.4
+
 farstream 0.2.4 (May 5, 2014)
 =============================
 - Install gtk-doc correctly

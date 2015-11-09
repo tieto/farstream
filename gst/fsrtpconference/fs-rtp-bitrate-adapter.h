@@ -52,12 +52,12 @@ struct _FsRtpBitrateAdapter
   GstPad *srcpad;
   GstPad *sinkpad;
 
-  GstCaps *caps;
-
   GstClock *system_clock;
   GstClockTime interval;
   GQueue bitrate_history;
   GstClockID clockid;
+  guint bitrate;
+  guint last_bitrate;
 };
 
 struct _FsRtpBitrateAdapterClass

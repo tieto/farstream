@@ -2,34 +2,28 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>FsMsnConference</title>
+<title>Farstream Plugins Manual: FsMsnConference</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="Farstream Plugins Manual">
 <link rel="up" href="ch03.html" title="MSN Webcam plugin">
 <link rel="prev" href="farstream-plugins-FsMsnCamCamRecvConference.html" title="FsMsnCamCamRecvConference">
 <link rel="next" href="FsMsnParticipant.html" title="FsMsnParticipant">
-<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
-<tr valign="middle">
-<td><a accesskey="p" href="farstream-plugins-FsMsnCamCamRecvConference.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
-<td><a accesskey="u" href="ch03.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
-<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">Farstream Plugins Manual</th>
-<td><a accesskey="n" href="FsMsnParticipant.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
-</tr>
-<tr><td colspan="5" class="shortcuts">
-<a href="#FsMsnConference.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#FsMsnConference.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#FsMsnConference.object-hierarchy" class="shortcut">Object Hierarchy</a>
-                   | 
-                  <a href="#FsMsnConference.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
-</td></tr>
-</table>
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#FsMsnConference.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
+                  <a href="#FsMsnConference.object-hierarchy" class="shortcut">Object Hierarchy</a></span><span id="nav_interfaces">  <span class="dim">|</span> 
+                  <a href="#FsMsnConference.implemented-interfaces" class="shortcut">Implemented Interfaces</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch03.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="farstream-plugins-FsMsnCamCamRecvConference.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="FsMsnParticipant.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
 <div class="refentry">
 <a name="FsMsnConference"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
@@ -37,25 +31,32 @@
 <h2><span class="refentrytitle"><a name="FsMsnConference.top_of_page"></a>FsMsnConference</span></h2>
 <p>FsMsnConference — Farstream MSN Conference Gstreamer Elements Base class</p>
 </td>
-<td valign="top" align="right"></td>
+<td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
-<div class="refsynopsisdiv">
-<a name="FsMsnConference.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">struct              <a class="link" href="FsMsnConference.html#FsMsnConference-struct" title="struct FsMsnConference">FsMsnConference</a>;
-</pre>
+<div class="refsect1">
+<a name="FsMsnConference.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="name">
+<col class="description">
+</colgroup>
+<tbody><tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="FsMsnConference.html#FsMsnConference-struct" title="struct FsMsnConference">FsMsnConference</a></td>
+</tr></tbody>
+</table></div>
 </div>
 <div class="refsect1">
 <a name="FsMsnConference.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="synopsis">
-  GObject
-   +----GInitiallyUnowned
-         +----<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstObject.html">GstObject</a>
-               +----<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html">GstElement</a>
-                     +----<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html">GstBin</a>
-                           +----FsConference
-                                 +----FsMsnConference
-                                       +----<a class="link" href="farstream-plugins-FsMsnCamCamRecvConference.html#FsMsnCamRecvConference">FsMsnCamRecvConference</a>
-                                       +----<a class="link" href="FsMsnCamSendConference.html" title="FsMsnCamSendConference">FsMsnCamSendConference</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+        <span class="lineart">╰──</span> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstObject.html">GstObject</a>
+            <span class="lineart">╰──</span> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html">GstElement</a>
+                <span class="lineart">╰──</span> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html">GstBin</a>
+                    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/farstream-libs-1.0/FsConference.html">FsConference</a>
+                        <span class="lineart">╰──</span> FsMsnConference
+                            <span class="lineart">├──</span> <a class="link" href="farstream-plugins-FsMsnCamCamRecvConference.html#FsMsnCamRecvConference">FsMsnCamRecvConference</a>
+                            <span class="lineart">╰──</span> <a class="link" href="FsMsnCamSendConference.html" title="FsMsnCamSendConference">FsMsnCamSendConference</a>
 </pre>
 </div>
 <div class="refsect1">
@@ -66,13 +67,14 @@ FsMsnConference implements
 </div>
 <div class="refsect1">
 <a name="FsMsnConference.description"></a><h2>Description</h2>
-<p>
-This element implements the unidirection webcam feature found in various
-version of MSN Messenger (tm) and Windows Live Messenger (tm).
-</p>
+<p>This element implements the unidirection webcam feature found in various
+version of MSN Messenger (tm) and Windows Live Messenger (tm).</p>
 </div>
 <div class="refsect1">
-<a name="FsMsnConference.details"></a><h2>Details</h2>
+<a name="FsMsnConference.functions_details"></a><h2>Functions</h2>
+</div>
+<div class="refsect1">
+<a name="FsMsnConference.other_details"></a><h2>Types and Values</h2>
 <div class="refsect2">
 <a name="FsMsnConference-struct"></a><h3>struct FsMsnConference</h3>
 <pre class="programlisting">struct FsMsnConference;</pre>
@@ -83,6 +85,6 @@ version of MSN Messenger (tm) and Windows Live Messenger (tm).
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.19</div>
+          Generated by GTK-Doc V1.21</div>
 </body>
 </html>

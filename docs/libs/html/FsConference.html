@@ -2,34 +2,28 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>FsConference</title>
+<title>Farstream Reference Manual: FsConference</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="Farstream Reference Manual">
 <link rel="up" href="ch01.html" title="Farstream Core Library">
 <link rel="prev" href="ch01.html" title="Farstream Core Library">
 <link rel="next" href="FsParticipant.html" title="FsParticipant">
-<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
-<tr valign="middle">
-<td><a accesskey="p" href="ch01.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
-<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
-<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">Farstream Reference Manual</th>
-<td><a accesskey="n" href="FsParticipant.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
-</tr>
-<tr><td colspan="5" class="shortcuts">
-<a href="#FsConference.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#FsConference.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#FsConference.object-hierarchy" class="shortcut">Object Hierarchy</a>
-                   | 
-                  <a href="#FsConference.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
-</td></tr>
-</table>
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#FsConference.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
+                  <a href="#FsConference.object-hierarchy" class="shortcut">Object Hierarchy</a></span><span id="nav_interfaces">  <span class="dim">|</span> 
+                  <a href="#FsConference.implemented-interfaces" class="shortcut">Implemented Interfaces</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="ch01.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="FsParticipant.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
 <div class="refentry">
 <a name="FsConference"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
@@ -37,37 +31,80 @@
 <h2><span class="refentrytitle"><a name="FsConference.top_of_page"></a>FsConference</span></h2>
 <p>FsConference — Interface for farstream conference elements</p>
 </td>
-<td valign="top" align="right"></td>
+<td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
-<div class="refsynopsisdiv">
-<a name="FsConference.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">
-#include &lt;farstream/fs-conference.h&gt;
-
-struct              <a class="link" href="FsConference.html#FsConference-struct" title="struct FsConference">FsConference</a>;
-<a class="link" href="FsSession.html" title="FsSession"><span class="returnvalue">FsSession</span></a> *         <a class="link" href="FsConference.html#fs-conference-new-session" title="fs_conference_new_session ()">fs_conference_new_session</a>           (<em class="parameter"><code><a class="link" href="FsConference.html" title="FsConference"><span class="type">FsConference</span></a> *conference</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="farstream-libs-FsCodec.html#FsMediaType" title="enum FsMediaType"><span class="type">FsMediaType</span></a> media_type</code></em>,
-                                                         <em class="parameter"><code><span class="type">GError</span> **error</code></em>);
-<a class="link" href="FsParticipant.html" title="FsParticipant"><span class="returnvalue">FsParticipant</span></a> *     <a class="link" href="FsConference.html#fs-conference-new-participant" title="fs_conference_new_participant ()">fs_conference_new_participant</a>       (<em class="parameter"><code><a class="link" href="FsConference.html" title="FsConference"><span class="type">FsConference</span></a> *conference</code></em>,
-                                                         <em class="parameter"><code><span class="type">GError</span> **error</code></em>);
-#define             <a class="link" href="FsConference.html#FS-ERROR:CAPS" title="FS_ERROR">FS_ERROR</a>
-enum                <a class="link" href="FsConference.html#FsError" title="enum FsError">FsError</a>;
-#define             <a class="link" href="FsConference.html#FS-ERROR-IS-FATAL:CAPS" title="FS_ERROR_IS_FATAL()">FS_ERROR_IS_FATAL</a>                   (error)
-<span class="returnvalue">gboolean</span>            <a class="link" href="FsConference.html#fs-parse-error" title="fs_parse_error ()">fs_parse_error</a>                      (<em class="parameter"><code><span class="type">GObject</span> *object</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="FsConference.html#FsError" title="enum FsError"><span class="type">FsError</span></a> *error</code></em>,
-                                                         <em class="parameter"><code>const <span class="type">gchar</span> **error_msg</code></em>);
-</pre>
+<div class="refsect1">
+<a name="FsConference.functions"></a><h2>Functions</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="functions_return">
+<col class="functions_name">
+</colgroup>
+<tbody>
+<tr>
+<td class="function_type">
+<a class="link" href="FsSession.html" title="FsSession"><span class="returnvalue">FsSession</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="FsConference.html#fs-conference-new-session" title="fs_conference_new_session ()">fs_conference_new_session</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="FsParticipant.html" title="FsParticipant"><span class="returnvalue">FsParticipant</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="FsConference.html#fs-conference-new-participant" title="fs_conference_new_participant ()">fs_conference_new_participant</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="FsConference.html#FS-ERROR:CAPS" title="FS_ERROR">FS_ERROR</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="FsConference.html#FS-ERROR-IS-FATAL:CAPS" title="FS_ERROR_IS_FATAL()">FS_ERROR_IS_FATAL</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="FsConference.html#fs-parse-error" title="fs_parse_error ()">fs_parse_error</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="FsConference.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="name">
+<col class="description">
+</colgroup>
+<tbody>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="FsConference.html#FsConference-struct" title="struct FsConference">FsConference</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="FsConference.html#FsError" title="enum FsError">FsError</a></td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <div class="refsect1">
 <a name="FsConference.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="synopsis">
-  GObject
-   +----GInitiallyUnowned
-         +----<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstObject.html">GstObject</a>
-               +----<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html">GstElement</a>
-                     +----<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html">GstBin</a>
-                           +----FsConference
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+        <span class="lineart">╰──</span> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstObject.html">GstObject</a>
+            <span class="lineart">╰──</span> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html">GstElement</a>
+                <span class="lineart">╰──</span> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html">GstBin</a>
+                    <span class="lineart">╰──</span> FsConference
 </pre>
 </div>
 <div class="refsect1">
@@ -77,18 +114,19 @@ FsConference implements
  <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstChildProxy.html">GstChildProxy</a>.</p>
 </div>
 <div class="refsect1">
+<a name="FsConference.includes"></a><h2>Includes</h2>
+<pre class="synopsis">#include &lt;farstream/fs-conference.h&gt;
+</pre>
+</div>
+<div class="refsect1">
 <a name="FsConference.description"></a><h2>Description</h2>
-<p>
-A Farstream conference is a conversation space that takes place between 2 or
+<p>A Farstream conference is a conversation space that takes place between 2 or
 more participants. Each conference must have one or more Farstream sessions
-that are associated to the conference participants.
-</p>
-<p>
-This will communicate asynchronous events to the user through <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a>
-of type <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html#GST-MESSAGE-ELEMENT:CAPS"><span class="type">GST_MESSAGE_ELEMENT</span></a> sent over the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBus.html"><span class="type">GstBus</span></a>.
-</p>
+that are associated to the conference participants.</p>
+<p>This will communicate asynchronous events to the user through <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a>
+of type <span class="type">GST_MESSAGE_ELEMENT</span> sent over the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBus.html"><span class="type">GstBus</span></a>.</p>
 <div class="refsect2">
-<a name="id-1.2.2.2.6.4"></a><h3>The "<code class="literal">farstream-error</code>" message</h3>
+<a name="id-1.2.2.2.8.4"></a><h3>The "<code class="literal">farstream-error</code>" message</h3>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -96,9 +134,9 @@ of type <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstrea
         <td class="listing_lines" align="right"><pre>1
 2
 3</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="string">"src-object"</span><span class="normal">       </span><span class="symbol">&lt;</span><span class="usertype">GTKDOCLINK</span><span class="normal"> HREF</span><span class="symbol">=</span><span class="string">"GObject"</span><span class="symbol">&gt;</span><span class="usertype">GObject&lt;/GTKDOCLINK&gt;           The object (&lt;a class="link" href="FsConference.html" title="FsConference"&gt;FsConference&lt;/a&gt;, &lt;a class="link" href="FsSession.html" title="FsSession"&gt;FsSession&lt;/a&gt;</span><span class="normal"> or </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"FsStream.html"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"FsStream"</span><span class="symbol">&gt;</span><span class="normal"><a href="../farstream-libs-1.0/FsStream.html">FsStream</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;)</span><span class="normal"> that emitted the error</span>
-<span class="string">"error-no"</span><span class="normal">         </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"FsConference.html#FsError"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"enum FsError"</span><span class="symbol">&gt;</span><span class="normal"><a href="../farstream-libs-1.0/FsConference.html#FsError">FsError</a></span><span class="symbol">&lt;/</span><span class="normal">a</span><span class="symbol">&gt;</span><span class="normal">           The Error number</span>
-<span class="string">"error-msg"</span><span class="normal">        </span><span class="symbol">&lt;</span><span class="usertype">GTKDOCLINK</span><span class="normal"> HREF</span><span class="symbol">=</span><span class="string">"gchar"</span><span class="symbol">&gt;</span><span class="normal">gchar</span><span class="symbol">&lt;/</span><span class="normal">GTKDOCLINK</span><span class="symbol">&gt;*</span><span class="normal">            The error message</span></pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="string">"src-object"</span><span class="normal">       #GObject           </span><span class="usertype">The</span><span class="normal"> </span><span class="function">object</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">#FsConference</span><span class="symbol">,</span><span class="normal"> #</span><span class="usertype">FsSession</span><span class="normal"> or #FsStream</span><span class="symbol">)</span><span class="normal"> that emitted the error</span>
+<span class="string">"error-no"</span><span class="normal">         #FsError           The Error number</span>
+<span class="string">"error-msg"</span><span class="normal">        #gchar</span><span class="symbol">*</span><span class="normal">            The error message</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -108,272 +146,293 @@ of type <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstrea
 The message is sent on asynchronous errors.
 </p>
 </div>
-<p>
-</p>
 </div>
 <div class="refsect1">
-<a name="FsConference.details"></a><h2>Details</h2>
+<a name="FsConference.functions_details"></a><h2>Functions</h2>
 <div class="refsect2">
-<a name="FsConference-struct"></a><h3>struct FsConference</h3>
-<pre class="programlisting">struct FsConference;</pre>
-<p>
-The <a class="link" href="FsConference.html" title="FsConference"><span class="type">FsConference</span></a> structure, all the members are private
-</p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-conference-new-session"></a><h3>fs_conference_new_session ()</h3>
-<pre class="programlisting"><a class="link" href="FsSession.html" title="FsSession"><span class="returnvalue">FsSession</span></a> *         fs_conference_new_session           (<em class="parameter"><code><a class="link" href="FsConference.html" title="FsConference"><span class="type">FsConference</span></a> *conference</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="farstream-libs-FsCodec.html#FsMediaType" title="enum FsMediaType"><span class="type">FsMediaType</span></a> media_type</code></em>,
-                                                         <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
-<p>
-Create a new Farstream session for the given conference.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+<a name="fs-conference-new-session"></a><h3>fs_conference_new_session ()</h3>
+<pre class="programlisting"><a class="link" href="FsSession.html" title="FsSession"><span class="returnvalue">FsSession</span></a> *
+fs_conference_new_session (<em class="parameter"><code><a class="link" href="FsConference.html" title="FsConference"><span class="type">FsConference</span></a> *conference</code></em>,
+                           <em class="parameter"><code><a class="link" href="farstream-libs-FsCodec.html#FsMediaType" title="enum FsMediaType"><span class="type">FsMediaType</span></a> media_type</code></em>,
+                           <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
+<p>Create a new Farstream session for the given conference.</p>
+<div class="refsect3">
+<a name="id-1.2.2.2.9.2.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>conference</code></em> :</span></p></td>
-<td>
-<a class="link" href="FsConference.html" title="FsConference"><span class="type">FsConference</span></a> interface of a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a>
-</td>
+<td class="parameter_name"><p>conference</p></td>
+<td class="parameter_description"><p><a class="link" href="FsConference.html" title="FsConference"><span class="type">FsConference</span></a> interface of a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a></p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>media_type</code></em> :</span></p></td>
-<td>
-<a class="link" href="farstream-libs-FsCodec.html#FsMediaType" title="enum FsMediaType"><span class="type">FsMediaType</span></a> of the new session</td>
+<td class="parameter_name"><p>media_type</p></td>
+<td class="parameter_description"><p><a class="link" href="farstream-libs-FsCodec.html#FsMediaType" title="enum FsMediaType"><span class="type">FsMediaType</span></a> of the new session</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td>location of a <span class="type">GError</span>, or <code class="literal">NULL</code> if no error occured</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the new <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> that has been created.
-The <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> must be unref'd by the user when closing the session. <span class="annotation">[<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>]</span>
-</td>
+<td class="parameter_name"><p>error</p></td>
+<td class="parameter_description"><p>location of a <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if no error occured</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
+<div class="refsect3">
+<a name="id-1.2.2.2.9.2.6"></a><h4>Returns</h4>
+<p> the new <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> that has been created.
+The <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> must be unref'd by the user when closing the session. </p>
+<p><span class="annotation">[<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>]</span></p>
+</div>
+</div>
 <hr>
 <div class="refsect2">
-<a name="fs-conference-new-participant"></a><h3>fs_conference_new_participant ()</h3>
-<pre class="programlisting"><a class="link" href="FsParticipant.html" title="FsParticipant"><span class="returnvalue">FsParticipant</span></a> *     fs_conference_new_participant       (<em class="parameter"><code><a class="link" href="FsConference.html" title="FsConference"><span class="type">FsConference</span></a> *conference</code></em>,
-                                                         <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
-<p>
-Create a new Farstream Participant for the type of the given conference.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+<a name="fs-conference-new-participant"></a><h3>fs_conference_new_participant ()</h3>
+<pre class="programlisting"><a class="link" href="FsParticipant.html" title="FsParticipant"><span class="returnvalue">FsParticipant</span></a> *
+fs_conference_new_participant (<em class="parameter"><code><a class="link" href="FsConference.html" title="FsConference"><span class="type">FsConference</span></a> *conference</code></em>,
+                               <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
+<p>Create a new Farstream Participant for the type of the given conference.</p>
+<div class="refsect3">
+<a name="id-1.2.2.2.9.3.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>conference</code></em> :</span></p></td>
-<td>
-<a class="link" href="FsConference.html" title="FsConference"><span class="type">FsConference</span></a> interface of a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a>
-</td>
+<td class="parameter_name"><p>conference</p></td>
+<td class="parameter_description"><p><a class="link" href="FsConference.html" title="FsConference"><span class="type">FsConference</span></a> interface of a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a></p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td>location of a <span class="type">GError</span>, or <code class="literal">NULL</code> if no error occured</td>
+<td class="parameter_name"><p>error</p></td>
+<td class="parameter_description"><p>location of a <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if no error occured</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the new <a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a> that has been created.
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.2.9.3.6"></a><h4>Returns</h4>
+<p> the new <a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a> that has been created.
 The <a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a> is owned by the user and he must unref it when he is
-done with it. <span class="annotation">[<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>]</span>
-</td>
-</tr>
-</tbody>
-</table></div>
+done with it. </p>
+<p><span class="annotation">[<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>]</span></p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="FS-ERROR:CAPS"></a><h3>FS_ERROR</h3>
 <pre class="programlisting">#define FS_ERROR (fs_error_quark ())
 </pre>
-<p>
-This quark is used to denote errors coming from Farstream objects
-</p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="FsError"></a><h3>enum FsError</h3>
-<pre class="programlisting">typedef enum {
-  FS_ERROR_CONSTRUCTION = 1,
-  FS_ERROR_INTERNAL,
-  FS_ERROR_INVALID_ARGUMENTS = 100,
-  FS_ERROR_NETWORK,
-  FS_ERROR_NOT_IMPLEMENTED,
-  FS_ERROR_NEGOTIATION_FAILED,
-  FS_ERROR_UNKNOWN_CODEC,
-  FS_ERROR_NO_CODECS,
-  FS_ERROR_NO_CODECS_LEFT,
-  FS_ERROR_CONNECTION_FAILED,
-  FS_ERROR_DISPOSED,
-  FS_ERROR_ALREADY_EXISTS
-} FsError;
-</pre>
-<p>
-This is the enum of error numbers that will come either on the "error"
-signal, from the Gst Bus or for error in the FS_ERROR domain in GErrors
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><a name="FS-ERROR-CONSTRUCTION:CAPS"></a><span class="term"><code class="literal">FS_ERROR_CONSTRUCTION</code></span></p></td>
-<td>Error constructing some of the sub-elements, this
-probably denotes an error in the installation of the gstreamer elements.
-It is a fatal error.
-</td>
-</tr>
-<tr>
-<td><p><a name="FS-ERROR-INTERNAL:CAPS"></a><span class="term"><code class="literal">FS_ERROR_INTERNAL</code></span></p></td>
-<td>An internal error happened in Farstream, it may be in
-an inconsistent state. The object from which this error comes should be
-discarded.
-</td>
-</tr>
-<tr>
-<td><p><a name="FS-ERROR-INVALID-ARGUMENTS:CAPS"></a><span class="term"><code class="literal">FS_ERROR_INVALID_ARGUMENTS</code></span></p></td>
-<td>Invalid arguments to the function, this
-is a programming error and should not be reported to the user
-</td>
-</tr>
-<tr>
-<td><p><a name="FS-ERROR-NETWORK:CAPS"></a><span class="term"><code class="literal">FS_ERROR_NETWORK</code></span></p></td>
-<td>A network related error, this should probably be
- reported to the user.
-</td>
-</tr>
-<tr>
-<td><p><a name="FS-ERROR-NOT-IMPLEMENTED:CAPS"></a><span class="term"><code class="literal">FS_ERROR_NOT_IMPLEMENTED</code></span></p></td>
-<td>The optional functionality is not implemented by
-this plugin.
-</td>
-</tr>
-<tr>
-<td><p><a name="FS-ERROR-NEGOTIATION-FAILED:CAPS"></a><span class="term"><code class="literal">FS_ERROR_NEGOTIATION_FAILED</code></span></p></td>
-<td>The codec negotiation has failed, this means
-that there are no common codecs between the local and remote codecs.
-</td>
-</tr>
-<tr>
-<td><p><a name="FS-ERROR-UNKNOWN-CODEC:CAPS"></a><span class="term"><code class="literal">FS_ERROR_UNKNOWN_CODEC</code></span></p></td>
-<td>Data is received on an unknown codec, this most
-likely denotes an error on the remote side, the buffers will be ignored.
-It can safely be ignored in most cases (but may result in a call with no
-media received).
-</td>
-</tr>
-<tr>
-<td><p><a name="FS-ERROR-NO-CODECS:CAPS"></a><span class="term"><code class="literal">FS_ERROR_NO_CODECS</code></span></p></td>
-<td>There are no codecs detected for that media type.
-</td>
-</tr>
-<tr>
-<td><p><a name="FS-ERROR-NO-CODECS-LEFT:CAPS"></a><span class="term"><code class="literal">FS_ERROR_NO_CODECS_LEFT</code></span></p></td>
-<td>All of the codecs have been disabled by the
-codec preferences, one should try less strict codec preferences.
-</td>
-</tr>
-<tr>
-<td><p><a name="FS-ERROR-CONNECTION-FAILED:CAPS"></a><span class="term"><code class="literal">FS_ERROR_CONNECTION_FAILED</code></span></p></td>
-<td>Could not connect to the to remote party.
-</td>
-</tr>
-<tr>
-<td><p><a name="FS-ERROR-DISPOSED:CAPS"></a><span class="term"><code class="literal">FS_ERROR_DISPOSED</code></span></p></td>
-<td>The object has been disposed.
-</td>
-</tr>
-<tr>
-<td><p><a name="FS-ERROR-ALREADY-EXISTS:CAPS"></a><span class="term"><code class="literal">FS_ERROR_ALREADY_EXISTS</code></span></p></td>
-<td>The object already exists
-</td>
-</tr>
-</tbody>
-</table></div>
+<p>This quark is used to denote errors coming from Farstream objects</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="FS-ERROR-IS-FATAL:CAPS"></a><h3>FS_ERROR_IS_FATAL()</h3>
 <pre class="programlisting">#define             FS_ERROR_IS_FATAL(error)</pre>
-<p>
-Tells the programmer if an error if fatal or not, if it returns <code class="literal">TRUE</code>,
+<p>Tells the programmer if an error if fatal or not, if it returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>,
 the error is fatal, and the object that created it should
-be discarded. It returns <code class="literal">FALSE</code> otherwise.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+be discarded. It returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
+<div class="refsect3">
+<a name="id-1.2.2.2.9.5.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody><tr>
-<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td>a <a class="link" href="FsConference.html#FsError" title="enum FsError"><span class="type">FsError</span></a>
-</td>
+<td class="parameter_name"><p>error</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsConference.html#FsError" title="enum FsError"><span class="type">FsError</span></a></p></td>
+<td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
 </div>
+</div>
 <hr>
 <div class="refsect2">
-<a name="fs-parse-error"></a><h3>fs_parse_error ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_parse_error                      (<em class="parameter"><code><span class="type">GObject</span> *object</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="FsConference.html#FsError" title="enum FsError"><span class="type">FsError</span></a> *error</code></em>,
-                                                         <em class="parameter"><code>const <span class="type">gchar</span> **error_msg</code></em>);</pre>
-<p>
-Parses a "farstream-farstream" message and checks if it matches
-the <em class="parameter"><code>object</code></em> parameters.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+<a name="fs-parse-error"></a><h3>fs_parse_error ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+fs_parse_error (<em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> *object</code></em>,
+                <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
+                <em class="parameter"><code><a class="link" href="FsConference.html#FsError" title="enum FsError"><span class="type">FsError</span></a> *error</code></em>,
+                <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **error_msg</code></em>);</pre>
+<p>Parses a "farstream-farstream" message and checks if it matches
+the <em class="parameter"><code>object</code></em>
+ parameters.</p>
+<div class="refsect3">
+<a name="id-1.2.2.2.9.6.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
-<td>a <span class="type">GObject</span> to match against the message</td>
+<td class="parameter_name"><p>object</p></td>
+<td class="parameter_description"><p>a <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> to match against the message</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>message</code></em> :</span></p></td>
-<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</td>
+<td class="parameter_name"><p>message</p></td>
+<td class="parameter_description"><p>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td>Returns the <a class="link" href="FsConference.html#FsError" title="enum FsError"><span class="type">FsError</span></a> error number in
-the message if not <code class="literal">NULL</code>. <span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>]</span>
+<td class="parameter_name"><p>error</p></td>
+<td class="parameter_description"><p> Returns the <a class="link" href="FsConference.html#FsError" title="enum FsError"><span class="type">FsError</span></a> error number in
+the message if not <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>error_msg</p></td>
+<td class="parameter_description"><p>Returns the error message if not <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.2.9.6.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the message matches the object and is valid.</p>
+<p></p>
+</div>
+</div>
+</div>
+<div class="refsect1">
+<a name="FsConference.other_details"></a><h2>Types and Values</h2>
+<div class="refsect2">
+<a name="FsConference-struct"></a><h3>struct FsConference</h3>
+<pre class="programlisting">struct FsConference;</pre>
+<p>The <a class="link" href="FsConference.html" title="FsConference"><span class="type">FsConference</span></a> structure, all the members are private</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="FsError"></a><h3>enum FsError</h3>
+<p>This is the enum of error numbers that will come either on the "error"
+signal, from the Gst Bus or for error in the FS_ERROR domain in GErrors</p>
+<div class="refsect3">
+<a name="id-1.2.2.2.10.3.4"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="FS-ERROR-CONSTRUCTION:CAPS"></a>FS_ERROR_CONSTRUCTION</p></td>
+<td class="enum_member_description">
+<p>Error constructing some of the sub-elements, this
+probably denotes an error in the installation of the gstreamer elements.
+It is a fatal error.</p>
 </td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>error_msg</code></em> :</span></p></td>
-<td>Returns the error message if not <code class="literal">NULL</code>. <span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>]</span>
+<td class="enum_member_name"><p><a name="FS-ERROR-INTERNAL:CAPS"></a>FS_ERROR_INTERNAL</p></td>
+<td class="enum_member_description">
+<p>An internal error happened in Farstream, it may be in
+an inconsistent state. The object from which this error comes should be
+discarded.</p>
 </td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
-<code class="literal">TRUE</code> if the message matches the object and is valid.</td>
+<td class="enum_member_name"><p><a name="FS-ERROR-INVALID-ARGUMENTS:CAPS"></a>FS_ERROR_INVALID_ARGUMENTS</p></td>
+<td class="enum_member_description">
+<p>Invalid arguments to the function, this
+is a programming error and should not be reported to the user</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="FS-ERROR-NETWORK:CAPS"></a>FS_ERROR_NETWORK</p></td>
+<td class="enum_member_description">
+<p>A network related error, this should probably be
+ reported to the user.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="FS-ERROR-NOT-IMPLEMENTED:CAPS"></a>FS_ERROR_NOT_IMPLEMENTED</p></td>
+<td class="enum_member_description">
+<p>The optional functionality is not implemented by
+this plugin.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="FS-ERROR-NEGOTIATION-FAILED:CAPS"></a>FS_ERROR_NEGOTIATION_FAILED</p></td>
+<td class="enum_member_description">
+<p>The codec negotiation has failed, this means
+that there are no common codecs between the local and remote codecs.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="FS-ERROR-UNKNOWN-CODEC:CAPS"></a>FS_ERROR_UNKNOWN_CODEC</p></td>
+<td class="enum_member_description">
+<p>Data is received on an unknown codec, this most
+likely denotes an error on the remote side, the buffers will be ignored.
+It can safely be ignored in most cases (but may result in a call with no
+media received).</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="FS-ERROR-NO-CODECS:CAPS"></a>FS_ERROR_NO_CODECS</p></td>
+<td class="enum_member_description">
+<p>There are no codecs detected for that media type.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="FS-ERROR-NO-CODECS-LEFT:CAPS"></a>FS_ERROR_NO_CODECS_LEFT</p></td>
+<td class="enum_member_description">
+<p>All of the codecs have been disabled by the
+codec preferences, one should try less strict codec preferences.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="FS-ERROR-CONNECTION-FAILED:CAPS"></a>FS_ERROR_CONNECTION_FAILED</p></td>
+<td class="enum_member_description">
+<p>Could not connect to the to remote party.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="FS-ERROR-DISPOSED:CAPS"></a>FS_ERROR_DISPOSED</p></td>
+<td class="enum_member_description">
+<p>The object has been disposed.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="FS-ERROR-ALREADY-EXISTS:CAPS"></a>FS_ERROR_ALREADY_EXISTS</p></td>
+<td class="enum_member_description">
+<p>The object already exists</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
 </div>
 </div>
+</div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.19</div>
+          Generated by GTK-Doc V1.21</div>
 </body>
 </html>

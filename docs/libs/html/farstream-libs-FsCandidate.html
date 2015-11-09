@@ -2,30 +2,26 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>FsCandidate</title>
+<title>Farstream Reference Manual: FsCandidate</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="Farstream Reference Manual">
 <link rel="up" href="ch01.html" title="Farstream Core Library">
 <link rel="prev" href="FsStream.html" title="FsStream">
 <link rel="next" href="farstream-libs-FsCodec.html" title="FsCodec">
-<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
-<tr valign="middle">
-<td><a accesskey="p" href="FsStream.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
-<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
-<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">Farstream Reference Manual</th>
-<td><a accesskey="n" href="farstream-libs-FsCodec.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
-</tr>
-<tr><td colspan="5" class="shortcuts">
-<a href="#farstream-libs-FsCandidate.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#farstream-libs-FsCandidate.description" class="shortcut">Description</a>
-</td></tr>
-</table>
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#farstream-libs-FsCandidate.description" class="shortcut">Description</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="FsStream.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="farstream-libs-FsCodec.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
 <div class="refentry">
 <a name="farstream-libs-FsCandidate"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
@@ -33,55 +29,408 @@
 <h2><span class="refentrytitle"><a name="farstream-libs-FsCandidate.top_of_page"></a>FsCandidate</span></h2>
 <p>FsCandidate — Structure describing a transport candidate.</p>
 </td>
-<td valign="top" align="right"></td>
+<td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
-<div class="refsynopsisdiv">
-<a name="farstream-libs-FsCandidate.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">
-#include &lt;farstream/fs-conference.h&gt;
-
-struct              <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate">FsCandidate</a>;
-enum                <a class="link" href="farstream-libs-FsCandidate.html#FsCandidateType" title="enum FsCandidateType">FsCandidateType</a>;
-enum                <a class="link" href="farstream-libs-FsCandidate.html#FsNetworkProtocol" title="enum FsNetworkProtocol">FsNetworkProtocol</a>;
-enum                <a class="link" href="farstream-libs-FsCandidate.html#FsComponentType" title="enum FsComponentType">FsComponentType</a>;
-<a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="returnvalue">FsCandidate</span></a> *       <a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-new" title="fs_candidate_new ()">fs_candidate_new</a>                    (<em class="parameter"><code>const <span class="type">gchar</span> *foundation</code></em>,
-                                                         <em class="parameter"><code><span class="type">guint</span> component_id</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidateType" title="enum FsCandidateType"><span class="type">FsCandidateType</span></a> type</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsNetworkProtocol" title="enum FsNetworkProtocol"><span class="type">FsNetworkProtocol</span></a> proto</code></em>,
-                                                         <em class="parameter"><code>const <span class="type">gchar</span> *ip</code></em>,
-                                                         <em class="parameter"><code><span class="type">guint</span> port</code></em>);
-<a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="returnvalue">FsCandidate</span></a> *       <a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-new-full" title="fs_candidate_new_full ()">fs_candidate_new_full</a>               (<em class="parameter"><code>const <span class="type">gchar</span> *foundation</code></em>,
-                                                         <em class="parameter"><code><span class="type">guint</span> component_id</code></em>,
-                                                         <em class="parameter"><code>const <span class="type">gchar</span> *ip</code></em>,
-                                                         <em class="parameter"><code><span class="type">guint16</span> port</code></em>,
-                                                         <em class="parameter"><code>const <span class="type">gchar</span> *base_ip</code></em>,
-                                                         <em class="parameter"><code><span class="type">guint16</span> base_port</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsNetworkProtocol" title="enum FsNetworkProtocol"><span class="type">FsNetworkProtocol</span></a> proto</code></em>,
-                                                         <em class="parameter"><code><span class="type">guint32</span> priority</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidateType" title="enum FsCandidateType"><span class="type">FsCandidateType</span></a> type</code></em>,
-                                                         <em class="parameter"><code>const <span class="type">gchar</span> *username</code></em>,
-                                                         <em class="parameter"><code>const <span class="type">gchar</span> *password</code></em>,
-                                                         <em class="parameter"><code><span class="type">guint</span> ttl</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-destroy" title="fs_candidate_destroy ()">fs_candidate_destroy</a>                (<em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> *cand</code></em>);
-<a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="returnvalue">FsCandidate</span></a> *       <a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-copy" title="fs_candidate_copy ()">fs_candidate_copy</a>                   (<em class="parameter"><code>const <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> *cand</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-list-destroy" title="fs_candidate_list_destroy ()">fs_candidate_list_destroy</a>           (<em class="parameter"><code><span class="type">GList</span> *candidate_list</code></em>);
-<span class="returnvalue">GList</span> *             <a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-list-copy" title="fs_candidate_list_copy ()">fs_candidate_list_copy</a>              (<em class="parameter"><code>const <span class="type">GList</span> *candidate_list</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="farstream-libs-FsCandidate.html#fs-value-set-candidate-list" title="fs_value_set_candidate_list ()">fs_value_set_candidate_list</a>         (<em class="parameter"><code><span class="type">GValue</span> *value</code></em>,
-                                                         <em class="parameter"><code><span class="type">GList</span> *candidates</code></em>);
+<div class="refsect1">
+<a name="farstream-libs-FsCandidate.functions"></a><h2>Functions</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="functions_return">
+<col class="functions_name">
+</colgroup>
+<tbody>
+<tr>
+<td class="function_type">
+<a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="returnvalue">FsCandidate</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-new" title="fs_candidate_new ()">fs_candidate_new</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="returnvalue">FsCandidate</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-new-full" title="fs_candidate_new_full ()">fs_candidate_new_full</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-destroy" title="fs_candidate_destroy ()">fs_candidate_destroy</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="returnvalue">FsCandidate</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-copy" title="fs_candidate_copy ()">fs_candidate_copy</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-list-destroy" title="fs_candidate_list_destroy ()">fs_candidate_list_destroy</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-list-copy" title="fs_candidate_list_copy ()">fs_candidate_list_copy</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="farstream-libs-FsCandidate.html#fs-value-set-candidate-list" title="fs_value_set_candidate_list ()">fs_value_set_candidate_list</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="farstream-libs-FsCandidate.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="name">
+<col class="description">
+</colgroup>
+<tbody>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate">FsCandidate</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="farstream-libs-FsCandidate.html#FsCandidateType" title="enum FsCandidateType">FsCandidateType</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="farstream-libs-FsCandidate.html#FsNetworkProtocol" title="enum FsNetworkProtocol">FsNetworkProtocol</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="farstream-libs-FsCandidate.html#FsComponentType" title="enum FsComponentType">FsComponentType</a></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="farstream-libs-FsCandidate.includes"></a><h2>Includes</h2>
+<pre class="synopsis">#include &lt;farstream/fs-conference.h&gt;
 </pre>
 </div>
 <div class="refsect1">
 <a name="farstream-libs-FsCandidate.description"></a><h2>Description</h2>
-<p>
-An FsCandidate is a way to exchange candidate information between the client
+<p>An FsCandidate is a way to exchange candidate information between the client
 and Farstream. This description is compatible with ICE-13. It can also be a
 multicast address. Candidates are linked to streams. The information
 specified in this structure is usually representative of the codec
-information exchanged in the signaling.
-</p>
+information exchanged in the signaling.</p>
 </div>
 <div class="refsect1">
-<a name="farstream-libs-FsCandidate.details"></a><h2>Details</h2>
+<a name="farstream-libs-FsCandidate.functions_details"></a><h2>Functions</h2>
+<div class="refsect2">
+<a name="fs-candidate-new"></a><h3>fs_candidate_new ()</h3>
+<pre class="programlisting"><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="returnvalue">FsCandidate</span></a> *
+fs_candidate_new (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *foundation</code></em>,
+                  <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> component_id</code></em>,
+                  <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidateType" title="enum FsCandidateType"><span class="type">FsCandidateType</span></a> type</code></em>,
+                  <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsNetworkProtocol" title="enum FsNetworkProtocol"><span class="type">FsNetworkProtocol</span></a> proto</code></em>,
+                  <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *ip</code></em>,
+                  <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> port</code></em>);</pre>
+<p>Allocates a new <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>, the rest of the fields can be optionally
+filled manually. See also <a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-new-full" title="fs_candidate_new_full ()"><code class="function">fs_candidate_new_full()</code></a></p>
+<div class="refsect3">
+<a name="id-1.2.2.6.7.2.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>foundation</p></td>
+<td class="parameter_description"><p>The foundation of the candidate</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>component_id</p></td>
+<td class="parameter_description"><p>The component this candidate is for</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>type</p></td>
+<td class="parameter_description"><p>The type of candidate</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>proto</p></td>
+<td class="parameter_description"><p>The protocol this component is for</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>ip</p></td>
+<td class="parameter_description"><p> The IP address of this component (can be NULL for local candidate to
+mean any address). </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>port</p></td>
+<td class="parameter_description"><p>the UDP/TCP port</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.6.7.2.6"></a><h4>Returns</h4>
+<p> a newly-allocated <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a></p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-candidate-new-full"></a><h3>fs_candidate_new_full ()</h3>
+<pre class="programlisting"><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="returnvalue">FsCandidate</span></a> *
+fs_candidate_new_full (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *foundation</code></em>,
+                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> component_id</code></em>,
+                       <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *ip</code></em>,
+                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint16"><span class="type">guint16</span></a> port</code></em>,
+                       <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *base_ip</code></em>,
+                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint16"><span class="type">guint16</span></a> base_port</code></em>,
+                       <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsNetworkProtocol" title="enum FsNetworkProtocol"><span class="type">FsNetworkProtocol</span></a> proto</code></em>,
+                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint32"><span class="type">guint32</span></a> priority</code></em>,
+                       <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidateType" title="enum FsCandidateType"><span class="type">FsCandidateType</span></a> type</code></em>,
+                       <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *username</code></em>,
+                       <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *password</code></em>,
+                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> ttl</code></em>);</pre>
+<p>Allocates a new <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>, filling all the fields. See also
+<a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-new" title="fs_candidate_new ()"><code class="function">fs_candidate_new()</code></a></p>
+<div class="refsect3">
+<a name="id-1.2.2.6.7.3.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>foundation</p></td>
+<td class="parameter_description"><p>The foundation of the candidate</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>component_id</p></td>
+<td class="parameter_description"><p>The component this candidate is for</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>ip</p></td>
+<td class="parameter_description"><p> The IP address of this component (can be NULL for local candidate to
+mean any address). </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>port</p></td>
+<td class="parameter_description"><p>the UDP/TCP port</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>base_ip</p></td>
+<td class="parameter_description"><p> IP of base in dotted format as defined in ICE-19. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>base_port</p></td>
+<td class="parameter_description"><p>Port of base as defined in ICE-19.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>proto</p></td>
+<td class="parameter_description"><p>The protocol this component is for</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>priority</p></td>
+<td class="parameter_description"><p>Value between 0 and (2^31 - 1) representing the priority</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>type</p></td>
+<td class="parameter_description"><p>The type of candidate</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>username</p></td>
+<td class="parameter_description"><p> Username to use to connect to client if necessary,
+NULL otherwise. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>password</p></td>
+<td class="parameter_description"><p> Username to use to connect to client if necessary,
+NULL otherwise. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>ttl</p></td>
+<td class="parameter_description"><p>The TTL used when sending Multicast packet (0 = auto)</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.6.7.3.6"></a><h4>Returns</h4>
+<p> a newly-allocated <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a></p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-candidate-destroy"></a><h3>fs_candidate_destroy ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+fs_candidate_destroy (<em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> *cand</code></em>);</pre>
+<p>Frees a <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> and all its contents</p>
+<div class="refsect3">
+<a name="id-1.2.2.6.7.4.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>cand</p></td>
+<td class="parameter_description"><p>a <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> to delete</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-candidate-copy"></a><h3>fs_candidate_copy ()</h3>
+<pre class="programlisting"><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="returnvalue">FsCandidate</span></a> *
+fs_candidate_copy (<em class="parameter"><code>const <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> *cand</code></em>);</pre>
+<p>Copies a <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> and its contents.</p>
+<div class="refsect3">
+<a name="id-1.2.2.6.7.5.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>cand</p></td>
+<td class="parameter_description"><p>a <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> to copy</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.6.7.5.6"></a><h4>Returns</h4>
+<p> a new <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a></p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-candidate-list-destroy"></a><h3>fs_candidate_list_destroy ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+fs_candidate_list_destroy (<em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *candidate_list</code></em>);</pre>
+<p>Deletes a GList of <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> and its contents</p>
+<div class="refsect3">
+<a name="id-1.2.2.6.7.6.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>candidate_list</p></td>
+<td class="parameter_description"><p>A GList of <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-candidate-list-copy"></a><h3>fs_candidate_list_copy ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
+fs_candidate_list_copy (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *candidate_list</code></em>);</pre>
+<p>Copies a GList of <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> and its contents</p>
+<div class="refsect3">
+<a name="id-1.2.2.6.7.7.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>candidate_list</p></td>
+<td class="parameter_description"><p> A GList of <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec]</span></td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.6.7.7.6"></a><h4>Returns</h4>
+<p> a new GList of <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>. </p>
+<p><span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec][<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>]</span></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-value-set-candidate-list"></a><h3>fs_value_set_candidate_list ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+fs_value_set_candidate_list (<em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>,
+                             <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *candidates</code></em>);</pre>
+<p>This is for the bindings benefit. Works around the limitations of GObject
+introspection.</p>
+<div class="refsect3">
+<a name="id-1.2.2.6.7.8.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>value</p></td>
+<td class="parameter_description"><p>a <a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> of type <span class="type">FS_TYPE_CANDIDATE_LIST</span></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>candidates</p></td>
+<td class="parameter_description"><p> A <a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCandidate][<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="refsect1">
+<a name="farstream-libs-FsCandidate.other_details"></a><h2>Types and Values</h2>
 <div class="refsect2">
 <a name="FsCandidate"></a><h3>struct FsCandidate</h3>
 <pre class="programlisting">struct FsCandidate {
@@ -99,444 +448,233 @@ information exchanged in the signaling.
   guint ttl;
 };
 </pre>
-<p>
-Struct to hold information about ICE-19 compliant candidates
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+<p>Struct to hold information about ICE-19 compliant candidates</p>
+<div class="refsect3">
+<a name="id-1.2.2.6.8.2.5"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><span class="term"><span class="type">gchar</span> *<em class="structfield"><code><a name="FsCandidate.foundation"></a>foundation</code></em>;</span></p></td>
-<td>a string representing the foundation of this candidate (maximum 32 chars)</td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="FsCandidate.foundation"></a>foundation</code></em>;</p></td>
+<td class="struct_member_description"><p>a string representing the foundation of this candidate (maximum 32 chars)</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><span class="type">guint</span> <em class="structfield"><code><a name="FsCandidate.component-id"></a>component_id</code></em>;</span></p></td>
-<td>value between 1 and 256 indicating which component this candidate represents (1 is RTP, 2 is RTCP, <a class="link" href="farstream-libs-FsCandidate.html#FsComponentType" title="enum FsComponentType"><span class="type">FsComponentType</span></a> can be used here)</td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="FsCandidate.component-id"></a>component_id</code></em>;</p></td>
+<td class="struct_member_description"><p>value between 1 and 256 indicating which component this candidate represents (1 is RTP, 2 is RTCP, <a class="link" href="farstream-libs-FsCandidate.html#FsComponentType" title="enum FsComponentType"><span class="type">FsComponentType</span></a> can be used here)</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><span class="type">gchar</span> *<em class="structfield"><code><a name="FsCandidate.ip"></a>ip</code></em>;</span></p></td>
-<td>IP in dotted format</td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="FsCandidate.ip"></a>ip</code></em>;</p></td>
+<td class="struct_member_description"><p>IP in dotted format</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><span class="type">guint16</span> <em class="structfield"><code><a name="FsCandidate.port"></a>port</code></em>;</span></p></td>
-<td>Port to use</td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint16"><span class="type">guint16</span></a> <em class="structfield"><code><a name="FsCandidate.port"></a>port</code></em>;</p></td>
+<td class="struct_member_description"><p>Port to use</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><span class="type">gchar</span> *<em class="structfield"><code><a name="FsCandidate.base-ip"></a>base_ip</code></em>;</span></p></td>
-<td>IP of base in dotted format as defined in ICE-19.</td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="FsCandidate.base-ip"></a>base_ip</code></em>;</p></td>
+<td class="struct_member_description"><p>IP of base in dotted format as defined in ICE-19.</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><span class="type">guint16</span> <em class="structfield"><code><a name="FsCandidate.base-port"></a>base_port</code></em>;</span></p></td>
-<td>Port of base as defined in ICE-19.</td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint16"><span class="type">guint16</span></a> <em class="structfield"><code><a name="FsCandidate.base-port"></a>base_port</code></em>;</p></td>
+<td class="struct_member_description"><p>Port of base as defined in ICE-19.</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><a class="link" href="farstream-libs-FsCandidate.html#FsNetworkProtocol" title="enum FsNetworkProtocol"><span class="type">FsNetworkProtocol</span></a> <em class="structfield"><code><a name="FsCandidate.proto"></a>proto</code></em>;</span></p></td>
-<td>
-<a class="link" href="farstream-libs-FsCandidate.html#FsNetworkProtocol" title="enum FsNetworkProtocol"><span class="type">FsNetworkProtocol</span></a> for ip protocol to use as candidate</td>
+<td class="struct_member_name"><p><a class="link" href="farstream-libs-FsCandidate.html#FsNetworkProtocol" title="enum FsNetworkProtocol"><span class="type">FsNetworkProtocol</span></a> <em class="structfield"><code><a name="FsCandidate.proto"></a>proto</code></em>;</p></td>
+<td class="struct_member_description"><p><a class="link" href="farstream-libs-FsCandidate.html#FsNetworkProtocol" title="enum FsNetworkProtocol"><span class="type">FsNetworkProtocol</span></a> for ip protocol to use as candidate</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><span class="type">guint32</span> <em class="structfield"><code><a name="FsCandidate.priority"></a>priority</code></em>;</span></p></td>
-<td>Value between 0 and (2^31 - 1) representing the priority</td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint32"><span class="type">guint32</span></a> <em class="structfield"><code><a name="FsCandidate.priority"></a>priority</code></em>;</p></td>
+<td class="struct_member_description"><p>Value between 0 and (2^31 - 1) representing the priority</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><a class="link" href="farstream-libs-FsCandidate.html#FsCandidateType" title="enum FsCandidateType"><span class="type">FsCandidateType</span></a> <em class="structfield"><code><a name="FsCandidate.type"></a>type</code></em>;</span></p></td>
-<td>The <a class="link" href="farstream-libs-FsCandidate.html#FsCandidateType" title="enum FsCandidateType"><span class="type">FsCandidateType</span></a> of the candidate</td>
+<td class="struct_member_name"><p><a class="link" href="farstream-libs-FsCandidate.html#FsCandidateType" title="enum FsCandidateType"><span class="type">FsCandidateType</span></a> <em class="structfield"><code><a name="FsCandidate.type"></a>type</code></em>;</p></td>
+<td class="struct_member_description"><p>The <a class="link" href="farstream-libs-FsCandidate.html#FsCandidateType" title="enum FsCandidateType"><span class="type">FsCandidateType</span></a> of the candidate</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><span class="type">gchar</span> *<em class="structfield"><code><a name="FsCandidate.username"></a>username</code></em>;</span></p></td>
-<td>Username to use to connect to client if necessary,
-NULL otherwise</td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="FsCandidate.username"></a>username</code></em>;</p></td>
+<td class="struct_member_description"><p>Username to use to connect to client if necessary,
+NULL otherwise</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><span class="type">gchar</span> *<em class="structfield"><code><a name="FsCandidate.password"></a>password</code></em>;</span></p></td>
-<td>Username to use to connect to client if necessary,
-NULL otherwise</td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="FsCandidate.password"></a>password</code></em>;</p></td>
+<td class="struct_member_description"><p>Username to use to connect to client if necessary,
+NULL otherwise</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><span class="type">guint</span> <em class="structfield"><code><a name="FsCandidate.ttl"></a>ttl</code></em>;</span></p></td>
-<td>The TTL used when sending Multicast packet (0 = auto)</td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="FsCandidate.ttl"></a>ttl</code></em>;</p></td>
+<td class="struct_member_description"><p>The TTL used when sending Multicast packet (0 = auto)</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
+</div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="FsCandidateType"></a><h3>enum FsCandidateType</h3>
-<pre class="programlisting">typedef enum {
-  FS_CANDIDATE_TYPE_HOST,
-  FS_CANDIDATE_TYPE_SRFLX,
-  FS_CANDIDATE_TYPE_PRFLX,
-  FS_CANDIDATE_TYPE_RELAY,    /* An external stream relay */
-  FS_CANDIDATE_TYPE_MULTICAST
-} FsCandidateType;
-</pre>
-<p>
-An enum for the type of candidate used/reported
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+<p>An enum for the type of candidate used/reported</p>
+<div class="refsect3">
+<a name="id-1.2.2.6.8.3.4"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><a name="FS-CANDIDATE-TYPE-HOST:CAPS"></a><span class="term"><code class="literal">FS_CANDIDATE_TYPE_HOST</code></span></p></td>
-<td>A host candidate (local)
+<td class="enum_member_name"><p><a name="FS-CANDIDATE-TYPE-HOST:CAPS"></a>FS_CANDIDATE_TYPE_HOST</p></td>
+<td class="enum_member_description">
+<p>A host candidate (local)</p>
 </td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><a name="FS-CANDIDATE-TYPE-SRFLX:CAPS"></a><span class="term"><code class="literal">FS_CANDIDATE_TYPE_SRFLX</code></span></p></td>
-<td>A server reflexive candidate.
+<td class="enum_member_name"><p><a name="FS-CANDIDATE-TYPE-SRFLX:CAPS"></a>FS_CANDIDATE_TYPE_SRFLX</p></td>
+<td class="enum_member_description">
+<p>A server reflexive candidate.</p>
 </td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><a name="FS-CANDIDATE-TYPE-PRFLX:CAPS"></a><span class="term"><code class="literal">FS_CANDIDATE_TYPE_PRFLX</code></span></p></td>
-<td>A peer reflexive candidate
+<td class="enum_member_name"><p><a name="FS-CANDIDATE-TYPE-PRFLX:CAPS"></a>FS_CANDIDATE_TYPE_PRFLX</p></td>
+<td class="enum_member_description">
+<p>A peer reflexive candidate</p>
 </td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><a name="FS-CANDIDATE-TYPE-RELAY:CAPS"></a><span class="term"><code class="literal">FS_CANDIDATE_TYPE_RELAY</code></span></p></td>
-<td>An relay candidate
+<td class="enum_member_name"><p><a name="FS-CANDIDATE-TYPE-RELAY:CAPS"></a>FS_CANDIDATE_TYPE_RELAY</p></td>
+<td class="enum_member_description">
+<p>An relay candidate</p>
 </td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><a name="FS-CANDIDATE-TYPE-MULTICAST:CAPS"></a><span class="term"><code class="literal">FS_CANDIDATE_TYPE_MULTICAST</code></span></p></td>
-<td>A multicast address
+<td class="enum_member_name"><p><a name="FS-CANDIDATE-TYPE-MULTICAST:CAPS"></a>FS_CANDIDATE_TYPE_MULTICAST</p></td>
+<td class="enum_member_description">
+<p>A multicast address</p>
 </td>
+<td class="enum_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
+</div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="FsNetworkProtocol"></a><h3>enum FsNetworkProtocol</h3>
-<pre class="programlisting">typedef enum {
-  FS_NETWORK_PROTOCOL_UDP,
-  FS_NETWORK_PROTOCOL_TCP
-} FsNetworkProtocol;
-</pre>
-<p>
-An enum for the base IP protocol
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+<p>An enum for the base IP protocol</p>
+<div class="refsect3">
+<a name="id-1.2.2.6.8.4.4"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><a name="FS-NETWORK-PROTOCOL-UDP:CAPS"></a><span class="term"><code class="literal">FS_NETWORK_PROTOCOL_UDP</code></span></p></td>
-<td>A UDP based protocol
+<td class="enum_member_name"><p><a name="FS-NETWORK-PROTOCOL-UDP:CAPS"></a>FS_NETWORK_PROTOCOL_UDP</p></td>
+<td class="enum_member_description">
+<p>A UDP based protocol</p>
 </td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><a name="FS-NETWORK-PROTOCOL-TCP:CAPS"></a><span class="term"><code class="literal">FS_NETWORK_PROTOCOL_TCP</code></span></p></td>
-<td>A TCP based protocol
+<td class="enum_member_name"><p><a name="FS-NETWORK-PROTOCOL-TCP:CAPS"></a>FS_NETWORK_PROTOCOL_TCP</p></td>
+<td class="enum_member_description">
+<p>A TCP based protocol, will listen for
+incoming connections</p>
 </td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="FS-NETWORK-PROTOCOL-TCP-PASSIVE:CAPS"></a>FS_NETWORK_PROTOCOL_TCP_PASSIVE</p></td>
+<td class="enum_member_description">
+<p>A TCP based protocol, will listen for
+incoming connections</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="FS-NETWORK-PROTOCOL-TCP-ACTIVE:CAPS"></a>FS_NETWORK_PROTOCOL_TCP_ACTIVE</p></td>
+<td class="enum_member_description">
+<p>A TCP based protocol, will attempt to
+open an outbound connection</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="FS-NETWORK-PROTOCOL-TCP-SO:CAPS"></a>FS_NETWORK_PROTOCOL_TCP_SO</p></td>
+<td class="enum_member_description">
+<p>A TCP based protocol, will listen for
+incoming connections and attempt an outbound connection at the same time
+as the peer (Simultanuous-Open)</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
+</div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="FsComponentType"></a><h3>enum FsComponentType</h3>
-<pre class="programlisting">typedef enum {
-  FS_COMPONENT_NONE = 0,
-  FS_COMPONENT_RTP = 1,
-  FS_COMPONENT_RTCP = 2
-} FsComponentType;
-</pre>
-<p>
-This enum contains the component IDs defined in ICE-19
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+<p>This enum contains the component IDs defined in ICE-19</p>
+<div class="refsect3">
+<a name="id-1.2.2.6.8.5.4"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><a name="FS-COMPONENT-NONE:CAPS"></a><span class="term"><code class="literal">FS_COMPONENT_NONE</code></span></p></td>
-<td>Use this when specifying a component is innapropriate
+<td class="enum_member_name"><p><a name="FS-COMPONENT-NONE:CAPS"></a>FS_COMPONENT_NONE</p></td>
+<td class="enum_member_description">
+<p>Use this when specifying a component is innapropriate</p>
 </td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><a name="FS-COMPONENT-RTP:CAPS"></a><span class="term"><code class="literal">FS_COMPONENT_RTP</code></span></p></td>
-<td>This component is for RTP data
+<td class="enum_member_name"><p><a name="FS-COMPONENT-RTP:CAPS"></a>FS_COMPONENT_RTP</p></td>
+<td class="enum_member_description">
+<p>This component is for RTP data</p>
 </td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><a name="FS-COMPONENT-RTCP:CAPS"></a><span class="term"><code class="literal">FS_COMPONENT_RTCP</code></span></p></td>
-<td>This component is for RTCP control
+<td class="enum_member_name"><p><a name="FS-COMPONENT-RTCP:CAPS"></a>FS_COMPONENT_RTCP</p></td>
+<td class="enum_member_description">
+<p>This component is for RTCP control</p>
 </td>
+<td class="enum_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
-<hr>
-<div class="refsect2">
-<a name="fs-candidate-new"></a><h3>fs_candidate_new ()</h3>
-<pre class="programlisting"><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="returnvalue">FsCandidate</span></a> *       fs_candidate_new                    (<em class="parameter"><code>const <span class="type">gchar</span> *foundation</code></em>,
-                                                         <em class="parameter"><code><span class="type">guint</span> component_id</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidateType" title="enum FsCandidateType"><span class="type">FsCandidateType</span></a> type</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsNetworkProtocol" title="enum FsNetworkProtocol"><span class="type">FsNetworkProtocol</span></a> proto</code></em>,
-                                                         <em class="parameter"><code>const <span class="type">gchar</span> *ip</code></em>,
-                                                         <em class="parameter"><code><span class="type">guint</span> port</code></em>);</pre>
-<p>
-Allocates a new <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>, the rest of the fields can be optionally
-filled manually. See also <a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-new-full" title="fs_candidate_new_full ()"><code class="function">fs_candidate_new_full()</code></a>
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>foundation</code></em> :</span></p></td>
-<td>The foundation of the candidate</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>component_id</code></em> :</span></p></td>
-<td>The component this candidate is for</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
-<td>The type of candidate</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>proto</code></em> :</span></p></td>
-<td>The protocol this component is for</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>ip</code></em> :</span></p></td>
-<td>The IP address of this component (can be NULL for local candidate to
-mean any address). <span class="annotation">[<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>port</code></em> :</span></p></td>
-<td>the UDP/TCP port</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a newly-allocated <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>
-</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-candidate-new-full"></a><h3>fs_candidate_new_full ()</h3>
-<pre class="programlisting"><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="returnvalue">FsCandidate</span></a> *       fs_candidate_new_full               (<em class="parameter"><code>const <span class="type">gchar</span> *foundation</code></em>,
-                                                         <em class="parameter"><code><span class="type">guint</span> component_id</code></em>,
-                                                         <em class="parameter"><code>const <span class="type">gchar</span> *ip</code></em>,
-                                                         <em class="parameter"><code><span class="type">guint16</span> port</code></em>,
-                                                         <em class="parameter"><code>const <span class="type">gchar</span> *base_ip</code></em>,
-                                                         <em class="parameter"><code><span class="type">guint16</span> base_port</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsNetworkProtocol" title="enum FsNetworkProtocol"><span class="type">FsNetworkProtocol</span></a> proto</code></em>,
-                                                         <em class="parameter"><code><span class="type">guint32</span> priority</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidateType" title="enum FsCandidateType"><span class="type">FsCandidateType</span></a> type</code></em>,
-                                                         <em class="parameter"><code>const <span class="type">gchar</span> *username</code></em>,
-                                                         <em class="parameter"><code>const <span class="type">gchar</span> *password</code></em>,
-                                                         <em class="parameter"><code><span class="type">guint</span> ttl</code></em>);</pre>
-<p>
-Allocates a new <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>, filling all the fields. See also
-<a class="link" href="farstream-libs-FsCandidate.html#fs-candidate-new" title="fs_candidate_new ()"><code class="function">fs_candidate_new()</code></a>
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>foundation</code></em> :</span></p></td>
-<td>The foundation of the candidate</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>component_id</code></em> :</span></p></td>
-<td>The component this candidate is for</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>ip</code></em> :</span></p></td>
-<td>The IP address of this component (can be NULL for local candidate to
-mean any address). <span class="annotation">[<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>port</code></em> :</span></p></td>
-<td>the UDP/TCP port</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>base_ip</code></em> :</span></p></td>
-<td>IP of base in dotted format as defined in ICE-19. <span class="annotation">[<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>base_port</code></em> :</span></p></td>
-<td>Port of base as defined in ICE-19.</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>proto</code></em> :</span></p></td>
-<td>The protocol this component is for</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>priority</code></em> :</span></p></td>
-<td>Value between 0 and (2^31 - 1) representing the priority</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
-<td>The type of candidate</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>username</code></em> :</span></p></td>
-<td>Username to use to connect to client if necessary,
-NULL otherwise. <span class="annotation">[<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>password</code></em> :</span></p></td>
-<td>Username to use to connect to client if necessary,
-NULL otherwise. <span class="annotation">[<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>ttl</code></em> :</span></p></td>
-<td>The TTL used when sending Multicast packet (0 = auto)</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a newly-allocated <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>
-</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-candidate-destroy"></a><h3>fs_candidate_destroy ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                fs_candidate_destroy                (<em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> *cand</code></em>);</pre>
-<p>
-Frees a <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> and all its contents
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody><tr>
-<td><p><span class="term"><em class="parameter"><code>cand</code></em> :</span></p></td>
-<td>a <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> to delete</td>
-</tr></tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-candidate-copy"></a><h3>fs_candidate_copy ()</h3>
-<pre class="programlisting"><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="returnvalue">FsCandidate</span></a> *       fs_candidate_copy                   (<em class="parameter"><code>const <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> *cand</code></em>);</pre>
-<p>
-Copies a <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> and its contents.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>cand</code></em> :</span></p></td>
-<td>a <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> to copy</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a new <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>
-</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-candidate-list-destroy"></a><h3>fs_candidate_list_destroy ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                fs_candidate_list_destroy           (<em class="parameter"><code><span class="type">GList</span> *candidate_list</code></em>);</pre>
-<p>
-Deletes a GList of <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> and its contents
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody><tr>
-<td><p><span class="term"><em class="parameter"><code>candidate_list</code></em> :</span></p></td>
-<td>A GList of <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>
-</td>
-</tr></tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-candidate-list-copy"></a><h3>fs_candidate_list_copy ()</h3>
-<pre class="programlisting"><span class="returnvalue">GList</span> *             fs_candidate_list_copy              (<em class="parameter"><code>const <span class="type">GList</span> *candidate_list</code></em>);</pre>
-<p>
-Copies a GList of <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> and its contents
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>candidate_list</code></em> :</span></p></td>
-<td>A GList of <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>. <span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a new GList of <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>. <span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec][<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>]</span>
-</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-value-set-candidate-list"></a><h3>fs_value_set_candidate_list ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                fs_value_set_candidate_list         (<em class="parameter"><code><span class="type">GValue</span> *value</code></em>,
-                                                         <em class="parameter"><code><span class="type">GList</span> *candidates</code></em>);</pre>
-<p>
-This is for the bindings benefit. Works around the limitations of GObject
-introspection.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
-<td>a <span class="type">GValue</span> of type <span class="type">FS_TYPE_CANDIDATE_LIST</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>candidates</code></em> :</span></p></td>
-<td>A <span class="type">GList</span> of <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>. <span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCandidate][<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span>
-</td>
-</tr>
-</tbody>
-</table></div>
 </div>
 </div>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.19</div>
+          Generated by GTK-Doc V1.21</div>
 </body>
 </html>

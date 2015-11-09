@@ -79,6 +79,16 @@
 </ARG>
 
 <ARG>
+<NAME>FsRtpSession::internal-session</NAME>
+<TYPE>GObject*</TYPE>
+<RANGE></RANGE>
+<FLAGS>r</FLAGS>
+<NICK>Internal RTP Session</NICK>
+<BLURB>Internal RTPSession object from rtpbin.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
 <NAME>FsRtpStream::rtp-header-extensions</NAME>
 <TYPE>FsRtpHeaderExtensionGList*</TYPE>
 <RANGE></RANGE>
@@ -86,6 +96,16 @@
 <NICK>RTP Header extension desired by participant in this stream</NICK>
 <BLURB>GList of RTP Header extensions that the participant for this stream would like to use.</BLURB>
 <DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>FsRtpStream::send-rtcp-mux</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Send RTCP muxed with on the same RTP connection</NICK>
+<BLURB>Send RTCP muxed with on the same RTP connection.</BLURB>
+<DEFAULT>FALSE</DEFAULT>
 </ARG>
 
 <ARG>

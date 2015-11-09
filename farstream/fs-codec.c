@@ -80,13 +80,13 @@ fs_codec_list_get_type (void)
 G_DEFINE_BOXED_TYPE (FsCodecParameter,
     fs_codec_parameter,
     fs_codec_parameter_copy,
-    fs_codec_parameter_free);
+    fs_codec_parameter_free)
 
 
 G_DEFINE_BOXED_TYPE (FsFeedbackParameter,
     fs_feedback_parameter,
     fs_feedback_parameter_copy,
-    fs_feedback_parameter_free);
+    fs_feedback_parameter_free)
 
 /**
  * fs_codec_new:
@@ -367,6 +367,11 @@ fs_codec_list_from_keyfile (const gchar *filename, GError **error)
     {
       media_type = FS_MEDIA_TYPE_VIDEO;
     }
+    else if ((next_tok - groups[i]) == 11 /* strlen ("application") */ &&
+        !g_ascii_strncasecmp ("application", groups[i], 11))
+    {
+      media_type = FS_MEDIA_TYPE_APPLICATION;
+    }
     else
     {
       GST_WARNING ("Invalid media type in codec name name %s", groups[i]);
@@ -504,6 +509,8 @@ fs_media_type_to_string (FsMediaType media_type)
     return "audio";
   } else if (media_type == FS_MEDIA_TYPE_VIDEO) {
     return "video";
+  } else if (media_type == FS_MEDIA_TYPE_APPLICATION) {
+    return "application";
   } else {
     return NULL;
   }
@@ -756,7 +763,7 @@ fs_codec_remove_optional_parameter (FsCodec *codec,
  * Finds the #FsCodecParameter in the #FsCodec that has the requested name
  * and, if not %NULL, the requested value
  *
- * Returns: (transfer none) the #FsCodecParameter from the #FsCodec or %NULL
+ * Returns: (transfer none): the #FsCodecParameter from the #FsCodec or %NULL
  */
 
 FsCodecParameter *

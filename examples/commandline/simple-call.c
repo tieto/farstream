@@ -32,7 +32,7 @@
 #include <gst/gst.h>
 #include <farstream/fs-conference.h>
 
-#define DEFAULT_AUDIOSRC       "audiotestsrc"
+#define DEFAULT_AUDIOSRC       "audiotestsrc is-live=1"
 #define DEFAULT_AUDIOSINK      "audioconvert ! audioresample ! audioconvert ! alsasink"
 
 typedef struct _TestSession

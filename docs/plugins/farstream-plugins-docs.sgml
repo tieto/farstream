@@ -55,5 +55,7 @@
   <part>
     <title>Utility elements</title>
     <xi:include href="xml/element-fsvideoanyrate.xml"/>
+    <xi:include href="xml/element-fsrtpxdatapay.xml"/>
+    <xi:include href="xml/element-fsrtpxdatadepay.xml"/>
   </part>
 </book>

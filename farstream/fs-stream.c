@@ -36,7 +36,7 @@
  *
  * This will communicate asynchronous events to the user through #GstMessage
  * of type #GST_MESSAGE_ELEMENT sent over the #GstBus.
- * </para>
+ *
  * <refsect2><title>The "<literal>farstream-new-local-candidate</literal>" message</title>
  * |[
  * "stream"           #FsStream          The stream that emits the message
@@ -93,7 +93,7 @@
  * This message is emitted the state of a component of a stream changes.
  * </para>
  * </refsect2>
- * <para>
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -129,7 +129,8 @@ enum
   PROP_CURRENT_RECV_CODECS,
   PROP_DIRECTION,
   PROP_PARTICIPANT,
-  PROP_SESSION
+  PROP_SESSION,
+  PROP_DECRYPTION_PARAMETERS
 };
 
 
@@ -144,7 +145,7 @@ struct _FsStreamPrivate
    (G_TYPE_INSTANCE_GET_PRIVATE ((o), FS_TYPE_STREAM, FsStreamPrivate))
 
 
-G_DEFINE_ABSTRACT_TYPE(FsStream, fs_stream, G_TYPE_OBJECT);
+G_DEFINE_ABSTRACT_TYPE(FsStream, fs_stream, G_TYPE_OBJECT)
 
 static void fs_stream_constructed (GObject *obj);
 static void fs_stream_get_property (GObject *object,
@@ -178,14 +179,11 @@ fs_stream_class_init (FsStreamClass *klass)
 
 
   /**
-   * FsStream:remote-codecs:
+   * FsStream:remote-codecs: (type GLib.List(FsCodec)) (transfer full)
    *
    * This is the list of remote codecs for this stream. They must be set by the
    * user as soon as they are known using fs_stream_set_remote_codecs()
    * (generally through external signaling). It is a #GList of #FsCodec.
-   *
-   * Type: GLib.List(FsCodec)
-   * Transfer: full
    */
   g_object_class_install_property (gobject_class,
       PROP_REMOTE_CODECS,
@@ -196,16 +194,13 @@ fs_stream_class_init (FsStreamClass *klass)
         G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
   /**
-   * FsStream:negotiated-codecs:
+   * FsStream:negotiated-codecs: (type GLib.List(FsCodec)) (transfer full)
    *
    * This is the list of negotiatied codecs, it is the same list as the list
    * of #FsCodec from the parent #FsSession, except that the codec config data
    * has been replaced with the data from the remote codecs for this stream.
    * This is the list of #FsCodec used to receive data from this stream.
    * It is a #GList of #FsCodec.
-   *
-   * Type: GLib.List(FsCodec)
-   * Transfer: full
    */
   g_object_class_install_property (gobject_class,
       PROP_NEGOTIATED_CODECS,
@@ -216,7 +211,7 @@ fs_stream_class_init (FsStreamClass *klass)
         G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
   /**
-   * FsStream:current-recv-codecs:
+   * FsStream:current-recv-codecs: (type GLib.List(FsCodec)) (transfer full)
    *
    * This is the list of codecs that have been received by this stream.
    * The user must free the list if fs_codec_list_destroy().
@@ -226,9 +221,6 @@ fs_stream_class_init (FsStreamClass *klass)
    * only if that codec was not previously received in this stream, but it can
    * also be emitted if the pad already exists, but the source material that
    * will come to it is different.
-   *
-   * Type: GLib.List(FsCodec)
-   * Transfer: full
    */
   g_object_class_install_property (gobject_class,
       PROP_CURRENT_RECV_CODECS,
@@ -284,6 +276,19 @@ fs_stream_class_init (FsStreamClass *klass)
         "An FsSession represented by the stream",
         FS_TYPE_SESSION,
         G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
+  /**
+   * FsStream:decryption-parameters:
+   *
+   * Retrieves previously set decryption parameters
+   */
+  g_object_class_install_property (gobject_class,
+      PROP_DECRYPTION_PARAMETERS,
+      g_param_spec_boxed ("decryption-parameters",
+          "Decryption parameters",
+          "Parameters used to decrypt the stream",
+          GST_TYPE_STRUCTURE,
+          G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
   /**
    * FsStream::error:
@@ -366,10 +371,18 @@ fs_stream_get_property (GObject *object,
                         GValue *value,
                         GParamSpec *pspec)
 {
-  GST_WARNING ("Subclass %s of FsStream does not override the %s property"
-      " getter",
-      G_OBJECT_TYPE_NAME(object),
-      g_param_spec_get_name (pspec));
+  switch (prop_id) {
+    case PROP_DECRYPTION_PARAMETERS:
+      g_value_set_boxed (value, NULL);
+      /* Not having parameters is valid, in this case set nothing */
+      break;
+    default:
+      GST_WARNING ("Subclass %s of FsStream does not override the %s property"
+          " getter",
+          G_OBJECT_TYPE_NAME(object),
+          g_param_spec_get_name (pspec));
+      break;
+  }
 }
 
 static void
@@ -744,6 +757,38 @@ end:
   g_free (params);
 
   return ret;
+}
+
+/**
+ * fs_stream_set_decryption_parameters:
+ * @stream: a #FsStream
+ * @parameters: (transfer none): a #GstStructure containing the decryption
+ *  parameters
+ * @error: the location where to store a #GError or %NULL
+ *
+ * Sets decryption parameters. The exact parameters depend on the type of
+ * plugin being used.
+ *
+ * Returns: %TRUE if the decryption parameters could be set, %FALSE otherwise
+ * Since: UNRELEASED
+ */
+gboolean
+fs_stream_set_decryption_parameters (FsStream *stream,
+    GstStructure *parameters, GError **error)
+{
+  FsStreamClass *klass;
+
+  g_return_val_if_fail (stream, FALSE);
+  g_return_val_if_fail (FS_IS_STREAM (stream), FALSE);
+  klass = FS_STREAM_GET_CLASS (stream);
+
+  if (klass->set_decryption_parameters)
+    return klass->set_decryption_parameters (stream, parameters, error);
+
+  g_set_error (error, FS_ERROR, FS_ERROR_NOT_IMPLEMENTED,
+      "Does not support decryption");
+
+  return FALSE;
 }
 
 /**

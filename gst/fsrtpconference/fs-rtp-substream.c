@@ -349,7 +349,7 @@ fs_rtp_sub_stream_class_init (FsRtpSubStreamClass *klass)
    * @self: #FsRtpSubStream that emitted the signal
    *
    * This signal is emitted when the code for this substream has
-   * changed. It can be fetvched from the #FsRtpSubStream:codec property
+   * changed. It can be fetched from the #FsRtpSubStream:codec property
    * This is useful for displaying the current active reception codecs.
    */
   signals[CODEC_CHANGED] = g_signal_new ("codec-changed",
@@ -1135,7 +1135,7 @@ fs_rtp_sub_stream_add_output_ghostpad_unlock (FsRtpSubStream *substream,
           ghostpad))
   {
     g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
-        "Could add build ghostpad src_%u_%u_%u to the conference",
+        "Could not add ghostpad src_%u_%u_%u to the conference",
         substream->priv->session->id, substream->ssrc, substream->pt);
     gst_object_unref (ghostpad);
     goto error;

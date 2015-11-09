@@ -103,20 +103,24 @@ link_unlinked_pads (GstElement *bin,
 
 GstElement *
 parse_bin_from_description_all_linked (const gchar *bin_description,
-    gboolean is_send, guint *src_pad_count, guint *sink_pad_count,
+    FsStreamDirection direction, guint *src_pad_count, guint *sink_pad_count,
     GError **error)
 {
   GstElement *bin;
   gchar *desc;
 
-  if (is_send)
+  if (direction == FS_DIRECTION_SEND)
   {
     desc = g_strdup_printf ("bin.( %s )", bin_description);
   }
-  else
+  else if (direction == FS_DIRECTION_RECV)
   {
     fs_rtp_bin_error_downgrade_register ();
     desc = g_strdup_printf ("fsrtpbinerrordowngrade.( %s )", bin_description);
+  }
+  else
+  {
+    g_assert_not_reached ();
   }
   bin = gst_parse_launch_full (desc, NULL, GST_PARSE_FLAG_NONE,
       error);
@@ -159,22 +163,23 @@ find_matching_pad (gconstpointer a, gconstpointer b)
 }
 
 static gboolean
-validate_codec_profile (FsCodec *codec,const gchar *bin_description,
-    gboolean is_send)
+validate_codec_profile (CodecPreference *cp, const gchar *bin_description,
+    FsStreamDirection direction)
 {
   GError *error = NULL;
-  GstElement *bin = NULL;
+  GstElement *codecbin = NULL;
   guint src_pad_count = 0, sink_pad_count = 0;
   GstCaps *caps;
   GstIterator *iter;
   gboolean has_matching_pad = FALSE;
   GValue val = {0,};
+  gboolean ret = FALSE;
 
-  bin = parse_bin_from_description_all_linked (bin_description, is_send,
+  codecbin = parse_bin_from_description_all_linked (bin_description, direction,
       &src_pad_count, &sink_pad_count, &error);
 
   /* if could not build bin, fail */
-  if (!bin)
+  if (!codecbin)
   {
     GST_WARNING ("Could not build profile (%s): %s", bin_description,
         error->message);
@@ -183,12 +188,14 @@ validate_codec_profile (FsCodec *codec,const gchar *bin_description,
   }
   g_clear_error (&error);
 
-  caps = fs_codec_to_gst_caps (codec);
+  caps = fs_codec_to_gst_caps (cp->codec);
 
-  if (is_send)
-    iter = gst_element_iterate_src_pads (bin);
+  if (direction == FS_DIRECTION_SEND)
+    iter = gst_element_iterate_src_pads (codecbin);
+  else if (direction == FS_DIRECTION_RECV)
+    iter = gst_element_iterate_sink_pads (codecbin);
   else
-    iter = gst_element_iterate_sink_pads (bin);
+    g_assert_not_reached ();
 
   has_matching_pad = gst_iterator_find_custom (iter, find_matching_pad,
       &val, caps);
@@ -198,30 +205,25 @@ validate_codec_profile (FsCodec *codec,const gchar *bin_description,
   if (!has_matching_pad)
   {
     GST_WARNING ("Invalid profile (%s), has no %s pad that matches the codec"
-        " details", is_send ? "src" : "sink", bin_description);
-    gst_caps_unref (caps);
-    gst_object_unref (bin);
-    return FALSE;
+        " details", (direction == FS_DIRECTION_SEND) ? "src" : "sink",
+        bin_description);
+    goto done;
   }
-
-  gst_caps_unref (caps);
-  gst_object_unref (bin);
-
-  if (is_send)
+  if (direction == FS_DIRECTION_SEND)
   {
     if (src_pad_count == 0)
     {
       GST_WARNING ("Invalid profile (%s), has 0 src pad", bin_description);
-      return FALSE;
+      goto done;
     }
   }
-  else
+  else if (direction == FS_DIRECTION_RECV)
   {
     if (src_pad_count != 1)
     {
       GST_WARNING ("Invalid profile (%s), has %u src pads, should have one",
           bin_description, src_pad_count);
-      return FALSE;
+      goto done;
     }
   }
 
@@ -229,10 +231,31 @@ validate_codec_profile (FsCodec *codec,const gchar *bin_description,
   {
     GST_WARNING ("Invalid profile (%s), has %u sink pads, should have one",
         bin_description, sink_pad_count);
-    return FALSE;
+    goto done;
   }
 
-  return TRUE;
+  if (direction == FS_DIRECTION_SEND)
+  {
+    cp->input_caps = codec_get_in_out_caps (cp->codec, caps, FS_DIRECTION_SEND,
+        codecbin);
+    if (!cp->input_caps)
+      goto done;
+  }
+  else if (direction == FS_DIRECTION_RECV)
+  {
+    cp->output_caps = codec_get_in_out_caps (cp->codec, caps, FS_DIRECTION_RECV,
+        codecbin);
+    if (!cp->output_caps)
+      goto done;
+  }
+
+  ret = TRUE;
+done:
+
+  gst_caps_unref (caps);
+  gst_object_unref (codecbin);
+
+  return ret;
 }
 
 static gboolean
@@ -255,29 +278,33 @@ codec_sdp_compare (FsCodec *local_codec, FsCodec *remote_codec)
  * @blueprints: A #GList of #CodecBlueprints to validate the codecs agsint
  * @codecs: a #GList of #FsCodec that represent the preferences
  *
- * This function validates a GList of passed FarstreamCodec structures
+ * This function validates a GList of passed FsCodec structures
  * against the valid discovered payloaders
- * It removes all "invalid" codecs from the list, it modifies the list
- * passed in as an argument.
+ * It returns a list of the valid ones.
  *
- * Returns: the #GList of #FsCodec minus the invalid ones
+ * Returns: a #GList of #CodecPreference
  */
 GList *
 validate_codecs_configuration (FsMediaType media_type, GList *blueprints,
   GList *codecs)
 {
+  GQueue result = G_QUEUE_INIT;
   GList *codec_e = codecs;
 
-  while (codec_e)
+  for (codec_e = codecs; codec_e; codec_e = codec_e->next)
   {
     FsCodec *codec = codec_e->data;
     GList *blueprint_e = NULL;
     FsCodecParameter *param;
+    CodecPreference *cp = NULL;
 
     /* Check if codec is for the wrong media_type.. this would be wrong
      */
     if (media_type != codec->media_type)
-      goto remove_this_codec;
+      goto ignore_this_codec;
+
+    cp = g_slice_new0 (CodecPreference);
+    cp->codec = fs_codec_copy (codec);
 
     if (codec->id >= 0 && codec->id < 128 && codec->encoding_name &&
         !g_ascii_strcasecmp (codec->encoding_name, "reserve-pt"))
@@ -307,42 +334,43 @@ validate_codecs_configuration (FsMediaType media_type, GList *blueprints,
 
     /* If there are send and/or recv profiles, lets test them */
     param = fs_codec_get_optional_parameter (codec, RECV_PROFILE_ARG, NULL);
-    if (param && !validate_codec_profile (codec, param->value, FALSE))
-        goto remove_this_codec;
+    if (param && !validate_codec_profile (cp, param->value,
+            FS_DIRECTION_RECV))
+      goto ignore_this_codec;
 
     param = fs_codec_get_optional_parameter (codec, SEND_PROFILE_ARG, NULL);
-    if (param && !validate_codec_profile (codec, param->value, TRUE))
-      goto remove_this_codec;
+    if (param && !validate_codec_profile (cp, param->value,
+            FS_DIRECTION_SEND))
+      goto ignore_this_codec;
 
     /* If no blueprint was found */
     if (blueprint_e == NULL)
     {
+      gchar *tmp;
+
       /* Accept codecs with no blueprints if they have a valid profile */
       if (fs_codec_get_optional_parameter (codec, RECV_PROFILE_ARG, NULL) &&
           codec->encoding_name && codec->clock_rate)
         goto accept_codec;
 
-      goto remove_this_codec;
-    }
-
-  accept_codec:
-    codec_e = g_list_next (codec_e);
-
-    continue;
-  remove_this_codec:
-    {
-      GList *nextcodec_e = g_list_next (codec_e);
-      gchar *tmp = fs_codec_to_string (codec);
+      tmp = fs_codec_to_string (codec);
       GST_DEBUG ("Preferred codec %s could not be matched with a blueprint",
           tmp);
       g_free (tmp);
-      fs_codec_destroy (codec);
-      codecs = g_list_delete_link (codecs, codec_e);
-      codec_e = nextcodec_e;
+      goto ignore_this_codec;
     }
+
+  accept_codec:
+
+    g_queue_push_tail (&result, cp);
+    continue;
+  ignore_this_codec:
+    if (cp)
+      codec_preference_destroy (cp);
+    continue;
   }
 
-  return codecs;
+  return result.head;
 }
 
 
@@ -418,15 +446,15 @@ _is_disabled (GList *codec_prefs, CodecBlueprint *bp)
 
   for (item = g_list_first (codec_prefs); item; item = g_list_next (item))
   {
-    FsCodec *codec = item->data;
+    CodecPreference *cp = item->data;
     GstCaps *caps = NULL;
     gboolean ok = FALSE;
 
     /* Only check for DISABLE entries */
-    if (codec->id != FS_CODEC_ID_DISABLE)
+    if (cp->codec->id != FS_CODEC_ID_DISABLE)
       continue;
 
-    caps = fs_codec_to_gst_caps (codec);
+    caps = fs_codec_to_gst_caps (cp->codec);
     if (!caps)
       continue;
 
@@ -503,10 +531,59 @@ list_insert_local_ca (GList *list, CodecAssociation *ca)
   return g_list_append (list, ca);
 }
 
+static gboolean
+verify_caps (CodecPreference *cp, CodecBlueprint *bp, GstCaps *input_caps,
+    GstCaps *output_caps)
+{
+  if (cp && cp->input_caps)
+  {
+    if (!gst_caps_can_intersect (input_caps, cp->input_caps))
+    {
+      GST_LOG ("Rejected codec " FS_CODEC_FORMAT " by input caps, filter: %"
+          GST_PTR_FORMAT " pref caps: %" GST_PTR_FORMAT,
+          FS_CODEC_ARGS (cp->codec), input_caps, cp->input_caps);
+      return FALSE;
+   }
+  }
+  else if (bp && bp->input_caps)
+  {
+    if (!gst_caps_can_intersect (input_caps, bp->input_caps))
+    {
+      GST_LOG ("Rejected codec " FS_CODEC_FORMAT " by input caps, filter: %"
+          GST_PTR_FORMAT " blueprint caps: %" GST_PTR_FORMAT,
+          FS_CODEC_ARGS (bp->codec), input_caps, bp->input_caps);
+      return FALSE;
+    }
+  }
+
+  if (cp && cp->output_caps)
+  {
+    if (!gst_caps_can_intersect (output_caps, cp->output_caps))
+    {
+      GST_LOG ("Rejected codec " FS_CODEC_FORMAT " by output caps, filter: %"
+          GST_PTR_FORMAT " pref caps: %" GST_PTR_FORMAT,
+          FS_CODEC_ARGS (cp->codec), output_caps, cp->output_caps);
+      return FALSE;
+   }
+  }
+  else if (bp && bp->output_caps)
+  {
+    if (!gst_caps_can_intersect (output_caps, bp->output_caps))
+    {
+      GST_LOG ("Rejected codec " FS_CODEC_FORMAT " by output caps, filter: %"
+          GST_PTR_FORMAT " blueprint caps: %" GST_PTR_FORMAT,
+          FS_CODEC_ARGS (bp->codec), output_caps, bp->output_caps);
+      return FALSE;
+    }
+  }
+
+  return TRUE;
+}
+
 /**
  * create_local_codec_associations:
- * @blueprints: The #GList of CodecBlueprint
- * @codec_pref: The #GList of #FsCodec representing codec preferences
+ * @blueprints: The #GList of #CodecBlueprint
+ * @codec_prefs: The #GList of #CodecPreference representing codec preferences
  * @current_codec_associations: The #GList of current #CodecAssociation
  *
  * This function creates a list of codec associations from installed codecs
@@ -520,7 +597,9 @@ GList *
 create_local_codec_associations (
     GList *blueprints,
     GList *codec_prefs,
-    GList *current_codec_associations)
+    GList *current_codec_associations,
+    GstCaps *input_caps,
+    GstCaps *output_caps)
 {
   GList *codec_associations = NULL;
   GList *bp_e = NULL;
@@ -539,54 +618,58 @@ create_local_codec_associations (
        codec_pref_e;
        codec_pref_e = g_list_next (codec_pref_e))
   {
-    FsCodec *codec_pref = codec_pref_e->data;
-    CodecBlueprint *bp = _find_matching_blueprint (codec_pref, blueprints);
+    CodecPreference *cp = codec_pref_e->data;
+    CodecBlueprint *bp = _find_matching_blueprint (cp->codec,
+        blueprints);
     CodecAssociation *ca = NULL;
     GList *bp_param_e = NULL;
 
     /* If its a negative pref, ignore it in this stage */
-    if (codec_pref->id == FS_CODEC_ID_DISABLE)
+    if (cp->codec->id == FS_CODEC_ID_DISABLE)
       continue;
 
     /* If we want to disable a codec ID, we just insert a reserved codec assoc
      * in the list
      */
-    if (codec_pref->id >= 0 && codec_pref->id < 128 &&
-        codec_pref->encoding_name &&
-        !g_ascii_strcasecmp (codec_pref->encoding_name, "reserve-pt"))
+    if (cp->codec->id >= 0 && cp->codec->id < 128 &&
+        cp->codec->encoding_name &&
+        !g_ascii_strcasecmp (cp->codec->encoding_name, "reserve-pt"))
     {
       CodecAssociation *ca = g_slice_new0 (CodecAssociation);
-      ca->codec = fs_codec_copy (codec_pref);
+      ca->codec = fs_codec_copy (cp->codec);
       ca->reserved = TRUE;
       codec_associations = g_list_append (codec_associations, ca);
-      GST_DEBUG ("Add reserved payload type %d", codec_pref->id);
+      GST_DEBUG ("Add reserved payload type %d", cp->codec->id);
       continue;
     }
 
     /* No matching blueprint, can't use this codec */
     if (!bp &&
-        !fs_codec_get_optional_parameter (codec_pref, RECV_PROFILE_ARG,
+        !fs_codec_get_optional_parameter (cp->codec, RECV_PROFILE_ARG,
                 NULL))
     {
       GST_LOG ("Could not find matching blueprint for preferred codec %s/%s",
-          fs_media_type_to_string (codec_pref->media_type),
-          codec_pref->encoding_name);
+          fs_media_type_to_string (cp->codec->media_type),
+          cp->codec->encoding_name);
       continue;
     }
+
+    if (!verify_caps (cp, bp, input_caps, output_caps))
+      continue;
 
     /* Now lets see if there is an existing codec that matches this preference
      */
 
-    if (codec_pref->id == FS_CODEC_ID_ANY)
+    if (cp->codec->id == FS_CODEC_ID_ANY)
     {
       oldca = lookup_codec_association_custom_internal (
           current_codec_associations, TRUE,
-          match_original_codec_and_codec_pref, codec_pref);
+          match_original_codec_and_codec_pref, cp->codec);
     }
     else
     {
       oldca = lookup_codec_association_by_pt_list (current_codec_associations,
-          codec_pref->id, FALSE);
+          cp->codec->id, FALSE);
       if (oldca && oldca->reserved)
         oldca = NULL;
     }
@@ -598,7 +681,7 @@ create_local_codec_associations (
     {
       FsCodec *codec = sdp_negotiate_codec (
           oldca->codec, FS_PARAM_TYPE_BOTH | FS_PARAM_TYPE_CONFIG,
-          codec_pref, FS_PARAM_TYPE_ALL);
+          cp->codec, FS_PARAM_TYPE_ALL);
       FsCodec *send_codec;
 
       if (codec)
@@ -607,7 +690,8 @@ create_local_codec_associations (
 
         send_codec = sdp_negotiate_codec (
             oldca->send_codec, FS_PARAM_TYPE_SEND,
-            codec_pref, FS_PARAM_TYPE_SEND | FS_PARAM_TYPE_SEND_AVOID_NEGO);
+            cp->codec,
+            FS_PARAM_TYPE_SEND | FS_PARAM_TYPE_SEND_AVOID_NEGO);
         if (send_codec)
           fs_codec_destroy (send_codec);
         else
@@ -621,16 +705,17 @@ create_local_codec_associations (
 
     ca = g_slice_new0 (CodecAssociation);
     ca->blueprint = bp;
-    ca->codec = fs_codec_copy (codec_pref);
+    ca->codec = fs_codec_copy (cp->codec);
     codec_remove_parameter (ca->codec, SEND_PROFILE_ARG);
     codec_remove_parameter (ca->codec, RECV_PROFILE_ARG);
-    ca->send_codec = codec_copy_filtered (codec_pref, FS_PARAM_TYPE_CONFIG);
+    ca->send_codec = codec_copy_filtered (cp->codec,
+        FS_PARAM_TYPE_CONFIG);
     codec_remove_parameter (ca->send_codec, SEND_PROFILE_ARG);
     codec_remove_parameter (ca->send_codec, RECV_PROFILE_ARG);
     if (oldca)
       ca->send_codec->id = ca->codec->id = oldca->codec->id;
-    ca->send_profile = dup_param_value (codec_pref, SEND_PROFILE_ARG);
-    ca->recv_profile = dup_param_value (codec_pref, RECV_PROFILE_ARG);
+    ca->send_profile = dup_param_value (cp->codec, SEND_PROFILE_ARG);
+    ca->recv_profile = dup_param_value (cp->codec, RECV_PROFILE_ARG);
 
     if (bp)
     {
@@ -757,6 +842,9 @@ create_local_codec_associations (
           continue;
         fs_codec_destroy (codec);
 
+        if (!verify_caps (NULL, bp, input_caps, output_caps))
+          continue;
+
         ca = g_slice_new0 (CodecAssociation);
         ca->blueprint = bp;
         ca->codec = fs_codec_copy (bp->codec);
@@ -777,6 +865,9 @@ create_local_codec_associations (
     if (!codec)
       continue;
     fs_codec_destroy (codec);
+
+    if (!verify_caps (NULL, bp, input_caps, output_caps))
+      continue;
 
     ca = g_slice_new0 (CodecAssociation);
     ca->blueprint = bp;
@@ -811,7 +902,10 @@ create_local_codec_associations (
     CodecAssociation *ca = lca_e->data;
 
     if (codec_association_is_valid_for_sending (ca, TRUE))
+    {
       has_valid_codec = TRUE;
+      break;
+    }
   }
 
   if (!has_valid_codec)
@@ -1307,7 +1401,7 @@ codec_association_is_valid_for_sending (CodecAssociation *ca,
       !ca->recv_only &&
       (!needs_codecbin ||
           (ca->blueprint &&
-              codec_blueprint_has_factory (ca->blueprint, TRUE)) ||
+              codec_blueprint_has_factory (ca->blueprint, FS_DIRECTION_SEND)) ||
           ca->send_profile))
     return TRUE;
   else
@@ -1626,4 +1720,15 @@ finish_header_extensions_nego (GList *hdrexts, guint8 *used_ids)
 
   return hdrexts;
 
+}
+
+void
+codec_preference_destroy (CodecPreference *cp)
+{
+  fs_codec_destroy (cp->codec);
+
+  gst_caps_replace (&cp->input_caps, NULL);
+  gst_caps_replace (&cp->output_caps, NULL);
+
+  g_slice_free (CodecPreference, cp);
 }

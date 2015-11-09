@@ -1510,6 +1510,8 @@ GST_START_TEST (test_rtpcodecs_nego_ilbc)
   FsCodec *prefcodec = NULL;
   FsCodec *outprefcodec = NULL;
   FsParticipant *participant;
+  GError *error = NULL;
+  GstCaps *caps;
 
   setup_codec_tests (&dat, &participant, FS_MEDIA_TYPE_AUDIO);
 
@@ -1524,6 +1526,11 @@ GST_START_TEST (test_rtpcodecs_nego_ilbc)
       "rtpilbcdepay ! identity");
   fs_codec_add_optional_parameter (prefcodec, "farstream-send-profile",
       "identity ! rtpilbcpay");
+
+  caps = gst_caps_from_string ("audio/x-iLBC; audio/x-raw");
+  fail_unless (fs_session_set_allowed_caps (dat->session, caps, caps, &error));
+  g_assert_no_error (error);
+  gst_caps_unref (caps);
 
   codec = fs_codec_new (100, "ILBC", FS_MEDIA_TYPE_AUDIO, 8000);
   outcodec = fs_codec_new (100, "ILBC", FS_MEDIA_TYPE_AUDIO, 8000);
@@ -1610,6 +1617,8 @@ GST_START_TEST (test_rtpcodecs_nego_g729)
   FsCodec *prefcodec = NULL;
   FsCodec *outprefcodec = NULL;
   FsParticipant *participant;
+  GError *error = NULL;
+  GstCaps *caps;
 
   setup_codec_tests (&dat, &participant, FS_MEDIA_TYPE_AUDIO);
 
@@ -1622,6 +1631,11 @@ GST_START_TEST (test_rtpcodecs_nego_g729)
       "rtpg729depay ! identity");
   fs_codec_add_optional_parameter (prefcodec, "farstream-send-profile",
       "identity ! rtpg729pay");
+
+  caps = gst_caps_from_string ("audio/G729; audio/x-raw");
+  fail_unless (fs_session_set_allowed_caps (dat->session, caps, caps, &error));
+  g_assert_no_error (error);
+  gst_caps_unref (caps);
 
   codec = fs_codec_new (18, "G729", FS_MEDIA_TYPE_AUDIO, 8000);
   outcodec = fs_codec_new (18, "G729", FS_MEDIA_TYPE_AUDIO, 8000);
@@ -1711,6 +1725,8 @@ GST_START_TEST (test_rtpcodecs_nego_h261)
   FsCodec *prefcodec = NULL;
   FsCodec *outprefcodec = NULL;
   FsParticipant *participant;
+  GError *error = NULL;
+  GstCaps *caps;
 
   setup_codec_tests (&dat, &participant, FS_MEDIA_TYPE_VIDEO);
 
@@ -1721,6 +1737,13 @@ GST_START_TEST (test_rtpcodecs_nego_h261)
       "identity");
   fs_codec_add_optional_parameter (prefcodec, "farstream-send-profile",
       "identity");
+
+  caps = gst_caps_from_string ("application/x-rtp, media=(string)video,"
+      " clock-rate=90000, encoding-name=H261; video/x-raw");
+  fail_unless (fs_session_set_allowed_caps (dat->session, caps, caps, &error));
+  g_assert_no_error (error);
+  gst_caps_unref (caps);
+
 
   codec = fs_codec_new (31, "H261", FS_MEDIA_TYPE_VIDEO, 90000);
   outcodec = fs_codec_new (31, "H261", FS_MEDIA_TYPE_VIDEO, 90000);
@@ -1789,6 +1812,8 @@ GST_START_TEST (test_rtpcodecs_nego_h263_1998)
   FsCodec *prefcodec = NULL;
   FsCodec *outprefcodec = NULL;
   FsParticipant *participant;
+  GError *error = NULL;
+  GstCaps *caps;
 
   setup_codec_tests (&dat, &participant, FS_MEDIA_TYPE_VIDEO);
 
@@ -1799,6 +1824,12 @@ GST_START_TEST (test_rtpcodecs_nego_h263_1998)
       "identity");
   fs_codec_add_optional_parameter (prefcodec, "farstream-send-profile",
       "identity");
+
+  caps = gst_caps_from_string ("application/x-rtp, media=(string)video,"
+      " clock-rate=90000, encoding-name=H263-1998; video/x-raw");
+  fail_unless (fs_session_set_allowed_caps (dat->session, caps, caps, &error));
+  g_assert_no_error (error);
+  gst_caps_unref (caps);
 
   codec = fs_codec_new (96, "H263-1998", FS_MEDIA_TYPE_VIDEO, 90000);
   outcodec = fs_codec_new (96, "H263-1998", FS_MEDIA_TYPE_VIDEO, 90000);
@@ -1951,6 +1982,8 @@ GST_START_TEST (test_rtpcodecs_nego_h263_2000)
   FsCodec *prefcodec = NULL;
   FsCodec *outprefcodec = NULL;
   FsParticipant *participant;
+  GError *error = NULL;
+  GstCaps *caps;
 
   setup_codec_tests (&dat, &participant, FS_MEDIA_TYPE_VIDEO);
 
@@ -1961,6 +1994,14 @@ GST_START_TEST (test_rtpcodecs_nego_h263_2000)
       "identity");
   fs_codec_add_optional_parameter (prefcodec, "farstream-send-profile",
       "identity");
+
+
+  caps = gst_caps_from_string ("application/x-rtp, media=(string)video,"
+      " clock-rate=90000, encoding-name=H263-2000; video/x-raw");
+  fail_unless (fs_session_set_allowed_caps (dat->session, caps, caps, &error));
+  g_assert_no_error (error);
+  gst_caps_unref (caps);
+
 
   codec = fs_codec_new (96, "H263-2000", FS_MEDIA_TYPE_VIDEO, 90000);
   outcodec = fs_codec_new (96, "H263-2000", FS_MEDIA_TYPE_VIDEO, 90000);
@@ -2037,6 +2078,8 @@ GST_START_TEST (test_rtpcodecs_nego_h264)
   FsCodec *outprefcodec = NULL;
   FsCodec *tmp_prefcodec, *tmp_outprefcodec;
   FsParticipant *participant;
+  GError *error = NULL;
+  GstCaps *caps;
 
   setup_codec_tests (&dat, &participant, FS_MEDIA_TYPE_VIDEO);
 
@@ -2047,6 +2090,12 @@ GST_START_TEST (test_rtpcodecs_nego_h264)
       "identity");
   fs_codec_add_optional_parameter (prefcodec, "farstream-send-profile",
       "identity");
+
+  caps = gst_caps_from_string ("application/x-rtp, media=(string)video,"
+      " clock-rate=90000, encoding-name=H264; video/x-raw");
+  fail_unless (fs_session_set_allowed_caps (dat->session, caps, caps, &error));
+  g_assert_no_error (error);
+  gst_caps_unref (caps);
 
   codec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
   outcodec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
@@ -2169,8 +2218,10 @@ GST_START_TEST (test_rtpcodecs_nego_feedback)
   FsCodec *prefcodec = NULL;
   FsCodec *outprefcodec = NULL;
   FsParticipant *participant;
-  setup_codec_tests (&dat, &participant, FS_MEDIA_TYPE_VIDEO);
+  GError *error = NULL;
+  GstCaps *caps;
 
+  setup_codec_tests (&dat, &participant, FS_MEDIA_TYPE_VIDEO);
 
   outprefcodec = fs_codec_new (FS_CODEC_ID_ANY, "H264",
       FS_MEDIA_TYPE_VIDEO, 90000);
@@ -2179,6 +2230,12 @@ GST_START_TEST (test_rtpcodecs_nego_feedback)
       "identity");
   fs_codec_add_optional_parameter (prefcodec, "farstream-send-profile",
       "identity");
+
+  caps = gst_caps_from_string ("application/x-rtp, media=(string)video,"
+      " clock-rate=90000, encoding-name=H264; video/x-raw");
+  fail_unless (fs_session_set_allowed_caps (dat->session, caps, caps, &error));
+  g_assert_no_error (error);
+  gst_caps_unref (caps);
 
   codec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
   outcodec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
@@ -2385,6 +2442,48 @@ GST_START_TEST (test_rtpcodecs_codec_need_resend)
 GST_END_TEST;
 
 
+GST_START_TEST (test_rtpcodecs_application_xdata)
+{
+  struct SimpleTestConference *dat;
+  struct SimpleTestStream *st;
+  GstCaps *caps;
+  GError *error = NULL;
+  GList *codecs;
+  FsCodec *codec;
+
+  dat = setup_simple_conference_full (1, "fsrtpconference", "bob@127.0.0.1",
+      FS_MEDIA_TYPE_APPLICATION);
+
+  caps = gst_caps_from_string ("application/octet-stream");
+  fail_unless (fs_session_set_allowed_caps (dat->session, caps, caps, &error));
+  g_assert_no_error (error);
+  gst_caps_unref (caps);
+
+  g_object_get (dat->session, "codecs-without-config", &codecs, NULL);
+  fail_unless (g_list_length (codecs) == 1);
+  codec = codecs->data;
+  fail_unless_equals_string (codec->encoding_name, "X-DATA");
+  fail_unless_equals_int (codec->clock_rate, 90000);
+
+  st = simple_conference_add_stream (dat, NULL, "rawudp", 0, NULL);
+
+  fail_unless (fs_stream_set_remote_codecs (st->stream, codecs, &error));
+  g_assert_no_error (error);
+
+  fs_codec_list_destroy (codecs);
+
+  g_object_get (dat->session, "codecs-without-config", &codecs, NULL);
+  fail_unless (g_list_length (codecs) == 1);
+  codec = codecs->data;
+  fail_unless_equals_string (codec->encoding_name, "X-DATA");
+  fail_unless_equals_int (codec->clock_rate, 90000);
+  fs_codec_list_destroy (codecs);
+
+
+  cleanup_simple_conference (dat);
+}
+GST_END_TEST;
+
 static Suite *
 fsrtpcodecs_suite (void)
 {
@@ -2477,7 +2576,9 @@ fsrtpcodecs_suite (void)
   tcase_add_test (tc_chain, test_rtpcodecs_codec_need_resend);
   suite_add_tcase (s, tc_chain);
 
-
+  tc_chain = tcase_create ("fsrtpcodecs_application_xdata");
+  tcase_add_test (tc_chain, test_rtpcodecs_application_xdata);
+  suite_add_tcase (s, tc_chain);
 
   return s;
 }

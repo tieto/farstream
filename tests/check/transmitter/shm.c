@@ -52,7 +52,6 @@ guint connected_count;
 enum {
   FLAG_NO_SOURCE = 1 << 2,
   FLAG_NOT_SENDING = 1 << 3,
-  FLAG_RECVONLY_FILTER = 1 << 4,
   FLAG_LOCAL_CANDIDATES = 1 << 5
 };
 
@@ -194,15 +193,6 @@ sync_error_handler (GstBus *bus, GstMessage *message, gpointer blob)
 }
 
 
-static GstElement *
-get_recvonly_filter (FsTransmitter *trans, guint component, gpointer user_data)
-{
-  if (component == 1)
-    return NULL;
-
-  return gst_element_factory_make ("identity", NULL);
-}
-
 static void
 run_shm_transmitter_test (gint flags)
 {
@@ -258,7 +248,7 @@ run_shm_transmitter_test (gint flags)
 
   associate_on_source = !(flags & FLAG_NO_SOURCE);
 
-  if ((flags & FLAG_NOT_SENDING) && (flags & FLAG_RECVONLY_FILTER))
+  if (flags & FLAG_NOT_SENDING)
   {
     buffer_count[0] = 20;
     received_known[0] = 20;
@@ -271,11 +261,6 @@ run_shm_transmitter_test (gint flags)
       g_quark_to_string (error->domain), error->code, error->message);
   ts_fail_if (trans == NULL, "No transmitter create, yet error is still NULL");
   g_clear_error (&error);
-
-  if (flags & FLAG_RECVONLY_FILTER)
-    ts_fail_unless (g_signal_connect (trans, "get-recvonly-filter",
-            G_CALLBACK (get_recvonly_filter), NULL));
-
 
   pipeline = setup_pipeline (trans, G_CALLBACK (_handoff_handler));
 
@@ -410,15 +395,9 @@ GST_START_TEST (test_shmtransmitter_run_basic)
 }
 GST_END_TEST;
 
-GST_START_TEST (test_shmtransmitter_with_filter)
-{
-  run_shm_transmitter_test (FLAG_RECVONLY_FILTER);
-}
-GST_END_TEST;
-
 GST_START_TEST (test_shmtransmitter_sending_half)
 {
-  run_shm_transmitter_test (FLAG_NOT_SENDING | FLAG_RECVONLY_FILTER);
+  run_shm_transmitter_test (FLAG_NOT_SENDING);
 }
 GST_END_TEST;
 
@@ -446,10 +425,6 @@ shmtransmitter_suite (void)
 
   tc_chain = tcase_create ("shmtransmitter_basic");
   tcase_add_test (tc_chain, test_shmtransmitter_run_basic);
-  suite_add_tcase (s, tc_chain);
-
-  tc_chain = tcase_create ("shmtransmitter-with-filter");
-  tcase_add_test (tc_chain, test_shmtransmitter_with_filter);
   suite_add_tcase (s, tc_chain);
 
   tc_chain = tcase_create ("shmtransmitter-sending-half");

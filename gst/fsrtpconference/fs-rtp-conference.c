@@ -375,8 +375,7 @@ _rtpbin_pad_added (GstElement *rtpbin, GstPad *new_pad,
   FsRtpConference *self = FS_RTP_CONFERENCE (user_data);
   gchar *name;
 
-  GST_DEBUG_OBJECT (self, "pad %s added" GST_PTR_FORMAT,
-      GST_PAD_NAME (new_pad));
+  GST_DEBUG_OBJECT (self, "pad %s:%s added", GST_DEBUG_PAD_NAME (new_pad));
 
   name = gst_pad_get_name (new_pad);
 

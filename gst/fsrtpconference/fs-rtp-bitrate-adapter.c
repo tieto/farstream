@@ -26,11 +26,11 @@
 #endif
 
 #include "fs-rtp-bitrate-adapter.h"
-#include <gst/video/video.h>
 
 #include <math.h>
 
 /* This is a magical value that smarter people discovered */
+/* This is H.264... other codecs (H.265 / VP9 ) will have different numbers */
 #define  H264_MAX_PIXELS_PER_BIT 25
 
 GST_DEBUG_CATEGORY_STATIC (fs_rtp_bitrate_adapter_debug);
@@ -40,28 +40,23 @@ static GstStaticPadTemplate fs_rtp_bitrate_adapter_sink_template =
     GST_STATIC_PAD_TEMPLATE ("sink",
         GST_PAD_SINK,
         GST_PAD_ALWAYS,
-        GST_STATIC_CAPS (GST_VIDEO_CAPS_MAKE (GST_VIDEO_FORMATS_ALL)));
+        GST_STATIC_CAPS_ANY);
 
 static GstStaticPadTemplate fs_rtp_bitrate_adapter_src_template =
     GST_STATIC_PAD_TEMPLATE ("src",
         GST_PAD_SRC,
         GST_PAD_ALWAYS,
-        GST_STATIC_CAPS (GST_VIDEO_CAPS_MAKE (GST_VIDEO_FORMATS_ALL)));
+        GST_STATIC_CAPS_ANY);
 enum
 {
   PROP_0,
   PROP_BITRATE,
   PROP_INTERVAL,
-  PROP_CAPS,
 };
 
 #define PROP_INTERVAL_DEFAULT (10 * GST_SECOND)
 
 static void fs_rtp_bitrate_adapter_finalize (GObject *object);
-static void fs_rtp_bitrate_adapter_get_property (GObject *object,
-    guint prop_id,
-    GValue *value,
-    GParamSpec *pspec);
 static void fs_rtp_bitrate_adapter_set_property (GObject *object,
     guint prop_id,
     const GValue *value,
@@ -79,15 +74,12 @@ static GstStateChangeReturn
 fs_rtp_bitrate_adapter_change_state (GstElement *element,
     GstStateChange transition);
 
-static GParamSpec *caps_pspec;
-
 static void
 fs_rtp_bitrate_adapter_class_init (FsRtpBitrateAdapterClass *klass)
 {
   GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
   GstElementClass *gstelement_class = GST_ELEMENT_CLASS (klass);
 
-  gobject_class->get_property = fs_rtp_bitrate_adapter_get_property;
   gobject_class->set_property = fs_rtp_bitrate_adapter_set_property;
   gobject_class->finalize = fs_rtp_bitrate_adapter_finalize;
 
@@ -124,13 +116,6 @@ fs_rtp_bitrate_adapter_class_init (FsRtpBitrateAdapterClass *klass)
           "The minimum interval before adapting after a change",
           0, G_MAXUINT64, PROP_INTERVAL_DEFAULT,
           G_PARAM_WRITABLE | G_PARAM_STATIC_STRINGS));
-
- caps_pspec = g_param_spec_pointer ("caps",
-     "Current input caps",
-     "The caps that getcaps on the sink pad would return",
-     G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
- g_object_class_install_property (gobject_class,
-     PROP_CAPS, caps_pspec);
 }
 
 struct BitratePoint
@@ -175,15 +160,14 @@ fs_rtp_bitrate_adapter_init (FsRtpBitrateAdapter *self)
   g_queue_init (&self->bitrate_history);
   self->system_clock = gst_system_clock_obtain ();
   self->interval = PROP_INTERVAL_DEFAULT;
+
+  self->last_bitrate = G_MAXUINT;
 }
 
 static void
 fs_rtp_bitrate_adapter_finalize (GObject *object)
 {
   FsRtpBitrateAdapter *self = FS_RTP_BITRATE_ADAPTER (object);
-
-  if (self->caps)
-    gst_caps_unref (self->caps);
 
   if (self->system_clock)
     gst_object_unref (self->system_clock);
@@ -229,13 +213,13 @@ static const struct Resolution twelve_on_eleven_resolutions[] =
 };
 
 static void
-video_caps_add (GstCaps *caps, const gchar *type,
+video_caps_add (GstCaps *caps, const gchar *media_type,
     guint min_framerate, guint max_framerate, guint width, guint height,
     guint par_n, guint par_d)
 {
   GstStructure *s;
 
-  s = gst_structure_new (type,
+  s = gst_structure_new (media_type,
       "pixel-aspect-ratio", GST_TYPE_FRACTION, par_n, par_d,
       "width", G_TYPE_INT, width,
       "height", G_TYPE_INT, height,
@@ -249,18 +233,18 @@ video_caps_add (GstCaps *caps, const gchar *type,
 }
 
 static void
-add_one_resolution_inner (GstCaps *caps, GstCaps *caps_gray,
+add_one_resolution_inner (GstCaps *caps, const gchar *media_type,
     guint min_framerate, guint max_framerate, guint width, guint height,
     guint par_n, guint par_d)
 {
-  video_caps_add (caps, "video/x-raw", min_framerate, max_framerate,
+  video_caps_add (caps, media_type, min_framerate, max_framerate,
       width, height, par_n, par_d);
 }
 
 static void
-add_one_resolution (GstCaps *caps, GstCaps *caps_gray,
-    GstCaps *lower_caps, GstCaps *lower_caps_gray,
-    GstCaps *extra_low_caps, GstCaps *extra_low_caps_gray,
+add_one_resolution (const gchar *media_type, GstCaps *caps,
+    GstCaps *lower_caps,
+    GstCaps *extra_low_caps,
     guint max_pixels_per_second,
     guint width, guint height,
     guint par_n, guint par_d)
@@ -274,37 +258,34 @@ add_one_resolution (GstCaps *caps, GstCaps *caps_gray,
 
   if (max_framerate >= 20)
   {
-    add_one_resolution_inner (caps, caps_gray,
-        20, 66, width, height, par_n, par_d);
-    add_one_resolution_inner (lower_caps, lower_caps_gray,
-        10, 66, width, height, par_n, par_d);
-    add_one_resolution_inner (extra_low_caps, extra_low_caps_gray,
-        1, 66, width, height, par_n, par_d);
+    add_one_resolution_inner (caps, media_type, 20, 66, width, height,
+        par_n, par_d);
+    add_one_resolution_inner (lower_caps, media_type, 10, 66, width, height,
+        par_n, par_d);
+    add_one_resolution_inner (extra_low_caps, media_type, 1, 66, width, height,
+        par_n, par_d);
   }
   else if (max_framerate >= 10)
   {
-    add_one_resolution_inner (lower_caps, lower_caps_gray,
-        10, 66, width, height, par_n, par_d);
-    add_one_resolution_inner (extra_low_caps, extra_low_caps_gray,
-        1, 66, width, height, par_n, par_d);
+    add_one_resolution_inner (lower_caps, media_type, 10, 66, width, height,
+        par_n, par_d);
+    add_one_resolution_inner (extra_low_caps, media_type, 1, 66, width, height,
+        par_n, par_d);
   }
   else if (max_framerate > 0)
   {
-    add_one_resolution_inner (extra_low_caps, extra_low_caps_gray,
-        1, 66, width, height, par_n, par_d);
+    add_one_resolution_inner (extra_low_caps, media_type, 1, 66, width, height,
+        par_n, par_d);
   }
 }
 
 
 GstCaps *
-caps_from_bitrate (guint bitrate)
+caps_from_bitrate (const gchar *media_type, guint bitrate)
 {
   GstCaps *caps = gst_caps_new_empty ();
-  GstCaps *caps_gray = gst_caps_new_empty ();
   GstCaps *lower_caps = gst_caps_new_empty ();
-  GstCaps *lower_caps_gray = gst_caps_new_empty ();
   GstCaps *extra_low_caps = gst_caps_new_empty ();
-  GstCaps *extra_low_caps_gray = gst_caps_new_empty ();
   GstCaps *template_caps;
   guint max_pixels_per_second = bitrate * H264_MAX_PIXELS_PER_BIT;
   gint i;
@@ -313,34 +294,22 @@ caps_from_bitrate (guint bitrate)
   max_pixels_per_second = MAX (max_pixels_per_second, 128 * 96);
 
   for (i = 0; one_on_one_resolutions[i].width > 1; i++)
-    add_one_resolution (caps, caps_gray, lower_caps, lower_caps_gray,
-        extra_low_caps, extra_low_caps_gray,
+    add_one_resolution (media_type, caps, lower_caps, extra_low_caps,
         max_pixels_per_second,
         one_on_one_resolutions[i].width,
         one_on_one_resolutions[i].height, 1, 1);
 
   for (i = 0; twelve_on_eleven_resolutions[i].width > 1; i++)
-    add_one_resolution (caps, caps_gray, lower_caps, lower_caps_gray,
-        extra_low_caps, extra_low_caps_gray,
+    add_one_resolution (media_type, caps, lower_caps, extra_low_caps,
         twelve_on_eleven_resolutions[i].width,
         twelve_on_eleven_resolutions[i].height,
         max_pixels_per_second, 12, 11);
 
   gst_caps_append (caps, lower_caps);
   if (gst_caps_is_empty (caps))
-  {
     gst_caps_append (caps, extra_low_caps);
-  }
   else
-  {
     gst_caps_unref (extra_low_caps);
-    gst_caps_unref (extra_low_caps_gray);
-    extra_low_caps_gray = NULL;
-  }
-  gst_caps_append (caps, caps_gray);
-  gst_caps_append (caps, lower_caps_gray);
-  if (extra_low_caps_gray)
-    gst_caps_append (caps, extra_low_caps_gray);
 
   template_caps =
       gst_static_pad_template_get_caps (&fs_rtp_bitrate_adapter_sink_template);
@@ -350,45 +319,16 @@ caps_from_bitrate (guint bitrate)
   return caps;
 }
 
-static GstCaps *
-fs_rtp_bitrate_adapter_get_suggested_caps (FsRtpBitrateAdapter *self)
-{
-  GstCaps *allowed_caps;
-  GstCaps *wanted_caps;
-  GstCaps *caps = NULL;
-
-  GST_OBJECT_LOCK (self);
-  if (self->caps)
-    caps = gst_caps_ref (self->caps);
-  GST_OBJECT_UNLOCK (self);
-
-  if (!caps)
-    return NULL;
-
-  allowed_caps = gst_pad_get_allowed_caps (self->sinkpad);
-
-  if (!allowed_caps)
-  {
-    gst_caps_unref (caps);
-    return NULL;
-  }
-
-  wanted_caps = gst_caps_intersect_full (caps, allowed_caps,
-      GST_CAPS_INTERSECT_FIRST);
-  gst_caps_unref (allowed_caps);
-  gst_caps_unref (caps);
-
-  return gst_caps_fixate (wanted_caps);
-}
-
 
 static GstCaps *
 fs_rtp_bitrate_adapter_getcaps (FsRtpBitrateAdapter *self, GstPad *pad,
     GstCaps *filter)
 {
-  GstCaps *caps;
   GstPad *otherpad;
   GstCaps *peer_caps;
+  GstCaps *result;
+  guint bitrate;
+  guint i;
 
   if (pad == self->srcpad)
     otherpad = self->sinkpad;
@@ -397,17 +337,44 @@ fs_rtp_bitrate_adapter_getcaps (FsRtpBitrateAdapter *self, GstPad *pad,
 
   peer_caps = gst_pad_peer_query_caps (otherpad, filter);
 
+  if (gst_caps_get_size (peer_caps) == 0)
+    return peer_caps;
+
   GST_OBJECT_LOCK (self);
-  if (self->caps)
-    caps = gst_caps_intersect_full (self->caps, peer_caps,
-        GST_CAPS_INTERSECT_FIRST);
-  else
-    caps = gst_caps_intersect (peer_caps,
-        gst_pad_get_pad_template_caps (pad));
-  gst_caps_unref (peer_caps);
+  bitrate = self->bitrate;
+  if (pad == self->sinkpad)
+    self->last_bitrate = self->bitrate;
   GST_OBJECT_UNLOCK (self);
 
-  return caps;
+  if (bitrate == G_MAXUINT)
+    return peer_caps;
+
+  result = gst_caps_new_empty ();
+
+  for (i = 0; i < gst_caps_get_size (peer_caps); i++)
+  {
+    GstStructure *s = gst_caps_get_structure (peer_caps, i);
+
+    if (g_str_has_prefix (gst_structure_get_name (s), "video/"))
+    {
+      GstCaps *rated_caps = caps_from_bitrate (gst_structure_get_name (s),
+          bitrate);
+      GstCaps *copy = gst_caps_copy_nth (peer_caps, i);
+
+      gst_caps_set_features (rated_caps, 0,
+          gst_caps_features_copy (gst_caps_get_features (peer_caps, i)));
+
+      gst_caps_append (result, gst_caps_intersect (rated_caps, copy));
+      gst_caps_unref (copy);
+      gst_caps_unref (rated_caps);
+    }
+    else
+    {
+      gst_caps_append (result, gst_caps_copy_nth (peer_caps, i));
+    }
+  }
+
+  return result;
 }
 
 static gboolean
@@ -486,39 +453,22 @@ fs_rtp_bitrate_adapter_get_bitrate_locked (FsRtpBitrateAdapter *self)
 static void
 fs_rtp_bitrate_adapter_updated_unlock (FsRtpBitrateAdapter *self)
 {
-  GstCaps *wanted_caps;
-  guint bitrate;
-  GstCaps *current_caps;
+  gboolean changed = FALSE;
 
-  bitrate = fs_rtp_bitrate_adapter_get_bitrate_locked (self);
-  if (self->caps)
-    gst_caps_unref (self->caps);
-  self->caps = NULL;
+  self->bitrate = fs_rtp_bitrate_adapter_get_bitrate_locked (self);
 
-  GST_DEBUG ("Computed average lower bitrate: %u", bitrate);
-  if (bitrate == G_MAXUINT)
+  GST_DEBUG ("Computed average lower bitrate: %u", self->bitrate);
+  if (self->bitrate != G_MAXUINT &&
+      (self->bitrate > self->last_bitrate * 1.1 ||
+          self->bitrate < self->last_bitrate * 0.9))
   {
-    GST_OBJECT_UNLOCK (self);
-    return;
+    self->last_bitrate = self->bitrate;
+    changed = TRUE;
   }
-  self->caps = caps_from_bitrate (bitrate);
   GST_OBJECT_UNLOCK (self);
 
-  current_caps = gst_pad_get_current_caps (self->sinkpad);
-  if (!current_caps)
-    return;
-
-  wanted_caps = fs_rtp_bitrate_adapter_get_suggested_caps (self);
-
-  GST_DEBUG ("wanted: %s", gst_caps_to_string (wanted_caps));
-  GST_DEBUG ("current: %s", gst_caps_to_string (current_caps));
-
-  if (!gst_caps_is_equal_fixed (current_caps, wanted_caps))
-    gst_pad_push_event (self->sinkpad,
-        gst_event_new_reconfigure ());
-
-  gst_caps_unref (wanted_caps);
-  gst_caps_unref (current_caps);
+  if (changed)
+    gst_pad_push_event (self->sinkpad, gst_event_new_reconfigure ());
 }
 
 static void
@@ -623,30 +573,6 @@ fs_rtp_bitrate_adapter_set_property (GObject *object,
 }
 
 
-static void
-fs_rtp_bitrate_adapter_get_property (GObject *object,
-    guint prop_id,
-    GValue *value,
-    GParamSpec *pspec)
-{
-  FsRtpBitrateAdapter *self = FS_RTP_BITRATE_ADAPTER (object);
-
-  GST_OBJECT_LOCK (self);
-
-  switch (prop_id)
-  {
-    case PROP_CAPS:
-      if (self->caps)
-        g_value_set_pointer (value, gst_caps_ref (self->caps));
-      break;
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-      break;
-  }
-
-  GST_OBJECT_UNLOCK (self);
-}
-
 static GstStateChangeReturn
 fs_rtp_bitrate_adapter_change_state (GstElement *element,
     GstStateChange transition)
@@ -681,6 +607,18 @@ fs_rtp_bitrate_adapter_change_state (GstElement *element,
           GST_ELEMENT_CLASS (fs_rtp_bitrate_adapter_parent_class)->change_state
           (element, transition)) == GST_STATE_CHANGE_FAILURE)
     goto failure;
+
+  switch (transition) {
+    case GST_STATE_CHANGE_PAUSED_TO_READY:
+      self->last_bitrate = G_MAXUINT;
+      g_queue_foreach (&self->bitrate_history, (GFunc) bitrate_point_free,
+          NULL);
+      g_queue_clear(&self->bitrate_history);
+      break;
+    default:
+      break;
+  }
+
 
   return result;
 

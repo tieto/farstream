@@ -2,34 +2,28 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>FsRtpParticipant</title>
+<title>Farstream Plugins Manual: FsRtpParticipant</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="Farstream Plugins Manual">
 <link rel="up" href="ch01.html" title="RTP Plugin">
 <link rel="prev" href="FsRtpConference.html" title="FsRtpConference">
 <link rel="next" href="FsRtpSession.html" title="FsRtpSession">
-<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
-<tr valign="middle">
-<td><a accesskey="p" href="FsRtpConference.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
-<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
-<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">Farstream Plugins Manual</th>
-<td><a accesskey="n" href="FsRtpSession.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
-</tr>
-<tr><td colspan="5" class="shortcuts">
-<a href="#FsRtpParticipant.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#FsRtpParticipant.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#FsRtpParticipant.object-hierarchy" class="shortcut">Object Hierarchy</a>
-                   | 
-                  <a href="#FsRtpParticipant.properties" class="shortcut">Properties</a>
-</td></tr>
-</table>
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#FsRtpParticipant.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
+                  <a href="#FsRtpParticipant.object-hierarchy" class="shortcut">Object Hierarchy</a></span><span id="nav_properties">  <span class="dim">|</span> 
+                  <a href="#FsRtpParticipant.properties" class="shortcut">Properties</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="FsRtpConference.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="FsRtpSession.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
 <div class="refentry">
 <a name="FsRtpParticipant"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
@@ -37,52 +31,71 @@
 <h2><span class="refentrytitle"><a name="FsRtpParticipant.top_of_page"></a>FsRtpParticipant</span></h2>
 <p>FsRtpParticipant — A RTP participant in a <a class="link" href="FsRtpConference.html" title="FsRtpConference"><span class="type">FsRtpConference</span></a></p>
 </td>
-<td valign="top" align="right"></td>
+<td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
-<div class="refsynopsisdiv">
-<a name="FsRtpParticipant.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">                    <a class="link" href="FsRtpParticipant.html#FsRtpParticipant-struct" title="FsRtpParticipant">FsRtpParticipant</a>;
-</pre>
+<div class="refsect1">
+<a name="FsRtpParticipant.properties"></a><h2>Properties</h2>
+<div class="informaltable"><table border="0">
+<colgroup>
+<col width="150px" class="properties_type">
+<col width="300px" class="properties_name">
+<col width="200px" class="properties_flags">
+</colgroup>
+<tbody><tr>
+<td class="property_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
+<td class="property_name"><a class="link" href="FsRtpParticipant.html#FsRtpParticipant--cname" title="The “cname” property">cname</a></td>
+<td class="property_flags">Read / Write</td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="FsRtpParticipant.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="name">
+<col class="description">
+</colgroup>
+<tbody><tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="FsRtpParticipant.html#FsRtpParticipant-struct" title="struct FsRtpParticipant">FsRtpParticipant</a></td>
+</tr></tbody>
+</table></div>
 </div>
 <div class="refsect1">
 <a name="FsRtpParticipant.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="synopsis">
-  GObject
-   +----FsParticipant
-         +----FsRtpParticipant
-</pre>
-</div>
-<div class="refsect1">
-<a name="FsRtpParticipant.properties"></a><h2>Properties</h2>
-<pre class="synopsis">
-  "<a class="link" href="FsRtpParticipant.html#FsRtpParticipant--cname" title='The "cname" property'>cname</a>"                    <span class="type">gchar</span>*                : Read / Write
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/farstream-libs-1.0/FsParticipant.html">FsParticipant</a>
+        <span class="lineart">╰──</span> FsRtpParticipant
 </pre>
 </div>
 <div class="refsect1">
 <a name="FsRtpParticipant.description"></a><h2>Description</h2>
-<p>
-This object represents one participant or person in a RTP conference
-</p>
+<p>This object represents one participant or person in a RTP conference</p>
 </div>
 <div class="refsect1">
-<a name="FsRtpParticipant.details"></a><h2>Details</h2>
+<a name="FsRtpParticipant.functions_details"></a><h2>Functions</h2>
+</div>
+<div class="refsect1">
+<a name="FsRtpParticipant.other_details"></a><h2>Types and Values</h2>
 <div class="refsect2">
-<a name="FsRtpParticipant-struct"></a><h3>FsRtpParticipant</h3>
-<pre class="programlisting">typedef struct _FsRtpParticipant FsRtpParticipant;</pre>
+<a name="FsRtpParticipant-struct"></a><h3>struct FsRtpParticipant</h3>
+<pre class="programlisting">struct FsRtpParticipant;</pre>
 </div>
 </div>
 <div class="refsect1">
 <a name="FsRtpParticipant.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
-<a name="FsRtpParticipant--cname"></a><h3>The <code class="literal">"cname"</code> property</h3>
-<pre class="programlisting">  "cname"                    <span class="type">gchar</span>*                : Read / Write</pre>
+<a name="FsRtpParticipant--cname"></a><h3>The <code class="literal">“cname”</code> property</h3>
+<pre class="programlisting">  “cname”                    <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
 <p>A string of the cname of the participant.</p>
+<p>Flags: Read / Write</p>
 <p>Default value: NULL</p>
 </div>
 </div>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.19</div>
+          Generated by GTK-Doc V1.21</div>
 </body>
 </html>

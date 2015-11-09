@@ -895,7 +895,6 @@ GST_START_TEST (test_rtpconference_ten_way)
 }
 GST_END_TEST;
 
-
 GST_START_TEST (test_rtpconference_errors)
 {
   struct SimpleTestConference *dat = NULL;
@@ -1401,6 +1400,102 @@ GST_START_TEST (test_rtpconference_unref_session_in_pad_added)
 GST_END_TEST;
 
 
+static void
+setup_srtp_sender (struct SimpleTestConference *dat, guint confid)
+{
+  GstBuffer *key;
+  GstStructure *s, *s2 = NULL;
+  GstMapInfo info;
+  guint i;
+  GError *error = NULL;
+  gboolean ret;
+
+  key = gst_buffer_new_allocate (NULL, 30, NULL);
+  gst_buffer_map (key, &info, GST_MAP_WRITE);
+  for (i = 0; i < info.size / 4; i++)
+    GST_WRITE_UINT32_LE (info.data + (i * 4), g_random_int ());
+  GST_WRITE_UINT32_LE (info.data + info.size - 4, g_random_int ());
+  gst_buffer_unmap (key, &info);
+
+  s = gst_structure_new ("FarstreamSRTP",
+      "auth", G_TYPE_STRING, "hmac-sha1-80",
+      "cipher", G_TYPE_STRING, "aes-128-icm",
+      "key", GST_TYPE_BUFFER, key, NULL);
+  gst_buffer_unref (key);
+
+  ret = fs_session_set_encryption_parameters (dat->session, s, &error);
+  g_assert_no_error (error);
+  fail_unless (ret);
+
+  g_object_get (dat->session, "encryption-parameters", &s2, NULL);
+  fail_unless (s2 != NULL);
+  fail_unless (gst_structure_is_equal (s, s2));
+
+  gst_structure_free (s2);
+  gst_structure_free (s);
+}
+
+static void
+setup_srtp_receiver (struct SimpleTestStream *st, guint confid, guint streamid)
+{
+  GstStructure *s, *s2 = NULL;
+  GError *error = NULL;
+  gboolean ret;
+
+  g_object_get (st->target->session, "encryption-parameters", &s, NULL);
+
+  ret = fs_stream_set_decryption_parameters (st->stream, s, &error);
+  g_assert_no_error (error);
+  fail_unless (ret);
+
+  g_object_get (st->stream, "decryption-parameters", &s2, NULL);
+  fail_unless (s2 != NULL);
+  fail_unless (gst_structure_is_equal (s, s2));
+
+  gst_structure_free (s2);
+  gst_structure_free (s);
+}
+
+GST_START_TEST (test_rtpconference_two_way_srtp)
+{
+  nway_test (2, setup_srtp_sender, setup_srtp_receiver, "rawudp", 0, NULL);
+}
+GST_END_TEST;
+
+
+GST_START_TEST (test_rtpconference_three_way_srtp)
+{
+  nway_test (3, setup_srtp_sender, setup_srtp_receiver, "rawudp", 0, NULL);
+}
+GST_END_TEST;
+
+GST_START_TEST (test_rtpconference_ten_way_srtp)
+{
+  nway_test (10, setup_srtp_sender, setup_srtp_receiver, "rawudp", 0, NULL);
+}
+GST_END_TEST;
+
+static void
+multicast_srtp_init (struct SimpleTestStream *st, guint confid, guint streamid)
+{
+  multicast_ssrc_init (st, confid, streamid);
+  setup_srtp_receiver (st, confid, streamid);
+}
+
+GST_START_TEST (test_rtpconference_multicast_three_way_ssrc_assoc_srtp)
+{
+  gchar *mcast_addr = find_multicast_capable_address ();
+
+  if (!mcast_addr)
+    return;
+  g_free (mcast_addr);
+
+  max_src_pads = 3 * 2; /* x2 because of loopbacks causing fake conflicts */
+  nway_test (3, setup_srtp_sender, multicast_srtp_init, "multicast", 0, NULL);
+  max_src_pads = 1;
+}
+GST_END_TEST;
+
 static Suite *
 fsrtpconference_suite (void)
 {
@@ -1454,7 +1549,7 @@ fsrtpconference_suite (void)
 #if 0
   tc_chain = tcase_create ("fsrtpconference_three_way_cname_assoc");
   tcase_add_test (tc_chain, test_rtpconference_three_way_cname_assoc);
-  //suite_add_tcase (s, tc_chain);
+  suite_add_tcase (s, tc_chain);
 #endif
 
   tc_chain = tcase_create ("fsrtpconference_simple_profile");
@@ -1484,6 +1579,23 @@ fsrtpconference_suite (void)
   tcase_add_test (tc_chain, test_rtpconference_unref_session_in_pad_added);
   suite_add_tcase (s, tc_chain);
 
+  tc_chain = tcase_create ("fsrtpconference_two_way_srtp");
+  tcase_add_test (tc_chain, test_rtpconference_two_way_srtp);
+  suite_add_tcase (s, tc_chain);
+
+  tc_chain = tcase_create ("fsrtpconference_three_way_srtp");
+  tcase_add_test (tc_chain, test_rtpconference_three_way_srtp);
+  suite_add_tcase (s, tc_chain);
+
+  tc_chain = tcase_create ("fsrtpconference_ten_way_srtp");
+  tcase_add_test (tc_chain, test_rtpconference_ten_way_srtp);
+  suite_add_tcase (s, tc_chain);
+
+  tc_chain = tcase_create (
+      "fsrtpconference_multicast_three_way_ssrc_assoc_srtp");
+  tcase_add_test (tc_chain,
+      test_rtpconference_multicast_three_way_ssrc_assoc_srtp);
+  suite_add_tcase (s, tc_chain);
 
   return s;
 }

@@ -67,6 +67,12 @@ typedef struct _CodecAssociation {
 
 } CodecAssociation;
 
+typedef struct _CodecPreference {
+  FsCodec *codec;
+
+  GstCaps *input_caps;
+  GstCaps *output_caps;
+} CodecPreference;
 
 GList *validate_codecs_configuration (
     FsMediaType media_type,
@@ -77,7 +83,9 @@ GList *
 create_local_codec_associations (
     GList *blueprints,
     GList *codec_prefs,
-    GList *current_codec_associations);
+    GList *current_codec_associations,
+    GstCaps *input_caps,
+    GstCaps *output_caps);
 
 GList *
 negotiate_stream_codecs (
@@ -125,7 +133,7 @@ lookup_codec_association_custom (GList *codec_associations,
 
 GstElement *
 parse_bin_from_description_all_linked (const gchar *bin_description,
-    gboolean is_send, guint *src_pad_count, guint *sink_pad_count,
+    FsStreamDirection direction, guint *src_pad_count, guint *sink_pad_count,
     GError **error);
 
 
@@ -138,6 +146,9 @@ negotiate_stream_header_extensions (GList *hdrext, GList *hdrext_remote,
     gboolean favor_remote, guint8 *used_ids);
 GList *
 finish_header_extensions_nego (GList *hdrexts, guint8 *used_ids);
+
+void
+codec_preference_destroy (CodecPreference *cp);
 
 G_END_DECLS
 

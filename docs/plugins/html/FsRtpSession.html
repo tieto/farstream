@@ -2,34 +2,28 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>FsRtpSession</title>
+<title>Farstream Plugins Manual: FsRtpSession</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="Farstream Plugins Manual">
 <link rel="up" href="ch01.html" title="RTP Plugin">
 <link rel="prev" href="FsRtpParticipant.html" title="FsRtpParticipant">
 <link rel="next" href="FsRtpStream.html" title="FsRtpStream">
-<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
-<tr valign="middle">
-<td><a accesskey="p" href="FsRtpParticipant.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
-<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
-<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">Farstream Plugins Manual</th>
-<td><a accesskey="n" href="FsRtpStream.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
-</tr>
-<tr><td colspan="5" class="shortcuts">
-<a href="#FsRtpSession.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#FsRtpSession.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#FsRtpSession.object-hierarchy" class="shortcut">Object Hierarchy</a>
-                   | 
-                  <a href="#FsRtpSession.properties" class="shortcut">Properties</a>
-</td></tr>
-</table>
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#FsRtpSession.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
+                  <a href="#FsRtpSession.object-hierarchy" class="shortcut">Object Hierarchy</a></span><span id="nav_properties">  <span class="dim">|</span> 
+                  <a href="#FsRtpSession.properties" class="shortcut">Properties</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="FsRtpParticipant.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="FsRtpStream.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
 <div class="refentry">
 <a name="FsRtpSession"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
@@ -37,113 +31,221 @@
 <h2><span class="refentrytitle"><a name="FsRtpSession.top_of_page"></a>FsRtpSession</span></h2>
 <p>FsRtpSession — A  RTP session in a <a class="link" href="FsRtpConference.html" title="FsRtpConference"><span class="type">FsRtpConference</span></a></p>
 </td>
-<td valign="top" align="right"></td>
+<td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
-<div class="refsynopsisdiv">
-<a name="FsRtpSession.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">                    <a class="link" href="FsRtpSession.html#FsRtpSession-struct" title="FsRtpSession">FsRtpSession</a>;
-</pre>
+<div class="refsect1">
+<a name="FsRtpSession.properties"></a><h2>Properties</h2>
+<div class="informaltable"><table border="0">
+<colgroup>
+<col width="150px" class="properties_type">
+<col width="300px" class="properties_name">
+<col width="200px" class="properties_flags">
+</colgroup>
+<tbody>
+<tr>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
+<td class="property_name"><a class="link" href="FsRtpSession.html#FsRtpSession--no-rtcp-timeout" title="The “no-rtcp-timeout” property">no-rtcp-timeout</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type">
+<span class="type">FsRtpHeaderExtensionGList</span> *</td>
+<td class="property_name"><a class="link" href="FsRtpSession.html#FsRtpSession--rtp-header-extension-preferences" title="The “rtp-header-extension-preferences” property">rtp-header-extension-preferences</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type">
+<span class="type">FsRtpHeaderExtensionGList</span> *</td>
+<td class="property_name"><a class="link" href="FsRtpSession.html#FsRtpSession--rtp-header-extensions" title="The “rtp-header-extensions” property">rtp-header-extensions</a></td>
+<td class="property_flags">Read</td>
+</tr>
+<tr>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a></td>
+<td class="property_name"><a class="link" href="FsRtpSession.html#FsRtpSession--send-bitrate" title="The “send-bitrate” property">send-bitrate</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a></td>
+<td class="property_name"><a class="link" href="FsRtpSession.html#FsRtpSession--ssrc" title="The “ssrc” property">ssrc</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type">
+<a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> *</td>
+<td class="property_name"><a class="link" href="FsRtpSession.html#FsRtpSession--internal-session" title="The “internal-session” property">internal-session</a></td>
+<td class="property_flags">Read</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="FsRtpSession.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="name">
+<col class="description">
+</colgroup>
+<tbody><tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="FsRtpSession.html#FsRtpSession-struct" title="struct FsRtpSession">FsRtpSession</a></td>
+</tr></tbody>
+</table></div>
 </div>
 <div class="refsect1">
 <a name="FsRtpSession.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="synopsis">
-  GObject
-   +----FsSession
-         +----FsRtpSession
-</pre>
-</div>
-<div class="refsect1">
-<a name="FsRtpSession.properties"></a><h2>Properties</h2>
-<pre class="synopsis">
-  "<a class="link" href="FsRtpSession.html#FsRtpSession--no-rtcp-timeout" title='The "no-rtcp-timeout" property'>no-rtcp-timeout</a>"          <span class="type">gint</span>                  : Read / Write
-  "<a class="link" href="FsRtpSession.html#FsRtpSession--rtp-header-extension-preferences" title='The "rtp-header-extension-preferences" property'>rtp-header-extension-preferences</a>" <span class="type">FsRtpHeaderExtensionGList</span>*  : Read / Write
-  "<a class="link" href="FsRtpSession.html#FsRtpSession--rtp-header-extensions" title='The "rtp-header-extensions" property'>rtp-header-extensions</a>"    <span class="type">FsRtpHeaderExtensionGList</span>*  : Read
-  "<a class="link" href="FsRtpSession.html#FsRtpSession--send-bitrate" title='The "send-bitrate" property'>send-bitrate</a>"             <span class="type">guint</span>                 : Read / Write
-  "<a class="link" href="FsRtpSession.html#FsRtpSession--ssrc" title='The "ssrc" property'>ssrc</a>"                     <span class="type">guint</span>                 : Read / Write
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/farstream-libs-1.0/FsSession.html">FsSession</a>
+        <span class="lineart">╰──</span> FsRtpSession
 </pre>
 </div>
 <div class="refsect1">
 <a name="FsRtpSession.description"></a><h2>Description</h2>
-<p>
-This object represents one session, it is created by called
-<code class="function">fs_conference_new_session()</code> on a <a class="link" href="FsRtpConference.html" title="FsRtpConference"><span class="type">FsRtpConference</span></a>. It can be either
+<p>This object represents one session, it is created by called
+<a href="/usr/share/gtk-doc/html/farstream-libs-1.0/FsConference.html#fs-conference-new-session"><code class="function">fs_conference_new_session()</code></a> on a <a class="link" href="FsRtpConference.html" title="FsRtpConference"><span class="type">FsRtpConference</span></a>. It can be either
 Audio or Video. It also represents data send with one and only one
-SSRC (although if there is a SSRC collision, that SSRC may change).
-</p>
+SSRC (although if there is a SSRC collision, that SSRC may change).</p>
 <div class="refsect2">
 <a name="id-1.2.2.4.6.3"></a><h3>Codec profiles</h3>
 <p>
 It is possible to define "codec profiles", that is non-autodetected
 encoding and decoding pipelines for codecs. It is even possible to declare
 entirely new codecs using this method.
-</p>
-<p>
+
 To create a profile for a codec, add it to the codec-preferences with
 special optional parameters called "farstream-send-profile" and
 "farstream-recv-profile", these should contain gst-launch style descriptions
 of the encoding or decoding bin.
-</p>
-<p>
+
 As a special case, encoding profiles can have more than one unconnected
 source pad, all of these pads should produce application/x-rtp of some kind.
 The profile will be ignored if not ALL pads match currently negotiated
 codecs.
-</p>
-<p>
+
 Also, it is possible to declare profiles with only a decoding pipeline,
 you will only be able to receive from this codec, the encoding may be a
 secondary pad of some other codec.
 </p>
 </div>
+<hr>
+<div class="refsect2">
+<a name="id-1.2.2.4.6.4"></a><h3>SRTP signature and encryption</h3>
+<p>
+
+To tell <a class="link" href="FsRtpSession.html" title="FsRtpSession"><span class="type">FsRtpSession</span></a> to authenticate encrypt the media it is
+sending using SRTP, one must set the parameters using a
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstStructure.html"><span class="type">GstStructure</span></a> named "FarstreamSRTP" and passing it to
+<code class="function">fs_session_set_encryption_parameters()</code>.
+
+The cipher, auth, and key must be specified:
+</p>
+<div class="refsect3">
+<a name="FarstreamSRTP"></a><h4>FarstreamSRTP</h4>
+<div class="table"><table>
+<tr>
+  <td><code class="code">"rtp-cipher" and "rtcp-cipher"</code></td>
+  <td>gchar *</td>
+  <td>
+   <p>Encryption algorithm</p>
+   <p>Possible values: "null", "aes-128-icm" or "aes-256-icm"</p>
+  </td>
+ </tr>
+<tr>
+  <td><code class="code">"cipher"</code></td>
+  <td>gchar *</td>
+  <td>
+<p>Default value for "rtp-cipher" and "rtcp-cipher"</p>
+      <p>Possible values: "null", "aes-128-icm" or "aes-256-icm"</p>
+  </td>
+ </tr>
+<tr>
+  <td><code class="code">"rtp-auth" and "rtcp-auth"</code></td>
+  <td>gchar *</td>
+  <td>
+   <p>Authentication algorithm, can never be null</p>
+   <p>Possible values: "hmac-sha1-32" or "hmac-sha1-80"</p>
+  </td>
+ </tr>
+<tr>
+  <td><code class="code">"auth"</code></td>
+  <td>gchar *</td>
+  <td>
+<p>Default value for "rtp-auth" and "rtcp-auth"</p>
+      <p>Possible values: "hmac-sha1-32" or "hmac-sha1-80"</p>
+  </td>
+ </tr>
+<tr>
+  <td><code class="code">"key"</code></td>
+  <td><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a></td>
+  <td>Size must be 30 if cipher is "aes-128-icm" and 46 if cipher is
+  "aes-256-icm" </td>
+ </tr>
+</table></div>
+</div>
 <p>
 </p>
 </div>
+</div>
 <div class="refsect1">
-<a name="FsRtpSession.details"></a><h2>Details</h2>
+<a name="FsRtpSession.functions_details"></a><h2>Functions</h2>
+</div>
+<div class="refsect1">
+<a name="FsRtpSession.other_details"></a><h2>Types and Values</h2>
 <div class="refsect2">
-<a name="FsRtpSession-struct"></a><h3>FsRtpSession</h3>
-<pre class="programlisting">typedef struct _FsRtpSession FsRtpSession;</pre>
+<a name="FsRtpSession-struct"></a><h3>struct FsRtpSession</h3>
+<pre class="programlisting">struct FsRtpSession;</pre>
 </div>
 </div>
 <div class="refsect1">
 <a name="FsRtpSession.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
-<a name="FsRtpSession--no-rtcp-timeout"></a><h3>The <code class="literal">"no-rtcp-timeout"</code> property</h3>
-<pre class="programlisting">  "no-rtcp-timeout"          <span class="type">gint</span>                  : Read / Write</pre>
+<a name="FsRtpSession--no-rtcp-timeout"></a><h3>The <code class="literal">“no-rtcp-timeout”</code> property</h3>
+<pre class="programlisting">  “no-rtcp-timeout”          <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
 <p>This is the time (in ms) after which data received without RTCP is attached the FsStream, this only works if there is only one FsStream. -1 will wait forever. 0 will not wait for RTCP and attach it immediataly to the FsStream and prohibit the creation of a second FsStream.</p>
+<p>Flags: Read / Write</p>
 <p>Allowed values: &gt;= G_MAXULONG</p>
 <p>Default value: 7000</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="FsRtpSession--rtp-header-extension-preferences"></a><h3>The <code class="literal">"rtp-header-extension-preferences"</code> property</h3>
-<pre class="programlisting">  "rtp-header-extension-preferences" <span class="type">FsRtpHeaderExtensionGList</span>*  : Read / Write</pre>
+<a name="FsRtpSession--rtp-header-extension-preferences"></a><h3>The <code class="literal">“rtp-header-extension-preferences”</code> property</h3>
+<pre class="programlisting">  “rtp-header-extension-preferences” <span class="type">FsRtpHeaderExtensionGList</span> *</pre>
 <p>GList of RTP Header extensions that are locally supported and desired by the application.</p>
+<p>Flags: Read / Write</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="FsRtpSession--rtp-header-extensions"></a><h3>The <code class="literal">"rtp-header-extensions"</code> property</h3>
-<pre class="programlisting">  "rtp-header-extensions"    <span class="type">FsRtpHeaderExtensionGList</span>*  : Read</pre>
+<a name="FsRtpSession--rtp-header-extensions"></a><h3>The <code class="literal">“rtp-header-extensions”</code> property</h3>
+<pre class="programlisting">  “rtp-header-extensions”    <span class="type">FsRtpHeaderExtensionGList</span> *</pre>
 <p>GList of RTP Header extensions that have been negotiated and will be used when sending of receiving RTP packets.</p>
+<p>Flags: Read</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="FsRtpSession--send-bitrate"></a><h3>The <code class="literal">"send-bitrate"</code> property</h3>
-<pre class="programlisting">  "send-bitrate"             <span class="type">guint</span>                 : Read / Write</pre>
+<a name="FsRtpSession--send-bitrate"></a><h3>The <code class="literal">“send-bitrate”</code> property</h3>
+<pre class="programlisting">  “send-bitrate”             <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a></pre>
 <p>The bitrate that the session will try to send at in bits/sec.</p>
+<p>Flags: Read / Write</p>
 <p>Default value: 0</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="FsRtpSession--ssrc"></a><h3>The <code class="literal">"ssrc"</code> property</h3>
-<pre class="programlisting">  "ssrc"                     <span class="type">guint</span>                 : Read / Write</pre>
+<a name="FsRtpSession--ssrc"></a><h3>The <code class="literal">“ssrc”</code> property</h3>
+<pre class="programlisting">  “ssrc”                     <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a></pre>
 <p>This is the current SSRC used to send data (defaults to a random value).</p>
+<p>Flags: Read / Write</p>
 <p>Default value: 0</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="FsRtpSession--internal-session"></a><h3>The <code class="literal">“internal-session”</code> property</h3>
+<pre class="programlisting">  “internal-session”         <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> *</pre>
+<p>Internal RTPSession object from rtpbin.</p>
+<p>Flags: Read</p>
 </div>
 </div>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.19</div>
+          Generated by GTK-Doc V1.21</div>
 </body>
 </html>
