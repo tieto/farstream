@@ -2,32 +2,27 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>FsParticipant</title>
+<title>Farstream Reference Manual: FsParticipant</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="Farstream Reference Manual">
 <link rel="up" href="ch01.html" title="Farstream Core Library">
 <link rel="prev" href="FsConference.html" title="FsConference">
 <link rel="next" href="FsSession.html" title="FsSession">
-<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
-<tr valign="middle">
-<td><a accesskey="p" href="FsConference.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
-<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
-<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">Farstream Reference Manual</th>
-<td><a accesskey="n" href="FsSession.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
-</tr>
-<tr><td colspan="5" class="shortcuts">
-<a href="#FsParticipant.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#FsParticipant.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#FsParticipant.object-hierarchy" class="shortcut">Object Hierarchy</a>
-</td></tr>
-</table>
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#FsParticipant.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
+                  <a href="#FsParticipant.object-hierarchy" class="shortcut">Object Hierarchy</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="FsConference.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="FsSession.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
 <div class="refentry">
 <a name="FsParticipant"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
@@ -35,43 +30,120 @@
 <h2><span class="refentrytitle"><a name="FsParticipant.top_of_page"></a>FsParticipant</span></h2>
 <p>FsParticipant — A participant in a conference</p>
 </td>
-<td valign="top" align="right"></td>
+<td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
-<div class="refsynopsisdiv">
-<a name="FsParticipant.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">
-#include &lt;farstream/fs-conference.h&gt;
-
-                    <a class="link" href="FsParticipant.html#FsParticipant-struct" title="FsParticipant">FsParticipant</a>;
-struct              <a class="link" href="FsParticipant.html#FsParticipantClass" title="struct FsParticipantClass">FsParticipantClass</a>;
-#define             <a class="link" href="FsParticipant.html#FS-PARTICIPANT-DATA-LOCK:CAPS" title="FS_PARTICIPANT_DATA_LOCK()">FS_PARTICIPANT_DATA_LOCK</a>            (participant)
-#define             <a class="link" href="FsParticipant.html#FS-PARTICIPANT-DATA-UNLOCK:CAPS" title="FS_PARTICIPANT_DATA_UNLOCK()">FS_PARTICIPANT_DATA_UNLOCK</a>          (participant)
-</pre>
+<div class="refsect1">
+<a name="FsParticipant.functions"></a><h2>Functions</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="functions_return">
+<col class="functions_name">
+</colgroup>
+<tbody>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="FsParticipant.html#FS-PARTICIPANT-DATA-LOCK:CAPS" title="FS_PARTICIPANT_DATA_LOCK()">FS_PARTICIPANT_DATA_LOCK</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="FsParticipant.html#FS-PARTICIPANT-DATA-UNLOCK:CAPS" title="FS_PARTICIPANT_DATA_UNLOCK()">FS_PARTICIPANT_DATA_UNLOCK</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="FsParticipant.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="name">
+<col class="description">
+</colgroup>
+<tbody>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="FsParticipant.html#FsParticipant-struct" title="struct FsParticipant">FsParticipant</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="FsParticipant.html#FsParticipantClass" title="struct FsParticipantClass">FsParticipantClass</a></td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <div class="refsect1">
 <a name="FsParticipant.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="synopsis">
-  GObject
-   +----FsParticipant
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> FsParticipant
+</pre>
+</div>
+<div class="refsect1">
+<a name="FsParticipant.includes"></a><h2>Includes</h2>
+<pre class="synopsis">#include &lt;farstream/fs-conference.h&gt;
 </pre>
 </div>
 <div class="refsect1">
 <a name="FsParticipant.description"></a><h2>Description</h2>
-<p>
-This object is the base implementation of a Farstream Participant. It needs to be
+<p>This object is the base implementation of a Farstream Participant. It needs to be
 derived and implemented by a farstream conference gstreamer element. A
 participant represents any source of media in a conference. This could be a
-human-participant or an automaton.
-</p>
+human-participant or an automaton.</p>
 </div>
 <div class="refsect1">
-<a name="FsParticipant.details"></a><h2>Details</h2>
+<a name="FsParticipant.functions_details"></a><h2>Functions</h2>
 <div class="refsect2">
-<a name="FsParticipant-struct"></a><h3>FsParticipant</h3>
-<pre class="programlisting">typedef struct _FsParticipant FsParticipant;</pre>
-<p>
-All members are private (access them using the properties)
-</p>
+<a name="FS-PARTICIPANT-DATA-LOCK:CAPS"></a><h3>FS_PARTICIPANT_DATA_LOCK()</h3>
+<pre class="programlisting">#define             FS_PARTICIPANT_DATA_LOCK(participant)</pre>
+<p>Locks the participant for data set with <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-set-data"><code class="function">g_object_set_data()</code></a> or
+<a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-set-qdata"><code class="function">g_object_set_qdata()</code></a>.</p>
+<div class="refsect3">
+<a name="id-1.2.2.3.8.2.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>participant</p></td>
+<td class="parameter_description"><p>A <a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="FS-PARTICIPANT-DATA-UNLOCK:CAPS"></a><h3>FS_PARTICIPANT_DATA_UNLOCK()</h3>
+<pre class="programlisting">#define             FS_PARTICIPANT_DATA_UNLOCK(participant)</pre>
+<p>Unlocks the participant for data set with <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-set-data"><code class="function">g_object_set_data()</code></a> or
+<a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-set-qdata"><code class="function">g_object_set_qdata()</code></a>.</p>
+<div class="refsect3">
+<a name="id-1.2.2.3.8.3.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>participant</p></td>
+<td class="parameter_description"><p>A <a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="refsect1">
+<a name="FsParticipant.other_details"></a><h2>Types and Values</h2>
+<div class="refsect2">
+<a name="FsParticipant-struct"></a><h3>struct FsParticipant</h3>
+<pre class="programlisting">struct FsParticipant;</pre>
+<p>All members are private (access them using the properties)</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -82,65 +154,28 @@ All members are private (access them using the properties)
   /* virtual functions */
 };
 </pre>
-<p>
-The FsParticipant class has no virtual methods to implement,
-but you may want to override the properties or attach more date to it
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+<p>The FsParticipant class has no virtual methods to implement,
+but you may want to override the properties or attach more date to it</p>
+<div class="refsect3">
+<a name="id-1.2.2.3.9.3.5"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
 </colgroup>
 <tbody><tr>
-<td><p><span class="term"><span class="type">GObjectClass</span> <em class="structfield"><code><a name="FsParticipantClass.parent-class"></a>parent_class</code></em>;</span></p></td>
-<td>Our parent</td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObjectClass"><span class="type">GObjectClass</span></a> <em class="structfield"><code><a name="FsParticipantClass.parent-class"></a>parent_class</code></em>;</p></td>
+<td class="struct_member_description"><p>Our parent</p></td>
+<td class="struct_member_annotations"> </td>
 </tr></tbody>
 </table></div>
 </div>
-<hr>
-<div class="refsect2">
-<a name="FS-PARTICIPANT-DATA-LOCK:CAPS"></a><h3>FS_PARTICIPANT_DATA_LOCK()</h3>
-<pre class="programlisting">#define             FS_PARTICIPANT_DATA_LOCK(participant)</pre>
-<p>
-Locks the participant for data set with <code class="function">g_object_set_data()</code> or
-<code class="function">g_object_set_qdata()</code>.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody><tr>
-<td><p><span class="term"><em class="parameter"><code>participant</code></em> :</span></p></td>
-<td>A <a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a>
-</td>
-</tr></tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="FS-PARTICIPANT-DATA-UNLOCK:CAPS"></a><h3>FS_PARTICIPANT_DATA_UNLOCK()</h3>
-<pre class="programlisting">#define             FS_PARTICIPANT_DATA_UNLOCK(participant)</pre>
-<p>
-Unlocks the participant for data set with <code class="function">g_object_set_data()</code> or
-<code class="function">g_object_set_qdata()</code>.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody><tr>
-<td><p><span class="term"><em class="parameter"><code>participant</code></em> :</span></p></td>
-<td>A <a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a>
-</td>
-</tr></tbody>
-</table></div>
 </div>
 </div>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.19</div>
+          Generated by GTK-Doc V1.21</div>
 </body>
 </html>

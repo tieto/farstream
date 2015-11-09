@@ -2,34 +2,28 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>FsElementAddedNotifier</title>
+<title>Farstream Reference Manual: FsElementAddedNotifier</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="Farstream Reference Manual">
 <link rel="up" href="ch03.html" title="Farstream Utility Functions and Objects">
 <link rel="prev" href="ch03.html" title="Farstream Utility Functions and Objects">
 <link rel="next" href="farstream-libs-Utility-functions.html" title="Utility functions">
-<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
-<tr valign="middle">
-<td><a accesskey="p" href="ch03.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
-<td><a accesskey="u" href="ch03.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
-<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">Farstream Reference Manual</th>
-<td><a accesskey="n" href="farstream-libs-Utility-functions.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
-</tr>
-<tr><td colspan="5" class="shortcuts">
-<a href="#FsElementAddedNotifier.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#FsElementAddedNotifier.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#FsElementAddedNotifier.object-hierarchy" class="shortcut">Object Hierarchy</a>
-                   | 
-                  <a href="#FsElementAddedNotifier.signals" class="shortcut">Signals</a>
-</td></tr>
-</table>
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#FsElementAddedNotifier.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
+                  <a href="#FsElementAddedNotifier.object-hierarchy" class="shortcut">Object Hierarchy</a></span><span id="nav_signals">  <span class="dim">|</span> 
+                  <a href="#FsElementAddedNotifier.signals" class="shortcut">Signals</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch03.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="ch03.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="farstream-libs-Utility-functions.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
 <div class="refentry">
 <a name="FsElementAddedNotifier"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
@@ -37,301 +31,381 @@
 <h2><span class="refentrytitle"><a name="FsElementAddedNotifier.top_of_page"></a>FsElementAddedNotifier</span></h2>
 <p>FsElementAddedNotifier — Recursive element addition notifier</p>
 </td>
-<td valign="top" align="right"></td>
+<td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
-<div class="refsynopsisdiv">
-<a name="FsElementAddedNotifier.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">
-#include &lt;farstream/fs-element-added-notifier.h&gt;
-
-struct              <a class="link" href="FsElementAddedNotifier.html#FsElementAddedNotifier-struct" title="struct FsElementAddedNotifier">FsElementAddedNotifier</a>;
-<a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="returnvalue">FsElementAddedNotifier</span></a> * <a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-new" title="fs_element_added_notifier_new ()">fs_element_added_notifier_new</a>  (<em class="parameter"><code><span class="type">void</span></code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-add" title="fs_element_added_notifier_add ()">fs_element_added_notifier_add</a>       (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> *bin</code></em>);
-<span class="returnvalue">gboolean</span>            <a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-remove" title="fs_element_added_notifier_remove ()">fs_element_added_notifier_remove</a>    (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> *bin</code></em>);
-<span class="returnvalue">gulong</span>              <a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-set-properties-from-keyfile" title="fs_element_added_notifier_set_properties_from_keyfile ()">fs_element_added_notifier_set_properties_from_keyfile</a>
-                                                        (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
-                                                         <em class="parameter"><code><span class="type">GKeyFile</span> *keyfile</code></em>);
-<span class="returnvalue">gboolean</span>            <a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-set-properties-from-file" title="fs_element_added_notifier_set_properties_from_file ()">fs_element_added_notifier_set_properties_from_file</a>
-                                                        (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
-                                                         <em class="parameter"><code>const <span class="type">gchar</span> *filename</code></em>,
-                                                         <em class="parameter"><code><span class="type">GError</span> **error</code></em>);
-<span class="returnvalue">gulong</span>              <a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-set-default-properties" title="fs_element_added_notifier_set_default_properties ()">fs_element_added_notifier_set_default_properties</a>
-                                                        (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);
-</pre>
-</div>
 <div class="refsect1">
-<a name="FsElementAddedNotifier.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="synopsis">
-  GObject
-   +----FsElementAddedNotifier
-</pre>
+<a name="FsElementAddedNotifier.functions"></a><h2>Functions</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="functions_return">
+<col class="functions_name">
+</colgroup>
+<tbody>
+<tr>
+<td class="function_type">
+<a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="returnvalue">FsElementAddedNotifier</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-new" title="fs_element_added_notifier_new ()">fs_element_added_notifier_new</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-add" title="fs_element_added_notifier_add ()">fs_element_added_notifier_add</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-remove" title="fs_element_added_notifier_remove ()">fs_element_added_notifier_remove</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gulong"><span class="returnvalue">gulong</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-set-properties-from-keyfile" title="fs_element_added_notifier_set_properties_from_keyfile ()">fs_element_added_notifier_set_properties_from_keyfile</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-set-properties-from-file" title="fs_element_added_notifier_set_properties_from_file ()">fs_element_added_notifier_set_properties_from_file</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gulong"><span class="returnvalue">gulong</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-set-default-properties" title="fs_element_added_notifier_set_default_properties ()">fs_element_added_notifier_set_default_properties</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <div class="refsect1">
 <a name="FsElementAddedNotifier.signals"></a><h2>Signals</h2>
-<pre class="synopsis">
-  "<a class="link" href="FsElementAddedNotifier.html#FsElementAddedNotifier-element-added" title='The "element-added" signal'>element-added</a>"                                  : <code class="literal">Run Last</code>
+<div class="informaltable"><table border="0">
+<colgroup>
+<col width="150px" class="signals_return">
+<col width="300px" class="signals_name">
+<col width="200px" class="signals_flags">
+</colgroup>
+<tbody><tr>
+<td class="signal_type"><span class="returnvalue">void</span></td>
+<td class="signal_name"><a class="link" href="FsElementAddedNotifier.html#FsElementAddedNotifier-element-added" title="The “element-added” signal">element-added</a></td>
+<td class="signal_flags">Run Last</td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="FsElementAddedNotifier.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="name">
+<col class="description">
+</colgroup>
+<tbody><tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="FsElementAddedNotifier.html#FsElementAddedNotifier-struct" title="struct FsElementAddedNotifier">FsElementAddedNotifier</a></td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="FsElementAddedNotifier.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> FsElementAddedNotifier
+</pre>
+</div>
+<div class="refsect1">
+<a name="FsElementAddedNotifier.includes"></a><h2>Includes</h2>
+<pre class="synopsis">#include &lt;farstream/fs-element-added-notifier.h&gt;
 </pre>
 </div>
 <div class="refsect1">
 <a name="FsElementAddedNotifier.description"></a><h2>Description</h2>
-<p>
-This object can be attach to any <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> and will emit a the
-<a class="link" href="FsElementAddedNotifier.html#FsElementAddedNotifier-element-added" title='The "element-added" signal'><span class="type">"element-added"</span></a> signal for every element inside the
+<p>This object can be attach to any <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> and will emit a the
+<a class="link" href="FsElementAddedNotifier.html#FsElementAddedNotifier-element-added" title="The “element-added” signal"><span class="type">“element-added”</span></a> signal for every element inside the
 <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> or any sub-bin and any element added in the future to the bin or
 its sub-bins. There is also a utility method to have it used to
-set the properties of elements based on a GKeyfile.
-</p>
+set the properties of elements based on a GKeyfile.</p>
 </div>
 <div class="refsect1">
-<a name="FsElementAddedNotifier.details"></a><h2>Details</h2>
+<a name="FsElementAddedNotifier.functions_details"></a><h2>Functions</h2>
 <div class="refsect2">
-<a name="FsElementAddedNotifier-struct"></a><h3>struct FsElementAddedNotifier</h3>
-<pre class="programlisting">struct FsElementAddedNotifier;</pre>
-<p>
-All members are private
-</p>
+<a name="fs-element-added-notifier-new"></a><h3>fs_element_added_notifier_new ()</h3>
+<pre class="programlisting"><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="returnvalue">FsElementAddedNotifier</span></a> *
+fs_element_added_notifier_new (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+<p>Creates a new <a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> object</p>
+<div class="refsect3">
+<a name="id-1.2.4.2.9.2.5"></a><h4>Returns</h4>
+<p> the newly-created <a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a></p>
+<p></p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
-<a name="fs-element-added-notifier-new"></a><h3>fs_element_added_notifier_new ()</h3>
-<pre class="programlisting"><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="returnvalue">FsElementAddedNotifier</span></a> * fs_element_added_notifier_new  (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
-<p>
-Creates a new <a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> object
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody><tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the newly-created <a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a>
-</td>
-</tr></tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-element-added-notifier-add"></a><h3>fs_element_added_notifier_add ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                fs_element_added_notifier_add       (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> *bin</code></em>);</pre>
-<p>
-Add a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> to on which the <a class="link" href="FsElementAddedNotifier.html#FsElementAddedNotifier-element-added" title='The "element-added" signal'><span class="type">"element-added"</span></a> signal
+<a name="fs-element-added-notifier-add"></a><h3>fs_element_added_notifier_add ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+fs_element_added_notifier_add (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
+                               <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> *bin</code></em>);</pre>
+<p>Add a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> to on which the <a class="link" href="FsElementAddedNotifier.html#FsElementAddedNotifier-element-added" title="The “element-added” signal"><span class="type">“element-added”</span></a> signal
 will be called on every element and sub-element present and added in the
-future.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+future.</p>
+<div class="refsect3">
+<a name="id-1.2.4.2.9.3.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>notifier</code></em> :</span></p></td>
-<td>a <a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a>
-</td>
+<td class="parameter_name"><p>notifier</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a></p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>bin</code></em> :</span></p></td>
-<td>A <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> to watch to added elements</td>
+<td class="parameter_name"><p>bin</p></td>
+<td class="parameter_description"><p>A <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> to watch to added elements</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
+</div>
 <hr>
 <div class="refsect2">
-<a name="fs-element-added-notifier-remove"></a><h3>fs_element_added_notifier_remove ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_element_added_notifier_remove    (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> *bin</code></em>);</pre>
-<p>
-Stop watching the passed bin and its subbins.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+<a name="fs-element-added-notifier-remove"></a><h3>fs_element_added_notifier_remove ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+fs_element_added_notifier_remove (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
+                                  <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> *bin</code></em>);</pre>
+<p>Stop watching the passed bin and its subbins.</p>
+<div class="refsect3">
+<a name="id-1.2.4.2.9.4.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>notifier</code></em> :</span></p></td>
-<td>a <a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a>
-</td>
+<td class="parameter_name"><p>notifier</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a></p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>bin</code></em> :</span></p></td>
-<td>A <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> to stop watching</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
-<code class="literal">TRUE</code> if the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> was being watched, <code class="literal">FALSE</code> otherwise</td>
+<td class="parameter_name"><p>bin</p></td>
+<td class="parameter_description"><p>A <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> to stop watching</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
+<div class="refsect3">
+<a name="id-1.2.4.2.9.4.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> was being watched, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
+<p></p>
+</div>
+</div>
 <hr>
 <div class="refsect2">
-<a name="fs-element-added-notifier-set-properties-from-keyfile"></a><h3>fs_element_added_notifier_set_properties_from_keyfile ()</h3>
-<pre class="programlisting"><span class="returnvalue">gulong</span>              fs_element_added_notifier_set_properties_from_keyfile
-                                                        (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
-                                                         <em class="parameter"><code><span class="type">GKeyFile</span> *keyfile</code></em>);</pre>
-<p>
-Using a <span class="type">GKeyFile</span> where the groups are the element's type or name
+<a name="fs-element-added-notifier-set-properties-from-keyfile"></a><h3>fs_element_added_notifier_set_properties_from_keyfile ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gulong"><span class="returnvalue">gulong</span></a>
+fs_element_added_notifier_set_properties_from_keyfile
+                               (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Key-value-file-parser.html#GKeyFile"><span class="type">GKeyFile</span></a> *keyfile</code></em>);</pre>
+<p>Using a <a href="https://developer.gnome.org/glib/unstable/glib-Key-value-file-parser.html#GKeyFile"><span class="type">GKeyFile</span></a> where the groups are the element's type or name
 and the key=value are the property and its value, this function
 will set the properties on the elements added to this object after
 this function has been called.  It will take ownership of the
 GKeyFile structure. It will first try the group as the element type, if that
-does not match, it will check its name.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+does not match, it will check its name.</p>
+<div class="refsect3">
+<a name="id-1.2.4.2.9.5.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>notifier</code></em> :</span></p></td>
-<td>a <a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a>
-</td>
+<td class="parameter_name"><p>notifier</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a></p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>keyfile</code></em> :</span></p></td>
-<td>a <span class="type">GKeyFile</span>. <span class="annotation">[<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The id of the signal connection, this can be used to disconnect
-this property setter using <code class="function">g_signal_handler_disconnect()</code>.</td>
+<td class="parameter_name"><p>keyfile</p></td>
+<td class="parameter_description"><p> a <a href="https://developer.gnome.org/glib/unstable/glib-Key-value-file-parser.html#GKeyFile"><span class="type">GKeyFile</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>]</span></td>
 </tr>
 </tbody>
 </table></div>
 </div>
+<div class="refsect3">
+<a name="id-1.2.4.2.9.5.6"></a><h4>Returns</h4>
+<p> The id of the signal connection, this can be used to disconnect
+this property setter using <a href="https://developer.gnome.org/gobject/unstable/gobject-Signals.html#g-signal-handler-disconnect"><code class="function">g_signal_handler_disconnect()</code></a>.</p>
+<p></p>
+</div>
+</div>
 <hr>
 <div class="refsect2">
-<a name="fs-element-added-notifier-set-properties-from-file"></a><h3>fs_element_added_notifier_set_properties_from_file ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_element_added_notifier_set_properties_from_file
-                                                        (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
-                                                         <em class="parameter"><code>const <span class="type">gchar</span> *filename</code></em>,
-                                                         <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
-<p>
-Same as <a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-set-properties-from-keyfile" title="fs_element_added_notifier_set_properties_from_keyfile ()"><code class="function">fs_element_added_notifier_set_properties_from_keyfile()</code></a> but using
-the name of the file to load instead of the <span class="type">GKeyFile</span> directly.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+<a name="fs-element-added-notifier-set-properties-from-file"></a><h3>fs_element_added_notifier_set_properties_from_file ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+fs_element_added_notifier_set_properties_from_file
+                               (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
+                                <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
+<p>Same as <a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-set-properties-from-keyfile" title="fs_element_added_notifier_set_properties_from_keyfile ()"><code class="function">fs_element_added_notifier_set_properties_from_keyfile()</code></a> but using
+the name of the file to load instead of the <a href="https://developer.gnome.org/glib/unstable/glib-Key-value-file-parser.html#GKeyFile"><span class="type">GKeyFile</span></a> directly.</p>
+<div class="refsect3">
+<a name="id-1.2.4.2.9.6.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>notifier</code></em> :</span></p></td>
-<td>a <a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a>
-</td>
+<td class="parameter_name"><p>notifier</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a></p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
-<td>The name of the keyfile to use</td>
+<td class="parameter_name"><p>filename</p></td>
+<td class="parameter_description"><p>The name of the keyfile to use</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td>location of a <span class="type">GError</span>, or <code class="literal">NULL</code> if no error occured</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
-<code class="literal">TRUE</code> if the file was successfully loaded, <code class="literal">FALSE</code> otherwise</td>
+<td class="parameter_name"><p>error</p></td>
+<td class="parameter_description"><p>location of a <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if no error occured</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
+<div class="refsect3">
+<a name="id-1.2.4.2.9.6.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the file was successfully loaded, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
+<p></p>
+</div>
+</div>
 <hr>
 <div class="refsect2">
-<a name="fs-element-added-notifier-set-default-properties"></a><h3>fs_element_added_notifier_set_default_properties ()</h3>
-<pre class="programlisting"><span class="returnvalue">gulong</span>              fs_element_added_notifier_set_default_properties
-                                                        (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);</pre>
-<p>
-Same as first calling <a class="link" href="farstream-libs-Utility-functions.html#fs-utils-get-default-element-properties" title="fs_utils_get_default_element_properties ()"><code class="function">fs_utils_get_default_element_properties()</code></a> and using
+<a name="fs-element-added-notifier-set-default-properties"></a><h3>fs_element_added_notifier_set_default_properties ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gulong"><span class="returnvalue">gulong</span></a>
+fs_element_added_notifier_set_default_properties
+                               (<em class="parameter"><code><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *notifier</code></em>,
+                                <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);</pre>
+<p>Same as first calling <a class="link" href="farstream-libs-Utility-functions.html#fs-utils-get-default-element-properties" title="fs_utils_get_default_element_properties ()"><code class="function">fs_utils_get_default_element_properties()</code></a> and using
 the result with
-<a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-set-properties-from-keyfile" title="fs_element_added_notifier_set_properties_from_keyfile ()"><code class="function">fs_element_added_notifier_set_properties_from_keyfile()</code></a> .
-</p>
-<p>
-This is binding friendly (since GKeyFile doesn't have a boxed type).
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+<a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-set-properties-from-keyfile" title="fs_element_added_notifier_set_properties_from_keyfile ()"><code class="function">fs_element_added_notifier_set_properties_from_keyfile()</code></a> .</p>
+<p>This is binding friendly (since GKeyFile doesn't have a boxed type).</p>
+<div class="refsect3">
+<a name="id-1.2.4.2.9.7.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>notifier</code></em> :</span></p></td>
-<td>a <a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a>
-</td>
+<td class="parameter_name"><p>notifier</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a></p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
-<td>Element for which to set the default codec
-preferences</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The id of the signal connection, this can be used to disconnect
-this property setter using <code class="function">g_signal_handler_disconnect()</code>.</td>
+<td class="parameter_name"><p>element</p></td>
+<td class="parameter_description"><p>Element for which to set the default codec
+preferences</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.4.2.9.7.7"></a><h4>Returns</h4>
+<p> The id of the signal connection, this can be used to disconnect
+this property setter using <a href="https://developer.gnome.org/gobject/unstable/gobject-Signals.html#g-signal-handler-disconnect"><code class="function">g_signal_handler_disconnect()</code></a>.</p>
+<p></p>
+</div>
+</div>
+</div>
+<div class="refsect1">
+<a name="FsElementAddedNotifier.other_details"></a><h2>Types and Values</h2>
+<div class="refsect2">
+<a name="FsElementAddedNotifier-struct"></a><h3>struct FsElementAddedNotifier</h3>
+<pre class="programlisting">struct FsElementAddedNotifier;</pre>
+<p>All members are private</p>
 </div>
 </div>
 <div class="refsect1">
 <a name="FsElementAddedNotifier.signal-details"></a><h2>Signal Details</h2>
 <div class="refsect2">
-<a name="FsElementAddedNotifier-element-added"></a><h3>The <code class="literal">"element-added"</code> signal</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *self,
-                                                        <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a>                 *bin,
-                                                        <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a>             *element,
-                                                        <span class="type">gpointer</span>                user_data)      : <code class="literal">Run Last</code></pre>
-<p>
-This signal is emitted when an element is added to a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> that was added
+<a name="FsElementAddedNotifier-element-added"></a><h3>The <code class="literal">“element-added”</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+user_function (<a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> *self,
+               <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a>                 *bin,
+               <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a>             *element,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                user_data)</pre>
+<p>This signal is emitted when an element is added to a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> that was added
 to this object or one of its sub-bins.
 Be careful, there is no guarantee that this will be emitted on your
 main thread, it will be emitted in the thread that added the element.
-The bin may be <code class="literal">NULL</code> if this is the top-level bin.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+The bin may be <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if this is the top-level bin.</p>
+<div class="refsect3">
+<a name="id-1.2.4.2.11.2.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
-<td>
-<a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> that emitted the signal</td>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p><a class="link" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier"><span class="type">FsElementAddedNotifier</span></a> that emitted the signal</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>bin</code></em> :</span></p></td>
-<td>The <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> to which this object was added</td>
+<td class="parameter_name"><p>bin</p></td>
+<td class="parameter_description"><p>The <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a> to which this object was added</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
-<td>The <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> that was added</td>
+<td class="parameter_name"><p>element</p></td>
+<td class="parameter_description"><p>The <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> that was added</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
-<td>user data set when the signal handler was connected.</td>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
+</div>
+<p>Flags: Run Last</p>
 </div>
 </div>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.19</div>
+          Generated by GTK-Doc V1.21</div>
 </body>
 </html>

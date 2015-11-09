@@ -31,6 +31,7 @@ fs_stream_set_transmitter_ht
 fs_stream_add_remote_candidates
 fs_stream_set_remote_codecs
 fs_stream_force_remote_candidates
+fs_stream_set_decryption_parameters
 fs_stream_destroy
 fs_stream_iterate_src_pads
 fs_stream_add_id
@@ -65,6 +66,8 @@ fs_session_set_send_codec
 fs_session_list_transmitters
 fs_session_get_stream_transmitter_type
 fs_session_codecs_need_resend
+fs_session_set_allowed_caps
+fs_session_set_encryption_parameters
 fs_session_emit_error
 fs_session_parse_codecs_changed
 fs_session_parse_send_codec_changed
@@ -182,7 +185,6 @@ fs_transmitter_new
 fs_transmitter_new_stream_transmitter
 fs_transmitter_get_stream_transmitter_type
 fs_transmitter_emit_error
-fs_transmitter_get_recvonly_filter
 fs_transmitter_list_available
 <SUBSECTION Standard>
 FS_IS_TRANSMITTER

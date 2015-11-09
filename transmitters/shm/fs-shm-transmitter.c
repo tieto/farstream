@@ -809,17 +809,12 @@ fs_shm_transmitter_get_shm_sink (FsShmTransmitter *self,
 
   /* Second add the recvonly filter */
 
-  elem = fs_transmitter_get_recvonly_filter (FS_TRANSMITTER (self), component);
-
+  elem = gst_element_factory_make ("valve", NULL);
   if (!elem)
   {
-    elem = gst_element_factory_make ("valve", NULL);
-    if (!elem)
-    {
-      g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
+    g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
         "Could not make valve");
-      goto error;
-    }
+    goto error;
   }
 
   if (!gst_bin_add (GST_BIN (self->priv->gst_sink), elem))
@@ -934,8 +929,6 @@ fs_shm_transmitter_sink_set_sending (FsShmTransmitter *self, ShmSink *shm,
 
   if (g_object_class_find_property (klass, "drop"))
     g_object_set (shm->recvonly_filter, "drop", !sending, NULL);
-  else if (g_object_class_find_property (klass, "sending"))
-    g_object_set (shm->recvonly_filter, "sending", sending, NULL);
 
   if (sending)
     gst_element_send_event (shm->sink,

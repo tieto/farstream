@@ -1,0 +1,55 @@
+<plugin>
+  <name>fsrtpxdata</name>
+  <description>Farstream Microsoft Lync x-data RTP plugin</description>
+  <filename>../../gst/fsrtpxdata/.libs/libfsrtpxdata.so</filename>
+  <basename>libfsrtpxdata.so</basename>
+  <version>0.2.4.1</version>
+  <license>LGPL</license>
+  <source>farstream</source>
+  <package>Farstream</package>
+  <origin>http://www.freedesktop.org/wiki/Software/Farstream</origin>
+  <elements>
+    <element>
+      <name>fsrtpxdatadepay</name>
+      <longname>RTP Depayloader for Microsoft Lync x-data</longname>
+      <class>Codec/Depayloader/Network/RTP</class>
+      <description>Extracts data from Microsoft Lync RTP x-data packets</description>
+      <author>Olivier Crete &lt;olivier.crete@collabora.com&gt;</author>
+      <pads>
+        <caps>
+          <name>sink</name>
+          <direction>sink</direction>
+          <presence>always</presence>
+          <details>application/x-rtp, media=(string)application, encoding-name=(string)X-DATA</details>
+        </caps>
+        <caps>
+          <name>src</name>
+          <direction>source</direction>
+          <presence>always</presence>
+          <details>ANY</details>
+        </caps>
+      </pads>
+    </element>
+    <element>
+      <name>fsrtpxdatapay</name>
+      <longname>RTP Payloader for Microsoft Lync x-data</longname>
+      <class>Codec/Payloader/Network/RTP</class>
+      <description>Packetize Microsoft Lync x-data streams into RTP packets</description>
+      <author>Olivier Crete &lt;olivier.crete@collabora.com&gt;</author>
+      <pads>
+        <caps>
+          <name>sink</name>
+          <direction>sink</direction>
+          <presence>always</presence>
+          <details>ANY</details>
+        </caps>
+        <caps>
+          <name>src</name>
+          <direction>source</direction>
+          <presence>always</presence>
+          <details>application/x-rtp, media=(string)application, payload=(int)[ 96, 127 ], clock-rate=(int)90000, encoding-name=(string)X-DATA</details>
+        </caps>
+      </pads>
+    </element>
+  </elements>
+</plugin>

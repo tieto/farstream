@@ -62,7 +62,8 @@ SCANOBJ_DEPS = \
 	$(top_builddir)/gst/fsrtpconference/libfsrtpconference_doc.la \
 	$(top_builddir)/gst/fsmsnconference/libfsmsnconference_doc.la \
 	$(top_builddir)/gst/fsrawconference/libfsrawconference_doc.la \
-	$(top_builddir)/gst/fsvideoanyrate/libfsvideoanyrate.la 
+	$(top_builddir)/gst/fsvideoanyrate/libfsvideoanyrate.la \
+	$(top_builddir)/gst/fsrtpxdata/libfsrtpxdata.la
 
 # Header files to ignore when scanning.
 IGNORE_HFILES = 
@@ -78,6 +79,8 @@ IGNORE_CFILES =
 
 EXTRA_HFILES = \
 	$(top_srcdir)/gst/fsvideoanyrate/videoanyrate.h \
+	$(top_srcdir)/gst/fsrtpxdata/fsrtpxdatapay.h \
+	$(top_srcdir)/gst/fsrtpxdata/fsrtpxdatadepay.h \
 	$(top_srcdir)/gst/fsrtpconference/fs-rtp-conference.h \
 	$(top_srcdir)/gst/fsrtpconference/fs-rtp-session.h \
 	$(top_srcdir)/gst/fsrtpconference/fs-rtp-stream.h \

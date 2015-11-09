@@ -104,6 +104,7 @@ typedef struct _FsStreamPrivate FsStreamPrivate;
  * @set_remote_codecs: Sets the list of remote codecs
  * @add_id: Add a known id to be associated with this stream
  * @set_transmitter: Set the transmitter to use for this stream
+ * @set_decryption_parameters: Set decryption parameters
  *
  * You must override add_remote_candidate in a subclass.
  * If you have to negotiate codecs, then you must override set_remote_codecs too
@@ -134,8 +135,11 @@ struct _FsStreamClass
       guint stream_transmitter_n_parameters,
       GError **error);
 
+  gboolean (* set_decryption_parameters) (FsStream *stream,
+      GstStructure *parameters, GError **error);
+
   /*< private >*/
-  gpointer _padding[8];
+  gpointer _padding[7];
 };
 
 /**
@@ -189,6 +193,9 @@ gboolean fs_stream_set_transmitter_ht (FsStream *stream,
     const gchar *transmitter,
     GHashTable *stream_transmitter_parameters,
     GError **error);
+
+gboolean fs_stream_set_decryption_parameters (FsStream *stream,
+    GstStructure *parameters, GError **error);
 
 void fs_stream_destroy (FsStream *stream);
 

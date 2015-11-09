@@ -2,36 +2,29 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>FsSession</title>
+<title>Farstream Reference Manual: FsSession</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="Farstream Reference Manual">
 <link rel="up" href="ch01.html" title="Farstream Core Library">
 <link rel="prev" href="FsParticipant.html" title="FsParticipant">
 <link rel="next" href="FsStream.html" title="FsStream">
-<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
-<tr valign="middle">
-<td><a accesskey="p" href="FsParticipant.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
-<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
-<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">Farstream Reference Manual</th>
-<td><a accesskey="n" href="FsStream.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
-</tr>
-<tr><td colspan="5" class="shortcuts">
-<a href="#FsSession.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#FsSession.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#FsSession.object-hierarchy" class="shortcut">Object Hierarchy</a>
-                   | 
-                  <a href="#FsSession.properties" class="shortcut">Properties</a>
-                   | 
-                  <a href="#FsSession.signals" class="shortcut">Signals</a>
-</td></tr>
-</table>
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#FsSession.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
+                  <a href="#FsSession.object-hierarchy" class="shortcut">Object Hierarchy</a></span><span id="nav_properties">  <span class="dim">|</span> 
+                  <a href="#FsSession.properties" class="shortcut">Properties</a></span><span id="nav_signals">  <span class="dim">|</span> 
+                  <a href="#FsSession.signals" class="shortcut">Signals</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="FsParticipant.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="FsStream.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
 <div class="refentry">
 <a name="FsSession"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
@@ -39,104 +32,294 @@
 <h2><span class="refentrytitle"><a name="FsSession.top_of_page"></a>FsSession</span></h2>
 <p>FsSession — A session in a conference</p>
 </td>
-<td valign="top" align="right"></td>
+<td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
-<div class="refsynopsisdiv">
-<a name="FsSession.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">
-#include &lt;farstream/fs-conference.h&gt;
-
-                    <a class="link" href="FsSession.html#FsSession-struct" title="FsSession">FsSession</a>;
-struct              <a class="link" href="FsSession.html#FsSessionClass" title="struct FsSessionClass">FsSessionClass</a>;
-enum                <a class="link" href="FsSession.html#FsDTMFEvent" title="enum FsDTMFEvent">FsDTMFEvent</a>;
-enum                <a class="link" href="FsSession.html#FsDTMFMethod" title="enum FsDTMFMethod">FsDTMFMethod</a>;
-<a class="link" href="FsStream.html" title="FsStream"><span class="returnvalue">FsStream</span></a> *          <a class="link" href="FsSession.html#fs-session-new-stream" title="fs_session_new_stream ()">fs_session_new_stream</a>               (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a> *participant</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="FsStream.html#FsStreamDirection" title="enum FsStreamDirection"><span class="type">FsStreamDirection</span></a> direction</code></em>,
-                                                         <em class="parameter"><code><span class="type">GError</span> **error</code></em>);
-<span class="returnvalue">gboolean</span>            <a class="link" href="FsSession.html#fs-session-set-codec-preferences" title="fs_session_set_codec_preferences ()">fs_session_set_codec_preferences</a>    (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><span class="type">GList</span> *codec_preferences</code></em>,
-                                                         <em class="parameter"><code><span class="type">GError</span> **error</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="FsSession.html#fs-session-destroy" title="fs_session_destroy ()">fs_session_destroy</a>                  (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>);
-<span class="returnvalue">gboolean</span>            <a class="link" href="FsSession.html#fs-session-start-telephony-event" title="fs_session_start_telephony_event ()">fs_session_start_telephony_event</a>    (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><span class="type">guint8</span> event</code></em>,
-                                                         <em class="parameter"><code><span class="type">guint8</span> volume</code></em>);
-<span class="returnvalue">gboolean</span>            <a class="link" href="FsSession.html#fs-session-stop-telephony-event" title="fs_session_stop_telephony_event ()">fs_session_stop_telephony_event</a>     (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>);
-<span class="returnvalue">gboolean</span>            <a class="link" href="FsSession.html#fs-session-set-send-codec" title="fs_session_set_send_codec ()">fs_session_set_send_codec</a>           (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> *send_codec</code></em>,
-                                                         <em class="parameter"><code><span class="type">GError</span> **error</code></em>);
-<span class="returnvalue">gchar</span> **            <a class="link" href="FsSession.html#fs-session-list-transmitters" title="fs_session_list_transmitters ()">fs_session_list_transmitters</a>        (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>);
-<span class="returnvalue">GType</span>               <a class="link" href="FsSession.html#fs-session-get-stream-transmitter-type" title="fs_session_get_stream_transmitter_type ()">fs_session_get_stream_transmitter_type</a>
-                                                        (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code>const <span class="type">gchar</span> *transmitter</code></em>);
-<span class="returnvalue">GList</span> *             <a class="link" href="FsSession.html#fs-session-codecs-need-resend" title="fs_session_codecs_need_resend ()">fs_session_codecs_need_resend</a>       (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><span class="type">GList</span> *old_codecs</code></em>,
-                                                         <em class="parameter"><code><span class="type">GList</span> *new_codecs</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="FsSession.html#fs-session-emit-error" title="fs_session_emit_error ()">fs_session_emit_error</a>               (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><span class="type">gint</span> error_no</code></em>,
-                                                         <em class="parameter"><code>const <span class="type">gchar</span> *error_msg</code></em>);
-<span class="returnvalue">gboolean</span>            <a class="link" href="FsSession.html#fs-session-parse-codecs-changed" title="fs_session_parse_codecs_changed ()">fs_session_parse_codecs_changed</a>     (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>);
-<span class="returnvalue">gboolean</span>            <a class="link" href="FsSession.html#fs-session-parse-send-codec-changed" title="fs_session_parse_send_codec_changed ()">fs_session_parse_send_codec_changed</a> (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> **codec</code></em>,
-                                                         <em class="parameter"><code><span class="type">GList</span> **secondary_codecs</code></em>);
-<span class="returnvalue">gboolean</span>            <a class="link" href="FsSession.html#fs-session-parse-telephony-event-started" title="fs_session_parse_telephony_event_started ()">fs_session_parse_telephony_event_started</a>
-                                                        (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="FsSession.html#FsDTMFMethod" title="enum FsDTMFMethod"><span class="type">FsDTMFMethod</span></a> *method</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="FsSession.html#FsDTMFEvent" title="enum FsDTMFEvent"><span class="type">FsDTMFEvent</span></a> *event</code></em>,
-                                                         <em class="parameter"><code><span class="type">guint8</span> *volume</code></em>);
-<span class="returnvalue">gboolean</span>            <a class="link" href="FsSession.html#fs-session-parse-telephony-event-stopped" title="fs_session_parse_telephony_event_stopped ()">fs_session_parse_telephony_event_stopped</a>
-                                                        (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="FsSession.html#FsDTMFMethod" title="enum FsDTMFMethod"><span class="type">FsDTMFMethod</span></a> *method</code></em>);
-</pre>
-</div>
 <div class="refsect1">
-<a name="FsSession.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="synopsis">
-  GObject
-   +----FsSession
-</pre>
+<a name="FsSession.functions"></a><h2>Functions</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="functions_return">
+<col class="functions_name">
+</colgroup>
+<tbody>
+<tr>
+<td class="function_type">
+<a class="link" href="FsStream.html" title="FsStream"><span class="returnvalue">FsStream</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="FsSession.html#fs-session-new-stream" title="fs_session_new_stream ()">fs_session_new_stream</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="FsSession.html#fs-session-set-codec-preferences" title="fs_session_set_codec_preferences ()">fs_session_set_codec_preferences</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="FsSession.html#fs-session-destroy" title="fs_session_destroy ()">fs_session_destroy</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="FsSession.html#fs-session-start-telephony-event" title="fs_session_start_telephony_event ()">fs_session_start_telephony_event</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="FsSession.html#fs-session-stop-telephony-event" title="fs_session_stop_telephony_event ()">fs_session_stop_telephony_event</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="FsSession.html#fs-session-set-send-codec" title="fs_session_set_send_codec ()">fs_session_set_send_codec</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **
+</td>
+<td class="function_name">
+<a class="link" href="FsSession.html#fs-session-list-transmitters" title="fs_session_list_transmitters ()">fs_session_list_transmitters</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="FsSession.html#fs-session-get-stream-transmitter-type" title="fs_session_get_stream_transmitter_type ()">fs_session_get_stream_transmitter_type</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="FsSession.html#fs-session-codecs-need-resend" title="fs_session_codecs_need_resend ()">fs_session_codecs_need_resend</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="FsSession.html#fs-session-set-allowed-caps" title="fs_session_set_allowed_caps ()">fs_session_set_allowed_caps</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="FsSession.html#fs-session-set-encryption-parameters" title="fs_session_set_encryption_parameters ()">fs_session_set_encryption_parameters</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="FsSession.html#fs-session-emit-error" title="fs_session_emit_error ()">fs_session_emit_error</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="FsSession.html#fs-session-parse-codecs-changed" title="fs_session_parse_codecs_changed ()">fs_session_parse_codecs_changed</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="FsSession.html#fs-session-parse-send-codec-changed" title="fs_session_parse_send_codec_changed ()">fs_session_parse_send_codec_changed</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="FsSession.html#fs-session-parse-telephony-event-started" title="fs_session_parse_telephony_event_started ()">fs_session_parse_telephony_event_started</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="FsSession.html#fs-session-parse-telephony-event-stopped" title="fs_session_parse_telephony_event_stopped ()">fs_session_parse_telephony_event_stopped</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <div class="refsect1">
 <a name="FsSession.properties"></a><h2>Properties</h2>
-<pre class="synopsis">
-  "<a class="link" href="FsSession.html#FsSession--codec-preferences" title='The "codec-preferences" property'>codec-preferences</a>"        <span class="type">FsCodecGList</span>*         : Read
-  "<a class="link" href="FsSession.html#FsSession--codecs" title='The "codecs" property'>codecs</a>"                   <span class="type">FsCodecGList</span>*         : Read
-  "<a class="link" href="FsSession.html#FsSession--codecs-without-config" title='The "codecs-without-config" property'>codecs-without-config</a>"    <span class="type">FsCodecGList</span>*         : Read
-  "<a class="link" href="FsSession.html#FsSession--conference" title='The "conference" property'>conference</a>"               <a class="link" href="FsConference.html" title="FsConference"><span class="type">FsConference</span></a>*         : Read / Write / Construct Only
-  "<a class="link" href="FsSession.html#FsSession--current-send-codec" title='The "current-send-codec" property'>current-send-codec</a>"       <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a>*              : Read
-  "<a class="link" href="FsSession.html#FsSession--id" title='The "id" property'>id</a>"                       <span class="type">guint</span>                 : Read / Write / Construct Only
-  "<a class="link" href="FsSession.html#FsSession--media-type" title='The "media-type" property'>media-type</a>"               <a class="link" href="farstream-libs-FsCodec.html#FsMediaType" title="enum FsMediaType"><span class="type">FsMediaType</span></a>           : Read / Write / Construct Only
-  "<a class="link" href="FsSession.html#FsSession--sink-pad" title='The "sink-pad" property'>sink-pad</a>"                 <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a>*               : Read
-  "<a class="link" href="FsSession.html#FsSession--tos" title='The "tos" property'>tos</a>"                      <span class="type">guint</span>                 : Read / Write
-</pre>
+<div class="informaltable"><table border="0">
+<colgroup>
+<col width="150px" class="properties_type">
+<col width="300px" class="properties_name">
+<col width="200px" class="properties_flags">
+</colgroup>
+<tbody>
+<tr>
+<td class="property_type">
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a> *</td>
+<td class="property_name"><a class="link" href="FsSession.html#FsSession--allowed-sink-caps" title="The “allowed-sink-caps” property">allowed-sink-caps</a></td>
+<td class="property_flags">Read</td>
+</tr>
+<tr>
+<td class="property_type">
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a> *</td>
+<td class="property_name"><a class="link" href="FsSession.html#FsSession--allowed-src-caps" title="The “allowed-src-caps” property">allowed-src-caps</a></td>
+<td class="property_flags">Read</td>
+</tr>
+<tr>
+<td class="property_type">
+<span class="type">FsCodecGList</span> *</td>
+<td class="property_name"><a class="link" href="FsSession.html#FsSession--codec-preferences" title="The “codec-preferences” property">codec-preferences</a></td>
+<td class="property_flags">Read</td>
+</tr>
+<tr>
+<td class="property_type">
+<span class="type">FsCodecGList</span> *</td>
+<td class="property_name"><a class="link" href="FsSession.html#FsSession--codecs" title="The “codecs” property">codecs</a></td>
+<td class="property_flags">Read</td>
+</tr>
+<tr>
+<td class="property_type">
+<span class="type">FsCodecGList</span> *</td>
+<td class="property_name"><a class="link" href="FsSession.html#FsSession--codecs-without-config" title="The “codecs-without-config” property">codecs-without-config</a></td>
+<td class="property_flags">Read</td>
+</tr>
+<tr>
+<td class="property_type">
+<a class="link" href="FsConference.html" title="FsConference"><span class="type">FsConference</span></a> *</td>
+<td class="property_name"><a class="link" href="FsSession.html#FsSession--conference" title="The “conference” property">conference</a></td>
+<td class="property_flags">Read / Write / Construct Only</td>
+</tr>
+<tr>
+<td class="property_type">
+<a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> *</td>
+<td class="property_name"><a class="link" href="FsSession.html#FsSession--current-send-codec" title="The “current-send-codec” property">current-send-codec</a></td>
+<td class="property_flags">Read</td>
+</tr>
+<tr>
+<td class="property_type">
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstStructure.html"><span class="type">GstStructure</span></a> *</td>
+<td class="property_name"><a class="link" href="FsSession.html#FsSession--encryption-parameters" title="The “encryption-parameters” property">encryption-parameters</a></td>
+<td class="property_flags">Read</td>
+</tr>
+<tr>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a></td>
+<td class="property_name"><a class="link" href="FsSession.html#FsSession--id" title="The “id” property">id</a></td>
+<td class="property_flags">Read / Write / Construct Only</td>
+</tr>
+<tr>
+<td class="property_type"><a class="link" href="farstream-libs-FsCodec.html#FsMediaType" title="enum FsMediaType"><span class="type">FsMediaType</span></a></td>
+<td class="property_name"><a class="link" href="FsSession.html#FsSession--media-type" title="The “media-type” property">media-type</a></td>
+<td class="property_flags">Read / Write / Construct Only</td>
+</tr>
+<tr>
+<td class="property_type">
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a> *</td>
+<td class="property_name"><a class="link" href="FsSession.html#FsSession--sink-pad" title="The “sink-pad” property">sink-pad</a></td>
+<td class="property_flags">Read</td>
+</tr>
+<tr>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a></td>
+<td class="property_name"><a class="link" href="FsSession.html#FsSession--tos" title="The “tos” property">tos</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <div class="refsect1">
 <a name="FsSession.signals"></a><h2>Signals</h2>
-<pre class="synopsis">
-  "<a class="link" href="FsSession.html#FsSession-error" title='The "error" signal'>error</a>"                                          : <code class="literal">Run Last</code>
+<div class="informaltable"><table border="0">
+<colgroup>
+<col width="150px" class="signals_return">
+<col width="300px" class="signals_name">
+<col width="200px" class="signals_flags">
+</colgroup>
+<tbody><tr>
+<td class="signal_type"><span class="returnvalue">void</span></td>
+<td class="signal_name"><a class="link" href="FsSession.html#FsSession-error" title="The “error” signal">error</a></td>
+<td class="signal_flags">Run Last</td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="FsSession.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="name">
+<col class="description">
+</colgroup>
+<tbody>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="FsSession.html#FsSession-struct" title="struct FsSession">FsSession</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="FsSession.html#FsSessionClass" title="struct FsSessionClass">FsSessionClass</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="FsSession.html#FsDTMFEvent" title="enum FsDTMFEvent">FsDTMFEvent</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="FsSession.html#FsDTMFMethod" title="enum FsDTMFMethod">FsDTMFMethod</a></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="FsSession.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> FsSession
+</pre>
+</div>
+<div class="refsect1">
+<a name="FsSession.includes"></a><h2>Includes</h2>
+<pre class="synopsis">#include &lt;farstream/fs-conference.h&gt;
 </pre>
 </div>
 <div class="refsect1">
 <a name="FsSession.description"></a><h2>Description</h2>
-<p>
-This object is the base implementation of a Farstream Session. It needs to be
+<p>This object is the base implementation of a Farstream Session. It needs to be
 derived and implemented by a farstream conference gstreamer element. A
 Farstream session is defined in the same way as an RTP session. It can contain
 one or more participants but represents only one media stream (i.e. One
 session for video and one session for audio in an AV conference). Sessions
 contained in the same conference will be synchronised together during
-playback.
-</p>
-<p>
-This will communicate asynchronous events to the user through <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a>
-of type <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html#GST-MESSAGE-ELEMENT:CAPS"><span class="type">GST_MESSAGE_ELEMENT</span></a> sent over the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBus.html"><span class="type">GstBus</span></a>.
-</p>
+playback.</p>
+<p>This will communicate asynchronous events to the user through <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a>
+of type <span class="type">GST_MESSAGE_ELEMENT</span> sent over the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBus.html"><span class="type">GstBus</span></a>.</p>
 <div class="refsect2">
-<a name="id-1.2.2.4.7.4"></a><h3>The "<code class="literal">farstream-send-codec-changed</code>"
+<a name="id-1.2.2.4.9.4"></a><h3>The "<code class="literal">farstream-send-codec-changed</code>"
   message</h3>
 <div class="table"><table>
 <tr>
@@ -151,19 +334,19 @@ of type <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstrea
  </tr>
 <tr>
   <td><code class="code">"secondary-codecs"</code></td>
-  <td><span class="type">GList</span></td>
-  <td>A <span class="type">GList</span> of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> (to be freed with <a class="link" href="farstream-libs-FsCodec.html#fs-codec-list-destroy" title="fs_codec_list_destroy ()"><code class="function">fs_codec_list_destroy()</code></a>)
+  <td><a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a></td>
+  <td>A <a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> (to be freed with <a class="link" href="farstream-libs-FsCodec.html#fs-codec-list-destroy" title="fs_codec_list_destroy ()"><code class="function">fs_codec_list_destroy()</code></a>)
   </td>
  </tr>
 </table></div>
 <p>
 This message is sent on the bus when the value of the
-<a class="link" href="FsSession.html#FsSession--current-send-codec" title='The "current-send-codec" property'><span class="type">"current-send-codec"</span></a> property changes.
+<a class="link" href="FsSession.html#FsSession--current-send-codec" title="The “current-send-codec” property"><span class="type">“current-send-codec”</span></a> property changes.
 </p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.2.4.7.5"></a><h3>The "<code class="literal">farstream-codecs-changed</code>"
+<a name="id-1.2.2.4.9.5"></a><h3>The "<code class="literal">farstream-codecs-changed</code>"
  message</h3>
 <div class="table"><table><tr>
   <td><code class="code">"session"</code></td>
@@ -172,15 +355,15 @@ This message is sent on the bus when the value of the
  </tr></table></div>
 <p>
 This message is sent on the bus when the value of the
-<a class="link" href="FsSession.html#FsSession--codecs" title='The "codecs" property'><span class="type">"codecs"</span></a> or <a class="link" href="FsSession.html#FsSession--codecs-without-config" title='The "codecs-without-config" property'><span class="type">"codecs-without-config"</span></a> properties change.
+<a class="link" href="FsSession.html#FsSession--codecs" title="The “codecs” property"><span class="type">“codecs”</span></a> or <a class="link" href="FsSession.html#FsSession--codecs-without-config" title="The “codecs-without-config” property"><span class="type">“codecs-without-config”</span></a> properties change.
 If one is using codecs that have configuration data that needs to be
-transmitted reliably, one should fetch <a class="link" href="FsSession.html#FsSession--codecs" title='The "codecs" property'><span class="type">"codecs"</span></a>, otherwise,
-<a class="link" href="FsSession.html#FsSession--codecs-without-config" title='The "codecs-without-config" property'><span class="type">"codecs-without-config"</span></a> should be enough.
+transmitted reliably, one should fetch <a class="link" href="FsSession.html#FsSession--codecs" title="The “codecs” property"><span class="type">“codecs”</span></a>, otherwise,
+<a class="link" href="FsSession.html#FsSession--codecs-without-config" title="The “codecs-without-config” property"><span class="type">“codecs-without-config”</span></a> should be enough.
 </p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.2.4.7.6"></a><h3>The "<code class="literal">farstream-telephony-event-started</code>"
+<a name="id-1.2.2.4.9.6"></a><h3>The "<code class="literal">farstream-telephony-event-started</code>"
  message</h3>
 <div class="table"><table>
 <tr>
@@ -206,13 +389,13 @@ transmitted reliably, one should fetch <a class="link" href="FsSession.html#FsSe
 </table></div>
 <p>
 This message is emitted after a succesful call to
-<a class="link" href="FsSession.html#fs-session-start-telephony-event" title="fs_session_start_telephony_event ()"><code class="function">fs_session_start_telephony_event()</code></a> to inform the application that the
+<a class="link" href="FsSession.html#fs-session-start-telephony-event" title="fs_session_start_telephony_event ()"><code class="function">fs_session_start_telephony_event()</code></a> to inform the application that the
 telephony event has started.
 </p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.2.4.7.7"></a><h3>The "<code class="literal">farstream-telephony-event-stopped</code>"
+<a name="id-1.2.2.4.9.7"></a><h3>The "<code class="literal">farstream-telephony-event-stopped</code>"
  message</h3>
 <div class="table"><table>
 <tr>
@@ -228,21 +411,717 @@ telephony event has started.
 </table></div>
 <p>
 This message is emitted after a succesful call to
-<a class="link" href="FsSession.html#fs-session-stop-telephony-event" title="fs_session_stop_telephony_event ()"><code class="function">fs_session_stop_telephony_event()</code></a> to inform the application that the
+<a class="link" href="FsSession.html#fs-session-stop-telephony-event" title="fs_session_stop_telephony_event ()"><code class="function">fs_session_stop_telephony_event()</code></a> to inform the application that the
 telephony event has stopped.
 </p>
 </div>
-<p>
-</p>
 </div>
 <div class="refsect1">
-<a name="FsSession.details"></a><h2>Details</h2>
+<a name="FsSession.functions_details"></a><h2>Functions</h2>
 <div class="refsect2">
-<a name="FsSession-struct"></a><h3>FsSession</h3>
-<pre class="programlisting">typedef struct _FsSession FsSession;</pre>
-<p>
-All members are private, access them using methods and properties
-</p>
+<a name="fs-session-new-stream"></a><h3>fs_session_new_stream ()</h3>
+<pre class="programlisting"><a class="link" href="FsStream.html" title="FsStream"><span class="returnvalue">FsStream</span></a> *
+fs_session_new_stream (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
+                       <em class="parameter"><code><a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a> *participant</code></em>,
+                       <em class="parameter"><code><a class="link" href="FsStream.html#FsStreamDirection" title="enum FsStreamDirection"><span class="type">FsStreamDirection</span></a> direction</code></em>,
+                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
+<p>This function creates a stream for the given participant into the active session.</p>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.2.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>session</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>participant</p></td>
+<td class="parameter_description"><p><a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a> of a participant for the new stream</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>direction</p></td>
+<td class="parameter_description"><p><a class="link" href="FsStream.html#FsStreamDirection" title="enum FsStreamDirection"><span class="type">FsStreamDirection</span></a> describing the direction of the new stream that will
+be created for this participant</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>error</p></td>
+<td class="parameter_description"><p>location of a <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if no error occured</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.2.6"></a><h4>Returns</h4>
+<p> the new <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> that has been created.
+User must unref the <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> when the stream is ended. If an error occured,
+returns NULL. </p>
+<p><span class="annotation">[<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>]</span></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-session-set-codec-preferences"></a><h3>fs_session_set_codec_preferences ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+fs_session_set_codec_preferences (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
+                                  <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *codec_preferences</code></em>,
+                                  <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
+<p>Set the list of desired codec preferences. The user may
+change this value during an ongoing session. Note that doing this can cause
+the codecs to change. Therefore this requires the user to fetch
+the new codecs and renegotiate them with the peers. It is a <a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a>
+of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a>. The changes are immediately effective.
+The function does not take ownership of the list.</p>
+<p>The payload type may be a valid dynamic PT (96-127), <a class="link" href="farstream-libs-FsCodec.html#FS-CODEC-ID-DISABLE:CAPS" title="FS_CODEC_ID_DISABLE"><code class="literal">FS_CODEC_ID_DISABLE</code></a>
+or <a class="link" href="farstream-libs-FsCodec.html#FS-CODEC-ID-ANY:CAPS" title="FS_CODEC_ID_ANY"><code class="literal">FS_CODEC_ID_ANY</code></a>. If the encoding name is "reserve-pt", then the
+payload type of the codec will be "reserved" and not be used by any
+dynamically assigned payload type.</p>
+<p>If the list of specifications would invalidate all codecs, an error will
+be returned.</p>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.3.7"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>session</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>codec_preferences</p></td>
+<td class="parameter_description"><p> a <a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> with the
+desired configuration. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec][<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>error</p></td>
+<td class="parameter_description"><p>location of a <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if no error occured</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.3.8"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> on error.</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-session-destroy"></a><h3>fs_session_destroy ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+fs_session_destroy (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>);</pre>
+<p>This will cause the session to remove all links to other objects and to
+remove itself from the <a class="link" href="FsConference.html" title="FsConference"><span class="type">FsConference</span></a>, it will also destroy all <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a>
+inside this <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> Once a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> has been destroyed, it
+can not be used anymore.</p>
+<p>It is strongly recommended to call this function from the main thread because
+releasing the application's reference to a session.</p>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.4.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>session</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-session-start-telephony-event"></a><h3>fs_session_start_telephony_event ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+fs_session_start_telephony_event (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
+                                  <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint8"><span class="type">guint8</span></a> event</code></em>,
+                                  <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint8"><span class="type">guint8</span></a> volume</code></em>);</pre>
+<p>This function will start sending a telephony event (such as a DTMF
+tone) on the <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>. You have to call the function
+<a class="link" href="FsSession.html#fs-session-stop-telephony-event" title="fs_session_stop_telephony_event ()"><code class="function">fs_session_stop_telephony_event()</code></a> to stop it.</p>
+<p>If this function returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, a "farstream-telephony-event-started" will
+always be emitted when the event is actually played out.</p>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.5.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>session</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>event</p></td>
+<td class="parameter_description"><p>A <span class="type">FsStreamDTMFEvent</span> or another number defined at
+http://www.iana.org/assignments/audio-telephone-event-registry</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>volume</p></td>
+<td class="parameter_description"><p>The volume in dBm0 without the negative sign. Should be between
+0 and 36. Higher values mean lower volume</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.5.7"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if sucessful, it can return <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if the <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a>
+does not support this telephony event.</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-session-stop-telephony-event"></a><h3>fs_session_stop_telephony_event ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+fs_session_stop_telephony_event (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>);</pre>
+<p>This function will stop sending a telephony event started by
+<a class="link" href="FsSession.html#fs-session-start-telephony-event" title="fs_session_start_telephony_event ()"><code class="function">fs_session_start_telephony_event()</code></a>. If the event was being sent
+for less than 50ms, it will be sent for 50ms minimum. If the
+duration was a positive and the event is not over, it will cut it
+short.</p>
+<p>If this function returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, a "farstream-telephony-event-stopped" will
+always be emitted when the event is actually stopped.</p>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.6.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>session</p></td>
+<td class="parameter_description"><p>an <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.6.7"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if sucessful, it can return <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if the <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>
+does not support telephony events or if no telephony event is being sent</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-session-set-send-codec"></a><h3>fs_session_set_send_codec ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+fs_session_set_send_codec (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
+                           <em class="parameter"><code><a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> *send_codec</code></em>,
+                           <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
+<p>This function will set the currently being sent codec for all streams in this
+session. The given <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> must be taken directly from the <span class="type">codecs</span>
+property of the session. If the given codec is not in the codecs
+list, <em class="parameter"><code>error</code></em>
+ will be set and <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> will be returned. The <em class="parameter"><code>send_codec</code></em>
+ will be
+copied so it must be free'd using <a class="link" href="farstream-libs-FsCodec.html#fs-codec-destroy" title="fs_codec_destroy ()"><code class="function">fs_codec_destroy()</code></a> when done.</p>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.7.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>session</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>send_codec</p></td>
+<td class="parameter_description"><p>a <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> representing the codec to send</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>error</p></td>
+<td class="parameter_description"><p>location of a <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if no error occured</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.7.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if the send codec couldn't be set.</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-session-list-transmitters"></a><h3>fs_session_list_transmitters ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **
+fs_session_list_transmitters (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>);</pre>
+<p>Get the list of all available transmitters for this session.</p>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.8.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>session</p></td>
+<td class="parameter_description"><p>A <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.8.6"></a><h4>Returns</h4>
+<p> a newly-allocagted <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> terminated array of
+named of transmitters or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if no transmitter is needed for this type of
+session. It should be freed with <a href="https://developer.gnome.org/glib/unstable/glib-String-Utility-Functions.html#g-strfreev"><code class="function">g_strfreev()</code></a>. </p>
+<p><span class="annotation">[<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>]</span></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-session-get-stream-transmitter-type"></a><h3>fs_session_get_stream_transmitter_type ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>
+fs_session_get_stream_transmitter_type
+                               (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
+                                <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *transmitter</code></em>);</pre>
+<p>Returns the GType of the stream transmitter, bindings can use it
+to validate/convert the parameters passed to <a class="link" href="FsSession.html#fs-session-new-stream" title="fs_session_new_stream ()"><code class="function">fs_session_new_stream()</code></a>.</p>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.9.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>session</p></td>
+<td class="parameter_description"><p>A <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>transmitter</p></td>
+<td class="parameter_description"><p>The name of the transmitter</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.9.6"></a><h4>Returns</h4>
+<p> The <a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> of the stream transmitter</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-session-codecs-need-resend"></a><h3>fs_session_codecs_need_resend ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
+fs_session_codecs_need_resend (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
+                               <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *old_codecs</code></em>,
+                               <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *new_codecs</code></em>);</pre>
+<p>Some codec updates need to be reliably transmitted to the other side
+because they contain important parameters required to decode the media.
+Other codec updates, caused by user action, don't.</p>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.10.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>session</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>old_codecs</p></td>
+<td class="parameter_description"><p> Codecs previously retrieved from the <a class="link" href="FsSession.html#FsSession--codecs" title="The “codecs” property"><span class="type">“codecs”</span></a> property. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>new_codecs</p></td>
+<td class="parameter_description"><p>  Codecs recently retrieved from the <a class="link" href="FsSession.html#FsSession--codecs" title="The “codecs” property"><span class="type">“codecs”</span></a> property. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.10.6"></a><h4>Returns</h4>
+<p> A new <a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of
+<a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> that need to be resent or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if there are none. This
+list must be freed with <a class="link" href="farstream-libs-FsCodec.html#fs-codec-list-destroy" title="fs_codec_list_destroy ()"><code class="function">fs_codec_list_destroy()</code></a>. </p>
+<p><span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec][<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>]</span></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-session-set-allowed-caps"></a><h3>fs_session_set_allowed_caps ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+fs_session_set_allowed_caps (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
+                             <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a> *sink_caps</code></em>,
+                             <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a> *src_caps</code></em>,
+                             <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
+<p>Sets the allowed caps for the sink and source pads for this <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>.
+Only codecs that can take the input specified by the <em class="parameter"><code>sink_caps</code></em>
+ and
+can produce output as specified by the <em class="parameter"><code>src_caps</code></em>
+ will be produced
+in the <a class="link" href="FsSession.html#FsSession--codecs" title="The “codecs” property"><span class="type">“codecs”</span></a> property and so only those will be negotiated.</p>
+<p>If <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> is passed to either <em class="parameter"><code>src_caps</code></em>
+ or <em class="parameter"><code>sink_caps</code></em>
+, it is not changed.</p>
+<p>The default is "video/x-raw" for a video stream, "audio/x-raw" for an audio
+stream and "ANY" for an application stream.</p>
+<p>The values can be retrived using the <a class="link" href="FsSession.html#FsSession--allowed-src-caps" title="The “allowed-src-caps” property"><span class="type">“allowed-src-caps”</span></a> and
+<a class="link" href="FsSession.html#FsSession--allowed-sink-caps" title="The “allowed-sink-caps” property"><span class="type">“allowed-sink-caps”</span></a> properties.</p>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.11.8"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>session</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>sink_caps</p></td>
+<td class="parameter_description"><p> Caps for the sink pad or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>src_caps</p></td>
+<td class="parameter_description"><p> Caps for the src pad or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>error</p></td>
+<td class="parameter_description"><p>the location where a <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> can be stored or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.11.9"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the new filter caps were acceptable.</p>
+<p></p>
+</div>
+<p class="since">Since UNRELEASED</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-session-set-encryption-parameters"></a><h3>fs_session_set_encryption_parameters ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+fs_session_set_encryption_parameters (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
+                                      <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstStructure.html"><span class="type">GstStructure</span></a> *parameters</code></em>,
+                                      <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
+<p>Sets encryption parameters. The exact parameters depend on the type of
+plugin being used.</p>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.12.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>session</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>parameters</p></td>
+<td class="parameter_description"><p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstStructure.html"><span class="type">GstStructure</span></a> containing the
+encryption  parameters or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> to disable encryption. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>error</p></td>
+<td class="parameter_description"><p>the location where to store a <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.12.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the encryption parameters could be set, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
+<p></p>
+</div>
+<p class="since">Since UNRELEASED</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-session-emit-error"></a><h3>fs_session_emit_error ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+fs_session_emit_error (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
+                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> error_no</code></em>,
+                       <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *error_msg</code></em>);</pre>
+<p>This function emit the "error" signal on a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>, it should only be
+called by subclasses.</p>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.13.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>session</p></td>
+<td class="parameter_description"><p><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> on which to emit the error signal</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>error_no</p></td>
+<td class="parameter_description"><p>The number of the error of type <a class="link" href="FsConference.html#FsError" title="enum FsError"><span class="type">FsError</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>error_msg</p></td>
+<td class="parameter_description"><p>Error message</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-session-parse-codecs-changed"></a><h3>fs_session_parse_codecs_changed ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+fs_session_parse_codecs_changed (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
+                                 <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>);</pre>
+<p>Parses a "farstream-codecs-changed" message and checks if it matches
+the <em class="parameter"><code>session</code></em>
+ parameters.</p>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.14.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>session</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> to match against the message</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>message</p></td>
+<td class="parameter_description"><p>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.14.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the message matches the session and is valid.</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-session-parse-send-codec-changed"></a><h3>fs_session_parse_send_codec_changed ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+fs_session_parse_send_codec_changed (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
+                                     <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
+                                     <em class="parameter"><code><a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> **codec</code></em>,
+                                     <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> **secondary_codecs</code></em>);</pre>
+<p>Parses a "farstream-send-codec-changed" message and checks if it matches
+the <em class="parameter"><code>session</code></em>
+ parameters.</p>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.15.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>session</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> to match against the message</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>message</p></td>
+<td class="parameter_description"><p>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>codec</p></td>
+<td class="parameter_description"><p> Returns the <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> in the message if not
+<a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>secondary_codecs</p></td>
+<td class="parameter_description"><p> Returns a <a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> of the message if not <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.15.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the message matches the session and is valid.</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-session-parse-telephony-event-started"></a><h3>fs_session_parse_telephony_event_started ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+fs_session_parse_telephony_event_started
+                               (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
+                                <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
+                                <em class="parameter"><code><a class="link" href="FsSession.html#FsDTMFMethod" title="enum FsDTMFMethod"><span class="type">FsDTMFMethod</span></a> *method</code></em>,
+                                <em class="parameter"><code><a class="link" href="FsSession.html#FsDTMFEvent" title="enum FsDTMFEvent"><span class="type">FsDTMFEvent</span></a> *event</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint8"><span class="type">guint8</span></a> *volume</code></em>);</pre>
+<p>Parses a "farstream-telephony-event-started" message and checks if it matches
+the <em class="parameter"><code>session</code></em>
+ parameters.</p>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.16.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>session</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> to match against the message</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>message</p></td>
+<td class="parameter_description"><p>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>method</p></td>
+<td class="parameter_description"><p> Returns the <a class="link" href="FsSession.html#FsDTMFMethod" title="enum FsDTMFMethod"><span class="type">FsDTMFMethod</span></a> in the message if not <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>event</p></td>
+<td class="parameter_description"><p> Returns the <a class="link" href="FsSession.html#FsDTMFEvent" title="enum FsDTMFEvent"><span class="type">FsDTMFEvent</span></a> in the message if not <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>volume</p></td>
+<td class="parameter_description"><p> Returns the volume in the message if not <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.16.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the message matches the session and is valid.</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-session-parse-telephony-event-stopped"></a><h3>fs_session_parse_telephony_event_stopped ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+fs_session_parse_telephony_event_stopped
+                               (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
+                                <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
+                                <em class="parameter"><code><a class="link" href="FsSession.html#FsDTMFMethod" title="enum FsDTMFMethod"><span class="type">FsDTMFMethod</span></a> *method</code></em>);</pre>
+<p>Parses a "farstream-telephony-event-stopped" message and checks if it matches
+the <em class="parameter"><code>session</code></em>
+ parameters.</p>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.17.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>session</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> to match against the message</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>message</p></td>
+<td class="parameter_description"><p>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>method</p></td>
+<td class="parameter_description"><p> Returns the <a class="link" href="FsSession.html#FsDTMFMethod" title="enum FsDTMFMethod"><span class="type">FsDTMFMethod</span></a> in the message if not <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.4.10.17.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the message matches the session and is valid.</p>
+<p></p>
+</div>
+</div>
+</div>
+<div class="refsect1">
+<a name="FsSession.other_details"></a><h2>Types and Values</h2>
+<div class="refsect2">
+<a name="FsSession-struct"></a><h3>struct FsSession</h3>
+<pre class="programlisting">struct FsSession;</pre>
+<p>All members are private, access them using methods and properties</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -273,797 +1152,234 @@ All members are private, access them using methods and properties
 
   GList* (* codecs_need_resend) (FsSession *session, GList *old_codecs,
       GList *new_codecs);
+
+  gboolean (* set_allowed_caps) (FsSession *session, GstCaps *sink_caps,
+      GstCaps *src_caps, GError **error);
+
+  gboolean (* set_encryption_parameters) (FsSession *session,
+      GstStructure *parameters, GError **error);
 };
 </pre>
-<p>
-You must override at least new_stream in a subclass.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+<p>You must override at least new_stream in a subclass.</p>
+<div class="refsect3">
+<a name="id-1.2.2.4.11.3.5"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><span class="term"><span class="type">GObjectClass</span> <em class="structfield"><code><a name="FsSessionClass.parent-class"></a>parent_class</code></em>;</span></p></td>
-<td>Our parent</td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObjectClass"><span class="type">GObjectClass</span></a> <em class="structfield"><code><a name="FsSessionClass.parent-class"></a>parent_class</code></em>;</p></td>
+<td class="struct_member_description"><p>Our parent</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="structfield"><code><a name="FsSessionClass.new-stream"></a>new_stream</code></em> ()</span></p></td>
-<td>Create a new <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a>
-</td>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="FsSessionClass.new-stream"></a>new_stream</code></em> ()</p></td>
+<td class="struct_member_description"><p>Create a new <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a></p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="structfield"><code><a name="FsSessionClass.start-telephony-event"></a>start_telephony_event</code></em> ()</span></p></td>
-<td>Starts a telephony event</td>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="FsSessionClass.start-telephony-event"></a>start_telephony_event</code></em> ()</p></td>
+<td class="struct_member_description"><p>Starts a telephony event</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="structfield"><code><a name="FsSessionClass.stop-telephony-event"></a>stop_telephony_event</code></em> ()</span></p></td>
-<td>Stops a telephony event</td>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="FsSessionClass.stop-telephony-event"></a>stop_telephony_event</code></em> ()</p></td>
+<td class="struct_member_description"><p>Stops a telephony event</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="structfield"><code><a name="FsSessionClass.set-send-codec"></a>set_send_codec</code></em> ()</span></p></td>
-<td>Forces sending with a specific codec</td>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="FsSessionClass.set-send-codec"></a>set_send_codec</code></em> ()</p></td>
+<td class="struct_member_description"><p>Forces sending with a specific codec</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="structfield"><code><a name="FsSessionClass.set-codec-preferences"></a>set_codec_preferences</code></em> ()</span></p></td>
-<td>Specifies the codec preferences</td>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="FsSessionClass.set-codec-preferences"></a>set_codec_preferences</code></em> ()</p></td>
+<td class="struct_member_description"><p>Specifies the codec preferences</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="structfield"><code><a name="FsSessionClass.list-transmitters"></a>list_transmitters</code></em> ()</span></p></td>
-<td>Returns a list of the available transmitters</td>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="FsSessionClass.list-transmitters"></a>list_transmitters</code></em> ()</p></td>
+<td class="struct_member_description"><p>Returns a list of the available transmitters</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="structfield"><code><a name="FsSessionClass.get-stream-transmitter-type"></a>get_stream_transmitter_type</code></em> ()</span></p></td>
-<td>Returns the GType of the stream transmitter</td>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="FsSessionClass.get-stream-transmitter-type"></a>get_stream_transmitter_type</code></em> ()</p></td>
+<td class="struct_member_description"><p>Returns the GType of the stream transmitter</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="structfield"><code><a name="FsSessionClass.codecs-need-resend"></a>codecs_need_resend</code></em> ()</span></p></td>
-<td>Returns the list of codecs that need resending</td>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="FsSessionClass.codecs-need-resend"></a>codecs_need_resend</code></em> ()</p></td>
+<td class="struct_member_description"><p>Returns the list of codecs that need resending</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="FsSessionClass.set-allowed-caps"></a>set_allowed_caps</code></em> ()</p></td>
+<td class="struct_member_description"><p>Set the possible allowed src and sink caps</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="FsSessionClass.set-encryption-parameters"></a>set_encryption_parameters</code></em> ()</p></td>
+<td class="struct_member_description"><p>Set encryption parameters</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
+</div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="FsDTMFEvent"></a><h3>enum FsDTMFEvent</h3>
-<pre class="programlisting">typedef enum {
-} FsDTMFEvent;
-</pre>
-<p>
-An enum that represents the different DTMF event that can be sent to a
+<p>An enum that represents the different DTMF event that can be sent to a
 <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>. The values corresponds those those defined in RFC 4733
 The rest of the possibles values are in the IANA registry at:
-http://www.iana.org/assignments/audio-telephone-event-registry
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+http://www.iana.org/assignments/audio-telephone-event-registry</p>
+<div class="refsect3">
+<a name="id-1.2.2.4.11.4.4"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
 </colgroup>
 <tbody></tbody>
 </table></div>
 </div>
+</div>
 <hr>
 <div class="refsect2">
 <a name="FsDTMFMethod"></a><h3>enum FsDTMFMethod</h3>
-<pre class="programlisting">typedef enum {
-  FS_DTMF_METHOD_RTP_RFC4733 = 1,
-  FS_DTMF_METHOD_SOUND = 2
-} FsDTMFMethod;
-</pre>
-<p>
-An enum that represents the different ways a DTMF event can be sent
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+<p>An enum that represents the different ways a DTMF event can be sent</p>
+<div class="refsect3">
+<a name="id-1.2.2.4.11.5.4"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><a name="FS-DTMF-METHOD-RTP-RFC4733:CAPS"></a><span class="term"><code class="literal">FS_DTMF_METHOD_RTP_RFC4733</code></span></p></td>
-<td>Send as a special payload type defined by RFC 4733
-(which obsoletes RFC 2833)
+<td class="enum_member_name"><p><a name="FS-DTMF-METHOD-RTP-RFC4733:CAPS"></a>FS_DTMF_METHOD_RTP_RFC4733</p></td>
+<td class="enum_member_description">
+<p>Send as a special payload type defined by RFC 4733
+(which obsoletes RFC 2833)</p>
 </td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><a name="FS-DTMF-METHOD-SOUND:CAPS"></a><span class="term"><code class="literal">FS_DTMF_METHOD_SOUND</code></span></p></td>
-<td>Send as tones as in-band audio sound
+<td class="enum_member_name"><p><a name="FS-DTMF-METHOD-SOUND:CAPS"></a>FS_DTMF_METHOD_SOUND</p></td>
+<td class="enum_member_description">
+<p>Send as tones as in-band audio sound</p>
 </td>
+<td class="enum_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
-<hr>
-<div class="refsect2">
-<a name="fs-session-new-stream"></a><h3>fs_session_new_stream ()</h3>
-<pre class="programlisting"><a class="link" href="FsStream.html" title="FsStream"><span class="returnvalue">FsStream</span></a> *          fs_session_new_stream               (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a> *participant</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="FsStream.html#FsStreamDirection" title="enum FsStreamDirection"><span class="type">FsStreamDirection</span></a> direction</code></em>,
-                                                         <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
-<p>
-This function creates a stream for the given participant into the active session.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
-<td>a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>participant</code></em> :</span></p></td>
-<td>
-<a class="link" href="FsParticipant.html" title="FsParticipant"><span class="type">FsParticipant</span></a> of a participant for the new stream</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>direction</code></em> :</span></p></td>
-<td>
-<a class="link" href="FsStream.html#FsStreamDirection" title="enum FsStreamDirection"><span class="type">FsStreamDirection</span></a> describing the direction of the new stream that will
-be created for this participant</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td>location of a <span class="type">GError</span>, or <code class="literal">NULL</code> if no error occured</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the new <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> that has been created.
-User must unref the <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> when the stream is ended. If an error occured,
-returns NULL. <span class="annotation">[<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>]</span>
-</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-session-set-codec-preferences"></a><h3>fs_session_set_codec_preferences ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_session_set_codec_preferences    (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><span class="type">GList</span> *codec_preferences</code></em>,
-                                                         <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
-<p>
-Set the list of desired codec preferences. The user may
-change this value during an ongoing session. Note that doing this can cause
-the codecs to change. Therefore this requires the user to fetch
-the new codecs and renegotiate them with the peers. It is a <span class="type">GList</span>
-of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a>. The changes are immediately effective.
-The function does not take ownership of the list.
-</p>
-<p>
-The payload type may be a valid dynamic PT (96-127), <a class="link" href="farstream-libs-FsCodec.html#FS-CODEC-ID-DISABLE:CAPS" title="FS_CODEC_ID_DISABLE"><code class="literal">FS_CODEC_ID_DISABLE</code></a>
-or <a class="link" href="farstream-libs-FsCodec.html#FS-CODEC-ID-ANY:CAPS" title="FS_CODEC_ID_ANY"><code class="literal">FS_CODEC_ID_ANY</code></a>. If the encoding name is "reserve-pt", then the
-payload type of the codec will be "reserved" and not be used by any
-dynamically assigned payload type.
-</p>
-<p>
-If the list of specifications would invalidate all codecs, an error will
-be returned.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
-<td>a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>codec_preferences</code></em> :</span></p></td>
-<td>a <span class="type">GList</span> of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> with the
-desired configuration. <span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec][<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td>location of a <span class="type">GError</span>, or <code class="literal">NULL</code> if no error occured</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
-<code class="literal">TRUE</code> on success, <code class="literal">FALSE</code> on error.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-session-destroy"></a><h3>fs_session_destroy ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                fs_session_destroy                  (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>);</pre>
-<p>
-This will cause the session to remove all links to other objects and to
-remove itself from the <a class="link" href="FsConference.html" title="FsConference"><span class="type">FsConference</span></a>, it will also destroy all <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a>
-inside this <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> Once a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> has been destroyed, it
-can not be used anymore.
-</p>
-<p>
-It is strongly recommended to call this function from the main thread because
-releasing the application's reference to a session.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody><tr>
-<td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
-<td>a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>
-</td>
-</tr></tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-session-start-telephony-event"></a><h3>fs_session_start_telephony_event ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_session_start_telephony_event    (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><span class="type">guint8</span> event</code></em>,
-                                                         <em class="parameter"><code><span class="type">guint8</span> volume</code></em>);</pre>
-<p>
-This function will start sending a telephony event (such as a DTMF
-tone) on the <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>. You have to call the function
-<a class="link" href="FsSession.html#fs-session-stop-telephony-event" title="fs_session_stop_telephony_event ()"><code class="function">fs_session_stop_telephony_event()</code></a> to stop it.
-</p>
-<p>
-If this function returns <code class="literal">TRUE</code>, a "farstream-telephony-event-started" will
-always be emitted when the event is actually played out.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
-<td>a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
-<td>A <span class="type">FsStreamDTMFEvent</span> or another number defined at
-http://www.iana.org/assignments/audio-telephone-event-registry</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>volume</code></em> :</span></p></td>
-<td>The volume in dBm0 without the negative sign. Should be between
-0 and 36. Higher values mean lower volume</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
-<code class="literal">TRUE</code> if sucessful, it can return <code class="literal">FALSE</code> if the <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a>
-does not support this telephony event.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-session-stop-telephony-event"></a><h3>fs_session_stop_telephony_event ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_session_stop_telephony_event     (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>);</pre>
-<p>
-This function will stop sending a telephony event started by
-<a class="link" href="FsSession.html#fs-session-start-telephony-event" title="fs_session_start_telephony_event ()"><code class="function">fs_session_start_telephony_event()</code></a>. If the event was being sent
-for less than 50ms, it will be sent for 50ms minimum. If the
-duration was a positive and the event is not over, it will cut it
-short.
-</p>
-<p>
-If this function returns <code class="literal">TRUE</code>, a "farstream-telephony-event-stopped" will
-always be emitted when the event is actually stopped.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
-<td>an <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
-<code class="literal">TRUE</code> if sucessful, it can return <code class="literal">FALSE</code> if the <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>
-does not support telephony events or if no telephony event is being sent</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-session-set-send-codec"></a><h3>fs_session_set_send_codec ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_session_set_send_codec           (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> *send_codec</code></em>,
-                                                         <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
-<p>
-This function will set the currently being sent codec for all streams in this
-session. The given <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> must be taken directly from the <span class="type">codecs</span>
-property of the session. If the given codec is not in the codecs
-list, <em class="parameter"><code>error</code></em> will be set and <code class="literal">FALSE</code> will be returned. The <em class="parameter"><code>send_codec</code></em> will be
-copied so it must be free'd using <a class="link" href="farstream-libs-FsCodec.html#fs-codec-destroy" title="fs_codec_destroy ()"><code class="function">fs_codec_destroy()</code></a> when done.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
-<td>a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>send_codec</code></em> :</span></p></td>
-<td>a <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> representing the codec to send</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td>location of a <span class="type">GError</span>, or <code class="literal">NULL</code> if no error occured</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
-<code class="literal">FALSE</code> if the send codec couldn't be set.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-session-list-transmitters"></a><h3>fs_session_list_transmitters ()</h3>
-<pre class="programlisting"><span class="returnvalue">gchar</span> **            fs_session_list_transmitters        (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>);</pre>
-<p>
-Get the list of all available transmitters for this session.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
-<td>A <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a newly-allocagted <code class="literal">NULL</code> terminated array of
-named of transmitters or <code class="literal">NULL</code> if no transmitter is needed for this type of
-session. It should be freed with <code class="function">g_strfreev()</code>. <span class="annotation">[<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>]</span>
-</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-session-get-stream-transmitter-type"></a><h3>fs_session_get_stream_transmitter_type ()</h3>
-<pre class="programlisting"><span class="returnvalue">GType</span>               fs_session_get_stream_transmitter_type
-                                                        (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code>const <span class="type">gchar</span> *transmitter</code></em>);</pre>
-<p>
-Returns the GType of the stream transmitter, bindings can use it
-to validate/convert the parameters passed to <a class="link" href="FsSession.html#fs-session-new-stream" title="fs_session_new_stream ()"><code class="function">fs_session_new_stream()</code></a>.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
-<td>A <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>transmitter</code></em> :</span></p></td>
-<td>The name of the transmitter</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The <span class="type">GType</span> of the stream transmitter</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-session-codecs-need-resend"></a><h3>fs_session_codecs_need_resend ()</h3>
-<pre class="programlisting"><span class="returnvalue">GList</span> *             fs_session_codecs_need_resend       (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><span class="type">GList</span> *old_codecs</code></em>,
-                                                         <em class="parameter"><code><span class="type">GList</span> *new_codecs</code></em>);</pre>
-<p>
-Some codec updates need to be reliably transmitted to the other side
-because they contain important parameters required to decode the media.
-Other codec updates, caused by user action, don't.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
-<td>a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>old_codecs</code></em> :</span></p></td>
-<td>Codecs previously retrieved from the <a class="link" href="FsSession.html#FsSession--codecs" title='The "codecs" property'><span class="type">"codecs"</span></a> property. <span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>new_codecs</code></em> :</span></p></td>
-<td>Codecs recently retrieved from the <a class="link" href="FsSession.html#FsSession--codecs" title='The "codecs" property'><span class="type">"codecs"</span></a> property. <span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][<a href="http://foldoc.org/allow-none"><span class="acronym">allow-none</span></a>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>A new <span class="type">GList</span> of
-<a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> that need to be resent or <code class="literal">NULL</code> if there are none. This
-list must be freed with <a class="link" href="farstream-libs-FsCodec.html#fs-codec-list-destroy" title="fs_codec_list_destroy ()"><code class="function">fs_codec_list_destroy()</code></a>. <span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec][<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>]</span>
-</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-session-emit-error"></a><h3>fs_session_emit_error ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                fs_session_emit_error               (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><span class="type">gint</span> error_no</code></em>,
-                                                         <em class="parameter"><code>const <span class="type">gchar</span> *error_msg</code></em>);</pre>
-<p>
-This function emit the "error" signal on a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>, it should only be
-called by subclasses.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
-<td>
-<a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> on which to emit the error signal</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>error_no</code></em> :</span></p></td>
-<td>The number of the error of type <a class="link" href="FsConference.html#FsError" title="enum FsError"><span class="type">FsError</span></a>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>error_msg</code></em> :</span></p></td>
-<td>Error message</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-session-parse-codecs-changed"></a><h3>fs_session_parse_codecs_changed ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_session_parse_codecs_changed     (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>);</pre>
-<p>
-Parses a "farstream-codecs-changed" message and checks if it matches
-the <em class="parameter"><code>session</code></em> parameters.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
-<td>a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> to match against the message</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>message</code></em> :</span></p></td>
-<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
-<code class="literal">TRUE</code> if the message matches the session and is valid.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-session-parse-send-codec-changed"></a><h3>fs_session_parse_send_codec_changed ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_session_parse_send_codec_changed (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> **codec</code></em>,
-                                                         <em class="parameter"><code><span class="type">GList</span> **secondary_codecs</code></em>);</pre>
-<p>
-Returns a <span class="type">GList</span> of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> of the message if not <code class="literal">NULL</code>
-</p>
-<p>
-Parses a "farstream-send-codec-changed" message and checks if it matches
-the <em class="parameter"><code>session</code></em> parameters.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
-<td>a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> to match against the message</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>message</code></em> :</span></p></td>
-<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>codec</code></em> :</span></p></td>
-<td>Returns the <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> in the message if not
-<code class="literal">NULL</code>. <span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>secondary_codecs</code></em> :</span></p></td>
-<td>. <span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
-<code class="literal">TRUE</code> if the message matches the session and is valid.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-session-parse-telephony-event-started"></a><h3>fs_session_parse_telephony_event_started ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_session_parse_telephony_event_started
-                                                        (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="FsSession.html#FsDTMFMethod" title="enum FsDTMFMethod"><span class="type">FsDTMFMethod</span></a> *method</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="FsSession.html#FsDTMFEvent" title="enum FsDTMFEvent"><span class="type">FsDTMFEvent</span></a> *event</code></em>,
-                                                         <em class="parameter"><code><span class="type">guint8</span> *volume</code></em>);</pre>
-<p>
-Parses a "farstream-telephony-event-started" message and checks if it matches
-the <em class="parameter"><code>session</code></em> parameters.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
-<td>a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> to match against the message</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>message</code></em> :</span></p></td>
-<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>method</code></em> :</span></p></td>
-<td>Returns the <a class="link" href="FsSession.html#FsDTMFMethod" title="enum FsDTMFMethod"><span class="type">FsDTMFMethod</span></a> in the message if not <code class="literal">NULL</code>. <span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
-<td>Returns the <a class="link" href="FsSession.html#FsDTMFEvent" title="enum FsDTMFEvent"><span class="type">FsDTMFEvent</span></a> in the message if not <code class="literal">NULL</code>. <span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>volume</code></em> :</span></p></td>
-<td>Returns the volume in the message if not <code class="literal">NULL</code>. <span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
-<code class="literal">TRUE</code> if the message matches the session and is valid.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-session-parse-telephony-event-stopped"></a><h3>fs_session_parse_telephony_event_stopped ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_session_parse_telephony_event_stopped
-                                                        (<em class="parameter"><code><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *session</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="FsSession.html#FsDTMFMethod" title="enum FsDTMFMethod"><span class="type">FsDTMFMethod</span></a> *method</code></em>);</pre>
-<p>
-Parses a "farstream-telephony-event-stopped" message and checks if it matches
-the <em class="parameter"><code>session</code></em> parameters.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>session</code></em> :</span></p></td>
-<td>a <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> to match against the message</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>message</code></em> :</span></p></td>
-<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>method</code></em> :</span></p></td>
-<td>Returns the <a class="link" href="FsSession.html#FsDTMFMethod" title="enum FsDTMFMethod"><span class="type">FsDTMFMethod</span></a> in the message if not <code class="literal">NULL</code>. <span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
-<code class="literal">TRUE</code> if the message matches the session and is valid.</td>
-</tr>
-</tbody>
-</table></div>
 </div>
 </div>
 <div class="refsect1">
 <a name="FsSession.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
-<a name="FsSession--codec-preferences"></a><h3>The <code class="literal">"codec-preferences"</code> property</h3>
-<pre class="programlisting">  "codec-preferences"        <span class="type">FsCodecGList</span>*         : Read</pre>
-<p>
-This is the current preferences list for the local codecs. It is
-set by the user to specify the codec options and priorities. The user may
-change its value with <a class="link" href="FsSession.html#fs-session-set-codec-preferences" title="fs_session_set_codec_preferences ()"><code class="function">fs_session_set_codec_preferences()</code></a> at any time
-during a session. It is a <span class="type">GList</span> of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a>.
-The user must free this codec list using <a class="link" href="farstream-libs-FsCodec.html#fs-codec-list-destroy" title="fs_codec_list_destroy ()"><code class="function">fs_codec_list_destroy()</code></a> when done.
-</p>
-<p>
-The payload type may be a valid dynamic PT (96-127), <a class="link" href="farstream-libs-FsCodec.html#FS-CODEC-ID-DISABLE:CAPS" title="FS_CODEC_ID_DISABLE"><code class="literal">FS_CODEC_ID_DISABLE</code></a>
-or <a class="link" href="farstream-libs-FsCodec.html#FS-CODEC-ID-ANY:CAPS" title="FS_CODEC_ID_ANY"><code class="literal">FS_CODEC_ID_ANY</code></a>. If the encoding name is "reserve-pt", then the
-payload type of the codec will be "reserved" and not be used by any
-dynamically assigned payload type.
-</p>
-<p>
-Type: GLib.List(FsCodec)
-Transfer: full
-</p>
+<a name="FsSession--allowed-sink-caps"></a><h3>The <code class="literal">“allowed-sink-caps”</code> property</h3>
+<pre class="programlisting">  “allowed-sink-caps”        <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a> *</pre>
+<p>These are the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a> that can be fed into the session,
+they are used to filter the codecs to only those that can
+accepted those caps as input.</p>
+<p>Flags: Read</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="FsSession--codecs"></a><h3>The <code class="literal">"codecs"</code> property</h3>
-<pre class="programlisting">  "codecs"                   <span class="type">FsCodecGList</span>*         : Read</pre>
-<p>
-This is the list of codecs used for this session. It will include the
-codecs and payload type used to receive media on this session. It will
-also include any configuration parameter that must be transmitted reliably
-for the other end to decode the content.
-</p>
-<p>
-It may change when the codec preferences are set, when codecs are set
-on a <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> in this session, when a <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> is destroyed or
-asynchronously when new config data is discovered.
-</p>
-<p>
-If any configuration parameter needs to be discovered, this property
-will be <code class="literal">NULL</code> until they have been discovered. One can always get
-the codecs from <a class="link" href="FsSession.html#FsSession--codecs-without-config" title='The "codecs-without-config" property'><span class="type">"codecs-without-config"</span></a>.
-The "farstream-codecs-changed" message will be emitted whenever the value
-of this property changes.
-</p>
-<p>
-It is a <span class="type">GList</span> of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a>. User must free this codec list using
-<a class="link" href="farstream-libs-FsCodec.html#fs-codec-list-destroy" title="fs_codec_list_destroy ()"><code class="function">fs_codec_list_destroy()</code></a> when done.
-</p>
-<p>
-Type: GLib.List(FsCodec)
-Transfer: full
-</p>
+<a name="FsSession--allowed-src-caps"></a><h3>The <code class="literal">“allowed-src-caps”</code> property</h3>
+<pre class="programlisting">  “allowed-src-caps”         <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a> *</pre>
+<p>These are the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a> that the session can produce,
+they are used to filter the codecs to only those that can
+accepted those caps as output.</p>
+<p>Flags: Read</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="FsSession--codecs-without-config"></a><h3>The <code class="literal">"codecs-without-config"</code> property</h3>
-<pre class="programlisting">  "codecs-without-config"    <span class="type">FsCodecGList</span>*         : Read</pre>
-<p>
-This is the same list of codecs as <a class="link" href="FsSession.html#FsSession--codecs" title='The "codecs" property'><span class="type">"codecs"</span></a> without
-the configuration information that describes the data sent. It is suitable
-for configurations where a list of codecs is shared by many senders.
-If one is using codecs such as Theora, Vorbis or H.264 that require
-such information to be transmitted, the configuration data should be
-included in the stream and retransmitted regularly.
-</p>
-<p>
-It may change when the codec preferences are set, when codecs are set
-on a <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> in this session, when a <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> is destroyed or
-asynchronously when new config data is discovered.
-</p>
-<p>
-The "farstream-codecs-changed" message will be emitted whenever the value
-of this property changes.
-</p>
-<p>
-It is a <span class="type">GList</span> of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a>. User must free this codec list using
-<a class="link" href="farstream-libs-FsCodec.html#fs-codec-list-destroy" title="fs_codec_list_destroy ()"><code class="function">fs_codec_list_destroy()</code></a> when done.
-</p>
-<p>
-Type: GLib.List(FsCodec)
-Transfer: full
-</p>
+<a name="FsSession--codec-preferences"></a><h3>The <code class="literal">“codec-preferences”</code> property</h3>
+<pre class="programlisting">  “codec-preferences”        <span class="type">FsCodecGList</span> *</pre>
+<p>A GList of FsCodecs that allows user to set his codec options and priorities.</p>
+<p>Flags: Read</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="FsSession--conference"></a><h3>The <code class="literal">"conference"</code> property</h3>
-<pre class="programlisting">  "conference"               <a class="link" href="FsConference.html" title="FsConference"><span class="type">FsConference</span></a>*         : Read / Write / Construct Only</pre>
-<p>
-The <a class="link" href="FsConference.html" title="FsConference"><span class="type">FsConference</span></a> parent of this session. This property is a
-construct param and is read-only.
-</p>
+<a name="FsSession--codecs"></a><h3>The <code class="literal">“codecs”</code> property</h3>
+<pre class="programlisting">  “codecs”                   <span class="type">FsCodecGList</span> *</pre>
+<p>A GList of FsCodecs indicating the codecs for this session.</p>
+<p>Flags: Read</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="FsSession--current-send-codec"></a><h3>The <code class="literal">"current-send-codec"</code> property</h3>
-<pre class="programlisting">  "current-send-codec"       <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a>*              : Read</pre>
-<p>
-Indicates the currently active send codec. A user can change the active
-send codec by calling <a class="link" href="FsSession.html#fs-session-set-send-codec" title="fs_session_set_send_codec ()"><code class="function">fs_session_set_send_codec()</code></a>. The send codec could
+<a name="FsSession--codecs-without-config"></a><h3>The <code class="literal">“codecs-without-config”</code> property</h3>
+<pre class="programlisting">  “codecs-without-config”    <span class="type">FsCodecGList</span> *</pre>
+<p>A GList of FsCodecs indicating the codecs for this session without any configuration data.</p>
+<p>Flags: Read</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="FsSession--conference"></a><h3>The <code class="literal">“conference”</code> property</h3>
+<pre class="programlisting">  “conference”               <a class="link" href="FsConference.html" title="FsConference"><span class="type">FsConference</span></a> *</pre>
+<p>The <a class="link" href="FsConference.html" title="FsConference"><span class="type">FsConference</span></a> parent of this session. This property is a
+construct param and is read-only.</p>
+<p>Flags: Read / Write / Construct Only</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="FsSession--current-send-codec"></a><h3>The <code class="literal">“current-send-codec”</code> property</h3>
+<pre class="programlisting">  “current-send-codec”       <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> *</pre>
+<p>Indicates the currently active send codec. A user can change the active
+send codec by calling <a class="link" href="FsSession.html#fs-session-set-send-codec" title="fs_session_set_send_codec ()"><code class="function">fs_session_set_send_codec()</code></a>. The send codec could
 also be automatically changed by Farstream. This property is an
-<a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a>. User must free the codec using <a class="link" href="farstream-libs-FsCodec.html#fs-codec-destroy" title="fs_codec_destroy ()"><code class="function">fs_codec_destroy()</code></a> when done.
+<a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a>. User must free the codec using <a class="link" href="farstream-libs-FsCodec.html#fs-codec-destroy" title="fs_codec_destroy ()"><code class="function">fs_codec_destroy()</code></a> when done.
 The "farstream-send-codec-changed" message is emitted on the bus when
-the value of this property changes.
-</p>
+the value of this property changes.</p>
+<p>Flags: Read</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="FsSession--id"></a><h3>The <code class="literal">"id"</code> property</h3>
-<pre class="programlisting">  "id"                       <span class="type">guint</span>                 : Read / Write / Construct Only</pre>
-<p>
-The ID of the session, the first number of the pads linked to this session
-will be this id
-</p>
+<a name="FsSession--encryption-parameters"></a><h3>The <code class="literal">“encryption-parameters”</code> property</h3>
+<pre class="programlisting">  “encryption-parameters”    <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstStructure.html"><span class="type">GstStructure</span></a> *</pre>
+<p>Retrieves previously set encryption parameters</p>
+<p>Flags: Read</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="FsSession--id"></a><h3>The <code class="literal">“id”</code> property</h3>
+<pre class="programlisting">  “id”                       <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a></pre>
+<p>The ID of the session, the first number of the pads linked to this session
+will be this id</p>
+<p>Flags: Read / Write / Construct Only</p>
 <p>Default value: 0</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="FsSession--media-type"></a><h3>The <code class="literal">"media-type"</code> property</h3>
-<pre class="programlisting">  "media-type"               <a class="link" href="farstream-libs-FsCodec.html#FsMediaType" title="enum FsMediaType"><span class="type">FsMediaType</span></a>           : Read / Write / Construct Only</pre>
-<p>
-The media-type of the session. This is either Audio, Video or both.
-This is a constructor parameter that cannot be changed.
-</p>
+<a name="FsSession--media-type"></a><h3>The <code class="literal">“media-type”</code> property</h3>
+<pre class="programlisting">  “media-type”               <a class="link" href="farstream-libs-FsCodec.html#FsMediaType" title="enum FsMediaType"><span class="type">FsMediaType</span></a></pre>
+<p>The media-type of the session. This is either Audio, Video or both.
+This is a constructor parameter that cannot be changed.</p>
+<p>Flags: Read / Write / Construct Only</p>
 <p>Default value: FS_MEDIA_TYPE_AUDIO</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="FsSession--sink-pad"></a><h3>The <code class="literal">"sink-pad"</code> property</h3>
-<pre class="programlisting">  "sink-pad"                 <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a>*               : Read</pre>
-<p>
-The Gstreamer sink pad that must be used to send media data on this
-session. User must unref this GstPad when done with it.
-</p>
+<a name="FsSession--sink-pad"></a><h3>The <code class="literal">“sink-pad”</code> property</h3>
+<pre class="programlisting">  “sink-pad”                 <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a> *</pre>
+<p>The Gstreamer sink pad that must be used to send media data on this
+session. User must unref this GstPad when done with it.</p>
+<p>Flags: Read</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="FsSession--tos"></a><h3>The <code class="literal">"tos"</code> property</h3>
-<pre class="programlisting">  "tos"                      <span class="type">guint</span>                 : Read / Write</pre>
-<p>
-Sets the IP ToS field (and if possible the IPv6 TCLASS field
-</p>
+<a name="FsSession--tos"></a><h3>The <code class="literal">“tos”</code> property</h3>
+<pre class="programlisting">  “tos”                      <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a></pre>
+<p>Sets the IP ToS field (and if possible the IPv6 TCLASS field</p>
+<p>Flags: Read / Write</p>
 <p>Allowed values: &lt;= 255</p>
 <p>Default value: 0</p>
 </div>
@@ -1071,50 +1387,58 @@ Sets the IP ToS field (and if possible the IPv6 TCLASS field
 <div class="refsect1">
 <a name="FsSession.signal-details"></a><h2>Signal Details</h2>
 <div class="refsect2">
-<a name="FsSession-error"></a><h3>The <code class="literal">"error"</code> signal</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *self,
-                                                        <span class="type">GObject</span>   *object,
-                                                        <a class="link" href="FsConference.html#FsError" title="enum FsError"><span class="type">FsError</span></a>    error_no,
-                                                        <span class="type">gchar</span>     *error_msg,
-                                                        <span class="type">gpointer</span>   user_data)      : <code class="literal">Run Last</code></pre>
-<p>
-This signal is emitted in any error condition, it can be emitted on any
-thread. Applications should listen to the GstBus for errors.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+<a name="FsSession-error"></a><h3>The <code class="literal">“error”</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+user_function (<a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *self,
+               <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a>   *object,
+               <a class="link" href="FsConference.html#FsError" title="enum FsError"><span class="type">FsError</span></a>    error_no,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>     *error_msg,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>   user_data)</pre>
+<p>This signal is emitted in any error condition, it can be emitted on any
+thread. Applications should listen to the GstBus for errors.</p>
+<div class="refsect3">
+<a name="id-1.2.2.4.13.2.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
-<td>
-<a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> that emitted the signal</td>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p><a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> that emitted the signal</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
-<td>The <span class="type">Gobject</span> that emitted the signal</td>
+<td class="parameter_name"><p>object</p></td>
+<td class="parameter_description"><p>The <span class="type">Gobject</span> that emitted the signal</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>error_no</code></em> :</span></p></td>
-<td>The number of the error</td>
+<td class="parameter_name"><p>error_no</p></td>
+<td class="parameter_description"><p>The number of the error</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>error_msg</code></em> :</span></p></td>
-<td>Error message</td>
+<td class="parameter_name"><p>error_msg</p></td>
+<td class="parameter_description"><p>Error message</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
-<td>user data set when the signal handler was connected.</td>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
+</div>
+<p>Flags: Run Last</p>
 </div>
 </div>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.19</div>
+          Generated by GTK-Doc V1.21</div>
 </body>
 </html>

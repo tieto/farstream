@@ -29,6 +29,20 @@
  * This is the conjunction of a #FsRtpParticipant and a #FsRtpSession,
  * it is created by calling fs_session_new_stream() on a
  * #FsRtpSession.
+ *
+ * <refsect2><title>SRTP authentication & decryption</title>
+ * <para>
+ *
+ * To tell #FsRtpStream to authenticate and decrypt the media it is
+ * receiving using SRTP, one must set the parameters using a
+ * #GstStructure named "FarstreamSRTP" and pass it to
+ * fs_stream_set_decryption_parameters().
+ *
+ * The cipher, auth, and key must be specified, refer to the <link
+ * linkend="FarstreamSRTP">FsRtpSession
+ * documentation</link> for details.
+ *
+ * </para> </refsect2>
  */
 
 #ifdef HAVE_CONFIG_H
@@ -61,7 +75,9 @@ enum
   PROP_DIRECTION,
   PROP_PARTICIPANT,
   PROP_SESSION,
-  PROP_RTP_HEADER_EXTENSIONS
+  PROP_RTP_HEADER_EXTENSIONS,
+  PROP_DECRYPTION_PARAMETERS,
+  PROP_SEND_RTCP_MUX
 };
 
 struct _FsRtpStreamPrivate
@@ -70,13 +86,18 @@ struct _FsRtpStreamPrivate
   FsStreamTransmitter *stream_transmitter;
 
   FsStreamDirection direction;
+  gboolean send_rtcp_mux;
 
   stream_new_remote_codecs_cb new_remote_codecs_cb;
   stream_known_source_packet_receive_cb known_source_packet_received_cb;
   stream_sending_changed_locked_cb sending_changed_locked_cb;
   stream_ssrc_added_cb ssrc_added_cb;
   stream_get_new_stream_transmitter_cb get_new_stream_transmitter_cb;
+  stream_decrypt_clear_locked_cb decrypt_clear_locked_cb;
   gpointer user_data_for_cb;
+
+  /* protected by session lock */
+  GstStructure *decryption_parameters;
 
   gulong local_candidates_prepared_handler_id;
   gulong new_active_candidate_pair_handler_id;
@@ -123,8 +144,10 @@ static gboolean fs_rtp_stream_set_transmitter (FsStream *stream,
     guint stream_transmitter_n_parameters,
     GError **error);
 
-
 static void fs_rtp_stream_add_id (FsStream *stream, guint id);
+
+static gboolean fs_rtp_stream_set_decryption_parameters (FsStream *stream,
+    GstStructure *parameters, GError **error);
 
 static void _local_candidates_prepared (
     FsStreamTransmitter *stream_transmitter,
@@ -175,6 +198,8 @@ fs_rtp_stream_class_init (FsRtpStreamClass *klass)
   stream_class->force_remote_candidates = fs_rtp_stream_force_remote_candidates;
   stream_class->add_id = fs_rtp_stream_add_id;
   stream_class->set_transmitter = fs_rtp_stream_set_transmitter;
+  stream_class->set_decryption_parameters =
+      fs_rtp_stream_set_decryption_parameters;
 
   g_type_class_add_private (klass, sizeof (FsRtpStreamPrivate));
 
@@ -196,6 +221,10 @@ fs_rtp_stream_class_init (FsRtpStreamClass *klass)
   g_object_class_override_property (gobject_class,
                                     PROP_SESSION,
                                     "session");
+  g_object_class_override_property (gobject_class,
+                                    PROP_DECRYPTION_PARAMETERS,
+                                    "decryption-parameters");
+
   g_object_class_install_property (gobject_class,
       PROP_RTP_HEADER_EXTENSIONS,
       g_param_spec_boxed ("rtp-header-extensions",
@@ -203,6 +232,14 @@ fs_rtp_stream_class_init (FsRtpStreamClass *klass)
           "GList of RTP Header extensions that the participant for this stream"
           " would like to use",
           FS_TYPE_RTP_HEADER_EXTENSION_LIST,
+          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
+  g_object_class_install_property (gobject_class,
+      PROP_SEND_RTCP_MUX,
+      g_param_spec_boolean ("send-rtcp-mux",
+          "Send RTCP muxed with on the same RTP connection",
+          "Send RTCP muxed with on the same RTP connection",
+          FALSE,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 }
 
@@ -338,6 +375,9 @@ fs_rtp_stream_finalize (GObject *object)
   fs_codec_list_destroy (self->remote_codecs);
   fs_codec_list_destroy (self->negotiated_codecs);
 
+  if (self->priv->decryption_parameters)
+    gst_structure_free (self->priv->decryption_parameters);
+
   g_mutex_clear (&self->priv->mutex);
 
   G_OBJECT_CLASS (fs_rtp_stream_parent_class)->finalize (object);
@@ -417,6 +457,22 @@ fs_rtp_stream_get_property (GObject *object,
     case PROP_RTP_HEADER_EXTENSIONS:
       FS_RTP_SESSION_LOCK (session);
       g_value_set_boxed (value, self->hdrext);
+      FS_RTP_SESSION_UNLOCK (session);
+      break;
+    case PROP_DECRYPTION_PARAMETERS:
+      FS_RTP_SESSION_LOCK (session);
+      g_value_set_boxed (value, self->priv->decryption_parameters);
+      FS_RTP_SESSION_UNLOCK (session);
+      break;
+    case PROP_SEND_RTCP_MUX:
+      FS_RTP_SESSION_LOCK (session);
+      if (self->priv->stream_transmitter == NULL ||
+          g_object_class_find_property (
+              G_OBJECT_GET_CLASS (self->priv->stream_transmitter),
+              "send-component-mux") != NULL)
+        g_value_set_boolean (value, self->priv->send_rtcp_mux);
+      else
+        g_value_set_boolean (value, FALSE);
       FS_RTP_SESSION_UNLOCK (session);
       break;
     default:
@@ -503,6 +559,23 @@ fs_rtp_stream_set_property (GObject *object,
           self->priv->new_remote_codecs_cb (NULL, NULL, NULL,
               self->priv->user_data_for_cb);
           g_object_unref (session);
+        }
+      }
+      break;
+    case PROP_SEND_RTCP_MUX:
+      {
+        FsRtpSession *session = fs_rtp_stream_get_session (self, NULL);
+
+        if (session) {
+          FS_RTP_SESSION_LOCK (session);
+          self->priv->send_rtcp_mux = g_value_get_boolean (value);
+          if (self->priv->stream_transmitter != NULL &&
+              g_object_class_find_property (
+                  G_OBJECT_GET_CLASS (self->priv->stream_transmitter),
+                  "send-component-mux") != NULL)
+            g_object_set (self->priv->stream_transmitter,
+                "send-component-mux", self->priv->send_rtcp_mux, NULL);
+          FS_RTP_SESSION_UNLOCK (session);
         }
       }
       break;
@@ -679,6 +752,7 @@ fs_rtp_stream_new (FsRtpSession *session,
     stream_sending_changed_locked_cb sending_changed_locked_cb,
     stream_ssrc_added_cb ssrc_added_cb,
     stream_get_new_stream_transmitter_cb get_new_stream_transmitter_cb,
+    stream_decrypt_clear_locked_cb decrypt_clear_locked_cb,
     gpointer user_data_for_cb)
 {
   FsRtpStream *self;
@@ -699,6 +773,7 @@ fs_rtp_stream_new (FsRtpSession *session,
   self->priv->sending_changed_locked_cb = sending_changed_locked_cb;
   self->priv->ssrc_added_cb = ssrc_added_cb;
   self->priv->get_new_stream_transmitter_cb = get_new_stream_transmitter_cb;
+  self->priv->decrypt_clear_locked_cb = decrypt_clear_locked_cb;
 
   self->priv->user_data_for_cb = user_data_for_cb;
 
@@ -1141,6 +1216,9 @@ fs_rtp_stream_set_transmitter (FsStream *stream,
     self->priv->sending_changed_locked_cb (self,
         self->priv->direction & FS_DIRECTION_SEND,
         self->priv->user_data_for_cb);
+  if (g_object_class_find_property (G_OBJECT_GET_CLASS (st),
+          "send-component-mux") != NULL)
+    g_object_set (st, "send-component-mux", self->priv->send_rtcp_mux, NULL);
   FS_RTP_SESSION_UNLOCK (session);
 
   if (!fs_stream_transmitter_gather_local_candidates (st, error))
@@ -1156,4 +1234,306 @@ fs_rtp_stream_set_transmitter (FsStream *stream,
 
   g_object_unref (session);
   return TRUE;
+}
+
+static gint
+parse_enum (const gchar *name, const gchar *value, GError **error)
+{
+  GstElementFactory *factory;
+  GstPluginFeature *loaded_feature;
+  GType srtpenc_type;
+  GObjectClass *srtpenc_class;
+  GParamSpec *spec;
+  GParamSpecEnum *enumspec;
+  GEnumValue *enumvalue;
+
+  if (value == NULL)
+    goto error;
+
+  factory = gst_element_factory_find ("srtpenc");
+  if (!factory)
+    goto error_not_installed;
+
+  loaded_feature = gst_plugin_feature_load (GST_PLUGIN_FEATURE (factory));
+  gst_object_unref (factory);
+  factory = GST_ELEMENT_FACTORY (loaded_feature);
+
+  srtpenc_type = gst_element_factory_get_element_type (factory);
+  gst_object_unref (factory);
+  if (srtpenc_type == 0)
+    goto error_not_installed;
+
+  srtpenc_class = g_type_class_ref (srtpenc_type);
+  if (!srtpenc_class)
+    goto error_not_installed;
+
+  spec = g_object_class_find_property (srtpenc_class, name);
+  g_type_class_unref (srtpenc_class);
+  if (!spec)
+    goto error_internal;
+
+  if (!G_IS_PARAM_SPEC_ENUM (spec))
+    goto error_internal;
+  enumspec = G_PARAM_SPEC_ENUM (spec);
+
+  enumvalue = g_enum_get_value_by_nick (enumspec->enum_class, value);
+  if (enumvalue)
+    return enumvalue->value;
+
+  enumvalue = g_enum_get_value_by_name (enumspec->enum_class, value);
+  if (enumvalue)
+    return enumvalue->value;
+
+error:
+  g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+      "Invalid %s value: %s", name, value);
+  return -1;
+
+error_not_installed:
+  g_set_error (error, FS_ERROR, FS_ERROR_CONSTRUCTION,
+      "Can't find srtpenc, no encryption possible");
+  return -1;
+
+error_internal:
+  g_set_error (error, FS_ERROR, FS_ERROR_INTERNAL,
+      "Can't find srtpenc %s property or is not a GEnum type!", name);
+  return -1;
+}
+
+
+gboolean
+validate_srtp_parameters (GstStructure *parameters,
+    gint *srtp_cipher, gint *srtcp_cipher, gint *srtp_auth, gint *srtcp_auth,
+    GstBuffer **key, guint *replay_window, GError **error)
+{
+  gint cipher = 0; /* 0 is null cipher, no encryption */
+  gint auth = -1;
+
+  *key = NULL;
+  *srtp_cipher = -1;
+  *srtcp_cipher = -1;
+  *srtp_auth = -1;
+  *srtcp_auth = -1;
+  *replay_window = 128;
+
+  if (parameters)
+  {
+    const GValue *v = NULL;
+    const gchar *tmp;
+
+    if (!gst_structure_has_name (parameters, "FarstreamSRTP"))
+    {
+      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+          "The only structure accepted is FarstreamSRTP");
+      return FALSE;
+    }
+    if ((tmp = gst_structure_get_string (parameters, "cipher")))
+    {
+      cipher = parse_enum ("rtp-cipher", tmp, error);
+      if (cipher == -1)
+        return FALSE;
+    }
+    if ((tmp = gst_structure_get_string (parameters, "rtp-cipher")))
+    {
+      *srtp_cipher = parse_enum ("rtp-cipher", tmp, error);
+      if (*srtp_cipher == -1)
+        return FALSE;
+    }
+    if ((tmp = gst_structure_get_string (parameters, "rtcp-cipher")))
+    {
+      *srtcp_cipher = parse_enum ("rtcp-cipher", tmp, error);
+      if (*srtcp_cipher == -1)
+        return FALSE;
+    }
+    if ((tmp = gst_structure_get_string (parameters, "auth")))
+    {
+      auth = parse_enum ("rtp-auth", tmp, error);
+      if (auth == -1)
+        return FALSE;
+    }
+    if ((tmp = gst_structure_get_string (parameters, "rtp-auth")))
+    {
+      *srtp_auth = parse_enum ("rtp-auth", tmp, error);
+      if (*srtp_auth == -1)
+        return FALSE;
+    }
+    if ((tmp = gst_structure_get_string (parameters, "rtcp-auth")))
+    {
+      *srtcp_auth = parse_enum ("rtcp-auth", tmp, error);
+      if (*srtcp_auth == -1)
+        return FALSE;
+    }
+
+    if (*srtp_cipher == -1)
+      *srtp_cipher = cipher;
+    if (*srtcp_cipher == -1)
+      *srtcp_cipher = cipher;
+
+    if (*srtp_auth == -1)
+      *srtp_auth = auth;
+    if (*srtcp_auth == -1)
+      *srtcp_auth = auth;
+    if (*srtp_auth == -1 || *srtcp_auth == -1)
+    {
+      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+          "At least the authentication MUST be set, \"auth\" or \"rtp-auth\""
+          " and \"rtcp-auth\" are required.");
+      return FALSE;
+    }
+
+    v = gst_structure_get_value (parameters, "key");
+    if (!v)
+    {
+      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+          "The argument \"key\" is required.");
+      return FALSE;
+    }
+    if (!GST_VALUE_HOLDS_BUFFER (v) || gst_value_get_buffer (v) == NULL)
+    {
+       g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+           "The argument \"key\" MUST hold a GstBuffer.");
+       return FALSE;
+    }
+    *key = gst_value_get_buffer (v);
+
+    if (gst_structure_get_uint (parameters, "replay-window-size",
+            replay_window))
+    {
+      if (*replay_window < 64 || *replay_window >= 32768)
+      {
+        g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+            "Reply window size must be between 64 and 32768");
+        return FALSE;
+      }
+    }
+  } else {
+    *srtp_cipher = *srtcp_cipher = *srtcp_auth = *srtp_auth = 0; /* 0 is NULL */
+  }
+
+  return TRUE;
+}
+
+
+static gboolean
+fs_rtp_stream_set_decryption_parameters (FsStream *stream,
+    GstStructure *parameters, GError **error)
+{
+  FsRtpStream *self = FS_RTP_STREAM (stream);
+  GstBuffer *key;
+  gint rtp_cipher;
+  gint rtcp_cipher;
+  gint rtp_auth;
+  gint rtcp_auth;
+  guint replay_window_size;
+  FsRtpSession *session;
+  gboolean ret = FALSE;
+
+  g_return_val_if_fail (FS_IS_RTP_STREAM (stream), FALSE);
+  g_return_val_if_fail (parameters == NULL ||
+      GST_IS_STRUCTURE (parameters), FALSE);
+
+  if (!validate_srtp_parameters (parameters, &rtp_cipher, &rtcp_cipher,
+          &rtp_auth, &rtcp_auth, &key, &replay_window_size, error))
+    return FALSE;
+
+  session = fs_rtp_stream_get_session (self, error);
+  if (!session)
+    return FALSE;
+
+
+  FS_RTP_SESSION_LOCK (session);
+  if (self->priv->decryption_parameters != parameters &&
+      (!parameters || !self->priv->decryption_parameters ||
+          !gst_structure_is_equal (self->priv->decryption_parameters,
+              parameters)))
+  {
+    if (!self->priv->decrypt_clear_locked_cb (self,
+            self->priv->user_data_for_cb))
+    {
+      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
+          "Can't set encryption because srtpdec is not installed");
+      goto done;
+    }
+
+    if (self->priv->decryption_parameters)
+      gst_structure_free (self->priv->decryption_parameters);
+
+    if (parameters)
+      self->priv->decryption_parameters = gst_structure_copy (parameters);
+    else
+      self->priv->decryption_parameters = NULL;
+
+ }
+
+  ret = TRUE;
+
+done:
+  FS_RTP_SESSION_UNLOCK (session);
+  g_object_unref (session);
+
+  return ret;
+}
+
+GstCaps *
+fs_rtp_stream_get_srtp_caps_locked (FsRtpStream *self)
+{
+  const gchar *srtp_cipher;
+  const gchar *srtcp_cipher;
+  const gchar *srtp_auth;
+  const gchar *srtcp_auth;
+  const GValue *v;
+  GstBuffer *key;
+
+  if (!self->priv->decryption_parameters)
+    return NULL;
+
+  /* This is always TRUE for now, but when we expand to DTLS-SRTP, it may
+   * not be.
+   */
+  if (!gst_structure_has_name (self->priv->decryption_parameters,
+          "FarstreamSRTP"))
+    return NULL;
+
+  srtp_cipher = gst_structure_get_string (self->priv->decryption_parameters,
+      "rtp-cipher");
+  if (!srtp_cipher)
+    srtp_cipher = gst_structure_get_string (self->priv->decryption_parameters,
+        "cipher");
+  if (!srtp_cipher)
+    srtp_cipher = "null";
+
+  srtcp_cipher = gst_structure_get_string (self->priv->decryption_parameters,
+      "rtcp-cipher");
+  if (!srtcp_cipher)
+    srtcp_cipher = gst_structure_get_string (self->priv->decryption_parameters,
+        "cipher");
+  if (!srtcp_cipher)
+    srtcp_cipher = "null";
+
+  srtp_auth = gst_structure_get_string (self->priv->decryption_parameters,
+      "rtp-auth");
+  if (!srtp_auth)
+    srtp_auth = gst_structure_get_string (self->priv->decryption_parameters,
+        "auth");
+  if (!srtp_auth)
+    srtp_auth = "null";
+
+  srtcp_auth = gst_structure_get_string (self->priv->decryption_parameters,
+      "rtcp-auth");
+  if (!srtcp_auth)
+    srtcp_auth = gst_structure_get_string (self->priv->decryption_parameters,
+        "auth");
+  if (!srtcp_auth)
+    srtcp_auth = "null";
+
+  v = gst_structure_get_value (self->priv->decryption_parameters, "key");
+  key = gst_value_get_buffer (v);
+
+  return gst_caps_new_simple ("application/x-srtp",
+      "srtp-key", GST_TYPE_BUFFER, key,
+      "srtp-cipher", G_TYPE_STRING, srtp_cipher,
+      "srtcp-cipher", G_TYPE_STRING, srtcp_cipher,
+      "srtp-auth", G_TYPE_STRING, srtp_auth,
+      "srtcp-auth", G_TYPE_STRING, srtcp_auth,
+      NULL);
 }

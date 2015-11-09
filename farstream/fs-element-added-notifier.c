@@ -329,8 +329,6 @@ _element_foreach_keyfile (const GValue * item, gpointer user_data)
   GKeyFile *keyfile = user_data;
 
   set_properties_from_keyfile (keyfile, element);
-
-  gst_object_unref (element);
 }
 
 

@@ -1,3 +1,558 @@
+commit 01fafe82fbc01f31e76623fbbbe6dd99eb28d6bb
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Jan 28 22:15:59 2015 -0500
+
+    Version 0.2.7
+
+commit e8c277eeed5c277605f2ecc191f347f68fed0a61
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Jan 28 22:15:25 2015 -0500
+
+    configure: Add "subdir-objects" automake option
+    
+    Automake now warns that it will be the only behavior
+    in the future. So quell the warning by adding it.
+
+commit e7857ade23f9771d250e4c3be772a1dcdc0584d5
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Jan 28 22:08:04 2015 -0500
+
+    Fix GIR annotations to remove deprecated styles
+
+commit b788ca15fae591a917de0ed77eeb632a919f7325
+Author: Youness Alaoui <kakaroto@kakaroto.homelinux.net>
+Date:   Wed Jan 28 18:19:08 2015 -0500
+
+    transmitter: Fix nice unit test for rtcp-muxing. Ignore component 2 ready.
+    
+    Component 2 may become ready before component 1 in which case data
+    sent to that part of the pipeline will be dropped since cid 1 is not
+    yet ready, which causes the unit test to fail since data is missing.
+
+commit f2c04851e27dc428153cb1520cb412fd8db2a144
+Author: Youness Alaoui <kakaroto@kakaroto.homelinux.net>
+Date:   Tue Jan 13 17:36:01 2015 -0500
+
+    transmitter: Add a unit test for send-component-mux property on nice transmitter
+
+commit eda61c44c79956eaa5723725d31d606a9df67c92
+Author: Youness Alaoui <kakaroto@kakaroto.homelinux.net>
+Date:   Fri Dec 5 12:52:51 2014 -0500
+
+    rtpxdatapay: Use gst_buffer_copy_into to avoid unreffing the buffer
+
+commit 645b9490bb3ec507cac2b01061c9b67c18abb5ae
+Author: Youness Alaoui <kakaroto@kakaroto.homelinux.net>
+Date:   Fri Nov 28 17:58:34 2014 -0500
+
+    rtpxdatapay: Add support for MTU and split long messages into multiple packets
+    Split all messages into max 1200 bytes of payload and send a GstBufferList when needed
+    Keep sending a normal buffer in case the buffer is smaller than 1200 bytes
+    to things slightly faster
+
+commit 9102709e6f8a0b9c390e8636589c3d80f9b1810a
+Author: Youness Alaoui <kakaroto@kakaroto.homelinux.net>
+Date:   Mon Aug 11 15:53:51 2014 -0400
+
+    Add support for send-rtcp-mux on fs-rtp-session and nice transmitter
+    
+    In fs_nice_transmitter_set_send_component_mux(), the component IDs,
+    which start from 1, are used as nicesinks array indexes and
+    nicesinks[0] is always NULL.
+
+commit 5bd19ca4a6c4fa0df50f521eb860d97e95310641
+Author: Youness Alaoui <youness.alaoui@collabora.co.uk>
+Date:   Thu Jul 17 23:46:44 2014 -0400
+
+    Add support for reliable nice transmitter and selection of ice-udp/ice-tcp
+
+commit 7f02aac24c859aadf4a0a83991502c9bcc1ddaf8
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Jan 27 16:37:57 2015 -0500
+
+    msnconnection: Fix potential race/deadlock
+    
+    Unlock the mutex while waiting for the thread to exit.
+
+commit 6b5e40c6c1f62ae1a1099f56ae70ed26b23c8a88
+Merge: 83199d9 fb51436
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Jan 27 15:58:30 2015 -0500
+
+    Merge branch 'branch-0.2.6'
+
+commit 83199d96480cd7835adc9d290e537effc550b4ca
+Author: Olivier Crête <olivier.crete@ocrete.ca>
+Date:   Tue Jan 13 14:11:27 2015 -0500
+
+    fs-session: Reduce padding because added set_encryption_parameters
+
+commit b71946fd05e2cdf80af132c306624c60d779ef89
+Author: Evan Nemerson <evan@nemerson.com>
+Date:   Sat Nov 22 11:02:01 2014 -0800
+
+    introspection: Call g-ir-scanner correctly
+    
+    This provides a symbol prefix separate from the identifier prefix,
+    corrects the identifier prefix to not include the trailing underscore,
+    specifies the exported pkg-config file, and provides a list of C
+    headers.
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=86589
+
+commit 3e36909e396d389348a62181585cd20f43929937
+Author: Jakub Adam <jakub.adam@ktknet.cz>
+Date:   Mon Oct 20 15:03:28 2014 +0200
+
+    nicestreamtransmitter: expose port range setting from libnice
+
+commit 75e249e8d9aa95e414145933aecb6b4f6614096f
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Nov 11 18:53:15 2014 -0500
+
+    nice-stream-transmitter: Return right enum for GstPadProbeReturn
+
+commit 16ae4d0126faefcc725311073f4971617bfd7858
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Oct 28 16:24:57 2014 -0400
+
+    Fix clang warnings
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=85565
+
+commit 80d4827a83f22d861adbd64a8cebc2ab372dddc1
+Author: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Date:   Tue Oct 28 14:52:00 2014 -0400
+
+    rtp-discover-codecs: Make global access to blueprints thread-safe
+    
+    The global variable list_codec_blueprintfs refcounted with codecs_list_ref
+    was not thread safe. This patch uses a global lock to make this code path
+    thread safe.
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=85567
+
+commit bf84ab63c8313d2c7299c82928dbfa528448062b
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Oct 28 15:18:19 2014 -0400
+
+    rtpsession: Don't try to return srtpenc/dec if not installed
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=85566
+
+commit 15dc8ef0efc871e4af7f7c661b05e081b6062d17
+Author: Olivier Crête <olivier.crete@ocrete.ca>
+Date:   Mon Oct 13 10:32:08 2014 -0400
+
+    nicestreamstransmitter: Remove extra unlock..
+
+commit fb51436e0a6dcefac5506744a6be3fd236b1ca79
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Oct 9 18:05:22 2014 -0400
+
+    Version 0.2.6.1
+
+commit f7aba8f7709981db4e46307439cdc7b183d8bbf3
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Oct 9 17:57:46 2014 -0400
+
+    Version 0.2.6
+
+commit 3cd69d66c849df4541cf0974c8429623dc103cbb
+Author: Jakub Adam <jakub.adam@ktknet.cz>
+Date:   Tue Apr 22 14:26:49 2014 +0200
+
+    Add ICE-TCP candidates
+    
+    Also to the nice transmitter
+
+commit 2cb3e163f153434b6e386d1fe80efcc6e70eb738
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Oct 9 17:35:29 2014 -0400
+
+    Version 0.2.5.1
+
+commit 37f8913ca758dd26eb3bbdf03eace04164b7a87c
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Oct 9 17:31:09 2014 -0400
+
+    Version 0.2.5
+
+commit 0d19d5610ac05b27aab1af447165c3eca795ed84
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Oct 9 17:11:11 2014 -0400
+
+    rtpstream: Use the right variables in validation
+    
+    Copy-paste error
+
+commit 958728fe7ca77b74a6b876b97f6d6e2ef877a840
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Oct 9 16:39:13 2014 -0400
+
+    Requirement is actually 1.4 for srtp
+
+commit 5f6f8aa6c7eeeeb0cf564499967e292f5a0eee07
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Oct 9 16:23:24 2014 -0400
+
+    nice stream transmitter: Ignore ICE-TCP candidates for now
+
+commit 5128b46b1f981668eb9fdfd436ce900abba506fb
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue Oct 7 16:29:36 2014 -0400
+
+    rtpsession: Don't try to start sending before a transmitter is set
+    
+    No stream is really sending before a transmitter is set.
+
+commit b79bb94f11fecbff4a1cff4f1952610c8da2da05
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Sep 18 15:48:30 2014 -0400
+
+    Bump requirement for srtp, need GStreamer 1.2
+
+commit 3c993718d0b559bfb27dcb8ae56f19fec00b4bd7
+Author: Youness Alaoui <kakaroto@kakaroto.homelinux.net>
+Date:   Thu Aug 7 23:23:29 2014 -0400
+
+    session: Add internal-session property
+
+commit b344a73c10cb1a57bbacf55292c0a376f7e43c97
+Author: Youness Alaoui <kakaroto@kakaroto.homelinux.net>
+Date:   Thu Jul 31 17:03:02 2014 -0400
+
+    rtpsession: Fix discovery of RTCP ssrc.
+    
+    SRTCP packets will have SDES encrypted, so we need to check for RR and SR reports.
+    Also, the code was checking if rtcp_map failed, instead of succeeded.
+    This also allows us to mix rtp and rtcp on the same component.
+
+commit c8a6bf9f4b72dd3264cc6a80290ee8ef71c7b695
+Author: Youness Alaoui <youness.alaoui@collabora.co.uk>
+Date:   Thu Jul 17 23:44:45 2014 -0400
+
+    Fix unit tests not working with gst 1.0
+
+commit 52e41e7324e3e8a54c5991e0bb3e6217a8ef46c0
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon May 5 22:32:25 2014 -0400
+
+    rtp: Add srtp test
+
+commit 344468a3b7a6828c0c16f95c81b99ed3af8c001a
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon May 5 21:26:39 2014 -0400
+
+    rtp: Implement setting SRTP decryption key
+
+commit 8989360664f68944ca6c00e69b2d88194fed4c38
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon May 5 20:29:44 2014 -0400
+
+    rtpsession: Factor out SRTP parameter validation
+
+commit d95620da48f4c10127eaf32e3a52cdecd3af1f9e
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon May 5 16:15:51 2014 -0400
+
+    rtpsession: Implemnt setting SRTP encryption key
+
+commit 9d4e85377d991abeb01de9c9aac77d2c70fbeef3
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 2 16:10:15 2014 -0400
+
+    rtpsession: Create srtpenc & srtpdec
+
+commit 7a68e77830e4c8472f52bdf39272b86da35bc4aa
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 2 15:54:58 2014 -0400
+
+    lib: Add parameters to set encryption and decryption parameters
+
+commit 9c7aa550ed0ea0b6962c7e3c1f42d7af253ea0fa
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon May 5 23:20:11 2014 -0400
+
+    transmitter: Remove recvonly-filter
+    
+    It was pretty much useless anyway.
+
+commit 220236e6564486571b0e7eae079b9cb6a554b933
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon May 5 22:47:23 2014 -0400
+
+    Remove fsrtcpfilter
+    
+    It's not useful in real life
+
+commit deb2be339b727b5fcdc7337c0c77a9202e7e4933
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 9 21:50:58 2014 -0400
+
+    tests: Test for x-data type
+
+commit 3bf911fd7586d8cb72368c4d3d25fe27c58c2e16
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue May 6 17:01:53 2014 -0400
+
+    fsrtpxdata: Add RTP pay/depay for Microsoft Lync RTP x-data
+
+commit ac98be9a8a48f6f21babd2d5b41df0f5b85a3e42
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue May 6 16:20:36 2014 -0400
+
+    Add Application Media type
+
+commit 4e4d73f86c19d2615992445b89b2622fb45ac7e9
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 9 20:55:03 2014 -0400
+
+    rtpdiscocodec: Also discover formats with no encoder
+    
+    This makes L16, L24 and Video/RAW available to Farstream without profiles.
+
+commit 04a706724d818f450f68b453492aae9e8cb08af5
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 9 20:50:48 2014 -0400
+
+    rtpdiscocode: Ignore codecs with no "payload" property
+
+commit 8d818b6377f19fe9e4e25b3c40c35ba49bcc13ed
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 9 18:03:41 2014 -0400
+
+    rtpdiscocodec: Use GQueue instead g_list_append
+
+commit 35f0811fa6f064cc771e67edc9f73585fb954155
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 9 17:52:11 2014 -0400
+
+    rtpbitrateadapter: Check bitrate changes since last getcaps or last notification
+    
+    Not only since the last reconfigure
+
+commit aaf96cc1715fddcee6e4a6a99f37e6961d182d74
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 9 17:47:04 2014 -0400
+
+    rtpbitrateadapter: Remove unused caps
+
+commit e9ac7697589d6c9fb493ed489a8c33efa7d17b79
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 9 17:45:41 2014 -0400
+
+    rtpbitrateadapter: Support non-video caps too
+
+commit 3856338f15d79bdb2ae410079ac26042a4f5f6f8
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 9 17:45:12 2014 -0400
+
+    rtpbitrateadapter: Do dynamic getcaps
+
+commit 11cd5652bd027186902b440eb3a11d592bbcf2f1
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 9 17:25:33 2014 -0400
+
+    rtpbitrateadapter: Let upstream do possible renegotiation on > 10% bitrate change
+
+commit dc66a180329b6b0cc53fc8d26ff256d2726f37c5
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 9 17:17:57 2014 -0400
+
+    rtpbitrateadapter: Remove caps property
+
+commit 11dba722578095699a686ec8765590b11a0717cd
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 9 17:13:05 2014 -0400
+
+    rtpbitrateadapter: Pass media type from caller
+
+commit 75285f4aa31a17296d8399389aaec11c5b0179f7
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 9 17:11:01 2014 -0400
+
+    rtpbitrateadapter: Remove gray caps
+
+commit af34d45cb18c3c588198e0ad8f3f4d57942289e5
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu May 8 21:25:27 2014 -0400
+
+    rtpcodecnego: Filter by input and output caps
+
+commit e0815937292a6083f78bd5a0288cb1668c80adae
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 9 16:23:53 2014 -0400
+
+    rtpsession: Implement allowed caps setting
+
+commit 279d507732bedc0395584c9ba0ad7bb555163e6d
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu May 8 22:32:26 2014 -0400
+
+    session: Add API to set the allowed caps
+
+commit 0cb4edb253ea78d8544682079c36b16f0b082df8
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu May 8 21:25:14 2014 -0400
+
+    rtpsession: Add input and output caps
+
+commit a072e43f45379ca0641da9c20575217d372148ec
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu May 8 21:12:00 2014 -0400
+
+    rtpcodecnego: Skip full list iteration
+    
+    One send codec is enough to be happy!
+
+commit 9ec4fe113a4d3f816087cbc36a827f1bebd1a26b
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu May 8 20:35:55 2014 -0400
+
+    rtpcodecnego: Discover input/output caps for application specified pipelines
+    
+    From the codec preferences, if there is a pipeline, inspect to find the
+    possible caps.
+
+commit 2beafb328ed8bc6f09e9a4af03c228edd4e86cdc
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu May 8 20:05:51 2014 -0400
+
+    rtpdiscocodec: Factor out in/out caps discovery
+
+commit 6062868a5eb42ba31b39e4898acc24033c977e6e
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu May 8 18:26:20 2014 -0400
+
+    rtpcodecnego: Add CodecPreference struct wrapping codec prefs
+
+commit a56dd182a6de3a13bf40c4a80e9335e52655dcf5
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu May 8 15:16:42 2014 -0400
+
+    rtp: Use FsStreamDirection instead of "is_send" gboolean
+    
+    Makes the API clearer
+
+commit 3af84c53630b362dde97cf98802303dd389826e6
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed May 7 23:07:48 2014 -0400
+
+    rtpcodecdisco: Discover output caps from receive codecbin
+
+commit c8d42be114f72159cea45b8f7da5c59d6d3823e2
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed May 7 22:51:59 2014 -0400
+
+    rtpcodecdisco: Discover input caps from send codecbin
+
+commit ec1dc8736b5e05e882762a2034e70c0dea3844f4
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed May 7 22:27:24 2014 -0400
+
+    rtpcodeccache: Add input/output caps to the codec cache
+
+commit 063fa048b38d6aea79f8aaed4654cfe1a3f9a0b2
+Author: Nicolas Dufresne <nicolas.dufresne@collabora.co.uk>
+Date:   Wed Sep 3 15:01:35 2014 -0400
+
+    example: Sources need to be live
+    
+    In current state this commandline example produce choppy audio,
+    with warning: "Unexpected discontinuity in audio timestamps of
+    -0:00:03.168625000, resyncing". Setting the source to live,
+    as it's suppose to be, fixes the issue.
+
+commit de7da7e70dbc1117ca59da4e98af5cc9d7a0efb2
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Jul 31 15:59:46 2014 -0400
+
+    rtpsession: Only try to read RTCP if mapping succeeded
+
+commit 4571880743d2d37938bd4a618bd305907a8518f3
+Author: George Kiagiadakis <george.kiagiadakis@collabora.com>
+Date:   Tue Jul 22 20:01:22 2014 +0300
+
+    fs-element-added-notifier: do not unref elements from already added bins when setting a keyfile
+    
+    The FsElementAddedNotifier does not own a reference to these elements.
+
+commit a911b7543fe396b98b45a06e53aa3a130173b9f5
+Author: Jakub Adam <jakub.adam@ktknet.cz>
+Date:   Mon May 12 12:07:45 2014 +0200
+
+    rtpdiscocodec: Fix build with -Werror=format-security
+
+commit 44ef0dffa8a3fda3695cda360bb16739d0610bdd
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 9 21:55:25 2014 -0400
+
+    rtpconference: Fix debug print
+
+commit 241326fcc90d2a6e2d3d717d8deacbad92dd97b7
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu May 8 00:03:10 2014 -0400
+
+    rtpcodecdisco: Style fix
+
+commit f01a491107f19be196fe2b32ae6f62ad09241b0c
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 9 18:34:04 2014 -0400
+
+    rtpsession: Verify object exists in dispose path
+
+commit 1f71dc237e90313cf1d0c4753ed9048401a279b5
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri May 9 20:07:48 2014 -0400
+
+    rtpdiscocodec: Debug pipeline at the right level
+
+commit dabb550aba18486b115fe6b15986222d29ac26ba
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed May 7 22:51:41 2014 -0400
+
+    rtpcodecdisco: Use GST_PTR_FORMAT for caps debug
+
+commit 76374a1844b33da20f70b5b2a17f6414d6109482
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed May 7 21:36:30 2014 -0400
+
+    rtpcodecdisco: Improve debug printing
+
+commit a15b66e23dd29ace82b9de218ea243b88d343890
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Tue May 6 17:17:20 2014 -0400
+
+    videoanyrate: Use the Fs prefix internally too
+
+commit 72f7b6326839caecc979d64eba3c0e459ddb4af9
+Author: Vincent Penquerc'h <vincent.penquerch@collabora.co.uk>
+Date:   Tue May 6 00:45:35 2014 -0400
+
+    rtp: Fix a couple typos
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=37997
+
+commit c84c351e3dd55f3cd77e4031d4faf86e5637b4bc
+Author: Iain Lane <iain.lane@canonical.com>
+Date:   Fri Mar 21 15:18:38 2014 +0000
+
+    Fix some mismatched / redundant <para> gtk-doc tags
+    
+    gtk-doc 1.20 got more strict about correctness here wrt. balanced tags.
+    
+    Also bump the relevant gtk-doc requirement, these tags were added for
+    a reason back then.
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=76458
+
+commit 32dcff23964fa6d6910584b1b664150734033fd2
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon May 5 15:17:39 2014 -0400
+
+    Version 0.2.4.1
+
 commit 798be3e02f665855577b6886768868ee24d7e4df
 Author: Olivier Crête <olivier.crete@collabora.com>
 Date:   Mon May 5 15:09:16 2014 -0400

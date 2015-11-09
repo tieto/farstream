@@ -2,36 +2,29 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>FsStreamTransmitter</title>
+<title>Farstream Reference Manual: FsStreamTransmitter</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="Farstream Reference Manual">
 <link rel="up" href="ch04.html" title="Farstream Transmitter Classes">
 <link rel="prev" href="FsTransmitter.html" title="FsTransmitter">
 <link rel="next" href="ch05.html" title="Farstream Plugins Infrastructure">
-<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
-<tr valign="middle">
-<td><a accesskey="p" href="FsTransmitter.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
-<td><a accesskey="u" href="ch04.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
-<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">Farstream Reference Manual</th>
-<td><a accesskey="n" href="ch05.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
-</tr>
-<tr><td colspan="5" class="shortcuts">
-<a href="#FsStreamTransmitter.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#FsStreamTransmitter.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#FsStreamTransmitter.object-hierarchy" class="shortcut">Object Hierarchy</a>
-                   | 
-                  <a href="#FsStreamTransmitter.properties" class="shortcut">Properties</a>
-                   | 
-                  <a href="#FsStreamTransmitter.signals" class="shortcut">Signals</a>
-</td></tr>
-</table>
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#FsStreamTransmitter.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
+                  <a href="#FsStreamTransmitter.object-hierarchy" class="shortcut">Object Hierarchy</a></span><span id="nav_properties">  <span class="dim">|</span> 
+                  <a href="#FsStreamTransmitter.properties" class="shortcut">Properties</a></span><span id="nav_signals">  <span class="dim">|</span> 
+                  <a href="#FsStreamTransmitter.signals" class="shortcut">Signals</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch04.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="FsTransmitter.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="ch05.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
 <div class="refentry">
 <a name="FsStreamTransmitter"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
@@ -40,94 +33,627 @@
 <p>FsStreamTransmitter — A stream transmitter object used to convey per-stream
   information to a transmitter.</p>
 </td>
-<td valign="top" align="right"></td>
+<td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
-<div class="refsynopsisdiv">
-<a name="FsStreamTransmitter.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">
-#include &lt;farstream/fs-transmitter.h&gt;
-
-                    <a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter-struct" title="FsStreamTransmitter">FsStreamTransmitter</a>;
-struct              <a class="link" href="FsStreamTransmitter.html#FsStreamTransmitterClass" title="struct FsStreamTransmitterClass">FsStreamTransmitterClass</a>;
-<span class="returnvalue">gboolean</span>            <a class="link" href="FsStreamTransmitter.html#fs-stream-transmitter-add-remote-candidates" title="fs_stream_transmitter_add_remote_candidates ()">fs_stream_transmitter_add_remote_candidates</a>
-                                                        (<em class="parameter"><code><a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *streamtransmitter</code></em>,
-                                                         <em class="parameter"><code><span class="type">GList</span> *candidates</code></em>,
-                                                         <em class="parameter"><code><span class="type">GError</span> **error</code></em>);
-<span class="returnvalue">gboolean</span>            <a class="link" href="FsStreamTransmitter.html#fs-stream-transmitter-gather-local-candidates" title="fs_stream_transmitter_gather_local_candidates ()">fs_stream_transmitter_gather_local_candidates</a>
-                                                        (<em class="parameter"><code><a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *streamtransmitter</code></em>,
-                                                         <em class="parameter"><code><span class="type">GError</span> **error</code></em>);
-<span class="returnvalue">gboolean</span>            <a class="link" href="FsStreamTransmitter.html#fs-stream-transmitter-force-remote-candidates" title="fs_stream_transmitter_force_remote_candidates ()">fs_stream_transmitter_force_remote_candidates</a>
-                                                        (<em class="parameter"><code><a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *streamtransmitter</code></em>,
-                                                         <em class="parameter"><code><span class="type">GList</span> *remote_candidates</code></em>,
-                                                         <em class="parameter"><code><span class="type">GError</span> **error</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="FsStreamTransmitter.html#fs-stream-transmitter-stop" title="fs_stream_transmitter_stop ()">fs_stream_transmitter_stop</a>          (<em class="parameter"><code><a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *streamtransmitter</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="FsStreamTransmitter.html#fs-stream-transmitter-emit-error" title="fs_stream_transmitter_emit_error ()">fs_stream_transmitter_emit_error</a>    (<em class="parameter"><code><a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *streamtransmitter</code></em>,
-                                                         <em class="parameter"><code><span class="type">gint</span> error_no</code></em>,
-                                                         <em class="parameter"><code>const <span class="type">gchar</span> *error_msg</code></em>);
-<span class="returnvalue">gboolean</span>            <a class="link" href="FsStreamTransmitter.html#fs-stream-parse-component-state-changed" title="fs_stream_parse_component_state_changed ()">fs_stream_parse_component_state_changed</a>
-                                                        (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
-                                                         <em class="parameter"><code><span class="type">guint</span> *component</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="FsStream.html#FsStreamState" title="enum FsStreamState"><span class="type">FsStreamState</span></a> *state</code></em>);
-<span class="returnvalue">gboolean</span>            <a class="link" href="FsStreamTransmitter.html#fs-stream-parse-local-candidates-prepared" title="fs_stream_parse_local_candidates_prepared ()">fs_stream_parse_local_candidates_prepared</a>
-                                                        (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>);
-<span class="returnvalue">gboolean</span>            <a class="link" href="FsStreamTransmitter.html#fs-stream-parse-new-active-candidate-pair" title="fs_stream_parse_new_active_candidate_pair ()">fs_stream_parse_new_active_candidate_pair</a>
-                                                        (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> **local_candidate</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> **remote_candidate</code></em>);
-<span class="returnvalue">gboolean</span>            <a class="link" href="FsStreamTransmitter.html#fs-stream-parse-new-local-candidate" title="fs_stream_parse_new_local_candidate ()">fs_stream_parse_new_local_candidate</a> (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> **candidate</code></em>);
-<span class="returnvalue">gboolean</span>            <a class="link" href="FsStreamTransmitter.html#fs-stream-parse-recv-codecs-changed" title="fs_stream_parse_recv_codecs_changed ()">fs_stream_parse_recv_codecs_changed</a> (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
-                                                         <em class="parameter"><code><span class="type">GList</span> **codecs</code></em>);
-</pre>
-</div>
 <div class="refsect1">
-<a name="FsStreamTransmitter.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="synopsis">
-  GObject
-   +----FsStreamTransmitter
-</pre>
+<a name="FsStreamTransmitter.functions"></a><h2>Functions</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="functions_return">
+<col class="functions_name">
+</colgroup>
+<tbody>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="FsStreamTransmitter.html#fs-stream-transmitter-add-remote-candidates" title="fs_stream_transmitter_add_remote_candidates ()">fs_stream_transmitter_add_remote_candidates</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="FsStreamTransmitter.html#fs-stream-transmitter-gather-local-candidates" title="fs_stream_transmitter_gather_local_candidates ()">fs_stream_transmitter_gather_local_candidates</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="FsStreamTransmitter.html#fs-stream-transmitter-force-remote-candidates" title="fs_stream_transmitter_force_remote_candidates ()">fs_stream_transmitter_force_remote_candidates</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="FsStreamTransmitter.html#fs-stream-transmitter-stop" title="fs_stream_transmitter_stop ()">fs_stream_transmitter_stop</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="FsStreamTransmitter.html#fs-stream-transmitter-emit-error" title="fs_stream_transmitter_emit_error ()">fs_stream_transmitter_emit_error</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="FsStreamTransmitter.html#fs-stream-parse-component-state-changed" title="fs_stream_parse_component_state_changed ()">fs_stream_parse_component_state_changed</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="FsStreamTransmitter.html#fs-stream-parse-local-candidates-prepared" title="fs_stream_parse_local_candidates_prepared ()">fs_stream_parse_local_candidates_prepared</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="FsStreamTransmitter.html#fs-stream-parse-new-active-candidate-pair" title="fs_stream_parse_new_active_candidate_pair ()">fs_stream_parse_new_active_candidate_pair</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="FsStreamTransmitter.html#fs-stream-parse-new-local-candidate" title="fs_stream_parse_new_local_candidate ()">fs_stream_parse_new_local_candidate</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="FsStreamTransmitter.html#fs-stream-parse-recv-codecs-changed" title="fs_stream_parse_recv_codecs_changed ()">fs_stream_parse_recv_codecs_changed</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <div class="refsect1">
 <a name="FsStreamTransmitter.properties"></a><h2>Properties</h2>
-<pre class="synopsis">
-  "<a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter--associate-on-source" title='The "associate-on-source" property'>associate-on-source</a>"      <span class="type">gboolean</span>              : Read / Write / Construct Only
-  "<a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter--preferred-local-candidates" title='The "preferred-local-candidates" property'>preferred-local-candidates</a>" <span class="type">FsCandidateList</span>*      : Read / Write / Construct Only
-  "<a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter--sending" title='The "sending" property'>sending</a>"                  <span class="type">gboolean</span>              : Read / Write
-</pre>
+<div class="informaltable"><table border="0">
+<colgroup>
+<col width="150px" class="properties_type">
+<col width="300px" class="properties_name">
+<col width="200px" class="properties_flags">
+</colgroup>
+<tbody>
+<tr>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_name"><a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter--associate-on-source" title="The “associate-on-source” property">associate-on-source</a></td>
+<td class="property_flags">Read / Write / Construct Only</td>
+</tr>
+<tr>
+<td class="property_type">
+<span class="type">FsCandidateList</span> *</td>
+<td class="property_name"><a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter--preferred-local-candidates" title="The “preferred-local-candidates” property">preferred-local-candidates</a></td>
+<td class="property_flags">Read / Write / Construct Only</td>
+</tr>
+<tr>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_name"><a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter--sending" title="The “sending” property">sending</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <div class="refsect1">
 <a name="FsStreamTransmitter.signals"></a><h2>Signals</h2>
-<pre class="synopsis">
-  "<a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter-error" title='The "error" signal'>error</a>"                                          : <code class="literal">Run Last</code>
-  "<a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter-known-source-packet-received" title='The "known-source-packet-received" signal'>known-source-packet-received</a>"                   : <code class="literal">Run Last</code>
-  "<a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter-local-candidates-prepared" title='The "local-candidates-prepared" signal'>local-candidates-prepared</a>"                      : <code class="literal">Run Last</code>
-  "<a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter-new-active-candidate-pair" title='The "new-active-candidate-pair" signal'>new-active-candidate-pair</a>"                      : <code class="literal">Run Last</code>
-  "<a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter-new-local-candidate" title='The "new-local-candidate" signal'>new-local-candidate</a>"                            : <code class="literal">Run Last</code>
-  "<a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter-state-changed" title='The "state-changed" signal'>state-changed</a>"                                  : <code class="literal">Run Last</code>
+<div class="informaltable"><table border="0">
+<colgroup>
+<col width="150px" class="signals_return">
+<col width="300px" class="signals_name">
+<col width="200px" class="signals_flags">
+</colgroup>
+<tbody>
+<tr>
+<td class="signal_type"><span class="returnvalue">void</span></td>
+<td class="signal_name"><a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter-error" title="The “error” signal">error</a></td>
+<td class="signal_flags">Run Last</td>
+</tr>
+<tr>
+<td class="signal_type"><span class="returnvalue">void</span></td>
+<td class="signal_name"><a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter-known-source-packet-received" title="The “known-source-packet-received” signal">known-source-packet-received</a></td>
+<td class="signal_flags">Run Last</td>
+</tr>
+<tr>
+<td class="signal_type"><span class="returnvalue">void</span></td>
+<td class="signal_name"><a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter-local-candidates-prepared" title="The “local-candidates-prepared” signal">local-candidates-prepared</a></td>
+<td class="signal_flags">Run Last</td>
+</tr>
+<tr>
+<td class="signal_type"><span class="returnvalue">void</span></td>
+<td class="signal_name"><a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter-new-active-candidate-pair" title="The “new-active-candidate-pair” signal">new-active-candidate-pair</a></td>
+<td class="signal_flags">Run Last</td>
+</tr>
+<tr>
+<td class="signal_type"><span class="returnvalue">void</span></td>
+<td class="signal_name"><a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter-new-local-candidate" title="The “new-local-candidate” signal">new-local-candidate</a></td>
+<td class="signal_flags">Run Last</td>
+</tr>
+<tr>
+<td class="signal_type"><span class="returnvalue">void</span></td>
+<td class="signal_name"><a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter-state-changed" title="The “state-changed” signal">state-changed</a></td>
+<td class="signal_flags">Run Last</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="FsStreamTransmitter.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="name">
+<col class="description">
+</colgroup>
+<tbody>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="FsStreamTransmitter.html#FsStreamTransmitter-struct" title="struct FsStreamTransmitter">FsStreamTransmitter</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="FsStreamTransmitter.html#FsStreamTransmitterClass" title="struct FsStreamTransmitterClass">FsStreamTransmitterClass</a></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="FsStreamTransmitter.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> FsStreamTransmitter
+</pre>
+</div>
+<div class="refsect1">
+<a name="FsStreamTransmitter.includes"></a><h2>Includes</h2>
+<pre class="synopsis">#include &lt;farstream/fs-transmitter.h&gt;
 </pre>
 </div>
 <div class="refsect1">
 <a name="FsStreamTransmitter.description"></a><h2>Description</h2>
-<p>
-This object is the base implementation of a Farstream Stream Transmitter.
+<p>This object is the base implementation of a Farstream Stream Transmitter.
 It needs to be derived and implement by a Farstream transmitter.
 A Farstream Stream transmitter is used to convery per-stream information
-to a transmitter, this is mostly local and remote candidates
-</p>
+to a transmitter, this is mostly local and remote candidates</p>
 </div>
 <div class="refsect1">
-<a name="FsStreamTransmitter.details"></a><h2>Details</h2>
+<a name="FsStreamTransmitter.functions_details"></a><h2>Functions</h2>
 <div class="refsect2">
-<a name="FsStreamTransmitter-struct"></a><h3>FsStreamTransmitter</h3>
-<pre class="programlisting">typedef struct _FsStreamTransmitter FsStreamTransmitter;</pre>
-<p>
-All members are private, access them using methods and properties
-</p>
+<a name="fs-stream-transmitter-add-remote-candidates"></a><h3>fs_stream_transmitter_add_remote_candidates ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+fs_stream_transmitter_add_remote_candidates
+                               (<em class="parameter"><code><a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *streamtransmitter</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *candidates</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
+<p>This function is used to add remote candidates to the transmitter</p>
+<div class="refsect3">
+<a name="id-1.3.2.3.10.2.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>streamtransmitter</p></td>
+<td class="parameter_description"><p>a <span class="type">FsStreamTranmitter</span></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>candidates</p></td>
+<td class="parameter_description"><p> a <a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of the remote candidates. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCandidate]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>error</p></td>
+<td class="parameter_description"><p>location of a <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or NULL if no error occured</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.2.3.10.2.6"></a><h4>Returns</h4>
+<p> TRUE of the candidate could be added, FALSE if it couldnt
+(and the <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> will be set)</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-stream-transmitter-gather-local-candidates"></a><h3>fs_stream_transmitter_gather_local_candidates ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+fs_stream_transmitter_gather_local_candidates
+                               (<em class="parameter"><code><a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *streamtransmitter</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
+<p>This function tells the transmitter to start gathering local candidates,
+signals for new candidates and newly active candidates can be emitted
+during the call to this function.</p>
+<div class="refsect3">
+<a name="id-1.3.2.3.10.3.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>streamtransmitter</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>error</p></td>
+<td class="parameter_description"><p>location of a <span class="type">GErrorh</span>, or NULL if no error occured</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.2.3.10.3.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if it succeeds (or is not implemented), <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-stream-transmitter-force-remote-candidates"></a><h3>fs_stream_transmitter_force_remote_candidates ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+fs_stream_transmitter_force_remote_candidates
+                               (<em class="parameter"><code><a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *streamtransmitter</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *remote_candidates</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
+<p>This function forces data to be sent immediately to the selected remote
+candidate, by-passing any connectivity checks. There should be at most
+one candidate per component.</p>
+<div class="refsect3">
+<a name="id-1.3.2.3.10.4.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>streamtransmitter</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>remote_candidates</p></td>
+<td class="parameter_description"><p> a <a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> to
+force. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCandidate]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>error</p></td>
+<td class="parameter_description"><p>location of a <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or NULL if no error occured</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.2.3.10.4.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the candidates could be forced, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-stream-transmitter-stop"></a><h3>fs_stream_transmitter_stop ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+fs_stream_transmitter_stop (<em class="parameter"><code><a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *streamtransmitter</code></em>);</pre>
+<p>This functions stops the <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a>, it must be called before
+the last reference is dropped.</p>
+<div class="refsect3">
+<a name="id-1.3.2.3.10.5.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>streamtransmitter</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-stream-transmitter-emit-error"></a><h3>fs_stream_transmitter_emit_error ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+fs_stream_transmitter_emit_error (<em class="parameter"><code><a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *streamtransmitter</code></em>,
+                                  <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> error_no</code></em>,
+                                  <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *error_msg</code></em>);</pre>
+<p>This function emit the "error" signal on a <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a>, it should
+only be called by subclasses.</p>
+<div class="refsect3">
+<a name="id-1.3.2.3.10.6.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>streamtransmitter</p></td>
+<td class="parameter_description"><p><a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> on which to emit the error signal</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>error_no</p></td>
+<td class="parameter_description"><p>The number of the error</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>error_msg</p></td>
+<td class="parameter_description"><p>Error message (for the programmer)</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-stream-parse-component-state-changed"></a><h3>fs_stream_parse_component_state_changed ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+fs_stream_parse_component_state_changed
+                               (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
+                                <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> *component</code></em>,
+                                <em class="parameter"><code><a class="link" href="FsStream.html#FsStreamState" title="enum FsStreamState"><span class="type">FsStreamState</span></a> *state</code></em>);</pre>
+<p>Parses a "farstream-component-state-changed" message and checks if it matches
+the <em class="parameter"><code>stream</code></em>
+ parameters.</p>
+<div class="refsect3">
+<a name="id-1.3.2.3.10.7.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>stream</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> to match against the message</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>message</p></td>
+<td class="parameter_description"><p>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>component</p></td>
+<td class="parameter_description"><p> Returns the component from the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> if not <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>state</p></td>
+<td class="parameter_description"><p> Returns the <a class="link" href="FsStream.html#FsStreamState" title="enum FsStreamState"><span class="type">FsStreamState</span></a> from the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> if not <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.2.3.10.7.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the message matches the stream and is valid.</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-stream-parse-local-candidates-prepared"></a><h3>fs_stream_parse_local_candidates_prepared ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+fs_stream_parse_local_candidates_prepared
+                               (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
+                                <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>);</pre>
+<p>Parses a "farstream-local-candidates-prepared" message and checks if it matches
+the <em class="parameter"><code>stream</code></em>
+ parameters.</p>
+<div class="refsect3">
+<a name="id-1.3.2.3.10.8.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>stream</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> to match against the message</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>message</p></td>
+<td class="parameter_description"><p>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.2.3.10.8.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the message matches the stream and is valid.</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-stream-parse-new-active-candidate-pair"></a><h3>fs_stream_parse_new_active_candidate_pair ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+fs_stream_parse_new_active_candidate_pair
+                               (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
+                                <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
+                                <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> **local_candidate</code></em>,
+                                <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> **remote_candidate</code></em>);</pre>
+<p>Parses a "farstream-new-active-candidate-pair" message and checks
+if it matches the <em class="parameter"><code>stream</code></em>
+ parameters.</p>
+<div class="refsect3">
+<a name="id-1.3.2.3.10.9.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>stream</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> to match against the message</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>message</p></td>
+<td class="parameter_description"><p>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>local_candidate</p></td>
+<td class="parameter_description"><p> Returns the local <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> in
+the message if not <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>remote_candidate</p></td>
+<td class="parameter_description"><p> Returns the remote <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> in
+the message if not <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.2.3.10.9.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the message matches the stream and is valid.</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-stream-parse-new-local-candidate"></a><h3>fs_stream_parse_new_local_candidate ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+fs_stream_parse_new_local_candidate (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
+                                     <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
+                                     <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> **candidate</code></em>);</pre>
+<p>Parses a "farstream-new-local-candidate" message and checks if it matches
+the <em class="parameter"><code>stream</code></em>
+ parameters.</p>
+<div class="refsect3">
+<a name="id-1.3.2.3.10.10.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>stream</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> to match against the message</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>message</p></td>
+<td class="parameter_description"><p>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>candidate</p></td>
+<td class="parameter_description"><p> Returns the <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> in the message
+if not <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.2.3.10.10.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the message matches the stream and is valid.</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fs-stream-parse-recv-codecs-changed"></a><h3>fs_stream_parse_recv_codecs_changed ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+fs_stream_parse_recv_codecs_changed (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
+                                     <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
+                                     <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> **codecs</code></em>);</pre>
+<p>Parses a "farstream-recv-codecs-changed" message and checks if it matches
+the <em class="parameter"><code>stream</code></em>
+ parameters.</p>
+<div class="refsect3">
+<a name="id-1.3.2.3.10.11.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>stream</p></td>
+<td class="parameter_description"><p>a <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> to match against the message</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>message</p></td>
+<td class="parameter_description"><p>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>codecs</p></td>
+<td class="parameter_description"><p> Returns a <a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> of the message if not <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.2.3.10.11.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the message matches the stream and is valid.</p>
+<p></p>
+</div>
+</div>
+</div>
+<div class="refsect1">
+<a name="FsStreamTransmitter.other_details"></a><h2>Types and Values</h2>
+<div class="refsect2">
+<a name="FsStreamTransmitter-struct"></a><h3>struct FsStreamTransmitter</h3>
+<pre class="programlisting">struct FsStreamTransmitter;</pre>
+<p>All members are private, access them using methods and properties</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -147,648 +673,325 @@ All members are private, access them using methods and properties
   void (*stop) (FsStreamTransmitter *streamtransmitter);
 };
 </pre>
-<p>
-You must override the add_remote_candidate in a subclass
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+<p>You must override the add_remote_candidate in a subclass</p>
+<div class="refsect3">
+<a name="id-1.3.2.3.11.3.5"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><span class="term"><span class="type">GObjectClass</span> <em class="structfield"><code><a name="FsStreamTransmitterClass.parent-class"></a>parent_class</code></em>;</span></p></td>
-<td>Our parent</td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObjectClass"><span class="type">GObjectClass</span></a> <em class="structfield"><code><a name="FsStreamTransmitterClass.parent-class"></a>parent_class</code></em>;</p></td>
+<td class="struct_member_description"><p>Our parent</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="structfield"><code><a name="FsStreamTransmitterClass.add-remote-candidates"></a>add_remote_candidates</code></em> ()</span></p></td>
-<td>Sets the remote candidates</td>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="FsStreamTransmitterClass.add-remote-candidates"></a>add_remote_candidates</code></em> ()</p></td>
+<td class="struct_member_description"><p>Sets the remote candidates</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="structfield"><code><a name="FsStreamTransmitterClass.force-remote-candidates"></a>force_remote_candidates</code></em> ()</span></p></td>
-<td>Forces certain remote candidates</td>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="FsStreamTransmitterClass.force-remote-candidates"></a>force_remote_candidates</code></em> ()</p></td>
+<td class="struct_member_description"><p>Forces certain remote candidates</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="structfield"><code><a name="FsStreamTransmitterClass.gather-local-candidates"></a>gather_local_candidates</code></em> ()</span></p></td>
-<td>Starts the gathering of local candidates</td>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="FsStreamTransmitterClass.gather-local-candidates"></a>gather_local_candidates</code></em> ()</p></td>
+<td class="struct_member_description"><p>Starts the gathering of local candidates</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="structfield"><code><a name="FsStreamTransmitterClass.stop"></a>stop</code></em> ()</span></p></td>
-<td>Stop the stream transmitter synchronously (does any Gst stopping
-that needs to be done)</td>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="FsStreamTransmitterClass.stop"></a>stop</code></em> ()</p></td>
+<td class="struct_member_description"><p>Stop the stream transmitter synchronously (does any Gst stopping
+that needs to be done)</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
-<hr>
-<div class="refsect2">
-<a name="fs-stream-transmitter-add-remote-candidates"></a><h3>fs_stream_transmitter_add_remote_candidates ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_stream_transmitter_add_remote_candidates
-                                                        (<em class="parameter"><code><a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *streamtransmitter</code></em>,
-                                                         <em class="parameter"><code><span class="type">GList</span> *candidates</code></em>,
-                                                         <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
-<p>
-This function is used to add remote candidates to the transmitter
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>streamtransmitter</code></em> :</span></p></td>
-<td>a <span class="type">FsStreamTranmitter</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>candidates</code></em> :</span></p></td>
-<td>a <span class="type">GList</span> of the remote candidates. <span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCandidate]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td>location of a <span class="type">GError</span>, or NULL if no error occured</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>TRUE of the candidate could be added, FALSE if it couldnt
-(and the <span class="type">GError</span> will be set)</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-stream-transmitter-gather-local-candidates"></a><h3>fs_stream_transmitter_gather_local_candidates ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_stream_transmitter_gather_local_candidates
-                                                        (<em class="parameter"><code><a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *streamtransmitter</code></em>,
-                                                         <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
-<p>
-This function tells the transmitter to start gathering local candidates,
-signals for new candidates and newly active candidates can be emitted
-during the call to this function.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>streamtransmitter</code></em> :</span></p></td>
-<td>a <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td>location of a <span class="type">GErrorh</span>, or NULL if no error occured</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
-<code class="literal">TRUE</code> if it succeeds (or is not implemented), <code class="literal">FALSE</code> otherwise</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-stream-transmitter-force-remote-candidates"></a><h3>fs_stream_transmitter_force_remote_candidates ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_stream_transmitter_force_remote_candidates
-                                                        (<em class="parameter"><code><a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *streamtransmitter</code></em>,
-                                                         <em class="parameter"><code><span class="type">GList</span> *remote_candidates</code></em>,
-                                                         <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
-<p>
-This function forces data to be sent immediately to the selected remote
-candidate, by-passing any connectivity checks. There should be at most
-one candidate per component.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>streamtransmitter</code></em> :</span></p></td>
-<td>a <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>remote_candidates</code></em> :</span></p></td>
-<td>a <span class="type">GList</span> of <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> to
-force. <span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCandidate]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td>location of a <span class="type">GError</span>, or NULL if no error occured</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
-<code class="literal">TRUE</code> if the candidates could be forced, <code class="literal">FALSE</code> otherwise</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-stream-transmitter-stop"></a><h3>fs_stream_transmitter_stop ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                fs_stream_transmitter_stop          (<em class="parameter"><code><a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *streamtransmitter</code></em>);</pre>
-<p>
-This functions stops the <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a>, it must be called before
-the last reference is dropped.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody><tr>
-<td><p><span class="term"><em class="parameter"><code>streamtransmitter</code></em> :</span></p></td>
-<td>a <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a>
-</td>
-</tr></tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-stream-transmitter-emit-error"></a><h3>fs_stream_transmitter_emit_error ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                fs_stream_transmitter_emit_error    (<em class="parameter"><code><a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *streamtransmitter</code></em>,
-                                                         <em class="parameter"><code><span class="type">gint</span> error_no</code></em>,
-                                                         <em class="parameter"><code>const <span class="type">gchar</span> *error_msg</code></em>);</pre>
-<p>
-This function emit the "error" signal on a <a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a>, it should
-only be called by subclasses.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>streamtransmitter</code></em> :</span></p></td>
-<td>
-<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> on which to emit the error signal</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>error_no</code></em> :</span></p></td>
-<td>The number of the error</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>error_msg</code></em> :</span></p></td>
-<td>Error message (for the programmer)</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-stream-parse-component-state-changed"></a><h3>fs_stream_parse_component_state_changed ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_stream_parse_component_state_changed
-                                                        (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
-                                                         <em class="parameter"><code><span class="type">guint</span> *component</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="FsStream.html#FsStreamState" title="enum FsStreamState"><span class="type">FsStreamState</span></a> *state</code></em>);</pre>
-<p>
-Parses a "farstream-component-state-changed" message and checks if it matches
-the <em class="parameter"><code>stream</code></em> parameters.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>stream</code></em> :</span></p></td>
-<td>a <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> to match against the message</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>message</code></em> :</span></p></td>
-<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>component</code></em> :</span></p></td>
-<td>Returns the component from the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> if not <code class="literal">NULL</code>. <span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>state</code></em> :</span></p></td>
-<td>Returns the <a class="link" href="FsStream.html#FsStreamState" title="enum FsStreamState"><span class="type">FsStreamState</span></a> from the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> if not <code class="literal">NULL</code>. <span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
-<code class="literal">TRUE</code> if the message matches the stream and is valid.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-stream-parse-local-candidates-prepared"></a><h3>fs_stream_parse_local_candidates_prepared ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_stream_parse_local_candidates_prepared
-                                                        (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>);</pre>
-<p>
-Parses a "farstream-local-candidates-prepared" message and checks if it matches
-the <em class="parameter"><code>stream</code></em> parameters.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>stream</code></em> :</span></p></td>
-<td>a <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> to match against the message</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>message</code></em> :</span></p></td>
-<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
-<code class="literal">TRUE</code> if the message matches the stream and is valid.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-stream-parse-new-active-candidate-pair"></a><h3>fs_stream_parse_new_active_candidate_pair ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_stream_parse_new_active_candidate_pair
-                                                        (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> **local_candidate</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> **remote_candidate</code></em>);</pre>
-<p>
-Parses a "farstream-new-active-candidate-pair" message and checks
-if it matches the <em class="parameter"><code>stream</code></em> parameters.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>stream</code></em> :</span></p></td>
-<td>a <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> to match against the message</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>message</code></em> :</span></p></td>
-<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>local_candidate</code></em> :</span></p></td>
-<td>Returns the local <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> in
-the message if not <code class="literal">NULL</code>. <span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>remote_candidate</code></em> :</span></p></td>
-<td>Returns the remote <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> in
-the message if not <code class="literal">NULL</code>. <span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
-<code class="literal">TRUE</code> if the message matches the stream and is valid.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-stream-parse-new-local-candidate"></a><h3>fs_stream_parse_new_local_candidate ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_stream_parse_new_local_candidate (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> **candidate</code></em>);</pre>
-<p>
-Parses a "farstream-new-local-candidate" message and checks if it matches
-the <em class="parameter"><code>stream</code></em> parameters.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>stream</code></em> :</span></p></td>
-<td>a <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> to match against the message</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>message</code></em> :</span></p></td>
-<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>candidate</code></em> :</span></p></td>
-<td>Returns the <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> in the message
-if not <code class="literal">NULL</code>. <span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
-<code class="literal">TRUE</code> if the message matches the stream and is valid.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="fs-stream-parse-recv-codecs-changed"></a><h3>fs_stream_parse_recv_codecs_changed ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>            fs_stream_parse_recv_codecs_changed (<em class="parameter"><code><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> *stream</code></em>,
-                                                         <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> *message</code></em>,
-                                                         <em class="parameter"><code><span class="type">GList</span> **codecs</code></em>);</pre>
-<p>
-Returns a <span class="type">GList</span> of <a class="link" href="farstream-libs-FsCodec.html#FsCodec" title="struct FsCodec"><span class="type">FsCodec</span></a> of the message if not <code class="literal">NULL</code>
-</p>
-<p>
-Parses a "farstream-recv-codecs-changed" message and checks if it matches
-the <em class="parameter"><code>stream</code></em> parameters.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>stream</code></em> :</span></p></td>
-<td>a <a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> to match against the message</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>message</code></em> :</span></p></td>
-<td>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html"><span class="type">GstMessage</span></a> to parse</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>codecs</code></em> :</span></p></td>
-<td>. <span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>][<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
-<code class="literal">TRUE</code> if the message matches the stream and is valid.</td>
-</tr>
-</tbody>
-</table></div>
 </div>
 </div>
 <div class="refsect1">
 <a name="FsStreamTransmitter.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
-<a name="FsStreamTransmitter--associate-on-source"></a><h3>The <code class="literal">"associate-on-source"</code> property</h3>
-<pre class="programlisting">  "associate-on-source"      <span class="type">gboolean</span>              : Read / Write / Construct Only</pre>
-<p>
-This tells the stream transmitter to associate incoming data with this
-based on the source without looking at the content if possible.
-</p>
+<a name="FsStreamTransmitter--associate-on-source"></a><h3>The <code class="literal">“associate-on-source”</code> property</h3>
+<pre class="programlisting">  “associate-on-source”      <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>This tells the stream transmitter to associate incoming data with this
+based on the source without looking at the content if possible.</p>
+<p>Flags: Read / Write / Construct Only</p>
 <p>Default value: TRUE</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="FsStreamTransmitter--preferred-local-candidates"></a><h3>The <code class="literal">"preferred-local-candidates"</code> property</h3>
-<pre class="programlisting">  "preferred-local-candidates" <span class="type">FsCandidateList</span>*      : Read / Write / Construct Only</pre>
+<a name="FsStreamTransmitter--preferred-local-candidates"></a><h3>The <code class="literal">“preferred-local-candidates”</code> property</h3>
+<pre class="programlisting">  “preferred-local-candidates” <span class="type">FsCandidateList</span> *</pre>
 <p>A GList of FsCandidates.</p>
+<p>Flags: Read / Write / Construct Only</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="FsStreamTransmitter--sending"></a><h3>The <code class="literal">"sending"</code> property</h3>
-<pre class="programlisting">  "sending"                  <span class="type">gboolean</span>              : Read / Write</pre>
-<p>
-A network source <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> to be used by the <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a>
-</p>
+<a name="FsStreamTransmitter--sending"></a><h3>The <code class="literal">“sending”</code> property</h3>
+<pre class="programlisting">  “sending”                  <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>A network source <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> to be used by the <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a></p>
+<p>Flags: Read / Write</p>
 <p>Default value: TRUE</p>
 </div>
 </div>
 <div class="refsect1">
 <a name="FsStreamTransmitter.signal-details"></a><h2>Signal Details</h2>
 <div class="refsect2">
-<a name="FsStreamTransmitter-error"></a><h3>The <code class="literal">"error"</code> signal</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *self,
-                                                        <a class="link" href="FsConference.html#FsError" title="enum FsError"><span class="type">FsError</span></a>              errorno,
-                                                        <span class="type">gchar</span>               *error_msg,
-                                                        <span class="type">gpointer</span>             user_data)      : <code class="literal">Run Last</code></pre>
-<p>
-This signal is emitted in any error condition
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+<a name="FsStreamTransmitter-error"></a><h3>The <code class="literal">“error”</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+user_function (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *self,
+               <a class="link" href="FsConference.html#FsError" title="enum FsError"><span class="type">FsError</span></a>              errorno,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>               *error_msg,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>             user_data)</pre>
+<p>This signal is emitted in any error condition</p>
+<div class="refsect3">
+<a name="id-1.3.2.3.13.2.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
-<td>
-<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> that emitted the signal</td>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p><a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> that emitted the signal</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>errorno</code></em> :</span></p></td>
-<td>The number of the error</td>
+<td class="parameter_name"><p>errorno</p></td>
+<td class="parameter_description"><p>The number of the error</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>error_msg</code></em> :</span></p></td>
-<td>Error message (for the programmer)</td>
+<td class="parameter_name"><p>error_msg</p></td>
+<td class="parameter_description"><p>Error message (for the programmer)</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
-<td>user data set when the signal handler was connected.</td>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
+<p>Flags: Run Last</p>
+</div>
 <hr>
 <div class="refsect2">
-<a name="FsStreamTransmitter-known-source-packet-received"></a><h3>The <code class="literal">"known-source-packet-received"</code> signal</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *self,
-                                                        <span class="type">guint</span>                component,
-                                                        <span class="type">gpointer</span>             buffer,
-                                                        <span class="type">gpointer</span>             user_data)      : <code class="literal">Run Last</code></pre>
-<p>
-This signal is emitted when a buffer coming from a confirmed known source
-is received.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+<a name="FsStreamTransmitter-known-source-packet-received"></a><h3>The <code class="literal">“known-source-packet-received”</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+user_function (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *self,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                component,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>             buffer,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>             user_data)</pre>
+<p>This signal is emitted when a buffer coming from a confirmed known source
+is received.</p>
+<div class="refsect3">
+<a name="id-1.3.2.3.13.3.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
-<td>
-<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> that emitted the signal</td>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p><a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> that emitted the signal</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>component</code></em> :</span></p></td>
-<td>The Component on which this buffer was received</td>
+<td class="parameter_name"><p>component</p></td>
+<td class="parameter_description"><p>The Component on which this buffer was received</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>buffer</code></em> :</span></p></td>
-<td>the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> coming from the known source</td>
+<td class="parameter_name"><p>buffer</p></td>
+<td class="parameter_description"><p>the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> coming from the known source</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
-<td>user data set when the signal handler was connected.</td>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
+<p>Flags: Run Last</p>
+</div>
 <hr>
 <div class="refsect2">
-<a name="FsStreamTransmitter-local-candidates-prepared"></a><h3>The <code class="literal">"local-candidates-prepared"</code> signal</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *self,
-                                                        <span class="type">gpointer</span>             user_data)      : <code class="literal">Run Last</code></pre>
-<p>
-This signal is emitted when all local candidates have been
-prepared, an ICE implementation would send its SDP offer or answer.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+<a name="FsStreamTransmitter-local-candidates-prepared"></a><h3>The <code class="literal">“local-candidates-prepared”</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+user_function (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *self,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>             user_data)</pre>
+<p>This signal is emitted when all local candidates have been
+prepared, an ICE implementation would send its SDP offer or answer.</p>
+<div class="refsect3">
+<a name="id-1.3.2.3.13.4.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
-<td>
-<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> that emitted the signal</td>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p><a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> that emitted the signal</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
-<td>user data set when the signal handler was connected.</td>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
+<p>Flags: Run Last</p>
+</div>
 <hr>
 <div class="refsect2">
-<a name="FsStreamTransmitter-new-active-candidate-pair"></a><h3>The <code class="literal">"new-active-candidate-pair"</code> signal</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *self,
-                                                        <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>         *local_candidate,
-                                                        <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>         *remote_candidate,
-                                                        <span class="type">gpointer</span>             user_data)             : <code class="literal">Run Last</code></pre>
-<p>
-This signal is emitted when there is a new active chandidate pair that has
+<a name="FsStreamTransmitter-new-active-candidate-pair"></a><h3>The <code class="literal">“new-active-candidate-pair”</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+user_function (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *self,
+               <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>         *local_candidate,
+               <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>         *remote_candidate,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>             user_data)</pre>
+<p>This signal is emitted when there is a new active chandidate pair that has
 been established. This is specially useful for ICE where the active
 candidate pair can change automatically due to network conditions. The user
 must not modify the candidates and must copy them if he wants to use them
-outside the callback scope.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+outside the callback scope.</p>
+<div class="refsect3">
+<a name="id-1.3.2.3.13.5.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
-<td>
-<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> that emitted the signal</td>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p><a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> that emitted the signal</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>local_candidate</code></em> :</span></p></td>
-<td>
-<a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> of the local candidate being used</td>
+<td class="parameter_name"><p>local_candidate</p></td>
+<td class="parameter_description"><p><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> of the local candidate being used</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>remote_candidate</code></em> :</span></p></td>
-<td>
-<a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> of the remote candidate being used</td>
+<td class="parameter_name"><p>remote_candidate</p></td>
+<td class="parameter_description"><p><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> of the remote candidate being used</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
-<td>user data set when the signal handler was connected.</td>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
+<p>Flags: Run Last</p>
+</div>
 <hr>
 <div class="refsect2">
-<a name="FsStreamTransmitter-new-local-candidate"></a><h3>The <code class="literal">"new-local-candidate"</code> signal</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *self,
-                                                        <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>         *local_candidate,
-                                                        <span class="type">gpointer</span>             user_data)            : <code class="literal">Run Last</code></pre>
-<p>
-This signal is emitted when a new local candidate is discovered.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+<a name="FsStreamTransmitter-new-local-candidate"></a><h3>The <code class="literal">“new-local-candidate”</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+user_function (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *self,
+               <a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a>         *local_candidate,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>             user_data)</pre>
+<p>This signal is emitted when a new local candidate is discovered.</p>
+<div class="refsect3">
+<a name="id-1.3.2.3.13.6.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
-<td>
-<a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> that emitted the signal</td>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p><a class="link" href="FsStream.html" title="FsStream"><span class="type">FsStream</span></a> that emitted the signal</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>local_candidate</code></em> :</span></p></td>
-<td>
-<a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> of the local candidate</td>
+<td class="parameter_name"><p>local_candidate</p></td>
+<td class="parameter_description"><p><a class="link" href="farstream-libs-FsCandidate.html#FsCandidate" title="struct FsCandidate"><span class="type">FsCandidate</span></a> of the local candidate</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
-<td>user data set when the signal handler was connected.</td>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
+<p>Flags: Run Last</p>
+</div>
 <hr>
 <div class="refsect2">
-<a name="FsStreamTransmitter-state-changed"></a><h3>The <code class="literal">"state-changed"</code> signal</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *self,
-                                                        <span class="type">guint</span>                component,
-                                                        <a class="link" href="FsStream.html#FsStreamState" title="enum FsStreamState"><span class="type">FsStreamState</span></a>        state,
-                                                        <span class="type">gpointer</span>             user_data)      : <code class="literal">Run Last</code></pre>
-<p>
-This signal is emitted when the ICE state (or equivalent) of the component
-changes
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+<a name="FsStreamTransmitter-state-changed"></a><h3>The <code class="literal">“state-changed”</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+user_function (<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> *self,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                component,
+               <a class="link" href="FsStream.html#FsStreamState" title="enum FsStreamState"><span class="type">FsStreamState</span></a>        state,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>             user_data)</pre>
+<p>This signal is emitted when the ICE state (or equivalent) of the component
+changes</p>
+<div class="refsect3">
+<a name="id-1.3.2.3.13.7.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
-<td>
-<a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> that emitted the signal</td>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p><a class="link" href="FsStreamTransmitter.html" title="FsStreamTransmitter"><span class="type">FsStreamTransmitter</span></a> that emitted the signal</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>component</code></em> :</span></p></td>
-<td>the id of the component which state has changed</td>
+<td class="parameter_name"><p>component</p></td>
+<td class="parameter_description"><p>the id of the component which state has changed</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>state</code></em> :</span></p></td>
-<td>the new state of the component</td>
+<td class="parameter_name"><p>state</p></td>
+<td class="parameter_description"><p>the new state of the component</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
-<td>user data set when the signal handler was connected.</td>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
+</div>
+<p>Flags: Run Last</p>
 </div>
 </div>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.19</div>
+          Generated by GTK-Doc V1.21</div>
 </body>
 </html>

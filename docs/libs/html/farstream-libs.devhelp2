@@ -30,215 +30,183 @@
     </sub>
   </chapters>
   <functions>
-    <keyword type="" name="The &quot;farstream-error&quot; message" link="FsConference.html#id-1.2.2.2.6.4"/>
-    <keyword type="struct" name="struct FsConference" link="FsConference.html#FsConference-struct"/>
-    <keyword type="function" name="fs_conference_new_session ()" link="FsConference.html#fs-conference-new-session"/>
-    <keyword type="function" name="fs_conference_new_participant ()" link="FsConference.html#fs-conference-new-participant"/>
+    <keyword type="" name="The &quot;farstream-error&quot; message" link="FsConference.html#id-1.2.2.2.8.4"/>
+    <keyword type="function" name="fs_conference_new_session ()" link="FsConference.html#fs-conference-new-session"/>
+    <keyword type="function" name="fs_conference_new_participant ()" link="FsConference.html#fs-conference-new-participant"/>
     <keyword type="macro" name="FS_ERROR" link="FsConference.html#FS-ERROR:CAPS"/>
-    <keyword type="enum" name="enum FsError" link="FsConference.html#FsError"/>
     <keyword type="macro" name="FS_ERROR_IS_FATAL()" link="FsConference.html#FS-ERROR-IS-FATAL:CAPS"/>
-    <keyword type="function" name="fs_parse_error ()" link="FsConference.html#fs-parse-error"/>
-    <keyword type="struct" name="FsParticipant" link="FsParticipant.html#FsParticipant-struct"/>
-    <keyword type="struct" name="struct FsParticipantClass" link="FsParticipant.html#FsParticipantClass"/>
+    <keyword type="function" name="fs_parse_error ()" link="FsConference.html#fs-parse-error"/>
+    <keyword type="struct" name="struct FsConference" link="FsConference.html#FsConference-struct"/>
+    <keyword type="enum" name="enum FsError" link="FsConference.html#FsError"/>
     <keyword type="macro" name="FS_PARTICIPANT_DATA_LOCK()" link="FsParticipant.html#FS-PARTICIPANT-DATA-LOCK:CAPS"/>
     <keyword type="macro" name="FS_PARTICIPANT_DATA_UNLOCK()" link="FsParticipant.html#FS-PARTICIPANT-DATA-UNLOCK:CAPS"/>
-    <keyword type="" name="The &quot;farstream-send-codec-changed&quot;&#10;  message" link="FsSession.html#id-1.2.2.4.7.4"/>
-    <keyword type="" name="The &quot;farstream-codecs-changed&quot;&#10; message" link="FsSession.html#id-1.2.2.4.7.5"/>
-    <keyword type="" name="The &quot;farstream-telephony-event-started&quot;&#10; message" link="FsSession.html#id-1.2.2.4.7.6"/>
-    <keyword type="" name="The &quot;farstream-telephony-event-stopped&quot;&#10; message" link="FsSession.html#id-1.2.2.4.7.7"/>
-    <keyword type="struct" name="FsSession" link="FsSession.html#FsSession-struct"/>
+    <keyword type="struct" name="struct FsParticipant" link="FsParticipant.html#FsParticipant-struct"/>
+    <keyword type="struct" name="struct FsParticipantClass" link="FsParticipant.html#FsParticipantClass"/>
+    <keyword type="" name="The &quot;farstream-send-codec-changed&quot;&#10;  message" link="FsSession.html#id-1.2.2.4.9.4"/>
+    <keyword type="" name="The &quot;farstream-codecs-changed&quot;&#10; message" link="FsSession.html#id-1.2.2.4.9.5"/>
+    <keyword type="" name="The &quot;farstream-telephony-event-started&quot;&#10; message" link="FsSession.html#id-1.2.2.4.9.6"/>
+    <keyword type="" name="The &quot;farstream-telephony-event-stopped&quot;&#10; message" link="FsSession.html#id-1.2.2.4.9.7"/>
+    <keyword type="function" name="fs_session_new_stream ()" link="FsSession.html#fs-session-new-stream"/>
+    <keyword type="function" name="fs_session_set_codec_preferences ()" link="FsSession.html#fs-session-set-codec-preferences"/>
+    <keyword type="function" name="fs_session_destroy ()" link="FsSession.html#fs-session-destroy"/>
+    <keyword type="function" name="fs_session_start_telephony_event ()" link="FsSession.html#fs-session-start-telephony-event"/>
+    <keyword type="function" name="fs_session_stop_telephony_event ()" link="FsSession.html#fs-session-stop-telephony-event"/>
+    <keyword type="function" name="fs_session_set_send_codec ()" link="FsSession.html#fs-session-set-send-codec"/>
+    <keyword type="function" name="fs_session_list_transmitters ()" link="FsSession.html#fs-session-list-transmitters"/>
+    <keyword type="function" name="fs_session_get_stream_transmitter_type ()" link="FsSession.html#fs-session-get-stream-transmitter-type"/>
+    <keyword type="function" name="fs_session_codecs_need_resend ()" link="FsSession.html#fs-session-codecs-need-resend"/>
+    <keyword type="function" name="fs_session_set_allowed_caps ()" link="FsSession.html#fs-session-set-allowed-caps" since="UNRELEASED"/>
+    <keyword type="function" name="fs_session_set_encryption_parameters ()" link="FsSession.html#fs-session-set-encryption-parameters" since="UNRELEASED"/>
+    <keyword type="function" name="fs_session_emit_error ()" link="FsSession.html#fs-session-emit-error"/>
+    <keyword type="function" name="fs_session_parse_codecs_changed ()" link="FsSession.html#fs-session-parse-codecs-changed"/>
+    <keyword type="function" name="fs_session_parse_send_codec_changed ()" link="FsSession.html#fs-session-parse-send-codec-changed"/>
+    <keyword type="function" name="fs_session_parse_telephony_event_started ()" link="FsSession.html#fs-session-parse-telephony-event-started"/>
+    <keyword type="function" name="fs_session_parse_telephony_event_stopped ()" link="FsSession.html#fs-session-parse-telephony-event-stopped"/>
+    <keyword type="struct" name="struct FsSession" link="FsSession.html#FsSession-struct"/>
     <keyword type="struct" name="struct FsSessionClass" link="FsSession.html#FsSessionClass"/>
     <keyword type="enum" name="enum FsDTMFEvent" link="FsSession.html#FsDTMFEvent"/>
     <keyword type="enum" name="enum FsDTMFMethod" link="FsSession.html#FsDTMFMethod"/>
-    <keyword type="function" name="fs_session_new_stream ()" link="FsSession.html#fs-session-new-stream"/>
-    <keyword type="function" name="fs_session_set_codec_preferences ()" link="FsSession.html#fs-session-set-codec-preferences"/>
-    <keyword type="function" name="fs_session_destroy ()" link="FsSession.html#fs-session-destroy"/>
-    <keyword type="function" name="fs_session_start_telephony_event ()" link="FsSession.html#fs-session-start-telephony-event"/>
-    <keyword type="function" name="fs_session_stop_telephony_event ()" link="FsSession.html#fs-session-stop-telephony-event"/>
-    <keyword type="function" name="fs_session_set_send_codec ()" link="FsSession.html#fs-session-set-send-codec"/>
-    <keyword type="function" name="fs_session_list_transmitters ()" link="FsSession.html#fs-session-list-transmitters"/>
-    <keyword type="function" name="fs_session_get_stream_transmitter_type ()" link="FsSession.html#fs-session-get-stream-transmitter-type"/>
-    <keyword type="function" name="fs_session_codecs_need_resend ()" link="FsSession.html#fs-session-codecs-need-resend"/>
-    <keyword type="function" name="fs_session_emit_error ()" link="FsSession.html#fs-session-emit-error"/>
-    <keyword type="function" name="fs_session_parse_codecs_changed ()" link="FsSession.html#fs-session-parse-codecs-changed"/>
-    <keyword type="function" name="fs_session_parse_send_codec_changed ()" link="FsSession.html#fs-session-parse-send-codec-changed"/>
-    <keyword type="function" name="fs_session_parse_telephony_event_started ()" link="FsSession.html#fs-session-parse-telephony-event-started"/>
-    <keyword type="function" name="fs_session_parse_telephony_event_stopped ()" link="FsSession.html#fs-session-parse-telephony-event-stopped"/>
-    <keyword type="property" name="The &quot;codec-preferences&quot; property" link="FsSession.html#FsSession--codec-preferences"/>
-    <keyword type="property" name="The &quot;codecs&quot; property" link="FsSession.html#FsSession--codecs"/>
-    <keyword type="property" name="The &quot;codecs-without-config&quot; property" link="FsSession.html#FsSession--codecs-without-config"/>
-    <keyword type="property" name="The &quot;conference&quot; property" link="FsSession.html#FsSession--conference"/>
-    <keyword type="property" name="The &quot;current-send-codec&quot; property" link="FsSession.html#FsSession--current-send-codec"/>
-    <keyword type="property" name="The &quot;id&quot; property" link="FsSession.html#FsSession--id"/>
-    <keyword type="property" name="The &quot;media-type&quot; property" link="FsSession.html#FsSession--media-type"/>
-    <keyword type="property" name="The &quot;sink-pad&quot; property" link="FsSession.html#FsSession--sink-pad"/>
-    <keyword type="property" name="The &quot;tos&quot; property" link="FsSession.html#FsSession--tos"/>
-    <keyword type="signal" name="The &quot;error&quot; signal" link="FsSession.html#FsSession-error"/>
-    <keyword type="" name="The &quot;farstream-new-local-candidate&quot; message" link="FsStream.html#id-1.2.2.5.7.4"/>
-    <keyword type="" name="The &quot;farstream-local-candidates-prepared&quot; message" link="FsStream.html#id-1.2.2.5.7.5"/>
-    <keyword type="" name="The &quot;farstream-new-active-candidate-pair&quot; message" link="FsStream.html#id-1.2.2.5.7.6"/>
-    <keyword type="" name="The &quot;farstream-recv-codecs-changed&quot; message" link="FsStream.html#id-1.2.2.5.7.7"/>
-    <keyword type="" name="The &quot;farstream-component-state-changed&quot; message" link="FsStream.html#id-1.2.2.5.7.8"/>
-    <keyword type="struct" name="FsStream" link="FsStream.html#FsStream-struct"/>
+    <keyword type="property" name="The “allowed-sink-caps” property" link="FsSession.html#FsSession--allowed-sink-caps"/>
+    <keyword type="property" name="The “allowed-src-caps” property" link="FsSession.html#FsSession--allowed-src-caps"/>
+    <keyword type="property" name="The “codec-preferences” property" link="FsSession.html#FsSession--codec-preferences"/>
+    <keyword type="property" name="The “codecs” property" link="FsSession.html#FsSession--codecs"/>
+    <keyword type="property" name="The “codecs-without-config” property" link="FsSession.html#FsSession--codecs-without-config"/>
+    <keyword type="property" name="The “conference” property" link="FsSession.html#FsSession--conference"/>
+    <keyword type="property" name="The “current-send-codec” property" link="FsSession.html#FsSession--current-send-codec"/>
+    <keyword type="property" name="The “encryption-parameters” property" link="FsSession.html#FsSession--encryption-parameters"/>
+    <keyword type="property" name="The “id” property" link="FsSession.html#FsSession--id"/>
+    <keyword type="property" name="The “media-type” property" link="FsSession.html#FsSession--media-type"/>
+    <keyword type="property" name="The “sink-pad” property" link="FsSession.html#FsSession--sink-pad"/>
+    <keyword type="property" name="The “tos” property" link="FsSession.html#FsSession--tos"/>
+    <keyword type="signal" name="The “error” signal" link="FsSession.html#FsSession-error"/>
+    <keyword type="" name="The &quot;farstream-new-local-candidate&quot; message" link="FsStream.html#id-1.2.2.5.9.4"/>
+    <keyword type="" name="The &quot;farstream-local-candidates-prepared&quot; message" link="FsStream.html#id-1.2.2.5.9.5"/>
+    <keyword type="" name="The &quot;farstream-new-active-candidate-pair&quot; message" link="FsStream.html#id-1.2.2.5.9.6"/>
+    <keyword type="" name="The &quot;farstream-recv-codecs-changed&quot; message" link="FsStream.html#id-1.2.2.5.9.7"/>
+    <keyword type="" name="The &quot;farstream-component-state-changed&quot; message" link="FsStream.html#id-1.2.2.5.9.8"/>
+    <keyword type="function" name="fs_stream_set_transmitter ()" link="FsStream.html#fs-stream-set-transmitter"/>
+    <keyword type="function" name="fs_stream_set_transmitter_ht ()" link="FsStream.html#fs-stream-set-transmitter-ht"/>
+    <keyword type="function" name="fs_stream_add_remote_candidates ()" link="FsStream.html#fs-stream-add-remote-candidates"/>
+    <keyword type="function" name="fs_stream_set_remote_codecs ()" link="FsStream.html#fs-stream-set-remote-codecs"/>
+    <keyword type="function" name="fs_stream_force_remote_candidates ()" link="FsStream.html#fs-stream-force-remote-candidates"/>
+    <keyword type="function" name="fs_stream_set_decryption_parameters ()" link="FsStream.html#fs-stream-set-decryption-parameters" since="UNRELEASED"/>
+    <keyword type="function" name="fs_stream_destroy ()" link="FsStream.html#fs-stream-destroy"/>
+    <keyword type="function" name="fs_stream_iterate_src_pads ()" link="FsStream.html#fs-stream-iterate-src-pads"/>
+    <keyword type="function" name="fs_stream_add_id ()" link="FsStream.html#fs-stream-add-id"/>
+    <keyword type="function" name="fs_stream_emit_error ()" link="FsStream.html#fs-stream-emit-error"/>
+    <keyword type="function" name="fs_stream_emit_src_pad_added ()" link="FsStream.html#fs-stream-emit-src-pad-added"/>
+    <keyword type="struct" name="struct FsStream" link="FsStream.html#FsStream-struct"/>
     <keyword type="struct" name="struct FsStreamClass" link="FsStream.html#FsStreamClass"/>
     <keyword type="enum" name="enum FsStreamDirection" link="FsStream.html#FsStreamDirection"/>
     <keyword type="enum" name="enum FsStreamState" link="FsStream.html#FsStreamState"/>
-    <keyword type="function" name="fs_stream_set_transmitter ()" link="FsStream.html#fs-stream-set-transmitter"/>
-    <keyword type="function" name="fs_stream_set_transmitter_ht ()" link="FsStream.html#fs-stream-set-transmitter-ht"/>
-    <keyword type="function" name="fs_stream_add_remote_candidates ()" link="FsStream.html#fs-stream-add-remote-candidates"/>
-    <keyword type="function" name="fs_stream_set_remote_codecs ()" link="FsStream.html#fs-stream-set-remote-codecs"/>
-    <keyword type="function" name="fs_stream_force_remote_candidates ()" link="FsStream.html#fs-stream-force-remote-candidates"/>
-    <keyword type="function" name="fs_stream_destroy ()" link="FsStream.html#fs-stream-destroy"/>
-    <keyword type="function" name="fs_stream_iterate_src_pads ()" link="FsStream.html#fs-stream-iterate-src-pads"/>
-    <keyword type="function" name="fs_stream_add_id ()" link="FsStream.html#fs-stream-add-id"/>
-    <keyword type="function" name="fs_stream_emit_error ()" link="FsStream.html#fs-stream-emit-error"/>
-    <keyword type="function" name="fs_stream_emit_src_pad_added ()" link="FsStream.html#fs-stream-emit-src-pad-added"/>
-    <keyword type="property" name="The &quot;current-recv-codecs&quot; property" link="FsStream.html#FsStream--current-recv-codecs"/>
-    <keyword type="property" name="The &quot;direction&quot; property" link="FsStream.html#FsStream--direction"/>
-    <keyword type="property" name="The &quot;negotiated-codecs&quot; property" link="FsStream.html#FsStream--negotiated-codecs"/>
-    <keyword type="property" name="The &quot;participant&quot; property" link="FsStream.html#FsStream--participant"/>
-    <keyword type="property" name="The &quot;remote-codecs&quot; property" link="FsStream.html#FsStream--remote-codecs"/>
-    <keyword type="property" name="The &quot;session&quot; property" link="FsStream.html#FsStream--session"/>
-    <keyword type="signal" name="The &quot;error&quot; signal" link="FsStream.html#FsStream-error"/>
-    <keyword type="signal" name="The &quot;src-pad-added&quot; signal" link="FsStream.html#FsStream-src-pad-added"/>
+    <keyword type="property" name="The “current-recv-codecs” property" link="FsStream.html#FsStream--current-recv-codecs"/>
+    <keyword type="property" name="The “decryption-parameters” property" link="FsStream.html#FsStream--decryption-parameters"/>
+    <keyword type="property" name="The “direction” property" link="FsStream.html#FsStream--direction"/>
+    <keyword type="property" name="The “negotiated-codecs” property" link="FsStream.html#FsStream--negotiated-codecs"/>
+    <keyword type="property" name="The “participant” property" link="FsStream.html#FsStream--participant"/>
+    <keyword type="property" name="The “remote-codecs” property" link="FsStream.html#FsStream--remote-codecs"/>
+    <keyword type="property" name="The “session” property" link="FsStream.html#FsStream--session"/>
+    <keyword type="signal" name="The “error” signal" link="FsStream.html#FsStream-error"/>
+    <keyword type="signal" name="The “src-pad-added” signal" link="FsStream.html#FsStream-src-pad-added"/>
+    <keyword type="function" name="fs_candidate_new ()" link="farstream-libs-FsCandidate.html#fs-candidate-new"/>
+    <keyword type="function" name="fs_candidate_new_full ()" link="farstream-libs-FsCandidate.html#fs-candidate-new-full"/>
+    <keyword type="function" name="fs_candidate_destroy ()" link="farstream-libs-FsCandidate.html#fs-candidate-destroy"/>
+    <keyword type="function" name="fs_candidate_copy ()" link="farstream-libs-FsCandidate.html#fs-candidate-copy"/>
+    <keyword type="function" name="fs_candidate_list_destroy ()" link="farstream-libs-FsCandidate.html#fs-candidate-list-destroy"/>
+    <keyword type="function" name="fs_candidate_list_copy ()" link="farstream-libs-FsCandidate.html#fs-candidate-list-copy"/>
+    <keyword type="function" name="fs_value_set_candidate_list ()" link="farstream-libs-FsCandidate.html#fs-value-set-candidate-list"/>
     <keyword type="struct" name="struct FsCandidate" link="farstream-libs-FsCandidate.html#FsCandidate"/>
     <keyword type="enum" name="enum FsCandidateType" link="farstream-libs-FsCandidate.html#FsCandidateType"/>
     <keyword type="enum" name="enum FsNetworkProtocol" link="farstream-libs-FsCandidate.html#FsNetworkProtocol"/>
     <keyword type="enum" name="enum FsComponentType" link="farstream-libs-FsCandidate.html#FsComponentType"/>
-    <keyword type="function" name="fs_candidate_new ()" link="farstream-libs-FsCandidate.html#fs-candidate-new"/>
-    <keyword type="function" name="fs_candidate_new_full ()" link="farstream-libs-FsCandidate.html#fs-candidate-new-full"/>
-    <keyword type="function" name="fs_candidate_destroy ()" link="farstream-libs-FsCandidate.html#fs-candidate-destroy"/>
-    <keyword type="function" name="fs_candidate_copy ()" link="farstream-libs-FsCandidate.html#fs-candidate-copy"/>
-    <keyword type="function" name="fs_candidate_list_destroy ()" link="farstream-libs-FsCandidate.html#fs-candidate-list-destroy"/>
-    <keyword type="function" name="fs_candidate_list_copy ()" link="farstream-libs-FsCandidate.html#fs-candidate-list-copy"/>
-    <keyword type="function" name="fs_value_set_candidate_list ()" link="farstream-libs-FsCandidate.html#fs-value-set-candidate-list"/>
+    <keyword type="macro" name="FS_CODEC_ID_ANY" link="farstream-libs-FsCodec.html#FS-CODEC-ID-ANY:CAPS"/>
+    <keyword type="macro" name="FS_CODEC_ID_DISABLE" link="farstream-libs-FsCodec.html#FS-CODEC-ID-DISABLE:CAPS"/>
+    <keyword type="function" name="fs_codec_new ()" link="farstream-libs-FsCodec.html#fs-codec-new"/>
+    <keyword type="function" name="fs_codec_destroy ()" link="farstream-libs-FsCodec.html#fs-codec-destroy"/>
+    <keyword type="function" name="fs_codec_copy ()" link="farstream-libs-FsCodec.html#fs-codec-copy"/>
+    <keyword type="function" name="fs_codec_are_equal ()" link="farstream-libs-FsCodec.html#fs-codec-are-equal"/>
+    <keyword type="function" name="fs_codec_list_from_keyfile ()" link="farstream-libs-FsCodec.html#fs-codec-list-from-keyfile"/>
+    <keyword type="function" name="fs_codec_list_destroy ()" link="farstream-libs-FsCodec.html#fs-codec-list-destroy"/>
+    <keyword type="function" name="fs_codec_list_copy ()" link="farstream-libs-FsCodec.html#fs-codec-list-copy"/>
+    <keyword type="function" name="fs_codec_list_are_equal ()" link="farstream-libs-FsCodec.html#fs-codec-list-are-equal"/>
+    <keyword type="function" name="fs_codec_to_string ()" link="farstream-libs-FsCodec.html#fs-codec-to-string"/>
+    <keyword type="function" name="fs_codec_add_optional_parameter ()" link="farstream-libs-FsCodec.html#fs-codec-add-optional-parameter"/>
+    <keyword type="function" name="fs_codec_remove_optional_parameter ()" link="farstream-libs-FsCodec.html#fs-codec-remove-optional-parameter"/>
+    <keyword type="function" name="fs_codec_get_optional_parameter ()" link="farstream-libs-FsCodec.html#fs-codec-get-optional-parameter"/>
+    <keyword type="function" name="fs_codec_parameter_copy ()" link="farstream-libs-FsCodec.html#fs-codec-parameter-copy"/>
+    <keyword type="function" name="fs_codec_parameter_free ()" link="farstream-libs-FsCodec.html#fs-codec-parameter-free"/>
+    <keyword type="function" name="fs_codec_add_feedback_parameter ()" link="farstream-libs-FsCodec.html#fs-codec-add-feedback-parameter"/>
+    <keyword type="function" name="fs_codec_get_feedback_parameter ()" link="farstream-libs-FsCodec.html#fs-codec-get-feedback-parameter"/>
+    <keyword type="function" name="fs_codec_remove_feedback_parameter ()" link="farstream-libs-FsCodec.html#fs-codec-remove-feedback-parameter"/>
+    <keyword type="function" name="fs_feedback_parameter_copy ()" link="farstream-libs-FsCodec.html#fs-feedback-parameter-copy"/>
+    <keyword type="function" name="fs_feedback_parameter_free ()" link="farstream-libs-FsCodec.html#fs-feedback-parameter-free"/>
+    <keyword type="macro" name="FS_CODEC_ARGS()" link="farstream-libs-FsCodec.html#FS-CODEC-ARGS:CAPS"/>
+    <keyword type="function" name="fs_media_type_to_string ()" link="farstream-libs-FsCodec.html#fs-media-type-to-string"/>
     <keyword type="struct" name="struct FsCodec" link="farstream-libs-FsCodec.html#FsCodec"/>
     <keyword type="enum" name="enum FsMediaType" link="farstream-libs-FsCodec.html#FsMediaType"/>
     <keyword type="struct" name="struct FsCodecParameter" link="farstream-libs-FsCodec.html#FsCodecParameter"/>
     <keyword type="struct" name="struct FsFeedbackParameter" link="farstream-libs-FsCodec.html#FsFeedbackParameter"/>
-    <keyword type="macro" name="FS_CODEC_ID_ANY" link="farstream-libs-FsCodec.html#FS-CODEC-ID-ANY:CAPS"/>
-    <keyword type="macro" name="FS_CODEC_ID_DISABLE" link="farstream-libs-FsCodec.html#FS-CODEC-ID-DISABLE:CAPS"/>
-    <keyword type="function" name="fs_codec_new ()" link="farstream-libs-FsCodec.html#fs-codec-new"/>
-    <keyword type="function" name="fs_codec_destroy ()" link="farstream-libs-FsCodec.html#fs-codec-destroy"/>
-    <keyword type="function" name="fs_codec_copy ()" link="farstream-libs-FsCodec.html#fs-codec-copy"/>
-    <keyword type="function" name="fs_codec_are_equal ()" link="farstream-libs-FsCodec.html#fs-codec-are-equal"/>
-    <keyword type="function" name="fs_codec_list_from_keyfile ()" link="farstream-libs-FsCodec.html#fs-codec-list-from-keyfile"/>
-    <keyword type="function" name="fs_codec_list_destroy ()" link="farstream-libs-FsCodec.html#fs-codec-list-destroy"/>
-    <keyword type="function" name="fs_codec_list_copy ()" link="farstream-libs-FsCodec.html#fs-codec-list-copy"/>
-    <keyword type="function" name="fs_codec_list_are_equal ()" link="farstream-libs-FsCodec.html#fs-codec-list-are-equal"/>
-    <keyword type="function" name="fs_codec_to_string ()" link="farstream-libs-FsCodec.html#fs-codec-to-string"/>
-    <keyword type="function" name="fs_codec_add_optional_parameter ()" link="farstream-libs-FsCodec.html#fs-codec-add-optional-parameter"/>
-    <keyword type="function" name="fs_codec_remove_optional_parameter ()" link="farstream-libs-FsCodec.html#fs-codec-remove-optional-parameter"/>
-    <keyword type="function" name="fs_codec_get_optional_parameter ()" link="farstream-libs-FsCodec.html#fs-codec-get-optional-parameter"/>
-    <keyword type="function" name="fs_codec_parameter_copy ()" link="farstream-libs-FsCodec.html#fs-codec-parameter-copy"/>
-    <keyword type="function" name="fs_codec_parameter_free ()" link="farstream-libs-FsCodec.html#fs-codec-parameter-free"/>
-    <keyword type="function" name="fs_codec_add_feedback_parameter ()" link="farstream-libs-FsCodec.html#fs-codec-add-feedback-parameter"/>
-    <keyword type="function" name="fs_codec_get_feedback_parameter ()" link="farstream-libs-FsCodec.html#fs-codec-get-feedback-parameter"/>
-    <keyword type="function" name="fs_codec_remove_feedback_parameter ()" link="farstream-libs-FsCodec.html#fs-codec-remove-feedback-parameter"/>
-    <keyword type="function" name="fs_feedback_parameter_copy ()" link="farstream-libs-FsCodec.html#fs-feedback-parameter-copy"/>
-    <keyword type="function" name="fs_feedback_parameter_free ()" link="farstream-libs-FsCodec.html#fs-feedback-parameter-free"/>
     <keyword type="macro" name="FS_CODEC_FORMAT" link="farstream-libs-FsCodec.html#FS-CODEC-FORMAT:CAPS"/>
-    <keyword type="macro" name="FS_CODEC_ARGS()" link="farstream-libs-FsCodec.html#FS-CODEC-ARGS:CAPS"/>
-    <keyword type="function" name="fs_media_type_to_string ()" link="farstream-libs-FsCodec.html#fs-media-type-to-string"/>
-    <keyword type="struct" name="FsRtpHeaderExtension" link="farstream-libs-RTP-Specific-types.html#FsRtpHeaderExtension"/>
-    <keyword type="function" name="fs_rtp_header_extension_new ()" link="farstream-libs-RTP-Specific-types.html#fs-rtp-header-extension-new"/>
-    <keyword type="function" name="fs_rtp_header_extension_copy ()" link="farstream-libs-RTP-Specific-types.html#fs-rtp-header-extension-copy"/>
-    <keyword type="function" name="fs_rtp_header_extension_destroy ()" link="farstream-libs-RTP-Specific-types.html#fs-rtp-header-extension-destroy"/>
-    <keyword type="function" name="fs_rtp_header_extension_are_equal ()" link="farstream-libs-RTP-Specific-types.html#fs-rtp-header-extension-are-equal"/>
-    <keyword type="function" name="fs_rtp_header_extension_list_copy ()" link="farstream-libs-RTP-Specific-types.html#fs-rtp-header-extension-list-copy"/>
-    <keyword type="function" name="fs_rtp_header_extension_list_destroy ()" link="farstream-libs-RTP-Specific-types.html#fs-rtp-header-extension-list-destroy"/>
-    <keyword type="function" name="fs_rtp_header_extension_list_from_keyfile ()" link="farstream-libs-RTP-Specific-types.html#fs-rtp-header-extension-list-from-keyfile"/>
-    <keyword type="macro" name="FS_RTP_HEADER_EXTENSION_FORMAT" link="farstream-libs-RTP-Specific-types.html#FS-RTP-HEADER-EXTENSION-FORMAT:CAPS"/>
+    <keyword type="function" name="fs_rtp_header_extension_new ()" link="farstream-libs-RTP-Specific-types.html#fs-rtp-header-extension-new"/>
+    <keyword type="function" name="fs_rtp_header_extension_copy ()" link="farstream-libs-RTP-Specific-types.html#fs-rtp-header-extension-copy"/>
+    <keyword type="function" name="fs_rtp_header_extension_destroy ()" link="farstream-libs-RTP-Specific-types.html#fs-rtp-header-extension-destroy"/>
+    <keyword type="function" name="fs_rtp_header_extension_are_equal ()" link="farstream-libs-RTP-Specific-types.html#fs-rtp-header-extension-are-equal"/>
+    <keyword type="function" name="fs_rtp_header_extension_list_copy ()" link="farstream-libs-RTP-Specific-types.html#fs-rtp-header-extension-list-copy"/>
+    <keyword type="function" name="fs_rtp_header_extension_list_destroy ()" link="farstream-libs-RTP-Specific-types.html#fs-rtp-header-extension-list-destroy"/>
+    <keyword type="function" name="fs_rtp_header_extension_list_from_keyfile ()" link="farstream-libs-RTP-Specific-types.html#fs-rtp-header-extension-list-from-keyfile"/>
     <keyword type="macro" name="FS_RTP_HEADER_EXTENSION_ARGS()" link="farstream-libs-RTP-Specific-types.html#FS-RTP-HEADER-EXTENSION-ARGS:CAPS"/>
+    <keyword type="struct" name="FsRtpHeaderExtension" link="farstream-libs-RTP-Specific-types.html#FsRtpHeaderExtension"/>
+    <keyword type="macro" name="FS_RTP_HEADER_EXTENSION_FORMAT" link="farstream-libs-RTP-Specific-types.html#FS-RTP-HEADER-EXTENSION-FORMAT:CAPS"/>
+    <keyword type="function" name="fs_element_added_notifier_new ()" link="FsElementAddedNotifier.html#fs-element-added-notifier-new"/>
+    <keyword type="function" name="fs_element_added_notifier_add ()" link="FsElementAddedNotifier.html#fs-element-added-notifier-add"/>
+    <keyword type="function" name="fs_element_added_notifier_remove ()" link="FsElementAddedNotifier.html#fs-element-added-notifier-remove"/>
+    <keyword type="function" name="fs_element_added_notifier_set_properties_from_keyfile ()" link="FsElementAddedNotifier.html#fs-element-added-notifier-set-properties-from-keyfile"/>
+    <keyword type="function" name="fs_element_added_notifier_set_properties_from_file ()" link="FsElementAddedNotifier.html#fs-element-added-notifier-set-properties-from-file"/>
+    <keyword type="function" name="fs_element_added_notifier_set_default_properties ()" link="FsElementAddedNotifier.html#fs-element-added-notifier-set-default-properties"/>
     <keyword type="struct" name="struct FsElementAddedNotifier" link="FsElementAddedNotifier.html#FsElementAddedNotifier-struct"/>
-    <keyword type="function" name="fs_element_added_notifier_new ()" link="FsElementAddedNotifier.html#fs-element-added-notifier-new"/>
-    <keyword type="function" name="fs_element_added_notifier_add ()" link="FsElementAddedNotifier.html#fs-element-added-notifier-add"/>
-    <keyword type="function" name="fs_element_added_notifier_remove ()" link="FsElementAddedNotifier.html#fs-element-added-notifier-remove"/>
-    <keyword type="function" name="fs_element_added_notifier_set_properties_from_keyfile ()" link="FsElementAddedNotifier.html#fs-element-added-notifier-set-properties-from-keyfile"/>
-    <keyword type="function" name="fs_element_added_notifier_set_properties_from_file ()" link="FsElementAddedNotifier.html#fs-element-added-notifier-set-properties-from-file"/>
-    <keyword type="function" name="fs_element_added_notifier_set_default_properties ()" link="FsElementAddedNotifier.html#fs-element-added-notifier-set-default-properties"/>
-    <keyword type="signal" name="The &quot;element-added&quot; signal" link="FsElementAddedNotifier.html#FsElementAddedNotifier-element-added"/>
-    <keyword type="function" name="fs_utils_set_bitrate ()" link="farstream-libs-Utility-functions.html#fs-utils-set-bitrate"/>
-    <keyword type="function" name="fs_utils_get_default_codec_preferences ()" link="farstream-libs-Utility-functions.html#fs-utils-get-default-codec-preferences"/>
-    <keyword type="function" name="fs_utils_get_default_element_properties ()" link="farstream-libs-Utility-functions.html#fs-utils-get-default-element-properties"/>
-    <keyword type="function" name="fs_utils_get_default_rtp_header_extension_preferences ()" link="farstream-libs-Utility-functions.html#fs-utils-get-default-rtp-header-extension-preferences"/>
-    <keyword type="struct" name="FsTransmitter" link="FsTransmitter.html#FsTransmitter-struct"/>
+    <keyword type="signal" name="The “element-added” signal" link="FsElementAddedNotifier.html#FsElementAddedNotifier-element-added"/>
+    <keyword type="function" name="fs_utils_set_bitrate ()" link="farstream-libs-Utility-functions.html#fs-utils-set-bitrate"/>
+    <keyword type="function" name="fs_utils_get_default_codec_preferences ()" link="farstream-libs-Utility-functions.html#fs-utils-get-default-codec-preferences"/>
+    <keyword type="function" name="fs_utils_get_default_element_properties ()" link="farstream-libs-Utility-functions.html#fs-utils-get-default-element-properties"/>
+    <keyword type="function" name="fs_utils_get_default_rtp_header_extension_preferences ()" link="farstream-libs-Utility-functions.html#fs-utils-get-default-rtp-header-extension-preferences"/>
+    <keyword type="function" name="fs_transmitter_new ()" link="FsTransmitter.html#fs-transmitter-new"/>
+    <keyword type="function" name="fs_transmitter_new_stream_transmitter ()" link="FsTransmitter.html#fs-transmitter-new-stream-transmitter"/>
+    <keyword type="function" name="fs_transmitter_get_stream_transmitter_type ()" link="FsTransmitter.html#fs-transmitter-get-stream-transmitter-type"/>
+    <keyword type="function" name="fs_transmitter_emit_error ()" link="FsTransmitter.html#fs-transmitter-emit-error"/>
+    <keyword type="function" name="fs_transmitter_list_available ()" link="FsTransmitter.html#fs-transmitter-list-available"/>
+    <keyword type="struct" name="struct FsTransmitter" link="FsTransmitter.html#FsTransmitter-struct"/>
     <keyword type="struct" name="struct FsTransmitterClass" link="FsTransmitter.html#FsTransmitterClass"/>
-    <keyword type="function" name="fs_transmitter_new ()" link="FsTransmitter.html#fs-transmitter-new"/>
-    <keyword type="function" name="fs_transmitter_new_stream_transmitter ()" link="FsTransmitter.html#fs-transmitter-new-stream-transmitter"/>
-    <keyword type="function" name="fs_transmitter_get_stream_transmitter_type ()" link="FsTransmitter.html#fs-transmitter-get-stream-transmitter-type"/>
-    <keyword type="function" name="fs_transmitter_emit_error ()" link="FsTransmitter.html#fs-transmitter-emit-error"/>
-    <keyword type="function" name="fs_transmitter_get_recvonly_filter ()" link="FsTransmitter.html#fs-transmitter-get-recvonly-filter"/>
-    <keyword type="function" name="fs_transmitter_list_available ()" link="FsTransmitter.html#fs-transmitter-list-available"/>
-    <keyword type="property" name="The &quot;components&quot; property" link="FsTransmitter.html#FsTransmitter--components"/>
-    <keyword type="property" name="The &quot;do-timestamp&quot; property" link="FsTransmitter.html#FsTransmitter--do-timestamp"/>
-    <keyword type="property" name="The &quot;gst-sink&quot; property" link="FsTransmitter.html#FsTransmitter--gst-sink"/>
-    <keyword type="property" name="The &quot;gst-src&quot; property" link="FsTransmitter.html#FsTransmitter--gst-src"/>
-    <keyword type="property" name="The &quot;tos&quot; property" link="FsTransmitter.html#FsTransmitter--tos"/>
-    <keyword type="signal" name="The &quot;error&quot; signal" link="FsTransmitter.html#FsTransmitter-error"/>
-    <keyword type="signal" name="The &quot;get-recvonly-filter&quot; signal" link="FsTransmitter.html#FsTransmitter-get-recvonly-filter"/>
-    <keyword type="struct" name="FsStreamTransmitter" link="FsStreamTransmitter.html#FsStreamTransmitter-struct"/>
+    <keyword type="property" name="The “components” property" link="FsTransmitter.html#FsTransmitter--components"/>
+    <keyword type="property" name="The “do-timestamp” property" link="FsTransmitter.html#FsTransmitter--do-timestamp"/>
+    <keyword type="property" name="The “gst-sink” property" link="FsTransmitter.html#FsTransmitter--gst-sink"/>
+    <keyword type="property" name="The “gst-src” property" link="FsTransmitter.html#FsTransmitter--gst-src"/>
+    <keyword type="property" name="The “tos” property" link="FsTransmitter.html#FsTransmitter--tos"/>
+    <keyword type="signal" name="The “error” signal" link="FsTransmitter.html#FsTransmitter-error"/>
+    <keyword type="function" name="fs_stream_transmitter_add_remote_candidates ()" link="FsStreamTransmitter.html#fs-stream-transmitter-add-remote-candidates"/>
+    <keyword type="function" name="fs_stream_transmitter_gather_local_candidates ()" link="FsStreamTransmitter.html#fs-stream-transmitter-gather-local-candidates"/>
+    <keyword type="function" name="fs_stream_transmitter_force_remote_candidates ()" link="FsStreamTransmitter.html#fs-stream-transmitter-force-remote-candidates"/>
+    <keyword type="function" name="fs_stream_transmitter_stop ()" link="FsStreamTransmitter.html#fs-stream-transmitter-stop"/>
+    <keyword type="function" name="fs_stream_transmitter_emit_error ()" link="FsStreamTransmitter.html#fs-stream-transmitter-emit-error"/>
+    <keyword type="function" name="fs_stream_parse_component_state_changed ()" link="FsStreamTransmitter.html#fs-stream-parse-component-state-changed"/>
+    <keyword type="function" name="fs_stream_parse_local_candidates_prepared ()" link="FsStreamTransmitter.html#fs-stream-parse-local-candidates-prepared"/>
+    <keyword type="function" name="fs_stream_parse_new_active_candidate_pair ()" link="FsStreamTransmitter.html#fs-stream-parse-new-active-candidate-pair"/>
+    <keyword type="function" name="fs_stream_parse_new_local_candidate ()" link="FsStreamTransmitter.html#fs-stream-parse-new-local-candidate"/>
+    <keyword type="function" name="fs_stream_parse_recv_codecs_changed ()" link="FsStreamTransmitter.html#fs-stream-parse-recv-codecs-changed"/>
+    <keyword type="struct" name="struct FsStreamTransmitter" link="FsStreamTransmitter.html#FsStreamTransmitter-struct"/>
     <keyword type="struct" name="struct FsStreamTransmitterClass" link="FsStreamTransmitter.html#FsStreamTransmitterClass"/>
-    <keyword type="function" name="fs_stream_transmitter_add_remote_candidates ()" link="FsStreamTransmitter.html#fs-stream-transmitter-add-remote-candidates"/>
-    <keyword type="function" name="fs_stream_transmitter_gather_local_candidates ()" link="FsStreamTransmitter.html#fs-stream-transmitter-gather-local-candidates"/>
-    <keyword type="function" name="fs_stream_transmitter_force_remote_candidates ()" link="FsStreamTransmitter.html#fs-stream-transmitter-force-remote-candidates"/>
-    <keyword type="function" name="fs_stream_transmitter_stop ()" link="FsStreamTransmitter.html#fs-stream-transmitter-stop"/>
-    <keyword type="function" name="fs_stream_transmitter_emit_error ()" link="FsStreamTransmitter.html#fs-stream-transmitter-emit-error"/>
-    <keyword type="function" name="fs_stream_parse_component_state_changed ()" link="FsStreamTransmitter.html#fs-stream-parse-component-state-changed"/>
-    <keyword type="function" name="fs_stream_parse_local_candidates_prepared ()" link="FsStreamTransmitter.html#fs-stream-parse-local-candidates-prepared"/>
-    <keyword type="function" name="fs_stream_parse_new_active_candidate_pair ()" link="FsStreamTransmitter.html#fs-stream-parse-new-active-candidate-pair"/>
-    <keyword type="function" name="fs_stream_parse_new_local_candidate ()" link="FsStreamTransmitter.html#fs-stream-parse-new-local-candidate"/>
-    <keyword type="function" name="fs_stream_parse_recv_codecs_changed ()" link="FsStreamTransmitter.html#fs-stream-parse-recv-codecs-changed"/>
-    <keyword type="property" name="The &quot;associate-on-source&quot; property" link="FsStreamTransmitter.html#FsStreamTransmitter--associate-on-source"/>
-    <keyword type="property" name="The &quot;preferred-local-candidates&quot; property" link="FsStreamTransmitter.html#FsStreamTransmitter--preferred-local-candidates"/>
-    <keyword type="property" name="The &quot;sending&quot; property" link="FsStreamTransmitter.html#FsStreamTransmitter--sending"/>
-    <keyword type="signal" name="The &quot;error&quot; signal" link="FsStreamTransmitter.html#FsStreamTransmitter-error"/>
-    <keyword type="signal" name="The &quot;known-source-packet-received&quot; signal" link="FsStreamTransmitter.html#FsStreamTransmitter-known-source-packet-received"/>
-    <keyword type="signal" name="The &quot;local-candidates-prepared&quot; signal" link="FsStreamTransmitter.html#FsStreamTransmitter-local-candidates-prepared"/>
-    <keyword type="signal" name="The &quot;new-active-candidate-pair&quot; signal" link="FsStreamTransmitter.html#FsStreamTransmitter-new-active-candidate-pair"/>
-    <keyword type="signal" name="The &quot;new-local-candidate&quot; signal" link="FsStreamTransmitter.html#FsStreamTransmitter-new-local-candidate"/>
-    <keyword type="signal" name="The &quot;state-changed&quot; signal" link="FsStreamTransmitter.html#FsStreamTransmitter-state-changed"/>
-    <keyword type="struct" name="struct FsPlugin" link="farstream-libs-FsPlugin.html#FsPlugin"/>
-    <keyword type="function" name="fs_plugin_create_valist ()" link="farstream-libs-FsPlugin.html#fs-plugin-create-valist"/>
-    <keyword type="function" name="fs_plugin_create ()" link="farstream-libs-FsPlugin.html#fs-plugin-create"/>
+    <keyword type="property" name="The “associate-on-source” property" link="FsStreamTransmitter.html#FsStreamTransmitter--associate-on-source"/>
+    <keyword type="property" name="The “preferred-local-candidates” property" link="FsStreamTransmitter.html#FsStreamTransmitter--preferred-local-candidates"/>
+    <keyword type="property" name="The “sending” property" link="FsStreamTransmitter.html#FsStreamTransmitter--sending"/>
+    <keyword type="signal" name="The “error” signal" link="FsStreamTransmitter.html#FsStreamTransmitter-error"/>
+    <keyword type="signal" name="The “known-source-packet-received” signal" link="FsStreamTransmitter.html#FsStreamTransmitter-known-source-packet-received"/>
+    <keyword type="signal" name="The “local-candidates-prepared” signal" link="FsStreamTransmitter.html#FsStreamTransmitter-local-candidates-prepared"/>
+    <keyword type="signal" name="The “new-active-candidate-pair” signal" link="FsStreamTransmitter.html#FsStreamTransmitter-new-active-candidate-pair"/>
+    <keyword type="signal" name="The “new-local-candidate” signal" link="FsStreamTransmitter.html#FsStreamTransmitter-new-local-candidate"/>
+    <keyword type="signal" name="The “state-changed” signal" link="FsStreamTransmitter.html#FsStreamTransmitter-state-changed"/>
+    <keyword type="function" name="fs_plugin_create_valist ()" link="farstream-libs-FsPlugin.html#fs-plugin-create-valist"/>
+    <keyword type="function" name="fs_plugin_create ()" link="farstream-libs-FsPlugin.html#fs-plugin-create"/>
     <keyword type="macro" name="FS_INIT_PLUGIN()" link="farstream-libs-FsPlugin.html#FS-INIT-PLUGIN:CAPS"/>
-    <keyword type="function" name="fs_plugin_list_available ()" link="farstream-libs-FsPlugin.html#fs-plugin-list-available"/>
-    <keyword type="constant" name="FS_ERROR_CONSTRUCTION" link="FsConference.html#FS-ERROR-CONSTRUCTION:CAPS"/>
-    <keyword type="constant" name="FS_ERROR_INTERNAL" link="FsConference.html#FS-ERROR-INTERNAL:CAPS"/>
-    <keyword type="constant" name="FS_ERROR_INVALID_ARGUMENTS" link="FsConference.html#FS-ERROR-INVALID-ARGUMENTS:CAPS"/>
-    <keyword type="constant" name="FS_ERROR_NETWORK" link="FsConference.html#FS-ERROR-NETWORK:CAPS"/>
-    <keyword type="constant" name="FS_ERROR_NOT_IMPLEMENTED" link="FsConference.html#FS-ERROR-NOT-IMPLEMENTED:CAPS"/>
-    <keyword type="constant" name="FS_ERROR_NEGOTIATION_FAILED" link="FsConference.html#FS-ERROR-NEGOTIATION-FAILED:CAPS"/>
-    <keyword type="constant" name="FS_ERROR_UNKNOWN_CODEC" link="FsConference.html#FS-ERROR-UNKNOWN-CODEC:CAPS"/>
-    <keyword type="constant" name="FS_ERROR_NO_CODECS" link="FsConference.html#FS-ERROR-NO-CODECS:CAPS"/>
-    <keyword type="constant" name="FS_ERROR_NO_CODECS_LEFT" link="FsConference.html#FS-ERROR-NO-CODECS-LEFT:CAPS"/>
-    <keyword type="constant" name="FS_ERROR_CONNECTION_FAILED" link="FsConference.html#FS-ERROR-CONNECTION-FAILED:CAPS"/>
-    <keyword type="constant" name="FS_ERROR_DISPOSED" link="FsConference.html#FS-ERROR-DISPOSED:CAPS"/>
-    <keyword type="constant" name="FS_ERROR_ALREADY_EXISTS" link="FsConference.html#FS-ERROR-ALREADY-EXISTS:CAPS"/>
-    <keyword type="constant" name="FS_DTMF_METHOD_RTP_RFC4733" link="FsSession.html#FS-DTMF-METHOD-RTP-RFC4733:CAPS"/>
-    <keyword type="constant" name="FS_DTMF_METHOD_SOUND" link="FsSession.html#FS-DTMF-METHOD-SOUND:CAPS"/>
-    <keyword type="constant" name="FS_DIRECTION_NONE" link="FsStream.html#FS-DIRECTION-NONE:CAPS"/>
-    <keyword type="constant" name="FS_DIRECTION_SEND" link="FsStream.html#FS-DIRECTION-SEND:CAPS"/>
-    <keyword type="constant" name="FS_DIRECTION_RECV" link="FsStream.html#FS-DIRECTION-RECV:CAPS"/>
-    <keyword type="constant" name="FS_DIRECTION_BOTH" link="FsStream.html#FS-DIRECTION-BOTH:CAPS"/>
-    <keyword type="constant" name="FS_STREAM_STATE_FAILED" link="FsStream.html#FS-STREAM-STATE-FAILED:CAPS"/>
-    <keyword type="constant" name="FS_STREAM_STATE_DISCONNECTED" link="FsStream.html#FS-STREAM-STATE-DISCONNECTED:CAPS"/>
-    <keyword type="constant" name="FS_STREAM_STATE_GATHERING" link="FsStream.html#FS-STREAM-STATE-GATHERING:CAPS"/>
-    <keyword type="constant" name="FS_STREAM_STATE_CONNECTING" link="FsStream.html#FS-STREAM-STATE-CONNECTING:CAPS"/>
-    <keyword type="constant" name="FS_STREAM_STATE_CONNECTED" link="FsStream.html#FS-STREAM-STATE-CONNECTED:CAPS"/>
-    <keyword type="constant" name="FS_STREAM_STATE_READY" link="FsStream.html#FS-STREAM-STATE-READY:CAPS"/>
-    <keyword type="constant" name="FS_CANDIDATE_TYPE_HOST" link="farstream-libs-FsCandidate.html#FS-CANDIDATE-TYPE-HOST:CAPS"/>
-    <keyword type="constant" name="FS_CANDIDATE_TYPE_SRFLX" link="farstream-libs-FsCandidate.html#FS-CANDIDATE-TYPE-SRFLX:CAPS"/>
-    <keyword type="constant" name="FS_CANDIDATE_TYPE_PRFLX" link="farstream-libs-FsCandidate.html#FS-CANDIDATE-TYPE-PRFLX:CAPS"/>
-    <keyword type="constant" name="FS_CANDIDATE_TYPE_RELAY" link="farstream-libs-FsCandidate.html#FS-CANDIDATE-TYPE-RELAY:CAPS"/>
-    <keyword type="constant" name="FS_CANDIDATE_TYPE_MULTICAST" link="farstream-libs-FsCandidate.html#FS-CANDIDATE-TYPE-MULTICAST:CAPS"/>
-    <keyword type="constant" name="FS_NETWORK_PROTOCOL_UDP" link="farstream-libs-FsCandidate.html#FS-NETWORK-PROTOCOL-UDP:CAPS"/>
-    <keyword type="constant" name="FS_NETWORK_PROTOCOL_TCP" link="farstream-libs-FsCandidate.html#FS-NETWORK-PROTOCOL-TCP:CAPS"/>
-    <keyword type="constant" name="FS_COMPONENT_NONE" link="farstream-libs-FsCandidate.html#FS-COMPONENT-NONE:CAPS"/>
-    <keyword type="constant" name="FS_COMPONENT_RTP" link="farstream-libs-FsCandidate.html#FS-COMPONENT-RTP:CAPS"/>
-    <keyword type="constant" name="FS_COMPONENT_RTCP" link="farstream-libs-FsCandidate.html#FS-COMPONENT-RTCP:CAPS"/>
-    <keyword type="constant" name="FS_MEDIA_TYPE_AUDIO" link="farstream-libs-FsCodec.html#FS-MEDIA-TYPE-AUDIO:CAPS"/>
-    <keyword type="constant" name="FS_MEDIA_TYPE_VIDEO" link="farstream-libs-FsCodec.html#FS-MEDIA-TYPE-VIDEO:CAPS"/>
-    <keyword type="constant" name="FS_MEDIA_TYPE_LAST" link="farstream-libs-FsCodec.html#FS-MEDIA-TYPE-LAST:CAPS"/>
+    <keyword type="function" name="fs_plugin_list_available ()" link="farstream-libs-FsPlugin.html#fs-plugin-list-available"/>
+    <keyword type="struct" name="struct FsPlugin" link="farstream-libs-FsPlugin.html#FsPlugin"/>
   </functions>
 </book>

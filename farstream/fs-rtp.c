@@ -174,6 +174,7 @@ fs_rtp_header_extension_list_destroy (GList *extensions)
 #define RTP_HDREXT_PREFIX "rtp-hdrext:"
 #define RTP_HDREXT_AUDIO_PREFIX "audio:"
 #define RTP_HDREXT_VIDEO_PREFIX "video:"
+#define RTP_HDREXT_APPLICATION_PREFIX "application:"
 
 /**
  * fs_rtp_header_extension_list_from_keyfile:
@@ -262,6 +263,13 @@ fs_rtp_header_extension_list_from_keyfile (const gchar *filename,
             strlen (RTP_HDREXT_VIDEO_PREFIX)))
     {
       if (media_type != FS_MEDIA_TYPE_VIDEO)
+        continue;
+    }
+    else if (!g_ascii_strncasecmp (RTP_HDREXT_APPLICATION_PREFIX,
+            groups[i] + strlen (RTP_HDREXT_PREFIX),
+            strlen (RTP_HDREXT_APPLICATION_PREFIX)))
+    {
+      if (media_type != FS_MEDIA_TYPE_APPLICATION)
         continue;
     }
     else

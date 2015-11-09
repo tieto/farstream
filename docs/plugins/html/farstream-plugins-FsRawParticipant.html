@@ -2,30 +2,26 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>FsRawParticipant</title>
+<title>Farstream Plugins Manual: FsRawParticipant</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="Farstream Plugins Manual">
 <link rel="up" href="ch02.html" title="Raw Plugin">
 <link rel="prev" href="FsRawConference.html" title="FsRawConference">
 <link rel="next" href="farstream-plugins-FsRawSession.html" title="FsRawSession">
-<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
-<tr valign="middle">
-<td><a accesskey="p" href="FsRawConference.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
-<td><a accesskey="u" href="ch02.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
-<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">Farstream Plugins Manual</th>
-<td><a accesskey="n" href="farstream-plugins-FsRawSession.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
-</tr>
-<tr><td colspan="5" class="shortcuts">
-<a href="#farstream-plugins-FsRawParticipant.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#farstream-plugins-FsRawParticipant.description" class="shortcut">Description</a>
-</td></tr>
-</table>
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#farstream-plugins-FsRawParticipant.description" class="shortcut">Description</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch02.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="FsRawConference.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="farstream-plugins-FsRawSession.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
 <div class="refentry">
 <a name="farstream-plugins-FsRawParticipant"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
@@ -33,29 +29,42 @@
 <h2><span class="refentrytitle"><a name="farstream-plugins-FsRawParticipant.top_of_page"></a>FsRawParticipant</span></h2>
 <p>FsRawParticipant — A Raw participant in a <a class="link" href="FsRawConference.html" title="FsRawConference"><span class="type">FsRawConference</span></a></p>
 </td>
-<td valign="top" align="right"></td>
+<td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
-<div class="refsynopsisdiv">
-<a name="farstream-plugins-FsRawParticipant.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">                    <a class="link" href="farstream-plugins-FsRawParticipant.html#FsRawParticipant" title="FsRawParticipant">FsRawParticipant</a>;
-</pre>
+<div class="refsect1">
+<a name="farstream-plugins-FsRawParticipant.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="name">
+<col class="description">
+</colgroup>
+<tbody><tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="farstream-plugins-FsRawParticipant.html#FsRawParticipant" title="struct FsRawParticipant">FsRawParticipant</a></td>
+</tr></tbody>
+</table></div>
 </div>
 <div class="refsect1">
 <a name="farstream-plugins-FsRawParticipant.description"></a><h2>Description</h2>
-<p>
-This object represents one participant or person in a raw conference
-</p>
+<p>This object represents one participant or person in a raw conference</p>
 </div>
 <div class="refsect1">
-<a name="farstream-plugins-FsRawParticipant.details"></a><h2>Details</h2>
+<a name="farstream-plugins-FsRawParticipant.functions_details"></a><h2>Functions</h2>
+</div>
+<div class="refsect1">
+<a name="farstream-plugins-FsRawParticipant.other_details"></a><h2>Types and Values</h2>
 <div class="refsect2">
-<a name="FsRawParticipant"></a><h3>FsRawParticipant</h3>
-<pre class="programlisting">typedef struct _FsRawParticipant FsRawParticipant;</pre>
+<a name="FsRawParticipant"></a><h3>struct FsRawParticipant</h3>
+<pre class="programlisting">struct FsRawParticipant {
+  FsParticipant parent;
+  FsRawParticipantPrivate *priv;
+};
+</pre>
 </div>
 </div>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.19</div>
+          Generated by GTK-Doc V1.21</div>
 </body>
 </html>

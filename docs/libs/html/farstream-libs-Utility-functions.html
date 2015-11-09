@@ -2,30 +2,26 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Utility functions</title>
+<title>Farstream Reference Manual: Utility functions</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="Farstream Reference Manual">
 <link rel="up" href="ch03.html" title="Farstream Utility Functions and Objects">
 <link rel="prev" href="FsElementAddedNotifier.html" title="FsElementAddedNotifier">
 <link rel="next" href="pt02.html" title="Part II. Classes used to implement Farstream plugins">
-<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
-<tr valign="middle">
-<td><a accesskey="p" href="FsElementAddedNotifier.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
-<td><a accesskey="u" href="ch03.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
-<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">Farstream Reference Manual</th>
-<td><a accesskey="n" href="pt02.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
-</tr>
-<tr><td colspan="5" class="shortcuts">
-<a href="#farstream-libs-Utility-functions.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#farstream-libs-Utility-functions.description" class="shortcut">Description</a>
-</td></tr>
-</table>
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#farstream-libs-Utility-functions.description" class="shortcut">Description</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch03.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="FsElementAddedNotifier.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="pt02.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
 <div class="refentry">
 <a name="farstream-libs-Utility-functions"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
@@ -33,157 +29,204 @@
 <h2><span class="refentrytitle"><a name="farstream-libs-Utility-functions.top_of_page"></a>Utility functions</span></h2>
 <p>Utility functions — Miscellaneous useful functions</p>
 </td>
-<td valign="top" align="right"></td>
+<td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
-<div class="refsynopsisdiv">
-<a name="farstream-libs-Utility-functions.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">
-#include &lt;farstream/fs-utils.h&gt;
-
-<span class="returnvalue">void</span>                <a class="link" href="farstream-libs-Utility-functions.html#fs-utils-set-bitrate" title="fs_utils_set_bitrate ()">fs_utils_set_bitrate</a>                (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>,
-                                                         <em class="parameter"><code><span class="type">glong</span> bitrate</code></em>);
-<span class="returnvalue">GList</span> *             <a class="link" href="farstream-libs-Utility-functions.html#fs-utils-get-default-codec-preferences" title="fs_utils_get_default_codec_preferences ()">fs_utils_get_default_codec_preferences</a>
-                                                        (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);
-<span class="returnvalue">GKeyFile</span> *          <a class="link" href="farstream-libs-Utility-functions.html#fs-utils-get-default-element-properties" title="fs_utils_get_default_element_properties ()">fs_utils_get_default_element_properties</a>
-                                                        (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);
-<span class="returnvalue">GList</span> *             <a class="link" href="farstream-libs-Utility-functions.html#fs-utils-get-default-rtp-header-extension-preferences" title="fs_utils_get_default_rtp_header_extension_preferences ()">fs_utils_get_default_rtp_header_extension_preferences</a>
-                                                        (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="farstream-libs-FsCodec.html#FsMediaType" title="enum FsMediaType"><span class="type">FsMediaType</span></a> media_type</code></em>);
+<div class="refsect1">
+<a name="farstream-libs-Utility-functions.functions"></a><h2>Functions</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="functions_return">
+<col class="functions_name">
+</colgroup>
+<tbody>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="farstream-libs-Utility-functions.html#fs-utils-set-bitrate" title="fs_utils_set_bitrate ()">fs_utils_set_bitrate</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="farstream-libs-Utility-functions.html#fs-utils-get-default-codec-preferences" title="fs_utils_get_default_codec_preferences ()">fs_utils_get_default_codec_preferences</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Key-value-file-parser.html#GKeyFile"><span class="returnvalue">GKeyFile</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="farstream-libs-Utility-functions.html#fs-utils-get-default-element-properties" title="fs_utils_get_default_element_properties ()">fs_utils_get_default_element_properties</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="farstream-libs-Utility-functions.html#fs-utils-get-default-rtp-header-extension-preferences" title="fs_utils_get_default_rtp_header_extension_preferences ()">fs_utils_get_default_rtp_header_extension_preferences</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="farstream-libs-Utility-functions.includes"></a><h2>Includes</h2>
+<pre class="synopsis">#include &lt;farstream/fs-utils.h&gt;
 </pre>
 </div>
 <div class="refsect1">
 <a name="farstream-libs-Utility-functions.description"></a><h2>Description</h2>
 </div>
 <div class="refsect1">
-<a name="farstream-libs-Utility-functions.details"></a><h2>Details</h2>
+<a name="farstream-libs-Utility-functions.functions_details"></a><h2>Functions</h2>
 <div class="refsect2">
-<a name="fs-utils-set-bitrate"></a><h3>fs_utils_set_bitrate ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                fs_utils_set_bitrate                (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>,
-                                                         <em class="parameter"><code><span class="type">glong</span> bitrate</code></em>);</pre>
-<p>
-This allows setting the bitrate on all elements that have a "bitrate"
-property without having to know the type or of the unit used by that element.
-</p>
-<p>
-This will be obsolete in 0.11 (when all elements use bit/sec for the
-"bitrate" property.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+<a name="fs-utils-set-bitrate"></a><h3>fs_utils_set_bitrate ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+fs_utils_set_bitrate (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>,
+                      <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#glong"><span class="type">glong</span></a> bitrate</code></em>);</pre>
+<p>This allows setting the bitrate on all elements that have a "bitrate"
+property without having to know the type or of the unit used by that element.</p>
+<p>This will be obsolete in 0.11 (when all elements use bit/sec for the
+"bitrate" property.</p>
+<div class="refsect3">
+<a name="id-1.2.4.3.6.2.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
-<td>The <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a>
-</td>
+<td class="parameter_name"><p>element</p></td>
+<td class="parameter_description"><p>The <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a></p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>bitrate</code></em> :</span></p></td>
-<td>The bitrate in bits/sec</td>
+<td class="parameter_name"><p>bitrate</p></td>
+<td class="parameter_description"><p>The bitrate in bits/sec</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
+</div>
 <hr>
 <div class="refsect2">
-<a name="fs-utils-get-default-codec-preferences"></a><h3>fs_utils_get_default_codec_preferences ()</h3>
-<pre class="programlisting"><span class="returnvalue">GList</span> *             fs_utils_get_default_codec_preferences
-                                                        (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);</pre>
-<p>
-These default codec preferences should work with the elements that are
+<a name="fs-utils-get-default-codec-preferences"></a><h3>fs_utils_get_default_codec_preferences ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
+fs_utils_get_default_codec_preferences
+                               (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);</pre>
+<p>These default codec preferences should work with the elements that are
 available in the main GStreamer element repositories.
-They should be suitable for standards based protocols like SIP or XMPP.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+They should be suitable for standards based protocols like SIP or XMPP.</p>
+<div class="refsect3">
+<a name="id-1.2.4.3.6.3.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
 </colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
-<td>Element for which to fetch default codec preferences</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The default codec preferences for this plugin.
-This <span class="type">GList</span> should be freed with <a class="link" href="farstream-libs-FsCodec.html#fs-codec-list-destroy" title="fs_codec_list_destroy ()"><code class="function">fs_codec_list_destroy()</code></a>. <span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec][<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>]</span>
-</td>
-</tr>
-</tbody>
+<tbody><tr>
+<td class="parameter_name"><p>element</p></td>
+<td class="parameter_description"><p>Element for which to fetch default codec preferences</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
 </table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.4.3.6.3.6"></a><h4>Returns</h4>
+<p>The default codec preferences for this plugin.
+This <a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> should be freed with <a class="link" href="farstream-libs-FsCodec.html#fs-codec-list-destroy" title="fs_codec_list_destroy ()"><code class="function">fs_codec_list_destroy()</code></a>. </p>
+<p><span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec][<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>]</span></p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
-<a name="fs-utils-get-default-element-properties"></a><h3>fs_utils_get_default_element_properties ()</h3>
-<pre class="programlisting"><span class="returnvalue">GKeyFile</span> *          fs_utils_get_default_element_properties
-                                                        (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);</pre>
-<p>
-This function produces a <span class="type">GKeyFile</span> that can be fed to
-<a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-set-properties-from-keyfile" title="fs_element_added_notifier_set_properties_from_keyfile ()"><code class="function">fs_element_added_notifier_set_properties_from_keyfile()</code></a>. If no
-default properties have been found, it will return <code class="literal">NULL</code>.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+<a name="fs-utils-get-default-element-properties"></a><h3>fs_utils_get_default_element_properties ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Key-value-file-parser.html#GKeyFile"><span class="returnvalue">GKeyFile</span></a> *
+fs_utils_get_default_element_properties
+                               (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);</pre>
+<p>This function produces a <a href="https://developer.gnome.org/glib/unstable/glib-Key-value-file-parser.html#GKeyFile"><span class="type">GKeyFile</span></a> that can be fed to
+<a class="link" href="FsElementAddedNotifier.html#fs-element-added-notifier-set-properties-from-keyfile" title="fs_element_added_notifier_set_properties_from_keyfile ()"><code class="function">fs_element_added_notifier_set_properties_from_keyfile()</code></a>. If no
+default properties have been found, it will return <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
+<div class="refsect3">
+<a name="id-1.2.4.3.6.4.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
 </colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
-<td>Element for which to fetch default element properties</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a <span class="type">GKeyFile</span> containing the default element
-properties for this element or <code class="literal">NULL</code> if no properties were found.
-Caller must free the <span class="type">GKeyFile</span> when he is done.</td>
-</tr>
-</tbody>
+<tbody><tr>
+<td class="parameter_name"><p>element</p></td>
+<td class="parameter_description"><p>Element for which to fetch default element properties</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
 </table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.4.3.6.4.6"></a><h4>Returns</h4>
+<p> a <a href="https://developer.gnome.org/glib/unstable/glib-Key-value-file-parser.html#GKeyFile"><span class="type">GKeyFile</span></a> containing the default element
+properties for this element or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if no properties were found.
+Caller must free the <a href="https://developer.gnome.org/glib/unstable/glib-Key-value-file-parser.html#GKeyFile"><span class="type">GKeyFile</span></a> when he is done.</p>
+<p></p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
-<a name="fs-utils-get-default-rtp-header-extension-preferences"></a><h3>fs_utils_get_default_rtp_header_extension_preferences ()</h3>
-<pre class="programlisting"><span class="returnvalue">GList</span> *             fs_utils_get_default_rtp_header_extension_preferences
-                                                        (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="farstream-libs-FsCodec.html#FsMediaType" title="enum FsMediaType"><span class="type">FsMediaType</span></a> media_type</code></em>);</pre>
-<p>
-These default rtp header extension preferences should work with the elements
+<a name="fs-utils-get-default-rtp-header-extension-preferences"></a><h3>fs_utils_get_default_rtp_header_extension_preferences ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
+fs_utils_get_default_rtp_header_extension_preferences
+                               (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>,
+                                <em class="parameter"><code><a class="link" href="farstream-libs-FsCodec.html#FsMediaType" title="enum FsMediaType"><span class="type">FsMediaType</span></a> media_type</code></em>);</pre>
+<p>These default rtp header extension preferences should work with the elements
 that are available in the main GStreamer element repositories.
-They should be suitable for standards based protocols like SIP or XMPP.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
+They should be suitable for standards based protocols like SIP or XMPP.</p>
+<div class="refsect3">
+<a name="id-1.2.4.3.6.5.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
 <colgroup>
-<col align="left" valign="top">
-<col>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
-<td>Element for which to fetch default RTP Header Extension preferences</td>
+<td class="parameter_name"><p>element</p></td>
+<td class="parameter_description"><p>Element for which to fetch default RTP Header Extension preferences</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>media_type</code></em> :</span></p></td>
-<td>The <a class="link" href="farstream-libs-FsCodec.html#FsMediaType" title="enum FsMediaType"><span class="type">FsMediaType</span></a> for which to get default RTP Header Extension
-preferences</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The default rtp
-header extension preferences for this plugin, this <span class="type">GList</span> should be
-freed with <a class="link" href="farstream-libs-FsCodec.html#fs-codec-list-destroy" title="fs_codec_list_destroy ()"><code class="function">fs_codec_list_destroy()</code></a>. <span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec][<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>]</span>
-</td>
+<td class="parameter_name"><p>media_type</p></td>
+<td class="parameter_description"><p>The <a class="link" href="farstream-libs-FsCodec.html#FsMediaType" title="enum FsMediaType"><span class="type">FsMediaType</span></a> for which to get default RTP Header Extension
+preferences</p></td>
+<td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
+<div class="refsect3">
+<a name="id-1.2.4.3.6.5.6"></a><h4>Returns</h4>
+<p> The default rtp
+header extension preferences for this plugin, this <a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> should be
+freed with <a class="link" href="farstream-libs-FsCodec.html#fs-codec-list-destroy" title="fs_codec_list_destroy ()"><code class="function">fs_codec_list_destroy()</code></a>. </p>
+<p><span class="annotation">[<a href="http://foldoc.org/element-type"><span class="acronym">element-type</span></a> FsCodec][<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>]</span></p>
+</div>
+</div>
+</div>
+<div class="refsect1">
+<a name="farstream-libs-Utility-functions.other_details"></a><h2>Types and Values</h2>
 </div>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.19</div>
+          Generated by GTK-Doc V1.21</div>
 </body>
 </html>

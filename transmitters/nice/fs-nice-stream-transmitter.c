@@ -66,7 +66,13 @@ enum
   PROP_COMPATIBILITY_MODE,
   PROP_ASSOCIATE_ON_SOURCE,
   PROP_RELAY_INFO,
-  PROP_DEBUG
+  PROP_MIN_PORT,
+  PROP_MAX_PORT,
+  PROP_ICE_TCP,
+  PROP_ICE_UDP,
+  PROP_RELIABLE,
+  PROP_DEBUG,
+  PROP_SEND_COMPONENT_MUX
 };
 
 struct _FsNiceStreamTransmitterPrivate
@@ -77,10 +83,17 @@ struct _FsNiceStreamTransmitterPrivate
 
   guint stream_id;
 
+  guint min_port;
+  guint max_port;
+
   gchar *stun_ip;
   guint stun_port;
 
   gboolean controlling_mode;
+  gboolean ice_udp;
+  gboolean ice_tcp;
+  gboolean reliable;
+  gboolean send_component_mux;
 
   guint compatibility_mode;
 
@@ -266,6 +279,30 @@ fs_nice_stream_transmitter_class_init (FsNiceStreamTransmitterClass *klass)
           TRUE,
           G_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS));
 
+  g_object_class_install_property (gobject_class, PROP_ICE_UDP,
+      g_param_spec_boolean (
+          "ice-udp",
+          "ICE UDP",
+          "Whether the agent gathers UDP candidates",
+          TRUE,
+          G_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS));
+
+  g_object_class_install_property (gobject_class, PROP_ICE_TCP,
+      g_param_spec_boolean (
+          "ice-tcp",
+          "ICE TCP",
+          "Whether the agent gathers TCP candidates",
+          TRUE,
+          G_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS));
+
+  g_object_class_install_property (gobject_class, PROP_RELIABLE,
+      g_param_spec_boolean (
+          "reliable",
+          "reliable mode",
+          "Whether the agent is reliable",
+          FALSE,
+          G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS));
+
   g_object_class_install_property (gobject_class, PROP_STREAM_ID,
       g_param_spec_uint (
           "stream-id",
@@ -361,6 +398,35 @@ fs_nice_stream_transmitter_class_init (FsNiceStreamTransmitterClass *klass)
           FALSE,
           G_PARAM_WRITABLE | G_PARAM_STATIC_STRINGS));
 
+  g_object_class_install_property (gobject_class, PROP_MIN_PORT,
+      g_param_spec_uint (
+          "min-port",
+          "Minimal listen port",
+          "Minimal port number for allocating host candidates."
+          " 0 means use any port",
+          0, 65535,
+          0,
+          G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS));
+
+  g_object_class_install_property (gobject_class, PROP_MAX_PORT,
+      g_param_spec_uint (
+          "max-port",
+          "Maximal listen port",
+          "Maximal port number for allocating host candidates."
+          " It should apply that min-port < max-port; otherwise, any port is"
+          " used, just as when the value is 0",
+          0, 65535,
+          0,
+          G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS));
+
+  g_object_class_install_property (gobject_class, PROP_SEND_COMPONENT_MUX,
+      g_param_spec_boolean (
+          "send-component-mux",
+          "Send component mux",
+          "Whether to mux all components on the same component as component 1",
+          FALSE,
+          G_PARAM_WRITABLE | G_PARAM_STATIC_STRINGS));
+
 }
 
 static void
@@ -373,6 +439,9 @@ fs_nice_stream_transmitter_init (FsNiceStreamTransmitter *self)
   g_mutex_init (&self->priv->mutex);
 
   self->priv->controlling_mode = TRUE;
+  self->priv->ice_udp = TRUE;
+  self->priv->ice_tcp = TRUE;
+  self->priv->reliable = TRUE;
 }
 
 static void
@@ -513,6 +582,27 @@ fs_nice_stream_transmitter_get_property (GObject *object,
       else
         g_value_set_boolean (value, self->priv->controlling_mode);
       break;
+    case PROP_ICE_UDP:
+      if (self->priv->agent)
+        g_object_get_property (G_OBJECT (self->priv->agent->agent),
+            g_param_spec_get_name (pspec), value);
+      else
+        g_value_set_boolean (value, self->priv->ice_udp);
+      break;
+    case PROP_ICE_TCP:
+      if (self->priv->agent)
+        g_object_get_property (G_OBJECT (self->priv->agent->agent),
+            g_param_spec_get_name (pspec), value);
+      else
+        g_value_set_boolean (value, self->priv->ice_tcp);
+      break;
+    case PROP_RELIABLE:
+      if (self->priv->agent)
+        g_object_get_property (G_OBJECT (self->priv->agent->agent),
+            g_param_spec_get_name (pspec), value);
+      else
+        g_value_set_boolean (value, self->priv->reliable);
+      break;
     case PROP_STREAM_ID:
       FS_NICE_STREAM_TRANSMITTER_LOCK (self);
       g_value_set_uint (value, self->priv->stream_id);
@@ -524,6 +614,9 @@ fs_nice_stream_transmitter_get_property (GObject *object,
     case PROP_ASSOCIATE_ON_SOURCE:
       g_value_set_boolean (value,
           g_atomic_int_get (&self->priv->associate_on_source));
+      break;
+    case PROP_SEND_COMPONENT_MUX:
+      g_value_set_boolean (value, self->priv->send_component_mux);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -564,6 +657,21 @@ fs_nice_stream_transmitter_set_property (GObject *object,
         g_object_set_property (G_OBJECT (self->priv->agent->agent),
             g_param_spec_get_name (pspec), value);
       break;
+    case PROP_ICE_UDP:
+      self->priv->ice_udp = g_value_get_boolean (value);
+      if (self->priv->transmitter && self->priv->agent)
+        g_object_set_property (G_OBJECT (self->priv->agent->agent),
+            g_param_spec_get_name (pspec), value);
+      break;
+    case PROP_ICE_TCP:
+      self->priv->ice_tcp = g_value_get_boolean (value);
+      if (self->priv->transmitter && self->priv->agent)
+        g_object_set_property (G_OBJECT (self->priv->agent->agent),
+            g_param_spec_get_name (pspec), value);
+      break;
+    case PROP_RELIABLE:
+      self->priv->reliable = g_value_get_boolean (value);
+      break;
     case PROP_COMPATIBILITY_MODE:
       self->priv->compatibility_mode = g_value_get_uint (value);
       break;
@@ -574,6 +682,12 @@ fs_nice_stream_transmitter_set_property (GObject *object,
     case PROP_RELAY_INFO:
       self->priv->relay_info = g_value_dup_boxed (value);
       break;
+    case PROP_MIN_PORT:
+      self->priv->min_port = g_value_get_uint (value);
+      break;
+    case PROP_MAX_PORT:
+      self->priv->max_port = g_value_get_uint (value);
+      break;
     case PROP_DEBUG:
       if (g_value_get_boolean (value)) {
         nice_debug_enable (TRUE);
@@ -581,6 +695,13 @@ fs_nice_stream_transmitter_set_property (GObject *object,
         nice_debug_disable (TRUE);
       }
       break;
+    case PROP_SEND_COMPONENT_MUX:
+      self->priv->send_component_mux = g_value_get_boolean (value);
+      if (self->priv->gststream != NULL)
+        fs_nice_transmitter_set_send_component_mux (self->priv->transmitter,
+            self->priv->gststream, self->priv->send_component_mux);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -614,6 +735,12 @@ fs_network_protocol_to_nice_candidate_protocol (FsNetworkProtocol proto)
   {
     case FS_NETWORK_PROTOCOL_UDP:
       return NICE_CANDIDATE_TRANSPORT_UDP;
+    case FS_NETWORK_PROTOCOL_TCP_ACTIVE:
+      return NICE_CANDIDATE_TRANSPORT_TCP_ACTIVE;
+    case FS_NETWORK_PROTOCOL_TCP_PASSIVE:
+      return NICE_CANDIDATE_TRANSPORT_TCP_PASSIVE;
+    case FS_NETWORK_PROTOCOL_TCP_SO:
+      return NICE_CANDIDATE_TRANSPORT_TCP_SO;
     default:
       GST_WARNING ("Invalid Fs network protocol type %u", proto);
       return NICE_CANDIDATE_TRANSPORT_UDP;
@@ -926,14 +1053,6 @@ fs_nice_stream_transmitter_force_remote_candidates (
       goto out;
     }
 
-    if (candidate->proto != FS_NETWORK_PROTOCOL_UDP)
-    {
-      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
-          "Only UDP candidates can be set");
-      res = FALSE;
-      goto out;
-    }
-
     if (done[candidate->component_id-1])
     {
       g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
@@ -995,6 +1114,12 @@ nice_candidate_transport_to_fs_network_protocol (NiceCandidateTransport trans)
   {
     case NICE_CANDIDATE_TRANSPORT_UDP:
       return FS_NETWORK_PROTOCOL_UDP;
+    case NICE_CANDIDATE_TRANSPORT_TCP_PASSIVE:
+      return FS_NETWORK_PROTOCOL_TCP_PASSIVE;
+    case NICE_CANDIDATE_TRANSPORT_TCP_ACTIVE:
+      return FS_NETWORK_PROTOCOL_TCP_ACTIVE;
+    case NICE_CANDIDATE_TRANSPORT_TCP_SO:
+      return FS_NETWORK_PROTOCOL_TCP_SO;
     default:
       GST_WARNING ("Invalid Nice network transport type %u", trans);
       return FS_NETWORK_PROTOCOL_UDP;
@@ -1180,13 +1305,6 @@ fs_nice_stream_transmitter_build (FsNiceStreamTransmitter *self,
           "You can only set preferred candidates of type host");
       return FALSE;
     }
-
-    if (cand->proto != FS_NETWORK_PROTOCOL_UDP)
-    {
-      g_set_error (error, FS_ERROR, FS_ERROR_INVALID_ARGUMENTS,
-          "Only UDP preferred candidates can be set");
-      return FALSE;
-    }
   }
 
   /* Now if we have a relayinfo, lets verify that its ok */
@@ -1312,7 +1430,7 @@ fs_nice_stream_transmitter_build (FsNiceStreamTransmitter *self,
   if (item == NULL)
   {
     agent = fs_nice_agent_new (self->priv->compatibility_mode,
-        self->priv->preferred_local_candidates,
+        self->priv->preferred_local_candidates, self->priv->reliable,
         error);
 
     if (!agent)
@@ -1326,6 +1444,8 @@ fs_nice_stream_transmitter_build (FsNiceStreamTransmitter *self,
 
     g_object_set (agent->agent,
         "controlling-mode", self->priv->controlling_mode,
+        "ice-udp", self->priv->ice_udp,
+        "ice-tcp", self->priv->ice_tcp,
         NULL);
 
     agents = g_list_prepend (agents, agent);
@@ -1390,6 +1510,17 @@ fs_nice_stream_transmitter_build (FsNiceStreamTransmitter *self,
     }
   }
 
+  /* Set a port range if it has been specified. */
+  if (self->priv->min_port && (self->priv->min_port < self->priv->max_port))
+  {
+    gint c;
+    for (c = 1; c <= self->priv->transmitter->components; c++)
+    {
+      nice_agent_set_port_range (self->priv->agent->agent,
+          self->priv->stream_id, c, self->priv->min_port, self->priv->max_port);
+    }
+  }
+
   self->priv->state_changed_handler_id = g_signal_connect_object (agent->agent,
       "component-state-changed", G_CALLBACK (agent_state_changed), self, 0);
   self->priv->gathering_done_handler_id = g_signal_connect_object (agent->agent,
@@ -1413,6 +1544,9 @@ fs_nice_stream_transmitter_build (FsNiceStreamTransmitter *self,
       error);
   if (self->priv->gststream == NULL)
     return FALSE;
+
+  fs_nice_transmitter_set_send_component_mux (self->priv->transmitter,
+      self->priv->gststream, self->priv->send_component_mux);
 
   GST_DEBUG ("Created a stream with %u components",
       self->priv->transmitter->components);
@@ -1701,7 +1835,7 @@ agent_new_candidate (NiceAgent *agent,
   else
   {
     GST_WARNING ("Could not find local candidate with foundation %s"
-        " for component_ %d in stream %d", foundation, component_id,
+        " for component %d in stream %d", foundation, component_id,
         stream_id);
   }
 }
@@ -1853,7 +1987,7 @@ known_buffer_have_buffer_handler (GstPad *pad, GstPadProbeInfo *info,
   GstBuffer *buffer = GST_PAD_PROBE_INFO_BUFFER (info);
 
   if (!g_atomic_int_get (&self->priv->associate_on_source))
-    return TRUE;
+    return GST_PAD_PROBE_OK;
 
   component_id = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT (pad),
           "component-id"));
@@ -1861,5 +1995,5 @@ known_buffer_have_buffer_handler (GstPad *pad, GstPadProbeInfo *info,
   g_signal_emit_by_name (self, "known-source-packet-received", component_id,
       buffer);
 
-  return TRUE;
+  return GST_PAD_PROBE_OK;
 }
