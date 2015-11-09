@@ -5,8 +5,9 @@ farstream-0.2 (0.2.7-1) UNRELEASED; urgency=medium
 
   [ Laurent Bigonville ]
   * New upstream release (Closes: #785195)
+    - Adjust the build-dependencies
 
- -- Laurent Bigonville <bigon@debian.org>  Mon, 09 Nov 2015 01:47:02 +0100
+ -- Laurent Bigonville <bigon@debian.org>  Mon, 09 Nov 2015 01:50:17 +0100
 
 farstream-0.2 (0.2.4-1) unstable; urgency=medium
 
