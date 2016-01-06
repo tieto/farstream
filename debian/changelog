@@ -1,4 +1,4 @@
-farstream-0.2 (0.2.7-1) UNRELEASED; urgency=medium
+farstream-0.2 (0.2.7-1) unstable; urgency=medium
 
   [ Simon McVittie ]
   * Remove myself from Uploaders
@@ -14,7 +14,7 @@ farstream-0.2 (0.2.7-1) UNRELEASED; urgency=medium
   * Drop libfarstream-0.2-dbg package and let debhelper create the dbgsym
     package itself.
 
- -- Laurent Bigonville <bigon@debian.org>  Wed, 06 Jan 2016 03:03:56 +0100
+ -- Laurent Bigonville <bigon@debian.org>  Wed, 06 Jan 2016 03:29:50 +0100
 
 farstream-0.2 (0.2.4-1) unstable; urgency=medium
 
