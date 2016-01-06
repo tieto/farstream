@@ -26,7 +26,7 @@ override_dh_auto_configure:
 	dh_auto_configure -- --enable-gtk-doc --disable-silent-rules
 
 override_dh_strip:
-	dh_strip --dbg-package=libfarstream-0.2-dbg
+	dh_strip --ddeb-migration='libfarstream-0.2-dbg (<< 0.2.7-1~)'
 
 %:
 	dh $@ --with autoreconf

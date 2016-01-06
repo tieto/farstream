@@ -11,8 +11,10 @@ farstream-0.2 (0.2.7-1) UNRELEASED; urgency=medium
     - Rename the package from libfarstream-0.2-2 to libfarstream-0.2-5 and
       adjust the .symbols file
   * debian/control: Bump Standards-Version to 3.9.6 (no further changes)
+  * Drop libfarstream-0.2-dbg package and let debhelper create the dbgsym
+    package itself.
 
- -- Laurent Bigonville <bigon@debian.org>  Wed, 06 Jan 2016 02:46:45 +0100
+ -- Laurent Bigonville <bigon@debian.org>  Wed, 06 Jan 2016 03:03:56 +0100
 
 farstream-0.2 (0.2.4-1) unstable; urgency=medium
 
