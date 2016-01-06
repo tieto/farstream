@@ -5,17 +5,17 @@ Maintainer: Debian Telepathy maintainers <pkg-telepathy-maintainers@lists.alioth
 Uploaders: Sjoerd Simons <sjoerd@debian.org>,
            Laurent Bigonville <bigon@debian.org>,
            Jonny Lamb <jonny@debian.org>
-Build-Depends: debhelper (>= 9),
+Build-Depends: autotools-dev,
+               debhelper (>= 9),
                dh-autoreconf,
-               autotools-dev,
-               libglib2.0-dev (>= 2.32),
-               libgstreamer1.0-dev (>= 1.4),
-               libgstreamer-plugins-base1.0-dev (>= 1.4),
                gobject-introspection,
                gtk-doc-tools (>= 1.18),
                libgirepository1.0-dev,
-               libnice-dev (>= 0.1.8),
+               libglib2.0-dev (>= 2.32),
+               libgstreamer-plugins-base1.0-dev (>= 1.4),
+               libgstreamer1.0-dev (>= 1.4),
                libgupnp-igd-1.0-dev,
+               libnice-dev (>= 0.1.8),
                uuid-dev
 Standards-Version: 3.9.6
 Vcs-Git: git://anonscm.debian.org/pkg-telepathy/farstream-0.2.git
@@ -27,11 +27,12 @@ Architecture: any
 Multi-Arch: same
 Conflicts: libfarstream-0.2-0, libfarstream-0.2-2
 Pre-Depends: ${misc:Pre-Depends}
-Depends: ${shlibs:Depends}, ${misc:Depends},
+Depends: gstreamer1.0-nice,
+         gstreamer1.0-plugins-bad,
          gstreamer1.0-plugins-base,
          gstreamer1.0-plugins-good,
-         gstreamer1.0-plugins-bad,
-         gstreamer1.0-nice
+         ${misc:Depends},
+         ${shlibs:Depends}
 Description: Audio/Video communications framework: core library
  The Farstream project is an effort to create a framework to deal with all
  known audio/video conferencing protocols. On one side it offers a generic
@@ -44,9 +45,11 @@ Description: Audio/Video communications framework: core library
 Package: libfarstream-0.2-dev
 Section: libdevel
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends},
-         libfarstream-0.2-5 (= ${binary:Version}), libgstreamer1.0-dev,
-         gir1.2-farstream-0.2
+Depends: gir1.2-farstream-0.2,
+         libfarstream-0.2-5 (= ${binary:Version}),
+         libgstreamer1.0-dev,
+         ${misc:Depends},
+         ${shlibs:Depends}
 Description: Audio/Video communications framework: development files
  The Farstream project is an effort to create a framework to deal with all
  known audio/video conferencing protocols. On one side it offers a generic
@@ -71,8 +74,7 @@ Description: Audio/Video communications framework: documentation
 
 Package: gir1.2-farstream-0.2
 Architecture: any
-Depends: ${gir:Depends},
-         ${misc:Depends}
+Depends: ${gir:Depends}, ${misc:Depends}
 Section: introspection
 Description: Audio/Video communications framework: GObject-Introspection
  The Farstream project is an effort to create a framework to deal with all
