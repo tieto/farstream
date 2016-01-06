@@ -6,9 +6,11 @@ farstream-0.2 (0.2.7-1) UNRELEASED; urgency=medium
   [ Laurent Bigonville ]
   * New upstream release (Closes: #785195)
     - Adjust the build-dependencies
+    - Drop d/p/0001-Fix-some-mismatched-redundant-para-gtk-doc-tags.patch,
+      applied upstream
   * debian/control: Bump Standards-Version to 3.9.6 (no further changes)
 
- -- Laurent Bigonville <bigon@debian.org>  Mon, 09 Nov 2015 01:50:53 +0100
+ -- Laurent Bigonville <bigon@debian.org>  Wed, 06 Jan 2016 02:41:02 +0100
 
 farstream-0.2 (0.2.4-1) unstable; urgency=medium
 
