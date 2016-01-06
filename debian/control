@@ -22,10 +22,10 @@ Vcs-Git: git://anonscm.debian.org/pkg-telepathy/farstream-0.2.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-telepathy/farstream-0.2.git
 Homepage: http://www.freedesktop.org/software/farstream/releases/farstream/
 
-Package: libfarstream-0.2-2
+Package: libfarstream-0.2-5
 Architecture: any
 Multi-Arch: same
-Conflicts: libfarstream-0.2-0
+Conflicts: libfarstream-0.2-0, libfarstream-0.2-2
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends},
          gstreamer1.0-plugins-base,
@@ -45,7 +45,7 @@ Package: libfarstream-0.2-dev
 Section: libdevel
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
-         libfarstream-0.2-2 (= ${binary:Version}), libgstreamer1.0-dev,
+         libfarstream-0.2-5 (= ${binary:Version}), libgstreamer1.0-dev,
          gir1.2-farstream-0.2
 Description: Audio/Video communications framework: development files
  The Farstream project is an effort to create a framework to deal with all
@@ -74,7 +74,7 @@ Section: debug
 Priority: extra
 Architecture: any
 Multi-Arch: same
-Depends: ${misc:Depends}, libfarstream-0.2-2 (= ${binary:Version}), libgstreamer1.0-dev
+Depends: ${misc:Depends}, libfarstream-0.2-5 (= ${binary:Version}), libgstreamer1.0-dev
 Description: Audio/Video communications framework: debugging symbols
  The Farstream project is an effort to create a framework to deal with all
  known audio/video conferencing protocols. On one side it offers a generic
