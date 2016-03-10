@@ -1232,6 +1232,10 @@ _rtpbin_pad_blocked_callback (GstPad *pad, GstPadProbeInfo *info,
   FsRtpSession *session;
   GstCaps *caps = NULL;
 
+  if (GST_PAD_PROBE_INFO_TYPE (info) == GST_PAD_PROBE_TYPE_EVENT_DOWNSTREAM &&
+      !GST_EVENT_IS_SERIALIZED (GST_PAD_PROBE_INFO_EVENT (info)))
+    return GST_PAD_PROBE_PASS;
+
   FS_RTP_SESSION_LOCK (substream->priv->session);
   substream->priv->blocking_id = 0;
   FS_RTP_SESSION_UNLOCK (substream->priv->session);
