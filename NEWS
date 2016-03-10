@@ -1,3 +1,10 @@
+farstream 0.2.8 (March 10, 2016)
+==================================
+- Add "require-encryption" parameter to ignore unencrypted packets
+- Enable building static GStreamer and transmitter plugins
+- Make OPUS plugin work and select it as default codec
+- Bug fixes
+
 farstream 0.2.7 (January 29, 2015)
 ==================================
 - Add "send-rtcp-mux" parameters to fsrtpsession
