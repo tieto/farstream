@@ -32,6 +32,8 @@ Depends: gstreamer1.4-nice,
          gstreamer1.4-plugins-good,
          ${misc:Depends},
          ${shlibs:Depends}
+Conflicts: libfarstream-0.2-2-sipe
+Replaces: libfarstream-0.2-2-sipe
 Description: Audio/Video communications framework: core library
  The Farstream project is an effort to create a framework to deal with all
  known audio/video conferencing protocols. On one side it offers a generic
