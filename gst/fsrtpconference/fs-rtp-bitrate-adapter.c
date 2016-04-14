@@ -161,6 +161,7 @@ fs_rtp_bitrate_adapter_init (FsRtpBitrateAdapter *self)
   self->system_clock = gst_system_clock_obtain ();
   self->interval = PROP_INTERVAL_DEFAULT;
 
+  self->bitrate = G_MAXUINT;
   self->last_bitrate = G_MAXUINT;
 }
 
