@@ -55,6 +55,7 @@ enum
 };
 
 #define PROP_INTERVAL_DEFAULT (10 * GST_SECOND)
+#define PROP_BITRATE_DEFAULT (G_MAXUINT)
 
 static void fs_rtp_bitrate_adapter_finalize (GObject *object);
 static void fs_rtp_bitrate_adapter_set_property (GObject *object,
@@ -105,8 +106,8 @@ fs_rtp_bitrate_adapter_class_init (FsRtpBitrateAdapterClass *klass)
       PROP_BITRATE,
       g_param_spec_uint ("bitrate",
           "Bitrate to adapt for",
-          "The bitrate to adapt for (0 means no adaption)",
-          0, G_MAXUINT, 0,
+          "The bitrate to adapt for (MAXUINT means no adaption)",
+          0, G_MAXUINT, PROP_BITRATE_DEFAULT,
           G_PARAM_WRITABLE | G_PARAM_STATIC_STRINGS));
 
  g_object_class_install_property (gobject_class,
@@ -161,6 +162,7 @@ fs_rtp_bitrate_adapter_init (FsRtpBitrateAdapter *self)
   self->system_clock = gst_system_clock_obtain ();
   self->interval = PROP_INTERVAL_DEFAULT;
 
+  self->bitrate = PROP_BITRATE_DEFAULT;
   self->last_bitrate = G_MAXUINT;
 }
 
