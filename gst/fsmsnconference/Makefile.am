@@ -36,6 +36,7 @@ libfsmsnconference_la_SOURCES = \
 	fs-msn-conference.c
 
 libfsmsnconference_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
+libfsmsnconference_la_LIBTOOLFLAGS = $(PLUGIN_LIBTOOLFLAGS)
 libfsmsnconference_la_LIBADD = \
 	libfsmsnconference-convenience.la \
 	$(top_builddir)/farstream/libfarstream-@FS_APIVERSION@.la \

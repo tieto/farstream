@@ -147,13 +147,13 @@ fs_nice_transmitter_register_type (FsPlugin *module)
   fs_nice_stream_transmitter_register_type (module);
   fs_nice_agent_register_type (module);
 
-  type = g_type_module_register_type (G_TYPE_MODULE (module),
-    FS_TYPE_TRANSMITTER, "FsNiceTransmitter", &info, 0);
+  type = g_type_register_static (FS_TYPE_TRANSMITTER,
+      "FsNiceTransmitter", &info, 0);
 
   return type;
 }
 
-FS_INIT_PLUGIN (fs_nice_transmitter_register_type)
+FS_INIT_PLUGIN (nice, transmitter)
 
 static void
 fs_nice_transmitter_class_init (FsNiceTransmitterClass *klass)

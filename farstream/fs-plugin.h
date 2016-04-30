@@ -104,6 +104,9 @@ GObject *fs_plugin_create (const gchar *name,
 
 gchar **fs_plugin_list_available (const gchar *type_suffix);
 
+void fs_plugin_register_static (const gchar *name, const gchar *type_suffix,
+        GType type);
+
 /**
  * FS_INIT_PLUGIN:
  * @type_register_func: A function that register a #GType and returns it
@@ -112,11 +115,52 @@ gchar **fs_plugin_list_available (const gchar *type_suffix);
  * in any farstream plugin.
  */
 
-#define FS_INIT_PLUGIN(type_register_func)            \
-    G_MODULE_EXPORT void fs_init_plugin (FsPlugin *plugin) {    \
-      plugin->type = (type_register_func (plugin));             \
+#define _FS_REGISTER_TYPE(plugin,name,type) \
+    fs_ ## name ## _ ## type ## _register_type (plugin)
+
+#ifdef GST_PLUGIN_BUILD_STATIC
+
+#define FS_INIT_PLUGIN(name,type)                       \
+    G_MODULE_EXPORT void                                \
+    fs_plugin_ ## name ## _ ## type ## _register (void) \
+    {                                                   \
+      fs_plugin_register_static (#name, #type,          \
+          _FS_REGISTER_TYPE (NULL, name, type));        \
     }
 
+#else /* !GST_PLUGIN_BUILD_STATIC */
+
+#define FS_INIT_PLUGIN(name,_type)                            \
+    G_MODULE_EXPORT void                                      \
+    fs_init_plugin (FsPlugin *plugin)                         \
+    {                                                         \
+      plugin->type = _FS_REGISTER_TYPE (plugin, name, _type); \
+    }
+
+#endif /* GST_PLUGIN_BUILD_STATIC */
+
+/**
+ * FS_PLUGIN_STATIC_DECLARE:
+ * @name: unique name of the plugin
+ *
+ * This macro can be used to initialize statically linked plugins. It is
+ * necessary to call this macro before the plugin can be used. It has to be
+ * used in combination with FS_PLUGIN_STATIC_REGISTER and must be placed
+ * outside any block to declare the plugin initialization function.
+ */
+#define FS_PLUGIN_STATIC_DECLARE(name) \
+    extern void fs_plugin_ ## name ## _register(void);
+
+/**
+ * FS_PLUGIN_STATIC_REGISTER:
+ * @name: unique name of the plugin
+ *
+ * This macro can be used to initialize statically linked plugins. It is
+ * necessary to call this macro before the plugin can be used. It has to
+ * be used in combination with FS_PLUGIN_STATIC_DECLARE and calls the plugin
+ * initialization function.
+ */
+#define FS_PLUGIN_STATIC_REGISTER(name) fs_plugin_ ## name ## _register ()
 
 G_END_DECLS
 #endif

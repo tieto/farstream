@@ -29,6 +29,7 @@ AM_CFLAGS = \
 libfsrawconference_la_SOURCES = fs-raw-conference-plugin.c
 
 libfsrawconference_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
+libfsrawconference_la_LIBTOOLFLAGS = $(PLUGIN_LIBTOOLFLAGS)
 libfsrawconference_la_LIBADD = \
 	libfsrawconference-convenience.la \
 	$(top_builddir)/farstream/libfarstream-@FS_APIVERSION@.la \

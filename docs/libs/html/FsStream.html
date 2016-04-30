@@ -178,6 +178,11 @@
 <td class="property_flags">Read</td>
 </tr>
 <tr>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_name"><a class="link" href="FsStream.html#FsStream--require-encryption" title="The “require-encryption” property">require-encryption</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
 <td class="property_type">
 <a class="link" href="FsSession.html" title="FsSession"><span class="type">FsSession</span></a> *</td>
 <td class="property_name"><a class="link" href="FsStream.html#FsStream--session" title="The “session” property">session</a></td>
@@ -1070,6 +1075,15 @@ is read-only construction.</p>
 <pre class="programlisting">  “remote-codecs”            <span class="type">FsCodecGList</span> *</pre>
 <p>A GList of FsCodecs of the remote codecs.</p>
 <p>Flags: Read</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="FsStream--require-encryption"></a><h3>The <code class="literal">“require-encryption”</code> property</h3>
+<pre class="programlisting">  “require-encryption”       <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>If set to TRUE, only encrypted content will be accepted on this
+stream.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: FALSE</p>
 </div>
 <hr>
 <div class="refsect2">

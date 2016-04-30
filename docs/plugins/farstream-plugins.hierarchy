@@ -16,6 +16,7 @@ GObject
       GstPluginFeature
         GstDeviceProviderFactory
         GstElementFactory
+        GstTracerFactory
         GstTypeFindFactory
       GstRegistry
       GstTask

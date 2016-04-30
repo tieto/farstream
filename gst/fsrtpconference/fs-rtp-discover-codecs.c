@@ -1483,6 +1483,11 @@ extract_field_data (GQuark field_id,
   }
   else if (0 == strcmp (field_name, "encoding-name"))
   {
+    if (type == GST_TYPE_LIST)
+    {
+      value = gst_value_list_get_value (value, 0);
+      type = G_VALUE_TYPE (value);
+    }
     if (type != G_TYPE_STRING)
     {
       return FALSE;

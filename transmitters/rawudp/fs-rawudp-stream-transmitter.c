@@ -226,8 +226,8 @@ fs_rawudp_stream_transmitter_register_type (FsPlugin *module)
 
   fs_rawudp_component_register_type (module);
 
-  type = g_type_module_register_type (G_TYPE_MODULE (module),
-      FS_TYPE_STREAM_TRANSMITTER, "FsRawUdpStreamTransmitter", &info, 0);
+  type = g_type_register_static (FS_TYPE_STREAM_TRANSMITTER,
+      "FsRawUdpStreamTransmitter", &info, 0);
 
   return type;
 }
@@ -655,6 +655,7 @@ fs_rawudp_stream_transmitter_build (FsRawUdpStreamTransmitter *self,
     if (used_port != requested_port  &&  !ports[c])
     {
       do {
+        fs_rawudp_component_stop (self->priv->component[c]);
         g_object_unref (self->priv->component[c]);
         self->priv->component[c] = NULL;
 

@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, cvs and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for cvs/prerelease
-AC_INIT(Farstream, 0.2.7,
+AC_INIT(Farstream, 0.2.8,
     https://bugs.freedesktop.org/enter_bug.cgi?product=Farstream,
     farstream)
 
@@ -56,7 +56,7 @@ dnl - interfaces added/removed/changed -> increment CURRENT, REVISION = 0
 dnl - interfaces added -> increment AGE
 dnl - interfaces removed -> AGE = 0
 dnl sets FS_LT_LDFLAGS
-AS_LIBTOOL(FS, 5, 0, 0)
+AS_LIBTOOL(FS, 6, 0, 1)
 
 dnl FIXME: this macro doesn't actually work;
 dnl the generated libtool script has no support for the listed tags.
@@ -337,12 +337,12 @@ AC_SUBST(FS_LIB_LDFLAGS)
 
 dnl this really should only contain flags, not libs - they get added before
 dnl whatevertarget_LIBS and -L flags here affect the rest of the linking
-FS_PLUGIN_LDFLAGS="-module -avoid-version -export-symbols-regex '^[_]*fs_init_plugin\$\$' $FS_ALL_LDFLAGS"
+FS_PLUGIN_LDFLAGS="-module -avoid-version -export-symbols-regex '^[_]*fs_.*plugin.*' $FS_ALL_LDFLAGS"
 AC_SUBST(FS_PLUGIN_LDFLAGS)
 
 dnl this really should only contain flags, not libs - they get added before
 dnl whatevertarget_LIBS and -L flags here affect the rest of the linking
-GST_PLUGIN_LDFLAGS="-module -avoid-version -export-symbols-regex '^[_]*gst_plugin_desc\$\$' $FS_ALL_LDFLAGS"
+GST_PLUGIN_LDFLAGS="-module -avoid-version -export-symbols-regex '^[_]*gst_plugin_.*' $FS_ALL_LDFLAGS"
 AC_SUBST(GST_PLUGIN_LDFLAGS)
 
 AC_ARG_ENABLE([gupnp],
@@ -367,6 +367,29 @@ fi
 if test "x$HAVE_GUPNP" = "xyes"; then
    AC_DEFINE(HAVE_GUPNP,,[Have the GUPnP IGD library])
 fi
+
+dnl build static plugins or not
+AC_MSG_CHECKING([whether to build static plugins or not])
+AC_ARG_ENABLE(
+  static-plugins,
+  AC_HELP_STRING(
+    [--enable-static-plugins],
+    [build static plugins @<:@default=no@:>@]),
+  [AS_CASE(
+    [$enableval], [no], [], [yes], [],
+    [AC_MSG_ERROR([bad value "$enableval" for --enable-static-plugins])])],
+  [enable_static_plugins=no])
+AC_MSG_RESULT([$enable_static_plugins])
+if test "x$enable_static_plugins" = xyes; then
+  AS_IF([test x$enable_static = xno], [AC_MSG_ERROR([--enable-static-plugins requires --enable-static to work])])
+  AC_DEFINE(GST_PLUGIN_BUILD_STATIC, 1,
+    [Define if static plugins should be built])
+  PLUGIN_LIBTOOLFLAGS=""
+else
+  PLUGIN_LIBTOOLFLAGS="--tag=disable-static"
+fi
+AC_SUBST(PLUGIN_LIBTOOLFLAGS)
+AM_CONDITIONAL(GST_PLUGIN_BUILD_STATIC, test "x$enable_static_plugins" = "xyes")
 
 dnl *** output files ***
 

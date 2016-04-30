@@ -1,3 +1,121 @@
+commit 1c21fb8053ce5853e7585e0327eb7308d0fb5e98
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Mar 10 12:35:04 2016 -0500
+
+    Version 0.2.8
+
+commit 3ec04587156f63f105051731acada2b43f74f8dc
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Mar 10 12:20:49 2016 -0500
+
+    fs-rtp-substream: Drop non-serialized events without caps
+    
+    This prevents some events that shouldn't be forwarded from
+    going downstream.
+
+commit c4bca15b08a34874fefc06529df98b4609abbf3d
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Jul 24 19:52:11 2015 -0400
+
+    rtpstream: Accept all uncrypted packets if no crypto set
+
+commit 28f0e7985cab9e305a32f830f974db0f049a8f51
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Fri Jul 24 19:24:41 2015 -0400
+
+    rtpstream: Accept everything when no crypto was set
+
+commit e9a20b815d88b6b2aac4bd2ddd2e30dc8a3e6725
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Apr 27 17:28:09 2015 -0400
+
+    bitrateadapter: Template caps are ANY and absorb the rest, so ignore them
+
+commit 76c4b7e3c3c2463ac256f2631bbdc3cc07bc8d6f
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Mar 25 15:25:00 2015 -0400
+
+    rtp: Opus is now our favorite codec
+
+commit db14343c55fb4616153a5ab783293f957c88f1b5
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Mar 25 15:24:27 2015 -0400
+
+    rtp: Parse payloaders with multiple names
+
+commit 2b085b0a3a37cf87e4a9ccf6b2de50a3fc236de3
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Mar 25 15:24:13 2015 -0400
+
+    rtp: Put channels as encoding-params as expected
+
+commit da2191e01ff5beb50cb1ce193778b4fe59225a2d
+Author: Sebastian Dröge <sebastian@centricular.com>
+Date:   Thu Mar 19 19:06:57 2015 +0100
+
+    fsrtpxdata: Add gst-plugins-base libs to the CFLAGS and LIBS
+    
+    Fixes compilation in gst-uninstalled, as otherwise the RTP library is not
+    found.
+
+commit 45861c192761b7059a6ffd4b6daea2ebcdd82642
+Author: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Date:   Thu Oct 30 19:36:25 2014 -0400
+
+    Enable building static FsPlugins
+    
+    This required change FS_INIT_PLUGIN() macro. It's now taking name and
+    type argumenet. This is a slight API break, but there never existed any
+    external plugins. Also, already built plugins should not be affected since
+    the symbol remains the same.
+    
+    Note also that plugin are no longer unloadable, it was already not well
+    supported. Instead of adding loads of if, we simply register the module
+    types as static (just like GStreamer does).
+    
+    To register static plugin, you can declare it's registration function
+    using FS_PLUGIN_STATIC_DECLARE(name), and then in your code call the
+    function using FS_PLUGIN_STATIC_REGISTER(name).
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=89287
+
+commit adb4765979f627dfce44590b243cd74af086da9a
+Author: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Date:   Thu Oct 30 17:42:05 2014 -0400
+
+    Enable building static GStreamer plugins
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=89287
+
+commit 98235c97645ff81cac4078b97d8f30d06eea1fff
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Mon Feb 23 14:34:37 2015 -0500
+
+    stream: Add "require-encryption" parameter
+    
+    If it is set to TRUE, then all buffers will be dropped before
+    the decryption key is set.
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=89288
+
+commit 9a8e68e837029031bf082350ff5dfb2ef5cf4f7a
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Feb 4 16:27:54 2015 -0500
+
+    rtpconference: Make get_extension() static
+
+commit 7cec3506bfe45a89c3043bd4a3026c997f858fcf
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Thu Jan 29 15:44:29 2015 -0500
+
+    rawudp-stream: Stop the component if the port is already used
+
+commit c73e5a7d14e10558533d1434922a58fb3535dde3
+Author: Olivier Crête <olivier.crete@collabora.com>
+Date:   Wed Jan 28 22:22:10 2015 -0500
+
+    Version 0.2.7.1
+
 commit 01fafe82fbc01f31e76623fbbbe6dd99eb28d6bb
 Author: Olivier Crête <olivier.crete@collabora.com>
 Date:   Wed Jan 28 22:15:59 2015 -0500

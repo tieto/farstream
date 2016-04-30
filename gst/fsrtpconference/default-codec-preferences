@@ -4,6 +4,8 @@
 
 # We love Opus !
 # But please give us standardised payloading
+[audio/OPUS]
+
 [audio/X-GST-OPUS-DRAFT-SPITTKA-00]
 
 [audio/SPEEX:8000]
