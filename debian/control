@@ -17,7 +17,7 @@ Build-Depends: autotools-dev,
                libgupnp-igd-1.0-dev,
                libnice-dev (>= 0.1.8),
                uuid-dev
-Standards-Version: 3.9.6
+Standards-Version: 3.9.8
 Vcs-Git: git://anonscm.debian.org/pkg-telepathy/farstream-0.2.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-telepathy/farstream-0.2.git
 Homepage: http://www.freedesktop.org/software/farstream/releases/farstream/
