@@ -1,8 +1,9 @@
-farstream-0.2 (0.2.7-2) UNRELEASED; urgency=medium
+farstream-0.2 (0.2.8-1) UNRELEASED; urgency=medium
 
+  * New upstream release
   * debian/watch: Fix URL
 
- -- Laurent Bigonville <bigon@debian.org>  Sat, 30 Apr 2016 02:52:40 +0200
+ -- Laurent Bigonville <bigon@debian.org>  Sat, 30 Apr 2016 02:53:25 +0200
 
 farstream-0.2 (0.2.7-1) unstable; urgency=medium
 
