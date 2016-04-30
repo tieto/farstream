@@ -1493,6 +1493,29 @@ It should be freed with g_strfreev().</doc>
           </parameter>
         </parameters>
       </function>
+      <function name="register_static"
+                c:identifier="fs_plugin_register_static">
+        <doc xml:space="preserve">Register a staticly linked transmitter. This function should strictly be
+used by plugins own register function. To register a static plugin:
+  extern fs_plugin_&lt;name&gt;_&lt;type&gt;_register_pluing (void);
+  fs_plugin_&lt;name&gt;_&lt;type&gt;_register_pluing ();</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="name" transfer-ownership="none">
+            <doc xml:space="preserve">The name of the plugin to register</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="type_suffix" transfer-ownership="none">
+            <doc xml:space="preserve">The type of plugin to register (normally "transmitter")</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="type" transfer-ownership="none">
+            <type name="GType" c:type="GType"/>
+          </parameter>
+        </parameters>
+      </function>
       <field name="parent">
         <doc xml:space="preserve">the parent object</doc>
         <type name="GObject.TypeModule" c:type="GTypeModule"/>
@@ -3481,6 +3504,13 @@ user as soon as they are known using fs_stream_set_remote_codecs()
         <type name="GLib.List">
           <type name="Codec"/>
         </type>
+      </property>
+      <property name="require-encryption"
+                writable="1"
+                transfer-ownership="none">
+        <doc xml:space="preserve">If set to TRUE, only encrypted content will be accepted on this
+stream.</doc>
+        <type name="gboolean" c:type="gboolean"/>
       </property>
       <property name="session"
                 writable="1"

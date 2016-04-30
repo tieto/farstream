@@ -286,7 +286,6 @@ caps_from_bitrate (const gchar *media_type, guint bitrate)
   GstCaps *caps = gst_caps_new_empty ();
   GstCaps *lower_caps = gst_caps_new_empty ();
   GstCaps *extra_low_caps = gst_caps_new_empty ();
-  GstCaps *template_caps;
   guint max_pixels_per_second = bitrate * H264_MAX_PIXELS_PER_BIT;
   gint i;
 
@@ -310,11 +309,6 @@ caps_from_bitrate (const gchar *media_type, guint bitrate)
     gst_caps_append (caps, extra_low_caps);
   else
     gst_caps_unref (extra_low_caps);
-
-  template_caps =
-      gst_static_pad_template_get_caps (&fs_rtp_bitrate_adapter_sink_template);
-  template_caps = gst_caps_make_writable (template_caps);
-  gst_caps_append (caps, template_caps);
 
   return caps;
 }

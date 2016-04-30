@@ -131,6 +131,9 @@ validate_srtp_parameters (GstStructure *parameters,
 GstCaps *
 fs_rtp_stream_get_srtp_caps_locked (FsRtpStream *self);
 
+gboolean
+fs_rtp_stream_requires_crypto_locked (FsRtpStream *self);
+
 G_END_DECLS
 
 #endif /* __FS_RTP_STREAM_H__ */

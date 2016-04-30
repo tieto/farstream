@@ -116,7 +116,7 @@ fs_nice_agent_get_type (void)
 }
 
 GType
-fs_nice_agent_register_type (FsPlugin *module)
+fs_nice_agent_register_type (FsPlugin *module G_GNUC_UNUSED)
 {
   static const GTypeInfo info = {
     sizeof (FsNiceAgentClass),
@@ -130,8 +130,7 @@ fs_nice_agent_register_type (FsPlugin *module)
     (GInstanceInitFunc) fs_nice_agent_init
   };
 
-  type = g_type_module_register_type (G_TYPE_MODULE (module),
-      G_TYPE_OBJECT, "FsNiceAgent", &info, 0);
+  type = g_type_register_static (G_TYPE_OBJECT, "FsNiceAgent", &info, 0);
 
   return type;
 }

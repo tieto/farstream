@@ -20,6 +20,7 @@ librawudp_transmitter_la_CFLAGS = \
 	$(GIO_CFLAGS)
 
 librawudp_transmitter_la_LDFLAGS = $(FS_PLUGIN_LDFLAGS)
+librawudp_transmitter_la_LIBTOOLFLAGS = $(PLUGIN_LIBTOOLFLAGS)
 librawudp_transmitter_la_LIBADD = \
 	$(top_builddir)/farstream/libfarstream-@FS_APIVERSION@.la \
 	$(FS_LIBS) \

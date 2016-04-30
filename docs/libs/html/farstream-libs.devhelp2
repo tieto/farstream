@@ -105,6 +105,7 @@
     <keyword type="property" name="The “negotiated-codecs” property" link="FsStream.html#FsStream--negotiated-codecs"/>
     <keyword type="property" name="The “participant” property" link="FsStream.html#FsStream--participant"/>
     <keyword type="property" name="The “remote-codecs” property" link="FsStream.html#FsStream--remote-codecs"/>
+    <keyword type="property" name="The “require-encryption” property" link="FsStream.html#FsStream--require-encryption"/>
     <keyword type="property" name="The “session” property" link="FsStream.html#FsStream--session"/>
     <keyword type="signal" name="The “error” signal" link="FsStream.html#FsStream-error"/>
     <keyword type="signal" name="The “src-pad-added” signal" link="FsStream.html#FsStream-src-pad-added"/>

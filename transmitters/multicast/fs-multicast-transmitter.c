@@ -173,13 +173,13 @@ fs_multicast_transmitter_register_type (FsPlugin *module)
 
   fs_multicast_stream_transmitter_register_type (module);
 
-  type = g_type_module_register_type (G_TYPE_MODULE (module),
-    FS_TYPE_TRANSMITTER, "FsMulticastTransmitter", &info, 0);
+  type = g_type_register_static (FS_TYPE_TRANSMITTER,
+      "FsMulticastTransmitter", &info, 0);
 
   return type;
 }
 
-FS_INIT_PLUGIN (fs_multicast_transmitter_register_type)
+FS_INIT_PLUGIN (multicast, transmitter)
 
 static void
 fs_multicast_transmitter_class_init (FsMulticastTransmitterClass *klass)

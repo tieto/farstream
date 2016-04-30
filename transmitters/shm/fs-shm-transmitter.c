@@ -241,16 +241,16 @@ fs_shm_transmitter_register_type (FsPlugin *module)
 
   fs_shm_stream_transmitter_register_type (module);
 
-  type = g_type_module_register_type (G_TYPE_MODULE (module),
-    FS_TYPE_TRANSMITTER, "FsShmTransmitter", &info, 0);
+  type = g_type_register_static (FS_TYPE_TRANSMITTER, "FsShmTransmitter",
+      &info, 0);
 
-  shm_bin_type = g_type_module_register_type (G_TYPE_MODULE (module),
+  shm_bin_type = g_type_register_static (
     GST_TYPE_BIN, "FsShmBin", &bin_info, 0);
 
   return type;
 }
 
-FS_INIT_PLUGIN (fs_shm_transmitter_register_type)
+FS_INIT_PLUGIN (shm, transmitter)
 
 static void
 fs_shm_transmitter_class_init (FsShmTransmitterClass *klass)

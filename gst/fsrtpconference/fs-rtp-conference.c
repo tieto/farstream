@@ -773,8 +773,15 @@ fs_codec_to_gst_caps (const FsCodec *codec)
     gst_structure_set (structure, "payload", G_TYPE_INT, codec->id, NULL);
 
   if (codec->channels)
-    gst_structure_set (structure, "channels", G_TYPE_INT, codec->channels,
-      NULL);
+  {
+    gchar tmp[11];
+
+    snprintf (tmp, 11, "%u", codec->channels);
+    gst_structure_set (structure,
+        "channels", G_TYPE_INT, codec->channels,
+        "encoding-params", G_TYPE_STRING, tmp,
+        NULL);
+  }
 
   for (item = codec->optional_params;
        item;

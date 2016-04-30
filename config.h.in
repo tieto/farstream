@@ -45,6 +45,9 @@
 /* package origin */
 #undef GST_PACKAGE_ORIGIN
 
+/* Define if static plugins should be built */
+#undef GST_PLUGIN_BUILD_STATIC
+
 /* Define if the target CPU is an Alpha */
 #undef HAVE_CPU_ALPHA
 

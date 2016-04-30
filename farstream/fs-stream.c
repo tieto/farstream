@@ -130,7 +130,8 @@ enum
   PROP_DIRECTION,
   PROP_PARTICIPANT,
   PROP_SESSION,
-  PROP_DECRYPTION_PARAMETERS
+  PROP_DECRYPTION_PARAMETERS,
+  PROP_REQUIRE_ENCRYPTION
 };
 
 
@@ -291,6 +292,20 @@ fs_stream_class_init (FsStreamClass *klass)
           G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
   /**
+   * FsStream:require-encryption:
+   *
+   * If set to TRUE, only encrypted content will be accepted on this
+   * stream.
+   */
+  g_object_class_install_property (gobject_class,
+      PROP_REQUIRE_ENCRYPTION,
+      g_param_spec_boolean ("require-encryption",
+          "Require Encryption",
+          "If TRUE, only encrypted content will be accepted",
+          FALSE,
+          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
+  /**
    * FsStream::error:
    * @self: #FsStream that emitted the signal
    * @errorno: The number of the error
@@ -375,6 +390,9 @@ fs_stream_get_property (GObject *object,
     case PROP_DECRYPTION_PARAMETERS:
       g_value_set_boxed (value, NULL);
       /* Not having parameters is valid, in this case set nothing */
+      break;
+    case PROP_REQUIRE_ENCRYPTION:
+      g_value_set_boxed (value, FALSE);
       break;
     default:
       GST_WARNING ("Subclass %s of FsStream does not override the %s property"

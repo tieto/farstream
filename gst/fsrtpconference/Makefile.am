@@ -64,6 +64,7 @@ libfsrtpconference_la_LIBADD = \
 	-lm
 
 libfsrtpconference_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
+libfsrtpconference_la_LIBTOOLFLAGS = $(PLUGIN_LIBTOOLFLAGS)
 
 preferencesdir = $(datadir)/$(PACKAGE_TARNAME)/$(FS_APIVERSION)/fsrtpconference
 preferences_DATA = \
