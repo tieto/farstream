@@ -20,7 +20,7 @@ Build-Depends: autotools-dev,
 Standards-Version: 3.9.8
 Vcs-Git: https://anonscm.debian.org/git/pkg-telepathy/farstream-0.2.git
 Vcs-Browser: https://anonscm.debian.org/gitweb/?p=pkg-telepathy/farstream-0.2.git
-Homepage: http://www.freedesktop.org/software/farstream/releases/farstream/
+Homepage: https://www.freedesktop.org/wiki/Software/Farstream/
 
 Package: libfarstream-0.2-5
 Architecture: any
