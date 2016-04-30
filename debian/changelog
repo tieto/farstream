@@ -3,8 +3,9 @@ farstream-0.2 (0.2.8-1) UNRELEASED; urgency=medium
   * New upstream release
   * debian/watch: Fix URL
   * debian/control: Bump Standards-Version to 3.9.8 (no further changes)
+  * debian/control: Update Vcs-* URL's to please lintian (again)
 
- -- Laurent Bigonville <bigon@debian.org>  Sat, 30 Apr 2016 02:55:12 +0200
+ -- Laurent Bigonville <bigon@debian.org>  Sat, 30 Apr 2016 02:56:14 +0200
 
 farstream-0.2 (0.2.7-1) unstable; urgency=medium
 

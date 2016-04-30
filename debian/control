@@ -18,8 +18,8 @@ Build-Depends: autotools-dev,
                libnice-dev (>= 0.1.8),
                uuid-dev
 Standards-Version: 3.9.8
-Vcs-Git: git://anonscm.debian.org/pkg-telepathy/farstream-0.2.git
-Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-telepathy/farstream-0.2.git
+Vcs-Git: https://anonscm.debian.org/git/pkg-telepathy/farstream-0.2.git
+Vcs-Browser: https://anonscm.debian.org/gitweb/?p=pkg-telepathy/farstream-0.2.git
 Homepage: http://www.freedesktop.org/software/farstream/releases/farstream/
 
 Package: libfarstream-0.2-5
