@@ -15,7 +15,7 @@ Build-Depends: autotools-dev,
                libgstreamer-plugins-base1.0-dev (>= 1.4),
                libgstreamer1.0-dev (>= 1.4),
                libgupnp-igd-1.0-dev,
-               libnice-dev (>= 0.1.8),
+               libnice-dev (>= 0.1.13),
                uuid-dev
 Standards-Version: 3.9.8
 Vcs-Git: https://anonscm.debian.org/git/pkg-telepathy/farstream-0.2.git
@@ -27,10 +27,11 @@ Architecture: any
 Multi-Arch: same
 Conflicts: libfarstream-0.2-0, libfarstream-0.2-2
 Pre-Depends: ${misc:Pre-Depends}
-Depends: gstreamer1.0-nice,
+Depends: gstreamer1.0-nice (>= 0.1.13),
          gstreamer1.0-plugins-bad,
          gstreamer1.0-plugins-base,
          gstreamer1.0-plugins-good,
+         libnice10 (>= 0.1.13)
          ${misc:Depends},
          ${shlibs:Depends}
 Description: Audio/Video communications framework: core library
