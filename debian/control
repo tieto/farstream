@@ -3,8 +3,7 @@ Priority: optional
 Section: libs
 Maintainer: Debian Telepathy maintainers <pkg-telepathy-maintainers@lists.alioth.debian.org>
 Uploaders: Sjoerd Simons <sjoerd@debian.org>,
-           Laurent Bigonville <bigon@debian.org>,
-           Jonny Lamb <jonny@debian.org>
+           Laurent Bigonville <bigon@debian.org>
 Build-Depends: autotools-dev,
                debhelper (>= 9),
                dh-autoreconf,
