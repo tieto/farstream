@@ -158,7 +158,7 @@ fs_rtp_tfrc_init (FsRtpTfrc *self)
 
   self->extension_type = EXTENSION_NONE;
   self->extension_id = 0;
-  memset (self->pts, 0, 128);
+  memset (self->pts, 0, 128 * sizeof (gboolean));
 
   self->systemclock = gst_system_clock_obtain ();
 }
@@ -1444,7 +1444,7 @@ fs_rtp_tfrc_codecs_updated (FsRtpTfrc *self,
 
   GST_OBJECT_LOCK (self);
 
-  memset (self->pts, 0, 128);
+  memset (self->pts, 0, 128 * sizeof (gboolean));
   for (item = codec_associations; item; item = item->next)
   {
     CodecAssociation *ca = item->data;
