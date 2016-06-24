@@ -91,6 +91,14 @@
    fun:pthread_create@@*
 }
 
+{
+   <tls>
+   Memcheck:Leak
+   fun:calloc
+   fun:allocate_dtv
+   fun:_dl_allocate_tls
+}
+
 # I get an extra stack entry on x86/dapper
 {
    <tls>
@@ -1289,6 +1297,15 @@
    fun:snd_config_update_r
    fun:snd_config_update
 }
+{
+   <alsa leak snd_config_searcha_hooks>
+   Memcheck:Leak
+   fun:*alloc
+   fun:_dl_close_worker
+   ...
+   fun:snd_config_searcha_hooks
+}
+
 {
    <nss lookup within ALSA>
    Memcheck:Leak
@@ -2520,41 +2537,13 @@
 }
 
 
-## Leak of property_list in gstffmpegcfg.c
-## This list is created in gst_ffmpegcsp_init(), called from
-## gst_ffmpegenc_register.
-{
-   <insert a suppression name here>
-   Memcheck:Leak
-   fun:malloc
-   fun:g_malloc
-   fun:g_slice_alloc
-   fun:g_datalist_id_set_data_full
-   fun:gst_ffmpeg_cfg_init
-   fun:gst_ffmpegenc_register
-   fun:plugin_init
-}
-{
-   <insert a suppression name here>
-   Memcheck:Leak
-   fun:malloc
-   fun:g_malloc
-   fun:g_slice_alloc
-   fun:g_datalist_id_set_data_full
-   fun:g_param_spec_set_qdata_full
-   fun:gst_ffmpeg_cfg_init
-   fun:gst_ffmpegenc_register
-   fun:plugin_init
-}
-
-
+## Leak of everything allocated by gst-libav plugin init
 {
    <insert_a_suppression_name_here>
    Memcheck:Leak
    fun:*alloc
-   fun:*
+   ...
    fun:gst_ffmpeg_cfg_init
-   fun:gst_ffmpegenc_register
 }
 
 ## Leak of GIO module through gnomevfs
@@ -3961,3 +3950,78 @@
    fun:gst_system_clock_init
 }
 
+{
+   <glib types are singletons>
+   Memcheck:Leak
+   fun:calloc
+   ...
+   fun:gobject_init_ctor
+}
+
+{
+   <quark table is leaked on purpose if it grows too big>
+   Memcheck:Leak
+   fun:malloc
+   ...
+   fun:g_quark_from*_string
+}
+
+{
+  <timer_create suppressions for earlier valgrind versions that complain>
+  Memcheck:Param
+  timer_create(evp)
+  fun:timer_create@@GLIBC_2.3.3
+}
+
+{
+   closures aren't valgrind friendly (bgo#739850)
+   Memcheck:Leak
+   fun:calloc
+   ...
+   fun:g_cclosure_new
+}
+
+{
+   closures aren't valgrind friendly (bgo#739850)
+   Memcheck:Leak
+   fun:malloc
+   ...
+   fun:g_closure_add_invalidate_notifier
+}
+
+{
+   closures aren't valgrind friendly (bgo#739850)
+   Memcheck:Leak
+   fun:calloc
+   ...
+   fun:g_closure_new_simple
+}
+
+{
+   glib/giomodules2 (from libsoup.supp)
+   Memcheck:Leak
+   ...
+   fun:_g_io_module_get_default
+}
+
+{
+   <valgrind bug when trying to parse "infinity" from "interleaved">
+   Memcheck:Addr8
+   fun:__GI___strncasecmp_l
+   fun:____strtod_l_internal
+   fun:gst_value_deserialize_double
+}
+
+{
+   <glibc overreads/conditionals>
+   Memcheck:Addr8
+   fun:do_lookup_x
+}
+
+{
+   <quark tables are leaked on purpose when they are expanded, observed with glib 2.46 and gst-rtsp-server tests>
+   Memcheck:Leak
+   fun:malloc
+   ...
+   fun:g_quark_init
+}

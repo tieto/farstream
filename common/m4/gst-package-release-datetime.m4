@@ -27,14 +27,16 @@ dnl ===========================================================================
 AC_DEFUN([AG_GST_SET_PACKAGE_RELEASE_DATETIME],
 [
   dnl AG_GST_SET_PACKAGE_RELEASE_DATETIME()
-  dnl AG_GST_SET_PACKAGE_RELEASE_DATETIME([yes]...)
+  dnl AG_GST_SET_PACKAGE_RELEASE_DATETIME([no]...)
   if test "x$1" = "xno" -o "x$1" = "x"; then
     GST_PACKAGE_RELEASE_DATETIME=`date -u "+%Y-%m-%dT%H:%MZ"`
   elif test "x$1" = "xyes"; then
-    dnl AG_GST_SET_PACKAGE_RELEASE_DATETIME([no], ["YYYY-MM-DD"])
-    dnl AG_GST_SET_PACKAGE_RELEASE_DATETIME([no], [DOAP-FILE], [RELEASE-VERSION])
-    if ( echo $1 | grep -e '^20[1-9][0-9]-[0-1][0-9]-[0-3][0-9]' >/dev/null ) ; then
-      GST_PACKAGE_RELEASE_DATETIME=$1
+    dnl AG_GST_SET_PACKAGE_RELEASE_DATETIME([yes], [YYYY-MM-DD])
+    dnl AG_GST_SET_PACKAGE_RELEASE_DATETIME([yes], [DOAP-FILE], [RELEASE-VERSION])
+changequote(<<, >>)dnl
+    if ( echo $2 | grep '^20[1-9][0-9]-[0-1][0-9]-[0-3][0-9]' >/dev/null ) ; then
+changequote([, ])dnl
+      GST_PACKAGE_RELEASE_DATETIME=$2
     else
       dnl we assume the .doap file contains the date as YYYY-MM-DD
       YYYY_MM_DD=`sh "${srcdir}/common/extract-release-date-from-doap-file" $3 $2`;
@@ -47,7 +49,9 @@ AC_DEFUN([AG_GST_SET_PACKAGE_RELEASE_DATETIME],
       fi
     fi
   dnl AG_GST_SET_PACKAGE_RELEASE_DATETIME([YYYY-MM-DD])
-  elif ( echo $1 | grep -e '^20[1-9][0-9]-[0-1][0-9]-[0-3][0-9]' >/dev/null ) ; then
+changequote(<<, >>)dnl
+  elif ( echo $1 | grep '^20[1-9][0-9]-[0-1][0-9]-[0-3][0-9]' >/dev/null ) ; then
+changequote([, ])dnl
     GST_PACKAGE_RELEASE_DATETIME=$1
   else
     AC_MSG_WARN([SET_PACKAGE_RELEASE_DATETIME: invalid first argument])

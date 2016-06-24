@@ -44,17 +44,26 @@ check-exports:
 	  if test "x$$libso" != "x"; then \
 	    echo Checking symbols in $$libso; \
 	    if ! ($(top_srcdir)/common/check-exports $$libdef $$libso) ; then \
-	      fail=1; \
+	      echo "$$libdef"; \
+	      if test "$$libbase" != "libgstgl"; then \
+	        fail=1; \
+	      fi; \
 	    fi; \
 	  fi; \
 	done ; \
 	if test $$fail != 0; then \
 	  echo '-----------------------------------------------------------'; \
 	  echo 'Run this to update the .def files:'; \
-	  echo 'make check-exports 2>&1 | patch -p1'; \
+	  echo 'make update-exports'; \
 	  echo '-----------------------------------------------------------'; \
 	fi; \
 	exit $$fail
+
+update-exports:
+	make check-exports 2>&1 | patch -p1
+	git add win32/common/libgst*.def
+	git diff --cached -- win32/common/
+	echo '^^^--- updated and staged changes above'
 
 # complain about nonportable printf format strings (%lld, %llu, %zu etc.)
 check-nonportable-print-format:

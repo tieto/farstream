@@ -3,7 +3,16 @@
 ###########################################################################
 # thomas: except of course that we did
 
-# thomas: copied from glib-2
+if GTK_DOC_USE_LIBTOOL
+GTKDOC_CC = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(INCLUDES) $(GTKDOC_DEPS_CFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+GTKDOC_LD = $(LIBTOOL) --tag=CC --mode=link $(CC) $(GTKDOC_DEPS_LIBS) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS)
+GTKDOC_RUN = $(LIBTOOL) --mode=execute
+else
+GTKDOC_CC = $(CC) $(INCLUDES) $(GTKDOC_DEPS_CFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+GTKDOC_LD = $(CC) $(GTKDOC_DEPS_LIBS) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS)
+GTKDOC_RUN =
+endif
+
 # We set GPATH here; this gives us semantics for GNU make
 # which are more like other make's VPATH, when it comes to
 # whether a source that is a target of one rule is then
@@ -81,17 +90,25 @@ scan-build.stamp: $(HFILE_GLOB) $(CFILE_GLOB)
 		--ignore-headers="$(IGNORE_HFILES)"
 	@if grep -l '^..*$$' $(DOC_MODULE).types > /dev/null; then	\
 	    echo "  DOC   Introspecting gobjects"; \
-	    GST_PLUGIN_SYSTEM_PATH=`cd $(top_builddir) && pwd`		\
-	    GST_PLUGIN_PATH=						\
-	    GST_REGISTRY=doc-registry.xml				\
+	    scanobj_options=""; \
+	    gtkdoc-scangobj 2>&1 --help | grep  >/dev/null "\-\-verbose"; \
+	    if test "$$?" = "0"; then \
+	        if test "x$(V)" = "x1"; then \
+	            scanobj_options="--verbose"; \
+	        fi; \
+	    fi; \
+	    GST_PLUGIN_SYSTEM_PATH_1_0=`cd $(top_builddir) && pwd`	\
+	    GST_PLUGIN_PATH_1_0=					\
+	    GST_REGISTRY_1_0=doc-registry.xml				\
 	    $(GTKDOC_EXTRA_ENVIRONMENT)					\
-	    CC="$(GTKDOC_CC)" LD="$(GTKDOC_LD)"				\
+	    CC="$(GTKDOC_CC)" LD="$(GTKDOC_LD)" RUN="$(GTKDOC_RUN)"	\
 	    CFLAGS="$(GTKDOC_CFLAGS) $(CFLAGS)"				\
 	    LDFLAGS="$(GTKDOC_LIBS) $(LDFLAGS)"				\
 	    gtkdoc-scangobj --type-init-func="gst_init(NULL,NULL)"	\
-	        --module=$(DOC_MODULE) ;				\
+	        $$scanobj_options --module=$(DOC_MODULE) ;		\
 	else								\
 	    for i in $(SCANOBJ_FILES) ; do				\
+	       $(MKDIR_P) $(dirname $$i) ;				\
 	       test -f $$i || touch $$i ;				\
 	    done							\
 	fi
@@ -104,7 +121,11 @@ $(DOC_MODULE)-decl.txt $(SCANOBJ_FILES) $(DOC_MODULE)-sections.txt $(DOC_MODULE)
 
 sgml-build.stamp: setup-build.stamp $(DOC_MODULE)-decl.txt $(SCANOBJ_FILES) $(DOC_MODULE)-sections.txt $(expand_content_files)
 	@echo '  DOC   Building XML'
-	@gtkdoc-mkdb --module=$(DOC_MODULE) --source-dir=$(DOC_SOURCE_DIR)  --expand-content-files="$(expand_content_files)" --main-sgml-file=$(DOC_MAIN_SGML_FILE) --output-format=xml $(MKDB_OPTIONS)
+	@_source_dir='' ;						\
+	for i in $(DOC_SOURCE_DIR) ; do					\
+	    _source_dir="$${_source_dir} --source-dir=$$i" ;	        \
+	done ;							        \
+	gtkdoc-mkdb --module=$(DOC_MODULE) $$(_source_dir)  --expand-content-files="$(expand_content_files)" --main-sgml-file=$(DOC_MAIN_SGML_FILE) --output-format=xml $(MKDB_OPTIONS)
 	@cp ../version.entities xml
 	@touch sgml-build.stamp
 
@@ -130,10 +151,7 @@ html-build.stamp: sgml.stamp $(DOC_MAIN_SGML_FILE) $(content_files)
 	if test "$(?)" = "0"; then \
 	  mkhtml_options=--path="$(abs_srcdir)"; \
 	fi; \
-	cd html && gtkdoc-mkhtml $$mkhtml_options $(MKHTML_OPTIONS) $(DOC_MODULE) ../$(DOC_MAIN_SGML_FILE)
-	@mv html/index.sgml html/index.sgml.bak
-	@$(SED) "s/ href=\"$(DOC_MODULE)\// href=\"$(DOC_MODULE)-@GST_API_VERSION@\//g" html/index.sgml.bak >html/index.sgml
-	@rm -f html/index.sgml.bak
+	cd html && gtkdoc-mkhtml $$mkhtml_options $(MKHTML_OPTIONS) $(DOC_MODULE)-@GST_API_VERSION@ ../$(DOC_MAIN_SGML_FILE)
 	@rm -rf html/xml
 	@rm -f version.entities
 	@test "x$(HTML_IMAGES)" = "x" ||  ( cd $(srcdir) && cp $(HTML_IMAGES) $(abs_builddir)/html )
@@ -189,13 +207,12 @@ install-data-local:
 	    echo '-- Installing '$$i ; \
 	    $(INSTALL_DATA) $$i $(DESTDIR)$(TARGET_DIR); \
 	  done; \
-	  echo '-- Installing $(builddir)/html/$(DOC_MODULE).devhelp2' ; \
-	  if test -e $(builddir)/html/$(DOC_MODULE).devhelp2; then \
-	            $(INSTALL_DATA) $(builddir)/html/$(DOC_MODULE).devhelp2 \
+	  echo '-- Installing $(builddir)/html/$(DOC_MODULE)-@GST_API_VERSION@.devhelp2' ; \
+	  if test -e $(builddir)/html/$(DOC_MODULE)-@GST_API_VERSION@.devhelp2; then \
+	            $(INSTALL_DATA) $(builddir)/html/$(DOC_MODULE)-@GST_API_VERSION@.devhelp2 \
 	            $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_API_VERSION@.devhelp2; \
 	  fi; \
-	  (which gtkdoc-rebase >/dev/null && \
-	    gtkdoc-rebase --relative --dest-dir=$(DESTDIR) --html-dir=$(DESTDIR)$(TARGET_DIR)) || true ; \
+	  $(GTKDOC_REBASE) --relative --dest-dir=$(DESTDIR) --html-dir=$(DESTDIR)$(TARGET_DIR) || true ; \
 	fi)
 uninstall-local:
 	if test -d $(DESTDIR)$(TARGET_DIR); then \
