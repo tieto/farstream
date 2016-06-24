@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 
 #
@@ -110,6 +110,8 @@ my $old_prerequisites_filename = "$OUTPUT_DIR/$MODULE.prerequisites";
 my $new_prerequisites_filename = "$OUTPUT_DIR/$MODULE.prerequisites.new";
 my $old_args_filename = "$OUTPUT_DIR/$MODULE.args";
 my $new_args_filename = "$OUTPUT_DIR/$MODULE.args.new";
+my $old_sections_filename = "$OUTPUT_DIR/$MODULE-sections";
+my $new_sections_filename = "$OUTPUT_DIR/$MODULE-sections.new";
 
 my $debug_log="g_message";
 if (!defined($VERBOSE) or $VERBOSE eq "0") {
@@ -150,7 +152,18 @@ print OUTPUT <<EOT;
 #include <stdio.h>
 #include <errno.h>
 
-$includes
+#include <gst/gst.h>
+EOT
+
+if ($includes) {
+    print OUTPUT $includes;
+} else {
+    for (@types) {
+        print OUTPUT "extern GType $_ (void);\n";
+    }
+}
+
+print OUTPUT <<EOT;
 
 #ifdef GTK_IS_WIDGET_CLASS
 #include <gtk/gtkversion.h>
@@ -307,10 +320,10 @@ get_object_types (void)
             /* output element data */
             fputs ("    <element>\\n", inspect);
             fputs (xmlprint(6, "name", gst_plugin_feature_get_name (feature)),inspect);
-            fputs (xmlprint(6, "longname", gst_element_factory_get_longname (factory)),inspect);
-            fputs (xmlprint(6, "class", gst_element_factory_get_klass (factory)),inspect);
-            fputs (xmlprint(6, "description", gst_element_factory_get_description (factory)),inspect);
-            fputs (xmlprint(6, "author", gst_element_factory_get_author (factory)),inspect);
+            fputs (xmlprint(6, "longname", gst_element_factory_get_metadata (factory, GST_ELEMENT_METADATA_LONGNAME)),inspect);
+            fputs (xmlprint(6, "class", gst_element_factory_get_metadata (factory, GST_ELEMENT_METADATA_KLASS)),inspect);
+            fputs (xmlprint(6, "description", gst_element_factory_get_metadata (factory, GST_ELEMENT_METADATA_DESCRIPTION)),inspect);
+            fputs (xmlprint(6, "author", gst_element_factory_get_metadata (factory, GST_ELEMENT_METADATA_AUTHOR)),inspect);
             fputs ("      <pads>\\n", inspect);
 
             /* output pad-template data */
@@ -354,11 +367,11 @@ get_object_types (void)
       factory = GST_ELEMENT_FACTORY (l->data);
       type = gst_element_factory_get_element_type (factory);
       if (type != 0) {
-        $debug_log ("adding type for factory %s", gst_element_factory_get_longname (factory));
+        $debug_log ("adding type for factory %s", gst_element_factory_get_metadata (factory, GST_ELEMENT_METADATA_LONGNAME));
         object_types[i++] = type;
       } else {
         g_message ("type info for factory %s not found",
-            gst_element_factory_get_longname (factory));
+            gst_element_factory_get_metadata (factory, GST_ELEMENT_METADATA_LONGNAME));
       }
       l = g_list_next (l);
     }
@@ -426,38 +439,33 @@ const gchar *hierarchy_filename = "$new_hierarchy_filename";
 const gchar *interfaces_filename = "$new_interfaces_filename";
 const gchar *prerequisites_filename = "$new_prerequisites_filename";
 const gchar *args_filename = "$new_args_filename";
+const gchar *sections_filename = "$new_sections_filename";
 
 
 static void output_signals (void);
-static void output_object_signals (FILE *fp,
-				   GType object_type);
-static void output_object_signal (FILE *fp,
-				  const gchar *object_class_name,
+static void output_object_signals (FILE *fp, GType object_type);
+static void output_object_signal (FILE *fp, const gchar *object_class_name,
 				  guint signal_id);
-static const gchar * get_type_name (GType type,
-			            gboolean * is_pointer);
+static const gchar * get_type_name (GType type, gboolean * is_pointer);
 static void output_object_hierarchy (void);
-static void output_hierarchy (FILE *fp,
-			      GType type,
-			      guint level);
+static void output_hierarchy (FILE *fp, GType type, guint level);
 
 static void output_object_interfaces (void);
-static void output_interfaces (FILE *fp,
-			       GType type);
+static void output_interfaces (FILE *fp, GType type);
 
 static void output_interface_prerequisites (void);
-static void output_prerequisites (FILE *fp,
-			          GType type);
+static void output_prerequisites (FILE *fp, GType type);
 
 static void output_args (void);
 static void output_object_args (FILE *fp, GType object_type);
 
-int
-main (int argc, char *argv[])
-{
-  /* Silence the compiler: */
-  if (argv != argv) argc = argc;
+static void output_sections (void);
+static void output_object_section (FILE *fp, GType object_type);
 
+
+int
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char *argv[])
+{
   $TYPE_INIT_FUNC;
 
   get_object_types ();
@@ -467,6 +475,8 @@ main (int argc, char *argv[])
   output_object_interfaces ();
   output_interface_prerequisites ();
   output_args ();
+  
+  output_sections ();
 
   return 0;
 }
@@ -1562,6 +1572,139 @@ output_object_args (FILE *fp, GType object_type)
     break;
   }
 }
+
+static void
+output_sections (void)
+{
+  FILE *fp;
+  gint i;
+
+  fp = fopen (sections_filename, "w");
+  if (fp == NULL)
+    {
+      g_warning ("Couldn't open output file: %s : %s", sections_filename, g_strerror(errno));
+      return;
+    }
+
+  for (i = 0; object_types[i]; i++) { }
+  qsort (object_types, i, sizeof (GType), compare_types);
+    
+  for (i = 0; object_types[i]; i++) {
+    output_object_section (fp, object_types[i]);
+  }
+
+  fclose (fp);
+}
+
+static gboolean
+find_by_type (GstPluginFeature *f, gpointer data) {
+  return (GST_IS_ELEMENT_FACTORY(f) && 
+      ((GType)data == gst_element_factory_get_element_type (GST_ELEMENT_FACTORY(f))));
+}
+
+static void
+output_object_section (FILE *fp, GType object_type)
+{
+  /* e.g. GstFakeSink */
+  const gchar *tn = g_type_name (object_type);
+  const gchar *cct = &tn[3]; /* cut 'Gst' */
+  gchar *title, *lct, *uct;
+  gint i, j, l = strlen(cct);
+  gpointer class;
+  GParamSpec **properties;
+  guint n_properties;
+  const gchar *ptn;
+  gchar *ptns;
+  GString *strbuf = g_string_new (NULL);
+  GList *fl;
+  GstPluginFeature *f = NULL;
+  gboolean need_unserscore = TRUE, have_abbrev = FALSE;
+  
+  fl = gst_registry_feature_filter (gst_registry_get(), find_by_type, TRUE, 
+    (gpointer)object_type);
+  if (fl) {
+    f = fl->data;
+    g_list_free(fl);
+  }
+  if (f) {
+    title = g_strdup (gst_plugin_feature_get_name(f));
+    g_object_unref (f);
+  } else {
+    title = g_ascii_strdown(cct, -1);
+  }
+  
+  /* turn CamelCase into '_' separated all lower, resulting string is atmost
+   * twice as long, special casing for abbevs like GstTCPClientSink */
+  lct = g_malloc(2*l);
+  for (i = 0, j = 0; i < l; i++) {
+    if (g_ascii_isupper (cct[i])) {
+      if (need_unserscore) {
+        if (i > 0) {
+          lct[j++] = '_';
+        }
+      } else {
+        have_abbrev = TRUE;
+      }
+      lct[j++] = g_ascii_tolower(cct[i]);
+      need_unserscore = FALSE;
+    } else {
+      if (have_abbrev) {
+        lct[j] = lct[j-1];
+        lct[j-1] = '_';
+        j++;
+        have_abbrev = FALSE;
+      }
+      lct[j++] = cct[i];
+      need_unserscore = TRUE;
+    }
+  }
+  lct[j] = '\\0';
+  uct = g_ascii_strup(lct, -1);
+  
+  /* scan properties and find local enums */
+  class = g_type_class_peek (object_type);
+  properties = g_object_class_list_properties (class, &n_properties);
+  qsort (properties, n_properties, sizeof (GParamSpec *), compare_param_specs);
+  for (i = 0; i < n_properties; i++) {
+    GParamSpec *spec = properties[i];
+    if (!(G_IS_PARAM_SPEC_ENUM (spec) || G_IS_PARAM_SPEC_FLAGS (spec))) {
+      continue;
+    }
+    ptn = g_type_name(spec->value_type);
+    // does it start with tn?
+    if (strncmp(tn, ptn, strlen(tn))) {
+      continue;
+    }
+    g_string_append_c(strbuf, '\\n');
+    g_string_append(strbuf, ptn);
+  }
+  ptns = g_string_free (strbuf, FALSE);
+
+  /* later we can remove the SUBSECTION Standart/Private, since we only need to
+   * highlight what is public API */
+  fprintf (fp, "<SECTION>\\n"
+               "<FILE>element-%s</FILE>\\n"
+               "<TITLE>%s</TITLE>\\n"
+               "Gst%s%s\\n"
+               "<SUBSECTION Standard>\\n"
+               "Gst%sClass\\n"
+               "GST_%s\\n"
+               "GST_%s_CAST\\n"
+               "GST_IS_%s\\n"
+               "GST_%s_CLASS\\n"
+               "GST_IS_%s_CLASS\\n"
+               "GST_TYPE_%s\\n"
+               "<SUBSECTION Private>\\n"
+               "gst_%s_get_type\\n"
+               "</SECTION>\\n\\n",
+               title, title, cct, ptns, 
+               cct, uct, uct, uct, uct, uct, uct, lct);
+  g_free (title);
+  g_free (lct);
+  g_free (uct);
+  g_free (ptns);
+}
+
 EOT
 
 close OUTPUT;
@@ -1606,4 +1749,4 @@ if (!defined($ENV{"GTK_DOC_KEEP_INTERMEDIATE"})) {
 #&UpdateFileIfChanged ($old_prerequisites_filename, $new_prerequisites_filename, 0);
 #&UpdateFileIfChanged ($old_signals_filename, $new_signals_filename, 0);
 #&UpdateFileIfChanged ($old_args_filename, $new_args_filename, 0);
-
+#&UpdateFileIfChanged ($old_sections_filename, $new_sections_filename, 0);
