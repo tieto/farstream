@@ -16,6 +16,16 @@ help:
 update: scanobj-update
 	$(MAKE) check-outdated-docs
 
+if GTK_DOC_USE_LIBTOOL
+GTKDOC_CC = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(INCLUDES) $(GTKDOC_DEPS_CFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+GTKDOC_LD = $(LIBTOOL) --tag=CC --mode=link $(CC) $(GTKDOC_DEPS_LIBS) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS)
+GTKDOC_RUN = $(LIBTOOL) --mode=execute
+else
+GTKDOC_CC = $(CC) $(INCLUDES) $(GTKDOC_DEPS_CFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+GTKDOC_LD = $(CC) $(GTKDOC_DEPS_LIBS) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS)
+GTKDOC_RUN =
+endif
+
 # We set GPATH here; this gives us semantics for GNU make
 # which are more like other make's VPATH, when it comes to
 # whether a source that is a target of one rule is then
@@ -44,11 +54,9 @@ EXTRA_DIST = 				\
 # maintainers and result is commited to git
 DOC_STAMPS =				\
 	scan-build.stamp		\
-	tmpl-build.stamp		\
 	sgml-build.stamp		\
 	html-build.stamp		\
 	scan.stamp			\
-	tmpl.stamp			\
 	sgml.stamp			\
 	html.stamp
 
@@ -94,9 +102,9 @@ all-local: html-build.stamp
 INSPECT_REGISTRY=$(top_builddir)/docs/plugins/inspect-registry.xml
 INSPECT_ENVIRONMENT=\
 	LC_ALL=C \
-	GST_PLUGIN_SYSTEM_PATH= \
-	GST_PLUGIN_PATH=$(top_builddir)/gst:$(top_builddir)/sys:$(top_builddir)/ext:$(top_builddir)/plugins:$(top_builddir)/src:$(top_builddir)/gnl \
-	GST_REGISTRY=$(INSPECT_REGISTRY) \
+	GST_PLUGIN_SYSTEM_PATH_1_0= \
+	GST_PLUGIN_PATH_1_0=$(top_builddir)/gst:$(top_builddir)/sys:$(top_builddir)/ext:$(top_builddir)/plugins:$(top_builddir)/src:$(top_builddir)/gnl \
+	GST_REGISTRY_1_0=$(INSPECT_REGISTRY) \
 	PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" \
 	$(INSPECT_EXTRA_ENVIRONMENT)
 
@@ -122,7 +130,7 @@ scanobj-build.stamp: $(SCANOBJ_DEPS) $(basefiles)
 	    scanobj_options="--verbose"; \
 	fi; \
 	$(INSPECT_ENVIRONMENT) 					\
-	CC="$(GTKDOC_CC)" LD="$(GTKDOC_LD)"				\
+	CC="$(GTKDOC_CC)" LD="$(GTKDOC_LD)" RUN="$(GTKDOC_RUN)"	\
 	CFLAGS="$(GTKDOC_CFLAGS) $(CFLAGS) $(WARNING_CFLAGS)"	\
 	LDFLAGS="$(GTKDOC_LIBS) $(LDFLAGS)"				\
 	$(GST_DOC_SCANOBJ) $$scanobj_options --type-init-func="gst_init(NULL,NULL)"	\
@@ -161,44 +169,29 @@ scan-build.stamp: $(HFILE_GLOB) $(EXTRA_HFILES) $(basefiles) scanobj-build.stamp
 	    --ignore-headers="$(IGNORE_HFILES)";			\
 	touch scan-build.stamp
 
-#### update templates; done on every build ####
-
-# in a non-srcdir build, we need to copy files from the previous step
-# and the files from previous runs of this step
-tmpl-build.stamp: $(DOC_MODULE)-decl.txt $(SCANOBJ_FILES) $(DOC_MODULE)-sections.txt $(DOC_OVERRIDES)
-	@echo '  DOC   Rebuilding template files'
-	@if test x"$(srcdir)" != x. ; then				\
-	    for f in $(SCANOBJ_FILES) $(SCAN_FILES);			\
-	    do								\
-	        if test -e $(srcdir)/$$f; then cp -u $(srcdir)/$$f . ; fi;	\
-	    done;							\
-	fi
-	@gtkdoc-mktmpl --module=$(DOC_MODULE)
-	@$(PYTHON) \
-		$(top_srcdir)/common/mangle-tmpl.py $(srcdir)/$(INSPECT_DIR) tmpl
-	@touch tmpl-build.stamp
-
-tmpl.stamp: tmpl-build.stamp
-	@true
-
 #### xml ####
 
-sgml-build.stamp: tmpl.stamp scan-build.stamp $(CFILE_GLOB) $(top_srcdir)/common/plugins.xsl $(expand_content_files)
+sgml-build.stamp: scan-build.stamp $(CFILE_GLOB) $(top_srcdir)/common/plugins.xsl $(expand_content_files)
 	@echo '  DOC   Building XML'
 	@-mkdir -p xml
-	@for a in $(srcdir)/$(INSPECT_DIR)/*.xml; do \
+	@for a in $(inspect_files); do \
 	    xsltproc --stringparam module $(MODULE) \
 		$(top_srcdir)/common/plugins.xsl $$a > xml/`basename $$a`; done
 	@for f in $(EXAMPLE_CFILES); do \
 		$(PYTHON) $(top_srcdir)/common/c-to-xml.py $$f > xml/element-`basename $$f .c`.xml; done
-	@gtkdoc-mkdb \
+	@_source_dir='' ;						\
+	for i in $(DOC_SOURCE_DIR) ; do					\
+	    _source_dir="$${_source_dir} --source-dir=$$i" ;	        \
+	done ;								\
+	gtkdoc-mkdb \
 		--module=$(DOC_MODULE) \
-		--source-dir=$(DOC_SOURCE_DIR) \
+		$${_source_dir} \
 		 --expand-content-files="$(expand_content_files)" \
 		--main-sgml-file=$(srcdir)/$(DOC_MAIN_SGML_FILE) \
 		--output-format=xml \
 		--ignore-files="$(IGNORE_HFILES) $(IGNORE_CFILES)" \
 		$(MKDB_OPTIONS)
+	@$(PYTHON) $(top_srcdir)/common/mangle-db.py xml
 	@cp ../version.entities xml
 	@touch sgml-build.stamp
 
@@ -222,10 +215,7 @@ html-build.stamp: sgml.stamp $(DOC_MAIN_SGML_FILE) $(content_files)
 	    mkhtml_options="$$mkhtml_options --verbose"; \
 	  fi; \
 	fi; \
-	cd html && gtkdoc-mkhtml $$mkhtml_options $(DOC_MODULE) $(DOC_MAIN_SGML_FILE)
-	@mv html/index.sgml html/index.sgml.bak
-	@$(SED) "s/ href=\"$(DOC_MODULE)\// href=\"$(DOC_MODULE)-@GST_API_VERSION@\//g" html/index.sgml.bak >html/index.sgml
-	@rm -f html/index.sgml.bak
+	cd html && gtkdoc-mkhtml $$mkhtml_options $(DOC_MODULE)-@GST_API_VERSION@ $(DOC_MAIN_SGML_FILE)
 	@rm -f html/$(DOC_MAIN_SGML_FILE)
 	@rm -rf html/xml
 	@rm -f html/version.entities
@@ -289,13 +279,12 @@ install-data-local:
 	      $(INSTALL_DATA) $$i $(DESTDIR)$(TARGET_DIR); \
 	    done; \
 	  fi; \
-	  echo '-- Installing $(builddir)/html/$(DOC_MODULE).devhelp2' ; \
-	  if test -e $(builddir)/html/$(DOC_MODULE).devhelp2; then \
-	            $(INSTALL_DATA) $(builddir)/html/$(DOC_MODULE).devhelp2 \
+	  echo '-- Installing $(builddir)/html/$(DOC_MODULE)-@GST_API_VERSION@.devhelp2' ; \
+	  if test -e $(builddir)/html/$(DOC_MODULE)-@GST_API_VERSION@.devhelp2; then \
+	            $(INSTALL_DATA) $(builddir)/html/$(DOC_MODULE)-@GST_API_VERSION@.devhelp2 \
 	            $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_API_VERSION@.devhelp2; \
 	  fi; \
-	  (which gtkdoc-rebase >/dev/null && \
-	    gtkdoc-rebase --relative --dest-dir=$(DESTDIR) --html-dir=$(DESTDIR)$(TARGET_DIR)) || true ; \
+	  $(GTKDOC_REBASE) --relative --dest-dir=$(DESTDIR) --html-dir=$(DESTDIR)$(TARGET_DIR) || true ; \
 	fi)
 uninstall-local:
 	if test -d $(DESTDIR)$(TARGET_DIR); then \

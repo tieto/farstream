@@ -6,8 +6,11 @@
 parse, merge and write gstdoc-scanobj files
 """
 
-import sys
+from __future__ import print_function, unicode_literals
+
+import codecs
 import os
+import sys
 
 def debug(*args):
     pass
@@ -76,13 +79,13 @@ class Object:
         return "<Object %s>" % self.name
 
     def add_signal(self, signal, overwrite=True):
-        if not overwrite and self._signals.has_key(signal.name):
-            raise IndexError, "signal %s already in %r" % (signal.name, self)
+        if not overwrite and signal.name in self._signals:
+            raise IndexError("signal %s already in %r" % (signal.name, self))
         self._signals[signal.name] = signal
 
     def add_arg(self, arg, overwrite=True):
-        if not overwrite and self._args.has_key(arg.name):
-            raise IndexError, "arg %s already in %r" % (arg.name, self)
+        if not overwrite and arg.name in self._args:
+            raise IndexError("arg %s already in %r" % (arg.name, self))
         self._args[arg.name] = arg
 
 class Docable:
@@ -103,10 +106,12 @@ class Arg(Docable):
 class GDoc:
     def load_file(self, filename):
         try:
-            lines = open(filename).readlines()
+            lines = codecs.open(filename, encoding='utf-8').readlines()
             self.load_data("".join(lines))
         except IOError:
-            print "WARNING - could not read from %s" % filename
+            print ("WARNING - could not read from %s" % filename)
+        except UnicodeDecodeError as e:
+            print ("WARNING - could not parse %s: %s" % (filename, e))
 
     def save_file(self, filename, backup=False):
         """
@@ -114,10 +119,10 @@ class GDoc:
         """
         olddata = None
         try:
-            lines = open(filename).readlines()
+            lines = codecs.open(filename, encoding='utf-8').readlines()
             olddata = "".join(lines)
         except IOError:
-            print "WARNING - could not read from %s" % filename
+            print ("WARNING - could not read from %s" % filename)
         newdata = self.get_data()
         if olddata and olddata == newdata:
             return
@@ -126,7 +131,7 @@ class GDoc:
             if backup:
                 os.rename(filename, filename + '.bak')
 
-        handle = open(filename, "w")
+        handle = codecs.open(filename, "w", encoding='utf-8')
         handle.write(newdata)
         handle.close()
 
@@ -161,7 +166,7 @@ class Signals(GDoc):
                 o = nmatch.group('object')
                 debug("Found object", o)
                 debug("Found signal", nmatch.group('signal'))
-                if not self._objects.has_key(o):
+                if o not in self._objects:
                     object = Object(o)
                     self._objects[o] = object
 
@@ -222,7 +227,7 @@ class Args(GDoc):
                 o = nmatch.group('object')
                 debug("Found object", o)
                 debug("Found arg", nmatch.group('arg'))
-                if not self._objects.has_key(o):
+                if o not in self._objects:
                     object = Object(o)
                     self._objects[o] = object
 
@@ -233,7 +238,7 @@ class Args(GDoc):
                     arg = Arg(**dict)
                     self._objects[o].add_arg(arg)
                 else:
-                    print "ERROR: could not match arg from block %s" % block
+                    print ("ERROR: could not match arg from block %s" % block)
 
     def get_data(self):
         lines = []
