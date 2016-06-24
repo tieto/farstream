@@ -5,6 +5,8 @@
 
 DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
+export GLIB_MKENUMS=glib-mkenums
+
 override_dh_install:
 	find debian/tmp/usr/lib/ -name *.la -exec rm {} \;
 	find debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/farstream-0.2 -name *.a -exec rm {} \;
