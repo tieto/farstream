@@ -55,6 +55,7 @@ libfarstream-0.2.so.5 libfarstream-0.2-5 #MINVER#
  fs_plugin_create_valist@Base 0.1.91
  fs_plugin_get_type@Base 0.1.91
  fs_plugin_list_available@Base 0.1.91
+ fs_plugin_register_static@Base 0.2.8
  fs_rtp_header_extension_are_equal@Base 0.1.91
  fs_rtp_header_extension_copy@Base 0.1.91
  fs_rtp_header_extension_destroy@Base 0.1.91
