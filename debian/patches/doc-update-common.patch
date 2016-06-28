@@ -1,0 +1,4722 @@
+Description: update documentation build system
+ .
+ farstream-0.2 (0.2.7-1.1) unstable; urgency=medium
+ .
+   * Non-maintainer upload.
+   * debian/patches/doc-sync-latest-common.patch:
+     - fix documentation build with gtk-doc
+     (Closes: #819836)
+
+Author: Héctor Orón Martínez <hector.oron@collabora.co.uk>
+Bug-Debian: https://bugs.debian.org/819836
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: Apertis
+Bug: https://bugs.freedesktop.org/show_bug.cgi?id=95210
+Bug-Debian: https://bugs.debian.org/819836
+Forwarded: picked from upstream
+Reviewed-By: Olivier Crête <olivier.crete@collabora.com>
+Last-Update: <2016-06-21>
+
+--- farstream-0.2-0.2.7.orig/common-modified/gst-glib-gen.mak
++++ farstream-0.2-0.2.7/common-modified/gst-glib-gen.mak
+@@ -10,16 +10,16 @@ enum_headers=$(foreach h,$(glib_enum_hea
+ 
+ # these are all the rules generating the relevant files
+ $(glib_gen_basename)-enumtypes.h: $(glib_enum_headers)
+-	$(AM_V_GEN)glib-mkenums \
++	$(AM_V_GEN)$(GLIB_MKENUMS) \
+ 	--fhead "#ifndef __$(glib_enum_define)_ENUM_TYPES_H__\n#define __$(glib_enum_define)_ENUM_TYPES_H__\n\n#include <glib-object.h>\n\nG_BEGIN_DECLS\n" \
+ 	--fprod "\n/* enumerations from \"@filename@\" */\n" \
+-	--vhead "GType @enum_name@_get_type (void);\n#define FS_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n" \
++	--vhead "GType @enum_name@_get_type (void);\n#define FS_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n"         \
+ 	--ftail "G_END_DECLS\n\n#endif /* __$(glib_enum_define)_ENUM_TYPES_H__ */" \
+ 	$^ > $@
+ 
+ $(glib_gen_basename)-enumtypes.c: $(glib_enum_headers)
+ 	@if test "x$(glib_enum_headers)" = "x"; then echo "ERROR: glib_enum_headers is empty, please fix Makefile"; exit 1; fi
+-	$(AM_V_GEN)glib-mkenums \
++	$(AM_V_GEN)$(GLIB_MKENUMS) \
+ 	--fhead "#include \"$(glib_gen_basename)-enumtypes.h\"\n$(enum_headers)" \
+ 	--fprod "\n/* enumerations from \"@filename@\" */" \
+ 	--vhead "GType\n@enum_name@_get_type (void)\n{\n  static volatile gsize g_define_type_id__volatile = 0;\n  if (g_once_init_enter (&g_define_type_id__volatile)) {\n    static const G@Type@Value values[] = {"     \
+--- farstream-0.2-0.2.7.orig/common-modified/gtk-doc-plugins.mak
++++ farstream-0.2-0.2.7/common-modified/gtk-doc-plugins.mak
+@@ -14,10 +14,19 @@ help:
+ 	@echo
+ 
+ # update the stuff maintained by doc maintainers
+-update:
+-	$(MAKE) scanobj-update
++update: scanobj-update
+ 	$(MAKE) check-outdated-docs
+ 
++if GTK_DOC_USE_LIBTOOL
++GTKDOC_CC = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(INCLUDES) $(GTKDOC_DEPS_CFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
++GTKDOC_LD = $(LIBTOOL) --tag=CC --mode=link $(CC) $(GTKDOC_DEPS_LIBS) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS)
++GTKDOC_RUN = $(LIBTOOL) --mode=execute
++else
++GTKDOC_CC = $(CC) $(INCLUDES) $(GTKDOC_DEPS_CFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
++GTKDOC_LD = $(CC) $(GTKDOC_DEPS_LIBS) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS)
++GTKDOC_RUN =
++endif
++
+ # We set GPATH here; this gives us semantics for GNU make
+ # which are more like other make's VPATH, when it comes to
+ # whether a source that is a target of one rule is then
+@@ -29,8 +38,7 @@ GPATH = $(srcdir)
+ TARGET_DIR=$(HTML_DIR)/$(DOC_MODULE)-@FS_APIVERSION@
+ 
+ MAINTAINER_DOC_STAMPS =			\
+-	scanobj-build.stamp		\
+-	scanobj-trans-build.stamp
++	scanobj-build.stamp
+ 
+ EXTRA_DIST = 				\
+ 	$(MAINTAINER_DOC_STAMPS)		\
+@@ -47,17 +55,15 @@ EXTRA_DIST = 				\
+ # maintainers and result is commited to git
+ DOC_STAMPS =				\
+ 	scan-build.stamp		\
+-	tmpl-build.stamp		\
+ 	sgml-build.stamp		\
+ 	html-build.stamp		\
+ 	scan.stamp			\
+-	tmpl.stamp			\
+ 	sgml.stamp			\
+ 	html.stamp
+ 
+ # files generated/updated by gtkdoc-scangobj
+ SCANOBJ_FILES =				\
+-	$(DOC_MODULE).args		\
++	$(DOC_MODULE).args              \
+ 	$(DOC_MODULE).hierarchy         \
+ 	$(DOC_MODULE).interfaces        \
+ 	$(DOC_MODULE).prerequisites     \
+@@ -97,9 +103,9 @@ all-local: html-build.stamp
+ INSPECT_REGISTRY=$(top_builddir)/docs/plugins/inspect-registry.xml
+ INSPECT_ENVIRONMENT=\
+ 	LC_ALL=C \
+-	GST_PLUGIN_SYSTEM_PATH= \
+-	GST_PLUGIN_PATH=$(top_builddir)/gst:$(top_builddir)/sys:$(top_builddir)/ext:$(top_builddir)/plugins:$(top_builddir)/src:$(top_builddir)/gnl \
+-	GST_REGISTRY=$(INSPECT_REGISTRY) \
++	GST_PLUGIN_SYSTEM_PATH_1_0= \
++	GST_PLUGIN_PATH_1_0=$(top_builddir)/gst:$(top_builddir)/sys:$(top_builddir)/ext:$(top_builddir)/plugins:$(top_builddir)/src:$(top_builddir)/gnl \
++	GST_REGISTRY_1_0=$(INSPECT_REGISTRY) \
+ 	PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" \
+ 	$(INSPECT_EXTRA_ENVIRONMENT)
+ 
+@@ -125,14 +131,14 @@ scanobj-build.stamp: $(SCANOBJ_DEPS) $(b
+ 	    scanobj_options="--verbose"; \
+ 	fi; \
+ 	$(INSPECT_ENVIRONMENT) 					\
+-	CC="$(GTKDOC_CC)" LD="$(GTKDOC_LD)"				\
++	CC="$(GTKDOC_CC)" LD="$(GTKDOC_LD)" RUN="$(GTKDOC_RUN)"	\
+ 	CFLAGS="$(GTKDOC_CFLAGS) $(CFLAGS) $(WARNING_CFLAGS)"	\
+ 	LDFLAGS="$(GTKDOC_LIBS) $(LDFLAGS)"				\
+ 	$(GST_DOC_SCANOBJ) $$scanobj_options --type-init-func="gst_init(NULL,NULL)"	\
+ 	    --module=$(DOC_MODULE) --source=$(PACKAGE) --inspect-dir=$(INSPECT_DIR) &&		\
+ 	    echo "  DOC   Merging introspection data" && \
+ 	    $(PYTHON)						\
+-	    $(top_srcdir)/common/scangobj-merge.py $(DOC_MODULE);	\
++	    $(top_srcdir)/common/scangobj-merge.py $(DOC_MODULE) || exit 1;	\
+ 	if test x"$(srcdir)" != x. ; then				\
+ 	    for f in $(SCANOBJ_FILES);					\
+ 	    do								\
+@@ -164,34 +170,12 @@ scan-build.stamp: $(HFILE_GLOB) $(EXTRA_
+ 	    --ignore-headers="$(IGNORE_HFILES)";			\
+ 	touch scan-build.stamp
+ 
+-#### update templates; done on every build ####
+-
+-### FIXME: make this error out again when docs are fixed for 0.9
+-# in a non-srcdir build, we need to copy files from the previous step
+-# and the files from previous runs of this step
+-tmpl-build.stamp: $(DOC_MODULE)-decl.txt $(SCANOBJ_FILES) $(DOC_MODULE)-sections.txt $(DOC_OVERRIDES)
+-	@echo '  DOC   Rebuilding template files'
+-	@if test x"$(srcdir)" != x. ; then				\
+-	    for f in $(SCANOBJ_FILES) $(SCAN_FILES);			\
+-	    do								\
+-	        if test -e $(srcdir)/$$f; then cp -u $(srcdir)/$$f . ; fi;	\
+-	    done;							\
+-	fi
+-	@gtkdoc-mktmpl --module=$(DOC_MODULE)
+-	@$(PYTHON) \
+-		$(top_srcdir)/common/mangle-tmpl.py $(srcdir)/$(INSPECT_DIR) tmpl
+-	@touch tmpl-build.stamp
+-
+-tmpl.stamp: tmpl-build.stamp
+-	@true
+-
+ #### xml ####
+ 
+-### FIXME: make this error out again when docs are fixed for 0.9
+-sgml-build.stamp: tmpl.stamp scan-build.stamp $(CFILE_GLOB) $(top_srcdir)/common/plugins.xsl $(expand_content_files)
++sgml-build.stamp: scan-build.stamp $(CFILE_GLOB) $(top_srcdir)/common/plugins.xsl $(expand_content_files)
+ 	@echo '  DOC   Building XML'
+ 	@-mkdir -p xml
+-	@for a in $(srcdir)/$(INSPECT_DIR)/*.xml; do \
++	@for a in $(inspect_files); do \
+ 	    xsltproc --stringparam module $(MODULE) \
+ 		$(top_srcdir)/common/plugins.xsl $$a > xml/`basename $$a`; done
+ 	@for f in $(EXAMPLE_CFILES); do \
+@@ -204,6 +188,7 @@ sgml-build.stamp: tmpl.stamp scan-build.
+ 		--output-format=xml \
+ 		--ignore-files="$(IGNORE_HFILES) $(IGNORE_CFILES)" \
+ 		$(MKDB_OPTIONS)
++	@$(PYTHON) $(top_srcdir)/common/mangle-db.py xml
+ 	@cp ../version.entities xml
+ 	@touch sgml-build.stamp
+ 
+@@ -227,10 +212,7 @@ html-build.stamp: sgml.stamp $(DOC_MAIN_
+ 	    mkhtml_options="$$mkhtml_options --verbose"; \
+ 	  fi; \
+ 	fi; \
+-	cd html && gtkdoc-mkhtml $$mkhtml_options $(DOC_MODULE) $(DOC_MAIN_SGML_FILE)
+-	@mv html/index.sgml html/index.sgml.bak
+-	@$(SED) "s/ href=\"$(DOC_MODULE)\// href=\"$(DOC_MODULE)-@GST_API_VERSION@\//g" html/index.sgml.bak >html/index.sgml
+-	@rm -f html/index.sgml.bak
++	cd html && gtkdoc-mkhtml $$mkhtml_options $(DOC_MODULE)-@GST_API_VERSION@ $(DOC_MAIN_SGML_FILE)
+ 	@rm -f html/$(DOC_MAIN_SGML_FILE)
+ 	@rm -rf html/xml
+ 	@rm -f html/version.entities
+@@ -253,8 +235,8 @@ clean-local-gtkdoc:
+ endif
+ 
+ clean-local: clean-local-gtkdoc
+-	rm -f *~ *.bak
+-	rm -rf .libs
++	@rm -f *~ *.bak
++	@rm -rf .libs
+ 
+ distclean-local:
+ 	@rm -f $(REPORT_FILES) \
+@@ -299,8 +281,7 @@ install-data-local:
+ 	            $(INSTALL_DATA) $(builddir)/html/$(DOC_MODULE).devhelp2 \
+ 	            $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@FS_APIVERSION@.devhelp2; \
+ 	  fi; \
+-	  (which gtkdoc-rebase >/dev/null && \
+-	    gtkdoc-rebase --relative --dest-dir=$(DESTDIR) --html-dir=$(DESTDIR)$(TARGET_DIR)) || true ; \
++	  $(GTKDOC_REBASE) --relative --dest-dir=$(DESTDIR) --html-dir=$(DESTDIR)$(TARGET_DIR) || true ; \
+ 	fi)
+ uninstall-local:
+ 	if test -d $(DESTDIR)$(TARGET_DIR); then \
+--- farstream-0.2-0.2.7.orig/common-modified/gtk-doc.mak
++++ farstream-0.2-0.2.7/common-modified/gtk-doc.mak
+@@ -3,7 +3,16 @@
+ ###########################################################################
+ # thomas: except of course that we did
+ 
+-# thomas: copied from glib-2
++if GTK_DOC_USE_LIBTOOL
++GTKDOC_CC = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(INCLUDES) $(GTKDOC_DEPS_CFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
++GTKDOC_LD = $(LIBTOOL) --tag=CC --mode=link $(CC) $(GTKDOC_DEPS_LIBS) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS)
++GTKDOC_RUN = $(LIBTOOL) --mode=execute
++else
++GTKDOC_CC = $(CC) $(INCLUDES) $(GTKDOC_DEPS_CFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
++GTKDOC_LD = $(CC) $(GTKDOC_DEPS_LIBS) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS)
++GTKDOC_RUN =
++endif
++
+ # We set GPATH here; this gives us semantics for GNU make
+ # which are more like other make's VPATH, when it comes to
+ # whether a source that is a target of one rule is then
+@@ -81,17 +90,25 @@ scan-build.stamp: $(HFILE_GLOB) $(CFILE_
+ 		--ignore-headers="$(IGNORE_HFILES)"
+ 	@if grep -l '^..*$$' $(DOC_MODULE).types > /dev/null; then	\
+ 	    echo "  DOC   Introspecting gobjects"; \
+-	    GST_PLUGIN_SYSTEM_PATH=`cd $(top_builddir) && pwd`		\
+-	    GST_PLUGIN_PATH=						\
+-	    GST_REGISTRY=doc-registry.xml				\
++	    scanobj_options=""; \
++	    gtkdoc-scangobj 2>&1 --help | grep  >/dev/null "\-\-verbose"; \
++	    if test "$$?" = "0"; then \
++	        if test "x$(V)" = "x1"; then \
++	            scanobj_options="--verbose"; \
++	        fi; \
++	    fi; \
++	    GST_PLUGIN_SYSTEM_PATH_1_0=`cd $(top_builddir) && pwd`	\
++	    GST_PLUGIN_PATH_1_0=					\
++	    GST_REGISTRY_1_0=doc-registry.xml				\
+ 	    $(GTKDOC_EXTRA_ENVIRONMENT)					\
+-	    CC="$(GTKDOC_CC)" LD="$(GTKDOC_LD)"				\
++	    CC="$(GTKDOC_CC)" LD="$(GTKDOC_LD)" RUN="$(GTKDOC_RUN)"	\
+ 	    CFLAGS="$(GTKDOC_CFLAGS) $(CFLAGS)"				\
+ 	    LDFLAGS="$(GTKDOC_LIBS) $(LDFLAGS)"				\
+ 	    gtkdoc-scangobj --type-init-func="gst_init(NULL,NULL)"	\
+-	        --module=$(DOC_MODULE) ;				\
++	        $$scanobj_options --module=$(DOC_MODULE) ;		\
+ 	else								\
+ 	    for i in $(SCANOBJ_FILES) ; do				\
++	       $(MKDIR_P) $(dirname $$i) ;				\
+ 	       test -f $$i || touch $$i ;				\
+ 	    done							\
+ 	fi
+@@ -130,10 +147,7 @@ html-build.stamp: sgml.stamp $(DOC_MAIN_
+ 	if test "$(?)" = "0"; then \
+ 	  mkhtml_options=--path="$(abs_srcdir)"; \
+ 	fi; \
+-	cd html && gtkdoc-mkhtml $$mkhtml_options $(MKHTML_OPTIONS) $(DOC_MODULE) ../$(DOC_MAIN_SGML_FILE)
+-	@mv html/index.sgml html/index.sgml.bak
+-	@$(SED) "s/ href=\"$(DOC_MODULE)\// href=\"$(DOC_MODULE)-@GST_API_VERSION@\//g" html/index.sgml.bak >html/index.sgml
+-	@rm -f html/index.sgml.bak
++	cd html && gtkdoc-mkhtml $$mkhtml_options $(MKHTML_OPTIONS) $(DOC_MODULE)-@GST_API_VERSION@ ../$(DOC_MAIN_SGML_FILE)
+ 	@rm -rf html/xml
+ 	@rm -f version.entities
+ 	@test "x$(HTML_IMAGES)" = "x" ||  ( cd $(srcdir) && cp $(HTML_IMAGES) $(abs_builddir)/html )
+@@ -194,8 +208,7 @@ install-data-local:
+ 	            $(INSTALL_DATA) $(builddir)/html/$(DOC_MODULE).devhelp2 \
+ 	            $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@FS_APIVERSION@.devhelp2; \
+ 	  fi; \
+-	  (which gtkdoc-rebase >/dev/null && \
+-	    gtkdoc-rebase --relative --dest-dir=$(DESTDIR) --html-dir=$(DESTDIR)$(TARGET_DIR)) || true ; \
++	  $(GTKDOC_REBASE) --relative --dest-dir=$(DESTDIR) --html-dir=$(DESTDIR)$(TARGET_DIR) || true ; \
+ 	fi)
+ uninstall-local:
+ 	if test -d $(DESTDIR)$(TARGET_DIR); then \
+--- /dev/null
++++ farstream-0.2-0.2.7/common/MAINTAINERS
+@@ -0,0 +1,12 @@
++GStreamer is currently maintained by the consensus of a number
++of people, including, but not limited to:
++
++ Jan Schmidt <thaytan@noraisin.net>
++ Wim Taymans <wim.taymans@gmail.com>
++ David Schleef <ds@schleef.org>
++ Tim-Philipp Müller <tim centricular net>
++ Sebastian Dröge <slomo@coaxion.net>
++
++Maintainer-related issues should be addressed to:
++
++  gstreamer-devel@lists.freedesktop.org
+--- farstream-0.2-0.2.7.orig/common/Makefile.am
++++ farstream-0.2-0.2.7/common/Makefile.am
+@@ -8,7 +8,7 @@ EXTRA_DIST = \
+ 	parallel-subdirs.mak \
+ 	gst-autogen.sh \
+ 	check-exports \
+-	c-to-xml.py mangle-tmpl.py scangobj-merge.py \
++	c-to-xml.py mangle-db.py scangobj-merge.py \
+ 	gtk-doc-plugins.mak \
+ 	plugins.xsl gstdoc-scangobj \
+ 	gst.supp check.mak \
+--- /dev/null
++++ farstream-0.2-0.2.7/common/README
+@@ -0,0 +1,255 @@
++GStreamer @SERIES_VERSION@
++
++WHAT IT IS
++----------
++
++This is GStreamer, a framework for streaming media.
++
++WHERE TO START
++--------------
++
++We have a website at
++http://gstreamer.freedesktop.org/
++
++You should start by going through our FAQ at
++http://gstreamer.freedesktop.org/data/doc/gstreamer/head/faq/html/
++
++There is more documentation; go to
++http://gstreamer.freedesktop.org/documentation
++
++You can subscribe to our mailing lists; see the website for details.
++
++We track bugs in GNOME's bugzilla; see the website for details.
++
++You can join us on IRC - #gstreamer on irc.freenode.org
++
++GStreamer 1.0 series
++--------------------
++
++Starring
++
++  GSTREAMER
++
++The core around which all other modules revolve.  Base functionality and
++libraries, some essential elements, documentation, and testing.
++
++  BASE
++
++A well-groomed and well-maintained collection of GStreamer plug-ins and
++elements, spanning the range of possible types of elements one would want
++to write for GStreamer.  
++
++And introducing, for the first time ever, on the development screen ...
++
++  THE GOOD
++
++ --- "Such ingratitude.  After all the times I've saved your life."
++
++A collection of plug-ins you'd want to have right next to you on the
++battlefield.  Shooting sharp and making no mistakes, these plug-ins have it
++all: good looks, good code, and good licensing.  Documented and dressed up
++in tests.  If you're looking for a role model to base your own plug-in on,
++here it is.
++
++If you find a plot hole or a badly lip-synced line of code in them,
++let us know - it is a matter of honour for us to ensure Blondie doesn't look
++like he's been walking 100 miles through the desert without water.
++
++  THE UGLY
++
++  --- "When you have to shoot, shoot.  Don't talk."
++
++There are times when the world needs a color between black and white.
++Quality code to match the good's, but two-timing, backstabbing and ready to
++sell your freedom down the river.  These plug-ins might have a patent noose
++around their neck, or a lock-up license, or any other problem that makes you
++think twice about shipping them.
++
++We don't call them ugly because we like them less.  Does a mother love her
++son less because he's not as pretty as the other ones ? No  - she commends
++him on his great personality.  These plug-ins are the life of the party.
++And we'll still step in and set them straight if you report any unacceptable
++behaviour - because there are two kinds of people in the world, my friend:
++those with a rope around their neck and the people who do the cutting.
++
++  THE BAD
++
++  --- "That an accusation?"
++
++No perfectly groomed moustache or any amount of fine clothing is going to
++cover up the truth - these plug-ins are Bad with a capital B. 
++They look fine on the outside, and might even appear to get the job done, but
++at the end of the day they're a black sheep. Without a golden-haired angel
++to watch over them, they'll probably land in an unmarked grave at the final
++showdown.
++
++Don't bug us about their quality - exercise your Free Software rights,
++patch up the offender and send us the patch on the fastest steed you can
++steal from the Confederates. Because you see, in this world, there's two
++kinds of people, my friend: those with loaded guns and those who dig.
++You dig.
++
++The Lowdown
++-----------
++
++  --- "I've never seen so many plug-ins wasted so badly."
++
++GStreamer Plug-ins has grown so big that it's hard to separate the wheat from
++the chaff.  Also, distributors have brought up issues about the legal status
++of some of the plug-ins we ship.  To remedy this, we've divided the previous
++set of available plug-ins into four modules:
++
++- gst-plugins-base: a small and fixed set of plug-ins, covering a wide range
++  of possible types of elements; these are continuously kept up-to-date
++  with any core changes during the development series.
++
++  - We believe distributors can safely ship these plug-ins.
++  - People writing elements should base their code on these elements.
++  - These elements come with examples, documentation, and regression tests.
++
++- gst-plugins-good: a set of plug-ins that we consider to have good quality
++  code, correct functionality, our preferred license (LGPL for the plug-in
++  code, LGPL or LGPL-compatible for the supporting library).
++
++  - We believe distributors can safely ship these plug-ins.
++  - People writing elements should base their code on these elements.
++ 
++- gst-plugins-ugly: a set of plug-ins that have good quality and correct
++  functionality, but distributing them might pose problems.  The license
++  on either the plug-ins or the supporting libraries might not be how we'd
++  like. The code might be widely known to present patent problems.
++
++  - Distributors should check if they want/can ship these plug-ins.
++  - People writing elements should base their code on these elements.
++
++- gst-plugins-bad: a set of plug-ins that aren't up to par compared to the
++  rest.  They might be close to being good quality, but they're missing
++  something - be it a good code review, some documentation, a set of tests,
++  a real live maintainer, or some actual wide use.
++  If the blanks are filled in they might be upgraded to become part of
++  either gst-plugins-good or gst-plugins-ugly, depending on the other factors.
++
++  - If the plug-ins break, you can't complain - instead, you can fix the
++    problem and send us a patch, or bribe someone into fixing them for you.
++  - New contributors can start here for things to work on.
++
++PLATFORMS
++---------
++
++- Linux is of course fully supported
++- FreeBSD is reported to work; other BSDs should work too
++- Solaris is reported to work; a specific sunaudiosink plugin has been written
++- MacOSX works, binary 1.x packages can be built using the cerbero build tool
++- Windows works; binary 1.x packages can be built using the cerbero build tool
++  - MSys/MinGW builds
++  - Microsoft Visual Studio builds are not yet available or supported
++- Android works, binary 1.x packages can be built using the cerbero build tool
++- iOS works
++
++INSTALLING FROM PACKAGES
++------------------------
++
++You should always prefer installing from packages first.  GStreamer is
++well-maintained for a number of distributions, including Fedora, Debian,
++Ubuntu, Mandrake, Gentoo, ...
++
++Only in cases where you:
++- want to hack on GStreamer
++- want to verify that a bug has been fixed
++- do not have a sane distribution
++should you choose to build from source tarballs or git.
++
++Find more information about the various packages at
++http://gstreamer.freedesktop.org/download/
++
++COMPILING FROM SOURCE TARBALLS
++------------------------------
++
++- again, make sure that you really need to install from source !
++  If GStreamer is one of your first projects ever that you build from source,
++  consider taking on an easier project.
++
++- check output of ./configure --help to see if any options apply to you
++- run
++  ./configure
++  make
++
++  to build GStreamer.
++- if you want to install it (not required, but what you usually want to do), run
++  make install
++
++- try out a simple test:
++  gst-launch -v fakesrc num_buffers=5 ! fakesink
++  (If you didn't install GStreamer, prefix gst-launch with tools/)
++
++  If it outputs a bunch of messages from fakesrc and fakesink, everything is
++  ok.
++
++  If it did not work, keep in mind that you might need to adjust the
++  PATH and/or LD_LIBRARY_PATH environment variables to make the system
++  find GStreamer in the prefix where you installed (by default that is /usr/local).
++
++- After this, you're ready to install gst-plugins, which will provide the
++  functionality you're probably looking for by now, so go on and read
++  that README.
++
++COMPILING FROM GIT
++------------------
++
++When building from git sources, you will need to run autogen.sh to generate
++the build system files.
++
++You will need a set of additional tools typical for building from git,
++including:
++- autoconf
++- automake
++- libtool
++
++autogen.sh will check for recent enough versions and complain if you don't have
++them.  You can also specify specific versions of automake and autoconf with
++--with-automake and --with-autoconf
++
++Check autogen.sh options by running autogen.sh --help
++
++autogen.sh can pass on arguments to configure
++
++When you have done this once, you can use autoregen.sh to re-autogen with
++the last passed options as a handy shortcut.  Use it.
++
++After the autogen.sh stage, you can follow the directions listed in
++"COMPILING FROM SOURCE"
++
++You can also run your whole git stack uninstalled in your home directory,
++so that you can quickly test changes without affecting your system setup or
++interfering with GStreamer installed from packages.  Many GStreamer developers
++use an uninstalled setup for their work.
++
++There is a 'create-uninstalled-setup.sh' script in
++
++  http://cgit.freedesktop.org/gstreamer/gstreamer/tree/scripts/
++
++to easily create an uninstalled setup from scratch.
++
++
++PLUG-IN DEPENDENCIES AND LICENSES
++---------------------------------
++
++GStreamer is developed under the terms of the LGPL (see LICENSE file for
++details). Some of our plug-ins however rely on libraries which are available
++under other licenses. This means that if you are distributing an application
++which has a non-GPL compatible license (for instance a closed-source
++application) with GStreamer, you have to make sure not to distribute GPL-linked
++plug-ins.
++
++When using GPL-linked plug-ins, GStreamer is for all practical reasons
++under the GPL itself.
++
++HISTORY
++-------
++
++The fundamental design comes from the video pipeline at Oregon Graduate
++Institute, as well as some ideas from DirectMedia.  It's based on plug-ins that
++will provide the various codec and other functionality.  The interface
++hopefully is generic enough for various companies (ahem, Apple) to release
++binary codecs for Linux, until such time as they get a clue and release the
++source.
+--- /dev/null
++++ farstream-0.2-0.2.7/common/README.static-linking
+@@ -0,0 +1,174 @@
++=================================
++ GStreamer Static Linking README
++=================================
++
++DRAFT, April 2013
++
++
++   I. INTRODUCTION
++
++It is possible to link GStreamer libraries, plugins and applications
++statically, both in case of free/libre/open-source software applications
++and proprietary applications. On some platforms static linking may even
++be required.
++
++However, distributing statically linked binaries using GStreamer usually
++requires additional effort to stay compliant with the GNU LGPL v2.1 license.
++
++The purpose of this document is to draw attention to this fact, and to
++summarise in layman's terms what we believe is required from anyone
++distributing statically linked GStreamer binaries. Most of this also
++applies to dynamically linked GStreamer binaries.
++
++
++   II. DISCLAIMER
++
++This document is not legal advice, nor is it comprehensive. It may use
++words in ways that do not match the definition or use in the license
++text. It may even be outright wrong. Read the license text for all the
++details, it is the only legally binding document in this respect.
++
++This document is primarily concerned with the implications for the
++distribution of binaries based on LGPL-licensed software as imposed by
++the LGPL license, but there may be other restrictions to the distribution
++of such binaries, such as terms and conditions of distribution channels
++(e.g. "app stores").
++
++
++   III. THE SPIRIT OF THE LGPL LICENSE
++
++The GNU LGPL v2.1 license allows use of such-licensed software by
++proprietary applications, but still aims to ensure that at least the
++LGPL-licensed software parts remain free under all circumstances. This
++means any changes to LGPL-licensed source code must be documented and
++be made available on request to those who received binaries of the
++software. It also means that it must be possible to make changes to the
++LGPL-licensed software parts and make the application use those, as far
++as that is possible. And that recipients of an application using
++LGPL-licensed software are made aware of their rights according to the
++LGPL license.
++
++In an environment where GStreamer libraries and plugins are used as
++dynamically-loaded shared objects (DLL/.so/.dyn files), this is usually
++not a big problem, because it is fairly easy to compile a modified version
++of the GStreamer libraries or LGPL plugins, and the application will/should
++just pick up and use the modified version automatically. All that is needed
++is for the original, LGPL-licensed source code and source code modifications
++to be made available, and for a way to build the libraries or plugins for
++the platform required (usually that will be using the build system scripts
++that come with GStreamer, and using the typical build environment on the
++system in question, but where that is not the case the needed build scripts
++and/or tools would need to be provided as well).
++
++
++   IV. THINGS YOU NEED TO DO
++
++  * You must tell users of your application that you are using LGPL-licensed
++    software, which LGPL-licensed software exactly, and you must provide them
++    with a copy of the license so they know their rights under the LGPL.
++
++  * You must provide (on request) all the source code and all the changes
++    or additions you have made to the LGPL-licensed software you are using.
++
++    For GStreamer code we would recommend that the changes be provided either
++    in form of a branch in a git repository, or as a set of "git format-patch"-
++    style patches against a GStreamer release or a snapshot of a GStreamer git
++    repository. The patches should ideally say what was changed and why it
++    was changed, and there should ideally be separate patches for independent
++    changes.
++
++  * You must provide a way for users of your application to make changes to
++    the LGPL-licensed parts of the code, and re-create a full application
++    binary with the changes (using the standard toolchain and tools of the
++    target platform; if you are using a custom toolchain or custom tools
++    you must provide these and document how to use them to create a new
++    application binary).
++
++    Note that this of course does not mean that the user is allowed to
++    re-distribute the changed application. Nor does it mean that you have
++    to provide your proprietary source code - it is sufficient to provide a
++    ready-made compiled object file that can be relinked into an application
++    binary with the re-compiled LGPL components.
++
++
++   V. THINGS TO LOOK OUT FOR
++
++While most GStreamer plugins and the libraries they depend on are licensed
++under the LGPL or even more permissive licenses, that is not the case for
++all plugins and libraries used, esp. those in the gst-plugins-ugly or
++some of those in the gst-plugins-bad set of plugins.
++
++When statically linking proprietary code, care must be taken not to
++statically link plugins or libraries that are licensed under less permissive
++terms than the LGPL, such as e.g. GPL-licensed libraries.
++
++
++   VI. SPECIAL CONSIDERATIONS FOR SPECIFIC USE-CASES
++
++
++   1. Proprietary GStreamer/GLib-based Application On iOS
++
++Let's assume an individual or a company wants to distribute a proprietary
++iOS application that is built on top of GStreamer and GLib through
++Apple's App Store. At the time of writing the Apple iPhone developer
++agreement didn’t allow the bundling of shared libraries, so distributing
++a proprietary iOS application with shared libraries is only possible using
++distribution mechanisms outside of the App Store and/or only to jailbroken
++devices, a prospect that may not appeal to our individual or company. So the
++only alternative then is to link everything statically, which means the
++obligations mentioned above come into play.
++
++
++   2. Example: Jabber on iOS
++
++Tandberg (now Cisco) created a Jabber application for iOS, based on GStreamer.
++On request they provided an LGPL compliance bundle in form of a zip file, with
++roughly the following contents:
++
++buildapp.sh
++readme.txt
++Jabber/Jabber-Info.plist
++Jabber/libip.a [236MB binary with proprietary code]
++Jabber/main.mm
++Jabber/xcconfig/Application.xcconfig
++Jabber/xcconfig/Debug.xcconfig
++Jabber/xcconfig/Release.xcconfig
++Jabber/xcconfig/Shared.xcconfig
++Jabber/Resources/*.lproj/Localizable.strings
++Jabber/Resources/{Images,Audio,Sounds,IB,Message Styles,Emoticons,Fonts}/*
++Jabber/Resources/*
++Jabber.xcodeproj/project.pbxproj
++Jabber.xcodeproj/project.xcworkspace/contents.xcworkspacedata
++opensource/build/config.site
++opensource/build/m4/movi.m4
++opensource/build/scripts/clean-deps.sh
++opensource/build/scripts/fixup-makefile.sh
++opensource/build/scripts/MoviMaker.py
++opensource/build.sh
++opensource/env.sh
++opensource/Makefile
++opensource/external/glib/*
++opensource/external/gstreamer/{gstreamer,gst-plugins-*}/*
++opensource/external/openssl/*
++opensource/external/proxy-libintl/*
++opensource/toolchain/darwin-x86/bin/{misc autotoools,m4,glib-mkenums,glib-genmarshal,libtool,pkg-config,etc.}
++opensource/toolchain/darwin-x86/share/{aclocal,aclocal-1.11,autoconf,automake-1.11,libtool}/*
++opensource/toolchain/darwin-x86/share/Config.pm
++opensource/toolchain/darwin-x86/share/Config.pm.movi.in
++patches/glib/glib.patch
++patches/gst-plugins-bad/gst-plugins-bad.patch
++patches/gst-plugins-base/gst-plugins-base.patch
++patches/gst-plugins-good/gst-plugins-good.patch
++patches/gstreamer/gstreamer.patch
++patches/openssl/openssl.patch
++
++readme.txt starts with "This Readme file describes how to build the Cisco 
++Jabber for iPad application. You need to install Xcode, but the final package
++is built by running buildapp.sh." and describes how to build project,
++prerequisites, the procedure in detail, and a "How to Include Provisioning
++Profile Manually / Alternate Code Signing Instructions" section.
++
++
++   3. Random Links Which May Be Of Interest
++
++[0] http://multinc.com/2009/08/24/compatibility-between-the-iphone-app-store-and-the-lgpl/
+--- /dev/null
++++ farstream-0.2-0.2.7/common/autogen.sh.in
+@@ -0,0 +1,115 @@
++test -n "$srcdir" || srcdir=`dirname "$0"`
++test -n "$srcdir" || srcdir=.
++
++olddir=`pwd`
++cd "$srcdir"
++
++package=@PACKAGE@
++srcfile=@SRCFILE@
++
++# Make sure we have common
++if test ! -f common/gst-autogen.sh;
++then
++  echo "+ Setting up common submodule"
++  git submodule init
++fi
++git submodule update
++
++# source helper functions
++if test ! -f common/gst-autogen.sh;
++then
++  echo There is something wrong with your source tree.
++  echo You are missing common/gst-autogen.sh
++  exit 1
++fi
++. common/gst-autogen.sh
++
++# install pre-commit hook for doing clean commits
++if test ! \( -x .git/hooks/pre-commit -a -L .git/hooks/pre-commit \);
++then
++    rm -f .git/hooks/pre-commit
++    if ! ln -s ../../common/hooks/pre-commit.hook .git/hooks/pre-commit 2> /dev/null
++    then
++        echo "Failed to create commit hook symlink, copying instead ..."
++        cp common/hooks/pre-commit.hook .git/hooks/pre-commit
++    fi
++fi
++
++# GNU gettext automake support doesn't get along with git.
++# https://bugzilla.gnome.org/show_bug.cgi?id=661128
++if test -d po ; then
++  touch -t 200001010000 po/@PACKAGE@-@API_VERSION@.pot
++fi
++
++CONFIGURE_DEF_OPT='--enable-maintainer-mode --enable-gtk-doc'
++
++if test "x$package" = "xgstreamer"; then
++  CONFIGURE_DEF_OPT="$CONFIGURE_DEF_OPT --enable-docbook --enable-failing-tests --enable-poisoning"
++elif test "x$package" = "xgst-plugins-bad"; then
++  CONFIGURE_DEF_OPT="$CONFIGURE_DEF_OPT --with-player-tests"
++fi
++
++autogen_options $@
++
++printf "+ check for build tools"
++if test -z "$NOCHECK"; then
++  echo
++
++  printf "  checking for autoreconf ... "
++  echo
++  which "autoreconf" 2>/dev/null || {
++    echo "not found! Please install the autoconf package."
++    exit 1
++  }
++
++  printf "  checking for pkg-config ... "
++  echo
++  which "pkg-config" 2>/dev/null || {
++    echo "not found! Please install pkg-config."
++    exit 1
++  }
++else
++  echo ": skipped version checks"
++fi
++
++# if no arguments specified then this will be printed
++if test -z "$*" && test -z "$NOCONFIGURE"; then
++  echo "+ checking for autogen.sh options"
++  echo "  This autogen script will automatically run ./configure as:"
++  echo "  ./configure $CONFIGURE_DEF_OPT"
++  echo "  To pass any additional options, please specify them on the $0"
++  echo "  command line."
++fi
++
++toplevel_check $srcfile
++
++# autopoint
++if test -d po && grep ^AM_GNU_GETTEXT_VERSION configure.ac >/dev/null ; then
++  tool_run "autopoint" "--force"
++fi
++
++# aclocal
++if test -f acinclude.m4; then rm acinclude.m4; fi
++
++autoreconf --force --install || exit 1
++
++test -n "$NOCONFIGURE" && {
++  echo "+ skipping configure stage for package $package, as requested."
++  echo "+ autogen.sh done."
++  exit 0
++}
++
++cd "$olddir"
++
++echo "+ running configure ... "
++test ! -z "$CONFIGURE_DEF_OPT" && echo "  default flags:  $CONFIGURE_DEF_OPT"
++test ! -z "$CONFIGURE_EXT_OPT" && echo "  external flags: $CONFIGURE_EXT_OPT"
++echo
++
++echo "$srcdir/configure" $CONFIGURE_DEF_OPT $CONFIGURE_EXT_OPT
++"$srcdir/configure" $CONFIGURE_DEF_OPT $CONFIGURE_EXT_OPT || {
++        echo "  configure failed"
++        exit 1
++}
++
++echo "Now type 'make' to compile $package."
+--- farstream-0.2-0.2.7.orig/common/c-to-xml.py
++++ farstream-0.2-0.2.7/common/c-to-xml.py
+@@ -5,6 +5,8 @@
+ Convert a C program to valid XML to be included in docbook
+ """
+ 
++from __future__ import print_function, unicode_literals
++
+ import sys
+ import os
+ from xml.sax import saxutils
+@@ -22,13 +24,13 @@ def main():
+     content = open(source, "r").read()
+ 
+     # print header
+-    print '<?xml version="1.0"?>'
+-    print '<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">'
+-    print
+-    print '<programlisting>'
++    print ('<?xml version="1.0"?>')
++    print ('<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">')
++    print ()
++    print ('<programlisting>')
+ 
+     # print content
+-    print saxutils.escape(content).encode('UTF-8')
+-    print '</programlisting>'
++    print (saxutils.escape(content))
++    print ('</programlisting>')
+ 
+ main()
+--- farstream-0.2-0.2.7.orig/common/check.mak
++++ farstream-0.2-0.2.7/common/check.mak
+@@ -11,69 +11,79 @@ check-valgrind:
+ 	@true
+ endif
+ 
+-LOOPS = 10
++LOOPS ?= 10
++AM_TESTS_ENVIRONMENT = CK_DEFAULT_TIMEOUT=20
+ 
+ # run any given test by running make test.check
+ # if the test fails, run it again at at least debug level 2
+ %.check: %
+-	@$(TESTS_ENVIRONMENT)					\
+-	CK_DEFAULT_TIMEOUT=20					\
++	@$(AM_TESTS_ENVIRONMENT)					\
+ 	$* ||							\
+-	$(TESTS_ENVIRONMENT)					\
++	$(AM_TESTS_ENVIRONMENT)					\
+ 	GST_DEBUG=$$GST_DEBUG,*:2				\
+-	CK_DEFAULT_TIMEOUT=20					\
+ 	$*
+ 
+ # just like 'check', but don't run it again if it fails (useful for debugging)
+ %.check-norepeat: %
+-	@$(TESTS_ENVIRONMENT)					\
+-	CK_DEFAULT_TIMEOUT=20					\
++	@$(AM_TESTS_ENVIRONMENT)					\
+ 	$*
+ 
+ # run any given test in a loop
+ %.torture: %
+ 	@for i in `seq 1 $(LOOPS)`; do				\
+-	$(TESTS_ENVIRONMENT)					\
+-	CK_DEFAULT_TIMEOUT=20					\
++	$(AM_TESTS_ENVIRONMENT)					\
+ 	$*; done
+ 
+ # run any given test in an infinite loop
+ %.forever: %
+ 	@while true; do						\
+-	$(TESTS_ENVIRONMENT)					\
+-	CK_DEFAULT_TIMEOUT=20					\
++	$(AM_TESTS_ENVIRONMENT)					\
+ 	$* || break; done
+ 
+ # valgrind any given test by running make test.valgrind
+ %.valgrind: %
+-	@$(TESTS_ENVIRONMENT)					\
++	@valgrind_log=$(subst /,-,$*-valgrind.log);		\
++	$(AM_TESTS_ENVIRONMENT)					\
+ 	CK_DEFAULT_TIMEOUT=360					\
+ 	G_SLICE=always-malloc					\
+ 	$(LIBTOOL) --mode=execute				\
+ 	$(VALGRIND_PATH) -q					\
+ 	$(foreach s,$(SUPPRESSIONS),--suppressions=$(s))	\
+ 	--tool=memcheck --leak-check=full --trace-children=yes	\
++	--show-possibly-lost=no                                 \
+ 	--leak-resolution=high --num-callers=20			\
+-	./$* 2>&1 | tee valgrind.log
+-	@if grep "==" valgrind.log > /dev/null 2>&1; then	\
+-	    rm valgrind.log;					\
++	./$* 2>&1 | tee $$valgrind_log ;			\
++	if grep "^==" $$valgrind_log > /dev/null 2>&1; then	\
++	    rm $$valgrind_log;					\
+ 	    exit 1;						\
+-	fi
+-	@rm valgrind.log
+-	
++	fi ;							\
++	rm $$valgrind_log
++
+ # valgrind any given test and generate suppressions for it
+ %.valgrind.gen-suppressions: %
+-	@$(TESTS_ENVIRONMENT)					\
++	@$(AM_TESTS_ENVIRONMENT)					\
+ 	CK_DEFAULT_TIMEOUT=360					\
+ 	G_SLICE=always-malloc					\
+ 	$(LIBTOOL) --mode=execute				\
+ 	$(VALGRIND_PATH) -q 					\
+ 	$(foreach s,$(SUPPRESSIONS),--suppressions=$(s))	\
+ 	--tool=memcheck --leak-check=full --trace-children=yes	\
++	--show-possibly-lost=no                                 \
+ 	--leak-resolution=high --num-callers=20			\
+ 	--gen-suppressions=all					\
+ 	./$* 2>&1 | tee suppressions.log
+-	
++
++# valgrind torture any given test
++%.valgrind-torture: %
++	@for i in `seq 1 $(LOOPS)`; do				\
++		$(MAKE) $*.valgrind ||				\
++		(echo "Failure after $$i runs"; exit 1) ||	\
++		exit 1;						\
++	done
++	@banner="All $(LOOPS) loops passed";			\
++	dashes=`echo "$$banner" | sed s/./=/g`;			\
++	echo $$dashes; echo $$banner; echo $$dashes
++
+ # valgrind any given test until failure by running make test.valgrind-forever
+ %.valgrind-forever: %
+ 	@while $(MAKE) $*.valgrind; do				\
+@@ -81,14 +91,39 @@ LOOPS = 10
+ 
+ # gdb any given test by running make test.gdb
+ %.gdb: %
+-	@$(TESTS_ENVIRONMENT)					\
++	@$(AM_TESTS_ENVIRONMENT)					\
+ 	CK_FORK=no						\
+ 	$(LIBTOOL) --mode=execute				\
+ 	gdb $*
+ 
++%.lcov-reset:
++	$(MAKE) $*.lcov-run
++	$(MAKE) $*.lcov-report
++
++%.lcov: %
++	$(MAKE) $*.lcov-reset
++
++if GST_GCOV_ENABLED
++%.lcov-clean:
++	$(MAKE) -C $(top_builddir) lcov-clean
++
++%.lcov-run:
++	$(MAKE) $*.lcov-clean
++	$(MAKE) $*.check
++
++%.lcov-report:
++	$(MAKE) -C $(top_builddir) lcov-report
++else
++%.lcov-run:
++	echo "Need to reconfigure with --enable-gcov"
++
++%.lcov-report:
++	echo "Need to reconfigure with --enable-gcov"
++endif
++
+ # torture tests
+ torture: $(TESTS)
+-	-rm test-registry.xml
++	-rm test-registry.*
+ 	@echo "Torturing tests ..."
+ 	@for i in `seq 1 $(LOOPS)`; do				\
+ 		$(MAKE) check ||				\
+@@ -101,7 +136,7 @@ torture: $(TESTS)
+ 
+ # forever tests
+ forever: $(TESTS)
+-	-rm test-registry.xml
++	-rm test-registry.*
+ 	@echo "Forever tests ..."
+ 	@while true; do						\
+ 		$(MAKE) check ||				\
+@@ -112,21 +147,38 @@ forever: $(TESTS)
+ # valgrind all tests
+ valgrind: $(TESTS)
+ 	@echo "Valgrinding tests ..."
+-	@failed=0;							\
++	@failed=0; valgrind_targets="";					\
+ 	for t in $(filter-out $(VALGRIND_TESTS_DISABLE),$(TESTS)); do	\
+-		$(MAKE) $$t.valgrind;					\
+-		if test "$$?" -ne 0; then                               \
+-			echo "Valgrind error for test $$t";		\
+-			failed=`expr $$failed + 1`;			\
+-			whicht="$$whicht $$t";				\
+-		fi;							\
++	  valgrind_targets="$$valgrind_targets $$t.valgrind";		\
+ 	done;								\
+-	if test "$$failed" -ne 0; then					\
+-		echo "$$failed tests had leaks or errors under valgrind:";	\
+-		echo "$$whicht";					\
+-		false;							\
++	if ! $(MAKE) $$valgrind_targets ; then				\
++	  echo "Some tests had leaks or errors under valgrind";		\
++	  false;							\
+ 	fi
+ 
++# valgrind all tests until failure
++valgrind-forever: $(TESTS)
++	-rm test-registry.*
++	@echo "Forever valgrinding tests ..."
++	@while true; do						\
++		$(MAKE) valgrind ||				\
++		(echo "Failure"; exit 1) ||			\
++		exit 1;						\
++	done
++
++# valgrind torture all tests
++valgrind-torture: $(TESTS)
++	-rm test-registry.*
++	@echo "Torturing and valgrinding tests ..."
++	@for i in `seq 1 $(LOOPS)`; do				\
++		$(MAKE) valgrind ||				\
++		(echo "Failure after $$i runs"; exit 1) ||	\
++		exit 1;						\
++	done
++	@banner="All $(LOOPS) loops passed";			\
++	dashes=`echo "$$banner" | sed s/./=/g`;			\
++	echo $$dashes; echo $$banner; echo $$dashes
++
+ # valgrind all tests and generate suppressions
+ valgrind.gen-suppressions: $(TESTS)
+ 	@echo "Valgrinding tests ..."
+@@ -149,11 +201,14 @@ valgrind.gen-suppressions: $(TESTS)
+ GST_INSPECT = $(GST_TOOLS_DIR)/gst-inspect-$(GST_API_VERSION)
+ inspect:
+ 	@echo "Inspecting features ..."
+-	@for e in `$(TESTS_ENVIRONMENT) $(GST_INSPECT) | head -n -2 	\
++	@for e in `$(AM_TESTS_ENVIRONMENT) $(GST_INSPECT) | head -n -2 	\
+ 	  | cut -d: -f2`;						\
+ 	  do echo Inspecting $$e;					\
+ 	     $(GST_INSPECT) $$e > /dev/null 2>&1; done
+ 
++# build all tests
++build-checks: $(TESTS)
++
+ help:
+ 	@echo
+ 	@echo "make check                         -- run all checks"
+@@ -166,13 +221,17 @@ help:
+ 	@echo "make (dir)/(test).gdb              -- start up gdb for the given test"
+ 	@echo
+ 	@echo "make valgrind                      -- valgrind all tests"
++	@echo "make valgrind-forever              -- valgrind all tests forever"
++	@echo "make valgrind-torture              -- valgrind all tests $(LOOPS) times"
+ 	@echo "make valgrind.gen-suppressions     -- generate suppressions for all tests"
+ 	@echo "                                      and save to suppressions.log"
+ 	@echo "make (dir)/(test).valgrind         -- valgrind the given test"
+ 	@echo "make (dir)/(test).valgrind-forever -- valgrind the given test forever"
++	@echo "make (dir)/(test).valgrind-torture -- valgrind the given test $(LOOPS) times"
+ 	@echo "make (dir)/(test).valgrind.gen-suppressions -- generate suppressions"
+ 	@echo "                                               and save to suppressions.log"
+ 	@echo "make inspect                       -- inspect all plugin features"
++	@echo "make build-checks                  -- build all checks (but don't run them)"
+ 	@echo
+ 	@echo
+ 	@echo "Additionally, you can use the GST_CHECKS environment variable to"
+--- farstream-0.2-0.2.7.orig/common/coverage/coverage-report-entry.pl
++++ farstream-0.2-0.2.7/common/coverage/coverage-report-entry.pl
+@@ -14,7 +14,7 @@
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with this program; if not, write to the Free Software
+-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ 
+ 
+ print <<EOF;
+--- farstream-0.2-0.2.7.orig/common/coverage/coverage-report.pl
++++ farstream-0.2-0.2.7/common/coverage/coverage-report.pl
+@@ -14,7 +14,7 @@
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with this program; if not, write to the Free Software
+-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ 
+ use warnings;
+ use strict;
+--- farstream-0.2-0.2.7.orig/common/coverage/coverage-report.xsl
++++ farstream-0.2-0.2.7/common/coverage/coverage-report.xsl
+@@ -15,7 +15,7 @@
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with this program; if not, write to the Free Software
+-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ -->
+ <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                 version="1.0">
+--- farstream-0.2-0.2.7.orig/common/coverage/lcov.mak
++++ farstream-0.2-0.2.7/common/coverage/lcov.mak
+@@ -1,5 +1,5 @@
+ ## .PHONY so it always rebuilds it
+-.PHONY: lcov-reset lcov lcov-run lcov-report lcov-upload
++.PHONY: lcov-reset lcov lcov-run lcov-report lcov-upload lcov-clean
+ 
+ # run lcov from scratch, always
+ lcov-reset:
+@@ -11,10 +11,14 @@ lcov:
+ 	$(MAKE) lcov-reset
+ 
+ if GST_GCOV_ENABLED
+-# reset run coverage tests
+-lcov-run:
++# reset lcov stats
++lcov-clean:
+ 	@-rm -rf lcov
+ 	lcov --directory . --zerocounters
++
++# reset run coverage tests
++lcov-run:
++	-$(MAKE) lcov-clean
+ 	-if test -d tests/check; then $(MAKE) -C tests/check inspect; fi
+ 	-$(MAKE) check
+ 
+--- farstream-0.2-0.2.7.orig/common/extract-release-date-from-doap-file
++++ farstream-0.2-0.2.7/common/extract-release-date-from-doap-file
+@@ -18,12 +18,12 @@ fi
+ 
+ awk 'BEGIN {x=0}
+ {
+-if ($0~"<release>") {x=1; chunk=""}
++if ( $0 ~ /<release>/ ) {x=1; chunk=""}
+ if (x==1) {
+-  if ($0~"<revision>") { chunk = chunk $0 }
+-  if ($0~"<created>") { chunk = chunk $0 }
++  if ($0 ~ /<revision>/) { chunk = chunk $0 }
++  if ($0 ~ /<created>/) { chunk = chunk $0 }
+ }
+-if ($0~"</release>") {x=0; print chunk}
++if ($0 ~ /<\/release>/) {x=0; print chunk}
+ }' < "$2" | \
+ \
+ grep '<revision>'"$1"'</revision>' | \
+--- /dev/null
++++ farstream-0.2-0.2.7/common/gen-changelog.py
+@@ -0,0 +1,99 @@
++#!/usr/bin/env python
++
++import sys
++import subprocess
++import re
++
++# Makes a GNU-Style ChangeLog from a git repository
++# Handles git-svn repositories also
++
++# Arguments : same as for git log
++release_refs={}
++
++def process_commit(lines, files):
++    # DATE NAME
++    # BLANK LINE
++    # Subject
++    # BLANK LINE
++    # ...
++    # FILES
++    fileincommit = False
++    lines = [x.strip() for x in lines if x.strip() and not x.startswith('git-svn-id')]
++    files = [x.strip() for x in files if x.strip()]
++    for l in lines:
++        if l.startswith('* ') and ':' in l:
++            fileincommit = True
++            break
++
++    top_line = lines[0]
++    print top_line.strip()
++    print
++    if not fileincommit:
++        for f in files:
++            print '\t* %s:' % f
++    for l in lines[1:]:
++        print '\t ', l
++    print
++
++def output_commits():
++    cmd = ['git', 'log', '--pretty=format:--START-COMMIT--%H%n%ai  %an <%ae>%n%n%s%n%b%n--END-COMMIT--',
++           '--date=short', '--name-only']
++
++    start_tag = find_start_tag()
++
++    if start_tag is None:
++        cmd.extend(sys.argv[1:])
++    else:
++        cmd.extend(["%s..HEAD" % (start_tag)])
++
++    p = subprocess.Popen(args=cmd, shell=False, stdout=subprocess.PIPE)
++    buf = []
++    files = []
++    filemode = False
++    for lin in p.stdout.readlines():
++        if lin.startswith("--START-COMMIT--"):
++            if buf != []:
++                process_commit(buf, files)
++            hash = lin[16:].strip()
++            try:
++                rel = release_refs[hash]
++                print "=== release %d.%d.%d ===\n" % (int(rel[0]), int(rel[1]), int(rel[2]))
++            except:
++                pass
++            buf = []
++            files = []
++            filemode = False
++        elif lin.startswith("--END-COMMIT--"):
++            filemode = True
++        elif filemode == True:
++            files.append(lin)
++        else:
++            buf.append(lin)
++    if buf != []:
++        process_commit(buf, files)
++
++def get_rel_tags():
++    # Populate the release_refs dict with the tags for previous releases
++    reltagre = re.compile("^([a-z0-9]{40}) refs\/tags\/[RELEASE-]*([0-9]+)[-_.]([0-9]+)[-_.]([0-9]+)")
++
++    cmd = ['git', 'show-ref', '--tags', '--dereference']
++    p = subprocess.Popen(args=cmd, shell=False, stdout=subprocess.PIPE)
++    for lin in p.stdout.readlines():
++       match = reltagre.search (lin)
++       if match:
++           (sha, maj, min, nano) = match.groups()
++           release_refs[sha] = (maj, min, nano)
++
++def find_start_tag():
++    starttagre = re.compile("^([a-z0-9]{40}) refs\/tags\/CHANGELOG_START")
++    cmd = ['git', 'show-ref', '--tags']
++    p = subprocess.Popen(args=cmd, shell=False, stdout=subprocess.PIPE)
++    for lin in p.stdout.readlines():
++       match = starttagre.search (lin)
++       if match:
++           return match.group(1)
++    return None
++
++if __name__ == "__main__":
++    get_rel_tags()
++    output_commits()
+--- farstream-0.2-0.2.7.orig/common/gst-autogen.sh
++++ farstream-0.2-0.2.7/common/gst-autogen.sh
+@@ -20,215 +20,6 @@ debug ()
+   fi
+ }
+ 
+-version_get ()
+-# based on the command's version output, set variables
+-# _MAJOR, _MINOR, _MICRO, _VERSION, using the given prefix as variable prefix
+-#
+-# arg 1: command binary name
+-# arg 2: (uppercased) variable name prefix
+-{
+-  COMMAND=$1
+-  VARPREFIX=`echo $2 | tr .,- _`
+-
+-  # strip everything that's not a digit, then use cut to get the first field
+-  pkg_version=`$COMMAND --version|head -n 1|sed 's/^.*)[^0-9]*//'|cut -d' ' -f1`
+-  debug "pkg_version $pkg_version"
+-  # remove any non-digit characters from the version numbers to permit numeric
+-  # comparison
+-  pkg_major=`echo $pkg_version | cut -d. -f1 | sed s/[a-zA-Z\-].*//g`
+-  pkg_minor=`echo $pkg_version | cut -d. -f2 | sed s/[a-zA-Z\-].*//g`
+-  pkg_micro=`echo $pkg_version | cut -d. -f3 | sed s/[a-zA-Z\-].*//g`
+-  test -z "$pkg_major" && pkg_major=0
+-  test -z "$pkg_minor" && pkg_minor=0
+-  test -z "$pkg_micro" && pkg_micro=0
+-  debug "found major $pkg_major minor $pkg_minor micro $pkg_micro"
+-  eval ${VARPREFIX}_MAJOR=$pkg_major
+-  eval ${VARPREFIX}_MINOR=$pkg_minor
+-  eval ${VARPREFIX}_MICRO=$pkg_micro
+-  eval ${VARPREFIX}_VERSION=$pkg_version
+-}
+-
+-version_compare ()
+-# Checks whether the version of VARPREFIX is equal to or
+-# newer than the requested version
+-# arg1: VARPREFIX
+-# arg2: MAJOR
+-# arg3: MINOR
+-# arg4: MICRO
+-{
+-  VARPREFIX=`echo $1 | tr .,- _`
+-  MAJOR=$2
+-  MINOR=$3
+-  MICRO=$4
+-
+-  eval pkg_major=\$${VARPREFIX}_MAJOR;
+-  eval pkg_minor=\$${VARPREFIX}_MINOR;
+-  eval pkg_micro=\$${VARPREFIX}_MICRO;
+-
+-  #start checking the version
+-  debug "version_compare: $VARPREFIX against $MAJOR.$MINOR.$MICRO"
+-
+-    # reset check
+-    WRONG=
+-
+-    if [ ! "$pkg_major" -gt "$MAJOR" ]; then
+-      debug "major: $pkg_major <= $MAJOR"
+-      if [ "$pkg_major" -lt "$MAJOR" ]; then
+-        debug "major: $pkg_major < $MAJOR"
+-        WRONG=1
+-      elif [ ! "$pkg_minor" -gt "$MINOR" ]; then
+-        debug "minor: $pkg_minor <= $MINOR"
+-        if [ "$pkg_minor" -lt "$MINOR" ]; then
+-          debug "minor: $pkg_minor < $MINOR"
+-          WRONG=1
+-        elif [ "$pkg_micro" -lt "$MICRO" ]; then
+-          debug "micro: $pkg_micro < $MICRO"
+-	  WRONG=1
+-        fi
+-      fi
+-    fi
+-    if test ! -z "$WRONG"; then
+-      debug "version_compare: $VARPREFIX older than $MAJOR.$MINOR.$MICRO"
+-      return 1
+-    fi
+-    debug "version_compare: $VARPREFIX equal to/newer than $MAJOR.$MINOR.$MICRO"
+-    return 0
+-}
+-
+-
+-version_check ()
+-# check the version of a package
+-# first argument : package name (executable)
+-# second argument : optional path where to look for it instead
+-# third argument : source download url
+-# rest of arguments : major, minor, micro version
+-# all consecutive ones : suggestions for binaries to use
+-# (if not specified in second argument)
+-{
+-  PACKAGE=$1
+-  PKG_PATH=$2
+-  URL=$3
+-  MAJOR=$4
+-  MINOR=$5
+-  MICRO=$6
+-
+-  # for backwards compatibility, we let PKG_PATH=PACKAGE when PKG_PATH null
+-  if test -z "$PKG_PATH"; then PKG_PATH=$PACKAGE; fi
+-  debug "major $MAJOR minor $MINOR micro $MICRO"
+-  VERSION=$MAJOR
+-  if test ! -z "$MINOR"; then VERSION=$VERSION.$MINOR; else MINOR=0; fi
+-  if test ! -z "$MICRO"; then VERSION=$VERSION.$MICRO; else MICRO=0; fi
+-
+-  debug "major $MAJOR minor $MINOR micro $MICRO"
+-
+-  for SUGGESTION in $PKG_PATH; do
+-    COMMAND="$SUGGESTION"
+-
+-    # don't check if asked not to
+-    test -z "$NOCHECK" && {
+-      printf "  checking for $COMMAND >= $VERSION ... "
+-    } || {
+-      # we set a var with the same name as the package, but stripped of
+-      # unwanted chars
+-      VAR=`echo $PACKAGE | sed 's/-//g'`
+-      debug "setting $VAR"
+-      eval $VAR="$COMMAND"
+-      return 0
+-    }
+-
+-    which $COMMAND > /dev/null 2>&1
+-    if test $? -eq 1;
+-    then 
+-      debug "$COMMAND not found"
+-      continue
+-    fi
+-
+-    VARPREFIX=`echo $COMMAND | sed 's/-//g' | tr [:lower:] [:upper:]`
+-    version_get $COMMAND $VARPREFIX
+-
+-    version_compare $VARPREFIX $MAJOR $MINOR $MICRO
+-    if test $? -ne 0; then
+-      echo "found $pkg_version, not ok !"
+-      continue
+-    else
+-      echo "found $pkg_version, ok."
+-      # we set a var with the same name as the package, but stripped of
+-      # unwanted chars
+-      VAR=`echo $PACKAGE | sed 's/-//g'`
+-      debug "setting $VAR"
+-      eval $VAR="$COMMAND"
+-      return 0
+-    fi
+-  done
+-
+-  echo "$PACKAGE not found !"
+-  echo "You must have $PACKAGE installed to compile $package."
+-  echo "Download the appropriate package for your distribution,"
+-  echo "or get the source tarball at $URL"
+-  return 1;
+-}
+-
+-aclocal_check ()
+-{
+-  # normally aclocal is part of automake
+-  # so we expect it to be in the same place as automake
+-  # so if a different automake is supplied, we need to adapt as well
+-  # so how's about replacing automake with aclocal in the set var,
+-  # and saving that in $aclocal ?
+-  # note, this will fail if the actual automake isn't called automake*
+-  # or if part of the path before it contains it
+-  if [ -z "$automake" ]; then
+-    echo "Error: no automake variable set !"
+-    return 1
+-  else
+-    aclocal=`echo $automake | sed s/automake/aclocal/`
+-    debug "aclocal: $aclocal"
+-    if [ "$aclocal" != "aclocal" ];
+-    then
+-      CONFIGURE_DEF_OPT="$CONFIGURE_DEF_OPT --with-aclocal=$aclocal"
+-    fi
+-    if [ ! -x `which $aclocal` ]; then
+-      echo "Error: cannot execute $aclocal !"
+-      return 1
+-    fi
+-  fi
+-}
+-
+-autoheader_check ()
+-{
+-  # same here - autoheader is part of autoconf
+-  # use the same voodoo
+-  if [ -z "$autoconf" ]; then
+-    echo "Error: no autoconf variable set !"
+-    return 1
+-  else
+-    autoheader=`echo $autoconf | sed s/autoconf/autoheader/`
+-    debug "autoheader: $autoheader"
+-    if [ "$autoheader" != "autoheader" ];
+-    then
+-      CONFIGURE_DEF_OPT="$CONFIGURE_DEF_OPT --with-autoheader=$autoheader"
+-    fi
+-    if [ ! -x `which $autoheader` ]; then
+-      echo "Error: cannot execute $autoheader !"
+-      return 1
+-    fi
+-  fi
+-
+-}
+-
+-die_check ()
+-{
+-  # call with $DIE
+-  # if set to 1, we need to print something helpful then die
+-  DIE=$1
+-  if test "x$DIE" = "x1";
+-  then
+-    echo
+-    echo "- Please get the right tools before proceeding."
+-    echo "- Alternatively, if you're sure we're wrong, run with --nocheck."
+-    exit 1
+-  fi
+-}
+ 
+ autogen_options ()
+ {
+--- farstream-0.2-0.2.7.orig/common/gst-glib-gen.mak
++++ farstream-0.2-0.2.7/common/gst-glib-gen.mak
+@@ -10,16 +10,16 @@ enum_headers=$(foreach h,$(glib_enum_hea
+ 
+ # these are all the rules generating the relevant files
+ $(glib_gen_basename)-marshal.h: $(glib_gen_basename)-marshal.list
+-	$(AM_V_GEN)glib-genmarshal --header --prefix=$(glib_gen_prefix)_marshal $^ > $(glib_gen_basename)-marshal.h.tmp && \
++	$(AM_V_GEN)$(GLIB_GENMARSHAL) --header --prefix=$(glib_gen_prefix)_marshal $^ > $(glib_gen_basename)-marshal.h.tmp && \
+ 	mv $(glib_gen_basename)-marshal.h.tmp $(glib_gen_basename)-marshal.h
+ 
+ $(glib_gen_basename)-marshal.c: $(glib_gen_basename)-marshal.list
+ 	$(AM_V_GEN)echo "#include \"$(glib_gen_basename)-marshal.h\"" >> $(glib_gen_basename)-marshal.c.tmp && \
+-	glib-genmarshal --body --prefix=$(glib_gen_prefix)_marshal $^ >> $(glib_gen_basename)-marshal.c.tmp && \
++	$(GLIB_GENMARSHAL) --body --prefix=$(glib_gen_prefix)_marshal $^ >> $(glib_gen_basename)-marshal.c.tmp && \
+ 	mv $(glib_gen_basename)-marshal.c.tmp $(glib_gen_basename)-marshal.c
+ 
+ $(glib_gen_basename)-enumtypes.h: $(glib_enum_headers)
+-	$(AM_V_GEN)glib-mkenums \
++	$(AM_V_GEN)$(GLIB_MKENUMS) \
+ 	--fhead "#ifndef __$(glib_enum_define)_ENUM_TYPES_H__\n#define __$(glib_enum_define)_ENUM_TYPES_H__\n\n#include <glib-object.h>\n\nG_BEGIN_DECLS\n" \
+ 	--fprod "\n/* enumerations from \"@filename@\" */\n" \
+ 	--vhead "GType @enum_name@_get_type (void);\n#define GST_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n"         \
+@@ -28,7 +28,7 @@ $(glib_gen_basename)-enumtypes.h: $(glib
+ 
+ $(glib_gen_basename)-enumtypes.c: $(glib_enum_headers)
+ 	@if test "x$(glib_enum_headers)" = "x"; then echo "ERROR: glib_enum_headers is empty, please fix Makefile"; exit 1; fi
+-	$(AM_V_GEN)glib-mkenums \
++	$(AM_V_GEN)$(GLIB_MKENUMS) \
+ 	--fhead "#include \"$(glib_gen_basename)-enumtypes.h\"\n$(enum_headers)" \
+ 	--fprod "\n/* enumerations from \"@filename@\" */" \
+ 	--vhead "GType\n@enum_name@_get_type (void)\n{\n  static volatile gsize g_define_type_id__volatile = 0;\n  if (g_once_init_enter (&g_define_type_id__volatile)) {\n    static const G@Type@Value values[] = {"     \
+--- farstream-0.2-0.2.7.orig/common/gst-indent
++++ farstream-0.2-0.2.7/common/gst-indent
+@@ -9,13 +9,19 @@
+ 
+ version=`gnuindent --version 2>/dev/null`
+ if test "x$version" = "x"; then
+-  version=`indent --version 2>/dev/null`
++  version=`gindent --version 2>/dev/null`
+   if test "x$version" = "x"; then
+-    echo "GStreamer git pre-commit hook:"
+-    echo "Did not find GNU indent, please install it before continuing."
+-    exit 1
++    version=`indent --version 2>/dev/null`
++    if test "x$version" = "x"; then
++      echo "GStreamer git pre-commit hook:"
++      echo "Did not find GNU indent, please install it before continuing."
++      exit 1
++    else
++      INDENT=indent
++    fi
++  else
++    INDENT=gindent
+   fi
+-  INDENT=indent
+ else
+   INDENT=gnuindent
+ fi
+--- farstream-0.2-0.2.7.orig/common/gst.supp
++++ farstream-0.2-0.2.7/common/gst.supp
+@@ -91,6 +91,14 @@
+    fun:pthread_create@@*
+ }
+ 
++{
++   <tls>
++   Memcheck:Leak
++   fun:calloc
++   fun:allocate_dtv
++   fun:_dl_allocate_tls
++}
++
+ # I get an extra stack entry on x86/dapper
+ {
+    <tls>
+@@ -1290,6 +1298,15 @@
+    fun:snd_config_update
+ }
+ {
++   <alsa leak snd_config_searcha_hooks>
++   Memcheck:Leak
++   fun:*alloc
++   fun:_dl_close_worker
++   ...
++   fun:snd_config_searcha_hooks
++}
++
++{
+    <nss lookup within ALSA>
+    Memcheck:Leak
+    fun:malloc
+@@ -2520,41 +2537,13 @@
+ }
+ 
+ 
+-## Leak of property_list in gstffmpegcfg.c
+-## This list is created in gst_ffmpegcsp_init(), called from
+-## gst_ffmpegenc_register.
+-{
+-   <insert a suppression name here>
+-   Memcheck:Leak
+-   fun:malloc
+-   fun:g_malloc
+-   fun:g_slice_alloc
+-   fun:g_datalist_id_set_data_full
+-   fun:gst_ffmpeg_cfg_init
+-   fun:gst_ffmpegenc_register
+-   fun:plugin_init
+-}
+-{
+-   <insert a suppression name here>
+-   Memcheck:Leak
+-   fun:malloc
+-   fun:g_malloc
+-   fun:g_slice_alloc
+-   fun:g_datalist_id_set_data_full
+-   fun:g_param_spec_set_qdata_full
+-   fun:gst_ffmpeg_cfg_init
+-   fun:gst_ffmpegenc_register
+-   fun:plugin_init
+-}
+-
+-
++## Leak of everything allocated by gst-libav plugin init
+ {
+    <insert_a_suppression_name_here>
+    Memcheck:Leak
+    fun:*alloc
+-   fun:*
++   ...
+    fun:gst_ffmpeg_cfg_init
+-   fun:gst_ffmpegenc_register
+ }
+ 
+ ## Leak of GIO module through gnomevfs
+@@ -3961,3 +3950,78 @@
+    fun:gst_system_clock_init
+ }
+ 
++{
++   <glib types are singletons>
++   Memcheck:Leak
++   fun:calloc
++   ...
++   fun:gobject_init_ctor
++}
++
++{
++   <quark table is leaked on purpose if it grows too big>
++   Memcheck:Leak
++   fun:malloc
++   ...
++   fun:g_quark_from*_string
++}
++
++{
++  <timer_create suppressions for earlier valgrind versions that complain>
++  Memcheck:Param
++  timer_create(evp)
++  fun:timer_create@@GLIBC_2.3.3
++}
++
++{
++   closures aren't valgrind friendly (bgo#739850)
++   Memcheck:Leak
++   fun:calloc
++   ...
++   fun:g_cclosure_new
++}
++
++{
++   closures aren't valgrind friendly (bgo#739850)
++   Memcheck:Leak
++   fun:malloc
++   ...
++   fun:g_closure_add_invalidate_notifier
++}
++
++{
++   closures aren't valgrind friendly (bgo#739850)
++   Memcheck:Leak
++   fun:calloc
++   ...
++   fun:g_closure_new_simple
++}
++
++{
++   glib/giomodules2 (from libsoup.supp)
++   Memcheck:Leak
++   ...
++   fun:_g_io_module_get_default
++}
++
++{
++   <valgrind bug when trying to parse "infinity" from "interleaved">
++   Memcheck:Addr8
++   fun:__GI___strncasecmp_l
++   fun:____strtod_l_internal
++   fun:gst_value_deserialize_double
++}
++
++{
++   <glibc overreads/conditionals>
++   Memcheck:Addr8
++   fun:do_lookup_x
++}
++
++{
++   <quark tables are leaked on purpose when they are expanded, observed with glib 2.46 and gst-rtsp-server tests>
++   Memcheck:Leak
++   fun:malloc
++   ...
++   fun:g_quark_init
++}
+--- farstream-0.2-0.2.7.orig/common/gstdoc-scangobj
++++ farstream-0.2-0.2.7/common/gstdoc-scangobj
+@@ -16,7 +16,7 @@
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with this program; if not, write to the Free Software
+-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
++# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
+ #
+ 
+ #
+@@ -110,6 +110,8 @@ my $old_prerequisites_filename = "$OUTPU
+ my $new_prerequisites_filename = "$OUTPUT_DIR/$MODULE.prerequisites.new";
+ my $old_args_filename = "$OUTPUT_DIR/$MODULE.args";
+ my $new_args_filename = "$OUTPUT_DIR/$MODULE.args.new";
++my $old_sections_filename = "$OUTPUT_DIR/$MODULE-sections";
++my $new_sections_filename = "$OUTPUT_DIR/$MODULE-sections.new";
+ 
+ my $debug_log="g_message";
+ if (!defined($VERBOSE) or $VERBOSE eq "0") {
+@@ -150,7 +152,18 @@ print OUTPUT <<EOT;
+ #include <stdio.h>
+ #include <errno.h>
+ 
+-$includes
++#include <gst/gst.h>
++EOT
++
++if ($includes) {
++    print OUTPUT $includes;
++} else {
++    for (@types) {
++        print OUTPUT "extern GType $_ (void);\n";
++    }
++}
++
++print OUTPUT <<EOT;
+ 
+ #ifdef GTK_IS_WIDGET_CLASS
+ #include <gtk/gtkversion.h>
+@@ -307,10 +320,10 @@ get_object_types (void)
+             /* output element data */
+             fputs ("    <element>\\n", inspect);
+             fputs (xmlprint(6, "name", gst_plugin_feature_get_name (feature)),inspect);
+-            fputs (xmlprint(6, "longname", gst_element_factory_get_longname (factory)),inspect);
+-            fputs (xmlprint(6, "class", gst_element_factory_get_klass (factory)),inspect);
+-            fputs (xmlprint(6, "description", gst_element_factory_get_description (factory)),inspect);
+-            fputs (xmlprint(6, "author", gst_element_factory_get_author (factory)),inspect);
++            fputs (xmlprint(6, "longname", gst_element_factory_get_metadata (factory, GST_ELEMENT_METADATA_LONGNAME)),inspect);
++            fputs (xmlprint(6, "class", gst_element_factory_get_metadata (factory, GST_ELEMENT_METADATA_KLASS)),inspect);
++            fputs (xmlprint(6, "description", gst_element_factory_get_metadata (factory, GST_ELEMENT_METADATA_DESCRIPTION)),inspect);
++            fputs (xmlprint(6, "author", gst_element_factory_get_metadata (factory, GST_ELEMENT_METADATA_AUTHOR)),inspect);
+             fputs ("      <pads>\\n", inspect);
+ 
+             /* output pad-template data */
+@@ -354,11 +367,11 @@ get_object_types (void)
+       factory = GST_ELEMENT_FACTORY (l->data);
+       type = gst_element_factory_get_element_type (factory);
+       if (type != 0) {
+-        $debug_log ("adding type for factory %s", gst_element_factory_get_longname (factory));
++        $debug_log ("adding type for factory %s", gst_element_factory_get_metadata (factory, GST_ELEMENT_METADATA_LONGNAME));
+         object_types[i++] = type;
+       } else {
+         g_message ("type info for factory %s not found",
+-            gst_element_factory_get_longname (factory));
++            gst_element_factory_get_metadata (factory, GST_ELEMENT_METADATA_LONGNAME));
+       }
+       l = g_list_next (l);
+     }
+@@ -426,38 +439,33 @@ const gchar *hierarchy_filename = "$new_
+ const gchar *interfaces_filename = "$new_interfaces_filename";
+ const gchar *prerequisites_filename = "$new_prerequisites_filename";
+ const gchar *args_filename = "$new_args_filename";
++const gchar *sections_filename = "$new_sections_filename";
+ 
+ 
+ static void output_signals (void);
+-static void output_object_signals (FILE *fp,
+-				   GType object_type);
+-static void output_object_signal (FILE *fp,
+-				  const gchar *object_class_name,
++static void output_object_signals (FILE *fp, GType object_type);
++static void output_object_signal (FILE *fp, const gchar *object_class_name,
+ 				  guint signal_id);
+-static const gchar * get_type_name (GType type,
+-			            gboolean * is_pointer);
++static const gchar * get_type_name (GType type, gboolean * is_pointer);
+ static void output_object_hierarchy (void);
+-static void output_hierarchy (FILE *fp,
+-			      GType type,
+-			      guint level);
++static void output_hierarchy (FILE *fp, GType type, guint level);
+ 
+ static void output_object_interfaces (void);
+-static void output_interfaces (FILE *fp,
+-			       GType type);
++static void output_interfaces (FILE *fp, GType type);
+ 
+ static void output_interface_prerequisites (void);
+-static void output_prerequisites (FILE *fp,
+-			          GType type);
++static void output_prerequisites (FILE *fp, GType type);
+ 
+ static void output_args (void);
+ static void output_object_args (FILE *fp, GType object_type);
+ 
++static void output_sections (void);
++static void output_object_section (FILE *fp, GType object_type);
++
++
+ int
+-main (int argc, char *argv[])
++main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char *argv[])
+ {
+-  /* Silence the compiler: */
+-  if (argv != argv) argc = argc;
+-
+   $TYPE_INIT_FUNC;
+ 
+   get_object_types ();
+@@ -467,6 +475,8 @@ main (int argc, char *argv[])
+   output_object_interfaces ();
+   output_interface_prerequisites ();
+   output_args ();
++  
++  output_sections ();
+ 
+   return 0;
+ }
+@@ -1562,6 +1572,139 @@ output_object_args (FILE *fp, GType obje
+     break;
+   }
+ }
++
++static void
++output_sections (void)
++{
++  FILE *fp;
++  gint i;
++
++  fp = fopen (sections_filename, "w");
++  if (fp == NULL)
++    {
++      g_warning ("Couldn't open output file: %s : %s", sections_filename, g_strerror(errno));
++      return;
++    }
++
++  for (i = 0; object_types[i]; i++) { }
++  qsort (object_types, i, sizeof (GType), compare_types);
++    
++  for (i = 0; object_types[i]; i++) {
++    output_object_section (fp, object_types[i]);
++  }
++
++  fclose (fp);
++}
++
++static gboolean
++find_by_type (GstPluginFeature *f, gpointer data) {
++  return (GST_IS_ELEMENT_FACTORY(f) && 
++      ((GType)data == gst_element_factory_get_element_type (GST_ELEMENT_FACTORY(f))));
++}
++
++static void
++output_object_section (FILE *fp, GType object_type)
++{
++  /* e.g. GstFakeSink */
++  const gchar *tn = g_type_name (object_type);
++  const gchar *cct = &tn[3]; /* cut 'Gst' */
++  gchar *title, *lct, *uct;
++  gint i, j, l = strlen(cct);
++  gpointer class;
++  GParamSpec **properties;
++  guint n_properties;
++  const gchar *ptn;
++  gchar *ptns;
++  GString *strbuf = g_string_new (NULL);
++  GList *fl;
++  GstPluginFeature *f = NULL;
++  gboolean need_unserscore = TRUE, have_abbrev = FALSE;
++  
++  fl = gst_registry_feature_filter (gst_registry_get(), find_by_type, TRUE, 
++    (gpointer)object_type);
++  if (fl) {
++    f = fl->data;
++    g_list_free(fl);
++  }
++  if (f) {
++    title = g_strdup (gst_plugin_feature_get_name(f));
++    g_object_unref (f);
++  } else {
++    title = g_ascii_strdown(cct, -1);
++  }
++  
++  /* turn CamelCase into '_' separated all lower, resulting string is atmost
++   * twice as long, special casing for abbevs like GstTCPClientSink */
++  lct = g_malloc(2*l);
++  for (i = 0, j = 0; i < l; i++) {
++    if (g_ascii_isupper (cct[i])) {
++      if (need_unserscore) {
++        if (i > 0) {
++          lct[j++] = '_';
++        }
++      } else {
++        have_abbrev = TRUE;
++      }
++      lct[j++] = g_ascii_tolower(cct[i]);
++      need_unserscore = FALSE;
++    } else {
++      if (have_abbrev) {
++        lct[j] = lct[j-1];
++        lct[j-1] = '_';
++        j++;
++        have_abbrev = FALSE;
++      }
++      lct[j++] = cct[i];
++      need_unserscore = TRUE;
++    }
++  }
++  lct[j] = '\\0';
++  uct = g_ascii_strup(lct, -1);
++  
++  /* scan properties and find local enums */
++  class = g_type_class_peek (object_type);
++  properties = g_object_class_list_properties (class, &n_properties);
++  qsort (properties, n_properties, sizeof (GParamSpec *), compare_param_specs);
++  for (i = 0; i < n_properties; i++) {
++    GParamSpec *spec = properties[i];
++    if (!(G_IS_PARAM_SPEC_ENUM (spec) || G_IS_PARAM_SPEC_FLAGS (spec))) {
++      continue;
++    }
++    ptn = g_type_name(spec->value_type);
++    // does it start with tn?
++    if (strncmp(tn, ptn, strlen(tn))) {
++      continue;
++    }
++    g_string_append_c(strbuf, '\\n');
++    g_string_append(strbuf, ptn);
++  }
++  ptns = g_string_free (strbuf, FALSE);
++
++  /* later we can remove the SUBSECTION Standart/Private, since we only need to
++   * highlight what is public API */
++  fprintf (fp, "<SECTION>\\n"
++               "<FILE>element-%s</FILE>\\n"
++               "<TITLE>%s</TITLE>\\n"
++               "Gst%s%s\\n"
++               "<SUBSECTION Standard>\\n"
++               "Gst%sClass\\n"
++               "GST_%s\\n"
++               "GST_%s_CAST\\n"
++               "GST_IS_%s\\n"
++               "GST_%s_CLASS\\n"
++               "GST_IS_%s_CLASS\\n"
++               "GST_TYPE_%s\\n"
++               "<SUBSECTION Private>\\n"
++               "gst_%s_get_type\\n"
++               "</SECTION>\\n\\n",
++               title, title, cct, ptns, 
++               cct, uct, uct, uct, uct, uct, uct, lct);
++  g_free (title);
++  g_free (lct);
++  g_free (uct);
++  g_free (ptns);
++}
++
+ EOT
+ 
+ close OUTPUT;
+@@ -1606,4 +1749,4 @@ if (!defined($ENV{"GTK_DOC_KEEP_INTERMED
+ #&UpdateFileIfChanged ($old_prerequisites_filename, $new_prerequisites_filename, 0);
+ #&UpdateFileIfChanged ($old_signals_filename, $new_signals_filename, 0);
+ #&UpdateFileIfChanged ($old_args_filename, $new_args_filename, 0);
+-
++#&UpdateFileIfChanged ($old_sections_filename, $new_sections_filename, 0);
+--- farstream-0.2-0.2.7.orig/common/gtk-doc-plugins.mak
++++ farstream-0.2-0.2.7/common/gtk-doc-plugins.mak
+@@ -16,6 +16,16 @@ help:
+ update: scanobj-update
+ 	$(MAKE) check-outdated-docs
+ 
++if GTK_DOC_USE_LIBTOOL
++GTKDOC_CC = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(INCLUDES) $(GTKDOC_DEPS_CFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
++GTKDOC_LD = $(LIBTOOL) --tag=CC --mode=link $(CC) $(GTKDOC_DEPS_LIBS) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS)
++GTKDOC_RUN = $(LIBTOOL) --mode=execute
++else
++GTKDOC_CC = $(CC) $(INCLUDES) $(GTKDOC_DEPS_CFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
++GTKDOC_LD = $(CC) $(GTKDOC_DEPS_LIBS) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS)
++GTKDOC_RUN =
++endif
++
+ # We set GPATH here; this gives us semantics for GNU make
+ # which are more like other make's VPATH, when it comes to
+ # whether a source that is a target of one rule is then
+@@ -44,11 +54,9 @@ EXTRA_DIST = 				\
+ # maintainers and result is commited to git
+ DOC_STAMPS =				\
+ 	scan-build.stamp		\
+-	tmpl-build.stamp		\
+ 	sgml-build.stamp		\
+ 	html-build.stamp		\
+ 	scan.stamp			\
+-	tmpl.stamp			\
+ 	sgml.stamp			\
+ 	html.stamp
+ 
+@@ -94,9 +102,9 @@ all-local: html-build.stamp
+ INSPECT_REGISTRY=$(top_builddir)/docs/plugins/inspect-registry.xml
+ INSPECT_ENVIRONMENT=\
+ 	LC_ALL=C \
+-	GST_PLUGIN_SYSTEM_PATH= \
+-	GST_PLUGIN_PATH=$(top_builddir)/gst:$(top_builddir)/sys:$(top_builddir)/ext:$(top_builddir)/plugins:$(top_builddir)/src:$(top_builddir)/gnl \
+-	GST_REGISTRY=$(INSPECT_REGISTRY) \
++	GST_PLUGIN_SYSTEM_PATH_1_0= \
++	GST_PLUGIN_PATH_1_0=$(top_builddir)/gst:$(top_builddir)/sys:$(top_builddir)/ext:$(top_builddir)/plugins:$(top_builddir)/src:$(top_builddir)/gnl \
++	GST_REGISTRY_1_0=$(INSPECT_REGISTRY) \
+ 	PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" \
+ 	$(INSPECT_EXTRA_ENVIRONMENT)
+ 
+@@ -122,7 +130,7 @@ scanobj-build.stamp: $(SCANOBJ_DEPS) $(b
+ 	    scanobj_options="--verbose"; \
+ 	fi; \
+ 	$(INSPECT_ENVIRONMENT) 					\
+-	CC="$(GTKDOC_CC)" LD="$(GTKDOC_LD)"				\
++	CC="$(GTKDOC_CC)" LD="$(GTKDOC_LD)" RUN="$(GTKDOC_RUN)"	\
+ 	CFLAGS="$(GTKDOC_CFLAGS) $(CFLAGS) $(WARNING_CFLAGS)"	\
+ 	LDFLAGS="$(GTKDOC_LIBS) $(LDFLAGS)"				\
+ 	$(GST_DOC_SCANOBJ) $$scanobj_options --type-init-func="gst_init(NULL,NULL)"	\
+@@ -161,44 +169,29 @@ scan-build.stamp: $(HFILE_GLOB) $(EXTRA_
+ 	    --ignore-headers="$(IGNORE_HFILES)";			\
+ 	touch scan-build.stamp
+ 
+-#### update templates; done on every build ####
+-
+-# in a non-srcdir build, we need to copy files from the previous step
+-# and the files from previous runs of this step
+-tmpl-build.stamp: $(DOC_MODULE)-decl.txt $(SCANOBJ_FILES) $(DOC_MODULE)-sections.txt $(DOC_OVERRIDES)
+-	@echo '  DOC   Rebuilding template files'
+-	@if test x"$(srcdir)" != x. ; then				\
+-	    for f in $(SCANOBJ_FILES) $(SCAN_FILES);			\
+-	    do								\
+-	        if test -e $(srcdir)/$$f; then cp -u $(srcdir)/$$f . ; fi;	\
+-	    done;							\
+-	fi
+-	@gtkdoc-mktmpl --module=$(DOC_MODULE)
+-	@$(PYTHON) \
+-		$(top_srcdir)/common/mangle-tmpl.py $(srcdir)/$(INSPECT_DIR) tmpl
+-	@touch tmpl-build.stamp
+-
+-tmpl.stamp: tmpl-build.stamp
+-	@true
+-
+ #### xml ####
+ 
+-sgml-build.stamp: tmpl.stamp scan-build.stamp $(CFILE_GLOB) $(top_srcdir)/common/plugins.xsl $(expand_content_files)
++sgml-build.stamp: scan-build.stamp $(CFILE_GLOB) $(top_srcdir)/common/plugins.xsl $(expand_content_files)
+ 	@echo '  DOC   Building XML'
+ 	@-mkdir -p xml
+-	@for a in $(srcdir)/$(INSPECT_DIR)/*.xml; do \
++	@for a in $(inspect_files); do \
+ 	    xsltproc --stringparam module $(MODULE) \
+ 		$(top_srcdir)/common/plugins.xsl $$a > xml/`basename $$a`; done
+ 	@for f in $(EXAMPLE_CFILES); do \
+ 		$(PYTHON) $(top_srcdir)/common/c-to-xml.py $$f > xml/element-`basename $$f .c`.xml; done
+-	@gtkdoc-mkdb \
++	@_source_dir='' ;						\
++	for i in $(DOC_SOURCE_DIR) ; do					\
++	    _source_dir="$${_source_dir} --source-dir=$$i" ;	        \
++	done ;								\
++	gtkdoc-mkdb \
+ 		--module=$(DOC_MODULE) \
+-		--source-dir=$(DOC_SOURCE_DIR) \
++		$${_source_dir} \
+ 		 --expand-content-files="$(expand_content_files)" \
+ 		--main-sgml-file=$(srcdir)/$(DOC_MAIN_SGML_FILE) \
+ 		--output-format=xml \
+ 		--ignore-files="$(IGNORE_HFILES) $(IGNORE_CFILES)" \
+ 		$(MKDB_OPTIONS)
++	@$(PYTHON) $(top_srcdir)/common/mangle-db.py xml
+ 	@cp ../version.entities xml
+ 	@touch sgml-build.stamp
+ 
+@@ -222,10 +215,7 @@ html-build.stamp: sgml.stamp $(DOC_MAIN_
+ 	    mkhtml_options="$$mkhtml_options --verbose"; \
+ 	  fi; \
+ 	fi; \
+-	cd html && gtkdoc-mkhtml $$mkhtml_options $(DOC_MODULE) $(DOC_MAIN_SGML_FILE)
+-	@mv html/index.sgml html/index.sgml.bak
+-	@$(SED) "s/ href=\"$(DOC_MODULE)\// href=\"$(DOC_MODULE)-@GST_API_VERSION@\//g" html/index.sgml.bak >html/index.sgml
+-	@rm -f html/index.sgml.bak
++	cd html && gtkdoc-mkhtml $$mkhtml_options $(DOC_MODULE)-@GST_API_VERSION@ $(DOC_MAIN_SGML_FILE)
+ 	@rm -f html/$(DOC_MAIN_SGML_FILE)
+ 	@rm -rf html/xml
+ 	@rm -f html/version.entities
+@@ -289,13 +279,12 @@ install-data-local:
+ 	      $(INSTALL_DATA) $$i $(DESTDIR)$(TARGET_DIR); \
+ 	    done; \
+ 	  fi; \
+-	  echo '-- Installing $(builddir)/html/$(DOC_MODULE).devhelp2' ; \
+-	  if test -e $(builddir)/html/$(DOC_MODULE).devhelp2; then \
+-	            $(INSTALL_DATA) $(builddir)/html/$(DOC_MODULE).devhelp2 \
++	  echo '-- Installing $(builddir)/html/$(DOC_MODULE)-@GST_API_VERSION@.devhelp2' ; \
++	  if test -e $(builddir)/html/$(DOC_MODULE)-@GST_API_VERSION@.devhelp2; then \
++	            $(INSTALL_DATA) $(builddir)/html/$(DOC_MODULE)-@GST_API_VERSION@.devhelp2 \
+ 	            $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_API_VERSION@.devhelp2; \
+ 	  fi; \
+-	  (which gtkdoc-rebase >/dev/null && \
+-	    gtkdoc-rebase --relative --dest-dir=$(DESTDIR) --html-dir=$(DESTDIR)$(TARGET_DIR)) || true ; \
++	  $(GTKDOC_REBASE) --relative --dest-dir=$(DESTDIR) --html-dir=$(DESTDIR)$(TARGET_DIR) || true ; \
+ 	fi)
+ uninstall-local:
+ 	if test -d $(DESTDIR)$(TARGET_DIR); then \
+--- farstream-0.2-0.2.7.orig/common/gtk-doc.mak
++++ farstream-0.2-0.2.7/common/gtk-doc.mak
+@@ -3,7 +3,16 @@
+ ###########################################################################
+ # thomas: except of course that we did
+ 
+-# thomas: copied from glib-2
++if GTK_DOC_USE_LIBTOOL
++GTKDOC_CC = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(INCLUDES) $(GTKDOC_DEPS_CFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
++GTKDOC_LD = $(LIBTOOL) --tag=CC --mode=link $(CC) $(GTKDOC_DEPS_LIBS) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS)
++GTKDOC_RUN = $(LIBTOOL) --mode=execute
++else
++GTKDOC_CC = $(CC) $(INCLUDES) $(GTKDOC_DEPS_CFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
++GTKDOC_LD = $(CC) $(GTKDOC_DEPS_LIBS) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS)
++GTKDOC_RUN =
++endif
++
+ # We set GPATH here; this gives us semantics for GNU make
+ # which are more like other make's VPATH, when it comes to
+ # whether a source that is a target of one rule is then
+@@ -81,17 +90,25 @@ scan-build.stamp: $(HFILE_GLOB) $(CFILE_
+ 		--ignore-headers="$(IGNORE_HFILES)"
+ 	@if grep -l '^..*$$' $(DOC_MODULE).types > /dev/null; then	\
+ 	    echo "  DOC   Introspecting gobjects"; \
+-	    GST_PLUGIN_SYSTEM_PATH=`cd $(top_builddir) && pwd`		\
+-	    GST_PLUGIN_PATH=						\
+-	    GST_REGISTRY=doc-registry.xml				\
++	    scanobj_options=""; \
++	    gtkdoc-scangobj 2>&1 --help | grep  >/dev/null "\-\-verbose"; \
++	    if test "$$?" = "0"; then \
++	        if test "x$(V)" = "x1"; then \
++	            scanobj_options="--verbose"; \
++	        fi; \
++	    fi; \
++	    GST_PLUGIN_SYSTEM_PATH_1_0=`cd $(top_builddir) && pwd`	\
++	    GST_PLUGIN_PATH_1_0=					\
++	    GST_REGISTRY_1_0=doc-registry.xml				\
+ 	    $(GTKDOC_EXTRA_ENVIRONMENT)					\
+-	    CC="$(GTKDOC_CC)" LD="$(GTKDOC_LD)"				\
++	    CC="$(GTKDOC_CC)" LD="$(GTKDOC_LD)" RUN="$(GTKDOC_RUN)"	\
+ 	    CFLAGS="$(GTKDOC_CFLAGS) $(CFLAGS)"				\
+ 	    LDFLAGS="$(GTKDOC_LIBS) $(LDFLAGS)"				\
+ 	    gtkdoc-scangobj --type-init-func="gst_init(NULL,NULL)"	\
+-	        --module=$(DOC_MODULE) ;				\
++	        $$scanobj_options --module=$(DOC_MODULE) ;		\
+ 	else								\
+ 	    for i in $(SCANOBJ_FILES) ; do				\
++	       $(MKDIR_P) $(dirname $$i) ;				\
+ 	       test -f $$i || touch $$i ;				\
+ 	    done							\
+ 	fi
+@@ -104,7 +121,11 @@ $(DOC_MODULE)-decl.txt $(SCANOBJ_FILES)
+ 
+ sgml-build.stamp: setup-build.stamp $(DOC_MODULE)-decl.txt $(SCANOBJ_FILES) $(DOC_MODULE)-sections.txt $(expand_content_files)
+ 	@echo '  DOC   Building XML'
+-	@gtkdoc-mkdb --module=$(DOC_MODULE) --source-dir=$(DOC_SOURCE_DIR)  --expand-content-files="$(expand_content_files)" --main-sgml-file=$(DOC_MAIN_SGML_FILE) --output-format=xml $(MKDB_OPTIONS)
++	@_source_dir='' ;						\
++	for i in $(DOC_SOURCE_DIR) ; do					\
++	    _source_dir="$${_source_dir} --source-dir=$$i" ;	        \
++	done ;							        \
++	gtkdoc-mkdb --module=$(DOC_MODULE) $$(_source_dir)  --expand-content-files="$(expand_content_files)" --main-sgml-file=$(DOC_MAIN_SGML_FILE) --output-format=xml $(MKDB_OPTIONS)
+ 	@cp ../version.entities xml
+ 	@touch sgml-build.stamp
+ 
+@@ -130,10 +151,7 @@ html-build.stamp: sgml.stamp $(DOC_MAIN_
+ 	if test "$(?)" = "0"; then \
+ 	  mkhtml_options=--path="$(abs_srcdir)"; \
+ 	fi; \
+-	cd html && gtkdoc-mkhtml $$mkhtml_options $(MKHTML_OPTIONS) $(DOC_MODULE) ../$(DOC_MAIN_SGML_FILE)
+-	@mv html/index.sgml html/index.sgml.bak
+-	@$(SED) "s/ href=\"$(DOC_MODULE)\// href=\"$(DOC_MODULE)-@GST_API_VERSION@\//g" html/index.sgml.bak >html/index.sgml
+-	@rm -f html/index.sgml.bak
++	cd html && gtkdoc-mkhtml $$mkhtml_options $(MKHTML_OPTIONS) $(DOC_MODULE)-@GST_API_VERSION@ ../$(DOC_MAIN_SGML_FILE)
+ 	@rm -rf html/xml
+ 	@rm -f version.entities
+ 	@test "x$(HTML_IMAGES)" = "x" ||  ( cd $(srcdir) && cp $(HTML_IMAGES) $(abs_builddir)/html )
+@@ -189,13 +207,12 @@ install-data-local:
+ 	    echo '-- Installing '$$i ; \
+ 	    $(INSTALL_DATA) $$i $(DESTDIR)$(TARGET_DIR); \
+ 	  done; \
+-	  echo '-- Installing $(builddir)/html/$(DOC_MODULE).devhelp2' ; \
+-	  if test -e $(builddir)/html/$(DOC_MODULE).devhelp2; then \
+-	            $(INSTALL_DATA) $(builddir)/html/$(DOC_MODULE).devhelp2 \
++	  echo '-- Installing $(builddir)/html/$(DOC_MODULE)-@GST_API_VERSION@.devhelp2' ; \
++	  if test -e $(builddir)/html/$(DOC_MODULE)-@GST_API_VERSION@.devhelp2; then \
++	            $(INSTALL_DATA) $(builddir)/html/$(DOC_MODULE)-@GST_API_VERSION@.devhelp2 \
+ 	            $(DESTDIR)$(TARGET_DIR)/$(DOC_MODULE)-@GST_API_VERSION@.devhelp2; \
+ 	  fi; \
+-	  (which gtkdoc-rebase >/dev/null && \
+-	    gtkdoc-rebase --relative --dest-dir=$(DESTDIR) --html-dir=$(DESTDIR)$(TARGET_DIR)) || true ; \
++	  $(GTKDOC_REBASE) --relative --dest-dir=$(DESTDIR) --html-dir=$(DESTDIR)$(TARGET_DIR) || true ; \
+ 	fi)
+ uninstall-local:
+ 	if test -d $(DESTDIR)$(TARGET_DIR); then \
+--- /dev/null
++++ farstream-0.2-0.2.7/common/hooks/install-hooks
+@@ -0,0 +1,97 @@
++#!/bin/bash
++#
++# install-hooks
++#
++# install hooks on git server
++#
++# usage: install-hooks [GIT_REPOSITORY_DIR]
++
++set -e
++
++HOOKS="update post-receive"
++
++# if directory where git repositories are is specified, change into that
++if ! test -z $1 ; then
++  cd $1;
++fi
++
++# save it
++gitrepodir=`pwd`
++
++# make backup of previous hooks
++timestamp=`date +%F-%H%M%S`
++for hook in $HOOKS; do
++  if [ -e $hook ]; then
++    cp $hook $hook.backup-$timestamp
++  fi
++done
++
++# now check out the common module with the latest hooks
++tmpdir=`mktemp -d`
++if test -z $tmpdir; then
++  echo "Failed to create temp dir"
++  exit 1;
++fi
++
++pushd $tmpdir >/dev/null
++git clone --branch=master $gitrepodir/common
++
++# copy over latest hooks into directory with git repositories
++for hook in $HOOKS; do
++  cp -v common/hooks/$hook.hook $gitrepodir/$hook
++done
++
++# now switch back to directory where the git repositories are
++popd >/dev/null
++
++# clean up temp checkout of common dir
++rm -rf $tmpdir
++
++# remove backup again if it is identical to the new one
++for hook in $HOOKS; do
++  if cmp $hook $hook.backup-$timestamp; then
++    rm $hook.backup-$timestamp
++  fi
++done
++
++# sanity check if there are any git repositories in here
++if ! ls *.git */*.git 2>/dev/null >&2 ; then
++  echo "No git repositories in $(pwd) ?!"
++  exit;
++fi
++
++echo "git repository base dir: $gitrepodir"
++
++for repo in *.git */*.git ; do
++  if test "$repo" = "sdk/glib.git"; then
++    echo "Skipping $repo"
++    continue
++  fi
++  echo "Updating hooks in $repo"
++  for hook in $HOOKS; do
++    # make sure target hook script actually exists
++    if ! test -e $hook ; then
++      echo "Hook '$hook' does not exist in $gitrepodir. Aborting.";
++      exit 1;
++    fi
++    # create new hook
++    rm -f $repo/hooks/$hook.new
++    pushd $repo/hooks >/dev/null
++    if [ -e "../../$hook" ] ; then
++      ln -s "../../$hook" $hook.new
++    elif [ -e "../../../$hook" ] ; then
++      ln -s "../../../$hook" $hook.new
++    else
++      echo "could not find hook script in parent directories ?!"
++      exit 1
++    fi
++    # put new hook in place atomically
++    #echo "installing $repo/hooks/$hook"
++    mv $hook.new $hook
++    # test it to make sure all is good
++    cat $hook >/dev/null
++    popd >/dev/null
++  done
++done
++
++echo "Done"
+--- /dev/null
++++ farstream-0.2-0.2.7/common/hooks/post-receive.hook
+@@ -0,0 +1,293 @@
++#!/usr/bin/perl -w
++#
++# Copyright 2005 Alexandre Julliard
++#
++# This program is free software; you can redistribute it and/or
++# modify it under the terms of the GNU General Public License as
++# published by the Free Software Foundation; either version 2 of
++# the License, or (at your option) any later version.
++
++use strict;
++use open ':utf8';
++use Encode 'encode';
++use Cwd 'realpath';
++
++binmode STDIN, ':utf8';
++binmode STDOUT, ':utf8';
++
++sub git_config($);
++sub get_repos_name();
++
++# some parameters you may want to change
++
++# set this to something that takes "-s"
++my $mailer = "/usr/bin/mail";
++
++# debug mode
++my $debug = 0;
++
++# configuration parameters
++
++my $project_name = 'gstreamer';
++
++# base URL of the gitweb repository browser
++my $gitweb_url = "http://cgit.freedesktop.org/$project_name";
++
++
++# default repository name
++my $repos_name = get_repos_name();
++
++# max size of diffs in bytes
++my $max_diff_size = 10000;
++
++# address for mail notices
++my $commitlist_address = 'gstreamer-commits@lists.freedesktop.org';
++#my $commitlist_address = 'tpm';
++
++# max number of individual notices before falling back to a single global notice
++my $max_individual_notices = 100;
++
++# format an integer date + timezone as string
++# algorithm taken from git's date.c
++sub format_date($$)
++{
++    my ($time,$tz) = @_;
++
++    if ($tz < 0)
++    {
++        my $minutes = (-$tz / 100) * 60 + (-$tz % 100);
++        $time -= $minutes * 60;
++    }
++    else
++    {
++        my $minutes = ($tz / 100) * 60 + ($tz % 100);
++        $time += $minutes * 60;
++    }
++    return gmtime($time) . sprintf " %+05d", $tz;
++}
++
++# fetch a parameter from the git config file
++sub git_config($)
++{
++    my ($param) = @_;
++
++    open CONFIG, "-|" or exec "git", "config", $param;
++    my $ret = <CONFIG>;
++    chomp $ret if $ret;
++    close CONFIG or $ret = undef;
++    return $ret;
++}
++
++# send an email notification
++sub mail_notification($$$@)
++{
++    my ($name, $subject, $content_type, @text) = @_;
++    $subject = encode("MIME-Q",$subject);
++    if ($debug)
++    {
++        print "---------------------\n";
++        print "To: $name\n";
++        print "Subject: $subject\n";
++        print "Content-Type: $content_type\n";
++        print "\n", join("\n", @text), "\n";
++    }
++    else
++    {
++        my $pid = open MAIL, "|-";
++        return unless defined $pid;
++        if (!$pid)
++        {
++            exec $mailer, "-s", $subject, $name, or die "Cannot exec $mailer";
++        }
++        print MAIL join("\n", @text), "\n";
++        close MAIL;
++    }
++}
++
++# get the default repository name (includes subdirectory, if any)
++sub get_repos_name()
++{
++    my $dir = `git rev-parse --git-dir`;
++    chomp $dir;
++    my $repos = realpath($dir);
++    $repos =~ s/(.*?)((\.git\/)?\.git)$/$1/;
++    $repos =~ s%(.*\/$project_name)/([^/]+/?[^/]*)/?$%$2%;
++    return $repos;
++}
++
++# extract the information from a commit or tag object and return a hash containing the various fields
++sub get_object_info($)
++{
++    my $obj = shift;
++    my %info = ();
++    my @log = ();
++    my $do_log = 0;
++
++    open TYPE, "-|" or exec "git", "cat-file", "-t", $obj or die "cannot run git-cat-file";
++    my $type = <TYPE>;
++    chomp $type;
++    close TYPE;
++
++    open OBJ, "-|" or exec "git", "cat-file", $type, $obj or die "cannot run git-cat-file";
++    while (<OBJ>)
++    {
++        chomp;
++        if ($do_log)
++        {
++            last if /^-----BEGIN PGP SIGNATURE-----/;
++            push @log, $_;
++        }
++        elsif (/^(author|committer|tagger) ((.*)(<.*>)) (\d+) ([+-]\d+)$/)
++        {
++            $info{$1} = $2;
++            $info{$1 . "_name"} = $3;
++            $info{$1 . "_email"} = $4;
++            $info{$1 . "_date"} = $5;
++            $info{$1 . "_tz"} = $6;
++        }
++        elsif (/^tag (.*)$/)
++        {
++            $info{"tag"} = $1;
++        }
++        elsif (/^$/) { $do_log = 1; }
++    }
++    close OBJ;
++
++    $info{"type"} = $type;
++    $info{"log"} = \@log;
++    return %info;
++}
++
++# send a commit notice to a mailing list
++sub send_commit_notice($$)
++{
++    my ($ref,$obj) = @_;
++    my %info = get_object_info($obj);
++    my @notice = ();
++    my $subject;
++
++    printf "sending e-mail for $obj\n";
++
++    # TODO normal tags are not identified
++    if ($info{"type"} eq "tag")
++    {
++        push @notice,
++        "Module: $repos_name",
++        "Branch: $ref",
++        "Tag:    $obj",
++        $gitweb_url ? "URL:    $gitweb_url/tag/?id=$obj\n" : "",
++        "Tagger: " . $info{"tagger"},
++        "Date:   " . format_date($info{"tagger_date"},$info{"tagger_tz"}),
++        "",
++        join "\n", @{$info{"log"}};
++        $subject = "Tag " . $info{"tag"} . ": " . ${$info{"log"}}[0];
++    }
++    else
++    {
++        push @notice,
++        "Module: $repos_name",
++        "Branch: $ref",
++        "Commit: $obj",
++        $gitweb_url ? "URL:    $gitweb_url/commit/?id=$obj\n" : "",
++        "Author: " . $info{"author"},
++        "Date:   " . format_date($info{"author_date"},$info{"author_tz"}),
++        "",
++        join "\n", @{$info{"log"}},
++        "",
++        "---",
++        "";
++
++        open STAT, "-|" or exec "git", "diff-tree", "--stat", "-M", "--no-commit-id", $obj or die "cannot exec git-diff-tree";
++        push @notice, join("", <STAT>);
++        close STAT;
++
++        open DIFF, "-|" or exec "git", "diff-tree", "-p", "-M", "--no-commit-id", $obj or die "cannot exec git-diff-tree";
++        my $diff = join( "", <DIFF> );
++        close DIFF;
++
++        if (($max_diff_size == -1) || (length($diff) < $max_diff_size))
++        {
++            push @notice, $diff;
++        }
++        else
++        {
++            push @notice, "Diff:   $gitweb_url/diff/?id=$obj" if $gitweb_url;
++        }
++
++        if ($ref eq 'master')
++        {
++            $subject = $repos_name . ": " . ${$info{"log"}}[0];
++        }
++        else
++        {
++            $subject = "[$ref] " . $repos_name . ": " . ${$info{"log"}}[0];
++        }
++    }
++
++    mail_notification($commitlist_address, $subject, "text/plain; charset=UTF-8", @notice);
++}
++
++# send a global commit notice when there are too many commits for individual mails
++sub send_global_notice($$$)
++{
++    my ($ref, $old_sha1, $new_sha1) = @_;
++    my @notice = ();
++
++    open LIST, "-|" or exec "git", "rev-list", "--pretty", "^$old_sha1", "$new_sha1" or die "cannot exec git-rev-list";
++    while (<LIST>)
++    {
++        chomp;
++        s/^commit /URL:    $gitweb_url\/commit\/?id=/ if $gitweb_url;
++        push @notice, $_;
++    }
++    close LIST;
++
++    mail_notification($commitlist_address, "New commits on branch $ref", "text/plain; charset=UTF-8", @notice);
++}
++
++# send all the notices
++sub send_all_notices($$$)
++{
++    my ($old_sha1, $new_sha1, $ref) = @_;
++
++    $ref =~ s/^refs\/heads\///;
++
++    if ($old_sha1 eq '0' x 40)  # new ref
++    {
++        send_commit_notice( $ref, $new_sha1 ) if $commitlist_address;
++        return;
++    }
++
++    my @commits = ();
++
++    open LIST, "-|" or exec "git", "rev-list", "--topo-order", "^$old_sha1", "$new_sha1" or die "cannot exec git-rev-list";
++    while (<LIST>)
++    {
++        chomp;
++        die "invalid commit $_" unless /^[0-9a-f]{40}$/;
++        unshift @commits, $_;
++    }
++    close LIST;
++
++    if (@commits > $max_individual_notices)
++    {
++        send_global_notice( $ref, $old_sha1, $new_sha1 ) if $commitlist_address;
++        return;
++    }
++
++    foreach my $commit (@commits)
++    {
++        send_commit_notice( $ref, $commit ) if $commitlist_address;
++    }
++}
++
++# append repository path to URL
++$gitweb_url .= "/$repos_name" if $gitweb_url;
++
++while (<>)
++{
++    chomp;
++    if (/^([0-9a-f]{40}) ([0-9a-f]{40}) (.*)$/) { send_all_notices( $1, $2, $3 ); }
++}
++
++exit 0;
+--- /dev/null
++++ farstream-0.2-0.2.7/common/hooks/pre-commit.hook
+@@ -0,0 +1,83 @@
++#!/bin/sh
++#
++# Check that the code follows a consistant code style
++#
++
++# Check for existence of indent, and error out if not present.
++# On some *bsd systems the binary seems to be called gnunindent,
++# so check for that first.
++
++version=`gnuindent --version 2>/dev/null`
++if test "x$version" = "x"; then
++  version=`gindent --version 2>/dev/null`
++  if test "x$version" = "x"; then
++    version=`indent --version 2>/dev/null`
++    if test "x$version" = "x"; then
++      echo "GStreamer git pre-commit hook:"
++      echo "Did not find GNU indent, please install it before continuing."
++      exit 1
++    else
++      INDENT=indent
++    fi
++  else
++    INDENT=gindent
++  fi
++else
++  INDENT=gnuindent
++fi
++
++case `$INDENT --version` in
++  GNU*)
++      ;;
++  default)
++      echo "GStreamer git pre-commit hook:"
++      echo "Did not find GNU indent, please install it before continuing."
++      echo "(Found $INDENT, but it doesn't seem to be GNU indent)"
++      exit 1
++      ;;
++esac
++
++INDENT_PARAMETERS="--braces-on-if-line \
++	--case-brace-indentation0 \
++	--case-indentation2 \
++	--braces-after-struct-decl-line \
++	--line-length80 \
++	--no-tabs \
++	--cuddle-else \
++	--dont-line-up-parentheses \
++	--continuation-indentation4 \
++	--honour-newlines \
++	--tab-size8 \
++	--indent-level2 \
++	--leave-preprocessor-space"
++
++echo "--Checking style--"
++for file in `git diff-index --cached --name-only HEAD --diff-filter=ACMR| grep "\.c$"` ; do
++    # nf is the temporary checkout. This makes sure we check against the
++    # revision in the index (and not the checked out version).
++    nf=`git checkout-index --temp ${file} | cut -f 1`
++    newfile=`mktemp /tmp/${nf}.XXXXXX` || exit 1
++    $INDENT ${INDENT_PARAMETERS} \
++	$nf -o $newfile 2>> /dev/null
++    # FIXME: Call indent twice as it tends to do line-breaks
++    # different for every second call.
++    $INDENT ${INDENT_PARAMETERS} \
++        $newfile 2>> /dev/null
++    diff -u -p "${nf}" "${newfile}"
++    r=$?
++    rm "${newfile}"
++    rm "${nf}"
++    if [ $r != 0 ] ; then
++echo "================================================================================================="
++echo " Code style error in: $file                                                                      "
++echo "                                                                                                 "
++echo " Please fix before committing. Don't forget to run git add before trying to commit again.        "
++echo " If the whole file is to be committed, this should work (run from the top-level directory):      "
++echo "                                                                                                 "
++echo "   gst-indent $file; git add $file; git commit"
++echo "                                                                                                 "
++echo "================================================================================================="
++        exit 1
++    fi
++done
++echo "--Checking style pass--"
+--- /dev/null
++++ farstream-0.2-0.2.7/common/hooks/pre-receive.hook
+@@ -0,0 +1,190 @@
++#!/usr/bin/env python
++import sys
++import os
++import subprocess
++
++# This server-side pre-receive hook is to be put and activated in all modules
++# that depend on the common submodule.
++#
++# It will check whether any modifications to the common 'submodule file' has a
++# a valid commit SHA1 that exists in the common module.
++
++def commit_exists(sha1, gitdir):
++    """Returns True if the sha1 is a valid commit in the given
++    git directory"""
++    # FIXME: We're using 'git show' for the time being, but there's a small
++    # risk that there might be a valid SHA1 for a non-commit object.
++    env = os.environ.copy()
++    env["GIT_DIR"] = gitdir
++    sub = subprocess.Popen(["git", "show", sha1], env=env,
++                           stdout=subprocess.PIPE,
++                           stderr=subprocess.PIPE)
++    while True:
++        res = sub.poll()
++        if res != None:
++            return res == 0
++
++# location of the common git module
++COMMON_GIT_DIR = "/git/gstreamer/common.git"
++
++# checks whether the push contains a change to the common submodule,
++# and if so checks that it is changing it to a valid *EXISTING* common
++# commit
++def has_valid_common_change(old, new, ref):
++    # 1. Get the latest change to common (if there was any changes)
++    sub = subprocess.Popen(["git", "diff", "%s..%s" % (old, new, ), "--", "common"],
++                           stdout=subprocess.PIPE)
++    stdout, stderr = sub.communicate()
++
++    print "=> Checking for integrity of common submodule changes"
++
++    if stdout != "":
++        # Format of submodule special files
++        # Subproject commit <SHA1>
++
++        # we get a diff, therefore only grab the last line
++        lastline = stdout.strip().rsplit('\n',1)[-1]
++        if not lastline.startswith("+Subproject commit"):
++            # this is bad, it means the diff has changed to something completely
++            # different
++            return False
++        subsha1 = lastline.rsplit(' ', 1)[-1]
++        print "   Pack wants common to point to", subsha1
++        if not commit_exists(subsha1, COMMON_GIT_DIR):
++            print
++            print "   /!\\ Commit does not exist in common git module /!\\"
++            print "   /!\\ for ref", ref
++            print
++            print "   Attempting to push commits containing modifications to common"
++            print "   that have not been commited to the actuall common module."
++            print
++            print "   First push your changes to common/ before pushing the changes"
++            print "   to the module using it."
++            print
++            return False
++
++    print "   [OK]"
++    print
++    return True
++
++def commit_in_valid_branch(sha):
++    sub = subprocess.Popen(["git", "branch", "--contains", sha],
++                           stdout=subprocess.PIPE)
++    stdout, stderr = sub.communicate()
++    r = stdout.strip()
++    return r != ""
++
++# checks whether the push contains merge commits and if so, makes sure that
++# the merge is only between branches present on the repository.
++def contains_valid_merge(old, new, ref):
++    sub = subprocess.Popen(["git", "rev-list", "--parents", "%s..%s" % (old, new, )],
++                           stdout=subprocess.PIPE)
++    stdout, stderr = sub.communicate()
++
++    res = True
++
++    print "=> Checking for merge commits"
++
++    for line in stdout.split('\n'):
++        if res == False:
++            break
++        splits = line.strip().split()
++        if len(splits) > 2:
++            # the commit has more than one parent => it's a merge
++            commit = splits[0]
++            for parent in splits[1:]:
++                if not commit_in_valid_branch(parent):
++                    print
++                    print "    /!\\ Commit %s" % commit
++                    print "    /!\\ is a merge commit from/to a branch not"
++                    print "    /!\\ present on this repository"
++                    print
++                    print "    Make sure you are not attempting to push a merge"
++                    print "    from a 3rd party repository"
++                    print
++                    print "    Make sure you have properly rebased your commits against"
++                    print "    the current official branches"
++                    print
++                    res = False
++                    break
++
++    if res:
++            print "   [OK]"
++            print
++    return res
++
++# checks whether the first line of any commit message contains a marker
++# that indicates that it's work-in-progress that shouldn't be pushed
++def contains_wip_commits(old, new):
++    # Get the commit message header
++    sub = subprocess.Popen(["git", "log", "--format=%s", "%s..%s" % (old, new, )], stdout=subprocess.PIPE)
++    stdout, stderr = sub.communicate()
++    if stdout != "":
++        for line in stdout.strip().rsplit('\n',1):
++            if line.startswith("!"):
++                return True
++            if line.startswith("WIP:") or line.startswith("wip:"):
++                return True
++    return False
++
++pushvalid = True
++error_badcommon = False
++error_badcommit = False
++
++openbranches = ["1.2", "1.0", "master"]
++
++def branch_closed(ref):
++    # We only care about branches
++    if not ref.startswith("refs/heads/"):
++        return False
++
++    # Check if it's in the allowed branches
++    brname = ref.rsplit("/", 1)[-1].strip()
++    if brname in openbranches:
++        return False
++
++    # Else it's not allowed
++    return True
++
++for line in sys.stdin.readlines():
++    # ref is the ref to be modified
++    # old is the old commit it was pointing to
++    # new is the new commit it was pointing to
++    old, new, ref = line.split(' ', 2)
++
++    pushvalid = has_valid_common_change(old, new, ref)
++    if pushvalid == False:
++        break
++    if branch_closed(ref):
++        print ">>>> Attempting to push to", ref
++        print ">>>> BRANCH READ-ONLY OR FORBIDDEN"
++        print ">>>> PUSH DENIED"
++        print
++        pushvalid = False
++        break
++    pushvalid = contains_valid_merge(old, new, ref)
++    if pushvalid == False:
++        break
++    if contains_wip_commits(old, new):
++        error_badcommit = True
++        pushvalid = False
++        break
++
++if pushvalid:
++    print "   Incoming packet valid, proceeding to actual commit"
++    print
++    sys.exit(0)
++else:
++    if error_badcommit:
++        print "   Attempting to push commits with commit messages that start"
++        print "   with '!' or 'WIP:'. Such commit messages are reserved for"
++        print "   private branches and work in progress to prevent the commits"
++        print "   from accidentally being pushed to the main repository."
++    if error_badcommon:
++        print "   Attempting to push commits containing modifications to common"
++        print "   that have not been commited to the actuall common module."
++        print
++        print "   First push your changes to common/ before pushing the changes"
++        print "   to the module using it."
++    sys.exit(-1)
++
+--- /dev/null
++++ farstream-0.2-0.2.7/common/hooks/update.hook
+@@ -0,0 +1,128 @@
++#!/bin/sh
++#
++# An example hook script to blocks unannotated tags from entering.
++# Called by "git receive-pack" with arguments: refname sha1-old sha1-new
++#
++# To enable this hook, rename this file to "update".
++#
++# Config
++# ------
++# hooks.allowunannotated
++#   This boolean sets whether unannotated tags will be allowed into the
++#   repository.  By default they won't be.
++# hooks.allowdeletetag
++#   This boolean sets whether deleting tags will be allowed in the
++#   repository.  By default they won't be.
++# hooks.allowmodifytag
++#   This boolean sets whether a tag may be modified after creation. By default
++#   it won't be.
++# hooks.allowdeletebranch
++#   This boolean sets whether deleting branches will be allowed in the
++#   repository.  By default they won't be.
++# hooks.denycreatebranch
++#   This boolean sets whether remotely creating branches will be denied
++#   in the repository.  By default this is allowed.
++#
++
++# --- Command line
++refname="$1"
++oldrev="$2"
++newrev="$3"
++
++# --- Safety check
++if [ -z "$GIT_DIR" ]; then
++	echo "Don't run this script from the command line." >&2
++	echo " (if you want, you could supply GIT_DIR then run" >&2
++	echo "  $0 <ref> <oldrev> <newrev>)" >&2
++	exit 1
++fi
++
++if [ -z "$refname" -o -z "$oldrev" -o -z "$newrev" ]; then
++	echo "Usage: $0 <ref> <oldrev> <newrev>" >&2
++	exit 1
++fi
++
++# --- Config
++allowunannotated=false        #$(git config --bool hooks.allowunannotated)
++allowdeletebranch=false       #$(git config --bool hooks.allowdeletebranch)
++denycreatebranch=false        #$(git config --bool hooks.denycreatebranch)
++allowdeletetag=false          #$(git config --bool hooks.allowdeletetag)
++allowmodifytag=true           #$(git config --bool hooks.allowmodifytag)
++
++# check for no description
++projectdesc=$(sed -e '1q' "$GIT_DIR/description")
++case "$projectdesc" in
++"Unnamed repository"* | "")
++	echo "*** Project description file hasn't been set" >&2
++	exit 1
++	;;
++esac
++
++# --- Check types
++# if $newrev is 0000...0000, it's a commit to delete a ref.
++zero="0000000000000000000000000000000000000000"
++if [ "$newrev" = "$zero" ]; then
++	newrev_type=delete
++else
++	newrev_type=$(git cat-file -t $newrev)
++fi
++
++case "$refname","$newrev_type" in
++	refs/tags/*,commit)
++		# un-annotated tag
++		short_refname=${refname##refs/tags/}
++		if [ "$allowunannotated" != "true" ]; then
++			echo "*** The un-annotated tag, $short_refname, is not allowed in this repository" >&2
++			echo "*** Use 'git tag [ -a | -s ]' for tags you want to propagate." >&2
++			exit 1
++		fi
++		;;
++	refs/tags/*,delete)
++		# delete tag
++		if [ "$allowdeletetag" != "true" ]; then
++			echo "*** Deleting a tag is not allowed in this repository" >&2
++			exit 1
++		fi
++		;;
++	refs/tags/*,tag)
++		# annotated tag
++		if [ "$allowmodifytag" != "true" ] && git rev-parse $refname > /dev/null 2>&1
++		then
++			echo "*** Tag '$refname' already exists." >&2
++			echo "*** Modifying a tag is not allowed in this repository." >&2
++			exit 1
++		fi
++		;;
++	refs/heads/*,commit)
++		# branch
++		if [ "$oldrev" = "$zero" -a "$denycreatebranch" = "true" ]; then
++			echo "*** Creating a branch is not allowed in this repository" >&2
++			exit 1
++		fi
++		;;
++	refs/heads/*,delete)
++		# delete branch
++		if [ "$allowdeletebranch" != "true" ]; then
++			echo "*** Deleting a branch is not allowed in this repository" >&2
++			exit 1
++		fi
++		;;
++	refs/remotes/*,commit)
++		# tracking branch
++		;;
++	refs/remotes/*,delete)
++		# delete tracking branch
++		if [ "$allowdeletebranch" != "true" ]; then
++			echo "*** Deleting a tracking branch is not allowed in this repository" >&2
++			exit 1
++		fi
++		;;
++	*)
++		# Anything else (is there anything else?)
++		echo "*** Update hook: unknown type of update to ref $refname of type $newrev_type" >&2
++		exit 1
++		;;
++esac
++
++# --- Finished
++exit 0
+--- farstream-0.2-0.2.7.orig/common/m4/Makefile.am
++++ farstream-0.2-0.2.7/common/m4/Makefile.am
+@@ -9,9 +9,9 @@ EXTRA_DIST = \
+ 	as-libtool.m4 \
+ 	as-libtool-tags.m4 \
+ 	as-python.m4 \
+-	as-scrub-include.m4 \
+ 	as-version.m4 \
+ 	ax_create_stdint_h.m4 \
++	ax_pthread.m4 \
+ 	glib-gettext.m4 \
+ 	gst-arch.m4 \
+ 	gst-args.m4 \
+--- farstream-0.2-0.2.7.orig/common/m4/as-docbook.m4
++++ farstream-0.2-0.2.7/common/m4/as-docbook.m4
+@@ -14,7 +14,19 @@ AC_DEFUN([AS_DOCBOOK],
+   TYPE_UC=XML
+   DOCBOOK_VERSION=4.1.2
+ 
+-  if test ! -f /etc/xml/catalog; then
++  if test -n "$XML_CATALOG_FILES"; then
++    oldIFS=$IFS
++    IFS=' '
++    for xml_catalog_file in $XML_CATALOG_FILES; do
++      if test -f $xml_catalog_file; then
++        XML_CATALOG=$xml_catalog_file
++        CAT_ENTRY_START='<!--'
++        CAT_ENTRY_END='-->'
++        break
++      fi
++    done
++    IFS=$oldIFS
++  elif test ! -f /etc/xml/catalog; then
+     for i in /usr/share/sgml/docbook/stylesheet/xsl/nwalsh /usr/share/sgml/docbook/xsl-stylesheets/ /usr/local/share/xsl/docbook ;
+     do
+       if test -d "$i"; then
+--- /dev/null
++++ farstream-0.2-0.2.7/common/m4/ax_pthread.m4
+@@ -0,0 +1,485 @@
++# ===========================================================================
++#        http://www.gnu.org/software/autoconf-archive/ax_pthread.html
++# ===========================================================================
++#
++# SYNOPSIS
++#
++#   AX_PTHREAD([ACTION-IF-FOUND[, ACTION-IF-NOT-FOUND]])
++#
++# DESCRIPTION
++#
++#   This macro figures out how to build C programs using POSIX threads. It
++#   sets the PTHREAD_LIBS output variable to the threads library and linker
++#   flags, and the PTHREAD_CFLAGS output variable to any special C compiler
++#   flags that are needed. (The user can also force certain compiler
++#   flags/libs to be tested by setting these environment variables.)
++#
++#   Also sets PTHREAD_CC to any special C compiler that is needed for
++#   multi-threaded programs (defaults to the value of CC otherwise). (This
++#   is necessary on AIX to use the special cc_r compiler alias.)
++#
++#   NOTE: You are assumed to not only compile your program with these flags,
++#   but also to link with them as well. For example, you might link with
++#   $PTHREAD_CC $CFLAGS $PTHREAD_CFLAGS $LDFLAGS ... $PTHREAD_LIBS $LIBS
++#
++#   If you are only building threaded programs, you may wish to use these
++#   variables in your default LIBS, CFLAGS, and CC:
++#
++#     LIBS="$PTHREAD_LIBS $LIBS"
++#     CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
++#     CC="$PTHREAD_CC"
++#
++#   In addition, if the PTHREAD_CREATE_JOINABLE thread-attribute constant
++#   has a nonstandard name, this macro defines PTHREAD_CREATE_JOINABLE to
++#   that name (e.g. PTHREAD_CREATE_UNDETACHED on AIX).
++#
++#   Also HAVE_PTHREAD_PRIO_INHERIT is defined if pthread is found and the
++#   PTHREAD_PRIO_INHERIT symbol is defined when compiling with
++#   PTHREAD_CFLAGS.
++#
++#   ACTION-IF-FOUND is a list of shell commands to run if a threads library
++#   is found, and ACTION-IF-NOT-FOUND is a list of commands to run it if it
++#   is not found. If ACTION-IF-FOUND is not specified, the default action
++#   will define HAVE_PTHREAD.
++#
++#   Please let the authors know if this macro fails on any platform, or if
++#   you have any other suggestions or comments. This macro was based on work
++#   by SGJ on autoconf scripts for FFTW (http://www.fftw.org/) (with help
++#   from M. Frigo), as well as ac_pthread and hb_pthread macros posted by
++#   Alejandro Forero Cuervo to the autoconf macro repository. We are also
++#   grateful for the helpful feedback of numerous users.
++#
++#   Updated for Autoconf 2.68 by Daniel Richard G.
++#
++# LICENSE
++#
++#   Copyright (c) 2008 Steven G. Johnson <stevenj@alum.mit.edu>
++#   Copyright (c) 2011 Daniel Richard G. <skunk@iSKUNK.ORG>
++#
++#   This program is free software: you can redistribute it and/or modify it
++#   under the terms of the GNU General Public License as published by the
++#   Free Software Foundation, either version 3 of the License, or (at your
++#   option) any later version.
++#
++#   This program is distributed in the hope that it will be useful, but
++#   WITHOUT ANY WARRANTY; without even the implied warranty of
++#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
++#   Public License for more details.
++#
++#   You should have received a copy of the GNU General Public License along
++#   with this program. If not, see <http://www.gnu.org/licenses/>.
++#
++#   As a special exception, the respective Autoconf Macro's copyright owner
++#   gives unlimited permission to copy, distribute and modify the configure
++#   scripts that are the output of Autoconf when processing the Macro. You
++#   need not follow the terms of the GNU General Public License when using
++#   or distributing such scripts, even though portions of the text of the
++#   Macro appear in them. The GNU General Public License (GPL) does govern
++#   all other use of the material that constitutes the Autoconf Macro.
++#
++#   This special exception to the GPL applies to versions of the Autoconf
++#   Macro released by the Autoconf Archive. When you make and distribute a
++#   modified version of the Autoconf Macro, you may extend this special
++#   exception to the GPL to apply to your modified version as well.
++
++#serial 23
++
++AU_ALIAS([ACX_PTHREAD], [AX_PTHREAD])
++AC_DEFUN([AX_PTHREAD], [
++AC_REQUIRE([AC_CANONICAL_HOST])
++AC_REQUIRE([AC_PROG_CC])
++AC_REQUIRE([AC_PROG_SED])
++AC_LANG_PUSH([C])
++ax_pthread_ok=no
++
++# We used to check for pthread.h first, but this fails if pthread.h
++# requires special compiler flags (e.g. on Tru64 or Sequent).
++# It gets checked for in the link test anyway.
++
++# First of all, check if the user has set any of the PTHREAD_LIBS,
++# etcetera environment variables, and if threads linking works using
++# them:
++if test "x$PTHREAD_CFLAGS$PTHREAD_LIBS" != "x"; then
++        ax_pthread_save_CC="$CC"
++        ax_pthread_save_CFLAGS="$CFLAGS"
++        ax_pthread_save_LIBS="$LIBS"
++        AS_IF([test "x$PTHREAD_CC" != "x"], [CC="$PTHREAD_CC"])
++        CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
++        LIBS="$PTHREAD_LIBS $LIBS"
++        AC_MSG_CHECKING([for pthread_join using $CC $PTHREAD_CFLAGS $PTHREAD_LIBS])
++        AC_LINK_IFELSE([AC_LANG_CALL([], [pthread_join])], [ax_pthread_ok=yes])
++        AC_MSG_RESULT([$ax_pthread_ok])
++        if test "x$ax_pthread_ok" = "xno"; then
++                PTHREAD_LIBS=""
++                PTHREAD_CFLAGS=""
++        fi
++        CC="$ax_pthread_save_CC"
++        CFLAGS="$ax_pthread_save_CFLAGS"
++        LIBS="$ax_pthread_save_LIBS"
++fi
++
++# We must check for the threads library under a number of different
++# names; the ordering is very important because some systems
++# (e.g. DEC) have both -lpthread and -lpthreads, where one of the
++# libraries is broken (non-POSIX).
++
++# Create a list of thread flags to try.  Items starting with a "-" are
++# C compiler flags, and other items are library names, except for "none"
++# which indicates that we try without any flags at all, and "pthread-config"
++# which is a program returning the flags for the Pth emulation library.
++
++ax_pthread_flags="pthreads none -Kthread -pthread -pthreads -mthreads pthread --thread-safe -mt pthread-config"
++
++# The ordering *is* (sometimes) important.  Some notes on the
++# individual items follow:
++
++# pthreads: AIX (must check this before -lpthread)
++# none: in case threads are in libc; should be tried before -Kthread and
++#       other compiler flags to prevent continual compiler warnings
++# -Kthread: Sequent (threads in libc, but -Kthread needed for pthread.h)
++# -pthread: Linux/gcc (kernel threads), BSD/gcc (userland threads), Tru64
++#           (Note: HP C rejects this with "bad form for `-t' option")
++# -pthreads: Solaris/gcc (Note: HP C also rejects)
++# -mt: Sun Workshop C (may only link SunOS threads [-lthread], but it
++#      doesn't hurt to check since this sometimes defines pthreads and
++#      -D_REENTRANT too), HP C (must be checked before -lpthread, which
++#      is present but should not be used directly; and before -mthreads,
++#      because the compiler interprets this as "-mt" + "-hreads")
++# -mthreads: Mingw32/gcc, Lynx/gcc
++# pthread: Linux, etcetera
++# --thread-safe: KAI C++
++# pthread-config: use pthread-config program (for GNU Pth library)
++
++case $host_os in
++
++        freebsd*)
++
++        # -kthread: FreeBSD kernel threads (preferred to -pthread since SMP-able)
++        # lthread: LinuxThreads port on FreeBSD (also preferred to -pthread)
++
++        ax_pthread_flags="-kthread lthread $ax_pthread_flags"
++        ;;
++
++        hpux*)
++
++        # From the cc(1) man page: "[-mt] Sets various -D flags to enable
++        # multi-threading and also sets -lpthread."
++
++        ax_pthread_flags="-mt -pthread pthread $ax_pthread_flags"
++        ;;
++
++        openedition*)
++
++        # IBM z/OS requires a feature-test macro to be defined in order to
++        # enable POSIX threads at all, so give the user a hint if this is
++        # not set. (We don't define these ourselves, as they can affect
++        # other portions of the system API in unpredictable ways.)
++
++        AC_EGREP_CPP([AX_PTHREAD_ZOS_MISSING],
++            [
++#            if !defined(_OPEN_THREADS) && !defined(_UNIX03_THREADS)
++             AX_PTHREAD_ZOS_MISSING
++#            endif
++            ],
++            [AC_MSG_WARN([IBM z/OS requires -D_OPEN_THREADS or -D_UNIX03_THREADS to enable pthreads support.])])
++        ;;
++
++        solaris*)
++
++        # On Solaris (at least, for some versions), libc contains stubbed
++        # (non-functional) versions of the pthreads routines, so link-based
++        # tests will erroneously succeed. (N.B.: The stubs are missing
++        # pthread_cleanup_push, or rather a function called by this macro,
++        # so we could check for that, but who knows whether they'll stub
++        # that too in a future libc.)  So we'll check first for the
++        # standard Solaris way of linking pthreads (-mt -lpthread).
++
++        ax_pthread_flags="-mt,pthread pthread $ax_pthread_flags"
++        ;;
++esac
++
++# GCC generally uses -pthread, or -pthreads on some platforms (e.g. SPARC)
++
++AS_IF([test "x$GCC" = "xyes"],
++      [ax_pthread_flags="-pthread -pthreads $ax_pthread_flags"])
++
++# The presence of a feature test macro requesting re-entrant function
++# definitions is, on some systems, a strong hint that pthreads support is
++# correctly enabled
++
++case $host_os in
++        darwin* | hpux* | linux* | osf* | solaris*)
++        ax_pthread_check_macro="_REENTRANT"
++        ;;
++
++        aix*)
++        ax_pthread_check_macro="_THREAD_SAFE"
++        ;;
++
++        *)
++        ax_pthread_check_macro="--"
++        ;;
++esac
++AS_IF([test "x$ax_pthread_check_macro" = "x--"],
++      [ax_pthread_check_cond=0],
++      [ax_pthread_check_cond="!defined($ax_pthread_check_macro)"])
++
++# Are we compiling with Clang?
++
++AC_CACHE_CHECK([whether $CC is Clang],
++    [ax_cv_PTHREAD_CLANG],
++    [ax_cv_PTHREAD_CLANG=no
++     # Note that Autoconf sets GCC=yes for Clang as well as GCC
++     if test "x$GCC" = "xyes"; then
++        AC_EGREP_CPP([AX_PTHREAD_CC_IS_CLANG],
++            [/* Note: Clang 2.7 lacks __clang_[a-z]+__ */
++#            if defined(__clang__) && defined(__llvm__)
++             AX_PTHREAD_CC_IS_CLANG
++#            endif
++            ],
++            [ax_cv_PTHREAD_CLANG=yes])
++     fi
++    ])
++ax_pthread_clang="$ax_cv_PTHREAD_CLANG"
++
++ax_pthread_clang_warning=no
++
++# Clang needs special handling, because older versions handle the -pthread
++# option in a rather... idiosyncratic way
++
++if test "x$ax_pthread_clang" = "xyes"; then
++
++        # Clang takes -pthread; it has never supported any other flag
++
++        # (Note 1: This will need to be revisited if a system that Clang
++        # supports has POSIX threads in a separate library.  This tends not
++        # to be the way of modern systems, but it's conceivable.)
++
++        # (Note 2: On some systems, notably Darwin, -pthread is not needed
++        # to get POSIX threads support; the API is always present and
++        # active.  We could reasonably leave PTHREAD_CFLAGS empty.  But
++        # -pthread does define _REENTRANT, and while the Darwin headers
++        # ignore this macro, third-party headers might not.)
++
++        PTHREAD_CFLAGS="-pthread"
++        PTHREAD_LIBS=
++
++        ax_pthread_ok=yes
++
++        # However, older versions of Clang make a point of warning the user
++        # that, in an invocation where only linking and no compilation is
++        # taking place, the -pthread option has no effect ("argument unused
++        # during compilation").  They expect -pthread to be passed in only
++        # when source code is being compiled.
++        #
++        # Problem is, this is at odds with the way Automake and most other
++        # C build frameworks function, which is that the same flags used in
++        # compilation (CFLAGS) are also used in linking.  Many systems
++        # supported by AX_PTHREAD require exactly this for POSIX threads
++        # support, and in fact it is often not straightforward to specify a
++        # flag that is used only in the compilation phase and not in
++        # linking.  Such a scenario is extremely rare in practice.
++        #
++        # Even though use of the -pthread flag in linking would only print
++        # a warning, this can be a nuisance for well-run software projects
++        # that build with -Werror.  So if the active version of Clang has
++        # this misfeature, we search for an option to squash it.
++
++        AC_CACHE_CHECK([whether Clang needs flag to prevent "argument unused" warning when linking with -pthread],
++            [ax_cv_PTHREAD_CLANG_NO_WARN_FLAG],
++            [ax_cv_PTHREAD_CLANG_NO_WARN_FLAG=unknown
++             # Create an alternate version of $ac_link that compiles and
++             # links in two steps (.c -> .o, .o -> exe) instead of one
++             # (.c -> exe), because the warning occurs only in the second
++             # step
++             ax_pthread_save_ac_link="$ac_link"
++             ax_pthread_sed='s/conftest\.\$ac_ext/conftest.$ac_objext/g'
++             ax_pthread_link_step=`$as_echo "$ac_link" | sed "$ax_pthread_sed"`
++             ax_pthread_2step_ac_link="($ac_compile) && (echo ==== >&5) && ($ax_pthread_link_step)"
++             ax_pthread_save_CFLAGS="$CFLAGS"
++             for ax_pthread_try in '' -Qunused-arguments -Wno-unused-command-line-argument unknown; do
++                AS_IF([test "x$ax_pthread_try" = "xunknown"], [break])
++                CFLAGS="-Werror -Wunknown-warning-option $ax_pthread_try -pthread $ax_pthread_save_CFLAGS"
++                ac_link="$ax_pthread_save_ac_link"
++                AC_LINK_IFELSE([AC_LANG_SOURCE([[int main(void){return 0;}]])],
++                    [ac_link="$ax_pthread_2step_ac_link"
++                     AC_LINK_IFELSE([AC_LANG_SOURCE([[int main(void){return 0;}]])],
++                         [break])
++                    ])
++             done
++             ac_link="$ax_pthread_save_ac_link"
++             CFLAGS="$ax_pthread_save_CFLAGS"
++             AS_IF([test "x$ax_pthread_try" = "x"], [ax_pthread_try=no])
++             ax_cv_PTHREAD_CLANG_NO_WARN_FLAG="$ax_pthread_try"
++            ])
++
++        case "$ax_cv_PTHREAD_CLANG_NO_WARN_FLAG" in
++                no | unknown) ;;
++                *) PTHREAD_CFLAGS="$ax_cv_PTHREAD_CLANG_NO_WARN_FLAG $PTHREAD_CFLAGS" ;;
++        esac
++
++fi # $ax_pthread_clang = yes
++
++if test "x$ax_pthread_ok" = "xno"; then
++for ax_pthread_try_flag in $ax_pthread_flags; do
++
++        case $ax_pthread_try_flag in
++                none)
++                AC_MSG_CHECKING([whether pthreads work without any flags])
++                ;;
++
++                -mt,pthread)
++                AC_MSG_CHECKING([whether pthreads work with -mt -lpthread])
++                PTHREAD_CFLAGS="-mt"
++                PTHREAD_LIBS="-lpthread"
++                ;;
++
++                -*)
++                AC_MSG_CHECKING([whether pthreads work with $ax_pthread_try_flag])
++                PTHREAD_CFLAGS="$ax_pthread_try_flag"
++                ;;
++
++                pthread-config)
++                AC_CHECK_PROG([ax_pthread_config], [pthread-config], [yes], [no])
++                AS_IF([test "x$ax_pthread_config" = "xno"], [continue])
++                PTHREAD_CFLAGS="`pthread-config --cflags`"
++                PTHREAD_LIBS="`pthread-config --ldflags` `pthread-config --libs`"
++                ;;
++
++                *)
++                AC_MSG_CHECKING([for the pthreads library -l$ax_pthread_try_flag])
++                PTHREAD_LIBS="-l$ax_pthread_try_flag"
++                ;;
++        esac
++
++        ax_pthread_save_CFLAGS="$CFLAGS"
++        ax_pthread_save_LIBS="$LIBS"
++        CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
++        LIBS="$PTHREAD_LIBS $LIBS"
++
++        # Check for various functions.  We must include pthread.h,
++        # since some functions may be macros.  (On the Sequent, we
++        # need a special flag -Kthread to make this header compile.)
++        # We check for pthread_join because it is in -lpthread on IRIX
++        # while pthread_create is in libc.  We check for pthread_attr_init
++        # due to DEC craziness with -lpthreads.  We check for
++        # pthread_cleanup_push because it is one of the few pthread
++        # functions on Solaris that doesn't have a non-functional libc stub.
++        # We try pthread_create on general principles.
++
++        AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <pthread.h>
++#                       if $ax_pthread_check_cond
++#                        error "$ax_pthread_check_macro must be defined"
++#                       endif
++                        static void routine(void *a) { a = 0; }
++                        static void *start_routine(void *a) { return a; }],
++                       [pthread_t th; pthread_attr_t attr;
++                        pthread_create(&th, 0, start_routine, 0);
++                        pthread_join(th, 0);
++                        pthread_attr_init(&attr);
++                        pthread_cleanup_push(routine, 0);
++                        pthread_cleanup_pop(0) /* ; */])],
++            [ax_pthread_ok=yes],
++            [])
++
++        CFLAGS="$ax_pthread_save_CFLAGS"
++        LIBS="$ax_pthread_save_LIBS"
++
++        AC_MSG_RESULT([$ax_pthread_ok])
++        AS_IF([test "x$ax_pthread_ok" = "xyes"], [break])
++
++        PTHREAD_LIBS=""
++        PTHREAD_CFLAGS=""
++done
++fi
++
++# Various other checks:
++if test "x$ax_pthread_ok" = "xyes"; then
++        ax_pthread_save_CFLAGS="$CFLAGS"
++        ax_pthread_save_LIBS="$LIBS"
++        CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
++        LIBS="$PTHREAD_LIBS $LIBS"
++
++        # Detect AIX lossage: JOINABLE attribute is called UNDETACHED.
++        AC_CACHE_CHECK([for joinable pthread attribute],
++            [ax_cv_PTHREAD_JOINABLE_ATTR],
++            [ax_cv_PTHREAD_JOINABLE_ATTR=unknown
++             for ax_pthread_attr in PTHREAD_CREATE_JOINABLE PTHREAD_CREATE_UNDETACHED; do
++                 AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <pthread.h>],
++                                                 [int attr = $ax_pthread_attr; return attr /* ; */])],
++                                [ax_cv_PTHREAD_JOINABLE_ATTR=$ax_pthread_attr; break],
++                                [])
++             done
++            ])
++        AS_IF([test "x$ax_cv_PTHREAD_JOINABLE_ATTR" != "xunknown" && \
++               test "x$ax_cv_PTHREAD_JOINABLE_ATTR" != "xPTHREAD_CREATE_JOINABLE" && \
++               test "x$ax_pthread_joinable_attr_defined" != "xyes"],
++              [AC_DEFINE_UNQUOTED([PTHREAD_CREATE_JOINABLE],
++                                  [$ax_cv_PTHREAD_JOINABLE_ATTR],
++                                  [Define to necessary symbol if this constant
++                                   uses a non-standard name on your system.])
++               ax_pthread_joinable_attr_defined=yes
++              ])
++
++        AC_CACHE_CHECK([whether more special flags are required for pthreads],
++            [ax_cv_PTHREAD_SPECIAL_FLAGS],
++            [ax_cv_PTHREAD_SPECIAL_FLAGS=no
++             case $host_os in
++             solaris*)
++             ax_cv_PTHREAD_SPECIAL_FLAGS="-D_POSIX_PTHREAD_SEMANTICS"
++             ;;
++             esac
++            ])
++        AS_IF([test "x$ax_cv_PTHREAD_SPECIAL_FLAGS" != "xno" && \
++               test "x$ax_pthread_special_flags_added" != "xyes"],
++              [PTHREAD_CFLAGS="$ax_cv_PTHREAD_SPECIAL_FLAGS $PTHREAD_CFLAGS"
++               ax_pthread_special_flags_added=yes])
++
++        AC_CACHE_CHECK([for PTHREAD_PRIO_INHERIT],
++            [ax_cv_PTHREAD_PRIO_INHERIT],
++            [AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <pthread.h>]],
++                                             [[int i = PTHREAD_PRIO_INHERIT;]])],
++                            [ax_cv_PTHREAD_PRIO_INHERIT=yes],
++                            [ax_cv_PTHREAD_PRIO_INHERIT=no])
++            ])
++        AS_IF([test "x$ax_cv_PTHREAD_PRIO_INHERIT" = "xyes" && \
++               test "x$ax_pthread_prio_inherit_defined" != "xyes"],
++              [AC_DEFINE([HAVE_PTHREAD_PRIO_INHERIT], [1], [Have PTHREAD_PRIO_INHERIT.])
++               ax_pthread_prio_inherit_defined=yes
++              ])
++
++        CFLAGS="$ax_pthread_save_CFLAGS"
++        LIBS="$ax_pthread_save_LIBS"
++
++        # More AIX lossage: compile with *_r variant
++        if test "x$GCC" != "xyes"; then
++            case $host_os in
++                aix*)
++                AS_CASE(["x/$CC"],
++                    [x*/c89|x*/c89_128|x*/c99|x*/c99_128|x*/cc|x*/cc128|x*/xlc|x*/xlc_v6|x*/xlc128|x*/xlc128_v6],
++                    [#handle absolute path differently from PATH based program lookup
++                     AS_CASE(["x$CC"],
++                         [x/*],
++                         [AS_IF([AS_EXECUTABLE_P([${CC}_r])],[PTHREAD_CC="${CC}_r"])],
++                         [AC_CHECK_PROGS([PTHREAD_CC],[${CC}_r],[$CC])])])
++                ;;
++            esac
++        fi
++fi
++
++test -n "$PTHREAD_CC" || PTHREAD_CC="$CC"
++
++AC_SUBST([PTHREAD_LIBS])
++AC_SUBST([PTHREAD_CFLAGS])
++AC_SUBST([PTHREAD_CC])
++
++# Finally, execute ACTION-IF-FOUND/ACTION-IF-NOT-FOUND:
++if test "x$ax_pthread_ok" = "xyes"; then
++        ifelse([$1],,[AC_DEFINE([HAVE_PTHREAD],[1],[Define if you have POSIX threads libraries and header files.])],[$1])
++        :
++else
++        ax_pthread_ok=no
++        $2
++fi
++AC_LANG_POP
++])dnl AX_PTHREAD
+--- farstream-0.2-0.2.7.orig/common/m4/gst-arch.m4
++++ farstream-0.2-0.2.7/common/m4/gst-arch.m4
+@@ -45,9 +45,15 @@ AC_DEFUN([AG_GST_ARCH],
+     xalpha*)
+       HAVE_CPU_ALPHA=yes
+       AC_DEFINE(HAVE_CPU_ALPHA, 1, [Define if the target CPU is an Alpha]) ;;
++    xarc*)
++      HAVE_CPU_ARC=yes
++      AC_DEFINE(HAVE_CPU_ARC, 1, [Define if the target CPU is an ARC]) ;;
+     xarm*)
+       HAVE_CPU_ARM=yes
+       AC_DEFINE(HAVE_CPU_ARM, 1, [Define if the target CPU is an ARM]) ;;
++    xaarch64*)
++      HAVE_CPU_AARCH64=yes
++      AC_DEFINE(HAVE_CPU_AARCH64, 1, [Define if the target CPU is AARCH64]) ;;
+     xsparc*)
+       HAVE_CPU_SPARC=yes
+       AC_DEFINE(HAVE_CPU_SPARC, 1, [Define if the target CPU is a SPARC]) ;;
+@@ -84,6 +90,7 @@ AC_DEFUN([AG_GST_ARCH],
+   AM_CONDITIONAL(HAVE_CPU_PPC,        test "x$HAVE_CPU_PPC" = "xyes")
+   AM_CONDITIONAL(HAVE_CPU_PPC64,      test "x$HAVE_CPU_PPC64" = "xyes")
+   AM_CONDITIONAL(HAVE_CPU_ALPHA,      test "x$HAVE_CPU_ALPHA" = "xyes")
++  AM_CONDITIONAL(HAVE_CPU_ARC,        test "x$HAVE_CPU_ARC" = "xyes")
+   AM_CONDITIONAL(HAVE_CPU_ARM,        test "x$HAVE_CPU_ARM" = "xyes")
+   AM_CONDITIONAL(HAVE_CPU_SPARC,      test "x$HAVE_CPU_SPARC" = "xyes")
+   AM_CONDITIONAL(HAVE_CPU_HPPA,       test "x$HAVE_CPU_HPPA" = "xyes")
+@@ -104,7 +111,7 @@ AC_DEFUN([AG_GST_UNALIGNED_ACCESS], [
+   AC_MSG_CHECKING([if unaligned memory access works correctly])
+   if test x"$as_cv_unaligned_access" = x ; then
+     case $host in
+-      alpha*|arm*|hp*|mips*|sh*|sparc*|ia64*)
++      alpha*|arc*|arm*|aarch64*|hp*|mips*|sh*|sparc*|ia64*)
+         _AS_ECHO_N([(blacklisted) ])
+         as_cv_unaligned_access=no
+ 	;;
+--- farstream-0.2-0.2.7.orig/common/m4/gst-args.m4
++++ farstream-0.2-0.2.7/common/m4/gst-args.m4
+@@ -337,6 +337,7 @@ AC_DEFUN([AG_GST_ARG_ENABLE_BROKEN],
+ 
+ dnl allow people (or build tools) to override default behaviour
+ dnl for fatal compiler warnings
++dnl Enable fatal warnings by default only for development versions
+ AC_DEFUN([AG_GST_ARG_DISABLE_FATAL_WARNINGS],
+ [
+   AC_ARG_ENABLE(fatal-warnings,
+@@ -349,5 +350,37 @@ AC_DEFUN([AG_GST_ARG_DISABLE_FATAL_WARNI
+         *)   AC_MSG_ERROR(bad value ${enableval} for --disable-fatal-warnings) ;;
+       esac
+     ],
+-    [FATAL_WARNINGS=$GST_GIT]) dnl Default value
++    [
++      if test "x`expr $PACKAGE_VERSION_MINOR % 2`" = "x1" -a "x`expr $PACKAGE_VERSION_MICRO '<' 90`" = "x1"; then
++        FATAL_WARNINGS=yes
++      else
++        FATAL_WARNINGS=no
++      fi
++    ])
++])
++
++dnl Enable extra checks by default only for development versions
++AC_DEFUN([AG_GST_ARG_ENABLE_EXTRA_CHECKS],
++[
++  AC_ARG_ENABLE(extra-check,
++    AC_HELP_STRING([--enable-extra-checks],
++                   [Enable extra runtime checks]),
++    [
++      case "${enableval}" in
++        yes) EXTRA_CHECKS=yes ;;
++        no)  EXTRA_CHECKS=no ;;
++        *)   AC_MSG_ERROR(bad value ${enableval} for --enable-extra-checks) ;;
++      esac
++    ],
++    [
++      if test "x`expr $PACKAGE_VERSION_MINOR % 2`" = "x1" -a "x`expr $PACKAGE_VERSION_MICRO '<' 90`" = "x1"; then
++        EXTRA_CHECKS=yes
++      else
++        EXTRA_CHECKS=no
++      fi
++    ])
++
++    if test "x$EXTRA_CHECKS" = "xyes"; then
++        AC_DEFINE(GST_ENABLE_EXTRA_CHECKS, 1, [Define if extra runtime checks should be enabled])
++    fi
+ ])
+--- farstream-0.2-0.2.7.orig/common/m4/gst-check.m4
++++ farstream-0.2-0.2.7/common/m4/gst-check.m4
+@@ -266,29 +266,29 @@ AC_DEFUN([AG_GST_CHECK_GST_PLUGINS_BAD],
+ ])
+ 
+ dnl ===========================================================================
+-dnl AG_GST_CHECK_GST_PLUGINS_FFMPEG([GST-API_VERSION], [MIN-VERSION])
++dnl AG_GST_CHECK_GST_PLUGINS_LIBAV([GST-API_VERSION], [MIN-VERSION])
+ dnl
+-dnl Will set GST_PLUGINS_FFMPEG_DIR for use in Makefile.am. Note that this will
+-dnl only be set in an uninstalled setup, since -ffmpeg ships no .pc file and in
++dnl Will set GST_PLUGINS_LIBAV_DIR for use in Makefile.am. Note that this will
++dnl only be set in an uninstalled setup, since -libav ships no .pc file and in
+ dnl an installed setup all plugins will be found in GST_PLUGINS_DIR anyway.
+ dnl ===========================================================================
+-AC_DEFUN([AG_GST_CHECK_GST_PLUGINS_FFMPEG],
++AC_DEFUN([AG_GST_CHECK_GST_PLUGINS_LIBAV],
+ [
+-  AG_GST_CHECK_MODULES(GST_PLUGINS_FFMPEG, gstreamer-plugins-ffmpeg-[$1], [$2],
+-    [GStreamer FFmpeg Plugins], [no])
++  AG_GST_CHECK_MODULES(GST_PLUGINS_LIBAV, gstreamer-plugins-libav-[$1], [$2],
++    [GStreamer Libav Plugins], [no])
+ 
+-  if test "x$HAVE_GST_PLUGINS_FFMPEG" = "xyes"; then
+-    dnl check for where ffmpeg plugins got installed
++  if test "x$HAVE_GST_PLUGINS_LIBAV" = "xyes"; then
++    dnl check for where libav plugins got installed
+     dnl this is used for unit tests
+     dnl allow setting before calling this macro to override
+-    if test -z $GST_PLUGINS_FFMPEG_DIR; then
+-      GST_PLUGINS_FFMPEG_DIR=`$PKG_CONFIG --variable=pluginsdir gstreamer-plugins-ffmpeg-[$1]`
+-      if test -z $GST_PLUGINS_FFMPEG_DIR; then
+-        AC_MSG_ERROR([no pluginsdir set in GStreamer FFmpeg Plugins pkg-config file])
++    if test -z $GST_PLUGINS_LIBAV_DIR; then
++      GST_PLUGINS_LIBAV_DIR=`$PKG_CONFIG --variable=pluginsdir gstreamer-plugins-libav-[$1]`
++      if test -z $GST_PLUGINS_LIBAV_DIR; then
++        AC_MSG_ERROR([no pluginsdir set in GStreamer Libav Plugins pkg-config file])
+       fi
+     fi
+-    GST_PLUGINS_FFMPEG_DIR="$GST_PLUGINS_FFMPEG_DIR/ext/ffmpeg"
+-    AC_MSG_NOTICE([using GStreamer FFmpeg Plugins in $GST_PLUGINS_FFMPEG_DIR])
+-    AC_SUBST(GST_PLUGINS_FFMPEG_DIR)
++    GST_PLUGINS_LIBAV_DIR="$GST_PLUGINS_LIBAV_DIR/ext/libav"
++    AC_MSG_NOTICE([using GStreamer Libav Plugins in $GST_PLUGINS_LIBAV_DIR])
++    AC_SUBST(GST_PLUGINS_LIBAV_DIR)
+   fi
+ ])
+--- farstream-0.2-0.2.7.orig/common/m4/gst-doc.m4
++++ farstream-0.2-0.2.7/common/m4/gst-doc.m4
+@@ -20,34 +20,10 @@ AC_DEFUN([AG_GST_DOCBOOK_CHECK],
+ 
+     dnl check for docbook tools
+     AC_CHECK_PROG(HAVE_DOCBOOK2PS, docbook2ps, yes, no)
+-    AC_CHECK_PROG(HAVE_DOCBOOK2HTML, docbook2html, yes, no)
++    AC_CHECK_PROG(HAVE_XSLTPROC, xsltproc, yes, no)
+     AC_CHECK_PROG(HAVE_JADETEX, jadetex, yes, no)
+     AC_CHECK_PROG(HAVE_PS2PDF, ps2pdf, yes, no)
+ 
+-    # -V option appeared in 0.6.10
+-    docbook2html_min_version=0.6.10
+-    if test "x$HAVE_DOCBOOK2HTML" != "xno"; then
+-      docbook2html_version=`docbook2html --version`
+-      AC_MSG_CHECKING([docbook2html version ($docbook2html_version) >= $docbook2html_min_version])
+-      if perl -w <<EOF
+-        (\$min_version_major, \$min_version_minor, \$min_version_micro ) = "$docbook2html_min_version" =~ /(\d+)\.(\d+)\.(\d+)/;
+-        (\$docbook2html_version_major, \$docbook2html_version_minor, \$docbook2html_version_micro ) = "$docbook2html_version" =~ /(\d+)\.(\d+)\.(\d+)/;
+-        exit (((\$docbook2html_version_major > \$min_version_major) ||
+-  	     ((\$docbook2html_version_major == \$min_version_major) &&
+-  	      (\$docbook2html_version_minor >= \$min_version_minor)) ||
+-  	     ((\$docbook2html_version_major == \$min_version_major) &&
+-  	      (\$docbook2html_version_minor >= \$min_version_minor) &&
+-  	      (\$docbook2html_version_micro >= \$min_version_micro)))
+-  	     ? 0 : 1);
+-EOF
+-      then
+-        AC_MSG_RESULT(yes)
+-      else
+-        AC_MSG_RESULT(no)
+-        HAVE_DOCBOOK2HTML=no
+-      fi
+-    fi
+-
+     dnl check if we can process docbook stuff
+     AS_DOCBOOK(have_docbook=yes, have_docbook=no)
+ 
+@@ -55,45 +31,14 @@ EOF
+     AC_CHECK_PROG(HAVE_DVIPS, dvips, yes, no)
+     AC_CHECK_PROG(HAVE_XMLLINT, xmllint, yes, no)
+ 
+-    dnl check for image conversion tools
+-    AC_CHECK_PROG(HAVE_FIG2DEV, fig2dev, yes, no)
+-    if test "x$HAVE_FIG2DEV" = "xno" ; then
+-      AC_MSG_WARN([Did not find fig2dev (from xfig), images will not be generated.])
+-    fi
+-
+-    dnl The following is a hack: if fig2dev doesn't display an error message
+-    dnl for the desired type, we assume it supports it.
+-    HAVE_FIG2DEV_EPS=no
+-    if test "x$HAVE_FIG2DEV" = "xyes" ; then
+-      fig2dev_quiet=`fig2dev -L eps </dev/null 2>&1 >/dev/null`
+-      if test "x$fig2dev_quiet" = "x" ; then
+-        HAVE_FIG2DEV_EPS=yes
+-      fi
+-    fi
+-    HAVE_FIG2DEV_PNG=no
+-    if test "x$HAVE_FIG2DEV" = "xyes" ; then
+-      fig2dev_quiet=`fig2dev -L png </dev/null 2>&1 >/dev/null`
+-      if test "x$fig2dev_quiet" = "x" ; then
+-        HAVE_FIG2DEV_PNG=yes
+-      fi
+-    fi
+-    HAVE_FIG2DEV_PDF=no
+-    if test "x$HAVE_FIG2DEV" = "xyes" ; then
+-      fig2dev_quiet=`fig2dev -L pdf </dev/null 2>&1 >/dev/null`
+-      if test "x$fig2dev_quiet" = "x" ; then
+-        HAVE_FIG2DEV_PDF=yes
+-      fi
+-    fi
+-
+     AC_CHECK_PROG(HAVE_PNGTOPNM, pngtopnm, yes, no)
+     AC_CHECK_PROG(HAVE_PNMTOPS,  pnmtops,  yes, no)
+     AC_CHECK_PROG(HAVE_EPSTOPDF, epstopdf, yes, no)
+ 
+     dnl check if we can generate HTML
+-    if test "x$HAVE_DOCBOOK2HTML" = "xyes" && \
++    if test "x$HAVE_XSLTPROC" = "xyes" && \
+        test "x$enable_docbook" = "xyes" && \
+-       test "x$HAVE_XMLLINT" = "xyes" && \
+-       test "x$HAVE_FIG2DEV_PNG" = "xyes"; then
++       test "x$HAVE_XMLLINT" = "xyes"; then
+       DOC_HTML=yes
+       AC_MSG_NOTICE(Will output HTML documentation)
+      else
+@@ -106,7 +51,6 @@ EOF
+        test "x$enable_docbook" = "xyes" && \
+        test "x$HAVE_XMLLINT" = "xyes" && \
+        test "x$HAVE_JADETEX" = "xyes" && \
+-       test "x$HAVE_FIG2DEV_EPS" = "xyes" && \
+        test "x$HAVE_DVIPS" = "xyes" && \
+        test "x$HAVE_PNGTOPNM" = "xyes" && \
+        test "x$HAVE_PNMTOPS" = "xyes"; then
+--- farstream-0.2-0.2.7.orig/common/m4/gst-error.m4
++++ farstream-0.2-0.2.7/common/m4/gst-error.m4
+@@ -52,39 +52,6 @@ AC_DEFUN([AG_GST_SET_ERROR_CFLAGS],
+   if test "x$1" != "xno"
+   then
+     AS_COMPILER_FLAG(-Werror, ERROR_CFLAGS="$ERROR_CFLAGS -Werror")
+-
+-    dnl if -Werror isn't suported, try -errwarn=%all (Sun Forte case)
+-    if test "x$ERROR_CFLAGS" = "x"
+-    then
+-      AS_COMPILER_FLAG([-errwarn=%all], [
+-          ERROR_CFLAGS="-errwarn=%all"
+-          dnl try -errwarn=%all,no%E_EMPTY_DECLARATION,
+-          dnl no%E_STATEMENT_NOT_REACHED,no%E_ARGUEMENT_MISMATCH,
+-          dnl no%E_MACRO_REDEFINED (Sun Forte case)
+-          dnl For Forte we need disable "empty declaration" warning produced by un-needed semicolon
+-          dnl "statement not reached" disabled because there is g_assert_not_reached () in some places
+-          dnl "macro redefined" because of gst/gettext.h
+-          dnl FIXME: is it really supposed to be 'ARGUEMENT' and not 'ARGUMENT'?
+-          for f in 'no%E_EMPTY_DECLARATION' \
+-                   'no%E_STATEMENT_NOT_REACHED' \
+-                   'no%E_ARGUEMENT_MISMATCH' \
+-                   'no%E_MACRO_REDEFINED' \
+-                   'no%E_LOOP_NOT_ENTERED_AT_TOP'
+-          do
+-            AS_COMPILER_FLAG([-errwarn=%all,$f], [
+-              ERROR_CFLAGS="$ERROR_CFLAGS,$f"
+-            ])
+-          done
+-      ])
+-    else
+-      dnl Add -fno-strict-aliasing for GLib versions before 2.19.8
+-      dnl as before G_LOCK and friends caused strict aliasing compiler
+-      dnl warnings.
+-      PKG_CHECK_EXISTS([glib-2.0 < 2.19.8], [
+-        AS_COMPILER_FLAG(-fno-strict-aliasing,
+-            ERROR_CFLAGS="$ERROR_CFLAGS -fno-strict-aliasing")
+-	])
+-    fi
+   fi
+ 
+   if test "x$2" != "x"
+@@ -150,28 +117,6 @@ AC_DEFUN([AG_GST_SET_ERROR_CXXFLAGS],
+ 	  AS_CXX_COMPILER_FLAG([-fno-strict-aliasing],
+ 	    ERROR_CXXFLAGS="$ERROR_CXXFLAGS -fno-strict-aliasing")
+ 	  ])
+-    else
+-      dnl if -Werror isn't suported, try -errwarn=%all
+-      AS_CXX_COMPILER_FLAG([-errwarn=%all], ERROR_CXXFLAGS="$ERROR_CXXFLAGS -errwarn=%all")
+-      if test "x$ERROR_CXXFLAGS" != "x"; then
+-        dnl try -errwarn=%all,no%E_EMPTY_DECLARATION,
+-        dnl no%E_STATEMENT_NOT_REACHED,no%E_ARGUEMENT_MISMATCH,
+-        dnl no%E_MACRO_REDEFINED (Sun Forte case)
+-        dnl For Forte we need disable "empty declaration" warning produced by un-needed semicolon
+-        dnl "statement not reached" disabled because there is g_assert_not_reached () in some places
+-        dnl "macro redefined" because of gst/gettext.h
+-        dnl FIXME: is it really supposed to be 'ARGUEMENT' and not 'ARGUMENT'?
+-        dnl FIXME: do any of these work with the c++ compiler? if not, why
+-        dnl do we check at all?
+-        for f in 'no%E_EMPTY_DECLARATION' \
+-                 'no%E_STATEMENT_NOT_REACHED' \
+-                 'no%E_ARGUEMENT_MISMATCH' \
+-                 'no%E_MACRO_REDEFINED' \
+-                 'no%E_LOOP_NOT_ENTERED_AT_TOP'
+-        do
+-          AS_CXX_COMPILER_FLAG([-errwarn=%all,$f], ERROR_CXXFLAGS="$ERROR_CXXFLAGS,$f")
+-        done
+-      fi
+     fi
+   fi
+ 
+@@ -235,28 +180,6 @@ AC_DEFUN([AG_GST_SET_ERROR_OBJCFLAGS],
+ 	  AS_OBJC_COMPILER_FLAG([-fno-strict-aliasing],
+ 	    ERROR_OBJCFLAGS="$ERROR_OBJCFLAGS -fno-strict-aliasing")
+ 	  ])
+-    else
+-      dnl if -Werror isn't suported, try -errwarn=%all
+-      AS_OBJC_COMPILER_FLAG([-errwarn=%all], ERROR_OBJCFLAGS="$ERROR_OBJCFLAGS -errwarn=%all")
+-      if test "x$ERROR_OBJCFLAGS" != "x"; then
+-        dnl try -errwarn=%all,no%E_EMPTY_DECLARATION,
+-        dnl no%E_STATEMENT_NOT_REACHED,no%E_ARGUEMENT_MISMATCH,
+-        dnl no%E_MACRO_REDEFINED (Sun Forte case)
+-        dnl For Forte we need disable "empty declaration" warning produced by un-needed semicolon
+-        dnl "statement not reached" disabled because there is g_assert_not_reached () in some places
+-        dnl "macro redefined" because of gst/gettext.h
+-        dnl FIXME: is it really supposed to be 'ARGUEMENT' and not 'ARGUMENT'?
+-        dnl FIXME: do any of these work with the c++ compiler? if not, why
+-        dnl do we check at all?
+-        for f in 'no%E_EMPTY_DECLARATION' \
+-                 'no%E_STATEMENT_NOT_REACHED' \
+-                 'no%E_ARGUEMENT_MISMATCH' \
+-                 'no%E_MACRO_REDEFINED' \
+-                 'no%E_LOOP_NOT_ENTERED_AT_TOP'
+-        do
+-          AS_OBJC_COMPILER_FLAG([-errwarn=%all,$f], ERROR_OBJCFLAGS="$ERROR_OBJCFLAGS,$f")
+-        done
+-      fi
+     fi
+   fi
+ 
+--- farstream-0.2-0.2.7.orig/common/m4/gst-feature.m4
++++ farstream-0.2-0.2.7/common/m4/gst-feature.m4
+@@ -209,7 +209,7 @@ AC_DEFUN([AG_GST_PARSE_SUBSYSTEM_DISABLE
+ 
+ dnl Parse gstconfig.h and defines add the symbols and substitions
+ dnl
+-dnl GST_CONFIGPATH=`$PKG_CONFIG --variable=includedir gstreamer-0.10`"/gst/gstconfig.h"
++dnl GST_CONFIGPATH=`$PKG_CONFIG --variable=includedir gstreamer-1.0`"/gst/gstconfig.h"
+ dnl AG_GST_PARSE_SUBSYSTEM_DISABLES(GST_CONFIGPATH)
+ dnl
+ AC_DEFUN([AG_GST_PARSE_SUBSYSTEM_DISABLES],
+--- farstream-0.2-0.2.7.orig/common/m4/gst-gettext.m4
++++ farstream-0.2-0.2.7/common/m4/gst-gettext.m4
+@@ -14,6 +14,13 @@ AC_DEFUN([AG_GST_GETTEXT],
+   AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], "$GETTEXT_PACKAGE",
+                      [gettext package name])
+ 
++  dnl make sure po/Makevars is kept in sync with GETTEXT_PACKAGE
++  if test -e "${srcdir}/po/Makevars"; then
++    if ! grep -e "$1" "${srcdir}/po/Makevars"; then
++      AC_MSG_ERROR([DOMAIN in po/Makevars does not match GETTEXT_PACKAGE $1])
++    fi
++  fi
++
+   dnl define LOCALEDIR in config.h
+   AS_AC_EXPAND(LOCALEDIR, $datadir/locale)
+   AC_DEFINE_UNQUOTED([LOCALEDIR], "$LOCALEDIR",
+--- farstream-0.2-0.2.7.orig/common/m4/gst-glib2.m4
++++ farstream-0.2-0.2.7/common/m4/gst-glib2.m4
+@@ -16,7 +16,7 @@ AC_DEFUN([AG_GST_GLIB_CHECK],
+ 
+   dnl Check for glib with everything
+   AG_GST_PKG_CHECK_MODULES(GLIB,
+-    glib-2.0 >= $GLIB_REQ gobject-2.0 gthread-2.0 gmodule-no-export-2.0)
++    glib-2.0 >= $GLIB_REQ gobject-2.0 gmodule-no-export-2.0)
+ 
+   if test "x$HAVE_GLIB" = "xno"; then
+     AC_MSG_ERROR([This package requires GLib >= $GLIB_REQ to compile.])
+@@ -27,19 +27,19 @@ AC_DEFUN([AG_GST_GLIB_CHECK],
+   dnl when using threading primitives)
+   GLIB_EXTRA_CFLAGS="$GLIB_EXTRA_CFLAGS -DG_THREADS_MANDATORY"
+ 
+-  dnl Define G_DISABLE_DEPRECATED for GIT versions
+-  if test "x$PACKAGE_VERSION_NANO" = "x1"; then
++  dnl Define G_DISABLE_DEPRECATED for development versions
++  if test "x`expr $PACKAGE_VERSION_MINOR % 2`" = "x1" -a "x`expr $PACKAGE_VERSION_MICRO '<' 90`" = "x1"; then
+     GLIB_EXTRA_CFLAGS="$GLIB_EXTRA_CFLAGS -DG_DISABLE_DEPRECATED"
+   fi
+ 
+   AC_ARG_ENABLE(gobject-cast-checks,
+     AS_HELP_STRING([--enable-gobject-cast-checks[=@<:@no/auto/yes@:>@]],
+-      [Enable GObject cast checks]),, 
++      [Enable GObject cast checks]),[enable_gobject_cast_checks=$enableval],
+     [enable_gobject_cast_checks=auto])
+ 
+   if test "x$enable_gobject_cast_checks" = "xauto"; then
+-    dnl For releases, turn off the cast checks
+-    if test "x$PACKAGE_VERSION_NANO" = "x1"; then
++    dnl Turn on cast checks only for development versions
++    if test "x`expr $PACKAGE_VERSION_MINOR % 2`" = "x1" -a "x`expr $PACKAGE_VERSION_MICRO '<' 90`" = "x1"; then
+       enable_gobject_cast_checks=yes
+     else
+       enable_gobject_cast_checks=no
+@@ -51,25 +51,51 @@ AC_DEFUN([AG_GST_GLIB_CHECK],
+   fi
+ 
+   AC_ARG_ENABLE(glib-asserts,
+-    AS_HELP_STRING([--enable-glib-asserts[=@<:@no/auto/yes@:>@]],
+-      [Enable GLib assertion]),, 
+-    [enable_glib_assertions=auto])
+-
+-  if test "x$enable_glib_assertions" = "xauto"; then
+-    dnl For releases, turn off the assertions
+-    if test "x$PACKAGE_VERSION_NANO" = "x1"; then
+-      enable_glib_assertions=yes
+-    else
+-      enable_glib_assertions=no
+-    fi
+-  fi
++    AS_HELP_STRING([--enable-glib-asserts[=@<:@no/yes@:>@]],
++      [Enable GLib assertion]),[enable_glib_assertions=$enableval],
++    [enable_glib_assertions=yes])
+ 
+   if test "x$enable_glib_assertions" = "xno"; then
+     GLIB_EXTRA_CFLAGS="$GLIB_EXTRA_CFLAGS -DG_DISABLE_ASSERT"
+   fi
+ 
+-  dnl for the poor souls who for example have glib in /usr/local
+-  AS_SCRUB_INCLUDE(GLIB_CFLAGS)
++  dnl Find location of glib utils. People may want to or have to override these,
++  dnl e.g. in a cross-compile situation where PATH is a bit messed up. We need
++  dnl for these tools to work on the host, so can't just use the one from the
++  dnl GLib installation that pkg-config picks up, as that might be for a
++  dnl different target architecture.
++  dnl
++  dnl glib-genmarshal:
++  AC_MSG_CHECKING(for glib-genmarshal)
++  if test "x$GLIB_GENMARSHAL" != "x"; then
++    AC_MSG_RESULT([$GLIB_GENMARSHAL (from environment)])
++  else
++    GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`
++    if $GLIB_GENMARSHAL --version 2>/dev/null >/dev/null; then
++      AC_MSG_RESULT([$GLIB_GENMARSHAL (from pkg-config path)])
++    else
++      AC_PATH_PROG(GLIB_GENMARSHAL, [glib-genmarshal], [glib-genmarshal])
++      AC_MSG_RESULT([$GLIB_GENMARSHAL])
++    fi
++  fi
++  if ! $GLIB_GENMARSHAL --version 2>/dev/null >/dev/null; then
++    AC_MSG_WARN([$GLIB_GENMARSHAL does not seem to work!])
++  fi
++  AC_SUBST(GLIB_GENMARSHAL)
++
++  dnl glib-mkenums:
++  AC_MSG_CHECKING(for glib-mkenums)
++  if test "x$GLIB_MKENUMS" != "x"; then
++    AC_MSG_RESULT([$GLIB_MKENUMS (from environment)])
++  else
++    dnl glib-mkenums is written in perl so should always work really
++    GLIB_MKENUMS=`$PKG_CONFIG --variable=glib_mkenums glib-2.0`
++    AC_MSG_RESULT([$GLIB_MKENUMS])
++  fi
++  if ! $GLIB_MKENUMS --version 2>/dev/null >/dev/null; then
++    AC_MSG_WARN([$GLIB_MKENUMS does not seem to work!])
++  fi
++  AC_SUBST(GLIB_MKENUMS)
+ 
+   AC_SUBST(GLIB_EXTRA_CFLAGS)
+ 
+@@ -85,6 +111,10 @@ AC_DEFUN([AG_GST_GLIB_CHECK],
+   GIO_LIBDIR="`$PKG_CONFIG --variable=libdir gio-2.0`"
+   AC_DEFINE_UNQUOTED(GIO_LIBDIR, "$GIO_LIBDIR",
+       [The GIO library directory.])
++  GIO_PREFIX="`$PKG_CONFIG --variable=prefix gio-2.0`"
++  AC_DEFINE_UNQUOTED(GIO_PREFIX, "$GIO_PREFIX",
++      [The GIO install prefix.])
++
+   AC_SUBST(GIO_CFLAGS)
+   AC_SUBST(GIO_LIBS)
+   AC_SUBST(GIO_LDFLAGS)
+--- farstream-0.2-0.2.7.orig/common/m4/gst-package-release-datetime.m4
++++ farstream-0.2-0.2.7/common/m4/gst-package-release-datetime.m4
+@@ -27,14 +27,16 @@ dnl ====================================
+ AC_DEFUN([AG_GST_SET_PACKAGE_RELEASE_DATETIME],
+ [
+   dnl AG_GST_SET_PACKAGE_RELEASE_DATETIME()
+-  dnl AG_GST_SET_PACKAGE_RELEASE_DATETIME([yes]...)
++  dnl AG_GST_SET_PACKAGE_RELEASE_DATETIME([no]...)
+   if test "x$1" = "xno" -o "x$1" = "x"; then
+     GST_PACKAGE_RELEASE_DATETIME=`date -u "+%Y-%m-%dT%H:%MZ"`
+   elif test "x$1" = "xyes"; then
+-    dnl AG_GST_SET_PACKAGE_RELEASE_DATETIME([no], ["YYYY-MM-DD"])
+-    dnl AG_GST_SET_PACKAGE_RELEASE_DATETIME([no], [DOAP-FILE], [RELEASE-VERSION])
+-    if ( echo $1 | grep -e '^20[1-9][0-9]-[0-1][0-9]-[0-3][0-9]' >/dev/null ) ; then
+-      GST_PACKAGE_RELEASE_DATETIME=$1
++    dnl AG_GST_SET_PACKAGE_RELEASE_DATETIME([yes], [YYYY-MM-DD])
++    dnl AG_GST_SET_PACKAGE_RELEASE_DATETIME([yes], [DOAP-FILE], [RELEASE-VERSION])
++changequote(<<, >>)dnl
++    if ( echo $2 | grep '^20[1-9][0-9]-[0-1][0-9]-[0-3][0-9]' >/dev/null ) ; then
++changequote([, ])dnl
++      GST_PACKAGE_RELEASE_DATETIME=$2
+     else
+       dnl we assume the .doap file contains the date as YYYY-MM-DD
+       YYYY_MM_DD=`sh "${srcdir}/common/extract-release-date-from-doap-file" $3 $2`;
+@@ -47,7 +49,9 @@ AC_DEFUN([AG_GST_SET_PACKAGE_RELEASE_DAT
+       fi
+     fi
+   dnl AG_GST_SET_PACKAGE_RELEASE_DATETIME([YYYY-MM-DD])
+-  elif ( echo $1 | grep -e '^20[1-9][0-9]-[0-1][0-9]-[0-3][0-9]' >/dev/null ) ; then
++changequote(<<, >>)dnl
++  elif ( echo $1 | grep '^20[1-9][0-9]-[0-1][0-9]-[0-3][0-9]' >/dev/null ) ; then
++changequote([, ])dnl
+     GST_PACKAGE_RELEASE_DATETIME=$1
+   else
+     AC_MSG_WARN([SET_PACKAGE_RELEASE_DATETIME: invalid first argument])
+--- farstream-0.2-0.2.7.orig/common/m4/gst-parser.m4
++++ farstream-0.2-0.2.7/common/m4/gst-parser.m4
+@@ -8,14 +8,14 @@ AC_DEFUN([AG_GST_BISON_CHECK],
+   fi
+ 
+   dnl check bison version
+-  dnl we need version >= 1.875 for the reentrancy support
++  dnl we need version >= 2.4 for the '<>' support
+   dnl in the parser.
+   dnl First lines observed: 'bison (GNU Bison) 2.3' or 'GNU Bison version 1.28'
+-  bison_min_version=1.875
++  bison_min_version=2.4
+   bison_version=`$BISON_PATH --version | head -n 1 |  sed 's/^[[^0-9]]*//' | sed 's/[[^0-9]]*$//' | cut -d' ' -f1`
+   AC_MSG_CHECKING([bison version $bison_version >= $bison_min_version])
+ 
+-  if perl -we "exit ((v$bison_version ge v$bison_min_version) ? 0 : 1)"; then
++  if perl -we "exit (('v$bison_version' ge 'v$bison_min_version') ? 0 : 1)"; then
+     AC_MSG_RESULT([yes])
+   else
+     AC_MSG_ERROR([no])
+--- farstream-0.2-0.2.7.orig/common/m4/gst-plugin-docs.m4
++++ farstream-0.2-0.2.7/common/m4/gst-plugin-docs.m4
+@@ -1,4 +1,4 @@
+-dnl AG_GST_PLUGIN_DOCS([MINIMUM-GTK-DOC-VERSION],[MINIMUM-PYTHON-VERSION])
++dnl AG_GST_PLUGIN_DOCS([MINIMUM-GTK-DOC-VERSION])
+ dnl
+ dnl checks for prerequisites for the common/mangle-tmpl.py script
+ dnl used when building the plugin documentation
+@@ -6,13 +6,17 @@ dnl used when building the plugin docume
+ AC_DEFUN([AG_GST_PLUGIN_DOCS],
+ [
+   AC_BEFORE([GTK_DOC_CHECK],[$0])dnl check for gtk-doc first
+-  AC_BEFORE([AS_PATH_PYTHON],[$1])dnl find python first
++  AC_REQUIRE([AM_PATH_PYTHON])dnl find python first
+ 
+   build_plugin_docs=no
+   AC_MSG_CHECKING([whether to build plugin documentation])
+   if test x$enable_gtk_doc = xyes; then
+-    build_plugin_docs=yes
+-    AC_MSG_RESULT([yes])
++    if test x$PYTHON != x; then
++      build_plugin_docs=yes
++      AC_MSG_RESULT([yes])
++    else
++      AC_MSG_RESULT([no (python not found)])
++    fi
+   else
+     AC_MSG_RESULT([no (gtk-doc disabled or not available)])
+   fi
+--- farstream-0.2-0.2.7.orig/common/m4/gst-x11.m4
++++ farstream-0.2-0.2.7/common/m4/gst-x11.m4
+@@ -9,7 +9,11 @@ AC_DEFUN([AG_GST_CHECK_X],
+   CPPFLAGS="$CPPFLAGS $X_CFLAGS"
+ 
+   dnl now try to find the HEADER
+-  AC_CHECK_HEADER(X11/Xlib.h, HAVE_X="yes", HAVE_X="no")
++  HAVE_X="no"
++  AC_CHECK_HEADER([X11/Xlib.h], [
++    dnl and then the library with the most uniquitous function
++    AC_CHECK_LIB(X11, [XSync], [HAVE_X="yes"], [], [$X_LIBS $X_PRE_LIBS $X_EXTRA_LIBS])
++  ], [], [AC_INCLUDES_DEFAULT])
+ 
+   if test "x$HAVE_X" = "xno"
+   then
+--- farstream-0.2-0.2.7.orig/common/m4/gtk-doc.m4
++++ farstream-0.2-0.2.7/common/m4/gtk-doc.m4
+@@ -67,5 +67,4 @@ AC_DEFUN([GTK_DOC_CHECK],
+   AM_CONDITIONAL([GTK_DOC_BUILD_HTML], [test x$enable_gtk_doc_html = xyes])
+   AM_CONDITIONAL([GTK_DOC_BUILD_PDF], [test x$enable_gtk_doc_pdf = xyes])
+   AM_CONDITIONAL([GTK_DOC_USE_LIBTOOL], [test -n "$LIBTOOL"])
+-  AM_CONDITIONAL([GTK_DOC_USE_REBASE], [test -n "$GTKDOC_REBASE"])
+ ])
+--- farstream-0.2-0.2.7.orig/common/m4/introspection.m4
++++ farstream-0.2-0.2.7/common/m4/introspection.m4
+@@ -62,6 +62,7 @@ m4_define([_GOBJECT_INTROSPECTION_CHECK_
+        INTROSPECTION_CFLAGS=`$PKG_CONFIG --cflags gobject-introspection-1.0`
+        INTROSPECTION_LIBS=`$PKG_CONFIG --libs gobject-introspection-1.0`
+        INTROSPECTION_MAKEFILE=`$PKG_CONFIG --variable=datadir gobject-introspection-1.0`/gobject-introspection-1.0/Makefile.introspection
++       INTROSPECTION_INIT="extern void gst_init(gint*,gchar**); gst_init(NULL,NULL);"
+     fi
+     AC_SUBST(INTROSPECTION_SCANNER)
+     AC_SUBST(INTROSPECTION_COMPILER)
+@@ -71,6 +72,7 @@ m4_define([_GOBJECT_INTROSPECTION_CHECK_
+     AC_SUBST(INTROSPECTION_CFLAGS)
+     AC_SUBST(INTROSPECTION_LIBS)
+     AC_SUBST(INTROSPECTION_MAKEFILE)
++    AC_SUBST(INTROSPECTION_INIT)
+ 
+     AM_CONDITIONAL(HAVE_INTROSPECTION, test "x$found_introspection" = "xyes")
+ ])
+--- /dev/null
++++ farstream-0.2-0.2.7/common/mangle-db.py
+@@ -0,0 +1,71 @@
++# -*- Mode: Python -*-
++# vi:si:et:sw=4:sts=4:ts=4
++
++"""
++Insert includes for the element-*-details.xml files into the related docbook
++files.
++"""
++
++from __future__ import print_function, unicode_literals
++
++import codecs
++import glob
++import os
++import sys
++
++import xml.dom.minidom
++
++def patch(related, details):
++    try:
++        doc = xml.dom.minidom.parse(related)
++    except IOError:
++        return
++
++    # find the insertion point
++    elem = None
++    for e in doc.childNodes:
++        if e.nodeType == e.ELEMENT_NODE and e.localName == 'refentry':
++            elem = e
++            break
++    if elem == None:
++        return
++
++    elem2 = None
++    for e in elem.childNodes:
++        if e.nodeType == e.ELEMENT_NODE and e.localName == 'refsect1':
++            id = e.getAttributeNode('id')
++            role = e.getAttributeNode('role')
++            if id and id.nodeValue.endswith('.description') and role and role.nodeValue == 'desc':
++                elem2 = e
++                break
++    if elem2 == None:
++        return
++
++    # insert include
++    include = doc.createElement('include')
++    include.setAttribute('xmlns', 'http://www.w3.org/2003/XInclude')
++    include.setAttribute('href', details)
++    fallback = doc.createElement('fallback')
++    fallback.setAttribute('xmlns', 'http://www.w3.org/2003/XInclude')
++    include.appendChild(fallback)
++    elem2.appendChild(include)
++
++    # store patched file
++    result = codecs.open(related, mode="w", encoding="utf-8")
++    #result = open(related, "wb")
++    doc.writexml(result)
++    result.close()
++
++def main():
++    if not len(sys.argv) == 2:
++        sys.stderr.write('Please specify the xml/ dir')
++        sys.exit(1)
++
++    xmldir = sys.argv[1]
++
++    # parse all *-details.xml files and patch includes into the corresponding
++    # xml files
++    for details in glob.glob("%s/element-*-details.xml" % xmldir):
++        patch (details.replace("-details", ""), os.path.basename(details))
++
++main()
+--- farstream-0.2-0.2.7.orig/common/release.mak
++++ farstream-0.2-0.2.7/common/release.mak
+@@ -2,11 +2,27 @@
+ # include $(top_srcdir)/common/release.mak
+ 
+ release: dist
+-	$(MAKE) $(PACKAGE)-$(VERSION).tar.xz.md5
++	@$(MAKE) $(PACKAGE)-$(VERSION).tar.xz.sha256sum
++	@echo
++	@echo "================================================================================================="
++	@echo "http://gstreamer.freedesktop.org/src/$(PACKAGE)/$(PACKAGE)-$(VERSION).tar.xz"
++	@cat $(PACKAGE)-$(VERSION).tar.xz.sha256sum
++	@echo "================================================================================================="
++	@if [ -d ~/releases/ ]; then \
++	  cp -v $(PACKAGE)-$(VERSION).tar.xz ~/releases/; \
++	fi
++	@if [ -d ../www/data/src ]; then \
++	  mv -v $(PACKAGE)-$(VERSION).tar.xz ../www/data/src/$(PACKAGE)/ ; \
++	  mv -v $(PACKAGE)-$(VERSION).tar.xz.sha256sum ../www/data/src/$(PACKAGE)/ ; \
++	elif [ -d ../../www/data/src ]; then \
++	  mv -v $(PACKAGE)-$(VERSION).tar.xz ../../www/data/src/$(PACKAGE)/ ; \
++	  mv -v $(PACKAGE)-$(VERSION).tar.xz.sha256sum ../../www/data/src/$(PACKAGE)/ ; \
++	fi
++	@echo "================================================================================================="
+ 
+-# generate md5 sum files
+-%.md5: %
+-	md5sum $< > $@
++# generate sha256 sum files
++%.sha256sum: %
++	@sha256sum $< > $@
+ 
+ # check that no marshal or enumtypes files are included
+ # this in turn ensures that distcheck fails for missing .list files which is currently
+@@ -14,8 +30,8 @@ release: dist
+ distcheck-hook:
+ 	@test "x" = "x`find $(distdir) -name \*-enumtypes.[ch] | grep -v win32`" && \
+ 	test "x" = "x`find $(distdir) -name \*-marshal.[ch]`" || \
+-	( $(ECHO) "*** Leftover enumtypes or marshal files in the tarball." && \
+-	  $(ECHO) "*** Make sure the following files are not disted:" && \
++	( echo "*** Leftover enumtypes or marshal files in the tarball." && \
++	  echo "*** Make sure the following files are not disted:" && \
+ 	  find $(distdir) -name \*-enumtypes.[ch] | grep -v win32 && \
+ 	  find $(distdir) -name \*-marshal.[ch] && \
+ 	  false )
+--- farstream-0.2-0.2.7.orig/common/scangobj-merge.py
++++ farstream-0.2-0.2.7/common/scangobj-merge.py
+@@ -6,8 +6,11 @@
+ parse, merge and write gstdoc-scanobj files
+ """
+ 
+-import sys
++from __future__ import print_function, unicode_literals
++
++import codecs
+ import os
++import sys
+ 
+ def debug(*args):
+     pass
+@@ -76,13 +79,13 @@ class Object:
+         return "<Object %s>" % self.name
+ 
+     def add_signal(self, signal, overwrite=True):
+-        if not overwrite and self._signals.has_key(signal.name):
+-            raise IndexError, "signal %s already in %r" % (signal.name, self)
++        if not overwrite and signal.name in self._signals:
++            raise IndexError("signal %s already in %r" % (signal.name, self))
+         self._signals[signal.name] = signal
+ 
+     def add_arg(self, arg, overwrite=True):
+-        if not overwrite and self._args.has_key(arg.name):
+-            raise IndexError, "arg %s already in %r" % (arg.name, self)
++        if not overwrite and arg.name in self._args:
++            raise IndexError("arg %s already in %r" % (arg.name, self))
+         self._args[arg.name] = arg
+ 
+ class Docable:
+@@ -103,10 +106,12 @@ class Arg(Docable):
+ class GDoc:
+     def load_file(self, filename):
+         try:
+-            lines = open(filename).readlines()
++            lines = codecs.open(filename, encoding='utf-8').readlines()
+             self.load_data("".join(lines))
+         except IOError:
+-            print "WARNING - could not read from %s" % filename
++            print ("WARNING - could not read from %s" % filename)
++        except UnicodeDecodeError as e:
++            print ("WARNING - could not parse %s: %s" % (filename, e))
+ 
+     def save_file(self, filename, backup=False):
+         """
+@@ -114,10 +119,10 @@ class GDoc:
+         """
+         olddata = None
+         try:
+-            lines = open(filename).readlines()
++            lines = codecs.open(filename, encoding='utf-8').readlines()
+             olddata = "".join(lines)
+         except IOError:
+-            print "WARNING - could not read from %s" % filename
++            print ("WARNING - could not read from %s" % filename)
+         newdata = self.get_data()
+         if olddata and olddata == newdata:
+             return
+@@ -126,7 +131,7 @@ class GDoc:
+             if backup:
+                 os.rename(filename, filename + '.bak')
+ 
+-        handle = open(filename, "w")
++        handle = codecs.open(filename, "w", encoding='utf-8')
+         handle.write(newdata)
+         handle.close()
+ 
+@@ -161,7 +166,7 @@ class Signals(GDoc):
+                 o = nmatch.group('object')
+                 debug("Found object", o)
+                 debug("Found signal", nmatch.group('signal'))
+-                if not self._objects.has_key(o):
++                if o not in self._objects:
+                     object = Object(o)
+                     self._objects[o] = object
+ 
+@@ -222,7 +227,7 @@ class Args(GDoc):
+                 o = nmatch.group('object')
+                 debug("Found object", o)
+                 debug("Found arg", nmatch.group('arg'))
+-                if not self._objects.has_key(o):
++                if o not in self._objects:
+                     object = Object(o)
+                     self._objects[o] = object
+ 
+@@ -233,7 +238,7 @@ class Args(GDoc):
+                     arg = Arg(**dict)
+                     self._objects[o].add_arg(arg)
+                 else:
+-                    print "ERROR: could not match arg from block %s" % block
++                    print ("ERROR: could not match arg from block %s" % block)
+ 
+     def get_data(self):
+         lines = []
+--- /dev/null
++++ farstream-0.2-0.2.7/common/update-autogen
+@@ -0,0 +1,48 @@
++#!/bin/bash
++
++if [ ! -f "common/update-autogen" ]; then
++  echo "Run ./common/update-autogen from the top-level source directory of a GStreamer module";
++  exit 1;
++fi
++
++if ! ls -1 *.doap 2>/dev/null >/dev/null; then
++  echo "Could not find *.doap file";
++  exit 1;
++fi
++
++PACKAGE=`ls -1 *.doap | head -n1 | sed -e 's/.doap$//'`
++
++#echo "Package: $PACKAGE"
++
++DIR=`mktemp -d`
++if [[ $? != 0 ]]; then
++  echo "Could not create temp dir";
++  exit 1;
++fi
++
++TEMP_AUTOGEN_SH="$DIR/autogen.sh"
++echo "\
++#!/bin/sh
++#
++# $PACKAGE autogen.sh
++#
++# Run this to generate all the initial makefiles, etc.
++#
++# This file has been generated from common/autogen.sh.in via common/update-autogen
++
++" > $TEMP_AUTOGEN_SH
++
++sed \
++    -e "s/@API_VERSION@/1.0/g" \
++    -e "s/@PACKAGE@/$PACKAGE/g" \
++    -e "s/@SRCFILE@/$PACKAGE.doap/g" < common/autogen.sh.in >> $TEMP_AUTOGEN_SH
++
++chmod +x $TEMP_AUTOGEN_SH
++
++mv $TEMP_AUTOGEN_SH autogen.sh || {
++  echo "Failed to update autogen.sh"
++  exit 1;
++}
++rmdir $DIR
++
++echo "Updated $PACKAGE autogen.sh"
+--- /dev/null
++++ farstream-0.2-0.2.7/common/update-common
+@@ -0,0 +1,187 @@
++#!/bin/bash
++#
++# This script will update all the modules listed below so that
++# common points to master in the common module.
++#
++# If you have many of the GStreamer modules checked out in a particular
++# directory, it's best to run this script from that directory.  For
++# example, I check everything out in ~/gst, so this file is
++# ~/gst/common/update-common.  To do an update, I do
++# 'cd ~/gst ; ./common/update-common'.  This will automatically use
++# the refs in your existing checkout when cloning the temporary
++# checkout.  Alternatively, you can use the reference variable below.
++#
++# Options:
++#
++#   --dry-run : pass --dry-run to git push, don't actually push the changes
++#   --keep    : keep temporary checkouts around instead of deleting them
++
++# Set this variable to point to any directory containing existing
++# git # checkouts, and git will pull objects from there, decreasing
++# network usage.
++BRANCH=master
++reference=~/gst
++PUSHURL=ssh://git.freedesktop.org/git/gstreamer
++DRY_RUN=
++KEEP=no
++COMMON_COMMIT=
++
++set -e
++set -x
++
++modules="gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad \
++	gst-plugins-ugly gst-libav gst-omx gstreamer-vaapi \
++	gst-rtsp-server gst-editing-services"
++
++topdir=`pwd`
++dir=`mktemp -d $topdir/common-update-XXXXXX`
++
++# process command line arguments
++set +x
++for arg in $@
++do
++  case $arg in
++    --dry-run)
++      DRY_RUN="--dry-run";
++      ;;
++    --keep)
++      KEEP="yes";
++      ;;
++    --commit=*)
++      COMMON_COMMIT="${arg#*=}";
++      DRY_RUN="--dry-run";
++      KEEP="yes";
++      ;;
++    --help)
++      echo
++      echo "update-common supported command line options:"
++      echo
++      echo " --dry-run   Don't actually push changes to the repository, use git push --dry-run"
++      echo
++      echo " --keep      Don't delete temporary git checkout used for update operation, keep it around"
++      echo
++      echo " --commit=REF  Update common to commit reference REF (for local testing, implies --dry-run --keep)"
++      echo
++      exit 0;
++      ;;
++    *)
++      echo "Unknown command line argument $arg"
++      echo "Supported: --dry-run, --keep"
++      exit 1;
++      ;;
++  esac
++done
++set -x
++
++# create temporary checkouts of the modules
++for module in $modules
++do
++  cd $dir
++  if test -e $reference/$module/.git ; then
++    pushd $reference/$module
++    PUSHURL=`git config remote.origin.url | sed 's@\(git/gstreamer\).*@\1@'`
++    popd
++    git clone --reference $reference/$module/.git --shared ssh://git.freedesktop.org/git/gstreamer/$module
++  elif test -e $topdir/$module/.git ; then
++    pushd $topdir/$module
++    PUSHURL=`git config remote.origin.url | sed 's@\(git/gstreamer\).*@\1@'`
++    popd
++    git clone --reference $topdir/$module/.git --shared $PUSHURL/$module
++  else
++    git clone $PUSHURL/$module
++  fi
++  cd $dir/$module
++
++  # ignore modules that don't have such a branch
++  if ! git show-ref origin/$BRANCH >/dev/null; then
++    continue;
++  fi
++
++  if test $BRANCH = 'master'; then
++    git checkout $BRANCH
++  else
++    git checkout -b $BRANCH origin/$BRANCH
++  fi
++
++  git submodule init
++
++  # avoid downloading common submodule by re-using existing common checkout
++  if test -e $reference/common/.git ; then
++    git submodule update --reference $reference/common -- common
++  elif test -e $topdir/common/.git ; then
++    git submodule update --reference $topdir/common -- common
++  else
++    git submodule update
++  fi
++
++  # avoid downloading libav submodule by re-using existing checkout
++  if test "$module" = "gst-libav"; then
++    if test -e $reference/gst-libav/gst-libs/ext/ffmpeg/.git ; then
++      git submodule update --reference $reference/gst-libav/gst-libs/ext/ffmpeg -- gst-libs/ext/gst-libav
++    elif test -e $topdir/gst-libav/gst-libs/ext/ffmpeg/.git ; then
++      git submodule update --reference $topdir/gst-libav/gst-libs/ext/ffmpeg/ -- gst-libs/ext/ffmpeg
++    else
++      git submodule update
++    fi
++  fi
++
++  # for good measure in case there are any other submodules anywhere
++  git submodule update
++
++  cd $dir/$module/common
++  ref_from=`git log --pretty=format:%h -n 1 HEAD`
++  if test $BRANCH = 'master'; then
++    git checkout $BRANCH
++  else
++    git checkout -b $BRANCH origin/$BRANCH
++  fi
++  git pull origin
++  if [ -n "$COMMON_COMMIT" ] ; then
++    echo "Forcing common to commit $COMMON_COMMIT";
++    git reset --hard $COMMON_COMMIT || {
++      echo "Failed to git reset to $COMMON_COMMIT";
++      exit 1;
++    }
++  fi
++  ref_to=`git log --pretty=format:%h -n 1 HEAD`
++  echo updating common from $ref_from to $ref_to
++  if [ "$ref_from" != "$ref_to" ] ; then
++    cd $dir/$module
++    # update autogen.sh for selected modules
++    case $module in
++      gstreamer|gst-plugins-base|gst-plugins-good|gst-plugins-ugly|gst-plugins-bad|gst-libav|gst-editing-services|gst-rtsp-server|gst-omx )
++        ./common/update-autogen
++        git add autogen.sh
++        ;;
++      *)
++        ;;
++    esac
++    # update README and MAINTAINERS for selected modules
++    case $module in
++      gstreamer|gst-plugins-base|gst-plugins-good|gst-plugins-ugly|gst-plugins-bad )
++        ./common/update-readmes --run-git-add
++        ;;
++      *)
++        ;;
++    esac
++    # and finally update the common submodule
++    git add common
++    git commit -m "Automatic update of common submodule
++
++From $ref_from to $ref_to"
++  fi
++  cd $dir
++done
++
++for module in $modules
++do
++  cd $dir/$module
++  if git show-ref origin/$BRANCH >/dev/null; then
++    git push $DRY_RUN origin $BRANCH
++  fi
++done
++
++# delete temporary checkouts again
++if test "x$KEEP" != "xyes"; then
++  rm -rf $dir
++fi
+--- /dev/null
++++ farstream-0.2-0.2.7/common/update-readmes
+@@ -0,0 +1,42 @@
++#!/bin/bash
++#
++# update-readmes
++#
++# Updates a module's README and MAINTAINERS files from the copy in the
++# common submodule.
++
++README_FILES="README README.static-linking MAINTAINERS"
++
++if [ ! -f "common/update-readmes" -o ! -f configure.ac ]; then
++  echo "Run ./common/update-readmes from the top-level source directory of a GStreamer module";
++  exit 1;
++fi
++
++MAJOR_VERSION=`grep '^AC_INIT' configure.ac | sed -e 's/[^0-9]*\([0-9]\)\.\([0-9]*\).*/\1/'`
++MINOR_VERSION=`grep '^AC_INIT' configure.ac | sed -e 's/[^0-9]*\([0-9]\)\.\([0-9]*\).*/\2/'`
++
++if test x$MAJOR_VERSION = x -o x$MINOR_VERSION = x ; then
++  echo "Failed to extract major/minor version";
++  exit 1;
++fi
++
++let m=$MINOR_VERSION%2
++if test $m = 0; then
++  SERIES_VERSION="$MAJOR_VERSION.$MINOR_VERSION.x stable series"
++else
++  SERIES_VERSION="$MAJOR_VERSION.$MINOR_VERSION.x development series"
++fi
++#echo "$SERIES_VERSION"
++
++for f in $README_FILES ; do
++ cp --preserve "common/$f" $f || {
++   echo "Failed to update $f"
++   exit 1;
++ }
++done
++
++sed -i "s/@SERIES_VERSION@/$SERIES_VERSION/g" README
++
++if test x$1 = "x--run-git-add"; then
++  git add $README_FILES;
++fi
+--- farstream-0.2-0.2.7.orig/common/upload-doc.mak
++++ farstream-0.2-0.2.7/common/upload-doc.mak
+@@ -44,14 +44,12 @@ upload: $(FORMATS)
+ 	if echo $(FORMATS) | grep ps > /dev/null; then export SRC="$$SRC $(DOC).ps"; fi; \
+ 	if echo $(FORMATS) | grep pdf > /dev/null; then export SRC="$$SRC $(DOC).pdf"; fi; \
+ 	\
+-	# upload releases to both 0.10.X/ and head/ subdirectories \
+-	if test "x$(PACKAGE_VERSION_NANO)" = x0; then \
+-	  export DIR=$(DOC_BASE)/gstreamer/$(VERSION)/$(DOC); \
+-	  echo Uploading $$SRC to $(DOC_SERVER):$$DIR; \
+-	  ssh $(DOC_SERVER) mkdir -p $$DIR; \
+-	  rsync -rv -e ssh --delete $$SRC $(DOC_SERVER):$$DIR; \
+-	  ssh $(DOC_SERVER) chmod -R g+w $$DIR; \
+-	fi; \
++	# upload releases to both X.Y/ and head/ subdirectories \
++	export DIR=$(DOC_BASE)/gstreamer/$(PACKAGE_VERSION_MAJOR).$(PACKAGE_VERSION_MINOR)/$(DOC); \
++	echo Uploading $$SRC to $(DOC_SERVER):$$DIR; \
++	ssh $(DOC_SERVER) mkdir -p $$DIR; \
++	rsync -rv -e ssh --delete $$SRC $(DOC_SERVER):$$DIR; \
++	ssh $(DOC_SERVER) chmod -R g+w $$DIR; \
+ 	\
+ 	export DIR=$(DOC_BASE)/gstreamer/head/$(DOC); \
+ 	echo Uploading $$SRC to $(DOC_SERVER):$$DIR; \
+--- farstream-0.2-0.2.7.orig/common/win32.mak
++++ farstream-0.2-0.2.7/common/win32.mak
+@@ -44,18 +44,27 @@ check-exports:
+ 	  if test "x$$libso" != "x"; then \
+ 	    echo Checking symbols in $$libso; \
+ 	    if ! ($(top_srcdir)/common/check-exports $$libdef $$libso) ; then \
+-	      fail=1; \
++	      echo "$$libdef"; \
++	      if test "$$libbase" != "libgstgl"; then \
++	        fail=1; \
++	      fi; \
+ 	    fi; \
+ 	  fi; \
+ 	done ; \
+ 	if test $$fail != 0; then \
+ 	  echo '-----------------------------------------------------------'; \
+ 	  echo 'Run this to update the .def files:'; \
+-	  echo 'make check-exports 2>&1 | patch -p1'; \
++	  echo 'make update-exports'; \
+ 	  echo '-----------------------------------------------------------'; \
+ 	fi; \
+ 	exit $$fail
+ 
++update-exports:
++	make check-exports 2>&1 | patch -p1
++	git add win32/common/libgst*.def
++	git diff --cached -- win32/common/
++	echo '^^^--- updated and staged changes above'
++
+ # complain about nonportable printf format strings (%lld, %llu, %zu etc.)
+ check-nonportable-print-format:
+ 	@fail=0 ; \

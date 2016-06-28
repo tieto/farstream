@@ -12,6 +12,14 @@ farstream-0.2 (0.2.8-1) UNRELEASED; urgency=medium
 
  -- Laurent Bigonville <bigon@debian.org>  Sat, 30 Apr 2016 02:57:43 +0200
 
+farstream-0.2 (0.2.7-2) unstable; urgency=medium
+
+  * debian/patches/doc-sync-latest-common.patch:
+    - fix documentation build with gtk-doc
+    (Closes: #819836)
+
+ -- Héctor Orón Martínez <zumbi@debian.org>  Wed, 22 Jun 2016 12:48:28 +0200
+
 farstream-0.2 (0.2.7-1) unstable; urgency=medium
 
   [ Simon McVittie ]
