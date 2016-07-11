@@ -34,11 +34,13 @@ G_BEGIN_DECLS
 /*
  * These are the basic types:
  *
- * @FS_PARAM_TYPE_SEND: The parameter define what we are allowed to send
- * @FS_PARAM_TYPE_RECV: The parameter defines what will be received,
+ * @FS_PARAM_TYPE_SEND: The parameter define what we are allowed to send, it
+ *  describes the capabilities of the decoder
+ * @FS_PARAM_TYPE_RECV: The parameter defines what will be received, it
+ *  describes the stream
  * @FS_PARAM_TYPE_CONFIG: The parameter is some configuration that must be
  *  fed to the decoder to be able to decode the stream
- * @FS_PARAM_TYPE_SEND_AVOID_NEGO: The parameter is not negotiated and can
+ * @FS_PARAM_TYPE_SEND_AVOID_NEGO: The send parameter is not negotiated and can
  *  be different on both sides
  * @FS_PARAM_TYPE_MANDATORY: This parameter is mandatory and the codec's
  *  definition is not useful without it.
