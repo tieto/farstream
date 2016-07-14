@@ -279,6 +279,19 @@ static const struct SdpNegoFunction sdp_nego_functions[] = {
       {"height", FS_PARAM_TYPE_SEND, param_minimum}
     }
   },
+  /* OPUS: RFC 7687 */
+  {FS_MEDIA_TYPE_AUDIO, "OPUS", sdp_negotiate_codec_default,
+    {
+      {"sprop-maxcapturerate", FS_PARAM_TYPE_CONFIG | FS_PARAM_TYPE_RECV, param_copy},
+      {"sprop-stereo",  FS_PARAM_TYPE_CONFIG | FS_PARAM_TYPE_RECV, param_copy},
+      /* Not sure how to handle those */
+      {"maxplaybackrate", FS_PARAM_TYPE_SEND_AVOID_NEGO, param_copy},
+      {"stereo", FS_PARAM_TYPE_SEND_AVOID_NEGO, param_copy},
+      {"cbr", FS_PARAM_TYPE_SEND_AVOID_NEGO, param_copy},
+      {"useinbandfec", FS_PARAM_TYPE_SEND_AVOID_NEGO, param_copy},
+      {"usedtx", FS_PARAM_TYPE_SEND_AVOID_NEGO, param_copy},
+    }
+  },
   {0, NULL, NULL}
 };
 
@@ -1226,7 +1239,6 @@ param_list_commas (const struct SdpParam *sdp_param,
 
   return TRUE;
 }
-
 
 /**
  * param_copy:

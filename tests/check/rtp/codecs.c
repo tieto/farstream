@@ -2173,6 +2173,12 @@ GST_START_TEST (test_rtpcodecs_nego_h264)
   test_one_codec (dat->session, participant, prefcodec, outprefcodec,
       codec, outcodec);
 
+  codec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
+  fs_codec_add_optional_parameter (codec, "sprop-init-buf-time", "1");
+  outcodec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
+  test_one_codec (dat->session, participant, prefcodec, outprefcodec,
+      codec, outcodec);
+
   /* Now test the minimum_reporting_interval property */
 
   codec = fs_codec_new (96, "H264", FS_MEDIA_TYPE_VIDEO, 90000);
@@ -2209,6 +2215,251 @@ GST_START_TEST (test_rtpcodecs_nego_h264)
 }
 GST_END_TEST;
 
+static gboolean
+check_opus_params (struct SimpleTestConference *dat, const gchar *param,
+    const gchar *value)
+{
+  GList *codecs = NULL, *item;
+  gboolean ret = FALSE;
+
+  g_object_get (dat->session, "codecs", &codecs, NULL);
+
+  for (item = codecs; item; item = item->next)
+  {
+    FsCodec *codec = item->data;
+    if (!g_ascii_strcasecmp ("OPUS", codec->encoding_name)) {
+      if (fs_codec_get_optional_parameter (codec, param, value))
+        ret = TRUE;
+      break;
+    }
+  }
+  fs_codec_list_destroy (codecs);
+
+  return ret;
+}
+
+static void
+opus_src_caps_set_cb (GstPad *pad, GParamSpec *spec, gpointer user_data)
+{
+  GstCaps **desired_src_caps = user_data;
+  GstCaps *current_caps;
+
+  current_caps = gst_pad_get_current_caps (pad);
+
+  if (current_caps) {
+    g_print ("caps: %s\n", gst_caps_to_string (gst_pad_get_current_caps (pad)));
+    g_mutex_lock (&check_mutex);
+    if (*desired_src_caps) {
+      if (gst_caps_can_intersect (current_caps, *desired_src_caps)) {
+        gst_caps_replace (desired_src_caps, 0);
+        g_cond_broadcast (&check_cond);
+      }
+    }
+    g_mutex_unlock (&check_mutex);
+    gst_caps_unref (current_caps);
+  }
+}
+
+static void
+opus_src_pad_added_cb (FsStream *self, GstPad *pad, FsCodec  *codec,
+    gpointer user_data)
+{
+  GstCaps **desired_src_caps = user_data;
+  GstCaps *current_caps;
+
+  current_caps = gst_pad_get_current_caps (pad);
+
+  if (current_caps) {
+    g_print ("caps: %s\n", gst_caps_to_string (gst_pad_get_current_caps (pad)));
+    g_mutex_lock (&check_mutex);
+    if (*desired_src_caps) {
+      if (gst_caps_can_intersect (current_caps, *desired_src_caps)) {
+        gst_caps_replace (desired_src_caps, 0);
+        g_cond_broadcast (&check_cond);
+      }
+    }
+    g_mutex_unlock (&check_mutex);
+    gst_caps_unref (current_caps);
+  } else {
+    g_signal_connect (pad, "notify::caps", G_CALLBACK (opus_src_caps_set_cb),
+        user_data);
+  }
+}
+
+GST_START_TEST (test_rtpcodecs_nego_opus)
+{
+  struct SimpleTestConference *dat = NULL;
+  FsCodec *codec = NULL;
+  FsCodec *outcodec = NULL;
+  FsCodec *prefcodec = NULL;
+  FsCodec *outprefcodec = NULL;
+  FsParticipant *participant;
+  GError *error = NULL;
+  GstCaps *caps;
+  FsStream *stream;
+  GstBus *bus;
+  GstElement *src;
+  GstPad *srcpad, *sinkpad;
+  gboolean done = FALSE;
+  GList *codecs = NULL, *item;
+  GError *gerror = NULL;
+  GstCaps *desired_src_caps = NULL;
+  FsCandidate *rtp_cand = NULL;
+  GstElement *send_pipeline;
+  gchar *tmp;
+
+  setup_codec_tests (&dat, &participant, FS_MEDIA_TYPE_AUDIO);
+
+
+  outprefcodec = fs_codec_new (FS_CODEC_ID_ANY, "OPUS", FS_MEDIA_TYPE_AUDIO,
+      48000);
+  outprefcodec->channels = 2;
+
+  prefcodec = fs_codec_copy (outprefcodec);
+  fs_codec_add_optional_parameter (prefcodec, "farstream-recv-profile",
+      "rtpopusdepay ! identity");
+  fs_codec_add_optional_parameter (prefcodec, "farstream-send-profile",
+      "identity ! rtpopuspay");
+
+  caps = gst_caps_from_string ("audio/x-opus; audio/x-raw");
+  fail_unless (fs_session_set_allowed_caps (dat->session, caps, caps, &error));
+  g_assert_no_error (error);
+  gst_caps_unref (caps);
+
+
+  codec = fs_codec_new (96, "OPUS", FS_MEDIA_TYPE_AUDIO, 48000);
+  outcodec = fs_codec_new (96, "OPUS", FS_MEDIA_TYPE_AUDIO, 48000);
+  outcodec->channels = 2;
+  test_one_codec (dat->session, participant, prefcodec, outprefcodec,
+      codec, outcodec);
+
+  codec = fs_codec_new (96, "OPUS", FS_MEDIA_TYPE_AUDIO, 48000);
+  fs_codec_add_optional_parameter (codec, "sprop-stereo", "1");
+  fs_codec_add_optional_parameter (codec, "stereo", "1");
+  outcodec = fs_codec_new (96, "OPUS", FS_MEDIA_TYPE_AUDIO, 48000);
+  outcodec->channels = 2;
+  test_one_codec (dat->session, participant, prefcodec, outprefcodec,
+      codec, outcodec);
+
+  fs_codec_destroy (outprefcodec);
+  fs_codec_destroy (prefcodec);
+  cleanup_codec_tests (dat, participant);
+
+
+
+  dat = setup_simple_conference (1, "fsrtpconference", "bob@127.0.0.1");
+  participant = fs_conference_new_participant (
+      FS_CONFERENCE (dat->conference), &gerror);
+  g_assert_no_error (gerror);
+
+  stream = fs_session_new_stream (dat->session, participant,
+      FS_DIRECTION_BOTH, &gerror);
+  g_assert_no_error (gerror);
+
+  g_object_get (dat->session, "codecs-without-config", &codecs, NULL);
+  for (item = codecs; item; item = item->next)
+  {
+    FsCodec *codec = item->data;
+    if (!g_ascii_strcasecmp ("OPUS", codec->encoding_name))
+      break;
+
+  }
+  fs_codec_list_destroy (codecs);
+
+  if (!item)
+  {
+    GST_WARNING ("Could not find Opus encoder/decoder/payloader/depayloaders,"
+        " so we are skipping the config-data test");
+    goto out;
+  }
+
+  g_object_set (dat->session, "no-rtcp-timeout", 0, NULL);
+
+  g_object_get (dat->session, "sink-pad", &sinkpad, NULL);
+  src = gst_parse_bin_from_description (
+      "audiotestsrc ! audio/x-raw, rate=16000, channels=1 ! identity", TRUE,
+      &gerror);
+  g_assert_no_error (gerror);
+  g_assert (src);
+  gst_bin_add (GST_BIN (dat->pipeline), src);
+  srcpad = gst_element_get_static_pad (src, "src");
+  g_assert (srcpad);
+  gst_pad_link (srcpad, sinkpad);
+  g_object_unref (sinkpad);
+  g_object_unref (srcpad);
+  gst_element_set_state (dat->pipeline, GST_STATE_PLAYING);
+
+  fs_stream_set_transmitter (stream, "rawudp", NULL, 0, &gerror);
+  g_assert_no_error (gerror);
+
+  desired_src_caps = gst_caps_from_string ("audio/x-raw, clock=rate=24000,"
+      " channels=2");
+
+  g_signal_connect (stream, "src-pad-added", G_CALLBACK (opus_src_pad_added_cb),
+      &desired_src_caps);
+
+  codec = fs_codec_new (96, "OPUS", FS_MEDIA_TYPE_AUDIO, 48000);
+  fs_codec_add_optional_parameter (codec, "sprop-stereo", "1");
+  fs_codec_add_optional_parameter (codec, "sprop-maxcapturerate", "24000");
+  codecs = g_list_append (NULL, codec);
+  fs_stream_set_remote_codecs (stream, codecs, &gerror);
+  fs_codec_list_destroy (codecs);
+  g_assert_no_error (gerror);
+
+  done = check_opus_params (dat, "sprop-maxcapturerate", "16000") &&
+    check_opus_params (dat, "sprop-stereo", "0");
+
+  bus = gst_pipeline_get_bus (GST_PIPELINE (dat->pipeline));
+
+
+  while (!done || rtp_cand == NULL) {
+    GstMessage *msg =  gst_bus_timed_pop_filtered (bus, GST_CLOCK_TIME_NONE,
+        GST_MESSAGE_ELEMENT);
+    FsCandidate *cand = NULL;
+
+    g_assert (msg);
+
+    if (fs_session_parse_codecs_changed (dat->session, msg)) {
+      done = check_opus_params (dat, "sprop-maxcapturerate", "16000") &&
+        check_opus_params (dat, "sprop-stereo", "0");
+    } else if (fs_stream_parse_new_local_candidate (stream, msg, &cand)) {
+      if (cand->component_id == 1)
+        rtp_cand = fs_candidate_copy (cand);
+    }
+    gst_message_unref (msg);
+  }
+  gst_object_unref (bus);
+
+  g_assert (check_opus_params (dat, "sprop-maxcapturerate", "16000"));
+  g_assert (check_opus_params (dat, "sprop-stereo", "0"));
+
+  tmp = g_strdup_printf (
+      "audiotestsrc ! opusenc ! rtpopuspay ! udpsink port=%d", rtp_cand->port);
+  send_pipeline = gst_parse_launch (tmp, &gerror);
+  g_assert_no_error (gerror);
+  g_free (tmp);
+
+  fs_candidate_destroy (rtp_cand);
+  gst_element_set_state (send_pipeline, GST_STATE_PLAYING);
+
+  g_mutex_lock (&check_mutex);
+  while (desired_src_caps != NULL)
+    g_cond_wait (&check_cond, &check_mutex);
+  g_mutex_unlock (&check_mutex);
+
+  gst_element_set_state (send_pipeline, GST_STATE_NULL);
+  gst_object_unref (send_pipeline);
+
+  gst_element_set_state (dat->pipeline, GST_STATE_NULL);
+ out:
+
+  fs_stream_destroy (stream);
+  g_object_unref (stream);
+  g_object_unref (participant);
+
+  cleanup_simple_conference (dat);
+}
+GST_END_TEST;
 
 GST_START_TEST (test_rtpcodecs_nego_feedback)
 {
@@ -2562,6 +2813,10 @@ fsrtpcodecs_suite (void)
 
   tc_chain = tcase_create ("fsrtpcodecs_nego_h264");
   tcase_add_test (tc_chain, test_rtpcodecs_nego_h264);
+  suite_add_tcase (s, tc_chain);
+
+  tc_chain = tcase_create ("fsrtpcodecs_nego_opus");
+  tcase_add_test (tc_chain, test_rtpcodecs_nego_opus);
   suite_add_tcase (s, tc_chain);
 
   tc_chain = tcase_create ("fsrtpcodecs_nego_feedback");
