@@ -1,4 +1,4 @@
-farstream-0.2 (0.2.8-1) UNRELEASED; urgency=medium
+farstream-0.2 (0.2.8-1) unstable; urgency=medium
 
   [ Laurent Bigonville ]
   * New upstream release
@@ -13,7 +13,7 @@ farstream-0.2 (0.2.8-1) UNRELEASED; urgency=medium
   [ Jonny Lamb ]
   * Remove myself from Uploaders.
 
- -- Laurent Bigonville <bigon@debian.org>  Mon, 15 Aug 2016 20:02:40 +0200
+ -- Laurent Bigonville <bigon@debian.org>  Mon, 15 Aug 2016 20:03:35 +0200
 
 farstream-0.2 (0.2.7-2) unstable; urgency=medium
 
