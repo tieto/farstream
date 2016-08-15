@@ -1,3 +1,10 @@
+farstream-0.2 (0.2.8-2) UNRELEASED; urgency=medium
+
+  * debian/watch, debian/upstream/signing-key.asc: Verify the upstream
+    signature and bump the compatibily version to 4
+
+ -- Laurent Bigonville <bigon@debian.org>  Mon, 15 Aug 2016 21:04:46 +0200
+
 farstream-0.2 (0.2.8-1) unstable; urgency=medium
 
   [ Laurent Bigonville ]
