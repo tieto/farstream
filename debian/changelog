@@ -8,11 +8,12 @@ farstream-0.2 (0.2.8-1) UNRELEASED; urgency=medium
   * debian/control: Update Vcs-* URL's to please lintian (again)
   * debian/control: Update the Homepage URL to point to the wiki page
   * Make gir1.2-farstream-0.2 package Multi-Arch: same
+  * debian/rules: Use gir sequence instead of overriding dh_shlibdeps
 
   [ Jonny Lamb ]
   * Remove myself from Uploaders.
 
- -- Laurent Bigonville <bigon@debian.org>  Mon, 15 Aug 2016 20:01:00 +0200
+ -- Laurent Bigonville <bigon@debian.org>  Mon, 15 Aug 2016 20:02:40 +0200
 
 farstream-0.2 (0.2.7-2) unstable; urgency=medium
 
