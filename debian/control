@@ -73,6 +73,7 @@ Description: Audio/Video communications framework: documentation
 
 Package: gir1.2-farstream-0.2
 Architecture: any
+Multi-Arch: same
 Depends: ${gir:Depends}, ${misc:Depends}
 Section: introspection
 Description: Audio/Video communications framework: GObject-Introspection
