@@ -1419,10 +1419,12 @@ fs_nice_stream_transmitter_build (FsNiceStreamTransmitter *self,
               self->priv->preferred_local_candidates))
       {
         fs_candidate_list_destroy (prefs);
+        g_free (stun_server);
         break;
       }
       fs_candidate_list_destroy (prefs);
     }
+    g_free (stun_server);
   }
 
 
