@@ -3,6 +3,7 @@
 #include "../../gst/fsrtpconference/fs-rtp-session.h"
 #include "../../gst/fsrtpconference/fs-rtp-stream.h"
 #include "../../gst/fsmsnconference/fs-msn-conference.h"
+#include "../../gst/fsmsnconference/fs-msn-participant.h"
 fs_rtp_participant_get_type
 fs_rtp_session_get_type
 fs_rtp_stream_get_type
