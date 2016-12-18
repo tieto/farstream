@@ -51,7 +51,7 @@ id=-1
 feedback:nack/pli=
 
 # We like VP8, but H.264 is still better
-[video/VP8-DRAFT-IETF-01]
+[video/VP8]
 
 [video/H263]
 feedback:nack/pli=
