@@ -1354,9 +1354,11 @@ fs_rtp_tfrc_new (FsRtpSession *fsrtpsession)
   gst_object_unref (rtpmuxer);
 
   self->in_rtp_probe_id = gst_pad_add_probe (self->in_rtp_pad,
-      GST_PAD_PROBE_TYPE_BUFFER, incoming_rtp_probe, self, NULL);
+      GST_PAD_PROBE_TYPE_BUFFER, incoming_rtp_probe,
+      g_object_ref (self), (GDestroyNotify) g_object_unref);
   self->in_rtcp_probe_id = gst_pad_add_probe (self->in_rtcp_pad,
-      GST_PAD_PROBE_TYPE_BUFFER, incoming_rtcp_probe, self, NULL);
+      GST_PAD_PROBE_TYPE_BUFFER, incoming_rtcp_probe,
+      g_object_ref (self), (GDestroyNotify) g_object_unref);
 
 
   self->on_ssrc_validated_id = g_signal_connect_object (self->rtpsession,
