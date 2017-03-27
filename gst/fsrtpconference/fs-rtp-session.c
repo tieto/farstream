@@ -1454,6 +1454,8 @@ fs_rtp_session_constructed (GObject *object)
     return;
   }
 
+  g_object_set (self->priv->discovery_valve, "drop", TRUE, NULL);
+
   if (!gst_bin_add (GST_BIN (self->priv->conference),
           self->priv->discovery_valve))
   {
