@@ -1,3 +1,9 @@
+farstream-0.2 (0.2.8-2+sipe) UNRELEASED; urgency=medium
+
+  * Build with extra sipe patches
+
+ -- Jakub Adam <jakub.adam@ktknet.cz>  Tue, 04 Apr 2017 19:22:14 +0200
+
 farstream-0.2 (0.2.8-2) unstable; urgency=medium
 
   * debian/watch, debian/upstream/signing-key.asc: Verify the upstream
