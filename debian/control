@@ -3,8 +3,7 @@ Priority: optional
 Section: libs
 Maintainer: Debian Telepathy maintainers <pkg-telepathy-maintainers@lists.alioth.debian.org>
 Uploaders: Sjoerd Simons <sjoerd@debian.org>,
-           Laurent Bigonville <bigon@debian.org>,
-           Jonny Lamb <jonny@debian.org>
+           Laurent Bigonville <bigon@debian.org>
 Build-Depends: autotools-dev,
                debhelper (>= 9),
                dh-autoreconf,
@@ -90,6 +89,7 @@ Description: Audio/Video communications framework: debugging symbols
 
 Package: gir1.2-farstream-0.2
 Architecture: any
+Multi-Arch: same
 Depends: ${gir:Depends}, ${misc:Depends}
 Section: introspection
 Description: Audio/Video communications framework: GObject-Introspection

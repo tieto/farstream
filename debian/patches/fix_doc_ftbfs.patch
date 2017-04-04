@@ -1,0 +1,24 @@
+From 1dcbbb07cbc8c3f05e3c86d21713d1a059eb2486 Mon Sep 17 00:00:00 2001
+From: Jeremy Bicha <jbicha@ubuntu.com>
+Date: Wed, 17 Aug 2016 02:51:38 -0400
+Subject: Add missing includes to fix docs build
+
+https://bugs.freedesktop.org/97376
+
+diff --git a/docs/plugins/farstream-plugins.types b/docs/plugins/farstream-plugins.types
+index 79a6b2a..ddacd28 100644
+--- a/docs/plugins/farstream-plugins.types
++++ b/docs/plugins/farstream-plugins.types
+@@ -1,4 +1,9 @@
+ #include <gst/gst.h>
++#include "../../gst/fsrtpconference/fs-rtp-participant.h"
++#include "../../gst/fsrtpconference/fs-rtp-session.h"
++#include "../../gst/fsrtpconference/fs-rtp-stream.h"
++#include "../../gst/fsmsnconference/fs-msn-conference.h"
++#include "../../gst/fsmsnconference/fs-msn-participant.h"
+ fs_rtp_participant_get_type
+ fs_rtp_session_get_type
+ fs_rtp_stream_get_type
+-- 
+cgit v0.10.2
+
