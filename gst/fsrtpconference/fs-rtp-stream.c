@@ -826,6 +826,11 @@ _local_candidates_prepared (FsStreamTransmitter *stream_transmitter,
 
   g_object_get (session, "conference", &conf, NULL);
 
+  if (!conf) {
+    g_object_unref (session);
+    return;
+  }
+
   gst_element_post_message (conf,
       gst_message_new_element (GST_OBJECT (conf),
           gst_structure_new ("farstream-local-candidates-prepared",
@@ -852,6 +857,11 @@ _new_active_candidate_pair (
     return;
 
   g_object_get (session, "conference", &conf, NULL);
+
+  if (!conf) {
+    g_object_unref (session);
+    return;
+  }
 
   gst_element_post_message (conf,
       gst_message_new_element (GST_OBJECT (conf),
@@ -880,6 +890,11 @@ _new_local_candidate (
     return;
 
   g_object_get (session, "conference", &conf, NULL);
+
+  if (!conf) {
+    g_object_unref (session);
+    return;
+  }
 
   gst_element_post_message (conf,
       gst_message_new_element (GST_OBJECT (conf),
@@ -928,6 +943,11 @@ _state_changed (FsStreamTransmitter *stream_transmitter,
     return;
 
   g_object_get (session, "conference", &conf, NULL);
+
+  if (!conf) {
+    g_object_unref (session);
+    return;
+  }
 
   gst_element_post_message (conf,
       gst_message_new_element (GST_OBJECT (conf),
