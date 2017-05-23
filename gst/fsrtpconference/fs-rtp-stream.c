@@ -1013,6 +1013,7 @@ _substream_unlinked (FsRtpSubStream *substream, gpointer user_data)
  * fs_rtp_stream_add_substream_unlock:
  * @stream: a #FsRtpStream
  * @substream: the #FsRtpSubStream to associate with this stream
+ * @session: the #FsRtpSession to be unlocked
  *
  * This functions associates a substream with this stream
  *
@@ -1024,13 +1025,18 @@ _substream_unlinked (FsRtpSubStream *substream, gpointer user_data)
 gboolean
 fs_rtp_stream_add_substream_unlock (FsRtpStream *stream,
     FsRtpSubStream *substream,
+    FsRtpSession *session,
     GError **error)
 {
   gboolean ret = TRUE;
-  FsRtpSession *session = fs_rtp_stream_get_session (stream, error);
+  FsRtpSession *mysession = fs_rtp_stream_get_session (stream, error);
 
-  if (!session)
+  if (!mysession) {
+    FS_RTP_SESSION_UNLOCK (session);
     return FALSE;
+  }
+
+  g_object_unref (mysession);
 
   stream->substreams = g_list_prepend (stream->substreams,
       substream);
@@ -1055,8 +1061,6 @@ fs_rtp_stream_add_substream_unlock (FsRtpStream *stream,
     ret = fs_rtp_sub_stream_add_output_ghostpad_unlock (substream, error);
   else
     FS_RTP_SESSION_UNLOCK (session);
-
-  g_object_unref (session);
 
   return ret;
 }

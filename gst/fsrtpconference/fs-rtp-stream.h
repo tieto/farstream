@@ -117,6 +117,7 @@ FsRtpStream *fs_rtp_stream_new (FsRtpSession *session,
 
 gboolean fs_rtp_stream_add_substream_unlock (FsRtpStream *stream,
     FsRtpSubStream *substream,
+    FsRtpSession *session,
     GError **error);
 
 void

@@ -3290,7 +3290,7 @@ fs_rtp_session_new_recv_pad (FsRtpSession *session, GstPad *new_pad,
 
   if (stream)
   {
-    if (!fs_rtp_stream_add_substream_unlock (stream, substream, &error))
+    if (!fs_rtp_stream_add_substream_unlock (stream, substream, session, &error))
     {
       g_prefix_error (&error,
           "Could not add the output ghostpad to the new substream: ");
@@ -4363,7 +4363,7 @@ fs_rtp_session_associate_free_substreams (FsRtpSession *session,
         g_signal_handlers_disconnect_by_func (substream, "no-rtcp-timedout",
             session) > 0);
 
-    if (fs_rtp_stream_add_substream_unlock (stream, substream, &error))
+    if (fs_rtp_stream_add_substream_unlock (stream, substream, session, &error))
     {
       GST_DEBUG ("Associated SSRC %x in session %u", ssrc, session->id);
     }
@@ -4488,7 +4488,7 @@ _substream_no_rtcp_timedout_cb (FsRtpSubStream *substream,
 
   first_stream = g_list_first (session->priv->streams)->data;
   g_object_ref (first_stream);
-  if (!fs_rtp_stream_add_substream_unlock (first_stream, substream, &error))
+  if (!fs_rtp_stream_add_substream_unlock (first_stream, substream, session, &error))
   {
     g_prefix_error (&error,
         "Could not link the substream to a stream: ");
