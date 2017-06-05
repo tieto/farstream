@@ -359,6 +359,7 @@ fs_rtp_stream_dispose (GObject *object)
     FsRtpSubStream *substream = self->substreams->data;
     self->substreams = g_list_remove (self->substreams, substream);
     FS_RTP_SESSION_UNLOCK (session);
+    fs_rtp_sub_stream_stop (substream);
     g_object_unref (substream);
     FS_RTP_SESSION_LOCK (session);
   }
