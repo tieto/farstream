@@ -949,7 +949,7 @@ rawudptransmitter_suite (void)
   suite_add_tcase (s, tc_chain);
 
   tc_chain = tcase_create ("rawudptransmitter-stun-timeout");
-  tcase_set_timeout (tc_chain, 5);
+  tcase_set_timeout (tc_chain, 10);
   tcase_add_test (tc_chain, test_rawudptransmitter_run_invalid_stun);
   suite_add_tcase (s, tc_chain);
 
@@ -1004,14 +1004,14 @@ rawudptransmitter_suite (void)
   suite_add_tcase (s, tc_chain);
 
   tc_chain = tcase_create ("rawudptransmitter-stunalternd-to-nowhere");
-  tcase_set_timeout (tc_chain, 12);
+  tcase_set_timeout (tc_chain, 20);
   tcase_add_checked_fixture (tc_chain, setup_stunalternd_valid,
       teardown_stunalternd);
   tcase_add_test (tc_chain, test_rawudptransmitter_run_stun_altern_to_nowhere);
   suite_add_tcase (s, tc_chain);
 
   tc_chain = tcase_create ("rawudptransmitter-stunalternd-loop");
-  tcase_set_timeout (tc_chain, 12);
+  tcase_set_timeout (tc_chain, 20);
   tcase_add_checked_fixture (tc_chain, setup_stunalternd_loop,
       teardown_stunalternd);
   tcase_add_test (tc_chain, test_rawudptransmitter_run_stun_altern_to_nowhere);
