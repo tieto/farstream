@@ -1734,6 +1734,9 @@ agent_new_candidate (NiceAgent *agent,
   FsNiceStreamTransmitter *self = FS_NICE_STREAM_TRANSMITTER (user_data);
   FsCandidate *fscandidate = NULL;
 
+  if (candidate->stream_id != self->priv->stream_id)
+    return;
+
   GST_DEBUG ("New candidate found");
 
   fscandidate = nice_candidate_to_fs_candidate (agent, candidate, TRUE);
