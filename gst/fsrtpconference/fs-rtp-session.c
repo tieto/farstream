@@ -574,19 +574,27 @@ _stop_transmitter_elem (gpointer key, gpointer value, gpointer elem_name)
 }
 
 static void
-stop_and_remove (GstBin *conf, GstElement **element, gboolean unref)
+stop_element (GstElement *element)
+{
+  if (element == NULL)
+    return;
+
+  gst_element_set_locked_state (element, TRUE);
+  if (gst_element_set_state (element, GST_STATE_NULL) !=
+      GST_STATE_CHANGE_SUCCESS)
+  {
+    gchar *elemname = gst_element_get_name (element);
+    GST_WARNING ("Could not set %s to GST_STATE_NULL", elemname);
+    g_free (elemname);
+  }
+}
+
+static void
+remove_element (GstBin *conf, GstElement **element, gboolean unref)
 {
   if (*element == NULL)
     return;
 
-  gst_element_set_locked_state (*element, TRUE);
-  if (gst_element_set_state (*element, GST_STATE_NULL) !=
-      GST_STATE_CHANGE_SUCCESS)
-  {
-    gchar *elemname = gst_element_get_name (*element);
-    GST_WARNING ("Could not set %s to GST_STATE_NULL", elemname);
-    g_free (elemname);
-  }
   if (!gst_bin_remove (conf, *element))
   {
     gchar *binname = gst_element_get_name (conf);
@@ -600,6 +608,12 @@ stop_and_remove (GstBin *conf, GstElement **element, gboolean unref)
   *element = NULL;
 }
 
+static void
+stop_and_remove (GstBin *conf, GstElement **element, gboolean unref)
+{
+  stop_element (*element);
+  remove_element (conf, element, unref);
+}
 
 static void
 fs_rtp_session_dispose (GObject *obj)
@@ -748,12 +762,15 @@ fs_rtp_session_dispose (GObject *obj)
   if (self->priv->rtpbin_recv_rtcp_sink)
     gst_pad_set_active (self->priv->rtpbin_recv_rtcp_sink, FALSE);
 
-  stop_and_remove (conferencebin, &self->priv->transmitter_rtp_funnel, TRUE);
-  stop_and_remove (conferencebin, &self->priv->transmitter_rtcp_funnel, TRUE);
+  stop_element (self->priv->transmitter_rtp_funnel);
+  stop_element (self->priv->transmitter_rtcp_funnel);
 
   if (self->priv->transmitters)
     g_hash_table_foreach (self->priv->transmitters, _stop_transmitter_elem,
       "gst-src");
+
+  remove_element (conferencebin, &self->priv->transmitter_rtp_funnel, TRUE);
+  remove_element (conferencebin, &self->priv->transmitter_rtcp_funnel, TRUE);
 
   self->priv->extra_sources =
     fs_rtp_special_sources_destroy (self->priv->extra_sources);
