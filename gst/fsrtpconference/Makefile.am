@@ -23,6 +23,13 @@ libfsrtpconference_convenience_la_SOURCES = \
 	fs-rtp-tfrc.c \
 	fs-rtp-packet-modder.c \
 	tfrc.c
+libfsrtpconference_convenience_la_LIBADD = \
+	$(top_builddir)/farstream/libfarstream-@FS_APIVERSION@.la \
+	$(FS_LIBS) \
+	$(GST_PLUGINS_BASE_LIBS) \
+	$(GST_LIBS) \
+	-lgstrtp-@GST_API_VERSION@ \
+	-lm
 
 noinst_HEADERS = \
 	fs-rtp-conference.h \
@@ -55,13 +62,7 @@ AM_CFLAGS = \
 libfsrtpconference_la_SOURCES = fs-rtp-conference-plugin.c
 
 libfsrtpconference_la_LIBADD = \
-	libfsrtpconference-convenience.la \
-	$(top_builddir)/farstream/libfarstream-@FS_APIVERSION@.la \
-	$(FS_LIBS) \
-	$(GST_PLUGINS_BASE_LIBS) \
-	$(GST_LIBS) \
-	-lgstrtp-@GST_API_VERSION@ \
-	-lm
+	libfsrtpconference-convenience.la
 
 libfsrtpconference_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
 libfsrtpconference_la_LIBTOOLFLAGS = $(PLUGIN_LIBTOOLFLAGS)
