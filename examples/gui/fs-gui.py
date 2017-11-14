@@ -140,34 +140,45 @@ class FsUIPipeline (GObject.Object):
         elif message.type == Gst.MessageType.LATENCY:
             self.pipeline.recalculate_latency()
         elif message.type == Gst.MessageType.ELEMENT:
+            sessions = []
+            if AUDIO:
+                sessions += [self.audiosession]
+            if VIDEO:
+                sessions += [self.videosession]
+            for session in sessions:
+                (changed, codec, sec_codecs) = session.fssession.parse_send_codec_changed(message)
+                if changed:
+                    print "Send codec changed: " + codec.to_string()
+                if changed or session.fssession.parse_codecs_changed(message):
+                    print "Codecs changed"
+
+                    if self.audiosession == session:
+                        self.codecs_changed_audio()
+                    if self.videosession == session:
+                        self.codecs_changed_video()
+                    return True
+
+                for stream in session.streams:
+                    (res, candidate) = stream.fsstream.parse_new_local_candidate(message)
+                    if res:
+                        print "New Local candidate"
+                        stream.new_local_candidate(candidate)
+                        return True
+
+                    (res, codecs) = stream.fsstream.parse_recv_codecs_changed(message)
+                    if res:
+                        print "Receive codecs changed"
+                        stream.recv_codecs_changed(codecs)
+                        return True
+
+                    if stream.fsstream.parse_local_candidates_prepared(message):
+                        print "Local candidates prepared"
+                        stream.local_candidates_prepared()
+                        return True
+
             if message.get_structure().has_name("dtmf-event"):
                 print "dtmf-event: %d" % message.get_structure().get_int("number")
-            elif message.get_structure().has_name("farstream-local-candidates-prepared"):
-                message.get_structure().get_value("stream").uistream.local_candidates_prepared()
 
-            elif message.get_structure().has_name("farstream-new-local-candidate"):
-                message.get_structure().get_value("stream").uistream.new_local_candidate(
-                    message.get_structure().get_value("candidate"))
-            elif message.get_structure().has_name("farstream-codecs-changed"):
-                print message.src.get_name(), ": ", message.get_structure().get_name()
-                message.get_structure().get_value("session").uisession.codecs_changed()
-                if AUDIO and message.get_structure().get_value("session") == self.audiosession.fssession:
-                    self.codecs_changed_audio()
-                if VIDEO and  message.get_structure().get_value("session") == self.videosession.fssession:
-                    self.codecs_changed_video()
-            elif message.get_structure().has_name("farstream-send-codec-changed"):
-                print message.src.get_name(), ": ", message.get_structure().get_name()
-                print "send codec changed: " + message.get_structure().get_value("codec").to_string()
-                if AUDIO and message.get_structure().get_value("session") == self.audiosession.fssession:
-                    self.codecs_changed_audio()
-                if VIDEO and message.get_structure().get_value("session") == self.videosession.fssession:
-                    self.codecs_changed_video()
-            elif message.get_structure().has_name("farstream-recv-codecs-changed"):
-                print message.src.get_name(), ": ", message.get_structure().get_name()
-                message.get_structure().get_value("stream").uistream.recv_codecs_changed( \
-                    message.get_structure().get_value("codecs"))
-                
-                
             elif message.get_structure().has_name("farstream-error"):
                 print "Async error ("+ str(message.get_structure().get_int("error-no")) +"): " + message.get_structure().get_string("error-msg")
             elif message.get_structure().has_name("level"):
