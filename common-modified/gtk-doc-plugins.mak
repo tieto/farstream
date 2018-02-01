@@ -212,7 +212,7 @@ html-build.stamp: sgml.stamp $(DOC_MAIN_SGML_FILE) $(content_files)
 	    mkhtml_options="$$mkhtml_options --verbose"; \
 	  fi; \
 	fi; \
-	cd html && gtkdoc-mkhtml $$mkhtml_options $(DOC_MODULE)-@GST_API_VERSION@ $(DOC_MAIN_SGML_FILE)
+	cd html && gtkdoc-mkhtml $$mkhtml_options $(DOC_MODULE) $(DOC_MAIN_SGML_FILE)
 	@rm -f html/$(DOC_MAIN_SGML_FILE)
 	@rm -rf html/xml
 	@rm -f html/version.entities
