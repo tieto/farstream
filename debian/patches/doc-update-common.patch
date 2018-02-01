@@ -1,29 +1,8 @@
 Description: update documentation build system
- .
- farstream-0.2 (0.2.7-1.1) unstable; urgency=medium
- .
-   * Non-maintainer upload.
-   * debian/patches/doc-sync-latest-common.patch:
-     - fix documentation build with gtk-doc
-     (Closes: #819836)
+Last-Update: 2018-02-01
 
-Author: Héctor Orón Martínez <hector.oron@collabora.co.uk>
-Bug-Debian: https://bugs.debian.org/819836
-
----
-The information above should follow the Patch Tagging Guidelines, please
-checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
-are templates for supplementary fields that you might want to add:
-
-Origin: Apertis
-Bug: https://bugs.freedesktop.org/show_bug.cgi?id=95210
-Bug-Debian: https://bugs.debian.org/819836
-Forwarded: picked from upstream
-Reviewed-By: Olivier Crête <olivier.crete@collabora.com>
-Last-Update: <2016-06-21>
-
---- farstream-0.2-0.2.7.orig/common-modified/gst-glib-gen.mak
-+++ farstream-0.2-0.2.7/common-modified/gst-glib-gen.mak
+--- a/common-modified/gst-glib-gen.mak
++++ b/common-modified/gst-glib-gen.mak
 @@ -10,16 +10,16 @@ enum_headers=$(foreach h,$(glib_enum_hea
  
  # these are all the rules generating the relevant files
@@ -44,8 +23,8 @@ Last-Update: <2016-06-21>
  	--fhead "#include \"$(glib_gen_basename)-enumtypes.h\"\n$(enum_headers)" \
  	--fprod "\n/* enumerations from \"@filename@\" */" \
  	--vhead "GType\n@enum_name@_get_type (void)\n{\n  static volatile gsize g_define_type_id__volatile = 0;\n  if (g_once_init_enter (&g_define_type_id__volatile)) {\n    static const G@Type@Value values[] = {"     \
---- farstream-0.2-0.2.7.orig/common-modified/gtk-doc-plugins.mak
-+++ farstream-0.2-0.2.7/common-modified/gtk-doc-plugins.mak
+--- a/common-modified/gtk-doc-plugins.mak
++++ b/common-modified/gtk-doc-plugins.mak
 @@ -14,10 +14,19 @@ help:
  	@echo
  
@@ -205,8 +184,8 @@ Last-Update: <2016-06-21>
  	fi)
  uninstall-local:
  	if test -d $(DESTDIR)$(TARGET_DIR); then \
---- farstream-0.2-0.2.7.orig/common-modified/gtk-doc.mak
-+++ farstream-0.2-0.2.7/common-modified/gtk-doc.mak
+--- a/common-modified/gtk-doc.mak
++++ b/common-modified/gtk-doc.mak
 @@ -3,7 +3,16 @@
  ###########################################################################
  # thomas: except of course that we did
@@ -279,7 +258,7 @@ Last-Update: <2016-06-21>
  uninstall-local:
  	if test -d $(DESTDIR)$(TARGET_DIR); then \
 --- /dev/null
-+++ farstream-0.2-0.2.7/common/MAINTAINERS
++++ b/common/MAINTAINERS
 @@ -0,0 +1,12 @@
 +GStreamer is currently maintained by the consensus of a number
 +of people, including, but not limited to:
@@ -293,8 +272,8 @@ Last-Update: <2016-06-21>
 +Maintainer-related issues should be addressed to:
 +
 +  gstreamer-devel@lists.freedesktop.org
---- farstream-0.2-0.2.7.orig/common/Makefile.am
-+++ farstream-0.2-0.2.7/common/Makefile.am
+--- a/common/Makefile.am
++++ b/common/Makefile.am
 @@ -8,7 +8,7 @@ EXTRA_DIST = \
  	parallel-subdirs.mak \
  	gst-autogen.sh \
@@ -305,7 +284,7 @@ Last-Update: <2016-06-21>
  	plugins.xsl gstdoc-scangobj \
  	gst.supp check.mak \
 --- /dev/null
-+++ farstream-0.2-0.2.7/common/README
++++ b/common/README
 @@ -0,0 +1,255 @@
 +GStreamer @SERIES_VERSION@
 +
@@ -563,7 +542,7 @@ Last-Update: <2016-06-21>
 +binary codecs for Linux, until such time as they get a clue and release the
 +source.
 --- /dev/null
-+++ farstream-0.2-0.2.7/common/README.static-linking
++++ b/common/README.static-linking
 @@ -0,0 +1,174 @@
 +=================================
 + GStreamer Static Linking README
@@ -740,7 +719,7 @@ Last-Update: <2016-06-21>
 +
 +[0] http://multinc.com/2009/08/24/compatibility-between-the-iphone-app-store-and-the-lgpl/
 --- /dev/null
-+++ farstream-0.2-0.2.7/common/autogen.sh.in
++++ b/common/autogen.sh.in
 @@ -0,0 +1,115 @@
 +test -n "$srcdir" || srcdir=`dirname "$0"`
 +test -n "$srcdir" || srcdir=.
@@ -788,7 +767,7 @@ Last-Update: <2016-06-21>
 +CONFIGURE_DEF_OPT='--enable-maintainer-mode --enable-gtk-doc'
 +
 +if test "x$package" = "xgstreamer"; then
-+  CONFIGURE_DEF_OPT="$CONFIGURE_DEF_OPT --enable-docbook --enable-failing-tests --enable-poisoning"
++  CONFIGURE_DEF_OPT="$CONFIGURE_DEF_OPT --enable-failing-tests --enable-poisoning"
 +elif test "x$package" = "xgst-plugins-bad"; then
 +  CONFIGURE_DEF_OPT="$CONFIGURE_DEF_OPT --with-player-tests"
 +fi
@@ -857,8 +836,8 @@ Last-Update: <2016-06-21>
 +}
 +
 +echo "Now type 'make' to compile $package."
---- farstream-0.2-0.2.7.orig/common/c-to-xml.py
-+++ farstream-0.2-0.2.7/common/c-to-xml.py
+--- a/common/c-to-xml.py
++++ b/common/c-to-xml.py
 @@ -5,6 +5,8 @@
  Convert a C program to valid XML to be included in docbook
  """
@@ -888,8 +867,8 @@ Last-Update: <2016-06-21>
 +    print ('</programlisting>')
  
  main()
---- farstream-0.2-0.2.7.orig/common/check.mak
-+++ farstream-0.2-0.2.7/common/check.mak
+--- a/common/check.mak
++++ b/common/check.mak
 @@ -11,69 +11,79 @@ check-valgrind:
  	@true
  endif
@@ -1125,8 +1104,8 @@ Last-Update: <2016-06-21>
  	@echo
  	@echo
  	@echo "Additionally, you can use the GST_CHECKS environment variable to"
---- farstream-0.2-0.2.7.orig/common/coverage/coverage-report-entry.pl
-+++ farstream-0.2-0.2.7/common/coverage/coverage-report-entry.pl
+--- a/common/coverage/coverage-report-entry.pl
++++ b/common/coverage/coverage-report-entry.pl
 @@ -14,7 +14,7 @@
  #
  # You should have received a copy of the GNU General Public License
@@ -1136,8 +1115,8 @@ Last-Update: <2016-06-21>
  
  
  print <<EOF;
---- farstream-0.2-0.2.7.orig/common/coverage/coverage-report.pl
-+++ farstream-0.2-0.2.7/common/coverage/coverage-report.pl
+--- a/common/coverage/coverage-report.pl
++++ b/common/coverage/coverage-report.pl
 @@ -14,7 +14,7 @@
  #
  # You should have received a copy of the GNU General Public License
@@ -1147,8 +1126,8 @@ Last-Update: <2016-06-21>
  
  use warnings;
  use strict;
---- farstream-0.2-0.2.7.orig/common/coverage/coverage-report.xsl
-+++ farstream-0.2-0.2.7/common/coverage/coverage-report.xsl
+--- a/common/coverage/coverage-report.xsl
++++ b/common/coverage/coverage-report.xsl
 @@ -15,7 +15,7 @@
  #
  # You should have received a copy of the GNU General Public License
@@ -1158,8 +1137,8 @@ Last-Update: <2016-06-21>
  -->
  <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                  version="1.0">
---- farstream-0.2-0.2.7.orig/common/coverage/lcov.mak
-+++ farstream-0.2-0.2.7/common/coverage/lcov.mak
+--- a/common/coverage/lcov.mak
++++ b/common/coverage/lcov.mak
 @@ -1,5 +1,5 @@
  ## .PHONY so it always rebuilds it
 -.PHONY: lcov-reset lcov lcov-run lcov-report lcov-upload
@@ -1184,8 +1163,8 @@ Last-Update: <2016-06-21>
  	-if test -d tests/check; then $(MAKE) -C tests/check inspect; fi
  	-$(MAKE) check
  
---- farstream-0.2-0.2.7.orig/common/extract-release-date-from-doap-file
-+++ farstream-0.2-0.2.7/common/extract-release-date-from-doap-file
+--- a/common/extract-release-date-from-doap-file
++++ b/common/extract-release-date-from-doap-file
 @@ -18,12 +18,12 @@ fi
  
  awk 'BEGIN {x=0}
@@ -1204,7 +1183,7 @@ Last-Update: <2016-06-21>
  \
  grep '<revision>'"$1"'</revision>' | \
 --- /dev/null
-+++ farstream-0.2-0.2.7/common/gen-changelog.py
++++ b/common/gen-changelog.py
 @@ -0,0 +1,99 @@
 +#!/usr/bin/env python
 +
@@ -1305,8 +1284,8 @@ Last-Update: <2016-06-21>
 +if __name__ == "__main__":
 +    get_rel_tags()
 +    output_commits()
---- farstream-0.2-0.2.7.orig/common/gst-autogen.sh
-+++ farstream-0.2-0.2.7/common/gst-autogen.sh
+--- a/common/gst-autogen.sh
++++ b/common/gst-autogen.sh
 @@ -20,215 +20,6 @@ debug ()
    fi
  }
@@ -1523,9 +1502,15 @@ Last-Update: <2016-06-21>
  
  autogen_options ()
  {
---- farstream-0.2-0.2.7.orig/common/gst-glib-gen.mak
-+++ farstream-0.2-0.2.7/common/gst-glib-gen.mak
-@@ -10,16 +10,16 @@ enum_headers=$(foreach h,$(glib_enum_hea
+--- a/common/gst-glib-gen.mak
++++ b/common/gst-glib-gen.mak
+@@ -5,30 +5,31 @@
+ #glib_enum_define=GST_COLOR_BALANCE
+ #glib_gen_prefix=gst_color_balance
+ #glib_gen_basename=colorbalance
++#glib_gen_decl_banner=GST_EXPORT
+ 
+ enum_headers=$(foreach h,$(glib_enum_headers),\n\#include \"$(h)\")
  
  # these are all the rules generating the relevant files
  $(glib_gen_basename)-marshal.h: $(glib_gen_basename)-marshal.list
@@ -1541,11 +1526,14 @@ Last-Update: <2016-06-21>
  
  $(glib_gen_basename)-enumtypes.h: $(glib_enum_headers)
 -	$(AM_V_GEN)glib-mkenums \
+-	--fhead "#ifndef __$(glib_enum_define)_ENUM_TYPES_H__\n#define __$(glib_enum_define)_ENUM_TYPES_H__\n\n#include <glib-object.h>\n\nG_BEGIN_DECLS\n" \
 +	$(AM_V_GEN)$(GLIB_MKENUMS) \
- 	--fhead "#ifndef __$(glib_enum_define)_ENUM_TYPES_H__\n#define __$(glib_enum_define)_ENUM_TYPES_H__\n\n#include <glib-object.h>\n\nG_BEGIN_DECLS\n" \
++	--fhead "#ifndef __$(glib_enum_define)_ENUM_TYPES_H__\n#define __$(glib_enum_define)_ENUM_TYPES_H__\n\n#include <gst/gst.h>\n\nG_BEGIN_DECLS\n" \
  	--fprod "\n/* enumerations from \"@filename@\" */\n" \
- 	--vhead "GType @enum_name@_get_type (void);\n#define GST_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n"         \
-@@ -28,7 +28,7 @@ $(glib_gen_basename)-enumtypes.h: $(glib
+-	--vhead "GType @enum_name@_get_type (void);\n#define GST_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n"         \
++	--vhead "$(glib_gen_decl_banner)\nGType @enum_name@_get_type (void);\n#define GST_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n"         \
+ 	--ftail "G_END_DECLS\n\n#endif /* __$(glib_enum_define)_ENUM_TYPES_H__ */" \
+ 	$^ > $@
  
  $(glib_gen_basename)-enumtypes.c: $(glib_enum_headers)
  	@if test "x$(glib_enum_headers)" = "x"; then echo "ERROR: glib_enum_headers is empty, please fix Makefile"; exit 1; fi
@@ -1554,8 +1542,8 @@ Last-Update: <2016-06-21>
  	--fhead "#include \"$(glib_gen_basename)-enumtypes.h\"\n$(enum_headers)" \
  	--fprod "\n/* enumerations from \"@filename@\" */" \
  	--vhead "GType\n@enum_name@_get_type (void)\n{\n  static volatile gsize g_define_type_id__volatile = 0;\n  if (g_once_init_enter (&g_define_type_id__volatile)) {\n    static const G@Type@Value values[] = {"     \
---- farstream-0.2-0.2.7.orig/common/gst-indent
-+++ farstream-0.2-0.2.7/common/gst-indent
+--- a/common/gst-indent
++++ b/common/gst-indent
 @@ -9,13 +9,19 @@
  
  version=`gnuindent --version 2>/dev/null`
@@ -1581,8 +1569,8 @@ Last-Update: <2016-06-21>
  else
    INDENT=gnuindent
  fi
---- farstream-0.2-0.2.7.orig/common/gst.supp
-+++ farstream-0.2-0.2.7/common/gst.supp
+--- a/common/gst.supp
++++ b/common/gst.supp
 @@ -91,6 +91,14 @@
     fun:pthread_create@@*
  }
@@ -1658,7 +1646,7 @@ Last-Update: <2016-06-21>
  }
  
  ## Leak of GIO module through gnomevfs
-@@ -3961,3 +3950,78 @@
+@@ -3961,3 +3950,87 @@
     fun:gst_system_clock_init
  }
  
@@ -1737,8 +1725,18 @@ Last-Update: <2016-06-21>
 +   ...
 +   fun:g_quark_init
 +}
---- farstream-0.2-0.2.7.orig/common/gstdoc-scangobj
-+++ farstream-0.2-0.2.7/common/gstdoc-scangobj
++
++{
++   Leak of debug function list
++   Memcheck:Leak
++   fun:*alloc
++   ...
++   fun:g_slist_prepend
++   fun:gst_debug_add_log_function
++}
+\ No newline at end of file
+--- a/common/gstdoc-scangobj
++++ b/common/gstdoc-scangobj
 @@ -16,7 +16,7 @@
  #
  # You should have received a copy of the GNU General Public License
@@ -1748,7 +1746,24 @@ Last-Update: <2016-06-21>
  #
  
  #
-@@ -110,6 +110,8 @@ my $old_prerequisites_filename = "$OUTPU
+@@ -27,16 +27,6 @@
+ 
+ use Getopt::Long;
+ 
+-my $GTK_DOC_PREFIX=`pkg-config --variable prefix gtk-doc`;
+-if ($GTK_DOC_PREFIX) {
+-  chomp $GTK_DOC_PREFIX;
+-  #print "Adding $GTK_DOC_PREFIX/share/gtk-doc/data to \@INC\n";
+-  unshift @INC, "$GTK_DOC_PREFIX/share/gtk-doc/data";
+-} else {
+-  unshift @INC, '/usr/share/gtk-doc/data';
+-}
+-require "gtkdoc-common.pl";
+-
+ # Options
+ 
+ # name of documentation module
+@@ -110,6 +100,8 @@ my $old_prerequisites_filename = "$OUTPU
  my $new_prerequisites_filename = "$OUTPUT_DIR/$MODULE.prerequisites.new";
  my $old_args_filename = "$OUTPUT_DIR/$MODULE.args";
  my $new_args_filename = "$OUTPUT_DIR/$MODULE.args.new";
@@ -1757,7 +1772,7 @@ Last-Update: <2016-06-21>
  
  my $debug_log="g_message";
  if (!defined($VERBOSE) or $VERBOSE eq "0") {
-@@ -150,7 +152,18 @@ print OUTPUT <<EOT;
+@@ -150,7 +142,18 @@ print OUTPUT <<EOT;
  #include <stdio.h>
  #include <errno.h>
  
@@ -1777,7 +1792,7 @@ Last-Update: <2016-06-21>
  
  #ifdef GTK_IS_WIDGET_CLASS
  #include <gtk/gtkversion.h>
-@@ -307,10 +320,10 @@ get_object_types (void)
+@@ -307,10 +310,10 @@ get_object_types (void)
              /* output element data */
              fputs ("    <element>\\n", inspect);
              fputs (xmlprint(6, "name", gst_plugin_feature_get_name (feature)),inspect);
@@ -1792,7 +1807,7 @@ Last-Update: <2016-06-21>
              fputs ("      <pads>\\n", inspect);
  
              /* output pad-template data */
-@@ -354,11 +367,11 @@ get_object_types (void)
+@@ -354,11 +357,11 @@ get_object_types (void)
        factory = GST_ELEMENT_FACTORY (l->data);
        type = gst_element_factory_get_element_type (factory);
        if (type != 0) {
@@ -1806,7 +1821,7 @@ Last-Update: <2016-06-21>
        }
        l = g_list_next (l);
      }
-@@ -426,38 +439,33 @@ const gchar *hierarchy_filename = "$new_
+@@ -426,38 +429,33 @@ const gchar *hierarchy_filename = "$new_
  const gchar *interfaces_filename = "$new_interfaces_filename";
  const gchar *prerequisites_filename = "$new_prerequisites_filename";
  const gchar *args_filename = "$new_args_filename";
@@ -1857,7 +1872,7 @@ Last-Update: <2016-06-21>
    $TYPE_INIT_FUNC;
  
    get_object_types ();
-@@ -467,6 +475,8 @@ main (int argc, char *argv[])
+@@ -467,6 +465,8 @@ main (int argc, char *argv[])
    output_object_interfaces ();
    output_interface_prerequisites ();
    output_args ();
@@ -1866,7 +1881,7 @@ Last-Update: <2016-06-21>
  
    return 0;
  }
-@@ -1562,6 +1572,139 @@ output_object_args (FILE *fp, GType obje
+@@ -1562,6 +1562,139 @@ output_object_args (FILE *fp, GType obje
      break;
    }
  }
@@ -2006,14 +2021,73 @@ Last-Update: <2016-06-21>
  EOT
  
  close OUTPUT;
-@@ -1606,4 +1749,4 @@ if (!defined($ENV{"GTK_DOC_KEEP_INTERMED
+@@ -1600,10 +1733,63 @@ if (!defined($ENV{"GTK_DOC_KEEP_INTERMED
+   unlink "./$MODULE-scan.c", "./$MODULE-scan.o", "./$MODULE-scan.lo", "./$MODULE-scan";
+ }
+ 
++# Copied from gtk-doc 1db161bd708cdfb88b362ea0b5d047034d9c3272
++#############################################################################
++# Function    : UpdateFileIfChanged
++# Description : Compares the old version of the file with the new version and
++#                if the file has changed it moves the new version into the old
++#                versions place. This is used so we only change files if
++#                needed, so we can do proper dependency tracking and we don't
++#                needlessly check files into version control systems that haven't
++#               changed.
++#                It returns 0 if the file hasn't changed, and 1 if it has.
++# Arguments   : $old_file - the pathname of the old file.
++#                $new_file - the pathname of the new version of the file.
++#                $make_backup - 1 if a backup of the old file should be kept.
++#                        It will have the .bak suffix added to the file name.
++#############################################################################
++
++sub UpdateFileIfChanged {
++    my ($old_file, $new_file, $make_backup) = @_;
++
++    #@TRACE@("Comparing $old_file with $new_file...");
++
++    # If the old file doesn't exist we want this to default to 1.
++    my $exit_code = 1;
++
++    if (-e $old_file) {
++        `cmp -s "$old_file" "$new_file"`;
++        $exit_code = $? >> 8;
++        #@TRACE@("   cmp exit code: $exit_code ($?)");
++    }
++
++    if ($exit_code > 1) {
++        die "Error running 'cmp $old_file $new_file'";
++    }
++
++    if ($exit_code == 1) {
++        #@TRACE@("   files changed - replacing old version with new version.");
++        if ($make_backup && -e $old_file) {
++            rename ($old_file, "$old_file.bak")
++                || die "Can't move $old_file to $old_file.bak: $!";
++        }
++        rename ($new_file, $old_file)
++            || die "Can't move $new_file to $old_file: $!";
++
++        return 1;
++    } else {
++        #@TRACE@("   files the same - deleting new version.");
++        unlink ("$new_file")
++            || die "Can't delete file: $new_file: $!";
++
++        return 0;
++    }
++}
++
+ &UpdateFileIfChanged ($old_hierarchy_filename, $new_hierarchy_filename, 0);
+ # we will merge these in scangobj-merge.py
+ #&UpdateFileIfChanged ($old_interfaces_filename, $new_interfaces_filename, 0);
  #&UpdateFileIfChanged ($old_prerequisites_filename, $new_prerequisites_filename, 0);
  #&UpdateFileIfChanged ($old_signals_filename, $new_signals_filename, 0);
  #&UpdateFileIfChanged ($old_args_filename, $new_args_filename, 0);
 -
 +#&UpdateFileIfChanged ($old_sections_filename, $new_sections_filename, 0);
---- farstream-0.2-0.2.7.orig/common/gtk-doc-plugins.mak
-+++ farstream-0.2-0.2.7/common/gtk-doc-plugins.mak
+--- a/common/gtk-doc-plugins.mak
++++ b/common/gtk-doc-plugins.mak
 @@ -16,6 +16,16 @@ help:
  update: scanobj-update
  	$(MAKE) check-outdated-docs
@@ -2149,8 +2223,8 @@ Last-Update: <2016-06-21>
  	fi)
  uninstall-local:
  	if test -d $(DESTDIR)$(TARGET_DIR); then \
---- farstream-0.2-0.2.7.orig/common/gtk-doc.mak
-+++ farstream-0.2-0.2.7/common/gtk-doc.mak
+--- a/common/gtk-doc.mak
++++ b/common/gtk-doc.mak
 @@ -3,7 +3,16 @@
  ###########################################################################
  # thomas: except of course that we did
@@ -2209,7 +2283,7 @@ Last-Update: <2016-06-21>
 +	for i in $(DOC_SOURCE_DIR) ; do					\
 +	    _source_dir="$${_source_dir} --source-dir=$$i" ;	        \
 +	done ;							        \
-+	gtkdoc-mkdb --module=$(DOC_MODULE) $$(_source_dir)  --expand-content-files="$(expand_content_files)" --main-sgml-file=$(DOC_MAIN_SGML_FILE) --output-format=xml $(MKDB_OPTIONS)
++	gtkdoc-mkdb --module=$(DOC_MODULE) $${_source_dir}  --expand-content-files="$(expand_content_files)" --main-sgml-file=$(DOC_MAIN_SGML_FILE) --output-format=xml $(MKDB_OPTIONS)
  	@cp ../version.entities xml
  	@touch sgml-build.stamp
  
@@ -2244,7 +2318,7 @@ Last-Update: <2016-06-21>
  uninstall-local:
  	if test -d $(DESTDIR)$(TARGET_DIR); then \
 --- /dev/null
-+++ farstream-0.2-0.2.7/common/hooks/install-hooks
++++ b/common/hooks/install-hooks
 @@ -0,0 +1,97 @@
 +#!/bin/bash
 +#
@@ -2344,7 +2418,7 @@ Last-Update: <2016-06-21>
 +
 +echo "Done"
 --- /dev/null
-+++ farstream-0.2-0.2.7/common/hooks/post-receive.hook
++++ b/common/hooks/post-receive.hook
 @@ -0,0 +1,293 @@
 +#!/usr/bin/perl -w
 +#
@@ -2640,7 +2714,7 @@ Last-Update: <2016-06-21>
 +
 +exit 0;
 --- /dev/null
-+++ farstream-0.2-0.2.7/common/hooks/pre-commit.hook
++++ b/common/hooks/pre-commit.hook
 @@ -0,0 +1,83 @@
 +#!/bin/sh
 +#
@@ -2726,7 +2800,7 @@ Last-Update: <2016-06-21>
 +done
 +echo "--Checking style pass--"
 --- /dev/null
-+++ farstream-0.2-0.2.7/common/hooks/pre-receive.hook
++++ b/common/hooks/pre-receive.hook
 @@ -0,0 +1,190 @@
 +#!/usr/bin/env python
 +import sys
@@ -2919,7 +2993,7 @@ Last-Update: <2016-06-21>
 +    sys.exit(-1)
 +
 --- /dev/null
-+++ farstream-0.2-0.2.7/common/hooks/update.hook
++++ b/common/hooks/update.hook
 @@ -0,0 +1,128 @@
 +#!/bin/sh
 +#
@@ -3049,8 +3123,8 @@ Last-Update: <2016-06-21>
 +
 +# --- Finished
 +exit 0
---- farstream-0.2-0.2.7.orig/common/m4/Makefile.am
-+++ farstream-0.2-0.2.7/common/m4/Makefile.am
+--- a/common/m4/Makefile.am
++++ b/common/m4/Makefile.am
 @@ -9,9 +9,9 @@ EXTRA_DIST = \
  	as-libtool.m4 \
  	as-libtool-tags.m4 \
@@ -3062,8 +3136,8 @@ Last-Update: <2016-06-21>
  	glib-gettext.m4 \
  	gst-arch.m4 \
  	gst-args.m4 \
---- farstream-0.2-0.2.7.orig/common/m4/as-docbook.m4
-+++ farstream-0.2-0.2.7/common/m4/as-docbook.m4
+--- a/common/m4/as-docbook.m4
++++ b/common/m4/as-docbook.m4
 @@ -14,7 +14,19 @@ AC_DEFUN([AS_DOCBOOK],
    TYPE_UC=XML
    DOCBOOK_VERSION=4.1.2
@@ -3086,7 +3160,7 @@ Last-Update: <2016-06-21>
      do
        if test -d "$i"; then
 --- /dev/null
-+++ farstream-0.2-0.2.7/common/m4/ax_pthread.m4
++++ b/common/m4/ax_pthread.m4
 @@ -0,0 +1,485 @@
 +# ===========================================================================
 +#        http://www.gnu.org/software/autoconf-archive/ax_pthread.html
@@ -3573,8 +3647,8 @@ Last-Update: <2016-06-21>
 +fi
 +AC_LANG_POP
 +])dnl AX_PTHREAD
---- farstream-0.2-0.2.7.orig/common/m4/gst-arch.m4
-+++ farstream-0.2-0.2.7/common/m4/gst-arch.m4
+--- a/common/m4/gst-arch.m4
++++ b/common/m4/gst-arch.m4
 @@ -45,9 +45,15 @@ AC_DEFUN([AG_GST_ARCH],
      xalpha*)
        HAVE_CPU_ALPHA=yes
@@ -3608,8 +3682,8 @@ Last-Update: <2016-06-21>
          _AS_ECHO_N([(blacklisted) ])
          as_cv_unaligned_access=no
  	;;
---- farstream-0.2-0.2.7.orig/common/m4/gst-args.m4
-+++ farstream-0.2-0.2.7/common/m4/gst-args.m4
+--- a/common/m4/gst-args.m4
++++ b/common/m4/gst-args.m4
 @@ -337,6 +337,7 @@ AC_DEFUN([AG_GST_ARG_ENABLE_BROKEN],
  
  dnl allow people (or build tools) to override default behaviour
@@ -3657,8 +3731,8 @@ Last-Update: <2016-06-21>
 +        AC_DEFINE(GST_ENABLE_EXTRA_CHECKS, 1, [Define if extra runtime checks should be enabled])
 +    fi
  ])
---- farstream-0.2-0.2.7.orig/common/m4/gst-check.m4
-+++ farstream-0.2-0.2.7/common/m4/gst-check.m4
+--- a/common/m4/gst-check.m4
++++ b/common/m4/gst-check.m4
 @@ -266,29 +266,29 @@ AC_DEFUN([AG_GST_CHECK_GST_PLUGINS_BAD],
  ])
  
@@ -3704,8 +3778,8 @@ Last-Update: <2016-06-21>
 +    AC_SUBST(GST_PLUGINS_LIBAV_DIR)
    fi
  ])
---- farstream-0.2-0.2.7.orig/common/m4/gst-doc.m4
-+++ farstream-0.2-0.2.7/common/m4/gst-doc.m4
+--- a/common/m4/gst-doc.m4
++++ b/common/m4/gst-doc.m4
 @@ -20,34 +20,10 @@ AC_DEFUN([AG_GST_DOCBOOK_CHECK],
  
      dnl check for docbook tools
@@ -3798,8 +3872,8 @@ Last-Update: <2016-06-21>
         test "x$HAVE_DVIPS" = "xyes" && \
         test "x$HAVE_PNGTOPNM" = "xyes" && \
         test "x$HAVE_PNMTOPS" = "xyes"; then
---- farstream-0.2-0.2.7.orig/common/m4/gst-error.m4
-+++ farstream-0.2-0.2.7/common/m4/gst-error.m4
+--- a/common/m4/gst-error.m4
++++ b/common/m4/gst-error.m4
 @@ -52,39 +52,6 @@ AC_DEFUN([AG_GST_SET_ERROR_CFLAGS],
    if test "x$1" != "xno"
    then
@@ -3898,8 +3972,8 @@ Last-Update: <2016-06-21>
      fi
    fi
  
---- farstream-0.2-0.2.7.orig/common/m4/gst-feature.m4
-+++ farstream-0.2-0.2.7/common/m4/gst-feature.m4
+--- a/common/m4/gst-feature.m4
++++ b/common/m4/gst-feature.m4
 @@ -209,7 +209,7 @@ AC_DEFUN([AG_GST_PARSE_SUBSYSTEM_DISABLE
  
  dnl Parse gstconfig.h and defines add the symbols and substitions
@@ -3909,8 +3983,8 @@ Last-Update: <2016-06-21>
  dnl AG_GST_PARSE_SUBSYSTEM_DISABLES(GST_CONFIGPATH)
  dnl
  AC_DEFUN([AG_GST_PARSE_SUBSYSTEM_DISABLES],
---- farstream-0.2-0.2.7.orig/common/m4/gst-gettext.m4
-+++ farstream-0.2-0.2.7/common/m4/gst-gettext.m4
+--- a/common/m4/gst-gettext.m4
++++ b/common/m4/gst-gettext.m4
 @@ -14,6 +14,13 @@ AC_DEFUN([AG_GST_GETTEXT],
    AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], "$GETTEXT_PACKAGE",
                       [gettext package name])
@@ -3925,8 +3999,8 @@ Last-Update: <2016-06-21>
    dnl define LOCALEDIR in config.h
    AS_AC_EXPAND(LOCALEDIR, $datadir/locale)
    AC_DEFINE_UNQUOTED([LOCALEDIR], "$LOCALEDIR",
---- farstream-0.2-0.2.7.orig/common/m4/gst-glib2.m4
-+++ farstream-0.2-0.2.7/common/m4/gst-glib2.m4
+--- a/common/m4/gst-glib2.m4
++++ b/common/m4/gst-glib2.m4
 @@ -16,7 +16,7 @@ AC_DEFUN([AG_GST_GLIB_CHECK],
  
    dnl Check for glib with everything
@@ -4038,8 +4112,8 @@ Last-Update: <2016-06-21>
    AC_SUBST(GIO_CFLAGS)
    AC_SUBST(GIO_LIBS)
    AC_SUBST(GIO_LDFLAGS)
---- farstream-0.2-0.2.7.orig/common/m4/gst-package-release-datetime.m4
-+++ farstream-0.2-0.2.7/common/m4/gst-package-release-datetime.m4
+--- a/common/m4/gst-package-release-datetime.m4
++++ b/common/m4/gst-package-release-datetime.m4
 @@ -27,14 +27,16 @@ dnl ====================================
  AC_DEFUN([AG_GST_SET_PACKAGE_RELEASE_DATETIME],
  [
@@ -4073,8 +4147,8 @@ Last-Update: <2016-06-21>
      GST_PACKAGE_RELEASE_DATETIME=$1
    else
      AC_MSG_WARN([SET_PACKAGE_RELEASE_DATETIME: invalid first argument])
---- farstream-0.2-0.2.7.orig/common/m4/gst-parser.m4
-+++ farstream-0.2-0.2.7/common/m4/gst-parser.m4
+--- a/common/m4/gst-parser.m4
++++ b/common/m4/gst-parser.m4
 @@ -8,14 +8,14 @@ AC_DEFUN([AG_GST_BISON_CHECK],
    fi
  
@@ -4093,8 +4167,8 @@ Last-Update: <2016-06-21>
      AC_MSG_RESULT([yes])
    else
      AC_MSG_ERROR([no])
---- farstream-0.2-0.2.7.orig/common/m4/gst-plugin-docs.m4
-+++ farstream-0.2-0.2.7/common/m4/gst-plugin-docs.m4
+--- a/common/m4/gst-plugin-docs.m4
++++ b/common/m4/gst-plugin-docs.m4
 @@ -1,4 +1,4 @@
 -dnl AG_GST_PLUGIN_DOCS([MINIMUM-GTK-DOC-VERSION],[MINIMUM-PYTHON-VERSION])
 +dnl AG_GST_PLUGIN_DOCS([MINIMUM-GTK-DOC-VERSION])
@@ -4122,8 +4196,8 @@ Last-Update: <2016-06-21>
    else
      AC_MSG_RESULT([no (gtk-doc disabled or not available)])
    fi
---- farstream-0.2-0.2.7.orig/common/m4/gst-x11.m4
-+++ farstream-0.2-0.2.7/common/m4/gst-x11.m4
+--- a/common/m4/gst-x11.m4
++++ b/common/m4/gst-x11.m4
 @@ -9,7 +9,11 @@ AC_DEFUN([AG_GST_CHECK_X],
    CPPFLAGS="$CPPFLAGS $X_CFLAGS"
  
@@ -4137,16 +4211,16 @@ Last-Update: <2016-06-21>
  
    if test "x$HAVE_X" = "xno"
    then
---- farstream-0.2-0.2.7.orig/common/m4/gtk-doc.m4
-+++ farstream-0.2-0.2.7/common/m4/gtk-doc.m4
+--- a/common/m4/gtk-doc.m4
++++ b/common/m4/gtk-doc.m4
 @@ -67,5 +67,4 @@ AC_DEFUN([GTK_DOC_CHECK],
    AM_CONDITIONAL([GTK_DOC_BUILD_HTML], [test x$enable_gtk_doc_html = xyes])
    AM_CONDITIONAL([GTK_DOC_BUILD_PDF], [test x$enable_gtk_doc_pdf = xyes])
    AM_CONDITIONAL([GTK_DOC_USE_LIBTOOL], [test -n "$LIBTOOL"])
 -  AM_CONDITIONAL([GTK_DOC_USE_REBASE], [test -n "$GTKDOC_REBASE"])
  ])
---- farstream-0.2-0.2.7.orig/common/m4/introspection.m4
-+++ farstream-0.2-0.2.7/common/m4/introspection.m4
+--- a/common/m4/introspection.m4
++++ b/common/m4/introspection.m4
 @@ -62,6 +62,7 @@ m4_define([_GOBJECT_INTROSPECTION_CHECK_
         INTROSPECTION_CFLAGS=`$PKG_CONFIG --cflags gobject-introspection-1.0`
         INTROSPECTION_LIBS=`$PKG_CONFIG --libs gobject-introspection-1.0`
@@ -4164,7 +4238,7 @@ Last-Update: <2016-06-21>
      AM_CONDITIONAL(HAVE_INTROSPECTION, test "x$found_introspection" = "xyes")
  ])
 --- /dev/null
-+++ farstream-0.2-0.2.7/common/mangle-db.py
++++ b/common/mangle-db.py
 @@ -0,0 +1,71 @@
 +# -*- Mode: Python -*-
 +# vi:si:et:sw=4:sts=4:ts=4
@@ -4237,8 +4311,8 @@ Last-Update: <2016-06-21>
 +        patch (details.replace("-details", ""), os.path.basename(details))
 +
 +main()
---- farstream-0.2-0.2.7.orig/common/release.mak
-+++ farstream-0.2-0.2.7/common/release.mak
+--- a/common/release.mak
++++ b/common/release.mak
 @@ -2,11 +2,27 @@
  # include $(top_srcdir)/common/release.mak
  
@@ -4271,7 +4345,7 @@ Last-Update: <2016-06-21>
  
  # check that no marshal or enumtypes files are included
  # this in turn ensures that distcheck fails for missing .list files which is currently
-@@ -14,8 +30,8 @@ release: dist
+@@ -14,8 +30,16 @@ release: dist
  distcheck-hook:
  	@test "x" = "x`find $(distdir) -name \*-enumtypes.[ch] | grep -v win32`" && \
  	test "x" = "x`find $(distdir) -name \*-marshal.[ch]`" || \
@@ -4282,8 +4356,16 @@ Last-Update: <2016-06-21>
  	  find $(distdir) -name \*-enumtypes.[ch] | grep -v win32 && \
  	  find $(distdir) -name \*-marshal.[ch] && \
  	  false )
---- farstream-0.2-0.2.7.orig/common/scangobj-merge.py
-+++ farstream-0.2-0.2.7/common/scangobj-merge.py
++
++dist-hook:
++	@if test -f meson.build && ! $(GREP) -e "version.*'$(VERSION)'" meson.build >/dev/null ; then \
++	  echo "*******************************************************"; \
++	  echo "* meson.build needs to be updated for version $(VERSION)"; \
++	  echo "*******************************************************"; \
++	  false; \
++	fi
+--- a/common/scangobj-merge.py
++++ b/common/scangobj-merge.py
 @@ -6,8 +6,11 @@
  parse, merge and write gstdoc-scanobj files
  """
@@ -4380,7 +4462,7 @@ Last-Update: <2016-06-21>
      def get_data(self):
          lines = []
 --- /dev/null
-+++ farstream-0.2-0.2.7/common/update-autogen
++++ b/common/update-autogen
 @@ -0,0 +1,48 @@
 +#!/bin/bash
 +
@@ -4431,7 +4513,7 @@ Last-Update: <2016-06-21>
 +
 +echo "Updated $PACKAGE autogen.sh"
 --- /dev/null
-+++ farstream-0.2-0.2.7/common/update-common
++++ b/common/update-common
 @@ -0,0 +1,187 @@
 +#!/bin/bash
 +#
@@ -4621,7 +4703,7 @@ Last-Update: <2016-06-21>
 +  rm -rf $dir
 +fi
 --- /dev/null
-+++ farstream-0.2-0.2.7/common/update-readmes
++++ b/common/update-readmes
 @@ -0,0 +1,42 @@
 +#!/bin/bash
 +#
@@ -4665,8 +4747,8 @@ Last-Update: <2016-06-21>
 +if test x$1 = "x--run-git-add"; then
 +  git add $README_FILES;
 +fi
---- farstream-0.2-0.2.7.orig/common/upload-doc.mak
-+++ farstream-0.2-0.2.7/common/upload-doc.mak
+--- a/common/upload-doc.mak
++++ b/common/upload-doc.mak
 @@ -44,14 +44,12 @@ upload: $(FORMATS)
  	if echo $(FORMATS) | grep ps > /dev/null; then export SRC="$$SRC $(DOC).ps"; fi; \
  	if echo $(FORMATS) | grep pdf > /dev/null; then export SRC="$$SRC $(DOC).pdf"; fi; \
@@ -4688,9 +4770,9 @@ Last-Update: <2016-06-21>
  	\
  	export DIR=$(DOC_BASE)/gstreamer/head/$(DOC); \
  	echo Uploading $$SRC to $(DOC_SERVER):$$DIR; \
---- farstream-0.2-0.2.7.orig/common/win32.mak
-+++ farstream-0.2-0.2.7/common/win32.mak
-@@ -44,18 +44,27 @@ check-exports:
+--- a/common/win32.mak
++++ b/common/win32.mak
+@@ -44,18 +44,30 @@ check-exports:
  	  if test "x$$libso" != "x"; then \
  	    echo Checking symbols in $$libso; \
  	    if ! ($(top_srcdir)/common/check-exports $$libdef $$libso) ; then \
@@ -4713,10 +4795,191 @@ Last-Update: <2016-06-21>
  
 +update-exports:
 +	make check-exports 2>&1 | patch -p1
-+	git add win32/common/libgst*.def
-+	git diff --cached -- win32/common/
++	if test -f "$(top_srcdir)/win32/common/libgstgl.def"; then \
++	  git checkout "$(top_srcdir)/win32/common/libgstgl.def";  \
++	fi
++	git add $(top_srcdir)/win32/common/lib*.def
++	git diff --cached -- $(top_srcdir)/win32/common/
 +	echo '^^^--- updated and staged changes above'
 +
  # complain about nonportable printf format strings (%lld, %llu, %zu etc.)
  check-nonportable-print-format:
  	@fail=0 ; \
+--- a/common/check-exports
++++ b/common/check-exports
+@@ -29,7 +29,7 @@ fi
+ # BSS symbol, unlike on linux where it's a local absolute symbol.
+ nm $NMARGS $lib_path | awk \
+ 	'{
+-		if ($3 ~ /^[_]?(gst_|Gst|GST_).*/)
++		if ($3 ~ /^[_]?(gst_|Gst|GST_|ges_|Ges|GES_).*/)
+ 		{
+ 			if ($2 ~ /^[BSDG]$/)
+ 				print "\t" $3 " DATA"
+--- a/common/download-translations
++++ b/common/download-translations
+@@ -7,7 +7,7 @@
+ # We need to check all domains, not only po/LINGUAS, since there might be
+ # new translations
+ DOMAINS=\
+-"af am ar az be bg pt_BR bs ca zh_CN cs cy da de el eo es et eu fa fi fr "\
++"af am ar ast az be bg pt_BR bs ca zh_CN cs cy da de el eo es et eu fa fi fr fur "\
+ "ga en_GB gl gu he hi zh_HK hr hu id is it ja ko ku ky lg lt lv mk mn ms "\
+ "mt nb ne nl nn or pa pl pt rm ro ru rw sk sl sq sr sv ta tq th tk "\
+ "tr zh_TW uk ven vi wa xh zu"
+--- a/common/orc.mak
++++ b/common/orc.mak
+@@ -32,12 +32,12 @@ orc-update: tmp-orc.c $(ORC_SOURCE).h
+ 	cp tmp-orc.c $(srcdir)/$(ORC_SOURCE)-dist.c
+ 	cp $(ORC_SOURCE).h $(srcdir)/$(ORC_SOURCE)-dist.h
+ 
+-orcc_v_gen = $(orcc_v_gen_$(V))
+-orcc_v_gen_ = $(orcc_v_gen_$(AM_DEFAULT_VERBOSITY))
++orcc_v_gen = $(orcc_v_gen_@AM_V@)
++orcc_v_gen_ = $(orcc_v_gen_@AM_DEFAULT_V@)
+ orcc_v_gen_0 = @echo "  ORCC   $@";
+ 
+-cp_v_gen = $(cp_v_gen_$(V))
+-cp_v_gen_ = $(cp_v_gen_$(AM_DEFAULT_VERBOSITY))
++cp_v_gen = $(cp_v_gen_@AM_V@)
++cp_v_gen_ = $(cp_v_gen_@AM_DEFAULT_V@)
+ cp_v_gen_0 = @echo "  CP     $@";
+ 
+ if HAVE_ORCC
+--- a/common/po.mak
++++ b/common/po.mak
+@@ -1,4 +1,11 @@
+ # rule to download the latest .po files
+ download-po: $(top_srcdir)/common/download-translations
+ 	$(top_srcdir)/common/download-translations $(PACKAGE)
++	for f in po/*.po; do \
++	  num_changed=`git diff $$f | grep -e '^[+-][^+-]' | wc -l`; \
++	  num_date=`git diff $$f | grep -e '^[+-][^+-]' | grep POT-Creation-Date | wc -l`; \
++	  if [ $num_date == $num_changed ]; then \
++	    git checkout $$f; \
++	  fi; \
++	done
+ 
+--- /dev/null
++++ b/common/tests/check/getpluginsdir
+@@ -0,0 +1,27 @@
++#!/usr/bin/env python3
++
++import os
++import sys
++import subprocess
++
++builddir = os.environ['MESON_BUILD_ROOT']
++
++res = ''
++args = sys.argv[1:]
++for i in range(0, len(args), 2):
++    project = args[i]
++    pkg_name = args[i + 1]
++    path = os.path.join(builddir, 'subprojects', project)
++    if os.path.exists(path):
++        res += ':' + path
++    else:
++        try:
++            res += ':' + subprocess.check_output([
++                'pkg-config', '--variable=pluginsdir',
++                pkg_name]).decode().replace("\n", "")
++        except subprocess.CalledProcessError as e:
++            # Probably means there is no .pc file for the module
++            # and it should hopefully no be too bad.
++            pass
++
++print(res.strip(":"))
+--- /dev/null
++++ b/common/update_gst_modules_assets.py
+@@ -0,0 +1,90 @@
++#!/usr/bin/env python3
++
++import os
++import shutil
++import sys
++import argparse
++import subprocess
++
++parser = argparse.ArgumentParser(prog="update-gstreamer-common-files",
++                                 description="Copy files that are common to several repository"
++                                 " to the right places in those.")
++parser.add_argument("-m", "--commit-message",
++                    help="git add modified files and commit the changes with this message.")
++parser.add_argument('rootdir', metavar='rootdir', nargs=1,
++                    help='The directory where to find GStreamer modules repoos.')
++
++
++SCRIPTDIR = os.path.dirname(__file__)
++FILES_TO_COPY = ['hooks/pre-commit.hook']
++GETPLUGINSDIR = 'tests/check/getpluginsdir'
++
++FILES_TO_COPY_PER_MODULE = {
++    'gstreamer': [],
++    'gst-plugins-base': [GETPLUGINSDIR],
++    'gst-plugins-good': [GETPLUGINSDIR],
++    'gst-plugins-ugly': [GETPLUGINSDIR],
++    'gst-plugins-bad': [],
++    'gst-libav': [],
++    'gst-editing-services': [GETPLUGINSDIR],
++    'gst-devtools': [(GETPLUGINSDIR, "validate/tests/")],
++    'gst-python': [],
++}
++
++if __name__ == "__main__":
++    options = parser.parse_args()
++    rootpath = options.rootdir[0]
++    if not os.path.exists(rootpath):
++        print("Please path the root directory where to find GStreamer modules repos"
++              " %s does not exists", rootpath)
++        exit(1)
++
++    summary = ""
++    for module, files in FILES_TO_COPY_PER_MODULE.items():
++        files += FILES_TO_COPY
++
++        repodir = os.path.abspath(os.path.join(rootpath, module))
++        if not os.path.exists(repodir):
++            print("Repo %s does not exists" % repodir)
++            exit(1)
++
++        if options.commit_message:
++            dirty = False
++            try:
++                dirty = subprocess.check_output('git status --porcelain --untracked-files=no'.split(' '),
++                                cwd=repodir)
++            except Exception as e:
++                dirty = True
++
++            if dirty:
++                print("Can not commit %s as the repository is dirty." %
++                        (repodir))
++                exit(1)
++
++        for f in files:
++            if isinstance(f, tuple):
++                destdir = os.path.join(repodir, f[1])
++                f = f[0]
++            else:
++                dirname = os.path.dirname(f)
++                destdir = os.path.join(repodir, dirname)
++
++            if destdir and not os.path.exists(destdir):
++                print("Making dir %s" % destdir)
++                os.makedirs(destdir, exist_ok=True)
++
++            dest = os.path.join(destdir, os.path.basename(f))
++            print("Copying %s to %s" %(f, dest))
++            shutil.copy(os.path.join(SCRIPTDIR, f), dest)
++            if options.commit_message:
++                subprocess.check_call(['git', 'add', os.path.abspath(dest)],
++                                      cwd=repodir)
++
++        if options.commit_message:
++            if subprocess.call('git diff-index --quiet --cached HEAD'.split(' '), cwd=repodir) != 0:
++                subprocess.call(['git', 'commit', '-m', options.commit_message], cwd=repodir)
++                if not summary:
++                    summary = "Commited:\n"
++                summary += repodir + '\n'
++
++    print(summary)
