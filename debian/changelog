@@ -1,9 +1,9 @@
-farstream-0.2 (0.2.8-4) UNRELEASED; urgency=medium
+farstream-0.2 (0.2.8-4) unstable; urgency=medium
 
   * debian/patches/doc-update-common.patch: Fix installation of .devhelp2
     files
 
- -- Laurent Bigonville <bigon@debian.org>  Thu, 01 Feb 2018 15:54:03 +0100
+ -- Laurent Bigonville <bigon@debian.org>  Thu, 01 Feb 2018 16:26:57 +0100
 
 farstream-0.2 (0.2.8-3) unstable; urgency=medium
 
