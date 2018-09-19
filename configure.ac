@@ -75,7 +75,7 @@ dnl allow for different autotools
 AS_AUTOTOOLS_ALTERNATE
 
 dnl Add parameters for aclocal
-AC_SUBST(ACLOCAL_AMFLAGS, "-I m4 -I common/m4")
+AC_SUBST(ACLOCAL_AMFLAGS, "-I common/m4")
 
 dnl *** check for arguments to configure ***
 
@@ -422,7 +422,6 @@ docs/Makefile
 docs/libs/Makefile
 docs/plugins/Makefile
 docs/version.entities
-m4/Makefile
 dnl docs/plugins/Makefile
 )
 AC_OUTPUT

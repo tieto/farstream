@@ -73,6 +73,7 @@ glib_enum_headers=$(public_headers)
 glib_enum_define=FS
 glib_gen_prefix=_fs
 glib_gen_basename=fs
+glib_gen_decl_include=\#include <glib-object.h>
 
 include $(top_srcdir)/common-modified/gst-glib-gen.mak
 
@@ -83,8 +84,9 @@ introspection_sources = \
 	$(nodist_libfarstreaminclude_HEADERS) \
 	$(libfarstreaminclude_HEADERS)
 
+
 INTROSPECTION_GIRS = Farstream-@FS_APIVERSION@.gir
-Farstream-@FS_APIVERSION@.gir: libfarstream-@FS_APIVERSION@.la
+Farstream_@FS_API_VERSION@_gir: libfarstream_@FS_APIVERSION@.la
 Farstream_@FS_API_VERSION@_gir_NAMESPACE = Farstream
 Farstream_@FS_API_VERSION@_gir_VERSION = @FS_APIVERSION@
 Farstream_@FS_API_VERSION@_gir_LIBS = libfarstream-@FS_APIVERSION@.la
@@ -94,8 +96,7 @@ Farstream_@FS_API_VERSION@_gir_CFLAGS = $(FS_INTERNAL_CFLAGS)
 Farstream_@FS_API_VERSION@_gir_SCANNERFLAGS = --symbol-prefix=fs \
 	--identifier-prefix=Fs --add-init-section="gst_init(NULL,NULL);" \
 	--pkg-export=farstream-@FS_APIVERSION@ \
-	$(foreach hdr,$(public_headers),--c-include=$(hdr))
-Farstream_@FS_API_VERSION@_gir_LDFLAGS = $(GST_LIBS)
+	$(foreach hdr,$(public_headers),--c-include=$(hdr)) --include-last-in-header=gst/gst.h
 
 girdir = $(datadir)/gir-1.0
 dist_gir_DATA = Farstream-@FS_APIVERSION@.gir
