@@ -10,7 +10,6 @@ SUBDIRS = 			\
 	docs			\
 	common			\
 	common-modified		\
-	m4			\
 	examples
 #	pkgconfig
 
@@ -22,7 +21,6 @@ DIST_SUBDIRS = 			\
 	docs			\
 	common			\
 	common-modified		\
-	m4			\
 	examples
 #	pkgconfig
 
@@ -30,7 +28,7 @@ EXTRA_DIST = \
 	AUTHORS COPYING NEWS README ChangeLog autogen.sh \
 	$(pcinfiles)
 
-ACLOCAL_AMFLAGS = -I m4 -I common/m4
+ACLOCAL_AMFLAGS = -I common/m4
 
 check-valgrind:
 	cd tests/check && make check-valgrind

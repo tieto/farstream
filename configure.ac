@@ -200,7 +200,6 @@ GOBJECT_INTROSPECTION_CHECK([0.10.1])
 
 dnl check for documentation tools
 GTK_DOC_CHECK([1.18])
-AS_PATH_PYTHON([2.1])
 AG_GST_PLUGIN_DOCS([1.8],[2.1])
 
 dnl Make automake happy with per-target flags
