@@ -97,6 +97,7 @@ Farstream_@FS_API_VERSION@_gir_SCANNERFLAGS = --symbol-prefix=fs \
 	--identifier-prefix=Fs --add-init-section="gst_init(NULL,NULL);" \
 	--pkg-export=farstream-@FS_APIVERSION@ \
 	$(foreach hdr,$(public_headers),--c-include=$(hdr)) --include-last-in-header=gst/gst.h
+Farstream_@FS_API_VERSION@_gir_LDFLAGS = $(GST_LIBS)
 
 girdir = $(datadir)/gir-1.0
 dist_gir_DATA = Farstream-@FS_APIVERSION@.gir
