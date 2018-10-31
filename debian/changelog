@@ -1,8 +1,23 @@
-farstream-0.2 (0.2.8-2+sipe) UNRELEASED; urgency=medium
+farstream-0.2 (0.2.8-4+sipe) UNRELEASED; urgency=medium
 
   * Build with extra sipe patches
 
- -- Jakub Adam <jakub.adam@ktknet.cz>  Tue, 04 Apr 2017 19:22:14 +0200
+ -- Jakub Adam <jakub.adam@ktknet.cz>  Wed, 31 Oct 2018 13:52:33 +0100
+
+farstream-0.2 (0.2.8-4) unstable; urgency=medium
+
+  * debian/patches/doc-update-common.patch: Fix installation of .devhelp2
+    files
+
+ -- Laurent Bigonville <bigon@debian.org>  Thu, 01 Feb 2018 16:26:57 +0100
+
+farstream-0.2 (0.2.8-3) unstable; urgency=medium
+
+  * debian/control: Bump Standards-Version to 4.1.3 (no further changes)
+  * debian/patches/doc-update-common.patch: Update the common/ directory again
+    to fix documentation build (Closes: #876611)
+
+ -- Laurent Bigonville <bigon@debian.org>  Thu, 01 Feb 2018 14:11:54 +0100
 
 farstream-0.2 (0.2.8-2) unstable; urgency=medium
 
@@ -53,6 +68,8 @@ farstream-0.2 (0.2.7-1) unstable; urgency=medium
     - Rename the package from libfarstream-0.2-2 to libfarstream-0.2-5 and
       adjust the .symbols file
   * debian/control: Bump Standards-Version to 3.9.6 (no further changes)
+  * Drop libfarstream-0.2-dbg package and let debhelper create the dbgsym
+    package itself.
 
  -- Laurent Bigonville <bigon@debian.org>  Wed, 06 Jan 2016 03:29:50 +0100
 
